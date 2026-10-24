@@ -1,0 +1,197 @@
+envelope: 1
+uuid: nexus-export-graph-phase:L1:f9baab1fe72d6f56
+type: graph
+id: phase:L1:f9baab1fe72d6f56
+context: dependency graph of phase L1
+intent: null
+summary: 17 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676180
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676180
+lastSeenAt: 1792787676180
+fingerprint: null
+payload:
+  for: L1
+  kind: phase
+  repo: null
+  hash: f9baab1fe72d6f56
+  nodes:
+    - path: loom/bootstrap.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/maps/staging-self-heal-map.js
+      role: changes
+      exists: false
+      system: loom
+    - path: loom/registry-components.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: loom/maps/accounts-authority-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/copilot-capability-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/cos-testenv-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/observability-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/raid-events-and-tools-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/session-2026-08-14-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/ui-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/warp-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/scanners/capability-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/scanners/spec-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/bootstrap.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/warp-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/observability-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/copilot-capability-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/session-2026-08-14-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/ui-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/raid-events-and-tools-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/accounts-authority-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/spec-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/cos-testenv-map.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/registry-components.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: loom/registry-components.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S2
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+    dependents:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    upstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S2
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+    downstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    blockedBy:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S2
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · blocked by S2, S3, S4, S5, S6, S7
+      - 'depends on (10): S0, S1, S2, S3, C0, C1, S4, S5, S6, S7'
+      - 'needed by (1): X1'
+    edges:
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S0
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S2
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::C0
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+        kind: declared
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+        kind: declared

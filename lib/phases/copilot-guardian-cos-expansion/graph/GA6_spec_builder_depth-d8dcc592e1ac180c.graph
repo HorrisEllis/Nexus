@@ -1,0 +1,66 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GA6_spec_builder_depth:d8dcc592e1ac180c
+type: graph
+id: phase:GA6_spec_builder_depth:d8dcc592e1ac180c
+context: dependency graph of phase GA6_spec_builder_depth
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678176
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678176
+lastSeenAt: 1792787678176
+fingerprint: null
+payload:
+  for: GA6_spec_builder_depth
+  kind: phase
+  repo: null
+  hash: d8dcc592e1ac180c
+  nodes:
+    - path: lib/agent-tools/tools/governance/spec-wizard.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ui/home/areas/spec-wizard.js
+      role: changes
+      exists: true
+      system: ui
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/tools/governance/spec-wizard.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/governance/spec-wizard.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/copilot-guardian-cos-expansion-phasemap.spec::GA9_cos_expansion_via_copilot
+    dependents: []
+    upstream:
+      - docs/copilot-guardian-cos-expansion-phasemap.spec::GA9_cos_expansion_via_copilot
+    downstream: []
+    blockedBy:
+      - docs/copilot-guardian-cos-expansion-phasemap.spec::GA9_cos_expansion_via_copilot
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by GA9_cos_expansion_via_copilot
+      - 'depends on (1): GA9_cos_expansion_via_copilot'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/copilot-guardian-cos-expansion-phasemap.spec::GA9_cos_expansion_via_copilot
+        kind: declared

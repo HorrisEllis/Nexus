@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC6_guardian_enforcement
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC6_guardian_enforcement
+context: pipeline phase EC6_guardian_enforcement of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC6_guardian_enforcement (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676315
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676315
+lastSeenAt: 1792787676315
+fingerprint: null
+payload:
+  id: EC6_guardian_enforcement
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/economy-guard.js
+    - guardian/lib/dispatcher.js
+    - guardian/lib/index.js
+    - guardian/server.js
+  depends_on:
+    - EC1_usage_ledger
+    - EC2_gate
+    - EC3_token_constraints
+  blocks: []
+  spec: null
+  graph: f302afba554cf0ff

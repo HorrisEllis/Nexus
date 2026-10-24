@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_cortex-schema-registry-phasemap.spec::P1_schema_table_in_cortex
+type: phase
+id: docs_cortex-schema-registry-phasemap.spec::P1_schema_table_in_cortex
+context: pipeline phase P1_schema_table_in_cortex of docs/cortex-schema-registry-phasemap.spec
+intent: null
+summary: P1_schema_table_in_cortex (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678189
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678189
+lastSeenAt: 1792787678189
+fingerprint: null
+payload:
+  id: P1_schema_table_in_cortex
+  map: docs/cortex-schema-registry-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/types.js
+    - contracts/SYSTEM-CONTRACTS.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8a7709b7b3706ea7

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS3_feature_starts_as_a_spec
+type: phase
+id: docs_2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS3_feature_starts_as_a_spec
+context: >-
+  pipeline phase CS3_feature_starts_as_a_spec of
+  docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec
+intent: null
+summary: CS3_feature_starts_as_a_spec (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677469
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677469
+lastSeenAt: 1792787677469
+fingerprint: null
+payload:
+  id: CS3_feature_starts_as_a_spec
+  map: docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - CS1_capability_spec_and_surface_check
+  blocks: []
+  spec: null
+  graph: a5a6068f4e05064d

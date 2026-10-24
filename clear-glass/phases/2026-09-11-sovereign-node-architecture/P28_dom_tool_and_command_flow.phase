@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P28_dom_tool_and_command_flow
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P28_dom_tool_and_command_flow
+context: >-
+  pipeline phase P28_dom_tool_and_command_flow of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P28_dom_tool_and_command_flow (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675924
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675924
+lastSeenAt: 1792787675924
+fingerprint: null
+payload:
+  id: P28_dom_tool_and_command_flow
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/guardian-picker.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0b2ddb3502c0b4d6

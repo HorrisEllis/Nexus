@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-announce-pulse-repair-phasemap.spec::PR1_the_announced_registry_is_the_list
+type: phase
+id: docs_2026-10-05-announce-pulse-repair-phasemap.spec::PR1_the_announced_registry_is_the_list
+context: >-
+  pipeline phase PR1_the_announced_registry_is_the_list of
+  docs/2026-10-05-announce-pulse-repair-phasemap.spec
+intent: null
+summary: PR1_the_announced_registry_is_the_list (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676774
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676774
+lastSeenAt: 1792787676774
+fingerprint: null
+payload:
+  id: PR1_the_announced_registry_is_the_list
+  map: docs/2026-10-05-announce-pulse-repair-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+    - nexus/autopilot.js
+    - lib/expected-systems.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 641bbd05951e0d82

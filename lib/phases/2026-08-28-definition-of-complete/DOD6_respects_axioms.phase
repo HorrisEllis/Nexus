@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-definition-of-complete-phasemap.spec::DOD6_respects_axioms
+type: phase
+id: docs_2026-08-28-definition-of-complete-phasemap.spec::DOD6_respects_axioms
+context: pipeline phase DOD6_respects_axioms of docs/2026-08-28-definition-of-complete-phasemap.spec
+intent: null
+summary: DOD6_respects_axioms (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675473
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675473
+lastSeenAt: 1792787675473
+fingerprint: null
+payload:
+  id: DOD6_respects_axioms
+  map: docs/2026-08-28-definition-of-complete-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - scripts/precommit-check.js
+    - orchestrator/lib/spec-drift.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0f8fab7681fae1d5

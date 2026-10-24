@@ -1,0 +1,76 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SP1_one_spotlight:094a82781d95acdc
+type: graph
+id: phase:SP1_one_spotlight:094a82781d95acdc
+context: dependency graph of phase SP1_one_spotlight
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677076
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677076
+lastSeenAt: 1792787677076
+fingerprint: null
+payload:
+  for: SP1_one_spotlight
+  kind: phase
+  repo: null
+  hash: 094a82781d95acdc
+  nodes:
+    - path: clear-glass/src/page/field.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: ui/tv-shell/spotlight/spotlight.js
+      role: changes
+      exists: true
+      system: ui
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::UN1_nexus_surfaces_in_the_field
+    dependents:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DX1_diagnose_it
+    upstream:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CC1_claude_code_lands_like_every_agent
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CM2_every_command_for_every_agent
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::UN1_nexus_surfaces_in_the_field
+    downstream:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DX1_diagnose_it
+    blockedBy:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::UN1_nexus_surfaces_in_the_field
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DC1_a_click_that_did_nothing
+        files:
+          - clear-glass/src/page/field.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by UN1_nexus_surfaces_in_the_field
+      - 'depends on (1): UN1_nexus_surfaces_in_the_field · all upstream 3'
+      - 'needed by (1): DX1_diagnose_it'
+      - >-
+        same files as DC1_a_click_that_did_nothing with no order between them:
+        clear-glass/src/page/field.js
+    edges:
+      - from: docs/2026-10-07-compartment-control-and-activity-phasemap.spec::UN1_nexus_surfaces_in_the_field
+        kind: declared

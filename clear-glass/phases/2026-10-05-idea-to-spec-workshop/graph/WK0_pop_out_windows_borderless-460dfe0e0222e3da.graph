@@ -1,0 +1,64 @@
+envelope: 1
+uuid: nexus-export-graph-phase:WK0_pop_out_windows_borderless:460dfe0e0222e3da
+type: graph
+id: phase:WK0_pop_out_windows_borderless:460dfe0e0222e3da
+context: dependency graph of phase WK0_pop_out_windows_borderless
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677034
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677034
+lastSeenAt: 1792787677034
+fingerprint: null
+payload:
+  for: WK0_pop_out_windows_borderless
+  kind: phase
+  repo: null
+  hash: 460dfe0e0222e3da
+  nodes:
+    - path: clear-glass/src/main/compartment-window.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/window-frame.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/main/compartment-window.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/test/window-frame.test.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

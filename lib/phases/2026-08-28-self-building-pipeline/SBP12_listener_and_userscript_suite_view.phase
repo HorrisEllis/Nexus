@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP12_listener_and_userscript_suite_view
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP12_listener_and_userscript_suite_view
+context: >-
+  pipeline phase SBP12_listener_and_userscript_suite_view of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP12_listener_and_userscript_suite_view (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675484
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675484
+lastSeenAt: 1792787675484
+fingerprint: null
+payload:
+  id: SBP12_listener_and_userscript_suite_view
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-chat.js
+    - lib/agent-system/contracts.js
+    - lib/gemini-toolbox/agent-contracts.js
+    - lib/account-registry.js
+    - ui/home/areas/agent-suite.js
+    - lib/agent-tools/tools/identity/hat-forge.js
+    - lib/hat-forge.js
+    - clear-glass/src/mesh/agent-mesh.js
+  depends_on:
+    - SBP9_hat_forge_real_hats
+  blocks: []
+  spec: null
+  graph: dc9e3b5d6c5777b3

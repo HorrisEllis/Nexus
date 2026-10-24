@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP6_the_build_surface_opens:cb6c79f8c844d719
+type: graph
+id: phase:HP6_the_build_surface_opens:cb6c79f8c844d719
+context: dependency graph of phase HP6_the_build_surface_opens
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677131
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677131
+lastSeenAt: 1792787677131
+fingerprint: null
+payload:
+  for: HP6_the_build_surface_opens
+  kind: phase
+  repo: null
+  hash: cb6c79f8c844d719
+  nodes:
+    - path: idearium/ui/js/phases.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP1_stale_spreads_along_dependencies
+    dependents: []
+    upstream:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP1_stale_spreads_along_dependencies
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): HP1_stale_spreads_along_dependencies'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-09-hardening-pass-phasemap.spec::HP1_stale_spreads_along_dependencies
+        kind: inferred

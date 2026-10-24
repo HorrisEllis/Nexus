@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::X1_node_decomposition_tool
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::X1_node_decomposition_tool
+context: >-
+  pipeline phase X1_node_decomposition_tool of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: X1_node_decomposition_tool (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675848
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675848
+lastSeenAt: 1792787675848
+fingerprint: null
+payload:
+  id: X1_node_decomposition_tool
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/boot.js
+    - lib/tool-index.js
+    - lib/agent-tools/tools/clear-glass/command-index.js
+    - ollama/lib/command-index.js
+  depends_on:
+    - T1_extend_system_scaffold
+  blocks: []
+  spec: null
+  graph: 6dc260de77610029

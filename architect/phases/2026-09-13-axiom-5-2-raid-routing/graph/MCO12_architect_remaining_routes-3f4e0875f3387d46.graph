@@ -1,0 +1,168 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MCO12_architect_remaining_routes:3f4e0875f3387d46
+type: graph
+id: phase:MCO12_architect_remaining_routes:3f4e0875f3387d46
+context: dependency graph of phase MCO12_architect_remaining_routes
+intent: null
+summary: 13 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675941
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675941
+lastSeenAt: 1792787675941
+fingerprint: null
+payload:
+  for: MCO12_architect_remaining_routes
+  kind: phase
+  repo: null
+  hash: 3f4e0875f3387d46
+  nodes:
+    - path: architect/service.js
+      role: changes
+      exists: true
+      system: architect
+    - path: architect/compile-route.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/config.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/registry-components.js
+      role: uses
+      exists: true
+      system: architect
+    - path: architect/src/spec/Blueprint.js
+      role: uses
+      exists: true
+      system: architect
+    - path: cortex/core/raid/contract-intake.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: hooks/index.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hook-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-connect.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: architect/service.js
+      to: lib/data-home.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/hook-registry.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/src/spec/Blueprint.js
+      kind: requires
+    - from: architect/service.js
+      to: intelligence/cfr/index.js
+      kind: requires
+    - from: architect/service.js
+      to: hooks/index.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/compile-route.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/config.js
+      kind: requires
+    - from: architect/service.js
+      to: nexus/nexus-connect.js
+      kind: requires
+    - from: architect/service.js
+      to: architect/registry-components.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: architect/service.js
+      to: intelligence/alk/index.js
+      kind: requires
+  crossings:
+    - from: architect/service.js
+      to: intelligence/cfr/index.js
+      fromSystem: architect
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: hooks/index.js
+      fromSystem: architect
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: nexus/nexus-connect.js
+      fromSystem: architect
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: intelligence/alk/index.js
+      fromSystem: architect
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO8_wire_the_honest_subset
+    dependents: []
+    upstream:
+      - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO7_map_real_proxy_traffic
+      - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO8_wire_the_honest_subset
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): MCO8_wire_the_honest_subset · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO8_wire_the_honest_subset
+        kind: declared

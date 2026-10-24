@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
+context: pipeline phase M0 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: M0 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676082
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676082
+lastSeenAt: 1792787676082
+fingerprint: null
+payload:
+  id: M0
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - nexus/autopilot.js
+    - guardian/jaa-store.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 90edb156dad368a7

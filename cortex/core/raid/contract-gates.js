@@ -97,7 +97,37 @@ function _refHash(ref, root) {
   if (!ref.path || !fs.existsSync(fp)) return null;
   let buf = fs.readFileSync(fp);
   if (Array.isArray(ref.lines)) buf = Buffer.from(buf.toString('utf8').split('\n').slice(ref.lines[0] - 1, ref.lines[1]).join('\n'));
+  else if (ref.phase) { const blk = phaseBlock(buf.toString('utf8'), ref.phase); if (blk !== null) buf = Buffer.from(blk); }
   return sha(buf);
+}
+
+/**
+ * phaseBlock(text, id) → the phase's own block in its map, without its status lines; null when the id is not there.
+ * §0.60.226 SL7 — a contract's input was the whole phasemap, so the pipeline's own status writes (SL1's 'DONE …', the build's
+ * 'active', status_previous kept above them) and any edit to another phase in the same map STALEd every brick, and a resumed
+ * build re-sent every file (test-contract-phase-build CP-03). A ref { path, phase } hashes only what the phase says it is.
+ * Found by its key line (not by line numbers, which shift when status_previous is inserted); a status key and its continuation
+ * lines (deeper indent), and comment lines (the writer's `# roadmap edit`), are left out.
+ */
+function phaseBlock(text, id) {
+  const lines = String(text).split('\n');
+  const esc = String(id).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const at = lines.findIndex(l => new RegExp(`^\\s{2,6}${esc}:`).test(l));
+  if (at < 0) return null;
+  const ind = lines[at].match(/^\s*/)[0].length;
+  const out = [lines[at].replace(/:\s*\{.*$/, ':')];
+  let skip = -1;
+  for (let i = at + 1; i < lines.length; i++) {
+    const l = lines[i];
+    if (l.trim() && l.match(/^\s*/)[0].length <= ind) break;
+    const li = l.match(/^\s*/)[0].length;
+    if (skip >= 0 && (!l.trim() || li > skip)) continue;
+    skip = -1;
+    if (/^\s+(status|status_previous):/.test(l)) { skip = li; continue; }
+    if (/^\s*#/.test(l)) continue;   // a `# roadmap edit` comment the status writer leaves above the status
+    out.push(l);
+  }
+  return out.join('\n').replace(/\s+$/, '');
 }
 
 function _order(gates) {
@@ -753,5 +783,5 @@ async function schedule(p, { root = DEFAULT_ROOT, executors = null, concurrency 
   return { rounds: maxRounds, log, complete: e3.complete, why: e3.why, blocked: aside() };
 }
 
-module.exports = { VERSION, STATES, load, save, validate, evaluate, completion, holds, verifyOutcome, check, packet, scaffold, record, checkCondition, compare, unitsOf, depthOf,
+module.exports = { VERSION, STATES, phaseBlock, load, save, validate, evaluate, completion, holds, verifyOutcome, check, packet, scaffold, record, checkCondition, compare, unitsOf, depthOf,
   packetTokens, Boundaries, shouldSplit, split, schedule, assess, classifyFailure, FAILURE_CLASSES };

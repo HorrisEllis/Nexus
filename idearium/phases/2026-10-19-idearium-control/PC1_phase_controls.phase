@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-idearium-control-phasemap.spec::PC1_phase_controls
+type: phase
+id: docs_2026-10-19-idearium-control-phasemap.spec::PC1_phase_controls
+context: pipeline phase PC1_phase_controls of docs/2026-10-19-idearium-control-phasemap.spec
+intent: null
+summary: PC1_phase_controls (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677890
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677890
+lastSeenAt: 1792787677890
+fingerprint: null
+payload:
+  id: PC1_phase_controls
+  map: docs/2026-10-19-idearium-control-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/phases.js
+    - lib/phase-dag.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 530560b20a4638d0

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
+context: >-
+  pipeline phase TX10_component_registry_discipline of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX10_component_registry_discipline (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678133
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678133
+lastSeenAt: 1792787678133
+fingerprint: null
+payload:
+  id: TX10_component_registry_discipline
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/bootstrap.js
+    - loom/maps/session-2026-08-14-map.js
+    - lib/account-registry.js
+    - lib/agent-tools/tools/identity/hat-forge.js
+    - lib/hat-forge.js
+    - lib/agent-tools/tools/query/file-tree.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 95d1f8ac41b8d673

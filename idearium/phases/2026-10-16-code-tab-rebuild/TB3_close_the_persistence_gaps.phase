@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB3_close_the_persistence_gaps
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB3_close_the_persistence_gaps
+context: pipeline phase TB3_close_the_persistence_gaps of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB3_close_the_persistence_gaps (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677661
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677661
+lastSeenAt: 1792787677661
+fingerprint: null
+payload:
+  id: TB3_close_the_persistence_gaps
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TB2_persistence_audit
+  blocks: []
+  spec: null
+  graph: 84bee17604195980

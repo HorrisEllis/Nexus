@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
 context: pipeline phase SF6_surface of docs/2026-10-21-snowflake-compartment-phasemap.spec
 intent: null
-summary: SF6_surface (surface) — 4 file(s)
+summary: SF6_surface (surface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792502100077
+exported_at: 1792787678054
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502100077
-lastSeenAt: 1792502100077
+firstSeenAt: 1792787678054
+lastSeenAt: 1792787678054
 fingerprint: null
 payload:
   id: SF6_surface
@@ -23,7 +23,6 @@ payload:
     - clear-glass/src/ipc/bridge.js
     - clear-glass/renderer/settings/sections/network.js
     - idearium/cli/route-commands.js
-    - lib/agent-tools/tools/clear-glass/net.js
   depends_on:
     - SF1_honest_detection
     - SF2_bridge_sources

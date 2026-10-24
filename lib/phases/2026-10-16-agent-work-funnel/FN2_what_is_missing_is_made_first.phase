@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-agent-work-funnel-phasemap.spec::FN2_what_is_missing_is_made_first
+type: phase
+id: docs_2026-10-16-agent-work-funnel-phasemap.spec::FN2_what_is_missing_is_made_first
+context: >-
+  pipeline phase FN2_what_is_missing_is_made_first of
+  docs/2026-10-16-agent-work-funnel-phasemap.spec
+intent: null
+summary: FN2_what_is_missing_is_made_first (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677645
+lastSeenAt: 1792787677645
+fingerprint: null
+payload:
+  id: FN2_what_is_missing_is_made_first
+  map: docs/2026-10-16-agent-work-funnel-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/work-funnel.js
+    - lib/spec-collect.js
+    - idearium/repo/phases.js
+    - lib/phase-plan.js
+  depends_on:
+    - FN1_every_door_goes_through_it
+  blocks: []
+  spec: null
+  graph: 94e1791ebf408132

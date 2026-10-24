@@ -231,7 +231,7 @@ spec:
         of gap \"create compartment\" had before it was fixed a few turns
         ago in this session. Template creation via co-pilot: not evident
         anywhere, genuinely open."
-      depends_on: [GA6]
+      depends_on: []   # 2026-10-23 SL3: was [GA6]. GA6 named GA9 too, a cycle. GA6's own words use GA9's work ("a natural pairing with GA9's COS-template work"); GA9's items (list/delete triggers, create-template-from-compartment) need nothing from GA6, so GA9 goes first (§0.1, decided from the phases' own text). Kept here (§0.3).
       does: >
         Would add real chat triggers for "list compartments" / "delete
         compartment X" following the EXACT pattern already used for

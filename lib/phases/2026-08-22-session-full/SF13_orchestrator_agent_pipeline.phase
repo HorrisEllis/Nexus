@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF13_orchestrator_agent_pipeline
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF13_orchestrator_agent_pipeline
+context: pipeline phase SF13_orchestrator_agent_pipeline of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF13_orchestrator_agent_pipeline (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675370
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675370
+lastSeenAt: 1792787675370
+fingerprint: null
+payload:
+  id: SF13_orchestrator_agent_pipeline
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/seam/stream.js
+    - docs/idearium-agent-pipeline.spec
+    - lib/end-state.js
+  depends_on:
+    - SF9_account_identity_capture
+    - SF10_agent_notes
+  blocks: []
+  spec: null
+  graph: de5ad9a019286d15

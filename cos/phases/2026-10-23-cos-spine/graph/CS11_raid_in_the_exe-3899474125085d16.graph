@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792757382224
+exported_at: 1792787678075
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382224
-lastSeenAt: 1792757382224
+firstSeenAt: 1792787678075
+lastSeenAt: 1792787678075
 fingerprint: null
 payload:
   for: CS11_raid_in_the_exe
@@ -181,8 +181,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 3351ce8a7e938b5b
-    layer: 6
+    layer: 9
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
@@ -195,11 +194,18 @@ payload:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
       - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
       - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM6_cortex_unclumped
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
@@ -225,9 +231,18 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 3351ce8a7e938b5b · layer 6 · blocked by CS4_every_system_a_compartment,
-        DB6_move_the_crossings, IM6_cortex_unclumped, CS_D8_raid_home
+        layer 9 · blocked by CS4_every_system_a_compartment, DB6_move_the_crossings,
+        IM6_cortex_unclumped, CS_D8_raid_home
       - >-
         depends on (4): CS4_every_system_a_compartment, DB6_move_the_crossings,
-        IM6_cortex_unclumped, CS_D8_raid_home · all upstream 21
+        IM6_cortex_unclumped, CS_D8_raid_home · all upstream 28
       - 'needed by (1): CS7_spawn_despawn_and_balance · all downstream 2'
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+        kind: declared
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+        kind: declared
+      - from: docs/2026-10-17-infrastructure-migration-phasemap.spec::IM6_cortex_unclumped
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D8_raid_home
+        kind: declared

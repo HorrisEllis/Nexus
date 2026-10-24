@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-warp-verification-phasemap.spec::P2_constitution_gate
+type: phase
+id: docs_raid-warp-verification-phasemap.spec::P2_constitution_gate
+context: pipeline phase P2_constitution_gate of docs/raid-warp-verification-phasemap.spec
+intent: null
+summary: P2_constitution_gate (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792814558643
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814558643
+lastSeenAt: 1792814558643
+fingerprint: null
+payload:
+  id: P2_constitution_gate
+  map: docs/raid-warp-verification-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/selector-check.js
+    - clear-glass/src/automation/dom.js
+    - clear-glass/src/releases/deliver.js
+    - lib/constitutional-ai.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8aac611e5c52d941

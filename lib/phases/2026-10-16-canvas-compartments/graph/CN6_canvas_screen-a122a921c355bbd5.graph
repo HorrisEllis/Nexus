@@ -1,0 +1,88 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CN6_canvas_screen:a122a921c355bbd5
+type: graph
+id: phase:CN6_canvas_screen:a122a921c355bbd5
+context: dependency graph of phase CN6_canvas_screen
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677652
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677652
+lastSeenAt: 1792787677652
+fingerprint: null
+payload:
+  for: CN6_canvas_screen
+  kind: phase
+  repo: null
+  hash: a122a921c355bbd5
+  nodes:
+    - path: cos/archetype/eravos-domains/music/core/sdk-music.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/archetype/eravos.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/canvas-compartments.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/run.html
+      role: changes
+      exists: false
+      system: null
+    - path: cos/archetype/registry.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cos-bridge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/file-tree-plan.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/canvas-compartments.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: lib/canvas-compartments.js
+      to: lib/file-tree-plan.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/canvas-compartments.js
+      kind: requires
+    - from: cos/archetype/registry.js
+      to: cos/archetype/eravos.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-16-canvas-compartments-phasemap.spec::CN3_nested_compartments
+    dependents: []
+    upstream:
+      - docs/2026-10-16-canvas-compartments-phasemap.spec::CN3_nested_compartments
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): CN3_nested_compartments'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-16-canvas-compartments-phasemap.spec::CN3_nested_compartments
+        kind: inferred

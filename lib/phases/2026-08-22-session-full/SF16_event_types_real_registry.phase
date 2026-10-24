@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF16_event_types_real_registry
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF16_event_types_real_registry
+context: pipeline phase SF16_event_types_real_registry of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF16_event_types_real_registry (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675376
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675376
+lastSeenAt: 1792787675376
+fingerprint: null
+payload:
+  id: SF16_event_types_real_registry
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/event-types.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 71639da711eaaf6d

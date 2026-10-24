@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 7 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792653394688
+exported_at: 1792787677921
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394688
-lastSeenAt: 1792653394688
+firstSeenAt: 1792787677921
+lastSeenAt: 1792787677921
 fingerprint: null
 payload:
   for: RC1_watchers_never_kill_a_kernel
@@ -249,14 +249,16 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 4470939bf8678599
     layer: 0
     deps: []
     dependents:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC2_linear_node_scan
     upstream: []
     downstream:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::MEM1_cortex_keeps_the_books
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC2_linear_node_scan
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC3_windows_safe_node_names
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS2_every_system_home
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS3_nodes_are_the_data
@@ -267,11 +269,13 @@ payload:
     blockedBy: []
     unlocks:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC2_linear_node_scan
     conflicts: []
     dangling: []
     lines:
-      - DAG 4470939bf8678599 · layer 0
+      - layer 0
       - 'depends on (0): —'
       - >-
-        needed by (1): SS1_system_store_adoption · all downstream 8 · finishing it unlocks
-        SS1_system_store_adoption
+        needed by (2): SS1_system_store_adoption, RC2_linear_node_scan · all downstream 10 ·
+        finishing it unlocks SS1_system_store_adoption, RC2_linear_node_scan
+    edges: []

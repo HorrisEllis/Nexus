@@ -110,7 +110,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   let run = null, rows = [];
   await test('CB-02', 'a two-file phase on Ollama is two requests, each naming one file, each under 2400 chars, each its own session', async () => {
     assert.ok(map && ph && ph.files.length === 2, `the expansion wrote a two-file phase: ${JSON.stringify(exd.phasemap && exd.phasemap.phases).slice(0, 300)}`);
-    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama' });
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama', rebuild: true });
     assert.strictEqual(b.status, 200, JSON.stringify(b.json).slice(0, 400));
     run = b.json.data || b.json;
     assert.strictEqual(run.chunking.chunk, true, JSON.stringify(run.chunking));
@@ -166,7 +166,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
   await test('CB-08', 'a proposal whose test fails is unproven — an empty placeholder no longer passes for it', async () => {
     sent.length = 0; brokenTest = true;
-    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama' });
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama', rebuild: true });
     const id = (b.json.data || b.json).runId;
     const rs = await settle(id, x => x.some(r => ['proven', 'unproven', 'no-proof'].includes(r.state)));
     const end = rs.find(r => ['proven', 'unproven', 'no-proof'].includes(r.state));
@@ -177,7 +177,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
   await test('CB-06', 'a first chunk that does not land stops the run, naming it; the second is never sent; it is a fault', async () => {
     sent.length = 0; failFirst = true;
-    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama' });
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama', rebuild: true });
     assert.strictEqual(b.status, 200, JSON.stringify(b.json).slice(0, 300));
     const id = (b.json.data || b.json).runId;
     const rs = await settle(id, x => x.some(r => r.chunkStopped));
@@ -216,7 +216,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     ].join('\n');
     const put = await R('PUT', `/api/repos/${repoUuid}/charter`, { text });
     assert.strictEqual(put.status, 200, JSON.stringify(put.json).slice(0, 400));
-    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama' });
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama', rebuild: true });
     const id = (b.json.data || b.json).runId;
     const rs = await settle(id, x => x.some(r => ['proven', 'unproven', 'no-proof'].includes(r.state)));
     assert.ok(sent.length === 2 && sent.every(m => /axiom: use the least amount of code/.test(m.message)), 'the axiom is in every chunk\'s request');
@@ -273,7 +273,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
   await test('CB-09', '0.45.0 CM3 — a build names only its phase (`idearium repo phase <repo> <phase> build`): the map is found; an unknown phase is said', async () => {
     sent.length = 0;
-    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { phase: ph.key, backend: 'ollama' });
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { phase: ph.key, backend: 'ollama', rebuild: true });
     assert.strictEqual(b.status, 200, JSON.stringify(b.json).slice(0, 300));
     const id = (b.json.data || b.json).runId;
     await settle(id, x => x.some(r => ['proven', 'unproven', 'no-proof'].includes(r.state)) || x.some(r => r.chunkStopped));

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P20_intelligence_reflexive_cfr_field
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P20_intelligence_reflexive_cfr_field
+context: >-
+  pipeline phase P20_intelligence_reflexive_cfr_field of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P20_intelligence_reflexive_cfr_field (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675908
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675908
+lastSeenAt: 1792787675908
+fingerprint: null
+payload:
+  id: P20_intelligence_reflexive_cfr_field
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/cfr/field.js
+    - intelligence/lattice/associative-lattice.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9c9558f07253d4ee

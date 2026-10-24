@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::E1
+type: phase
+id: docs_2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::E1
+context: pipeline phase E1 of docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec
+intent: null
+summary: E1 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676012
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676012
+lastSeenAt: 1792787676012
+fingerprint: null
+payload:
+  id: E1
+  map: docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - erosmancer/erosmancer-os/src/api/server.ts
+    - clear-glass/src/main/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 48449faf7b7f8211

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-infrastructure-migration-phasemap.spec::IM7_the_ui_on_the_registry
+type: phase
+id: docs_2026-10-17-infrastructure-migration-phasemap.spec::IM7_the_ui_on_the_registry
+context: >-
+  pipeline phase IM7_the_ui_on_the_registry of
+  docs/2026-10-17-infrastructure-migration-phasemap.spec
+intent: null
+summary: IM7_the_ui_on_the_registry (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677795
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677795
+lastSeenAt: 1792787677795
+fingerprint: null
+payload:
+  id: IM7_the_ui_on_the_registry
+  map: docs/2026-10-17-infrastructure-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-store.js
+    - nexus/nexus-bus.js
+    - nexus/nexus-connect.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a6263831c386b825

@@ -1,0 +1,230 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL7_emerge_files_to_emerge_folder:3ab7a1f57237920a
+type: graph
+id: phase:BL7_emerge_files_to_emerge_folder:3ab7a1f57237920a
+context: dependency graph of phase BL7_emerge_files_to_emerge_folder
+intent: null
+summary: 25 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675406
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675406
+lastSeenAt: 1792787675406
+fingerprint: null
+payload:
+  for: BL7_emerge_files_to_emerge_folder
+  kind: phase
+  repo: null
+  hash: 3ab7a1f57237920a
+  nodes:
+    - path: cli/boot-systems.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/diagnose.js
+      role: changes
+      exists: true
+      system: cli
+    - path: contracts/SYSTEM-CONTRACTS.js
+      role: changes
+      exists: true
+      system: contracts
+    - path: emerge/emerge-codegen-v2.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge-ide.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge-kernel.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: ollama/ollama-runtime.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: tests/kernel.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: orchestrator/lib/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/ollama-runtime.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: contracts/nodes/axioms.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/bottlenecks.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/deltas.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/divergent.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/edges.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/events.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/faults.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/gaps.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/interaction-contracts.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/ledgers.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/systems.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: nexus/nexus-connect.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: cli/boot-systems.js
+      to: nexus/nexus-connect.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/axioms.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/systems.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/events.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/gaps.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/faults.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/edges.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/deltas.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/divergent.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/bottlenecks.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/ledgers.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/interaction-contracts.node.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cli/boot-systems.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: ollama/ollama-runtime.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: ollama/ollama-runtime.js
+      kind: requires
+    - from: orchestrator/lib/autonomous-loop.js
+      to: ollama/ollama-runtime.js
+      kind: requires
+    - from: tests/modules/ollama-runtime.test.js
+      to: ollama/ollama-runtime.js
+      kind: requires
+  crossings:
+    - from: cli/boot-systems.js
+      to: nexus/nexus-connect.js
+      fromSystem: cli
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: cli/boot-systems.js
+      fromSystem: orchestrator
+      toSystem: cli
+      kind: system
+      known: true
+    - from: clear-glass/src/copilot/bridge.js
+      to: ollama/ollama-runtime.js
+      fromSystem: clear-glass
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: idearium/agent-suite/index.js
+      to: ollama/ollama-runtime.js
+      fromSystem: idearium
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: orchestrator/lib/autonomous-loop.js
+      to: ollama/ollama-runtime.js
+      fromSystem: orchestrator
+      toSystem: ollama
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL11_orchestrator_folder_consolidation
+      - docs/2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+    upstream: []
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL11_orchestrator_folder_consolidation
+      - docs/2026-08-23-backlog-phasemap.spec::BL12_nexus_heal_loop_to_diagnostic
+      - docs/2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL11_orchestrator_folder_consolidation
+      - docs/2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): BL11_orchestrator_folder_consolidation, BL16_per_server_configs · all
+        downstream 3 · finishing it unlocks BL11_orchestrator_folder_consolidation,
+        BL16_per_server_configs
+    edges: []

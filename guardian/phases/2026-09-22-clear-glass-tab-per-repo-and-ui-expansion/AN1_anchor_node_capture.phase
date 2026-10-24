@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::AN1_anchor_node_capture
+type: phase
+id: docs_2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::AN1_anchor_node_capture
+context: >-
+  pipeline phase AN1_anchor_node_capture of
+  docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+intent: null
+summary: AN1_anchor_node_capture (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675989
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675989
+lastSeenAt: 1792787675989
+fingerprint: null
+payload:
+  id: AN1_anchor_node_capture
+  map: docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b26c7c736581b2bd

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME14_across_callers
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME14_across_callers
+context: pipeline phase ME14_across_callers of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME14_across_callers (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677179
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677179
+lastSeenAt: 1792787677179
+fingerprint: null
+payload:
+  id: ME14_across_callers
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/modules/test-one-model-engine.test.js
+  depends_on:
+    - ME12_callers_moved
+  blocks: []
+  spec: null
+  graph: 0d67fbee2de537c0

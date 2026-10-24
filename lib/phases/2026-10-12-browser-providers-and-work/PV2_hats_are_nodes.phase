@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV2_hats_are_nodes
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV2_hats_are_nodes
+context: pipeline phase PV2_hats_are_nodes of docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: PV2_hats_are_nodes (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677301
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677301
+lastSeenAt: 1792787677301
+fingerprint: null
+payload:
+  id: PV2_hats_are_nodes
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/hat-forge.js
+    - guardian/lib/node-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 66c258dbf8ec8139

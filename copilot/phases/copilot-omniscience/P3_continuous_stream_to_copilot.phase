@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-omniscience-phasemap.spec::P3_continuous_stream_to_copilot
+type: phase
+id: docs_copilot-omniscience-phasemap.spec::P3_continuous_stream_to_copilot
+context: pipeline phase P3_continuous_stream_to_copilot of docs/copilot-omniscience-phasemap.spec
+intent: null
+summary: P3_continuous_stream_to_copilot (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678183
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678183
+lastSeenAt: 1792787678183
+fingerprint: null
+payload:
+  id: P3_continuous_stream_to_copilot
+  map: docs/copilot-omniscience-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/stream-digest.js
+    - lib/stream-digest.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 074a4aec5b0e38e9

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::FP1_feature_pilot
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::FP1_feature_pilot
+context: pipeline phase FP1_feature_pilot of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: FP1_feature_pilot (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677910
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677910
+lastSeenAt: 1792787677910
+fingerprint: null
+payload:
+  id: FP1_feature_pilot
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - features/verify-first.feature.json
+    - features/phase-dag.feature.json
+    - features/file-manager.feature.json
+  depends_on:
+    - NC1_neutral_core_boundary
+    - AD2_javascript_adapter
+  blocks: []
+  spec: null
+  graph: 6f5778d20d6e74db

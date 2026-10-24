@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR1_architect_retirement_and_hooks_to_loom
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR1_architect_retirement_and_hooks_to_loom
+context: >-
+  pipeline phase AR1_architect_retirement_and_hooks_to_loom of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: AR1_architect_retirement_and_hooks_to_loom (?) — 16 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675846
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675846
+lastSeenAt: 1792787675846
+fingerprint: null
+payload:
+  id: AR1_architect_retirement_and_hooks_to_loom
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - architect/src/spec/Blueprint.js
+    - docs/hooks-migration.spec
+    - hooks/index.js
+    - cortex/boot.js
+    - architect/service.js
+    - copilot/intents.js
+    - lib/nerve/index.js
+    - scripts/generate-hooks.js
+    - scripts/verify-wires.js
+    - lib/version.js
+    - tests/modules/nerve-phase0-phase1.test.js
+    - tests/modules/nexus-nerve.test.js
+    - lib/agent-tools/tools/query/nexus-status.js
+    - lib/tool-index.js
+    - lib/agent-tools/tools/clear-glass/command-index.js
+    - ollama/lib/command-index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c44714dfce980acf

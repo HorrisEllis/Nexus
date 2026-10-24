@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O3
+type: phase
+id: docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O3
+context: pipeline phase O3 of docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+intent: null
+summary: O3 (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676021
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676021
+lastSeenAt: 1792787676021
+fingerprint: null
+payload:
+  id: O3
+  map: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/vector-memory.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5cacc4d6647c995e

@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS9_spec_and_phase_build_ui:1dcee63c429e1ed4
+type: graph
+id: phase:BS9_spec_and_phase_build_ui:1dcee63c429e1ed4
+context: dependency graph of phase BS9_spec_and_phase_build_ui
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676204
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676204
+lastSeenAt: 1792787676204
+fingerprint: null
+payload:
+  for: BS9_spec_and_phase_build_ui
+  kind: phase
+  repo: null
+  hash: 1dcee63c429e1ed4
+  nodes:
+    - path: idearium/ui/js/living-spec.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/phases.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+    dependents:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    upstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
+      - docs/2026-09-29-build-surface-phasemap.spec::BS3_baseline_deviation
+      - docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+      - docs/2026-09-29-build-surface-phasemap.spec::BS5_spec_to_phasemap
+      - docs/2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+    downstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      - docs/2026-09-29-build-surface-phasemap.spec::BS18_sync_ci_theme
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6
+      - 'depends on (1): BS7_api · all upstream 6'
+      - >-
+        needed by (2): BS11_plan_panel, BS12_release · all downstream 3 · finishing it unlocks
+        BS11_plan_panel, BS12_release
+    edges:
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+        kind: declared

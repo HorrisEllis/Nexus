@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB49_an_idea_runs_through_by_itself
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB49_an_idea_runs_through_by_itself
+context: >-
+  pipeline phase SB49_an_idea_runs_through_by_itself of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB49_an_idea_runs_through_by_itself (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676949
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676949
+lastSeenAt: 1792787676949
+fingerprint: null
+payload:
+  id: SB49_an_idea_runs_through_by_itself
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/idea-run.js
+    - idearium/api/index.js
+    - idearium/ui/js/app.js
+  depends_on:
+    - SB46_every_step_by_hand
+    - SB48_proof_in_cos_closes_the_phase
+  blocks: []
+  spec: null
+  graph: 9272ab6662f32a97

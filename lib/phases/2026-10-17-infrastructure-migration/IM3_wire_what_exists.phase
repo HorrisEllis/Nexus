@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-infrastructure-migration-phasemap.spec::IM3_wire_what_exists
+type: phase
+id: docs_2026-10-17-infrastructure-migration-phasemap.spec::IM3_wire_what_exists
+context: pipeline phase IM3_wire_what_exists of docs/2026-10-17-infrastructure-migration-phasemap.spec
+intent: null
+summary: IM3_wire_what_exists (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677792
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677792
+lastSeenAt: 1792787677792
+fingerprint: null
+payload:
+  id: IM3_wire_what_exists
+  map: docs/2026-10-17-infrastructure-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-15-gate-held-work-phasemap.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 44f254336361884c

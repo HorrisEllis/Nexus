@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::CG2_one_source_of_truth_for_the_browser
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::CG2_one_source_of_truth_for_the_browser
+context: >-
+  pipeline phase CG2_one_source_of_truth_for_the_browser of
+  docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: CG2_one_source_of_truth_for_the_browser (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677272
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677272
+lastSeenAt: 1792787677272
+fingerprint: null
+payload:
+  id: CG2_one_source_of_truth_for_the_browser
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/browser.html
+    - clear-glass/renderer/browser.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b8620004bc4e6726

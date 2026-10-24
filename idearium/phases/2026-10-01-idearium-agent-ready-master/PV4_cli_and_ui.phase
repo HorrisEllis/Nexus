@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PV4_cli_and_ui
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PV4_cli_and_ui
+context: pipeline phase PV4_cli_and_ui of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PV4_cli_and_ui (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676509
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676509
+lastSeenAt: 1792787676509
+fingerprint: null
+payload:
+  id: PV4_cli_and_ui
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/index.js
+    - idearium/ui/js/plan-panel.js
+  depends_on:
+    - PV3_prove_loop
+  blocks: []
+  spec: null
+  graph: 5720214899fed175

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::JA1_the_matcher_consults_learned
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::JA1_the_matcher_consults_learned
+context: >-
+  pipeline phase JA1_the_matcher_consults_learned of
+  docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: JA1_the_matcher_consults_learned (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792814522028
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814522028
+lastSeenAt: 1792814522028
+fingerprint: null
+payload:
+  id: JA1_the_matcher_consults_learned
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/matcher.js
+  depends_on:
+    - GA0c_the_learned_map_is_per_site
+  blocks: []
+  spec: null
+  graph: 8650f43be33938ea

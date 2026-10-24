@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+context: pipeline phase T1_tool_listing_command of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: T1_tool_listing_command (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675590
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675590
+lastSeenAt: 1792787675590
+fingerprint: null
+payload:
+  id: T1_tool_listing_command
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/hat-forge.js
+    - copilot/lib/self-model.js
+    - lib/repo-agent.js
+    - lib/agent-tools/tools/identity/hat-forge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 360e0c29705d7e89

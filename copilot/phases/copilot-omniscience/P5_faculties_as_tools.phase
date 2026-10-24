@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-omniscience-phasemap.spec::P5_faculties_as_tools
+type: phase
+id: docs_copilot-omniscience-phasemap.spec::P5_faculties_as_tools
+context: pipeline phase P5_faculties_as_tools of docs/copilot-omniscience-phasemap.spec
+intent: null
+summary: P5_faculties_as_tools (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678185
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678185
+lastSeenAt: 1792787678185
+fingerprint: null
+payload:
+  id: P5_faculties_as_tools
+  map: docs/copilot-omniscience-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/module-builder.js
+    - copilot/axiom-manager.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7ce0d0cbf1e459e5

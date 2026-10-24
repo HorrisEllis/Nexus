@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-google-signin-phasemap.spec::GS3_domains_and_version
+type: phase
+id: docs_2026-10-16-google-signin-phasemap.spec::GS3_domains_and_version
+context: pipeline phase GS3_domains_and_version of docs/2026-10-16-google-signin-phasemap.spec
+intent: null
+summary: GS3_domains_and_version (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677704
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677704
+lastSeenAt: 1792787677704
+fingerprint: null
+payload:
+  id: GS3_domains_and_version
+  map: docs/2026-10-16-google-signin-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.108
+  files:
+    - clear-glass/src/fingerprint/firefox-version.js
+    - clear-glass/src/contexts/google-signin.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: be7633a1c9ac3502

@@ -1,0 +1,189 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GQ5_command:176adf36740d9ccb
+type: graph
+id: phase:GQ5_command:176adf36740d9ccb
+context: dependency graph of phase GQ5_command
+intent: null
+summary: 18 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677881
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677881
+lastSeenAt: 1792787677881
+fingerprint: null
+payload:
+  for: GQ5_command
+  kind: phase
+  repo: null
+  hash: 176adf36740d9ccb
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-shape.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-tunnel.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-shape.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-tunnel.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ4_phase_gate_keeps_the_test
+    dependents:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ6_ui
+    upstream:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ1_quality_stream
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ3_brick_tests
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ4_phase_gate_keeps_the_test
+    downstream:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ6_ui
+    blockedBy:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ4_phase_gate_keeps_the_test
+    unlocks:
+      - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ6_ui
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by GQ2_brick_gate_runs_the_test, GQ4_phase_gate_keeps_the_test
+      - 'depends on (2): GQ2_brick_gate_runs_the_test, GQ4_phase_gate_keeps_the_test · all upstream 4'
+      - 'needed by (1): GQ6_ui · finishing it unlocks GQ6_ui'
+    edges:
+      - from: docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ2_brick_gate_runs_the_test
+        kind: declared
+      - from: docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ4_phase_gate_keeps_the_test
+        kind: declared

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
+context: pipeline phase CX0_codex_component_store of docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: CX0_codex_component_store (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676758
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676758
+lastSeenAt: 1792787676758
+fingerprint: null
+payload:
+  id: CX0_codex_component_store
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-store.js
+    - lib/codex/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a6c33671bbad00ca

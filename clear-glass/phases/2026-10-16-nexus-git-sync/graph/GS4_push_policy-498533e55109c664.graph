@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GS4_push_policy:498533e55109c664
+type: graph
+id: phase:GS4_push_policy:498533e55109c664
+context: dependency graph of phase GS4_push_policy
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677723
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677723
+lastSeenAt: 1792787677723
+fingerprint: null
+payload:
+  for: GS4_push_policy
+  kind: phase
+  repo: null
+  hash: 498533e55109c664
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-16-nexus-git-sync-phasemap.spec::GS1_commands
+    dependents: []
+    upstream:
+      - docs/2026-10-16-nexus-git-sync-phasemap.spec::GS1_commands
+    downstream: []
+    blockedBy:
+      - docs/2026-10-16-nexus-git-sync-phasemap.spec::GS1_commands
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by GS1_commands
+      - 'depends on (1): GS1_commands'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-16-nexus-git-sync-phasemap.spec::GS1_commands
+        kind: declared

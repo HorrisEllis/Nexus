@@ -1,0 +1,82 @@
+envelope: 1
+uuid: nexus-export-graph-phase:JB5_varied_wording_true_facts:88d2ca99cff642c0
+type: graph
+id: phase:JB5_varied_wording_true_facts:88d2ca99cff642c0
+context: dependency graph of phase JB5_varied_wording_true_facts
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677318
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677318
+lastSeenAt: 1792787677318
+fingerprint: null
+payload:
+  for: JB5_varied_wording_true_facts
+  kind: phase
+  repo: null
+  hash: 88d2ca99cff642c0
+  nodes:
+    - path: copilot/lib/reword.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: guardian/lib/eros-typist.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/semantic-variant.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/semantic-variant.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: copilot/lib/reword.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/reword.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/eros-typist.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB7_the_follow_up
+    upstream: []
+    downstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB7_the_follow_up
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): JB7_the_follow_up'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

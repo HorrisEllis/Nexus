@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::T3_tool_to_event_mapping
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::T3_tool_to_event_mapping
+context: pipeline phase T3_tool_to_event_mapping of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: T3_tool_to_event_mapping (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675597
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675597
+lastSeenAt: 1792787675597
+fingerprint: null
+payload:
+  id: T3_tool_to_event_mapping
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - T1_tool_listing_command
+    - T2_event_taxonomy_per_system
+  blocks: []
+  spec: null
+  graph: 963fe75d4ce7268a

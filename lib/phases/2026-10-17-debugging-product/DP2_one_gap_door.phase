@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-debugging-product-phasemap.spec::DP2_one_gap_door
+type: phase
+id: docs_2026-10-17-debugging-product-phasemap.spec::DP2_one_gap_door
+context: pipeline phase DP2_one_gap_door of docs/2026-10-17-debugging-product-phasemap.spec
+intent: null
+summary: DP2_one_gap_door (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677763
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677763
+lastSeenAt: 1792787677763
+fingerprint: null
+payload:
+  id: DP2_one_gap_door
+  map: docs/2026-10-17-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/gap-field.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2ff9716abc657ff5

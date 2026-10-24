@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR11_spec_project_import_to_compartment
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR11_spec_project_import_to_compartment
+context: >-
+  pipeline phase SR11_spec_project_import_to_compartment of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR11_spec_project_import_to_compartment (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675726
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675726
+lastSeenAt: 1792787675726
+fingerprint: null
+payload:
+  id: SR11_spec_project_import_to_compartment
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/project-compartment.js
+    - lib/dynamic-project-parser.js
+    - idearium/api/index.js
+    - lib/autonomous-loop.js
+    - tests/modules/test-sr11-import-pipeline.js
+    - lib/intake.js
+    - lib/case-library.js
+    - run-all.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3ba40fae475bab7c

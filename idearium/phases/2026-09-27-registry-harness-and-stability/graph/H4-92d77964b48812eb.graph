@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:H4:92d77964b48812eb
+type: graph
+id: phase:H4:92d77964b48812eb
+context: dependency graph of phase H4
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787676074
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676074
+lastSeenAt: 1792787676074
+fingerprint: null
+payload:
+  for: H4
+  kind: phase
+  repo: null
+  hash: 92d77964b48812eb
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

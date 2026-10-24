@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DK1_desktop_image_and_login
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DK1_desktop_image_and_login
+context: >-
+  pipeline phase DK1_desktop_image_and_login of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DK1_desktop_image_and_login (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676419
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676419
+lastSeenAt: 1792787676419
+fingerprint: null
+payload:
+  id: DK1_desktop_image_and_login
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/setup-job.js
+    - cos/workspace/index.js
+    - idearium/ui/js/app.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0ce31841af1a7c24

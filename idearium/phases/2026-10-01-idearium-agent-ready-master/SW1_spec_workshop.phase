@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
+context: pipeline phase SW1_spec_workshop of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: SW1_spec_workshop (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676521
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676521
+lastSeenAt: 1792787676521
+fingerprint: null
+payload:
+  id: SW1_spec_workshop
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - architect/src/ui/spec-builder.html
+    - idearium/lib/idea-workbench.js
+    - idearium/ui/js/app.js
+    - lib/spec-library.js
+  depends_on:
+    - IL1_spec_library_as_ideas
+    - CX1_context_cascade
+    - UM1_nexus_understands_james
+  blocks: []
+  spec: null
+  graph: 72769d08ce74fe9f

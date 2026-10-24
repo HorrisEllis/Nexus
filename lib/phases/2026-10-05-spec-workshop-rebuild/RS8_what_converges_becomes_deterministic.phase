@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS8_what_converges_becomes_deterministic
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS8_what_converges_becomes_deterministic
+context: >-
+  pipeline phase RS8_what_converges_becomes_deterministic of
+  docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS8_what_converges_becomes_deterministic (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677048
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677048
+lastSeenAt: 1792787677048
+fingerprint: null
+payload:
+  id: RS8_what_converges_becomes_deterministic
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - warp/dispatch/population.js
+    - lib/component-store.js
+  depends_on:
+    - RS4_the_pipeline_on_warp2
+  blocks: []
+  spec: null
+  graph: 14a9d76c2db6ad37

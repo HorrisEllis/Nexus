@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB6_hundreds_of_specs
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB6_hundreds_of_specs
+context: pipeline phase SB6_hundreds_of_specs of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB6_hundreds_of_specs (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676812
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676812
+lastSeenAt: 1792787676812
+fingerprint: null
+payload:
+  id: SB6_hundreds_of_specs
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/spec-library.js
+    - idearium/lib/spec-library-import.js
+    - lib/component-store.js
+  depends_on:
+    - SB3_the_section_prompt_is_domain_agnostic
+    - SB5_nexus_rebuilds_a_system_from_its_spec
+  blocks: []
+  spec: null
+  graph: 121a25b96ccdf275

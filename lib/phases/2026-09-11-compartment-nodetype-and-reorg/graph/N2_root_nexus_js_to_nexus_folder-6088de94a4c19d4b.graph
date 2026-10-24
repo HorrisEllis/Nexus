@@ -1,0 +1,300 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N2_root_nexus_js_to_nexus_folder:6088de94a4c19d4b
+type: graph
+id: phase:N2_root_nexus_js_to_nexus_folder:6088de94a4c19d4b
+context: dependency graph of phase N2_root_nexus_js_to_nexus_folder
+intent: null
+summary: 26 node(s), 14 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675844
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675844
+lastSeenAt: 1792787675844
+fingerprint: null
+payload:
+  for: N2_root_nexus_js_to_nexus_folder
+  kind: phase
+  repo: null
+  hash: 6088de94a4c19d4b
+  nodes:
+    - path: loom/templates/system-scaffold.js
+      role: changes
+      exists: true
+      system: loom
+    - path: nexus/nexus-bus.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: nexus/nexus-cfr-influence.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: nexus/nexus-connect.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: nexus/nexus-knowledge.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: nexus/nexus-query.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: ollama/ollama-runtime.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/alk/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/execution/run-pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constitutional-ai.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: intelligence/lattice/associative-lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/heartbeat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ollama-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/tape.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: orchestrator/lib/pulse.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: nexus/nexus-connect.js
+      to: lib/heartbeat.js
+      kind: requires
+    - from: nexus/nexus-connect.js
+      to: intelligence/lattice/associative-lattice.js
+      kind: requires
+    - from: nexus/nexus-connect.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: ollama/ollama-runtime.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/ollama-runtime.js
+      to: lib/ollama-activity.js
+      kind: requires
+    - from: ollama/ollama-runtime.js
+      to: ollama/lib/tape.js
+      kind: requires
+    - from: loom/templates/system-scaffold.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: guardian/server.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/index.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/server.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/run-pipeline.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/constitutional-ai.js
+      to: nexus/nexus-bus.js
+      kind: requires
+  crossings:
+    - from: nexus/nexus-connect.js
+      to: intelligence/lattice/associative-lattice.js
+      fromSystem: nexus
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: nexus/nexus-connect.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: nexus
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      fromSystem: cortex
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: nexus/nexus-bus.js
+      fromSystem: cortex
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: nexus/nexus-bus.js
+      fromSystem: guardian
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/alk/index.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/gap/predicate.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/index.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/routes.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/server.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/execution/run-pipeline.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: lib/compartment-engine.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: lib/component-ledger.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: lib/constitutional-ai.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T4_cos_role_confirmed
+    dependents:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N3_stray_root_files_found_after_N1
+    upstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T4_cos_role_confirmed
+    downstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N3_stray_root_files_found_after_N1
+    blockedBy:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T4_cos_role_confirmed
+    unlocks:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N3_stray_root_files_found_after_N1
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by D1_diagnostic_real_folder, T4_cos_role_confirmed
+      - 'depends on (2): D1_diagnostic_real_folder, T4_cos_role_confirmed · all upstream 3'
+      - >-
+        needed by (1): N3_stray_root_files_found_after_N1 · finishing it unlocks
+        N3_stray_root_files_found_after_N1
+    edges:
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+        kind: inferred
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T4_cos_role_confirmed
+        kind: inferred

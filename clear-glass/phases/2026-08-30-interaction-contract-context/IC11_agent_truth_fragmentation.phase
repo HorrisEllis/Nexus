@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC11_agent_truth_fragmentation
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC11_agent_truth_fragmentation
+context: >-
+  pipeline phase IC11_agent_truth_fragmentation of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC11_agent_truth_fragmentation (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792814552780
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814552780
+lastSeenAt: 1792814552780
+fingerprint: null
+payload:
+  id: IC11_agent_truth_fragmentation
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/copilot-cli.js
+    - clear-glass/renderer/library/sections/accounts.js
+    - clear-glass/renderer/selector-check.js
+    - copilot/cli.js
+    - cos/app/shell.js
+    - tests/modules/contract-intake-dependency-graph.test.js
+    - copilot/lib/self-model.js
+    - clear-glass/src/mesh/agent-mesh.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0a51b71bfcb6edc5

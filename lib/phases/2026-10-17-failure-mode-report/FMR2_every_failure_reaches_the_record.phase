@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-failure-mode-report-phasemap.spec::FMR2_every_failure_reaches_the_record
+type: phase
+id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR2_every_failure_reaches_the_record
+context: >-
+  pipeline phase FMR2_every_failure_reaches_the_record of
+  docs/2026-10-17-failure-mode-report-phasemap.spec
+intent: null
+summary: FMR2_every_failure_reaches_the_record (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677779
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677779
+lastSeenAt: 1792787677779
+fingerprint: null
+payload:
+  id: FMR2_every_failure_reaches_the_record
+  map: docs/2026-10-17-failure-mode-report-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/self-heal/failure-intake.js
+    - lib/failure-post.js
+    - lib/error-log.js
+    - lib/cos-run.js
+    - lib/flight-data.js
+    - lib/cos-debug-report.js
+    - cortex/core/raid/contract-gates.js
+    - clear-glass/src/diagnostic/error-capture.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7d5ad1479d3e7570

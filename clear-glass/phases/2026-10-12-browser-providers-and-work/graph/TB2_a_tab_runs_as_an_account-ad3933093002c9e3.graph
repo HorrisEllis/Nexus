@@ -1,0 +1,149 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB2_a_tab_runs_as_an_account:ad3933093002c9e3
+type: graph
+id: phase:TB2_a_tab_runs_as_an_account:ad3933093002c9e3
+context: dependency graph of phase TB2_a_tab_runs_as_an_account
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677289
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677289
+lastSeenAt: 1792787677289
+fingerprint: null
+payload:
+  for: TB2_a_tab_runs_as_an_account
+  kind: phase
+  repo: null
+  hash: ad3933093002c9e3
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/vault.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/session-hub.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/nexus-options-autoboot.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/security/vault-key.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/shortcuts/registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/toolbar/commands.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/cookies/vault.js
+      to: clear-glass/src/security/vault-key.js
+      kind: requires
+    - from: clear-glass/src/cookies/vault.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/toolbar/commands.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/shortcuts/registry.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/cookies/session-hub.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/nexus-options-autoboot.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+    dependents:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB4_bookmark_checklists
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB5_site_and_account_nodes
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB2_the_copilot_hat_agent_and_account
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB0_the_webview_session_proved
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+    downstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB1_the_agent_writes_the_gig_file
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB2_the_copilot_hat_agent_and_account
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB3_autofill_fields_mapped_by_pick
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB4_bookmark_checklists
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB5_site_and_account_nodes
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB6_element_endpoints
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+    unlocks:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB4_bookmark_checklists
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB5_site_and_account_nodes
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB2_the_copilot_hat_agent_and_account
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by TB1_a_tab_is_its_own_webview
+      - 'depends on (1): TB1_a_tab_is_its_own_webview · all upstream 2'
+      - >-
+        needed by (3): TB4_bookmark_checklists, TB5_site_and_account_nodes,
+        JB2_the_copilot_hat_agent_and_account · all downstream 6 · finishing it unlocks
+        TB4_bookmark_checklists, TB5_site_and_account_nodes, JB2_the_copilot_hat_agent_and_account
+    edges:
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+        kind: declared

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+context: >-
+  pipeline phase LM2_registry_as_hub_with_watchdog of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM2_registry_as_hub_with_watchdog (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675529
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675529
+lastSeenAt: 1792787675529
+fingerprint: null
+payload:
+  id: LM2_registry_as_hub_with_watchdog
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/maps/raid-events-and-tools-map.js
+  depends_on:
+    - LM1_spec_as_living_model
+  blocks: []
+  spec: null
+  graph: 519224c23b9cef9e

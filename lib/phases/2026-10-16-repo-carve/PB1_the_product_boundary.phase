@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::PB1_the_product_boundary
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::PB1_the_product_boundary
+context: pipeline phase PB1_the_product_boundary of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: PB1_the_product_boundary (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677744
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677744
+lastSeenAt: 1792787677744
+fingerprint: null
+payload:
+  id: PB1_the_product_boundary
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.116 — test-repo-carve 14/14 (CV-13, CV-14); the flight recorder 173 files / 9
+    systems, nothing missing, 61/61 load alone"
+  files:
+    - products/flight-recorder/product.json
+    - lib/repo-carve.js
+    - products/flight-recorder/bin/flight-recorder.js
+    - lib/change-record.js
+    - lib/run-state.js
+    - lib/test-map.js
+    - lib/proposal-evidence.js
+  depends_on:
+    - CV2_untangle_with_rf0
+  blocks: []
+  spec: null
+  graph: cb390adf322a5601

@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792653394707
+exported_at: 1792787677930
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394707
-lastSeenAt: 1792653394707
+firstSeenAt: 1792787677930
+lastSeenAt: 1792787677930
 fingerprint: null
 payload:
   for: UI1_toolbox_and_store_explorer
@@ -31,7 +31,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 4470939bf8678599
     layer: 2
     deps:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
@@ -40,12 +39,14 @@ payload:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
     downstream: []
-    blockedBy:
-      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - DAG 4470939bf8678599 · layer 2 · blocked by SS1_system_store_adoption
+      - layer 2 · ready
       - 'depends on (1): SS1_system_store_adoption · all upstream 2'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+        kind: declared

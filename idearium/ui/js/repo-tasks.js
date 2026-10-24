@@ -382,6 +382,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // 0.60.22 — James: "maybe add a retry button." A failed or stalled phase build, built again by the same route Build uses.
 async function rtRetry(uuid, map, phase, btn) {
   if (btn) btn.disabled = true;
-  try { await api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ startedBy: 'person:ui:retry', map, phase, note: 'retry: the previous run failed or stalled' }) }); if (typeof toast === 'function') toast(`${phase}: building again`, 'ok'); }
+  // §0.60.226 SL7 — the one door: NOT_A_PHASE, NO_GRAPH, DEPS_OPEN and a complete phase are answered the same way as ▶ build
+  // (0.60.233: this comment had been written mid-line, which commented out the toast and the try's closing brace — the file did not parse)
+  try { await (typeof phaseBuildPost === 'function' ? phaseBuildPost(uuid, { startedBy: 'person:ui:retry', map, phase, note: 'retry: the previous run failed or stalled' }) : api(`/api/repos/${uuid}/phases/build`, { method: 'POST', body: JSON.stringify({ startedBy: 'person:ui:retry', map, phase, note: 'retry: the previous run failed or stalled' }) })); if (typeof toast === 'function') toast(`${phase}: building again`, 'ok'); }
   catch (e) { if (typeof toast === 'function') toast(`${phase} not retried: ${e.message}`, 'err'); if (btn) btn.disabled = false; }
 }

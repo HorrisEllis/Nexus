@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792775550200
+exported_at: 1792787678079
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550200
-lastSeenAt: 1792775550200
+firstSeenAt: 1792787678079
+lastSeenAt: 1792787678079
 fingerprint: null
 payload:
   for: SL0_what_can_be_built_now
@@ -223,7 +223,6 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 6577681f08a50367
     layer: 0
     deps: []
     dependents:
@@ -234,12 +233,16 @@ payload:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL6_the_loop_counts_itself
     upstream: []
     downstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL10_the_pipeline_simulated
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL5_when_a_proven_change_lands_alone
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL6_the_loop_counts_itself
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL7_build_again_is_asked_for
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL8_the_agent_maps_what_nexus_cannot
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL9_every_phase_a_node
     blockedBy: []
     unlocks:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
@@ -249,10 +252,11 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 6577681f08a50367 · layer 0
+      - layer 0
       - 'depends on (0): —'
       - >-
         needed by (5): SL1_a_proven_phase_closes_itself, SL2_done_by_evidence,
-        SL3_the_backlog_groomed, SL4_the_loop, SL6_the_loop_counts_itself · all downstream 6 ·
+        SL3_the_backlog_groomed, SL4_the_loop, SL6_the_loop_counts_itself · all downstream 10 ·
         finishing it unlocks SL1_a_proven_phase_closes_itself, SL2_done_by_evidence,
         SL3_the_backlog_groomed, SL6_the_loop_counts_itself
+    edges: []

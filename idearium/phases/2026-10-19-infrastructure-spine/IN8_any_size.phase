@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::IN8_any_size
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN8_any_size
+context: pipeline phase IN8_any_size of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: IN8_any_size (foundation) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677906
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677906
+lastSeenAt: 1792787677906
+fingerprint: null
+payload:
+  id: IN8_any_size
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - idearium/repo/nexus-self.js
+    - loom/bootstrap.js
+    - lib/jaa-store.js
+    - idearium/repo/import-pipeline.js
+  depends_on:
+    - IN0_baseline
+  blocks: []
+  spec: null
+  graph: 93a371269b367b64

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::MX1_nothing_built_unmapped
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::MX1_nothing_built_unmapped
+context: >-
+  pipeline phase MX1_nothing_built_unmapped of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: MX1_nothing_built_unmapped (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677323
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677323
+lastSeenAt: 1792787677323
+fingerprint: null
+payload:
+  id: MX1_nothing_built_unmapped
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/roadmap.js
+    - idearium/repo/living-spec.js
+    - idearium/lib/workshop.js
+  depends_on:
+    - MX0_phases_tagged_to_components
+  blocks: []
+  spec: null
+  graph: eebb2de339d0afaf

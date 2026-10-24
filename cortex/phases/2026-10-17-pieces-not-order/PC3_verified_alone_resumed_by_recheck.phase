@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::PC3_verified_alone_resumed_by_recheck
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::PC3_verified_alone_resumed_by_recheck
+context: >-
+  pipeline phase PC3_verified_alone_resumed_by_recheck of
+  docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: PC3_verified_alone_resumed_by_recheck (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677799
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677799
+lastSeenAt: 1792787677799
+fingerprint: null
+payload:
+  id: PC3_verified_alone_resumed_by_recheck
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-gates.js
+    - cortex/core/raid/contract-adapters.js
+  depends_on:
+    - PC1_the_point_first
+  blocks: []
+  spec: null
+  graph: c2d9bfbcf28fdd80

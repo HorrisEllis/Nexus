@@ -1,0 +1,220 @@
+envelope: 1
+uuid: nexus-export-graph-phase:X3_nodes_route:c4340ed9cd3aa9e9
+type: graph
+id: phase:X3_nodes_route:c4340ed9cd3aa9e9
+context: dependency graph of phase X3_nodes_route
+intent: null
+summary: 19 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676065
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676065
+lastSeenAt: 1792787676065
+fingerprint: null
+payload:
+  for: X3_nodes_route
+  kind: phase
+  repo: null
+  hash: c4340ed9cd3aa9e9
+  nodes:
+    - path: lib/system-nodes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: cli/nodes.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-node-relations.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cli/boot-systems.js
+      role: uses
+      exists: true
+      system: cli
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: nexus/nexus-cfr-influence.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: nexus/nexus-knowledge.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: nexus/nexus-query.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cli/boot-systems.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-query.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-knowledge.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-cfr-influence.js
+      kind: requires
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+    - from: cli/nodes.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: tests/modules/test-system-node-relations.test.js
+      to: lib/system-nodes.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: cli/boot-systems.js
+      fromSystem: orchestrator
+      toSystem: cli
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-bus.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-query.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-knowledge.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: nexus/nexus-cfr-influence.js
+      fromSystem: orchestrator
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: cli
+      toSystem: orchestrator
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X2_guardian_hat_agent
+    dependents:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    upstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::C1_copilot_contract
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X2_guardian_hat_agent
+    downstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (2): X1_system_nodes, X2_guardian_hat_agent · all upstream 3'
+      - 'needed by (1): Z1_release · finishing it unlocks Z1_release'
+    edges:
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+        kind: declared
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X2_guardian_hat_agent
+        kind: declared

@@ -1,0 +1,110 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC6_assembled_and_checked_whole:02773cb04a5358ed
+type: graph
+id: phase:PC6_assembled_and_checked_whole:02773cb04a5358ed
+context: dependency graph of phase PC6_assembled_and_checked_whole
+intent: null
+summary: 6 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677802
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677802
+lastSeenAt: 1792787677802
+fingerprint: null
+payload:
+  for: PC6_assembled_and_checked_whole
+  kind: phase
+  repo: null
+  hash: 02773cb04a5358ed
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC2_any_order
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC3_verified_alone_resumed_by_recheck
+    dependents: []
+    upstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC0a_what_a_piece_depends_on
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC0b_first_kinds
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC0c_who_cuts
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC2_any_order
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC3_verified_alone_resumed_by_recheck
+    downstream: []
+    blockedBy:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC2_any_order
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC3_verified_alone_resumed_by_recheck
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by PC2_any_order, PC3_verified_alone_resumed_by_recheck
+      - 'depends on (2): PC2_any_order, PC3_verified_alone_resumed_by_recheck · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-17-pieces-not-order-phasemap.spec::PC2_any_order
+        kind: declared
+      - from: docs/2026-10-17-pieces-not-order-phasemap.spec::PC3_verified_alone_resumed_by_recheck
+        kind: declared

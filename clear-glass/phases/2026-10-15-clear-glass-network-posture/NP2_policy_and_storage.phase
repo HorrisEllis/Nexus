@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP2_policy_and_storage
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP2_policy_and_storage
+context: pipeline phase NP2_policy_and_storage of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP2_policy_and_storage (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677477
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677477
+lastSeenAt: 1792787677477
+fingerprint: null
+payload:
+  id: NP2_policy_and_storage
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: PARTIAL-BUILT-0.60.60
+  files:
+    - clear-glass/src/net/policy.js
+    - clear-glass/src/net/vault.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 80223590c3dad8ed

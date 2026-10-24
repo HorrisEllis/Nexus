@@ -33,7 +33,8 @@ test('PS-01', 'derive: blocks resolve, graphs ready with the DAG slice, owners r
     assert.deepStrictEqual(d.blocks.missing, [], `${d.phase}: ${d.blocks.missing}`);
     assert.ok(d.ready, `${d.phase} graph not ready`);
     const dag = d.graphEnv.payload.dag;
-    assert.ok(dag && dag.dagHash && Array.isArray(dag.upstream) && dag.lines.length, `${d.phase} has no dag slice`);
+    // 0.60.229 SL9: the whole DAG's hash is no longer stored per phase (every node changed on any edit anywhere); the slice is
+    assert.ok(dag && !('dagHash' in dag) && 'layer' in dag && Array.isArray(dag.upstream) && Array.isArray(dag.edges) && dag.lines.length, `${d.phase} has no dag slice`);
     assert.ok(/^(lib|[a-z-]+)\/phases\/2026-10-20-belief-loop$/.test(d.dir.split(path.sep).join('/')), d.dir);
   }
   const cf = derived.find(d => d.phase === 'CF1_confidence_from_evidence');

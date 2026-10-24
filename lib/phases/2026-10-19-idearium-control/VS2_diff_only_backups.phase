@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-idearium-control-phasemap.spec::VS2_diff_only_backups
+type: phase
+id: docs_2026-10-19-idearium-control-phasemap.spec::VS2_diff_only_backups
+context: pipeline phase VS2_diff_only_backups of docs/2026-10-19-idearium-control-phasemap.spec
+intent: null
+summary: VS2_diff_only_backups (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677895
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677895
+lastSeenAt: 1792787677895
+fingerprint: null
+payload:
+  id: VS2_diff_only_backups
+  map: docs/2026-10-19-idearium-control-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/repo-versions.js
+    - idearium/repo/snapshot.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 536284767e3a671e

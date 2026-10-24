@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-live-mind-phasemap.spec::P6_copilot_programmable
+type: phase
+id: docs_nexus-live-mind-phasemap.spec::P6_copilot_programmable
+context: pipeline phase P6_copilot_programmable of docs/nexus-live-mind-phasemap.spec
+intent: null
+summary: P6_copilot_programmable (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678263
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678263
+lastSeenAt: 1792787678263
+fingerprint: null
+payload:
+  id: P6_copilot_programmable
+  map: docs/nexus-live-mind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chains.js
+    - lib/ledger-fanin/boot.js
+    - lib/snapshot-trigger.js
+    - docs/snapshot-trigger-phasemap.spec
+    - service/nexus-diagnostic.js
+    - cortex/self-heal/failure-intake.js
+    - cos/archetype/eravos-domains/music/core/music-theory.js
+    - cos/archetype/genesis-catalog.js
+    - clear-glass/src/mesh/agent-mesh.js
+    - intelligence/relational-field.js
+    - lib/component-ledger.js
+    - intelligence/snapshot-trigger.js
+    - diagnostic/nexus-diagnostic.js
+  depends_on:
+    - P4_copilot_awareness
+    - P5
+  blocks: []
+  spec: null
+  graph: 52e733c13ed35b06

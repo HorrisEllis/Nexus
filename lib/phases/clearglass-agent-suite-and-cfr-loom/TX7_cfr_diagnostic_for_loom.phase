@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX7_cfr_diagnostic_for_loom
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX7_cfr_diagnostic_for_loom
+context: >-
+  pipeline phase TX7_cfr_diagnostic_for_loom of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX7_cfr_diagnostic_for_loom (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678129
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678129
+lastSeenAt: 1792787678129
+fingerprint: null
+payload:
+  id: TX7_cfr_diagnostic_for_loom
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cli/cfr-debug.js
+    - guardian/memory_store/cfr_state.json
+    - lib/component-registry.js
+    - loom/scanners/phasemap-map.js
+    - lib/diagnostic-report.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c1a82bad016c63ef

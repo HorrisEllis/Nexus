@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB34_context_is_the_code_tab_the_graphs_and_memory
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB34_context_is_the_code_tab_the_graphs_and_memory
+context: >-
+  pipeline phase SB34_context_is_the_code_tab_the_graphs_and_memory of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB34_context_is_the_code_tab_the_graphs_and_memory (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676910
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676910
+lastSeenAt: 1792787676910
+fingerprint: null
+payload:
+  id: SB34_context_is_the_code_tab_the_graphs_and_memory
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent.js
+    - lib/code-intel/index.js
+    - lib/context-atlas.js
+    - lib/registry-harness.js
+  depends_on:
+    - SB33_the_agent_runs_the_pipeline
+  blocks: []
+  spec: null
+  graph: 2adfa9887db541f0

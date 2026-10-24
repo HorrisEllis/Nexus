@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LS4_live_in_the_code_tab_and_the_work_surface:02a22b8ffa0fbdc1
+type: graph
+id: phase:LS4_live_in_the_code_tab_and_the_work_surface:02a22b8ffa0fbdc1
+context: dependency graph of phase LS4_live_in_the_code_tab_and_the_work_surface
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677004
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677004
+lastSeenAt: 1792787677004
+fingerprint: null
+payload:
+  for: LS4_live_in_the_code_tab_and_the_work_surface
+  kind: phase
+  repo: null
+  hash: 02a22b8ffa0fbdc1
+  nodes:
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/code-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/plan-panel.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS3_one_feed_for_every_agent
+    dependents: []
+    upstream:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS1_the_bridge_job_holds_what_is_written_so_far
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS2_copilot_sends_the_text_as_it_comes
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS3_one_feed_for_every_agent
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): LS3_one_feed_for_every_agent · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-cli-data-code-phasemap.spec::LS3_one_feed_for_every_agent
+        kind: declared

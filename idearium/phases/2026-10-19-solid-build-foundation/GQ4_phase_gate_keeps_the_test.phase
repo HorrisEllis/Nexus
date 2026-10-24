@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-solid-build-foundation-phasemap.spec::GQ4_phase_gate_keeps_the_test
+type: phase
+id: docs_2026-10-19-solid-build-foundation-phasemap.spec::GQ4_phase_gate_keeps_the_test
+context: >-
+  pipeline phase GQ4_phase_gate_keeps_the_test of
+  docs/2026-10-19-solid-build-foundation-phasemap.spec
+intent: null
+summary: GQ4_phase_gate_keeps_the_test (api) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677947
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677947
+lastSeenAt: 1792787677947
+fingerprint: null
+payload:
+  id: GQ4_phase_gate_keeps_the_test
+  map: docs/2026-10-19-solid-build-foundation-phasemap.spec
+  repo: null
+  layer: api
+  status: OPEN
+  files:
+    - idearium/api/index.js
+  depends_on:
+    - GQ1_quality_stream
+  blocks:
+    - '"phase_gate_quality"'
+  spec: null
+  graph: dea1678c49093827

@@ -1,0 +1,70 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ME0_the_inventory_proved:9d64861419da9a7a
+type: graph
+id: phase:ME0_the_inventory_proved:9d64861419da9a7a
+context: dependency graph of phase ME0_the_inventory_proved
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677158
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677158
+lastSeenAt: 1792787677158
+fingerprint: null
+payload:
+  for: ME0_the_inventory_proved
+  kind: phase
+  repo: null
+  hash: 9d64861419da9a7a
+  nodes:
+    - path: docs/2026-10-09-one-model-engine-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-one-model-engine.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME8_the_drainers_run_the_engine
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME15_the_docs_tell_the_truth
+    upstream: []
+    downstream:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME10_nested_ladders_folded
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME11_old_settings_translated
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME13_no_bypass
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME14_across_callers
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME15_the_docs_tell_the_truth
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME2_caller_policy
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME4_one_attempt_record
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME5_one_chooser
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME6_one_learner
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME7_raid_spine_joins
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME8_the_drainers_run_the_engine
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME9_the_layers_below_report
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME15_the_docs_tell_the_truth
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (3): ME1_one_failure_list, ME8_the_drainers_run_the_engine,
+        ME15_the_docs_tell_the_truth · all downstream 15 · finishing it unlocks
+        ME1_one_failure_list, ME15_the_docs_tell_the_truth
+    edges: []

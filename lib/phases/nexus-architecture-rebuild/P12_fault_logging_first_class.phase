@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P12_fault_logging_first_class
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P12_fault_logging_first_class
+context: pipeline phase P12_fault_logging_first_class of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P12_fault_logging_first_class (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678246
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678246
+lastSeenAt: 1792787678246
+fingerprint: null
+payload:
+  id: P12_fault_logging_first_class
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/self-heal/fault-taxonomy.js
+    - cortex/self-heal/escalation.js
+    - lib/fault-log.js
+    - lib/agent-tools/index.js
+    - copilot/lib/self-model.js
+    - intelligence/bda/kernel.js
+    - lib/reflection.js
+    - nexus/nexus-cfr-influence.js
+    - lib/config-governance.js
+    - lib/agent-tools/tools/query/fault-log.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 45cc2cf048e77d57

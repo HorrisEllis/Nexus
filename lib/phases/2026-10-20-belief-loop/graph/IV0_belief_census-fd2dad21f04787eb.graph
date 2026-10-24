@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303344
+exported_at: 1792787677970
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303344
-lastSeenAt: 1792456303344
+firstSeenAt: 1792787677970
+lastSeenAt: 1792787677970
 fingerprint: null
 payload:
   for: IV0_belief_census
@@ -27,7 +27,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 0
     deps: []
     dependents:
@@ -44,6 +43,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 7583ffef0c495b95 · layer 0 · ready
+      - layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): IV1_invariant_kinds · all downstream 5'
+    edges: []

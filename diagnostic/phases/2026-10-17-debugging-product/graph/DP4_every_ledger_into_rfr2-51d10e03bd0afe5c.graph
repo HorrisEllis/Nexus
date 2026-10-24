@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DP4_every_ledger_into_rfr2:51d10e03bd0afe5c
+type: graph
+id: phase:DP4_every_ledger_into_rfr2:51d10e03bd0afe5c
+context: dependency graph of phase DP4_every_ledger_into_rfr2
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677766
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677766
+lastSeenAt: 1792787677766
+fingerprint: null
+payload:
+  for: DP4_every_ledger_into_rfr2
+  kind: phase
+  repo: null
+  hash: 51d10e03bd0afe5c
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
+    upstream: []
+    downstream:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP9_crystallize_the_fix
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): DP6_reproduce_in_cos · all downstream 3'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

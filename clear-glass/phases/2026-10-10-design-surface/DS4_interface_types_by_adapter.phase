@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-design-surface-phasemap.spec::DS4_interface_types_by_adapter
+type: phase
+id: docs_2026-10-10-design-surface-phasemap.spec::DS4_interface_types_by_adapter
+context: pipeline phase DS4_interface_types_by_adapter of docs/2026-10-10-design-surface-phasemap.spec
+intent: null
+summary: DS4_interface_types_by_adapter (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677199
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677199
+lastSeenAt: 1792787677199
+fingerprint: null
+payload:
+  id: DS4_interface_types_by_adapter
+  map: docs/2026-10-10-design-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - DS2_pick_and_edit_any_page
+  blocks: []
+  spec: null
+  graph: 23e21f01a2f3ded3

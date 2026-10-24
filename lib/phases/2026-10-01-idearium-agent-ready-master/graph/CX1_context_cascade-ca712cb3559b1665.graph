@@ -1,0 +1,241 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CX1_context_cascade:ca712cb3559b1665
+type: graph
+id: phase:CX1_context_cascade:ca712cb3559b1665
+context: dependency graph of phase CX1_context_cascade
+intent: null
+summary: 25 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676482
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676482
+lastSeenAt: 1792787676482
+fingerprint: null
+payload:
+  for: CX1_context_cascade
+  kind: phase
+  repo: null
+  hash: ca712cb3559b1665
+  nodes:
+    - path: lib/agent-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/clear-glass/search-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/analysis.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: ollama/lib/dispatch.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: test-new-plugins.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/response-sink.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/naming.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/extract-code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-context.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/extract-code.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/chat-logger.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/search-engine.js
+      to: lib/agent-tools/naming.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/search-engine.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/search-engine.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: copilot/analysis.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/clear-glass/search-engine.js
+      kind: requires
+    - from: test-new-plugins.js
+      to: lib/agent-tools/tools/clear-glass/search-engine.js
+      kind: requires
+  crossings:
+    - from: lib/agent-memory.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+    - from: lib/agent-memory.js
+      to: guardian/lib/response-sink.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/clear-glass/search-engine.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+    dependents:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+    downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+    blockedBy:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+    unlocks:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by DT3_failure_modes_routes_and_preflight
+      - 'depends on (1): DT3_failure_modes_routes_and_preflight · all upstream 4'
+      - >-
+        needed by (3): CP1_copilot_drives_idearium_and_talks_to_its_agents,
+        UM1_nexus_understands_james, SW1_spec_workshop · finishing it unlocks
+        CP1_copilot_drives_idearium_and_talks_to_its_agents
+    edges:
+      - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+        kind: declared

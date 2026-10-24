@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-debugging-product-phasemap.spec::DP1_the_doors
+type: phase
+id: docs_2026-10-17-debugging-product-phasemap.spec::DP1_the_doors
+context: pipeline phase DP1_the_doors of docs/2026-10-17-debugging-product-phasemap.spec
+intent: null
+summary: DP1_the_doors (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677762
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677762
+lastSeenAt: 1792787677762
+fingerprint: null
+payload:
+  id: DP1_the_doors
+  map: docs/2026-10-17-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9c5b97f48be11c5b

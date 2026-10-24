@@ -1,0 +1,110 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IN6_systems_onto_the_spine:cdcb05f20732c595
+type: graph
+id: phase:IN6_systems_onto_the_spine:cdcb05f20732c595
+context: dependency graph of phase IN6_systems_onto_the_spine
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677903
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677903
+lastSeenAt: 1792787677903
+fingerprint: null
+payload:
+  for: IN6_systems_onto_the_spine
+  kind: phase
+  repo: null
+  hash: cdcb05f20732c595
+  nodes:
+    - path: docs/2026-10-19-pipeline-root-causes-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/drawbridge-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: idearium/api/index.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: lib/system-boundary.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN4_retire_hand_maps
+    dependents: []
+    upstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN4_retire_hand_maps
+    downstream: []
+    blockedBy:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN4_retire_hand_maps
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by IN4_retire_hand_maps
+      - 'depends on (1): IN4_retire_hand_maps · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN4_retire_hand_maps
+        kind: declared

@@ -1,0 +1,83 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB19_genesis_sandboxed_fork:68f0ea951c3c9dae
+type: graph
+id: phase:DB19_genesis_sandboxed_fork:68f0ea951c3c9dae
+context: dependency graph of phase DB19_genesis_sandboxed_fork
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677843
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677843
+lastSeenAt: 1792787677843
+fingerprint: null
+payload:
+  for: DB19_genesis_sandboxed_fork
+  kind: phase
+  repo: null
+  hash: 68f0ea951c3c9dae
+  nodes:
+    - path: idearium/spec-engine/templates.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/templates/genesis-sandboxed.spec
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/sandbox/cos-compartment.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/spec-engine/templates.js
+      to: lib/agent-tools/tools/sandbox/cos-compartment.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/templates.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/spec-engine/templates.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+    dependents:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · ready
+      - 'depends on (1): DB13_the_tunnel · all upstream 9'
+      - 'needed by (1): DB20_sealed_archetype · finishing it unlocks DB20_sealed_archetype'
+    edges:
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+        kind: declared

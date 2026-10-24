@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IA3_the_screens:84728ca7fed20a3f
+type: graph
+id: phase:IA3_the_screens:84728ca7fed20a3f
+context: dependency graph of phase IA3_the_screens
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677208
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677208
+lastSeenAt: 1792787677208
+fingerprint: null
+payload:
+  for: IA3_the_screens
+  kind: phase
+  repo: null
+  hash: 84728ca7fed20a3f
+  nodes:
+    - path: idearium/ui/login.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/settings.html
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-10-idearium-access-phasemap.spec::IA1_the_routes
+    dependents: []
+    upstream:
+      - docs/2026-10-10-idearium-access-phasemap.spec::IA0_the_door_checks_who_is_asking
+      - docs/2026-10-10-idearium-access-phasemap.spec::IA1_the_routes
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): IA1_the_routes · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-10-idearium-access-phasemap.spec::IA1_the_routes
+        kind: declared

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CE3_reply_on_task_gate
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CE3_reply_on_task_gate
+context: pipeline phase CE3_reply_on_task_gate of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CE3_reply_on_task_gate (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677503
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677503
+lastSeenAt: 1792787677503
+fingerprint: null
+payload:
+  id: CE3_reply_on_task_gate
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.50 (tests/modules/test-run-state.test.js)
+  files:
+    - guardian/lib/gate-trail.js
+  depends_on:
+    - CE1_the_run_state
+  blocks: []
+  spec: null
+  graph: 6494fb36f98b0242

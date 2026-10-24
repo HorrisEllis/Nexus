@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB5_self_modification_from_inside
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB5_self_modification_from_inside
+context: pipeline phase SB5_self_modification_from_inside of docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB5_self_modification_from_inside (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678298
+lastSeenAt: 1792787678298
+fingerprint: null
+payload:
+  id: SB5_self_modification_from_inside
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/autonomous-repair.js
+  depends_on:
+    - SB3_guided_build_loop
+    - SB4_decision_lattice_wiring
+  blocks: []
+  spec: null
+  graph: cdb424f27e387b64

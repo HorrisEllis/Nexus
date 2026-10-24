@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-30-idearium-coding-flow-phasemap.spec::W6_release
+type: phase
+id: docs_2026-09-30-idearium-coding-flow-phasemap.spec::W6_release
+context: pipeline phase W6_release of docs/2026-09-30-idearium-coding-flow-phasemap.spec
+intent: null
+summary: W6_release (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676337
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676337
+lastSeenAt: 1792787676337
+fingerprint: null
+payload:
+  id: W6_release
+  map: docs/2026-09-30-idearium-coding-flow-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/version.js
+    - package.json
+    - CHANGELOG-0.39.284.md
+    - docs/2026-09-29-handoff.md
+  depends_on:
+    - W5_theme_and_css
+  blocks: []
+  spec: null
+  graph: 16020646cb3d4924

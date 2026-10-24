@@ -1,0 +1,203 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB50_every_task_timestamped:31bb47cf8a30809d
+type: graph
+id: phase:SB50_every_task_timestamped:31bb47cf8a30809d
+context: dependency graph of phase SB50_every_task_timestamped
+intent: null
+summary: 17 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676952
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676952
+lastSeenAt: 1792787676952
+fingerprint: null
+payload:
+  for: SB50_every_task_timestamped
+  kind: phase
+  repo: null
+  hash: 31bb47cf8a30809d
+  nodes:
+    - path: idearium/api/build-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/build-plan.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/plan-panel.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: cos/testenv/environment.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/repo/deviation.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/file-state.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/work-surface.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot-files.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/file-state.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/deviation.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/setup-job.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/work-surface.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/api/build-surface.js
+      kind: requires
+  crossings:
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/setup-job.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 9
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB29_the_build_flow_in_his_order
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB45_skeletons_grey_until_coded
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB26_an_imported_project_shows_its_progress
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB51_a_phase_built_in_chunks
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB10_reuse_first_keyed_on_the_contract
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB11_each_block_chunked
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB12_the_registry_is_the_component_list
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB26_an_imported_project_shows_its_progress
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB29_the_build_flow_in_his_order
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB30_the_template_is_a_skeleton
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB43_the_expansion_is_phased
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB44_phases_are_chunked_then_coded
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB45_skeletons_grey_until_coded
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB9_the_spec_is_a_spec_file
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::CH1_compartment_charter
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB51_a_phase_built_in_chunks
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB52_proven_on_the_proposed_code
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::WS1_agents_use_the_work_surface
+    blockedBy:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB29_the_build_flow_in_his_order
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB26_an_imported_project_shows_its_progress
+    unlocks:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB51_a_phase_built_in_chunks
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 9 · blocked by SB29_the_build_flow_in_his_order,
+        SB26_an_imported_project_shows_its_progress
+      - >-
+        depends on (3): SB29_the_build_flow_in_his_order, SB45_skeletons_grey_until_coded,
+        SB26_an_imported_project_shows_its_progress · all upstream 16
+      - >-
+        needed by (1): SB51_a_phase_built_in_chunks · all downstream 4 · finishing it unlocks
+        SB51_a_phase_built_in_chunks
+    edges:
+      - from: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB29_the_build_flow_in_his_order
+        kind: inferred
+      - from: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB45_skeletons_grey_until_coded
+        kind: inferred
+      - from: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB26_an_imported_project_shows_its_progress
+        kind: inferred

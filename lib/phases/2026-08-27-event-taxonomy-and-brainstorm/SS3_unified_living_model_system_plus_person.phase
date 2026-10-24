@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::SS3_unified_living_model_system_plus_person
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::SS3_unified_living_model_system_plus_person
+context: >-
+  pipeline phase SS3_unified_living_model_system_plus_person of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: SS3_unified_living_model_system_plus_person (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787918465
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787918465
+lastSeenAt: 1792787918465
+fingerprint: null
+payload:
+  id: SS3_unified_living_model_system_plus_person
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/user-model.js
+    - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+    - loom/scanners/phasemap-map.js
+    - copilot/lib/user-model.js
+  depends_on:
+    - SS1_system_manifest
+  blocks: []
+  spec: null
+  graph: 0bbbc7d8adf65f4e

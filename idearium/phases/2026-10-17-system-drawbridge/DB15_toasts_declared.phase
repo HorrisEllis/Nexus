@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB15_toasts_declared
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB15_toasts_declared
+context: pipeline phase DB15_toasts_declared of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB15_toasts_declared (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677832
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677832
+lastSeenAt: 1792787677832
+fingerprint: null
+payload:
+  id: DB15_toasts_declared
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0e1c1ccd78450583

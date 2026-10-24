@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB4c_measure
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB4c_measure
+context: pipeline phase TB4c_measure of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB4c_measure (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677673
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677673
+lastSeenAt: 1792787677673
+fingerprint: null
+payload:
+  id: TB4c_measure
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/CLAUDE.md
+    - idearium/ui/js/plan-panel.js
+    - lib/repo-agent.js
+    - lib/run-state.js
+    - idearium/repo/work-surface.js
+    - idearium/ui/js/work-surface.js
+    - idearium/ui/js/file-manage.js
+    - idearium/ui/js/repo-tasks.js
+  depends_on:
+    - TB4a_recall_in_the_dispatcher
+  blocks: []
+  spec: null
+  graph: a6559845267cef0c

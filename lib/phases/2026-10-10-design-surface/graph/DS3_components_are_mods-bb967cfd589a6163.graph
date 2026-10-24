@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DS3_components_are_mods:bb967cfd589a6163
+type: graph
+id: phase:DS3_components_are_mods:bb967cfd589a6163
+context: dependency graph of phase DS3_components_are_mods
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677197
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677197
+lastSeenAt: 1792787677197
+fingerprint: null
+payload:
+  for: DS3_components_are_mods
+  kind: phase
+  repo: null
+  hash: bb967cfd589a6163
+  nodes:
+    - path: eravos/ui/runtime/mod-factory.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+    dependents:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+    upstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+    downstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+      - docs/2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+      - docs/2026-10-10-design-surface-phasemap.spec::DS8_the_registry_routes_the_ui_reflects
+    blockedBy:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+    unlocks:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by DS0_one_token_source
+      - 'depends on (1): DS0_one_token_source'
+      - >-
+        needed by (1): DS6_one_module_contract_nested · all downstream 3 · finishing it unlocks
+        DS6_one_module_contract_nested
+    edges:
+      - from: docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+        kind: declared

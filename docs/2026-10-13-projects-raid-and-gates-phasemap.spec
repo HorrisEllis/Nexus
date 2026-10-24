@@ -252,7 +252,7 @@ spec:
         parse become the repo's Phases; plain specs become proposed phases (spec-plan derive) for him to accept (MX1).
       proof: "ERAVOS's specs appear in its Spec and Phases tabs; one accepted becomes a buildable phase"
     PL6_global_links_seen:
-      depends_on: [RF0_architecture_read]   # mapped from the files they share: RF0_architecture_read (lib/project-decompose.js)
+      depends_on: []   # 2026-10-23 SL3: was [RF0_architecture_read], written by MP4 (0.60.29) from a shared file (lib/project-decompose.js); RF0's own authored depends_on names PL6, so the two closed a cycle. An inferred edge never overrides an authored one (§0.1); kept here, not lost (§0.3).
       layer: library
       systems: [core]
       component: lib.component-store

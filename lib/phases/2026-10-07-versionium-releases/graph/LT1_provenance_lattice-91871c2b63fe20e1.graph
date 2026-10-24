@@ -1,0 +1,150 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LT1_provenance_lattice:91871c2b63fe20e1
+type: graph
+id: phase:LT1_provenance_lattice:91871c2b63fe20e1
+context: dependency graph of phase LT1_provenance_lattice
+intent: null
+summary: 14 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677115
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677115
+lastSeenAt: 1792787677115
+fingerprint: null
+payload:
+  for: LT1_provenance_lattice
+  kind: phase
+  repo: null
+  hash: 91871c2b63fe20e1
+  nodes:
+    - path: cortex/cortex-v2.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: intelligence/spatial/system-lattice.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/nexstore/record.js
+      role: changes
+      exists: true
+      system: lib
+    - path: meta/crystal-lattice.js
+      role: changes
+      exists: true
+      system: meta
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/case-library.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexstore/log.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: meta/index.js
+      role: used-by
+      exists: true
+      system: meta
+    - path: tests/modules/crystal-lattice.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/intuition-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/system-lattice.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/spatial/lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: meta/crystal-lattice.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/spatial/system-lattice.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: lib/nexstore/log.js
+      to: lib/nexstore/record.js
+      kind: requires
+    - from: lib/case-library.js
+      to: meta/crystal-lattice.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: meta/crystal-lattice.js
+      kind: requires
+    - from: meta/index.js
+      to: meta/crystal-lattice.js
+      kind: requires
+    - from: tests/modules/crystal-lattice.test.js
+      to: meta/crystal-lattice.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/spatial/system-lattice.js
+      kind: requires
+    - from: tests/modules/intuition-upgrade.test.js
+      to: intelligence/spatial/system-lattice.js
+      kind: requires
+    - from: tests/modules/system-lattice.test.js
+      to: intelligence/spatial/system-lattice.js
+      kind: requires
+  crossings:
+    - from: meta/crystal-lattice.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: meta
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/case-library.js
+      to: meta/crystal-lattice.js
+      fromSystem: lib
+      toSystem: meta
+      kind: upward
+      known: true
+    - from: lib/compartment-engine.js
+      to: meta/crystal-lattice.js
+      fromSystem: lib
+      toSystem: meta
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+    dependents:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN2_cortex_is_the_bookkeeper
+    upstream:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+    downstream:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN2_cortex_is_the_bookkeeper
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN3_releases_section
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): VR1_every_change_a_commit'
+      - 'needed by (1): RN2_cortex_is_the_bookkeeper · all downstream 2'
+    edges:
+      - from: docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+        kind: declared

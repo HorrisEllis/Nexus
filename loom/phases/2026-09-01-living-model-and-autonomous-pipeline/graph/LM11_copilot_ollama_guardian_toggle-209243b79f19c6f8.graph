@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM11_copilot_ollama_guardian_toggle:209243b79f19c6f8
+type: graph
+id: phase:LM11_copilot_ollama_guardian_toggle:209243b79f19c6f8
+context: dependency graph of phase LM11_copilot_ollama_guardian_toggle
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675546
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675546
+lastSeenAt: 1792787675546
+fingerprint: null
+payload:
+  for: LM11_copilot_ollama_guardian_toggle
+  kind: phase
+  repo: null
+  hash: 209243b79f19c6f8
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+    dependents: []
+    upstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+    downstream: []
+    blockedBy:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by LM9_deterministic_agent_switch_cli
+      - 'depends on (1): LM9_deterministic_agent_switch_cli'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+        kind: declared

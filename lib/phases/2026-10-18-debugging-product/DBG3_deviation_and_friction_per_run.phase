@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-debugging-product-phasemap.spec::DBG3_deviation_and_friction_per_run
+type: phase
+id: docs_2026-10-18-debugging-product-phasemap.spec::DBG3_deviation_and_friction_per_run
+context: >-
+  pipeline phase DBG3_deviation_and_friction_per_run of
+  docs/2026-10-18-debugging-product-phasemap.spec
+intent: null
+summary: DBG3_deviation_and_friction_per_run (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677858
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677858
+lastSeenAt: 1792787677858
+fingerprint: null
+payload:
+  id: DBG3_deviation_and_friction_per_run
+  map: docs/2026-10-18-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/debug-case.js
+    - lib/phase-faults.js
+    - lib/seam/detector.js
+    - lib/expectation-tests.js
+    - diagnostic/nexus-diagnostic.js
+  depends_on:
+    - DBG2_the_case
+  blocks: []
+  spec: null
+  graph: 3cdc3022f02a4874

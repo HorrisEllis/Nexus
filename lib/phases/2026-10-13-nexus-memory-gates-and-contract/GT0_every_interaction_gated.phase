@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::GT0_every_interaction_gated
+type: phase
+id: docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::GT0_every_interaction_gated
+context: >-
+  pipeline phase GT0_every_interaction_gated of
+  docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+intent: null
+summary: GT0_every_interaction_gated (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677419
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677419
+lastSeenAt: 1792787677419
+fingerprint: null
+payload:
+  id: GT0_every_interaction_gated
+  map: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 03a2a715a7b70f73

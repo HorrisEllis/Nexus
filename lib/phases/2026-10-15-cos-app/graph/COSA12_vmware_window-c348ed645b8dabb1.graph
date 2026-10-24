@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-graph-phase:COSA12_vmware_window:c348ed645b8dabb1
+type: graph
+id: phase:COSA12_vmware_window:c348ed645b8dabb1
+context: dependency graph of phase COSA12_vmware_window
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677534
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677534
+lastSeenAt: 1792787677534
+fingerprint: null
+payload:
+  for: COSA12_vmware_window
+  kind: phase
+  repo: null
+  hash: c348ed645b8dabb1
+  nodes:
+    - path: docs/CLAUDE.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA6_the_exe
+    dependents: []
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA6_the_exe
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): COSA6_the_exe · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-cos-app-phasemap.spec::COSA6_the_exe
+        kind: declared

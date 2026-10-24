@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC2_raid_test_env_hook
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC2_raid_test_env_hook
+context: >-
+  pipeline phase IC2_raid_test_env_hook of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC2_raid_test_env_hook (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675494
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675494
+lastSeenAt: 1792787675494
+fingerprint: null
+payload:
+  id: IC2_raid_test_env_hook
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/archetype/eravos-canvas/canvas/runtime/workspace.js
+    - intelligence/cfr/field.js
+    - intelligence/rfr2/compress/index.js
+    - lib/end-state.js
+  depends_on:
+    - RR4_governed_handshake_on_handoff
+  blocks: []
+  spec: null
+  graph: 6c2cc014708dd5ce

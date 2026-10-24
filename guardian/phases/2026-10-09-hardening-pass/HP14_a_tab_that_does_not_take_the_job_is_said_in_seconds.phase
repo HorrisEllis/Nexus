@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+context: >-
+  pipeline phase HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds of
+  docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677144
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677144
+lastSeenAt: 1792787677144
+fingerprint: null
+payload:
+  id: HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/dispatcher.js
+    - guardian/lib/gate-trail.js
+    - guardian/userscript-chatgpt.js
+    - guardian/userscript-claude.js
+    - guardian/userscript-gemini.js
+    - guardian/userscript-deepseek.js
+    - guardian/userscript-perplexity.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 484cb9512f837f5a

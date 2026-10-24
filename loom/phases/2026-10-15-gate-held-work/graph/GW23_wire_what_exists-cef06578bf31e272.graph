@@ -1,0 +1,81 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW23_wire_what_exists:cef06578bf31e272
+type: graph
+id: phase:GW23_wire_what_exists:cef06578bf31e272
+context: dependency graph of phase GW23_wire_what_exists
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677580
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677580
+lastSeenAt: 1792787677580
+fingerprint: null
+payload:
+  for: GW23_wire_what_exists
+  kind: phase
+  repo: null
+  hash: cef06578bf31e272
+  nodes:
+    - path: lib/rfr2-bridge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: intelligence/mastermind.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/relational-field.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-rfr2-cjs.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: cortex/boot.js
+      to: lib/rfr2-bridge.js
+      kind: requires
+    - from: intelligence/mastermind.js
+      to: lib/rfr2-bridge.js
+      kind: requires
+    - from: intelligence/relational-field.js
+      to: lib/rfr2-bridge.js
+      kind: requires
+    - from: tests/modules/test-rfr2-cjs.js
+      to: lib/rfr2-bridge.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+    dependents: []
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0_what_is_a_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0c_replay_mode
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by GW7_failure_macro_and_rewind
+      - 'depends on (1): GW7_failure_macro_and_rewind · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+        kind: inferred

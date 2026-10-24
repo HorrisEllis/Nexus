@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::SY1_fifteen_systems
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::SY1_fifteen_systems
+context: pipeline phase SY1_fifteen_systems of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: SY1_fifteen_systems (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676990
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676990
+lastSeenAt: 1792787676990
+fingerprint: null
+payload:
+  id: SY1_fifteen_systems
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-self/systems.js
+    - loom/scanners/phasemap-map.js
+    - tests/modules/test-loom-phasemap.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0b9d29e5e19e2532

@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MCO-F_config:2b2b4a75392d248d
+type: graph
+id: phase:MCO-F_config:2b2b4a75392d248d
+context: dependency graph of phase MCO-F_config
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787678205
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678205
+lastSeenAt: 1792787678205
+fingerprint: null
+payload:
+  for: MCO-F_config
+  kind: phase
+  repo: null
+  hash: 2b2b4a75392d248d
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-G_cicd_ssh
+    upstream: []
+    downstream:
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-G_cicd_ssh
+    blockedBy: []
+    unlocks:
+      - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-G_cicd_ssh
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): MCO-G_cicd_ssh · finishing it unlocks MCO-G_cicd_ssh'
+    edges: []

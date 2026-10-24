@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
+context: pipeline phase PV3_prove_loop of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PV3_prove_loop (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676506
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676506
+lastSeenAt: 1792787676506
+fingerprint: null
+payload:
+  id: PV3_prove_loop
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+  depends_on:
+    - PV2_repair_feedback
+  blocks: []
+  spec: null
+  graph: 1b213b5688552009

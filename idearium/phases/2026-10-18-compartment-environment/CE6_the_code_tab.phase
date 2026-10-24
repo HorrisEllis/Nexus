@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-compartment-environment-phasemap.spec::CE6_the_code_tab
+type: phase
+id: docs_2026-10-18-compartment-environment-phasemap.spec::CE6_the_code_tab
+context: pipeline phase CE6_the_code_tab of docs/2026-10-18-compartment-environment-phasemap.spec
+intent: null
+summary: CE6_the_code_tab (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677852
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677852
+lastSeenAt: 1792787677852
+fingerprint: null
+payload:
+  id: CE6_the_code_tab
+  map: docs/2026-10-18-compartment-environment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/code-surface.js
+    - idearium/ui/js/code-tab-panels.js
+    - idearium/ui/js/compartment-terminal.js
+    - idearium/ui/css/compartment-terminal.css
+    - idearium/ui/vendor/xterm.js
+  depends_on:
+    - CE4_the_terminal_bridge
+    - CE5_the_guest_file_tree
+  blocks: []
+  spec: null
+  graph: f11d856e1aa25e18

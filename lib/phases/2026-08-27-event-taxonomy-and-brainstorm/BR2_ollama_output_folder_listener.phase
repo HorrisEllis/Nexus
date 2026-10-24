@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR2_ollama_output_folder_listener
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR2_ollama_output_folder_listener
+context: >-
+  pipeline phase BR2_ollama_output_folder_listener of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: BR2_ollama_output_folder_listener (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675458
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675458
+lastSeenAt: 1792787675458
+fingerprint: null
+payload:
+  id: BR2_ollama_output_folder_listener
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/query/file-tree.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c5cdd4d86ddb5b74

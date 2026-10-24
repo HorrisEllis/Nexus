@@ -1,0 +1,154 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MR7_recipes:dba6a7b218cea00c
+type: graph
+id: phase:MR7_recipes:dba6a7b218cea00c
+context: dependency graph of phase MR7_recipes
+intent: null
+summary: 13 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676635
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676635
+lastSeenAt: 1792787676635
+fingerprint: null
+payload:
+  for: MR7_recipes
+  kind: phase
+  repo: null
+  hash: dba6a7b218cea00c
+  nodes:
+    - path: lib/case-library.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: meta/crystal-lattice.js
+      role: changes
+      exists: true
+      system: meta
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: meta/index.js
+      role: used-by
+      exists: true
+      system: meta
+    - path: tests/modules/case-library.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/crystal-lattice.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: lib/case-library.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/autonomous-loop.js
+      to: lib/case-library.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/case-library.js
+      kind: requires
+    - from: tests/modules/case-library.test.js
+      to: lib/case-library.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-hat.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: meta/index.js
+      to: meta/crystal-lattice.js
+      kind: requires
+    - from: tests/modules/crystal-lattice.test.js
+      to: meta/crystal-lattice.js
+      kind: requires
+  crossings:
+    - from: lib/case-library.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+        files:
+          - lib/repo-hat-memory.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic
+      - 'depends on (2): CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic · all upstream 8'
+      - 'needed by (2): MR8_crystallization, GL1_the_graphs_as_a_model · all downstream 3'
+      - >-
+        same files as MR10_the_field_between_james_and_the_agents with no order between them:
+        lib/repo-hat-memory.js
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+        kind: declared

@@ -1,0 +1,74 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL1_macro_erosmancer_integration:16a373b699bcfb38
+type: graph
+id: phase:BL1_macro_erosmancer_integration:16a373b699bcfb38
+context: dependency graph of phase BL1_macro_erosmancer_integration
+intent: null
+summary: 4 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675393
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675393
+lastSeenAt: 1792787675393
+fingerprint: null
+payload:
+  for: BL1_macro_erosmancer_integration
+  kind: phase
+  repo: null
+  hash: 16a373b699bcfb38
+  nodes:
+    - path: clear-glass/wire/nexus-wire.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/wire/eros-registry-components.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/lib/pulse.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: clear-glass/wire/nexus-wire.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/wire/nexus-wire.js
+      to: clear-glass/wire/eros-registry-components.js
+      kind: requires
+    - from: clear-glass/wire/nexus-wire.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+  crossings:
+    - from: clear-glass/wire/nexus-wire.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: clear-glass
+      toSystem: orchestrator
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+    dependents: []
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): BL0_macro_system'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+        kind: declared

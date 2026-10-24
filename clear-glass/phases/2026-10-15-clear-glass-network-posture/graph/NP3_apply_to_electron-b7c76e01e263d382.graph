@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NP3_apply_to_electron:b7c76e01e263d382
+type: graph
+id: phase:NP3_apply_to_electron:b7c76e01e263d382
+context: dependency graph of phase NP3_apply_to_electron
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677478
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677478
+lastSeenAt: 1792787677478
+fingerprint: null
+payload:
+  for: NP3_apply_to_electron
+  kind: phase
+  repo: null
+  hash: b7c76e01e263d382
+  nodes:
+    - path: clear-glass/src/net/apply.js
+      role: changes
+      exists: false
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+    upstream: []
+    downstream:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP16_quarantine_pipeline
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primitive
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP18_freeze_plugin
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): NP15_kill_switch · all downstream 4'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

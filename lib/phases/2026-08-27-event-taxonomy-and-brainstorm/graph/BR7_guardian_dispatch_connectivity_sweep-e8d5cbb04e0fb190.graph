@@ -1,0 +1,273 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BR7_guardian_dispatch_connectivity_sweep:e8d5cbb04e0fb190
+type: graph
+id: phase:BR7_guardian_dispatch_connectivity_sweep:e8d5cbb04e0fb190
+context: dependency graph of phase BR7_guardian_dispatch_connectivity_sweep
+intent: null
+summary: 29 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675463
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675463
+lastSeenAt: 1792787675463
+fingerprint: null
+payload:
+  for: BR7_guardian_dispatch_connectivity_sweep
+  kind: phase
+  repo: null
+  hash: e8d5cbb04e0fb190
+  nodes:
+    - path: copilot/lifeline.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/agent-chat.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-system/contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/coordination/agent-chat.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gemini-toolbox/agent-contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/reword.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/wake-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/ambiguity-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-confidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/lifeline-fluid-routing.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/lifeline-contracts.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/routing-ir.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-chat.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: cortex/core/raid/routing-ir.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/lifeline-contracts.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/event-types.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-system/contracts.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: guardian/lib/wake-loop.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/lib/reword.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/recursive-diagnose.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: tests/modules/copilot-confidence.test.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: tests/modules/lifeline-fluid-routing.test.js
+      to: copilot/lifeline.js
+      kind: requires
+  crossings:
+    - from: copilot/lifeline.js
+      to: cortex/core/raid/routing-ir.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lifeline.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: copilot/lifeline.js
+      fromSystem: cortex
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      fromSystem: cortex
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: copilot/lifeline.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+    dependents: []
+    upstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET2_guardian_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET3_clearglass_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET4_orchestrator_autopilot_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+    downstream: []
+    blockedBy:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by ET6_sigma_gates_on_taxonomy
+      - 'depends on (1): ET6_sigma_gates_on_taxonomy · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+        kind: inferred

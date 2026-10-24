@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+context: pipeline phase DB8_agents_have_it of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB8_agents_have_it (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677815
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677815
+lastSeenAt: 1792787677815
+fingerprint: null
+payload:
+  id: DB8_agents_have_it
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/architecture.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1436fb94e6e0ff14

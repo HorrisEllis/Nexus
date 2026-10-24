@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N6_time
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N6_time
+context: pipeline phase N6_time of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N6_time (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676245
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676245
+lastSeenAt: 1792787676245
+fingerprint: null
+payload:
+  id: N6_time
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/time.js
+  depends_on:
+    - N3_projection_and_indexes
+  blocks: []
+  spec: null
+  graph: 1d45bad2579387a6

@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ26_comparison_and_drift_on_real_signals
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ26_comparison_and_drift_on_real_signals
+context: >-
+  pipeline phase RQ26_comparison_and_drift_on_real_signals of
+  docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ26_comparison_and_drift_on_real_signals (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677388
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677388
+lastSeenAt: 1792787677388
+fingerprint: null
+payload:
+  id: RQ26_comparison_and_drift_on_real_signals
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/playground/compare.js
+    - lib/execution-pipeline.js
+    - cortex/core/raid/index.js
+    - intelligence/cfr/sigma.js
+    - intelligence/cfr/ledger.js
+    - lib/component-ledger.js
+  depends_on:
+    - RQ0_the_inventory_proved
+    - RQ23_acceptance_conditions_that_cannot_be_moved
+  blocks: []
+  spec: null
+  graph: 4f918005e469cb46

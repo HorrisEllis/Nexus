@@ -1,0 +1,248 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FR2_tested_before_it_lands:53d39bac7d121307
+type: graph
+id: phase:FR2_tested_before_it_lands:53d39bac7d121307
+context: dependency graph of phase FR2_tested_before_it_lands
+intent: null
+summary: 28 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677746
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677746
+lastSeenAt: 1792787677746
+fingerprint: null
+payload:
+  for: FR2_tested_before_it_lands
+  kind: phase
+  repo: null
+  hash: 53d39bac7d121307
+  nodes:
+    - path: lib/code-edit.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/zip.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/plugins/webextensions.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/webextensions.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cli/import-history.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cos/app/store.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/foundation/file-browser.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/repo/watcher.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cos-remote.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/expectation-tests.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/test-first.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-language-checks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-proposal-evidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/change-entry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/checks/ck-248-toolchain.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/structure.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/languages.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/step-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/proposal-evidence.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/test-map.js
+      kind: requires
+    - from: lib/code-edit.js
+      to: lib/languages.js
+      kind: requires
+    - from: lib/code-edit.js
+      to: lib/code-intel/structure.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/nexus-self/inject-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/change-entry.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: lib/expectation-tests.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: lib/test-first.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: tests/modules/test-language-checks.test.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: tests/modules/test-proposal-evidence.test.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: clear-glass/src/plugins/webextensions.js
+      to: lib/zip.js
+      kind: requires
+    - from: clear-glass/test/webextensions.test.js
+      to: lib/zip.js
+      kind: requires
+    - from: cli/import-history.js
+      to: lib/zip.js
+      kind: requires
+    - from: cos/app/store.js
+      to: lib/zip.js
+      kind: requires
+    - from: cos/foundation/file-browser.js
+      to: lib/zip.js
+      kind: requires
+    - from: idearium/repo/watcher.js
+      to: lib/zip.js
+      kind: requires
+    - from: lib/cos-remote.js
+      to: lib/zip.js
+      kind: requires
+  crossings:
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR1_one_record_per_change
+    dependents:
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR5_the_demo
+    upstream:
+      - docs/2026-10-16-repo-carve-phasemap.spec::CV1_carve_backend_route_command_ui
+      - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR1_one_record_per_change
+    downstream:
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR10_stop_the_ladder
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR5_the_demo
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR5_the_demo_note
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR6_flight_data
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR5_the_demo
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): FR1_one_record_per_change · all upstream 3'
+      - 'needed by (1): FR5_the_demo · all downstream 5 · finishing it unlocks FR5_the_demo'
+    edges:
+      - from: docs/2026-10-16-repo-carve-phasemap.spec::FR1_one_record_per_change
+        kind: declared

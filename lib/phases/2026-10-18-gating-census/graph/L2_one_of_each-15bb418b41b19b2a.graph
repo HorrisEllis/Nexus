@@ -1,0 +1,100 @@
+envelope: 1
+uuid: nexus-export-graph-phase:L2_one_of_each:15bb418b41b19b2a
+type: graph
+id: phase:L2_one_of_each:15bb418b41b19b2a
+context: dependency graph of phase L2_one_of_each
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677875
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677875
+lastSeenAt: 1792787677875
+fingerprint: null
+payload:
+  for: L2_one_of_each
+  kind: phase
+  repo: null
+  hash: 15bb418b41b19b2a
+  nodes:
+    - path: lib/code-edit.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/repo-history.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/code-intel/structure.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/languages.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/code-edit.js
+      to: lib/languages.js
+      kind: requires
+    - from: lib/code-edit.js
+      to: lib/code-intel/structure.js
+      kind: requires
+    - from: lib/code-edit.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/code-edit.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/code-edit.js
+      kind: requires
+    - from: lib/repo-history.js
+      to: lib/code-edit.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/code-edit.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/code-edit.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

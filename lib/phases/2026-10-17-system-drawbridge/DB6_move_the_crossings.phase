@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+context: pipeline phase DB6_move_the_crossings of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB6_move_the_crossings (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677813
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677813
+lastSeenAt: 1792787677813
+fingerprint: null
+payload:
+  id: DB6_move_the_crossings
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-15-gate-held-work-phasemap.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f3fefc6b9f760ec6

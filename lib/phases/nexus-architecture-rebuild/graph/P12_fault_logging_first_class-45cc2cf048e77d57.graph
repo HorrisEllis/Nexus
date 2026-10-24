@@ -1,0 +1,288 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P12_fault_logging_first_class:45cc2cf048e77d57
+type: graph
+id: phase:P12_fault_logging_first_class:45cc2cf048e77d57
+context: dependency graph of phase P12_fault_logging_first_class
+intent: null
+summary: 34 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678246
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678246
+lastSeenAt: 1792787678246
+fingerprint: null
+payload:
+  for: P12_fault_logging_first_class
+  kind: phase
+  repo: null
+  hash: 45cc2cf048e77d57
+  nodes:
+    - path: copilot/lib/self-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/self-heal/escalation.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/fault-taxonomy.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: intelligence/bda/kernel.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/fault-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/config-governance.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/reflection.js
+      role: changes
+      exists: true
+      system: lib
+    - path: nexus/nexus-cfr-influence.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/ask.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-model.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-config-governance.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-diagnostic-heal-path.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-escalation.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-fault-taxonomy.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/telemetry-codec/engines.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-call-listener.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/diagnostic/diagnose.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/run-command.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/read-file.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/prevention.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-config.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/self-heal/fault-taxonomy.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/self-heal/escalation.js
+      to: intelligence/telemetry-codec/engines.js
+      kind: requires
+    - from: cortex/self-heal/escalation.js
+      to: lib/prevention.js
+      kind: requires
+    - from: lib/fault-log.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-config.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/event-types.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tool-call-listener.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/query/read-file.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/run-command.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/diagnostic/diagnose.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: tests/modules/test-diagnostic-heal-path.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: tests/modules/test-fault-taxonomy.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: tests/modules/test-config-governance.js
+      to: cortex/self-heal/escalation.js
+      kind: requires
+    - from: tests/modules/test-escalation.js
+      to: cortex/self-heal/escalation.js
+      kind: requires
+    - from: lib/agent-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/agent-tools/index.js
+      kind: requires
+  crossings:
+    - from: cortex/self-heal/escalation.js
+      to: intelligence/telemetry-codec/engines.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: cortex/self-heal/fault-taxonomy.js
+      fromSystem: diagnostic
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: intelligence/gap/predicate.js
+      to: cortex/self-heal/fault-taxonomy.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/nexus-architecture-rebuild-phasemap.spec::P8_hat_forge_command
+      - docs/nexus-architecture-rebuild-phasemap.spec::P9_multi_agent_parallel_dispatch
+    dependents:
+      - docs/nexus-architecture-rebuild-phasemap.spec::P14_emergence_axioms_endstate
+      - docs/nexus-architecture-rebuild-phasemap.spec::P22_scanner_hand_map_id_drift
+    upstream:
+      - docs/nexus-architecture-rebuild-phasemap.spec::P8_hat_forge_command
+      - docs/nexus-architecture-rebuild-phasemap.spec::P9_multi_agent_parallel_dispatch
+    downstream:
+      - docs/nexus-architecture-rebuild-phasemap.spec::P14_emergence_axioms_endstate
+      - docs/nexus-architecture-rebuild-phasemap.spec::P22_scanner_hand_map_id_drift
+    blockedBy: []
+    unlocks:
+      - docs/nexus-architecture-rebuild-phasemap.spec::P14_emergence_axioms_endstate
+      - docs/nexus-architecture-rebuild-phasemap.spec::P22_scanner_hand_map_id_drift
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (2): P8_hat_forge_command, P9_multi_agent_parallel_dispatch'
+      - >-
+        needed by (2): P14_emergence_axioms_endstate, P22_scanner_hand_map_id_drift · finishing it
+        unlocks P14_emergence_axioms_endstate, P22_scanner_hand_map_id_drift
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/nexus-architecture-rebuild-phasemap.spec::P8_hat_forge_command
+        kind: inferred
+      - from: docs/nexus-architecture-rebuild-phasemap.spec::P9_multi_agent_parallel_dispatch
+        kind: inferred

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
+context: pipeline phase BL29_tab_context_menu_move_to_background of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL29_tab_context_menu_move_to_background (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675442
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675442
+lastSeenAt: 1792787675442
+fingerprint: null
+payload:
+  id: BL29_tab_context_menu_move_to_background
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/browser.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 801abdd7b0833200

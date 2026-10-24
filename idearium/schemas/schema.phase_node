@@ -115,8 +115,22 @@ payload:
       required: false
       enum: [key, list]
       description: "0.39.271 P2 - written as `  X1_slug:` (key) or `- id: X1` (list)"
+    shelf:
+      type: boolean
+      required: false
+      description: "0.55.1 HP9 - on the declutter's shelf: kept, never the queue; declared here 0.60.227 (the roadmap carried it undeclared)"
+    specs:
+      type: array
+      required: false
+      description: "0.60.63 PT1 - the specs the phase names (spec tags per phase); declared here 0.60.227 (the roadmap carried it undeclared)"
+      items: string
+    blocks:
+      type: array
+      required: false
+      description: "0.60.63 PT1 / 2026-10-20 - the spec module ids the phase builds; declared here 0.60.227"
+      items: string
     kind:
       type: string
       required: false
-      enum: [decision]
-      description: "0.60.81 CV6 - an entry under a map's open_decisions:/decisions: block: a decision recorded in the map, not a phase to build"
+      enum: [decision, finding]
+      description: "0.60.81 CV6 - an entry under a section of the map that holds decisions (open_decisions:, decisions:, decisions_needed: … since 0.60.227): a decision recorded in the map, not a phase to build. 0.60.225 NF1 - finding: an entry under root_findings:, a fact the phases cite"

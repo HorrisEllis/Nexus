@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792775550209
+exported_at: 1792787678085
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550209
-lastSeenAt: 1792775550209
+firstSeenAt: 1792787678085
+lastSeenAt: 1792787678085
 fingerprint: null
 payload:
   for: SL6_the_loop_counts_itself
@@ -66,7 +66,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 6577681f08a50367
     layer: 1
     deps:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
@@ -79,6 +78,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 6577681f08a50367 · layer 1 · ready
+      - layer 1 · ready
       - 'depends on (1): SL0_what_can_be_built_now'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+        kind: declared

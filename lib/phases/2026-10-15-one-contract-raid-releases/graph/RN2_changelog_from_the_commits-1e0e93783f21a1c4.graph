@@ -1,0 +1,81 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RN2_changelog_from_the_commits:1e0e93783f21a1c4
+type: graph
+id: phase:RN2_changelog_from_the_commits:1e0e93783f21a1c4
+context: dependency graph of phase RN2_changelog_from_the_commits
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677607
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677607
+lastSeenAt: 1792787677607
+fingerprint: null
+payload:
+  for: RN2_changelog_from_the_commits
+  kind: phase
+  repo: null
+  hash: 1e0e93783f21a1c4
+  nodes:
+    - path: lib/release-notes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/nexus-releases.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-releases.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/release-notes.js
+      to: lib/nexus-releases.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/release-notes.js
+      kind: requires
+    - from: lib/nexus-releases.js
+      to: lib/release-notes.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN1_versionium_tags_and_releases
+    dependents:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN3_releases_in_idearium
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::AT1_atlases_and_specs_from_releases
+    upstream:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::BR1_bricks_on_every_path
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GS1_a_snapshot_per_gate_rewind_and_compare
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD0_raid_runs_the_contract
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD1_every_build_goes_through_raid
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN1_versionium_tags_and_releases
+    downstream:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::AT1_atlases_and_specs_from_releases
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN3_releases_in_idearium
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN3_releases_in_idearium
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::AT1_atlases_and_specs_from_releases
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6
+      - 'depends on (1): RN1_versionium_tags_and_releases · all upstream 6'
+      - >-
+        needed by (2): RN3_releases_in_idearium, AT1_atlases_and_specs_from_releases · finishing it
+        unlocks RN3_releases_in_idearium, AT1_atlases_and_specs_from_releases
+    edges:
+      - from: docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN1_versionium_tags_and_releases
+        kind: declared

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P1_dangling_hook_flood
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P1_dangling_hook_flood
+context: pipeline phase P1_dangling_hook_flood of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P1_dangling_hook_flood (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678235
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678235
+lastSeenAt: 1792787678235
+fingerprint: null
+payload:
+  id: P1_dangling_hook_flood
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/source-map.js
+    - service/nexus-diagnostic.js
+    - diagnostic/nexus-diagnostic.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c2a48d9b68d5b863

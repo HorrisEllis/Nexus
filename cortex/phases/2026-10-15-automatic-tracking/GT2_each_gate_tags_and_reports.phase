@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::GT2_each_gate_tags_and_reports
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::GT2_each_gate_tags_and_reports
+context: pipeline phase GT2_each_gate_tags_and_reports of docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: GT2_each_gate_tags_and_reports (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677457
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677457
+lastSeenAt: 1792787677457
+fingerprint: null
+payload:
+  id: GT2_each_gate_tags_and_reports
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE (0.60.42)
+  files:
+    - cortex/core/raid/contract-gates.js
+    - cortex/core/raid/contract-intake.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3797d6cbb370567f

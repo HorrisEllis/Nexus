@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::SH1_one_home_for_every_concept
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::SH1_one_home_for_every_concept
+context: pipeline phase SH1_one_home_for_every_concept of docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: SH1_one_home_for_every_concept (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677275
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677275
+lastSeenAt: 1792787677275
+fingerprint: null
+payload:
+  id: SH1_one_home_for_every_concept
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/sources-of-truth.yaml
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d30f0553638eb554

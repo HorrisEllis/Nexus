@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-model-and-user-continuity-phasemap.spec::AM8_lifeline_as_general_channel_and_reasoning_upgrade
+type: phase
+id: docs_agent-model-and-user-continuity-phasemap.spec::AM8_lifeline_as_general_channel_and_reasoning_upgrade
+context: >-
+  pipeline phase AM8_lifeline_as_general_channel_and_reasoning_upgrade of
+  docs/agent-model-and-user-continuity-phasemap.spec
+intent: null
+summary: AM8_lifeline_as_general_channel_and_reasoning_upgrade (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678114
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678114
+lastSeenAt: 1792787678114
+fingerprint: null
+payload:
+  id: AM8_lifeline_as_general_channel_and_reasoning_upgrade
+  map: docs/agent-model-and-user-continuity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lifeline.js
+    - guardian/ask.js
+    - guardian/server.js
+    - guardian/agents/chatgpt-mode.js
+    - ollama/server.js
+    - lib/gemini-toolbox/injection.js
+    - lib/agent-system/contracts.js
+    - cortex/core/raid/index.js
+    - contracts/nexus-interaction-contract.js
+    - copilot/lib/lifeline-contracts.js
+    - lib/gemini-toolbox/agent-contracts.js
+  depends_on:
+    - AM1_per_agent_learned_model
+    - AM7_agent_switch_continuity_and_chat_recall
+  blocks: []
+  spec: null
+  graph: 6413a4c688ff13df

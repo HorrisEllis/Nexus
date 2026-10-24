@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-nexus-git-sync-phasemap.spec::GS1_commands
+type: phase
+id: docs_2026-10-16-nexus-git-sync-phasemap.spec::GS1_commands
+context: pipeline phase GS1_commands of docs/2026-10-16-nexus-git-sync-phasemap.spec
+intent: null
+summary: GS1_commands (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677722
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677722
+lastSeenAt: 1792787677722
+fingerprint: null
+payload:
+  id: GS1_commands
+  map: docs/2026-10-16-nexus-git-sync-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/site-settings/profile.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 81faeb652af072b8

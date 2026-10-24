@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW26_everything_declares_what_it_needs
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW26_everything_declares_what_it_needs
+context: >-
+  pipeline phase GW26_everything_declares_what_it_needs of
+  docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW26_everything_declares_what_it_needs (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677584
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677584
+lastSeenAt: 1792787677584
+fingerprint: null
+payload:
+  id: GW26_everything_declares_what_it_needs
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-adapters.js
+    - lib/phase-map-auto.js
+    - lib/capability-spec.js
+    - orchestrator/lib/spec-drift.js
+    - cortex/core/raid/contract-gates.js
+  depends_on:
+    - GW1_the_baton
+  blocks: []
+  spec: null
+  graph: c970dbd56ce21cc0

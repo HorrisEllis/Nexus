@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+context: pipeline phase COSA10_compartment_window of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA10_compartment_window (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677532
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677532
+lastSeenAt: 1792787677532
+fingerprint: null
+payload:
+  id: COSA10_compartment_window
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/switch.js
+    - idearium/repo/nexus-self.js
+    - lib/nexus-self/systems.js
+    - cos/spec/cos.spec
+  depends_on:
+    - COSA6_the_exe
+    - COSA9_idearium_sync
+  blocks: []
+  spec: null
+  graph: b221406d3e785772

@@ -1,0 +1,266 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FR4_stands_alone:7733ba9685bafc07
+type: graph
+id: phase:FR4_stands_alone:7733ba9685bafc07
+context: dependency graph of phase FR4_stands_alone
+intent: null
+summary: 29 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677748
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677748
+lastSeenAt: 1792787677748
+fingerprint: null
+payload:
+  for: FR4_stands_alone
+  kind: phase
+  repo: null
+  hash: 7733ba9685bafc07
+  nodes:
+    - path: guardian/jaa-store.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/jaa-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: changes
+      exists: true
+      system: lib
+    - path: products/flight-recorder/bin/flight-recorder.js
+      role: changes
+      exists: true
+      system: null
+    - path: versionium/lib/engine.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: versionium/lib/files.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: guardian/lib/account-routing.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-adversarial-sim.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-bus-subscriptions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-hook-ownership.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-deletes-stick.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-flush-lock.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-selective-load.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sigma-compaction.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/rfr2/compress/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/context/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/kernel/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: uses
+      exists: true
+      system: null
+    - path: products/flight-recorder/lib/versions.js
+      role: uses
+      exists: true
+      system: null
+    - path: versionium/config.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/text-diff.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: lib/repo-activity.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/compress/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/context/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: versionium/config.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: versionium/lib/files.js
+      to: versionium/lib/text-diff.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: products/flight-recorder/lib/project.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: lib/run-state.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: products/flight-recorder/lib/versions.js
+      kind: requires
+    - from: guardian/lib/account-routing.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-adversarial-sim.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-bus-subscriptions.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-hook-ownership.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-deletes-stick.test.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-flush-lock.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-selective-load.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-sigma-compaction.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-activity.js
+      kind: requires
+  crossings:
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/kernel/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/compress/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/context/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: versionium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+      - docs/2026-10-16-repo-carve-phasemap.spec::PB1_the_product_boundary
+    dependents: []
+    upstream:
+      - docs/2026-10-16-repo-carve-phasemap.spec::CV1_carve_backend_route_command_ui
+      - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+      - docs/2026-10-16-repo-carve-phasemap.spec::PB1_the_product_boundary
+    downstream: []
+    blockedBy:
+      - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-16-repo-carve-phasemap.spec::FR5_the_demo
+        files:
+          - guardian/jaa-store.js
+          - products/flight-recorder/bin/flight-recorder.js
+          - lib/jaa-store.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by CV2_untangle_with_rf0
+      - 'depends on (2): CV2_untangle_with_rf0, PB1_the_product_boundary · all upstream 3'
+      - 'needed by (0): —'
+      - >-
+        same files as FR5_the_demo with no order between them: guardian/jaa-store.js,
+        products/flight-recorder/bin/flight-recorder.js, lib/jaa-store.js
+    edges:
+      - from: docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+        kind: declared
+      - from: docs/2026-10-16-repo-carve-phasemap.spec::PB1_the_product_boundary
+        kind: declared

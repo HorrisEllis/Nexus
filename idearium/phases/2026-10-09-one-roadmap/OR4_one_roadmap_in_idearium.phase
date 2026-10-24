@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-roadmap-phasemap.spec::OR4_one_roadmap_in_idearium
+type: phase
+id: docs_2026-10-09-one-roadmap-phasemap.spec::OR4_one_roadmap_in_idearium
+context: pipeline phase OR4_one_roadmap_in_idearium of docs/2026-10-09-one-roadmap-phasemap.spec
+intent: null
+summary: OR4_one_roadmap_in_idearium (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677186
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677186
+lastSeenAt: 1792787677186
+fingerprint: null
+payload:
+  id: OR4_one_roadmap_in_idearium
+  map: docs/2026-10-09-one-roadmap-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/roadmap.js
+    - idearium/ui/js/phases.js
+  depends_on:
+    - OR1_five_answers_for_an_open_phase
+  blocks: []
+  spec: null
+  graph: eccb05a79ab9f7b3

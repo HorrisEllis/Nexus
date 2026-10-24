@@ -1,0 +1,194 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SBP10_per_hat_model_assignment:7abdac008edcde3d
+type: graph
+id: phase:SBP10_per_hat_model_assignment:7abdac008edcde3d
+context: dependency graph of phase SBP10_per_hat_model_assignment
+intent: null
+summary: 21 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675482
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675482
+lastSeenAt: 1792787675482
+fingerprint: null
+payload:
+  for: SBP10_per_hat_model_assignment
+  kind: phase
+  repo: null
+  hash: 7abdac008edcde3d
+  nodes:
+    - path: architect/schemas/index.js
+      role: changes
+      exists: true
+      system: architect
+    - path: clear-glass/renderer/settings/sections/mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/agents.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hat-seed.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ollama/abliterated-catalog.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: clear-glass/src/copilot/hat.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cli/nexus.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/jobs.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-intent-contract.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/hat-seed-ollama-personalities.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/hat-seed.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/hat-seed.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/hat-forge.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cli/nexus.js
+      to: ollama/abliterated-catalog.js
+      kind: requires
+    - from: lib/hat-seed-ollama-personalities.js
+      to: ollama/abliterated-catalog.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/hat-seed.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: lib/hat-seed.js
+      kind: requires
+    - from: clear-glass/src/copilot/hat.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/agent-intent-contract.js
+      to: lib/hat-forge.js
+      kind: requires
+  crossings:
+    - from: lib/hat-seed.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: cli/nexus.js
+      to: ollama/abliterated-catalog.js
+      fromSystem: cli
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: lib/hat-seed-ollama-personalities.js
+      to: ollama/abliterated-catalog.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP9_hat_forge_real_hats
+      - docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP3_wire_contract_intake_through_routing_ir
+    dependents: []
+    upstream:
+      - docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP3_wire_contract_intake_through_routing_ir
+      - docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP9_hat_forge_real_hats
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (2): SBP9_hat_forge_real_hats, SBP3_wire_contract_intake_through_routing_ir'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP9_hat_forge_real_hats
+        kind: declared
+      - from: docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP3_wire_contract_intake_through_routing_ir
+        kind: declared

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF9_boot_memory_census
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF9_boot_memory_census
+context: pipeline phase PF9_boot_memory_census of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PF9_boot_memory_census (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676382
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676382
+lastSeenAt: 1792787676382
+fingerprint: null
+payload:
+  id: PF9_boot_memory_census
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/memory/jaa-db.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c2a0c372cf2327b6

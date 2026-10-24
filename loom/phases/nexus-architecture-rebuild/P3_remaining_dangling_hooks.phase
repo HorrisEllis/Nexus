@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P3_remaining_dangling_hooks
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P3_remaining_dangling_hooks
+context: pipeline phase P3_remaining_dangling_hooks of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P3_remaining_dangling_hooks (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678237
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678237
+lastSeenAt: 1792787678237
+fingerprint: null
+payload:
+  id: P3_remaining_dangling_hooks
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 903fa24d744e6bd3

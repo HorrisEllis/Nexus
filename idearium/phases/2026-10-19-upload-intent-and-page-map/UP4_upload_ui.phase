@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::UP4_upload_ui
+type: phase
+id: docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::UP4_upload_ui
+context: pipeline phase UP4_upload_ui of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+intent: null
+summary: UP4_upload_ui (interface) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677953
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677953
+lastSeenAt: 1792787677953
+fingerprint: null
+payload:
+  id: UP4_upload_ui
+  map: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+  repo: null
+  layer: interface
+  status: DONE 0.60.173
+  files:
+    - idearium/ui/js/upload-intent.js
+    - idearium/ui/index.html
+  depends_on:
+    - UP3_upload_routes_and_commands
+  blocks: []
+  spec: null
+  graph: dcd2230ed41c4df6

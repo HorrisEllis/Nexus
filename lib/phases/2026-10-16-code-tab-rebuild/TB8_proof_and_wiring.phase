@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB8_proof_and_wiring
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB8_proof_and_wiring
+context: pipeline phase TB8_proof_and_wiring of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB8_proof_and_wiring (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677666
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677666
+lastSeenAt: 1792787677666
+fingerprint: null
+payload:
+  id: TB8_proof_and_wiring
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/CLAUDE.md
+    - guardian/lib/gate-trail.js
+    - lib/run-state.js
+    - lib/step-gate.js
+    - lib/intent-chain.js
+    - idearium/ui/js/plan-panel.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: bea6b955a3f4631e

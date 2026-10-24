@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB27_expanding_a_repo_keeps_its_spec_and_phases_current
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB27_expanding_a_repo_keeps_its_spec_and_phases_current
+context: >-
+  pipeline phase SB27_expanding_a_repo_keeps_its_spec_and_phases_current of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB27_expanding_a_repo_keeps_its_spec_and_phases_current (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676890
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676890
+lastSeenAt: 1792787676890
+fingerprint: null
+payload:
+  id: SB27_expanding_a_repo_keeps_its_spec_and_phases_current
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/roadmap.js
+    - idearium/repo/living-spec.js
+    - lib/repo-inject.js
+    - idearium/api/index.js
+  depends_on:
+    - SB26_an_imported_project_shows_its_progress
+  blocks: []
+  spec: null
+  graph: 2f6ef3f3a636044e

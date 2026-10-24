@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-system-expectations-phasemap.spec::EX3_the_diagnostic_reads_expectations
+type: phase
+id: docs_2026-10-07-system-expectations-phasemap.spec::EX3_the_diagnostic_reads_expectations
+context: >-
+  pipeline phase EX3_the_diagnostic_reads_expectations of
+  docs/2026-10-07-system-expectations-phasemap.spec
+intent: null
+summary: EX3_the_diagnostic_reads_expectations (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677109
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677109
+lastSeenAt: 1792787677109
+fingerprint: null
+payload:
+  id: EX3_the_diagnostic_reads_expectations
+  map: docs/2026-10-07-system-expectations-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2bec3e78837d68f5

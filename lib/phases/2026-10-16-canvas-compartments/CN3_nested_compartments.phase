@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-canvas-compartments-phasemap.spec::CN3_nested_compartments
+type: phase
+id: docs_2026-10-16-canvas-compartments-phasemap.spec::CN3_nested_compartments
+context: pipeline phase CN3_nested_compartments of docs/2026-10-16-canvas-compartments-phasemap.spec
+intent: null
+summary: CN3_nested_compartments (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677650
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677650
+lastSeenAt: 1792787677650
+fingerprint: null
+payload:
+  id: CN3_nested_compartments
+  map: docs/2026-10-16-canvas-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.104 backend, route, commands (CC-03, CC-04, CC-06, CC-10); UI is CN6, open
+  files:
+    - lib/canvas-compartments.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 567d60a0f20626fb

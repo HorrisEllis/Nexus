@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS19_copilot_atlas_guide:8cfe36554eded916
+type: graph
+id: phase:BS19_copilot_atlas_guide:8cfe36554eded916
+context: dependency graph of phase BS19_copilot_atlas_guide
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676219
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676219
+lastSeenAt: 1792787676219
+fingerprint: null
+payload:
+  for: BS19_copilot_atlas_guide
+  kind: phase
+  repo: null
+  hash: 8cfe36554eded916
+  nodes:
+    - path: docs/atlases/copilot-atlas.md
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-atlas-refs.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-nexus-atlas-refs.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
+    dependents:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    upstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
+    downstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): BS17_copilot_browser_verbs'
+      - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
+    edges:
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
+        kind: declared

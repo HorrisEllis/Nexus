@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::VM0_versionium_managed_per_repo
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::VM0_versionium_managed_per_repo
+context: >-
+  pipeline phase VM0_versionium_managed_per_repo of
+  docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: VM0_versionium_managed_per_repo (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677437
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677437
+lastSeenAt: 1792787677437
+fingerprint: null
+payload:
+  id: VM0_versionium_managed_per_repo
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-history.js
+    - lib/import-checks.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/repo-versions.js
+    - idearium/ui/js/app.js
+    - idearium/ui/index.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 040fc109a1d5cee4

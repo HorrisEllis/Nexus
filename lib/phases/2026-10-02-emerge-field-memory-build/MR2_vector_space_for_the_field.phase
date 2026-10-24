@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+context: >-
+  pipeline phase MR2_vector_space_for_the_field of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR2_vector_space_for_the_field (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676620
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676620
+lastSeenAt: 1792787676620
+fingerprint: null
+payload:
+  id: MR2_vector_space_for_the_field
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/vector-memory.js
+  depends_on:
+    - MR1_recall_triad_and_context_table
+    - CF1_cfr_improved_with_rfr2
+  blocks: []
+  spec: null
+  graph: 0dc9b5c41e9b71b8

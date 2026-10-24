@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::TB4_bookmark_checklists
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::TB4_bookmark_checklists
+context: pipeline phase TB4_bookmark_checklists of docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: TB4_bookmark_checklists (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677292
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677292
+lastSeenAt: 1792787677292
+fingerprint: null
+payload:
+  id: TB4_bookmark_checklists
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/browser.js
+    - clear-glass/src/bookmarks/store.js
+    - clear-glass/src/rewind/engine.js
+  depends_on:
+    - TB2_a_tab_runs_as_an_account
+  blocks: []
+  spec: null
+  graph: 8c52de1ac7a8caf8

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR5_role_tags
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR5_role_tags
+context: pipeline phase MR5_role_tags of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR5_role_tags (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677591
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677591
+lastSeenAt: 1792787677591
+fingerprint: null
+payload:
+  id: MR5_role_tags
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 947a6872f9bd98e5

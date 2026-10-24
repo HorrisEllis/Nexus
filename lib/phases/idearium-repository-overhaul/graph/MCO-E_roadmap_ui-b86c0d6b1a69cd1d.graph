@@ -1,0 +1,310 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MCO-E_roadmap_ui:b86c0d6b1a69cd1d
+type: graph
+id: phase:MCO-E_roadmap_ui:b86c0d6b1a69cd1d
+context: dependency graph of phase MCO-E_roadmap_ui
+intent: null
+summary: 32 node(s), 11 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787921220
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787921220
+lastSeenAt: 1792787921220
+fingerprint: null
+payload:
+  for: MCO-E_roadmap_ui
+  kind: phase
+  repo: null
+  hash: b86c0d6b1a69cd1d
+  nodes:
+    - path: architect/schemas/index.js
+      role: changes
+      exists: true
+      system: architect
+    - path: clear-glass/schemas/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: copilot/schemas/index.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: idearium/repo/roadmap.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/atlas-generate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/movement.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap-import.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/phase-dag.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/test/phasemap-map.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/generate-atlases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/routing-ir.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/personas.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/repo/source-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/component-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-tail.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/manifest.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/repo/roadmap.js
+      to: idearium/repo/source-files.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: architect/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/movement.js
+      to: lib/ledger-tail.js
+      kind: requires
+    - from: lib/movement.js
+      to: lib/manifest.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/routing-ir.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/personas.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/test/phasemap-map.test.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: scripts/generate-atlases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+  crossings:
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: loom
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/routing-ir.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/personas.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: false
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: false
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/idearium-repository-overhaul-phasemap.spec::MCO-A_schemas
+    dependents: []
+    upstream:
+      - docs/idearium-repository-overhaul-phasemap.spec::MCO-A_schemas
+      - docs/idearium-repository-overhaul-phasemap.spec::MCO0_audit_real_coverage
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): MCO-A_schemas · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/idearium-repository-overhaul-phasemap.spec::MCO-A_schemas
+        kind: declared

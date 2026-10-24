@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK4_the_void_feeds_the_workshop
+type: phase
+id: docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK4_the_void_feeds_the_workshop
+context: >-
+  pipeline phase WK4_the_void_feeds_the_workshop of
+  docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+intent: null
+summary: WK4_the_void_feeds_the_workshop (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677037
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677037
+lastSeenAt: 1792787677037
+fingerprint: null
+payload:
+  id: WK4_the_void_feeds_the_workshop
+  map: docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/void.html
+    - idearium/api/index.js
+    - idearium/lib/workshop.js
+  depends_on:
+    - WK1_the_workshop_is_blocks_from_the_templates
+  blocks: []
+  spec: null
+  graph: 239d2f058e122ae9

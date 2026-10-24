@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-repository-overhaul-phasemap.spec::MCO2_verification_deepening
+type: phase
+id: docs_idearium-repository-overhaul-phasemap.spec::MCO2_verification_deepening
+context: pipeline phase MCO2_verification_deepening of docs/idearium-repository-overhaul-phasemap.spec
+intent: null
+summary: MCO2_verification_deepening (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678220
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678220
+lastSeenAt: 1792787678220
+fingerprint: null
+payload:
+  id: MCO2_verification_deepening
+  map: docs/idearium-repository-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: '>'
+  files:
+    - idearium/repo/verify-lazy.js
+    - tests/modules/test-mco2-verify-deepening.js
+    - idearium/repo/import-pipeline.js
+  depends_on:
+    - MCO1_graph_layer
+  blocks: []
+  spec: null
+  graph: 6b47c1fa993010fe

@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456416773
+exported_at: 1792787677991
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416773
-lastSeenAt: 1792456416773
+firstSeenAt: 1792787677991
+lastSeenAt: 1792787677991
 fingerprint: null
 payload:
   for: GW0_gate_census
@@ -31,7 +31,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 0
     deps: []
     dependents:
@@ -56,6 +55,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 7583ffef0c495b95 · layer 0 · ready
+      - layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): GW1_gate_primitive · all downstream 13'
+    edges: []

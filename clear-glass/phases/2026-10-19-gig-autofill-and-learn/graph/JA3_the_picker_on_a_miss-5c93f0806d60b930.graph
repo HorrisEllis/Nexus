@@ -1,0 +1,249 @@
+envelope: 1
+uuid: nexus-export-graph-phase:JA3_the_picker_on_a_miss:5c93f0806d60b930
+type: graph
+id: phase:JA3_the_picker_on_a_miss:5c93f0806d60b930
+context: dependency graph of phase JA3_the_picker_on_a_miss
+intent: null
+summary: 30 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792814522031
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814522031
+lastSeenAt: 1792814522031
+fingerprint: null
+payload:
+  for: JA3_the_picker_on_a_miss
+  kind: phase
+  repo: null
+  hash: 5c93f0806d60b930
+  nodes:
+    - path: clear-glass/src/autofill/learn-pick.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/tools.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: clear-glass/src/gates/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/copilot-bridge-direct-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-agent-surface.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learn-pick.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learn-save.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learned.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/renderer/selector-check.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/proposal.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/store.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/handler-registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/bridge-sources.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/autofill/learn-pick.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/autofill/learn-pick.js
+      to: clear-glass/renderer/selector-check.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/proposal.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/ipc/handler-registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/bridge-sources.js
+      kind: requires
+    - from: tests/modules/test-autofill-learn-pick.test.js
+      to: clear-glass/src/autofill/learn-pick.js
+      kind: requires
+    - from: clear-glass/src/gates/index.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/screen-qa/detector.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/clear-glass-autofill.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learn-save.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learned.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: clear-glass/src/copilot/tools.js
+      kind: requires
+    - from: tests/copilot-bridge-direct-dispatch.test.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: tests/modules/clear-glass-agent-surface.test.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: clear-glass/src/copilot/tools.js
+      fromSystem: orchestrator
+      toSystem: clear-glass
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA2_a_pick_is_saved_per_site
+    dependents:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA4_the_learn_loop_ui
+    upstream:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA0c_the_learned_map_is_per_site
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA1_the_matcher_consults_learned
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA2_a_pick_is_saved_per_site
+    downstream:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA4_the_learn_loop_ui
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA5_the_pick_is_also_a_macro
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA4_the_learn_loop_ui
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): JA2_a_pick_is_saved_per_site · all upstream 3'
+      - >-
+        needed by (1): JA4_the_learn_loop_ui · all downstream 2 · finishing it unlocks
+        JA4_the_learn_loop_ui
+    edges:
+      - from: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::JA2_a_pick_is_saved_per_site
+        kind: declared

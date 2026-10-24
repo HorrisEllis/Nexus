@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR6_macro_to_automation
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR6_macro_to_automation
+context: pipeline phase MR6_macro_to_automation of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR6_macro_to_automation (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677591
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677591
+lastSeenAt: 1792787677591
+fingerprint: null
+payload:
+  id: MR6_macro_to_automation
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/shortcuts/registry.js
+    - clear-glass/src/mesh/automation-engine.js
+    - clear-glass/src/page/semantic-tree.js
+    - lib/agent-tools/tools/clear-glass/search-engine.js
+    - clear-glass/src/page/attention.js
+    - docs/nexus-uri-clearglass-mesh-integration.spec
+    - docs/clear-glass.spec
+    - docs/clear-glass-toolkit.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 806c89ac1dcff4f2

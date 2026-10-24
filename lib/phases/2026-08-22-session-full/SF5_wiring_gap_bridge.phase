@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF5_wiring_gap_bridge
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF5_wiring_gap_bridge
+context: pipeline phase SF5_wiring_gap_bridge of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF5_wiring_gap_bridge (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675354
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675354
+lastSeenAt: 1792787675354
+fingerprint: null
+payload:
+  id: SF5_wiring_gap_bridge
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/wiring-gaps.js
+    - lib/gap-field.js
+    - loom/scanners/dangling-report.js
+    - lib/component-ledger.js
+    - lib/autonomous-repair.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 91251df2a9f05ad8

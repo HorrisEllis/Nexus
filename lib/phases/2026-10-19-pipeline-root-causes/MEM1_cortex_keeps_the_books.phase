@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::MEM1_cortex_keeps_the_books
 context: pipeline phase MEM1_cortex_keeps_the_books of docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
-summary: MEM1_cortex_keeps_the_books (foundation) — 0 file(s)
+summary: MEM1_cortex_keeps_the_books (foundation) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792653394717
+exported_at: 1792787677937
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394717
-lastSeenAt: 1792653394717
+firstSeenAt: 1792787677937
+lastSeenAt: 1792787677937
 fingerprint: null
 payload:
   id: MEM1_cortex_keeps_the_books
@@ -19,9 +19,10 @@ payload:
   repo: null
   layer: foundation
   status: DECISION (his words, to confirm)
-  files: []
+  files:
+    - lib/system-store.js
   depends_on:
     - SS1_system_store_adoption
   blocks: []
   spec: null
-  graph: 945fb1de062e2087
+  graph: 5dc59a5287acfba0

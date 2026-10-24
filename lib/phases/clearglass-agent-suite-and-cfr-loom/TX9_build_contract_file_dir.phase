@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX9_build_contract_file_dir
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX9_build_contract_file_dir
+context: >-
+  pipeline phase TX9_build_contract_file_dir of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX9_build_contract_file_dir (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792814556436
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814556436
+lastSeenAt: 1792814556436
+fingerprint: null
+payload:
+  id: TX9_build_contract_file_dir
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/module-builder.js
+    - emerge/consumer.js
+    - clear-glass/renderer/copilot-cli.js
+    - clear-glass/renderer/library/sections/accounts.js
+    - clear-glass/renderer/selector-check.js
+    - intelligence/rfr2/context/index.js
+    - lib/contract-queue.js
+    - lib/grammar-engine.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a144b4f9e9ba9be2

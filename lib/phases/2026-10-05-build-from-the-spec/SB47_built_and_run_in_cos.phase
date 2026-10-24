@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB47_built_and_run_in_cos
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB47_built_and_run_in_cos
+context: pipeline phase SB47_built_and_run_in_cos of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB47_built_and_run_in_cos (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676942
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676942
+lastSeenAt: 1792787676942
+fingerprint: null
+payload:
+  id: SB47_built_and_run_in_cos
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/cos-run.js
+    - idearium/api/index.js
+    - lib/cos-bridge.js
+  depends_on:
+    - SB29_the_build_flow_in_his_order
+    - SB46_every_step_by_hand
+  blocks: []
+  spec: null
+  graph: 00c4a05731de14a2

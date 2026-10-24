@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::CG1_clear_glass_accounts_and_private
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::CG1_clear_glass_accounts_and_private
+context: >-
+  pipeline phase CG1_clear_glass_accounts_and_private of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: CG1_clear_glass_accounts_and_private (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676488
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676488
+lastSeenAt: 1792787676488
+fingerprint: null
+payload:
+  id: CG1_clear_glass_accounts_and_private
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: adf380e049b8562f

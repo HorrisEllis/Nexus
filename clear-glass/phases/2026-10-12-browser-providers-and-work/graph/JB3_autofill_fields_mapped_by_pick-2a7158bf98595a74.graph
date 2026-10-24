@@ -1,0 +1,186 @@
+envelope: 1
+uuid: nexus-export-graph-phase:JB3_autofill_fields_mapped_by_pick:2a7158bf98595a74
+type: graph
+id: phase:JB3_autofill_fields_mapped_by_pick:2a7158bf98595a74
+context: dependency graph of phase JB3_autofill_fields_mapped_by_pick
+intent: null
+summary: 21 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792814553938
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814553938
+lastSeenAt: 1792814553938
+fingerprint: null
+payload:
+  for: JB3_autofill_fields_mapped_by_pick
+  kind: phase
+  repo: null
+  hash: 2a7158bf98595a74
+  nodes:
+    - path: clear-glass/renderer/selector-check.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/attention.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/field.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/userscript-field-map.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: clear-glass/src/autofill/learn-pick.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/gates/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/agent-routes.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/clear-glass-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learn-pick.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learn-save.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learned.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/autofill/learn-pick.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/proposal.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/store.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/proposal.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/learn-pick.js
+      kind: requires
+    - from: clear-glass/src/autofill/learn-pick.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/gates/index.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/screen-qa/detector.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/clear-glass-autofill.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learn-pick.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learn-save.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learned.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/ipc/agent-routes.js
+      to: clear-glass/src/page/attention.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/page/attention.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB5_site_and_account_nodes
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB0_the_webview_session_proved
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB2_a_tab_runs_as_an_account
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB5_site_and_account_nodes
+    downstream: []
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB5_site_and_account_nodes
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB6_element_endpoints
+        files:
+          - clear-glass/src/page/field.js
+          - guardian/userscript-field-map.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by TB5_site_and_account_nodes
+      - 'depends on (1): TB5_site_and_account_nodes · all upstream 4'
+      - 'needed by (0): —'
+      - >-
+        same files as TB6_element_endpoints with no order between them:
+        clear-glass/src/page/field.js, guardian/userscript-field-map.js
+    edges:
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB5_site_and_account_nodes
+        kind: declared

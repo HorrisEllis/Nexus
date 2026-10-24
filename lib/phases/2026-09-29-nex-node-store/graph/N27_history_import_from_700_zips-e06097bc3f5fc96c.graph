@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N27_history_import_from_700_zips:e06097bc3f5fc96c
+type: graph
+id: phase:N27_history_import_from_700_zips:e06097bc3f5fc96c
+context: dependency graph of phase N27_history_import_from_700_zips
+intent: null
+summary: 3 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676295
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676295
+lastSeenAt: 1792787676295
+fingerprint: null
+payload:
+  for: N27_history_import_from_700_zips
+  kind: phase
+  repo: null
+  hash: e06097bc3f5fc96c
+  nodes:
+    - path: cli/import-history.js
+      role: changes
+      exists: true
+      system: cli
+    - path: lib/repo-history.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/zip.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cli/import-history.js
+      to: lib/zip.js
+      kind: requires
+    - from: lib/repo-history.js
+      to: cli/import-history.js
+      kind: requires
+  crossings:
+    - from: lib/repo-history.js
+      to: cli/import-history.js
+      fromSystem: lib
+      toSystem: cli
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N30_archive_import_dropbox_and_copilot_command
+    upstream: []
+    downstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N30_archive_import_dropbox_and_copilot_command
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N30_archive_import_dropbox_and_copilot_command
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): N30_archive_import_dropbox_and_copilot_command · finishing it unlocks
+        N30_archive_import_dropbox_and_copilot_command
+    edges: []

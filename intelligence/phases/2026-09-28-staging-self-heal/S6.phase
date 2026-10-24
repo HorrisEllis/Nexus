@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-staging-self-heal-phasemap.spec::S6
+type: phase
+id: docs_2026-09-28-staging-self-heal-phasemap.spec::S6
+context: pipeline phase S6 of docs/2026-09-28-staging-self-heal-phasemap.spec
+intent: null
+summary: S6 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676176
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676176
+lastSeenAt: 1792787676176
+fingerprint: null
+payload:
+  id: S6
+  map: docs/2026-09-28-staging-self-heal-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/alk/index.js
+    - intelligence/rfr2/version-gate/index.js
+  depends_on:
+    - S5
+  blocks: []
+  spec: null
+  graph: d5fb158cbc0ba8f0

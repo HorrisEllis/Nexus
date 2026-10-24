@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_cortex-schema-registry-phasemap.spec::UM1_schema_for_user_model
+type: phase
+id: docs_cortex-schema-registry-phasemap.spec::UM1_schema_for_user_model
+context: pipeline phase UM1_schema_for_user_model of docs/cortex-schema-registry-phasemap.spec
+intent: null
+summary: UM1_schema_for_user_model (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678192
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678192
+lastSeenAt: 1792787678192
+fingerprint: null
+payload:
+  id: UM1_schema_for_user_model
+  map: docs/cortex-schema-registry-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/schema-registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d62896550a607452

@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-intelligence-loop-phasemap.spec::AP5_autonomous_build_loop
+type: phase
+id: docs_agent-intelligence-loop-phasemap.spec::AP5_autonomous_build_loop
+context: pipeline phase AP5_autonomous_build_loop of docs/agent-intelligence-loop-phasemap.spec
+intent: null
+summary: AP5_autonomous_build_loop (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678098
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678098
+lastSeenAt: 1792787678098
+fingerprint: null
+payload:
+  id: AP5_autonomous_build_loop
+  map: docs/agent-intelligence-loop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-pull.js
+    - lib/tool-index.js
+    - copilot/lib/self-model.js
+    - lib/schema-registry.js
+    - lib/chunk-service.js
+    - loom/scanners/capability-map.js
+  depends_on:
+    - AP1_pull_toolbox
+    - AP2_agent_events_to_intelligence
+    - AP3_strategy_dynamic_db
+    - AP4_intelligence_optimizes
+  blocks: []
+  spec: null
+  graph: fee76168c1767280

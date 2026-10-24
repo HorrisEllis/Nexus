@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gate-memory-phasemap.spec::GM4_the_node_lattice
+type: phase
+id: docs_2026-10-18-gate-memory-phasemap.spec::GM4_the_node_lattice
+context: pipeline phase GM4_the_node_lattice of docs/2026-10-18-gate-memory-phasemap.spec
+intent: null
+summary: GM4_the_node_lattice (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677869
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677869
+lastSeenAt: 1792787677869
+fingerprint: null
+payload:
+  id: GM4_the_node_lattice
+  map: docs/2026-10-18-gate-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/lattice/node-lattice.js
+    - intelligence/routes.js
+    - intelligence/registry-components.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e541a10241def49f

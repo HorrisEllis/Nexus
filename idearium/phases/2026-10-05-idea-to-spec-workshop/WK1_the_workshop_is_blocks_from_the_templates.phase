@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK1_the_workshop_is_blocks_from_the_templates
+type: phase
+id: docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK1_the_workshop_is_blocks_from_the_templates
+context: >-
+  pipeline phase WK1_the_workshop_is_blocks_from_the_templates of
+  docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+intent: null
+summary: WK1_the_workshop_is_blocks_from_the_templates (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677035
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677035
+lastSeenAt: 1792787677035
+fingerprint: null
+payload:
+  id: WK1_the_workshop_is_blocks_from_the_templates
+  map: docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/workshop.js
+    - idearium/ui/workshop.html
+    - idearium/spec-engine/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7118b38fec612014

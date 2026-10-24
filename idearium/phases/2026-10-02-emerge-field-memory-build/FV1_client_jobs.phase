@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+context: pipeline phase FV1_client_jobs of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: FV1_client_jobs (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676683
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676683
+lastSeenAt: 1792787676683
+fingerprint: null
+payload:
+  id: FV1_client_jobs
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/jobs.js
+    - idearium/ui/jobs.html
+  depends_on:
+    - BT1_build_teams
+    - RC1_the_repo_main_chat
+    - EC6_economy_and_the_tokenizer
+    - MR8_crystallization
+  blocks: []
+  spec: null
+  graph: 662e29c3c4d7c409

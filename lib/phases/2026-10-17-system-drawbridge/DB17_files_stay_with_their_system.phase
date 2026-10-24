@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB17_files_stay_with_their_system
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB17_files_stay_with_their_system
+context: >-
+  pipeline phase DB17_files_stay_with_their_system of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB17_files_stay_with_their_system (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677834
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677834
+lastSeenAt: 1792787677834
+fingerprint: null
+payload:
+  id: DB17_files_stay_with_their_system
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-boundary.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0a30e279c2724858

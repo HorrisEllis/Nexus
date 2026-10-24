@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-mobile-compartments-phasemap.spec::MB2_android_compartment
+type: phase
+id: docs_2026-10-16-mobile-compartments-phasemap.spec::MB2_android_compartment
+context: pipeline phase MB2_android_compartment of docs/2026-10-16-mobile-compartments-phasemap.spec
+intent: null
+summary: MB2_android_compartment (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677718
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677718
+lastSeenAt: 1792787677718
+fingerprint: null
+payload:
+  id: MB2_android_compartment
+  map: docs/2026-10-16-mobile-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/compartment/process-runner.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9674795718df2e8a

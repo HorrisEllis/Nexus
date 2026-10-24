@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GA4_lib_meta_as_cortex_tools:f334e2fccb2cff97
+type: graph
+id: phase:GA4_lib_meta_as_cortex_tools:f334e2fccb2cff97
+context: dependency graph of phase GA4_lib_meta_as_cortex_tools
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787678174
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678174
+lastSeenAt: 1792787678174
+fingerprint: null
+payload:
+  for: GA4_lib_meta_as_cortex_tools
+  kind: phase
+  repo: null
+  hash: f334e2fccb2cff97
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/copilot-guardian-cos-expansion-phasemap.spec::GA10_copilot_capability_self_awareness
+    upstream: []
+    downstream:
+      - docs/copilot-guardian-cos-expansion-phasemap.spec::GA10_copilot_capability_self_awareness
+    blockedBy: []
+    unlocks:
+      - docs/copilot-guardian-cos-expansion-phasemap.spec::GA10_copilot_capability_self_awareness
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): GA10_copilot_capability_self_awareness · finishing it unlocks
+        GA10_copilot_capability_self_awareness
+    edges: []

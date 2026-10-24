@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC8_economy_console
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC8_economy_console
+context: pipeline phase EC8_economy_console of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC8_economy_console (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676318
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676318
+lastSeenAt: 1792787676318
+fingerprint: null
+payload:
+  id: EC8_economy_console
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/settings.html
+    - idearium/api/index.js
+  depends_on:
+    - EC6_guardian_enforcement
+  blocks: []
+  spec: null
+  graph: 1d70149370aba577

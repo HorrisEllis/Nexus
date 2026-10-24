@@ -1,0 +1,76 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GQ1_quality_stream:85b1ad483b041f8f
+type: graph
+id: phase:GQ1_quality_stream:85b1ad483b041f8f
+context: dependency graph of phase GQ1_quality_stream
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677945
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677945
+lastSeenAt: 1792787677945
+fingerprint: null
+payload:
+  for: GQ1_quality_stream
+  kind: phase
+  repo: null
+  hash: 85b1ad483b041f8f
+  nodes:
+    - path: lib/quality-stream.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+    dependents:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ3_brick_tests
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ4_phase_gate_keeps_the_test
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+    upstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+    downstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB1_autobuild_loop_and_resume
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ3_brick_tests
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ4_phase_gate_keeps_the_test
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET1_autobuild_config_and_command
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET2_autobuild_settings_ui
+      - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+      - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ3_brick_tests
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ4_phase_gate_keeps_the_test
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): CT1_cos_test_runner'
+      - >-
+        needed by (4): GQ3_brick_tests, GQ2_brick_gate_runs_the_test, GQ4_phase_gate_keeps_the_test,
+        GW1_gate_primitive · all downstream 20 · finishing it unlocks GQ3_brick_tests,
+        GQ4_phase_gate_keeps_the_test
+    edges:
+      - from: docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+        kind: declared

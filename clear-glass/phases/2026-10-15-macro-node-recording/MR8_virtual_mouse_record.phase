@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR8_virtual_mouse_record
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR8_virtual_mouse_record
+context: pipeline phase MR8_virtual_mouse_record of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR8_virtual_mouse_record (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677593
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677593
+lastSeenAt: 1792787677593
+fingerprint: null
+payload:
+  id: MR8_virtual_mouse_record
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8f07c8e16762a989

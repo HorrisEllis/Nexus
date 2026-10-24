@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+context: pipeline phase FM1_mining_failure_modes of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: FM1_mining_failure_modes (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676712
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676712
+lastSeenAt: 1792787676712
+fingerprint: null
+payload:
+  id: FM1_mining_failure_modes
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/self-heal/failure-mode-forensics.js
+    - cortex/self-heal/fault-taxonomy.js
+    - idearium/repo/proof-run.js
+  depends_on:
+    - PR1_proof_run_the_delivery_checker
+    - CF1_cfr_improved_with_rfr2
+  blocks: []
+  spec: null
+  graph: 4584c0639e11da24

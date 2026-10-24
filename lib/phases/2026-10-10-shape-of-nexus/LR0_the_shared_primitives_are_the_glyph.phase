@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::LR0_the_shared_primitives_are_the_glyph
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::LR0_the_shared_primitives_are_the_glyph
+context: >-
+  pipeline phase LR0_the_shared_primitives_are_the_glyph of
+  docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: LR0_the_shared_primitives_are_the_glyph (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677277
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677277
+lastSeenAt: 1792787677277
+fingerprint: null
+payload:
+  id: LR0_the_shared_primitives_are_the_glyph
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chunk-glyph.js
+    - lib/languages.js
+    - lib/build-context.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6952439b2f80c99c

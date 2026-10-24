@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:VC2_changelogs_rendered:991430c3f767143b
+type: graph
+id: phase:VC2_changelogs_rendered:991430c3f767143b
+context: dependency graph of phase VC2_changelogs_rendered
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677914
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677914
+lastSeenAt: 1792787677914
+fingerprint: null
+payload:
+  for: VC2_changelogs_rendered
+  kind: phase
+  repo: null
+  hash: 991430c3f767143b
+  nodes:
+    - path: idearium/ui/js/repo-versions.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: scripts/render-changelog.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::VC1_a_change_entry_for_every_event
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+    dependents: []
+    upstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::VC1_a_change_entry_for_every_event
+    downstream: []
+    blockedBy:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::VC1_a_change_entry_for_every_event
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by VC1_a_change_entry_for_every_event, IN2_quotes_ledger
+      - 'depends on (2): VC1_a_change_entry_for_every_event, IN2_quotes_ledger · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::VC1_a_change_entry_for_every_event
+        kind: declared
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+        kind: declared

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX3_talk_to_agent_launcher
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX3_talk_to_agent_launcher
+context: >-
+  pipeline phase TX3_talk_to_agent_launcher of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX3_talk_to_agent_launcher (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678124
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678124
+lastSeenAt: 1792787678124
+fingerprint: null
+payload:
+  id: TX3_talk_to_agent_launcher
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/browser.js
+    - clear-glass/src/bookmarks/browser.js
+    - cos/app/switch.js
+    - lib/agent-tools/tools/identity/switch-agent.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 095e5e9f21e07bf9

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC1_context_by_uuid_injection
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC1_context_by_uuid_injection
+context: >-
+  pipeline phase IC1_context_by_uuid_injection of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC1_context_by_uuid_injection (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675492
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675492
+lastSeenAt: 1792787675492
+fingerprint: null
+payload:
+  id: IC1_context_by_uuid_injection
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/lattice/associative-lattice.js
+    - emergence/vendor/rfr2/causality/index.js
+    - intelligence/rfr2/causality/index.js
+    - guardian/nexus-hey-claude.user.js
+    - guardian/userscript-chatgpt.js
+    - guardian/userscript-claude.js
+  depends_on:
+    - RR4_governed_handshake_on_handoff
+  blocks: []
+  spec: null
+  graph: e3fff7e8482237f8

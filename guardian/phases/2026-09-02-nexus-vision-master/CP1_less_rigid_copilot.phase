@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::CP1_less_rigid_copilot
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CP1_less_rigid_copilot
+context: pipeline phase CP1_less_rigid_copilot of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: CP1_less_rigid_copilot (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675700
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675700
+lastSeenAt: 1792787675700
+fingerprint: null
+payload:
+  id: CP1_less_rigid_copilot
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ce68f1c10420ee04

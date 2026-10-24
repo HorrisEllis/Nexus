@@ -1,0 +1,70 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BR1_brainos_cross_system_relay:74f187aeb527e717
+type: graph
+id: phase:BR1_brainos_cross_system_relay:74f187aeb527e717
+context: dependency graph of phase BR1_brainos_cross_system_relay
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675768
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675768
+lastSeenAt: 1792787675768
+fingerprint: null
+payload:
+  for: BR1_brainos_cross_system_relay
+  kind: phase
+  repo: null
+  hash: 74f187aeb527e717
+  nodes:
+    - path: ui/brainos/brainos-canvas.js
+      role: changes
+      exists: true
+      system: ui
+    - path: tests/modules/brainos-canvas.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-brainos-canvas-agent-mesh.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-brainos-dynamic-mesh-canvas.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: tests/modules/brainos-canvas.test.js
+      to: ui/brainos/brainos-canvas.js
+      kind: requires
+    - from: tests/modules/test-brainos-canvas-agent-mesh.js
+      to: ui/brainos/brainos-canvas.js
+      kind: requires
+    - from: tests/modules/test-brainos-dynamic-mesh-canvas.js
+      to: ui/brainos/brainos-canvas.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG3_relay_into_cortex_sse
+    dependents: []
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG3_relay_into_cortex_sse
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+    downstream: []
+    blockedBy:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG3_relay_into_cortex_sse
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by CG3_relay_into_cortex_sse
+      - 'depends on (1): CG3_relay_into_cortex_sse · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG3_relay_into_cortex_sse
+        kind: declared

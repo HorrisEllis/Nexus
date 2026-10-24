@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD13_the_machine_is_cos
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD13_the_machine_is_cos
+context: pipeline phase SD13_the_machine_is_cos of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD13_the_machine_is_cos (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677239
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677239
+lastSeenAt: 1792787677239
+fingerprint: null
+payload:
+  id: SD13_the_machine_is_cos
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/workspace/index.js
+    - cos/workspace/vm-control.js
+    - cos/testenv/provision.js
+    - cos/cli/commands/vm.js
+    - idearium/ui/desktop.html
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1141a9ac8cf919f0

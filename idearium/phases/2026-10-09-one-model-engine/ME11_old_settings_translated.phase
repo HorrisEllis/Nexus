@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME11_old_settings_translated
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME11_old_settings_translated
+context: pipeline phase ME11_old_settings_translated of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME11_old_settings_translated (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677173
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677173
+lastSeenAt: 1792787677173
+fingerprint: null
+payload:
+  id: ME11_old_settings_translated
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - idearium/lib/config-core.cjs
+    - idearium/ui/settings.html
+    - idearium/cli/route-commands.js
+  depends_on:
+    - ME3_one_engine_one_budget
+    - ME5_one_chooser
+  blocks: []
+  spec: null
+  graph: 5b0ec7fc75e2ad91

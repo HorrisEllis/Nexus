@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+context: pipeline phase RF1_relational_field of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: RF1_relational_field (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676611
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676611
+lastSeenAt: 1792787676611
+fingerprint: null
+payload:
+  id: RF1_relational_field
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/core/relation.js
+    - idearium/repo/graph.js
+    - intelligence/cfr/graph.js
+  depends_on:
+    - EM1_emerge_core
+    - CF1_cfr_improved_with_rfr2
+  blocks: []
+  spec: null
+  graph: 42da3a417bea3c55

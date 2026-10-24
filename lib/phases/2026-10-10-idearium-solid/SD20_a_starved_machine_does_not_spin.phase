@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD20_a_starved_machine_does_not_spin
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD20_a_starved_machine_does_not_spin
+context: >-
+  pipeline phase SD20_a_starved_machine_does_not_spin of
+  docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD20_a_starved_machine_does_not_spin (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677249
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677249
+lastSeenAt: 1792787677249
+fingerprint: null
+payload:
+  id: SD20_a_starved_machine_does_not_spin
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - lib/pipeline-routing.js
+    - lib/repo-inject.js
+    - lib/code-edit.js
+    - lib/intake.js
+    - cortex/core/raid/officiator.js
+    - cortex/core/raid/worker.js
+  depends_on:
+    - SD19_a_refusal_goes_back_to_its_agent
+  blocks: []
+  spec: null
+  graph: 76dc07b8a12db6ca

@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MEM3_timestamps_everywhere:3782812ddfa09005
+type: graph
+id: phase:MEM3_timestamps_everywhere:3782812ddfa09005
+context: dependency graph of phase MEM3_timestamps_everywhere
+intent: null
+summary: 16 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675744
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675744
+lastSeenAt: 1792787675744
+fingerprint: null
+payload:
+  for: MEM3_timestamps_everywhere
+  kind: phase
+  repo: null
+  hash: 3782812ddfa09005
+  nodes:
+    - path: cos/host/system-map.js
+      role: changes
+      exists: true
+      system: cos
+    - path: orchestrator/lib/spec-drift.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: scripts/confirm-build.mjs
+      role: changes
+      exists: true
+      system: null
+    - path: cos/host/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/vaultd/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: cos/foundation/axioms.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/compiler-enum.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/runtime-enum.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/types.js
+      role: uses
+      exists: true
+      system: cos
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: cos/host/system-map.js
+      to: cos/foundation/types.js
+      kind: requires
+    - from: cos/host/system-map.js
+      to: cos/foundation/axioms.js
+      kind: requires
+    - from: cos/host/system-map.js
+      to: cos/foundation/runtime-enum.js
+      kind: requires
+    - from: cos/host/system-map.js
+      to: cos/foundation/compiler-enum.js
+      kind: requires
+    - from: cos/host/system-map.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/system-map.js
+      kind: requires
+    - from: cos/test/test.js
+      to: cos/host/system-map.js
+      kind: requires
+    - from: cos/vaultd/server.js
+      to: cos/host/system-map.js
+      kind: requires
+  crossings:
+    - from: orchestrator/lib/spec-drift.js
+      to: intelligence/gap/predicate.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS4_active_drift_enforcement
+    dependents: []
+    upstream:
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS1_sovereign_folder_and_foundation
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS4_active_drift_enforcement
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS4_active_drift_enforcement
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by VS4_active_drift_enforcement
+      - 'depends on (1): VS4_active_drift_enforcement · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS4_active_drift_enforcement
+        kind: inferred

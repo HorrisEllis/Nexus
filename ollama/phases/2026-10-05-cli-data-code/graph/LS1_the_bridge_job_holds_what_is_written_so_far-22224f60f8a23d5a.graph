@@ -1,0 +1,223 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LS1_the_bridge_job_holds_what_is_written_so_far:22224f60f8a23d5a
+type: graph
+id: phase:LS1_the_bridge_job_holds_what_is_written_so_far:22224f60f8a23d5a
+context: dependency graph of phase LS1_the_bridge_job_holds_what_is_written_so_far
+intent: null
+summary: 21 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677000
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677000
+lastSeenAt: 1792787677000
+fingerprint: null
+payload:
+  for: LS1_the_bridge_job_holds_what_is_written_so_far
+  kind: phase
+  repo: null
+  hash: 22224f60f8a23d5a
+  nodes:
+    - path: ollama/lib/dispatch.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: loom/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: ollama/routes/jobs.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/server.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-ollama-activity.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-reply-continuation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ollama-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reply-continuation.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/tape.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: warp/dispatch/cascade.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/dispatch/index.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/dispatch/population.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/plugins/crystallizer-flatfile.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: ollama/lib/ollama-client.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/ollama-client.js
+      to: ollama/lib/state.js
+      kind: requires
+    - from: ollama/lib/ollama-client.js
+      to: lib/ollama-activity.js
+      kind: requires
+    - from: ollama/lib/ollama-client.js
+      to: ollama/lib/tape.js
+      kind: requires
+    - from: ollama/lib/ollama-client.js
+      to: lib/reply-continuation.js
+      kind: requires
+    - from: ollama/lib/ollama-client.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/index.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/cascade.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: warp/plugins/crystallizer-flatfile.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/population.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: loom/agent-suite/index.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: ollama/routes/jobs.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: tests/modules/test-ollama-activity.test.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: tests/modules/test-reply-continuation.test.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: ollama/lib/dispatch.js
+      kind: requires
+  crossings:
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/index.js
+      fromSystem: ollama
+      toSystem: warp
+      kind: system
+      known: true
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/cascade.js
+      fromSystem: ollama
+      toSystem: warp
+      kind: system
+      known: true
+    - from: ollama/lib/dispatch.js
+      to: warp/plugins/crystallizer-flatfile.js
+      fromSystem: ollama
+      toSystem: warp
+      kind: system
+      known: true
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/population.js
+      fromSystem: ollama
+      toSystem: warp
+      kind: system
+      known: true
+    - from: idearium/agent-suite/index.js
+      to: ollama/lib/ollama-client.js
+      fromSystem: idearium
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: loom/agent-suite/index.js
+      to: ollama/lib/ollama-client.js
+      fromSystem: loom
+      toSystem: ollama
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS2_copilot_sends_the_text_as_it_comes
+    upstream: []
+    downstream:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS2_copilot_sends_the_text_as_it_comes
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS3_one_feed_for_every_agent
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS4_live_in_the_code_tab_and_the_work_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::LS2_copilot_sends_the_text_as_it_comes
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): LS2_copilot_sends_the_text_as_it_comes · all downstream 3 · finishing it
+        unlocks LS2_copilot_sends_the_text_as_it_comes
+    edges: []

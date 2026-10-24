@@ -1,0 +1,71 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T4_cos_role_confirmed:73888c5f227ef76d
+type: graph
+id: phase:T4_cos_role_confirmed:73888c5f227ef76d
+context: dependency graph of phase T4_cos_role_confirmed
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675825
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675825
+lastSeenAt: 1792787675825
+fingerprint: null
+payload:
+  for: T4_cos_role_confirmed
+  kind: phase
+  repo: null
+  hash: 73888c5f227ef76d
+  nodes:
+    - path: loom/templates/system-scaffold.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/test/system-scaffold.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/templates/system-scaffold.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/templates/system-scaffold.js
+      kind: requires
+    - from: loom/test/system-scaffold.test.js
+      to: loom/templates/system-scaffold.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+    dependents:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+    upstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+    downstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N3_stray_root_files_found_after_N1
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): T1_extend_system_scaffold'
+      - 'needed by (1): N2_root_nexus_js_to_nexus_folder · all downstream 2'
+    edges:
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+        kind: declared

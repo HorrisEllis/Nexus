@@ -1,0 +1,236 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM14_components_store:c5ab3492fddbea5d
+type: graph
+id: phase:LM14_components_store:c5ab3492fddbea5d
+context: dependency graph of phase LM14_components_store
+intent: null
+summary: 25 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675550
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675550
+lastSeenAt: 1792787675550
+fingerprint: null
+payload:
+  for: LM14_components_store
+  kind: phase
+  repo: null
+  hash: c5ab3492fddbea5d
+  nodes:
+    - path: lib/agent-tools/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/ask.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/tool-runtime.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/framework-builder.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/generate-tool-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/loom/harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/user-guide-generator.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tool-call-listener.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/diagnostic/diagnose.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/move-data.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/run-command.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/run-pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/read-file.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-config.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-config.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/event-types.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tool-call-listener.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/query/read-file.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/run-command.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/diagnostic/diagnose.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/move-data.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/run-pipeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: intelligence/framework-builder.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/generate-tool-nodes.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tool-guide.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/loom/harness.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/tool-layers.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/user-guide-generator.js
+      to: lib/agent-tools/index.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM4_per_system_tool_index
+    dependents: []
+    upstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM4_per_system_tool_index
+    downstream: []
+    blockedBy:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM4_per_system_tool_index
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by LM2_registry_as_hub_with_watchdog, LM4_per_system_tool_index
+      - >-
+        depends on (2): LM2_registry_as_hub_with_watchdog, LM4_per_system_tool_index · all upstream
+        3
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+        kind: declared
+      - from: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM4_per_system_tool_index
+        kind: declared

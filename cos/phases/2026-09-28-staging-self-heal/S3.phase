@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-staging-self-heal-phasemap.spec::S3
+type: phase
+id: docs_2026-09-28-staging-self-heal-phasemap.spec::S3
+context: pipeline phase S3 of docs/2026-09-28-staging-self-heal-phasemap.spec
+intent: null
+summary: S3 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676166
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676166
+lastSeenAt: 1792787676166
+fingerprint: null
+payload:
+  id: S3
+  map: docs/2026-09-28-staging-self-heal-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/ci/index.js
+    - cos/runtime/syntax-check.cjs
+    - intelligence/rfr2/enforcement/index.js
+  depends_on:
+    - S1
+  blocks: []
+  spec: null
+  graph: 9e150090cf73a41d

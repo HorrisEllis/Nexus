@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SET2_autobuild_settings_ui:c78e2af0f32b3534
+type: graph
+id: phase:SET2_autobuild_settings_ui:c78e2af0f32b3534
+context: dependency graph of phase SET2_autobuild_settings_ui
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677949
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677949
+lastSeenAt: 1792787677949
+fingerprint: null
+payload:
+  for: SET2_autobuild_settings_ui
+  kind: phase
+  repo: null
+  hash: c78e2af0f32b3534
+  nodes:
+    - path: idearium/ui/js/settings.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/ui/settings.html
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET1_autobuild_config_and_command
+    dependents: []
+    upstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB1_autobuild_loop_and_resume
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::DC1_dynamic_chunk_at_plan
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ2_brick_gate_runs_the_test
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ3_brick_tests
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ4_phase_gate_keeps_the_test
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET1_autobuild_config_and_command
+    downstream: []
+    blockedBy:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET1_autobuild_config_and_command
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by SET1_autobuild_config_and_command
+      - 'depends on (1): SET1_autobuild_config_and_command · all upstream 9'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-19-solid-build-foundation-phasemap.spec::SET1_autobuild_config_and_command
+        kind: declared

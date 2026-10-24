@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::AU1_addenda_written_for_you
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::AU1_addenda_written_for_you
+context: pipeline phase AU1_addenda_written_for_you of docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: AU1_addenda_written_for_you (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677463
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677463
+lastSeenAt: 1792787677463
+fingerprint: null
+payload:
+  id: AU1_addenda_written_for_you
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/auto-addendum.js
+    - lib/spec-document.js
+  depends_on:
+    - GT2_each_gate_tags_and_reports
+  blocks: []
+  spec: null
+  graph: a1c1fe9139548e36

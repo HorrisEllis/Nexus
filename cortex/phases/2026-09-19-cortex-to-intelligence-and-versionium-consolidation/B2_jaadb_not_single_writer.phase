@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B2_jaadb_not_single_writer
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B2_jaadb_not_single_writer
+context: >-
+  pipeline phase B2_jaadb_not_single_writer of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: B2_jaadb_not_single_writer (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675956
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675956
+lastSeenAt: 1792787675956
+fingerprint: null
+payload:
+  id: B2_jaadb_not_single_writer
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/memory/jaa-db.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d497d683710ee21c

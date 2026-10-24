@@ -1,0 +1,94 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE3_the_handshake:aa79fe09a96f799d
+type: graph
+id: phase:CE3_the_handshake:aa79fe09a96f799d
+context: dependency graph of phase CE3_the_handshake
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677849
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677849
+lastSeenAt: 1792787677849
+fingerprint: null
+payload:
+  for: CE3_the_handshake
+  kind: phase
+  repo: null
+  hash: aa79fe09a96f799d
+  nodes:
+    - path: lib/contract-handshake.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/drawbridge.js
+      role: changes
+      exists: false
+      system: lib
+    - path: orchestrator/lib/contract-handshake.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/peer-relay.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/lib/peer-relay.js
+      to: orchestrator/lib/contract-handshake.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/contract-handshake.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+    dependents:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+    upstream:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+    downstream:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE6_the_code_tab
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE7_agents_and_commands
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+    blockedBy:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+    unlocks:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by CE2_the_shell_is_declared
+      - 'depends on (1): CE2_the_shell_is_declared · all upstream 4'
+      - >-
+        needed by (3): CE4_the_terminal_bridge, CE5_the_guest_file_tree,
+        CS3_the_registry_is_the_bridge · all downstream 13 · finishing it unlocks
+        CE4_the_terminal_bridge, CE5_the_guest_file_tree
+    edges:
+      - from: docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+        kind: declared

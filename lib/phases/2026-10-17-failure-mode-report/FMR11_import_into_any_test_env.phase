@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-failure-mode-report-phasemap.spec::FMR11_import_into_any_test_env
+type: phase
+id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR11_import_into_any_test_env
+context: pipeline phase FMR11_import_into_any_test_env of docs/2026-10-17-failure-mode-report-phasemap.spec
+intent: null
+summary: FMR11_import_into_any_test_env (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677788
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677788
+lastSeenAt: 1792787677788
+fingerprint: null
+payload:
+  id: FMR11_import_into_any_test_env
+  map: docs/2026-10-17-failure-mode-report-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/spec/cortex.spec
+    - diagnostic/spec/diagnostic.spec
+    - intelligence/spec/intelligence.spec
+    - lib/system-boundary.js
+    - lib/flight-data.js
+    - intelligence/cfr/delta.js
+    - lib/nexus-client.js
+    - docs/CLAUDE.md
+    - lib/phase-graph.js
+    - lib/failure-replay.js
+    - cos/testenv/replay.js
+    - products/flight-recorder/bin/flight-recorder.js
+    - lib/error-log.js
+  depends_on:
+    - FMR6_run_it_in_cos
+  blocks: []
+  spec: null
+  graph: 53ed35ed7a5f4718

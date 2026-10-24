@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::LN0_lines_tool
+type: phase
+id: docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::LN0_lines_tool
+context: pipeline phase LN0_lines_tool of docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+intent: null
+summary: LN0_lines_tool (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677416
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677416
+lastSeenAt: 1792787677416
+fingerprint: null
+payload:
+  id: LN0_lines_tool
+  map: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 88358d2f2c9e4f7e

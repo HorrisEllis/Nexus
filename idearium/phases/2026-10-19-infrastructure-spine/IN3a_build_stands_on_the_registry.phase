@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::IN3a_build_stands_on_the_registry
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN3a_build_stands_on_the_registry
+context: >-
+  pipeline phase IN3a_build_stands_on_the_registry of
+  docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: IN3a_build_stands_on_the_registry (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677917
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677917
+lastSeenAt: 1792787677917
+fingerprint: null
+payload:
+  id: IN3a_build_stands_on_the_registry
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.198 — test-pipeline-root-causes RC-16, RC-18
+  files:
+    - idearium/repo/snapshot.js
+    - idearium/api/index.js
+    - idearium/ui/js/app.js
+  depends_on: []
+  blocks: []
+  spec: idearium/spec/idearium.repo-snapshot.spec
+  graph: a6693c99336de552

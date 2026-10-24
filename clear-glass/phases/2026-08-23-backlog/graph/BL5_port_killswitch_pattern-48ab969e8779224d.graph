@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL5_port_killswitch_pattern:48ab969e8779224d
+type: graph
+id: phase:BL5_port_killswitch_pattern:48ab969e8779224d
+context: dependency graph of phase BL5_port_killswitch_pattern
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675402
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675402
+lastSeenAt: 1792787675402
+fingerprint: null
+payload:
+  for: BL5_port_killswitch_pattern
+  kind: phase
+  repo: null
+  hash: 48ab969e8779224d
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL2_guardian_zip_mining_report
+    dependents: []
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL2_guardian_zip_mining_report
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): BL2_guardian_zip_mining_report'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL2_guardian_zip_mining_report
+        kind: declared

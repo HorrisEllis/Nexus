@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+context: >-
+  pipeline phase T3_warp_replaces_siso of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: T3_warp_replaces_siso (?) — 12 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675824
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675824
+lastSeenAt: 1792787675824
+fingerprint: null
+payload:
+  id: T3_warp_replaces_siso
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/siso/Stream.js
+    - warp/core/index.js
+    - cos/siso/index.js
+    - warp/core/Stream.js
+    - warp/core/StreamLog.js
+    - cos/cli/commands/create.js
+    - cos/compartment/process-runner.js
+    - cos/host/event-bus.js
+    - cos/host/index.js
+    - cli/nexus-cli.js
+    - cos/test/test.js
+    - emerge/compiler/ring-buffer.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4a279856f4f7d1cc

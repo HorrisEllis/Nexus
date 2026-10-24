@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR7_token_reduction_toolkit
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR7_token_reduction_toolkit
+context: pipeline phase SR7_token_reduction_toolkit of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR7_token_reduction_toolkit (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675718
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675718
+lastSeenAt: 1792787675718
+fingerprint: null
+payload:
+  id: SR7_token_reduction_toolkit
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/vector-memory.js
+    - lib/chat-logger.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3530c94e6e6673f7

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N20_desktop_login
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N20_desktop_login
+context: pipeline phase N20_desktop_login of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N20_desktop_login (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676279
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676279
+lastSeenAt: 1792787676279
+fingerprint: null
+payload:
+  id: N20_desktop_login
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/provision.js
+    - idearium/ui/desktop.html
+    - docs/atlases/idearium-atlas.md
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4254a95488f078bd

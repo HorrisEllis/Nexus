@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DK3_vm_engines
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DK3_vm_engines
+context: pipeline phase DK3_vm_engines of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DK3_vm_engines (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676425
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676425
+lastSeenAt: 1792787676425
+fingerprint: null
+payload:
+  id: DK3_vm_engines
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/workspace/index.js
+    - cos/testenv/provision.js
+  depends_on:
+    - DK2_desktop_setup_popup
+  blocks: []
+  spec: null
+  graph: c8c57bc98a3b8bdc

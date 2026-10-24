@@ -1,0 +1,307 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FMR11_import_into_any_test_env:53ed35ed7a5f4718
+type: graph
+id: phase:FMR11_import_into_any_test_env:53ed35ed7a5f4718
+context: dependency graph of phase FMR11_import_into_any_test_env
+intent: null
+summary: 37 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677788
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677788
+lastSeenAt: 1792787677788
+fingerprint: null
+payload:
+  for: FMR11_import_into_any_test_env
+  kind: phase
+  repo: null
+  hash: 53ed35ed7a5f4718
+  nodes:
+    - path: cortex/spec/cortex.spec
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/testenv/replay.js
+      role: changes
+      exists: false
+      system: cos
+    - path: diagnostic/spec/diagnostic.spec
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: docs/CLAUDE.md
+      role: changes
+      exists: true
+      system: null
+    - path: intelligence/cfr/delta.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/spec/intelligence.spec
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/error-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/failure-replay.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/flight-data.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: products/flight-recorder/bin/flight-recorder.js
+      role: changes
+      exists: true
+      system: null
+    - path: cli/cfr-debug.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: copilot/movement-map.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/cfr/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/drawbridge-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/routing-ir.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/personas.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-config.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-cost.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/run-watch.js
+      role: uses
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: uses
+      exists: true
+      system: null
+  edges:
+    - from: lib/flight-data.js
+      to: lib/run-watch.js
+      kind: requires
+    - from: lib/flight-data.js
+      to: lib/phase-cost.js
+      kind: requires
+    - from: lib/flight-data.js
+      to: lib/phase-faults.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/routing-ir.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/personas.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: products/flight-recorder/lib/project.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: lib/run-state.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/delta.js
+      kind: requires
+    - from: copilot/movement-map.js
+      to: intelligence/cfr/delta.js
+      kind: requires
+    - from: intelligence/cfr/index.js
+      to: intelligence/cfr/delta.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/cfr/delta.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/cfr/delta.js
+      kind: requires
+  crossings:
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/routing-ir.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/personas.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/delta.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: copilot/movement-map.js
+      to: intelligence/cfr/delta.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+    dependents: []
+    upstream:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR1_every_ledger_into_rfr2
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR2_every_failure_reaches_the_record
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR3_the_report
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR4_the_macro_bundle
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+    downstream: []
+    blockedBy:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by FMR6_run_it_in_cos
+      - 'depends on (1): FMR6_run_it_in_cos · all upstream 8'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+        kind: declared

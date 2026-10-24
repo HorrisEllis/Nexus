@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::TB2_new_tab_menu
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::TB2_new_tab_menu
+context: pipeline phase TB2_new_tab_menu of docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: TB2_new_tab_menu (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677404
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677404
+lastSeenAt: 1792787677404
+fingerprint: null
+payload:
+  id: TB2_new_tab_menu
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TB1_tab_is_a_view
+  blocks: []
+  spec: null
+  graph: 12881bf49a145127

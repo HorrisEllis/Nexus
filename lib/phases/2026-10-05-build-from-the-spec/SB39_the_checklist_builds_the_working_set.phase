@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB39_the_checklist_builds_the_working_set
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB39_the_checklist_builds_the_working_set
+context: >-
+  pipeline phase SB39_the_checklist_builds_the_working_set of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB39_the_checklist_builds_the_working_set (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676923
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676923
+lastSeenAt: 1792787676923
+fingerprint: null
+payload:
+  id: SB39_the_checklist_builds_the_working_set
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/context-prereqs.js
+    - lib/agent-tools/tools/query/learn.js
+    - lib/agent-tools/index.js
+    - lib/agent-tools/tool-guide.js
+    - lib/agent-tools/tool-catalog.js
+    - copilot/lib/workset.js
+    - copilot/tool-runtime.js
+    - copilot/server.js
+    - lib/repo-agent.js
+    - lib/repo-prompt-blocks.js
+  depends_on:
+    - SB38_prerequisites_the_questions_first
+  blocks: []
+  spec: null
+  graph: 2ebaab7551ee77f8

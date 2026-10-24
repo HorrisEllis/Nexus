@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-full-capability-phasemap.spec::P6_identity_naming
+type: phase
+id: docs_copilot-full-capability-phasemap.spec::P6_identity_naming
+context: pipeline phase P6_identity_naming of docs/copilot-full-capability-phasemap.spec
+intent: null
+summary: P6_identity_naming (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678163
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678163
+lastSeenAt: 1792787678163
+fingerprint: null
+payload:
+  id: P6_identity_naming
+  map: docs/copilot-full-capability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/self-model.js
+    - tests/modules/test-repo-hat-memory.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0c33f7aab8915a01

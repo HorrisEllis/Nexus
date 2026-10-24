@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456416771
+exported_at: 1792787677990
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416771
-lastSeenAt: 1792456416771
+firstSeenAt: 1792787677990
+lastSeenAt: 1792787677990
 fingerprint: null
 payload:
   for: DK1_dynamic_chunking
@@ -81,7 +81,6 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 6
     deps:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
@@ -114,12 +113,17 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - >-
-        DAG 7583ffef0c495b95 · layer 6 · blocked by CH1_strategies_behind_the_contract,
-        DC1_dynamic_chunk_at_plan
+      - layer 6 · blocked by CH1_strategies_behind_the_contract, DC1_dynamic_chunk_at_plan
       - >-
         depends on (3): CH1_strategies_behind_the_contract, DC1_dynamic_chunk_at_plan,
         MF1_model_fit_routing · all upstream 11
       - >-
         needed by (2): DK2_learned_granularity, GW2_gates_at_every_level · all downstream 3 ·
         finishing it unlocks DK2_learned_granularity
+    edges:
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+        kind: declared
+      - from: docs/2026-10-19-solid-build-foundation-phasemap.spec::DC1_dynamic_chunk_at_plan
+        kind: declared
+      - from: docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+        kind: declared

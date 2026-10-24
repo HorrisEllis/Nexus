@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-runtime-load-phasemap.spec::PF2_velocity_steers_the_governor
+type: phase
+id: docs_2026-10-07-runtime-load-phasemap.spec::PF2_velocity_steers_the_governor
+context: pipeline phase PF2_velocity_steers_the_governor of docs/2026-10-07-runtime-load-phasemap.spec
+intent: null
+summary: PF2_velocity_steers_the_governor (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677103
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677103
+lastSeenAt: 1792787677103
+fingerprint: null
+payload:
+  id: PF2_velocity_steers_the_governor
+  map: docs/2026-10-07-runtime-load-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/diagnostic/resource-monitor.js
+    - lib/resource-monitor.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5c6b870477e755ff

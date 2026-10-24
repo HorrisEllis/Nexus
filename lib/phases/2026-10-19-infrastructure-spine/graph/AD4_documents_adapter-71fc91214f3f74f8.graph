@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AD4_documents_adapter:71fc91214f3f74f8
+type: graph
+id: phase:AD4_documents_adapter:71fc91214f3f74f8
+context: dependency graph of phase AD4_documents_adapter
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677908
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677908
+lastSeenAt: 1792787677908
+fingerprint: null
+payload:
+  for: AD4_documents_adapter
+  kind: phase
+  repo: null
+  hash: 71fc91214f3f74f8
+  nodes:
+    - path: lib/adapters/documents.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+    dependents:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NT1_neutrality_test
+    upstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+    downstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NT1_neutrality_test
+    blockedBy:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by AD1_adapter_contract
+      - 'depends on (1): AD1_adapter_contract · all upstream 4'
+      - 'needed by (1): NT1_neutrality_test'
+    edges:
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+        kind: declared

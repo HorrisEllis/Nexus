@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB6_files_changes_plans_cos_tabs:53d029fe85983028
+type: graph
+id: phase:TB6_files_changes_plans_cos_tabs:53d029fe85983028
+context: dependency graph of phase TB6_files_changes_plans_cos_tabs
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677664
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677664
+lastSeenAt: 1792787677664
+fingerprint: null
+payload:
+  for: TB6_files_changes_plans_cos_tabs
+  kind: phase
+  repo: null
+  hash: 53d029fe85983028
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+    dependents: []
+    upstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+    downstream: []
+    blockedBy:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by TB5_tab_shell
+      - 'depends on (1): TB5_tab_shell · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+        kind: declared

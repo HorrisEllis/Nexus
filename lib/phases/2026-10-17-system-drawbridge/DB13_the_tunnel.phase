@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+context: pipeline phase DB13_the_tunnel of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB13_the_tunnel (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677826
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677826
+lastSeenAt: 1792787677826
+fingerprint: null
+payload:
+  id: DB13_the_tunnel
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-registry.js
+    - idearium/cli/route-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1bdf18b3efb9edf1

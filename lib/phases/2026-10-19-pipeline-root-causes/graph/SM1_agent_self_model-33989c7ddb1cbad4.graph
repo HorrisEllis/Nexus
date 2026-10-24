@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792653394711
+exported_at: 1792787677933
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394711
-lastSeenAt: 1792653394711
+firstSeenAt: 1792787677933
+lastSeenAt: 1792787677933
 fingerprint: null
 payload:
   for: SM1_agent_self_model
@@ -27,7 +27,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 4470939bf8678599
     layer: 0
     deps: []
     dependents: []
@@ -38,6 +37,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 4470939bf8678599 · layer 0
+      - layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+    edges: []

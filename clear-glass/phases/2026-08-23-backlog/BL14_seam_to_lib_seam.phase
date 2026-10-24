@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL14_seam_to_lib_seam
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL14_seam_to_lib_seam
+context: pipeline phase BL14_seam_to_lib_seam of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL14_seam_to_lib_seam (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675420
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675420
+lastSeenAt: 1792787675420
+fingerprint: null
+payload:
+  id: BL14_seam_to_lib_seam
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/test/watchdog.test.js
+    - lib/seam/build-contract.js
+    - lib/seam/chunk-lifecycle.js
+    - clear-glass/seam/watchdog-gates.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a139a48406c5ffd1

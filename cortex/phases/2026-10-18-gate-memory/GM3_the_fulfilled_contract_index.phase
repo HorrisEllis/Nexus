@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gate-memory-phasemap.spec::GM3_the_fulfilled_contract_index
+type: phase
+id: docs_2026-10-18-gate-memory-phasemap.spec::GM3_the_fulfilled_contract_index
+context: pipeline phase GM3_the_fulfilled_contract_index of docs/2026-10-18-gate-memory-phasemap.spec
+intent: null
+summary: GM3_the_fulfilled_contract_index (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677868
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677868
+lastSeenAt: 1792787677868
+fingerprint: null
+payload:
+  id: GM3_the_fulfilled_contract_index
+  map: docs/2026-10-18-gate-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-index.js
+    - cortex/core/raid/contract-gates.js
+    - lib/component-store.js
+  depends_on:
+    - GM1_the_gate_record
+  blocks: []
+  spec: null
+  graph: 5f982253e7259033

@@ -1,0 +1,129 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P4_structured_agent_to_agent:8f27af99fec90581
+type: graph
+id: phase:P4_structured_agent_to_agent:8f27af99fec90581
+context: dependency graph of phase P4_structured_agent_to_agent
+intent: null
+summary: 11 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678199
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678199
+lastSeenAt: 1792787678199
+fingerprint: null
+payload:
+  for: P4_structured_agent_to_agent
+  kind: phase
+  repo: null
+  hash: 8f27af99fec90581
+  nodes:
+    - path: lib/intent-classifier.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/intent-hat-router.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-container.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/reasoning-route.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/idearium-phase-compartment.test.mjs
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/intent-classifier.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/intent-classifier.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/intent-classifier.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/intent-classifier.js
+      kind: requires
+    - from: lib/autonomous-loop.js
+      to: lib/intent-classifier.js
+      kind: requires
+    - from: lib/intent-hat-router.js
+      to: lib/intent-classifier.js
+      kind: requires
+    - from: lib/project-container.js
+      to: lib/intent-classifier.js
+      kind: requires
+    - from: lib/reasoning-route.js
+      to: lib/intent-classifier.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: lib/intent-classifier.js
+      kind: requires
+    - from: tests/modules/idearium-phase-compartment.test.mjs
+      to: lib/intent-classifier.js
+      kind: requires
+  crossings:
+    - from: lib/intent-classifier.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
+      - docs/gemini-multiagent-coding-phasemap.spec::P2_tree_parse_recall_injection
+    dependents:
+      - docs/gemini-multiagent-coding-phasemap.spec::P5_autonomous_multiagent_loop
+    upstream:
+      - docs/gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
+      - docs/gemini-multiagent-coding-phasemap.spec::P2_tree_parse_recall_injection
+    downstream:
+      - docs/gemini-multiagent-coding-phasemap.spec::P5_autonomous_multiagent_loop
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (2): P1_per_agent_contracts, P2_tree_parse_recall_injection'
+      - 'needed by (1): P5_autonomous_multiagent_loop'
+    edges:
+      - from: docs/gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
+        kind: declared
+      - from: docs/gemini-multiagent-coding-phasemap.spec::P2_tree_parse_recall_injection
+        kind: declared

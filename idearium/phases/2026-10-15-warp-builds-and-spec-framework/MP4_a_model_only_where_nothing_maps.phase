@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP4_a_model_only_where_nothing_maps
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP4_a_model_only_where_nothing_maps
+context: >-
+  pipeline phase MP4_a_model_only_where_nothing_maps of
+  docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: MP4_a_model_only_where_nothing_maps (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677642
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677642
+lastSeenAt: 1792787677642
+fingerprint: null
+payload:
+  id: MP4_a_model_only_where_nothing_maps
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/phase-mapping.js
+    - idearium/api/index.js
+  depends_on:
+    - MP2_automatic_in_every_repo
+  blocks: []
+  spec: null
+  graph: caa26af1fd162af7

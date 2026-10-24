@@ -7,11 +7,11 @@ intent: null
 summary: ND3_each_server_serves_its_nodes (integration) — 13 file(s)
 system: idearium
 tags: []
-exported_at: 1792650734506
+exported_at: 1792787678060
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792650734506
-lastSeenAt: 1792650734506
+firstSeenAt: 1792787678060
+lastSeenAt: 1792787678060
 fingerprint: null
 payload:
   id: ND3_each_server_serves_its_nodes
@@ -40,4 +40,4 @@ payload:
     - MOD-ND-MOUNT
     - MOD-ND-PROXY
   spec: docs/system-node-db.spec
-  graph: ea22d024a9a37bb4
+  graph: e4e6017c5d941f7b

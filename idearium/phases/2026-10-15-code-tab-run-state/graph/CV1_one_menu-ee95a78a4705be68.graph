@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CV1_one_menu:ee95a78a4705be68
+type: graph
+id: phase:CV1_one_menu:ee95a78a4705be68
+context: dependency graph of phase CV1_one_menu
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677514
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677514
+lastSeenAt: 1792787677514
+fingerprint: null
+payload:
+  for: CV1_one_menu
+  kind: phase
+  repo: null
+  hash: ee95a78a4705be68
+  nodes:
+    - path: idearium/ui/js/code-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/file-manage.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/file-versions.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE0_one_tab_or_two
+    dependents: []
+    upstream:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE0_one_tab_or_two
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): CE0_one_tab_or_two'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-code-tab-run-state-phasemap.spec::CE0_one_tab_or_two
+        kind: declared

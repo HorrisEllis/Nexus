@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::FR5_the_demo
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::FR5_the_demo
+context: pipeline phase FR5_the_demo of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: FR5_the_demo (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677749
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677749
+lastSeenAt: 1792787677749
+fingerprint: null
+payload:
+  id: FR5_the_demo
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: null
+  status: MAPPED
+  files:
+    - products/flight-recorder/lib/project.js
+    - guardian/jaa-store.js
+    - lib/jaa-store.js
+    - lib/pipeline-routing.js
+    - lib/system-census.js
+    - lib/phase-faults.js
+    - lib/flight-data.js
+    - products/flight-recorder/bin/flight-recorder.js
+  depends_on:
+    - FR2_tested_before_it_lands
+    - FR3_undo_any_change
+  blocks: []
+  spec: null
+  graph: a03b08442bb825c3

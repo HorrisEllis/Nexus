@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:G3:9e1fa9749c4f73cd
+type: graph
+id: phase:G3:9e1fa9749c4f73cd
+context: dependency graph of phase G3
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676029
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676029
+lastSeenAt: 1792787676029
+fingerprint: null
+payload:
+  for: G3
+  kind: phase
+  repo: null
+  hash: 9e1fa9749c4f73cd
+  nodes:
+    - path: guardian/userscript-chatgpt.js
+      role: changes
+      exists: true
+      system: guardian
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G1
+    dependents:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    upstream:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G1
+    downstream:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): G1'
+      - 'needed by (1): X1 · finishing it unlocks X1'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G1
+        kind: inferred

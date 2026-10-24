@@ -1,0 +1,110 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RR2_contract_based_chunking:9f2225141606bc1a
+type: graph
+id: phase:RR2_contract_based_chunking:9f2225141606bc1a
+context: dependency graph of phase RR2_contract_based_chunking
+intent: null
+summary: 6 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678312
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678312
+lastSeenAt: 1792787678312
+fingerprint: null
+payload:
+  for: RR2_contract_based_chunking
+  kind: phase
+  repo: null
+  hash: 9f2225141606bc1a
+  nodes:
+    - path: lib/chunk-service.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/core/raid/router.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/chunker/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/chunk-service.js
+      to: lib/chunker/index.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: lib/event-types.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: cortex/core/raid/router.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/chunk-service.js
+      kind: requires
+  crossings:
+    - from: lib/chunk-service.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/chunk-service.js
+      to: cortex/core/raid/router.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+    dependents:
+      - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+    upstream:
+      - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+    downstream:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC12_universal_gap_and_symmetry_detection
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC1_context_by_uuid_injection
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC2_raid_test_env_hook
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC3_intention_taxonomy_per_system
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC4_idearium_system_template_update
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC5_full_input_queue_output_qc_lifecycle
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC6_multi_source_code_request_intake
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC7_drift_and_comparison_tracking_in_the_pipeline
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC8_callto_event_driven_cli_injection
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC9_diagnostic_stall_detection_and_autofix
+      - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+      - docs/raid-routing-fidelity-phasemap.spec::RR6_cortex_fitness_and_fluid_configs
+    blockedBy: []
+    unlocks:
+      - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): RR1_verify_and_wire_the_snr_fidelity_gate'
+      - >-
+        needed by (1): RR4_governed_handshake_on_handoff · all downstream 12 · finishing it unlocks
+        RR4_governed_handshake_on_handoff
+    edges:
+      - from: docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+        kind: declared

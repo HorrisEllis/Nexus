@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_snapshot-trigger-phasemap.spec::SS1_drift_triggered_snapshot
+type: phase
+id: docs_snapshot-trigger-phasemap.spec::SS1_drift_triggered_snapshot
+context: pipeline phase SS1_drift_triggered_snapshot of docs/snapshot-trigger-phasemap.spec
+intent: null
+summary: SS1_drift_triggered_snapshot (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678347
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678347
+lastSeenAt: 1792787678347
+fingerprint: null
+payload:
+  id: SS1_drift_triggered_snapshot
+  map: docs/snapshot-trigger-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a29e09c529c8d673

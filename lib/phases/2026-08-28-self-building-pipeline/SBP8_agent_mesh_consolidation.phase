@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP8_agent_mesh_consolidation
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP8_agent_mesh_consolidation
+context: >-
+  pipeline phase SBP8_agent_mesh_consolidation of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP8_agent_mesh_consolidation (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675480
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675480
+lastSeenAt: 1792787675480
+fingerprint: null
+payload:
+  id: SBP8_agent_mesh_consolidation
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-router.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5a5600d90602c11e

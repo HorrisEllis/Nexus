@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P19_tablet_continue
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P19_tablet_continue
+context: pipeline phase P19_tablet_continue of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P19_tablet_continue (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678254
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678254
+lastSeenAt: 1792787678254
+fingerprint: null
+payload:
+  id: P19_tablet_continue
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d79f4c355f96ff81

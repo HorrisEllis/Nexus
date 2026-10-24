@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF6_boot_sync_yields_to_the_person
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF6_boot_sync_yields_to_the_person
+context: >-
+  pipeline phase PF6_boot_sync_yields_to_the_person of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PF6_boot_sync_yields_to_the_person (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676373
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676373
+lastSeenAt: 1792787676373
+fingerprint: null
+payload:
+  id: PF6_boot_sync_yields_to_the_person
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+  depends_on:
+    - PF5_in_place_spec_update
+  blocks: []
+  spec: null
+  graph: f8e349719667eff2

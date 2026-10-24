@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV3_input_nodes
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV3_input_nodes
+context: pipeline phase PV3_input_nodes of docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: PV3_input_nodes (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677303
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677303
+lastSeenAt: 1792787677303
+fingerprint: null
+payload:
+  id: PV3_input_nodes
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/jobs.js
+    - guardian/lib/node-registry.js
+    - guardian/cli.js
+    - copilot/cli.js
+    - idearium/cli/index.js
+    - lib/agent-tools/tools/nexus/command.js
+  depends_on:
+    - PV2_hats_are_nodes
+  blocks: []
+  spec: null
+  graph: 73528fe4f1a5e74b

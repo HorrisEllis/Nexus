@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW10_the_listener_knows_what_to_hear
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW10_the_listener_knows_what_to_hear
+context: >-
+  pipeline phase GW10_the_listener_knows_what_to_hear of
+  docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW10_the_listener_knows_what_to_hear (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677561
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677561
+lastSeenAt: 1792787677561
+fingerprint: null
+payload:
+  id: GW10_the_listener_knows_what_to_hear
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN - blocked on GW0d
+  files:
+    - lib/listener-commands.js
+    - lib/step-gate.js
+    - lib/spec-reply.js
+  depends_on:
+    - GW0d_listener_question
+  blocks: []
+  spec: null
+  graph: 539f9afb9e5ba54e
