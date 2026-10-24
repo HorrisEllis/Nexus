@@ -178,3 +178,9 @@ lib/data-home.js atBoot. That was wrong. The coder's proof script spread require
 process. Re-run correctly in 0.60.241 (the Loom proof), nothing moved. The earlier text is kept (§0.3); the code in the tree that uses
 childEnv (lib/phase-close.js, tests/modules/run-all.js) uses .env correctly. The 0.60.239 Idearium proof had the same mistake: it said
 "sandboxed" and was not.
+
+# ## ADDENDUM 2026-10-24 (on main) — GD1 is done on main at 0.60.246
+# This map came over from brave-cori verbatim (BCR3), where GD1 says "DONE 0.60.240". That was true on brave-cori. On main,
+# raid-port arrived at 0.60.242 (BCR2), and Guardian's last four RAID loads were rewired at 0.60.246, ported from brave-cori's
+# GD1: the intake queue match, decide, and the chunking and chat gates. test-raid-port 4/4 (RP-04) is in run-all. Both version
+# numbers are kept (§0.3).

@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841753305
+exported_at: 1792876199386
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841753305
-lastSeenAt: 1792841753305
+firstSeenAt: 1792876199386
+lastSeenAt: 1792876199386
 fingerprint: null
 payload:
   for: SF18_intelligence_becomes_a_real_system

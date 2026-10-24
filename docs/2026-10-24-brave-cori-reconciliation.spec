@@ -75,7 +75,7 @@ phases:
     proof: "cos/services present on main; its tests green; the boundary census names COS's new edges, no new crossing outside a port"
 
   BCR2_kernel_ports:
-    status: PARTLY 0.60.242 — raid-port landed and its first consumers rewired; the rest of Guardian's RAID decoupling (GD1) and the other ports remain
+    status: "PARTLY — GD1 DONE 0.60.246: Guardian's last 4 RAID loads go through lib/raid-port.js (intake queue match, decide, the chunking and chat gates); RP-04 passes and test-raid-port is in run-all. REMAIN: the other ports (ollama, spec-compiler, pulse, trust-rule, registry-draft, loom/lib) and their consumers."
     layer: integration
     depends_on: [BCR0_the_decisions, BC_D2_cos_compartments]
     files: [lib/raid-port.js, guardian/api-dispatch.js, guardian/lib/dispatcher.js, guardian/server.js, tests/modules/test-raid-port.test.js]

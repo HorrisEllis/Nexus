@@ -7,11 +7,11 @@ intent: null
 summary: EW5_the_registry_with_wires (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792877325001
+exported_at: 1792877952542
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877325001
-lastSeenAt: 1792877325001
+firstSeenAt: 1792877952542
+lastSeenAt: 1792877952542
 fingerprint: null
 payload:
   id: EW5_the_registry_with_wires
@@ -26,4 +26,4 @@ payload:
     - EW4_the_ide_into_idearium
   blocks: []
   spec: docs/2026-10-17-system-drawbridge-phasemap.spec
-  graph: 58b96ef64c2102c7
+  graph: cf2fffc242551c27

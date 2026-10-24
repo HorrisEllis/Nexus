@@ -7,11 +7,11 @@ intent: null
 summary: B1_full_build_contract_schema (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792841753533
+exported_at: 1792877948581
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841753533
-lastSeenAt: 1792841753533
+firstSeenAt: 1792877948581
+lastSeenAt: 1792877948581
 fingerprint: null
 payload:
   id: B1_full_build_contract_schema
@@ -30,4 +30,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: a8b32920b5ca7b40
+  graph: cfbbc1c98632e804

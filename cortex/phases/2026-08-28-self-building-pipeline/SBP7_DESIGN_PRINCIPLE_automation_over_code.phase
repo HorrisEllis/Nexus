@@ -9,11 +9,11 @@ intent: null
 summary: SBP7_DESIGN_PRINCIPLE_automation_over_code (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792841753414
+exported_at: 1792877948419
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841753414
-lastSeenAt: 1792841753414
+firstSeenAt: 1792877948419
+lastSeenAt: 1792877948419
 fingerprint: null
 payload:
   id: SBP7_DESIGN_PRINCIPLE_automation_over_code
@@ -28,4 +28,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 400d5ed02418fda3
+  graph: 38d7290b4603212e
