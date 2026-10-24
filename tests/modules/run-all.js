@@ -468,6 +468,7 @@ const SUITES = [
   'test-phase-groom.test.js',  // 0.60.227 SL3 — the DAG groomed: one depends_on reader, MP1's inferred edges, no cycle, DG1 checks every phase, the route
   'test-agent-maps-phase.test.js',  // 0.60.228 SL8 — the agent maps one phase Nexus cannot place: checked by code, kept per phase text, past DG2; the run says so
   'test-phase-nodes-all.test.js',  // 0.60.229 SL9 — every phase a .phase with its .graph beside its owner system; deterministic; the route reads what is written
+  'test-pipeline-sim.test.js',  // 0.60.230 SL10 — the phase build through every failure mode: scratch, extending, every gate; the run says why
   'test-upload-placement.test.js',      // 0.60.173 UP1-UP4 — a zip with an intent placed against the repo, waits for his answer, only his answer writes; his moves learned; the panel in Clear Glass
   'clear-glass-page-map.test.js',       // 0.60.174 PM1-PM4 — the page as blocks → index + chunks → a synthesized map that learns per site → intent → targets (layout in Clear Glass)
   'clear-glass-page-session.test.js',   // 0.60.175 PM5-PM8 — the page map as driver actions, co-pilot tools and commands; attention → Nerve → Ollama feel; live re-map; the panel in Clear Glass

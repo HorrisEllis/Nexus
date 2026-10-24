@@ -220,6 +220,18 @@ function savedPlan(file, { phaseHash = null, candidates = [] } = {}) {
   return { plan: null, why: 'the saved contract carries no plan and none on the run log matches it' };
 }
 
+function _failureOf(evd, id) {
+  // the executor's own error is the specific cause (no code in the reply, a refused path, it does not parse); the check's feedback is
+  // the generic one ("no evidence recorded for …verified") — the specific first, the class kept
+  let err = null; try { const o = JSON.parse(evd[`${id}.output`] || 'null'); if (o && o.error) err = String(o.error); } catch (_) {}
+  const cls = evd[`${id}.class`] ? `${evd[`${id}.class`]}: ` : '';
+  if (err) return `${cls}${err}`.slice(0, 400);
+  if (evd[`${id}.question`]) return String(evd[`${id}.question`]).slice(0, 400);
+  if (evd[`${id}.blocked`]) return `blocked: ${String(evd[`${id}.blocked`]).slice(0, 380)}`;
+  if (evd[`${id}.feedback`]) return String(evd[`${id}.feedback`]).slice(0, 400);
+  return null;
+}
+
 /** audit(p) → the record of a build: every brick, every dependency edge, every checkpoint, every gate, and what is blocked */
 function audit(p, { root = ROOT } = {}) {
   const ev = CG.evaluate(p, { root });
@@ -232,6 +244,9 @@ function audit(p, { root = ROOT } = {}) {
       attempts: st(g.id).attempts || 0, verified: evd[`${g.id}.verified`] || null, blocked: evd[`${g.id}.blocked`] || null, ...(g.parent ? { parent: g.parent } : {}),
       // §GS1 0.60.39 — the Versionium commit it passed at; a rewind before a retry (to what, which files); its failure class
       commit: evd[`${g.id}.commit`] || null, tag: evd[`${g.id}.tag`] || null, class: evd[`${g.id}.class`] || null, route: evd[`${g.id}.route`] || null,
+      // §0.60.230 SL10 — why a brick that did not pass did not pass (the check's words, the question it raised, or the agent's error):
+      // the audit said only FAILED, so a syntax error, a refusal and an empty reply ended identical in the record (§1.2)
+      ...(status.get(g.id) !== 'PASSED' ? { failure: _failureOf(evd, g.id) } : {}),
       rewound: (() => { try { return evd[`${g.id}.rewound`] ? JSON.parse(evd[`${g.id}.rewound`]) : null; } catch (_) { return null; } })() })),
     dependencies: (p.gates || []).flatMap(g => (g.depends_on || []).map(d => ({ from: d, to: g.id }))),
     checkpoints: p.state.checkpoints || [],

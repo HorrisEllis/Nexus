@@ -10,18 +10,19 @@ The checks ran on full git history. The clone was shallow at first, which made t
 
 | branch | commits `main` lacks | verdict |
 |---|---|---|
-| `claude/sleepy-gates-9lc085` | 6 (NF1, SL7, SL3, SL8, SL9, a PS-01 fix; 0.60.225–0.60.229) | **additive**: 3662 files added, 202 changed, 113 moved to `_archive/phases-moved/` (archived, not deleted, §0.3), none deleted, no `data/` |
+| `claude/sleepy-gates-9lc085` | 7 (NF1, SL7, SL3, SL8, SL9, a PS-01 fix, SL10; 0.60.225–0.60.230 — SL10 was pushed while this merge was being checked, and taken in too) | **additive**: 3662 files added, 202 changed, 113 moved to `_archive/phases-moved/` (archived, not deleted, §0.3), none deleted, no `data/` |
 | `claude/charming-lamport-mdzuau` | 0 | already in `main` |
 | `claude/new-session-4vpr7p` | 0 | already in `main` |
 | `claude/nexus-idearium-overview-yoguem` | 0 | already in `main` |
 
 ## What the merge needed
 - **Code:** no conflicts.
-- **Release numbers:** the two lines of work were built in parallel, and both used **0.60.225 and 0.60.226**. `main` used them for
-  JA1/JA2 (Clear Glass autofill), `sleepy-gates` for NF1/SL7. Nothing was renumbered (§0.3, nothing rewritten):
-  - `CHANGELOG-0.60.225.md` and `CHANGELOG-0.60.226.md` each hold **both** entries, and say the number was used twice;
+- **Release numbers:** the two lines of work were built in parallel, and both used **0.60.225, 0.60.226 and 0.60.230**. `main` used them for
+  JA1, JA2 and JA3 (Clear Glass autofill); `sleepy-gates` for NF1, SL7 and SL10. Nothing was renumbered (§0.3, nothing rewritten):
+  - `CHANGELOG-0.60.225.md`, `CHANGELOG-0.60.226.md` and `CHANGELOG-0.60.230.md` each hold **both** entries, and say the number
+    was used twice;
   - `lib/version.js` keeps both lines' entries under this one: the JA line (0.60.232 → 0.60.225), then the SL line
-    (0.60.229 → 0.60.225);
+    (0.60.230 → 0.60.225);
   - this merge is released as **0.60.233** (`VERSION`, `lib/version.js`, `package.json`).
 - **Phase files:** SL9 writes a `.phase` and its dependency `.graph` beside the system that owns each phase. Some were missing or
   stale:

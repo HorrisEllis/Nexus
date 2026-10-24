@@ -646,7 +646,7 @@ Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 
 </details>
 
-33 release notes name a file of cortex: 0.60.226., 0.60.224., 0.60.203., 0.60.177., 0.60.158., 0.60.157., 0.60.150., 0.60.149., 0.60.147., 0.60.145., 0.60.133., 0.60.132., 0.60.131., 0.60.94., 0.60.79., 0.60.78., 0.60.75., 0.60.73., 0.60.36., 0.60.30., 0.60.29., 0.60.18., 0.60.16., 0.60.15., 0.60.3., 0.59.6., 0.43.0., 0.39.342., 0.39.333., 0.39.277., 0.39.267., 0.39.236., 0.39.181.. Each is in the version history below, in his words.
+34 release notes name a file of cortex: 0.60.233., 0.60.226., 0.60.224., 0.60.203., 0.60.177., 0.60.158., 0.60.157., 0.60.150., 0.60.149., 0.60.147., 0.60.145., 0.60.133., 0.60.132., 0.60.131., 0.60.94., 0.60.79., 0.60.78., 0.60.75., 0.60.73., 0.60.36., 0.60.30., 0.60.29., 0.60.18., 0.60.16., 0.60.15., 0.60.3., 0.59.6., 0.43.0., 0.39.342., 0.39.333., 0.39.277., 0.39.267., 0.39.236., 0.39.181.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:cortex:end -->
 
@@ -1336,7 +1336,7 @@ The spec engine in `idearium/spec-engine/` turns an idea into a spec by chunking
 <!-- generated:readme:system:idearium:start -->
 #### idearium: every module and every file
 
-Idearium is 991 files in 108 modules, entry `idearium/api/index.js`, port 4800, spec `idearium/spec/idearium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/idearium-atlas.md`.
+Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, spec `idearium/spec/idearium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/idearium-atlas.md`.
 
 <details>
 <summary>`idearium/` · 12 files</summary>
@@ -2666,14 +2666,16 @@ Idearium is 991 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-23-self-building-loop/` · 13 files</summary>
+<summary>`idearium/phases/2026-10-23-self-building-loop/` · 15 files</summary>
 
 - `idearium/phases/2026-10-23-self-building-loop/SL0_what_can_be_built_now.phase`
+- `idearium/phases/2026-10-23-self-building-loop/SL10_the_pipeline_simulated.phase`
 - `idearium/phases/2026-10-23-self-building-loop/SL1_a_proven_phase_closes_itself.phase`
 - `idearium/phases/2026-10-23-self-building-loop/SL4_the_loop.phase`
 - `idearium/phases/2026-10-23-self-building-loop/SL7_build_again_is_asked_for.phase`
 - `idearium/phases/2026-10-23-self-building-loop/SL8_the_agent_maps_what_nexus_cannot.phase`
 - `idearium/phases/2026-10-23-self-building-loop/graph/SL0_what_can_be_built_now-d4b7b03b3139be7f.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL10_the_pipeline_simulated-1acb38d7cc404522.graph`
 - `idearium/phases/2026-10-23-self-building-loop/graph/SL1_a_proven_phase_closes_itself-c3e5309c4ae10c83.graph`
 - `idearium/phases/2026-10-23-self-building-loop/graph/SL4_the_loop-3dcb223b8d82e43d.graph`
 - `idearium/phases/2026-10-23-self-building-loop/graph/SL7_build_again_is_asked_for-0f0ab8a3543b9460.graph`
@@ -2977,7 +2979,7 @@ Idearium is 991 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 
 </details>
 
-134 release notes name a file of idearium: 0.60.231., 0.60.230., 0.60.228., 0.60.225., 0.60.223., 0.60.222., 0.60.221., 0.60.206., 0.60.205., 0.60.203., 0.60.199., 0.60.198., 0.60.197., 0.60.196., 0.60.193., 0.60.188., 0.60.177., 0.60.168., 0.60.167., 0.60.165., 0.60.164., 0.60.163., 0.60.162., 0.60.156., 0.60.153., 0.60.151., 0.60.150., 0.60.148., 0.60.145., 0.60.143., 0.60.141., 0.60.140., 0.60.134., 0.60.132., 0.60.131., 0.60.130., 0.60.128., 0.60.127., 0.60.124., 0.60.123., and 94 older. Each is in the version history below, in his words.
+135 release notes name a file of idearium: 0.60.233., 0.60.231., 0.60.230., 0.60.228., 0.60.225., 0.60.223., 0.60.222., 0.60.221., 0.60.206., 0.60.205., 0.60.203., 0.60.199., 0.60.198., 0.60.197., 0.60.196., 0.60.193., 0.60.188., 0.60.177., 0.60.168., 0.60.167., 0.60.165., 0.60.164., 0.60.163., 0.60.162., 0.60.156., 0.60.153., 0.60.151., 0.60.150., 0.60.148., 0.60.145., 0.60.143., 0.60.141., 0.60.140., 0.60.134., 0.60.132., 0.60.131., 0.60.130., 0.60.128., 0.60.127., 0.60.124., and 95 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:idearium:end -->
 
@@ -7376,7 +7378,7 @@ Everything no kernel owns. Core has no port and no entry: its code runs inside w
 <!-- generated:readme:system:core:start -->
 #### core: every module and every file
 
-Core is 4420 files in 49 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
+Core is 4419 files in 49 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
 
 <details>
 <summary>the files at the top of the tree · 19 files</summary>
@@ -8797,7 +8799,7 @@ Core is 4420 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`lib/phases/` · 1611 files</summary>
+<summary>`lib/phases/` · 1609 files</summary>
 
 - `lib/phases/2026-08-22-session-full/SF10_agent_notes.phase`
 - `lib/phases/2026-08-22-session-full/SF12_end_state_vision_and_full_phase_map_docs.phase`
@@ -10187,13 +10189,11 @@ Core is 4420 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND3_each_server_serves_its_nodes-ea22d024a9a37bb4.graph`
 - `lib/phases/2026-10-23-cos-spine/CS10_hats_bound_to_the_compartment.phase`
 - `lib/phases/2026-10-23-cos-spine/graph/CS10_hats_bound_to_the_compartment-9593a2c519f5f235.graph`
-- `lib/phases/2026-10-23-self-building-loop/SL10_the_pipeline_simulated.phase`
 - `lib/phases/2026-10-23-self-building-loop/SL2_done_by_evidence.phase`
 - `lib/phases/2026-10-23-self-building-loop/SL3_the_backlog_groomed.phase`
 - `lib/phases/2026-10-23-self-building-loop/SL5_when_a_proven_change_lands_alone.phase`
 - `lib/phases/2026-10-23-self-building-loop/SL6_the_loop_counts_itself.phase`
 - `lib/phases/2026-10-23-self-building-loop/SL9_every_phase_a_node.phase`
-- `lib/phases/2026-10-23-self-building-loop/graph/SL10_the_pipeline_simulated-fdc2918297e903cc.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/SL2_done_by_evidence-7bb9c1e91cb43b0f.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/SL3_the_backlog_groomed-d984c6d6901fa316.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/SL5_when_a_proven_change_lands_alone-379b566ca6597dd5.graph`
@@ -10665,7 +10665,7 @@ Core is 4420 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`tests/` · 822 files</summary>
+<summary>`tests/` · 823 files</summary>
 
 - `tests/audit-results.json`
 - `tests/brutal.test.js`
@@ -11235,6 +11235,7 @@ Core is 4420 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-pipeline-nodes.test.js`
 - `tests/modules/test-pipeline-root-causes.test.js`
 - `tests/modules/test-pipeline-routing.test.js`
+- `tests/modules/test-pipeline-sim.test.js`
 - `tests/modules/test-plan-code-run-attention.test.js`
 - `tests/modules/test-plan-conflict.test.js`
 - `tests/modules/test-plan-lands.test.js`
@@ -11790,7 +11791,7 @@ Everything below is written by `lib/readme-generate.js` from the tree as it is a
 
 ### Every phase
 
-Every phase of every phasemap, 2066 phases across 159 maps, read by the one phasemap parser loom uses (`loom/scanners/phasemap-map.js`). 841 are done, 11 in progress and 1214 pending. A decision (a question for James, or one his axioms decided) is marked as one. The maps are newest first; each opens to its phases, each phase with its status and what it does. The map itself, with the reasons and the proof, is the file named.
+Every phase of every phasemap, 2066 phases across 159 maps, read by the one phasemap parser loom uses (`loom/scanners/phasemap-map.js`). 842 are done, 11 in progress and 1213 pending. A decision (a question for James, or one his axioms decided) is marked as one. The maps are newest first; each opens to its phases, each phase with its status and what it does. The map itself, with the reasons and the proof, is the file named.
 
 <details>
 <summary>`docs/snapshot-trigger-phasemap.spec` · 2 · 0 done, 0 in progress, 2 pending</summary>
@@ -12184,7 +12185,7 @@ Every phase of every phasemap, 2066 phases across 159 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-23-self-building-loop-phasemap.spec` · 11 · 7 done, 0 in progress, 4 pending</summary>
+<summary>`docs/2026-10-23-self-building-loop-phasemap.spec` · 11 · 8 done, 0 in progress, 3 pending</summary>
 
 - **SL0_what_can_be_built_now** · done
 - **SL1_a_proven_phase_closes_itself** · done
@@ -12196,7 +12197,7 @@ Every phase of every phasemap, 2066 phases across 159 maps, read by the one phas
 - **SL7_build_again_is_asked_for** · done
 - **SL8_the_agent_maps_what_nexus_cannot** · done
 - **SL9_every_phase_a_node** · done
-- **SL10_the_pipeline_simulated** · pending
+- **SL10_the_pipeline_simulated** · done
 
 </details>
 
@@ -15247,7 +15248,7 @@ Every release note in the tree, 437 of them, newest first. Each opens with James
 <details>
 <summary>0.60.x · 229 releases · 0.60.0. to 0.60.233.</summary>
 
-- **0.60.233.** — 2026-10-24 — the SL line merged into main, additively — James: "merge and push" — built: What was checked · What the merge needed
+- **0.60.233.** — 2026-10-24 — the SL line merged into main, additively — James: "merge and push" — built: What was checked · What the merge needed · What the branch broke, found before merging (§0.1), and fixed here
 - **0.60.232.** — 2026-10-24 — JA5: the pick is also a macro and an automation node — James: "merge and push. yes make the macro too." — built: What it does · On screen · Reuse (§8.6)
 - **0.60.231.** — 2026-10-24 — JA4: the learn-loop on screen — James: "continue" — built: What was missing · On screen (Settings › Autofill) · Built (backend → API route → command/agent → UI, his order 2026-10-07)
 - **0.60.230.** — 2026-10-24 — JA3: the element picker on a field the autofill missed — James: "if he doesn't understand, have the element picker popup for me to select the element for him. saves to per site settings, and as a macro…" — built: What was missing · Reuse before build (§8.6) · Built (backend → API route → command/agent, his order 2026-10-07)
