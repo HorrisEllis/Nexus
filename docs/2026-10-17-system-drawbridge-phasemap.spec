@@ -116,6 +116,7 @@ spec:
         into a MISMATCH or UNREACHABLE system is refused with why.
     DB6_move_the_crossings:
       status: OPEN
+      depends_on: [SV7_intelligence_cos_cortex]   # 2026-10-24: cut into SV0–SV7 (docs/2026-10-23-cos-spine-phasemap.spec addendum (b))
       does: >-
         The crossings move to the drawbridge one system pair at a time, largest first, each move lowering the DB1 baseline.
         The debugging systems go first, because he asked for them: intelligence (cfr, rfr2, sigma) and diagnostic (friction,

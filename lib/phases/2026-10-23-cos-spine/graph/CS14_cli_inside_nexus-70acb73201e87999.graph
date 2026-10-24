@@ -1,0 +1,103 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS14_cli_inside_nexus:70acb73201e87999
+type: graph
+id: phase:CS14_cli_inside_nexus:70acb73201e87999
+context: dependency graph of phase CS14_cli_inside_nexus
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792876203193
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203193
+lastSeenAt: 1792876203193
+fingerprint: null
+payload:
+  for: CS14_cli_inside_nexus
+  kind: phase
+  repo: null
+  hash: 70acb73201e87999
+  nodes:
+    - path: cos/app/shell.js
+      role: changes
+      exists: true
+      system: cos
+    - path: package.json
+      role: changes
+      exists: true
+      system: null
+    - path: cos/app/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/desktop/main.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-app-shell.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/app/cli.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/app/shell.js
+      to: cos/app/store.js
+      kind: requires
+    - from: cos/app/shell.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/shell.js
+      to: cos/app/cli.js
+      kind: requires
+    - from: cos/app/cli.js
+      to: cos/app/shell.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/shell.js
+      kind: requires
+    - from: tests/modules/test-cos-app-shell.test.js
+      to: cos/app/shell.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D9_cli_inside_nexus
+    dependents: []
+    upstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D9_cli_inside_nexus
+    downstream: []
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D9_cli_inside_nexus
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-23-cos-spine-phasemap.spec::CS13_autopilot_to_orchestrator
+        files:
+          - package.json
+    dangling: []
+    lines:
+      - layer 1 · blocked by CS12_the_mover_is_proven, CS_D9_cli_inside_nexus
+      - 'depends on (2): CS12_the_mover_is_proven, CS_D9_cli_inside_nexus'
+      - 'needed by (0): —'
+      - 'same files as CS13_autopilot_to_orchestrator with no order between them: package.json'
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D9_cli_inside_nexus
+        kind: declared

@@ -1,0 +1,178 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV0_the_census_tells_the_truth:619263badee90cbb
+type: graph
+id: phase:SV0_the_census_tells_the_truth:619263badee90cbb
+context: dependency graph of phase SV0_the_census_tells_the_truth
+intent: null
+summary: 18 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792876203201
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203201
+lastSeenAt: 1792876203201
+fingerprint: null
+payload:
+  for: SV0_the_census_tells_the_truth
+  kind: phase
+  repo: null
+  hash: 619263badee90cbb
+  nodes:
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/drawbridge-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: diagnostic/healer/api/index.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: idearium/cli/route-commands.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/registry-components.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-store.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/registry-components.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: diagnostic/healer/api/index.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: lib/system-boundary.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV2_core_files_go_home
+    upstream: []
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV7_intelligence_cos_cortex
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV8_warp_sovereign
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ON THE CRITICAL PATH · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): SV1_every_table_has_one_owner, SV2_core_files_go_home · all downstream 17 ·
+        finishing it unlocks SV1_every_table_has_one_owner
+    edges: []

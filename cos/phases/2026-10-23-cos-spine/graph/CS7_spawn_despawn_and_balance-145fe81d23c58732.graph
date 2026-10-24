@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787678072
+exported_at: 1792876203186
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678072
-lastSeenAt: 1792787678072
+firstSeenAt: 1792876203186
+lastSeenAt: 1792876203186
 fingerprint: null
 payload:
   for: CS7_spawn_despawn_and_balance
@@ -65,6 +65,7 @@ payload:
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
       - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
       - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
@@ -73,6 +74,14 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D8_raid_home
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV7_intelligence_cos_cortex
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
     blockedBy:
@@ -82,8 +91,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 10 · blocked by CS5_caps_per_compartment, CS11_raid_in_the_exe
-      - 'depends on (2): CS5_caps_per_compartment, CS11_raid_in_the_exe · all upstream 31'
+      - layer 10 · ON THE CRITICAL PATH · blocked by CS5_caps_per_compartment, CS11_raid_in_the_exe
+      - 'depends on (2): CS5_caps_per_compartment, CS11_raid_in_the_exe · all upstream 40'
       - 'needed by (1): CS8_the_cos_screen'
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment

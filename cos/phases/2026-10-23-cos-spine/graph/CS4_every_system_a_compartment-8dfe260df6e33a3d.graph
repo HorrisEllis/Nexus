@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787678068
+exported_at: 1792876203183
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678068
-lastSeenAt: 1792787678068
+firstSeenAt: 1792876203183
+lastSeenAt: 1792876203183
 fingerprint: null
 payload:
   for: CS4_every_system_a_compartment
@@ -201,10 +201,19 @@ payload:
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
       - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV7_intelligence_cos_cortex
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
@@ -223,20 +232,25 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-10-23-cos-spine-phasemap.spec::CS13_autopilot_to_orchestrator
+        files:
+          - cos/app/runtime.js
     dangling: []
     lines:
       - >-
-        layer 8 · blocked by CS4a_cos_boots_alone, CS3_the_registry_is_the_bridge,
-        CS_D7_sovereign_first, DB6_move_the_crossings, DB16_a_registry_for_each_system,
-        DB4_one_bus_per_system, DB5_the_handshake_for_every_system, DB11_cos_compartment_per_system
+        layer 8 · ON THE CRITICAL PATH · blocked by CS4a_cos_boots_alone,
+        CS3_the_registry_is_the_bridge, CS_D7_sovereign_first, DB6_move_the_crossings,
+        DB16_a_registry_for_each_system, DB4_one_bus_per_system, DB5_the_handshake_for_every_system,
+        DB11_cos_compartment_per_system
       - >-
         depends on (8): CS4a_cos_boots_alone, CS3_the_registry_is_the_bridge, CS_D7_sovereign_first,
         DB6_move_the_crossings, DB16_a_registry_for_each_system, DB4_one_bus_per_system,
-        DB5_the_handshake_for_every_system, DB11_cos_compartment_per_system · all upstream 25
+        DB5_the_handshake_for_every_system, DB11_cos_compartment_per_system · all upstream 34
       - >-
         needed by (4): CS5_caps_per_compartment, CS6_rebuild_from_the_spec,
         CS9_every_project_a_compartment, CS11_raid_in_the_exe · all downstream 7
+      - 'same files as CS13_autopilot_to_orchestrator with no order between them: cos/app/runtime.js'
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
         kind: declared

@@ -6,14 +6,14 @@ context: >-
   pipeline phase BR6_copilot_as_agent_chat_model of
   docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
 intent: null
-summary: BR6_copilot_as_agent_chat_model (?) — 4 file(s)
+summary: BR6_copilot_as_agent_chat_model (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792875538104
+exported_at: 1792876199522
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792875538104
-lastSeenAt: 1792875538104
+firstSeenAt: 1792876199522
+lastSeenAt: 1792876199522
 fingerprint: null
 payload:
   id: BR6_copilot_as_agent_chat_model
@@ -23,11 +23,10 @@ payload:
   status: OPEN
   files:
     - copilot/server.js
-    - bridge/router.js
     - lib/user-model.js
     - copilot/lib/user-model.js
   depends_on:
     - ET5_loom_event_taxonomy_map
   blocks: []
   spec: null
-  graph: 25003ddb3ca8adb8
+  graph: f3213197b621683c

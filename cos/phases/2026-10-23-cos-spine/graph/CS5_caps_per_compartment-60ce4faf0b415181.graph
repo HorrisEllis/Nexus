@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787678070
+exported_at: 1792876203185
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678070
-lastSeenAt: 1792787678070
+firstSeenAt: 1792876203185
+lastSeenAt: 1792876203185
 fingerprint: null
 payload:
   for: CS5_caps_per_compartment
@@ -131,12 +131,21 @@ payload:
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
       - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D4_caps_by_the_os
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV7_intelligence_cos_cortex
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
@@ -151,8 +160,10 @@ payload:
           - cos/compartment/qemu-runtime.js
     dangling: []
     lines:
-      - layer 9 · blocked by CS4_every_system_a_compartment, CS_D4_caps_by_the_os
-      - 'depends on (2): CS4_every_system_a_compartment, CS_D4_caps_by_the_os · all upstream 27'
+      - >-
+        layer 9 · ON THE CRITICAL PATH · blocked by CS4_every_system_a_compartment,
+        CS_D4_caps_by_the_os
+      - 'depends on (2): CS4_every_system_a_compartment, CS_D4_caps_by_the_os · all upstream 36'
       - >-
         needed by (3): CS7_spawn_despawn_and_balance, CS10_hats_bound_to_the_compartment,
         CS8_the_cos_screen

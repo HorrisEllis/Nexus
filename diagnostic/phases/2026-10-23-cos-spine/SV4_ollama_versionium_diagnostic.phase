@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::SV4_ollama_versionium_diagnostic
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::SV4_ollama_versionium_diagnostic
+context: pipeline phase SV4_ollama_versionium_diagnostic of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: SV4_ollama_versionium_diagnostic (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792876203205
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203205
+lastSeenAt: 1792876203205
+fingerprint: null
+payload:
+  id: SV4_ollama_versionium_diagnostic
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ollama
+    - versionium
+    - diagnostic
+    - diagnostic/lib/heal-loop.js
+  depends_on:
+    - SV3_components_and_architect
+    - SV2_core_files_go_home
+  blocks: []
+  spec: null
+  graph: 0fe6d932671749a8

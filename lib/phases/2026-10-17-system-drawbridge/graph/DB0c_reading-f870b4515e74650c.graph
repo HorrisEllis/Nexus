@@ -7,11 +7,11 @@ intent: null
 summary: 35 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792875541728
+exported_at: 1792876202797
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792875541728
-lastSeenAt: 1792875541728
+firstSeenAt: 1792876202797
+lastSeenAt: 1792876202797
 fingerprint: null
 payload:
   for: DB0c_reading
@@ -325,8 +325,8 @@ payload:
     dangling: []
     lines:
       - >-
-        layer 1 · ON THE CRITICAL PATH · blocked by DB8_agents_have_it,
-        DB5_the_handshake_for_every_system, DB4_one_bus_per_system
+        layer 1 · blocked by DB8_agents_have_it, DB5_the_handshake_for_every_system,
+        DB4_one_bus_per_system
       - >-
         depends on (3): DB8_agents_have_it, DB5_the_handshake_for_every_system,
         DB4_one_bus_per_system

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+context: pipeline phase CS12_the_mover_is_proven of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS12_the_mover_is_proven (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792876203191
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203191
+lastSeenAt: 1792876203191
+fingerprint: null
+payload:
+  id: CS12_the_mover_is_proven
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/architecture-apply.js
+    - tests/modules/test-architecture-apply.test.js
+    - tests/modules/run-all.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 749fe193c88002cd

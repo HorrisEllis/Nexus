@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS13_autopilot_to_orchestrator
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS13_autopilot_to_orchestrator
+context: pipeline phase CS13_autopilot_to_orchestrator of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS13_autopilot_to_orchestrator (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792876203193
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203193
+lastSeenAt: 1792876203193
+fingerprint: null
+payload:
+  id: CS13_autopilot_to_orchestrator
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/autopilot.js
+    - lib/nexus/autopilot.js
+    - package.json
+    - cos/app/runtime.js
+    - lib/nexus-self/systems.js
+  depends_on:
+    - CS12_the_mover_is_proven
+    - CS_D14_autopilot_to_orchestrator
+  blocks: []
+  spec: null
+  graph: 9fd26cda7c070cb8

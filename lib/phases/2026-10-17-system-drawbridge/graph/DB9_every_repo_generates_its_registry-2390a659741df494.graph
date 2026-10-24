@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792875541730
+exported_at: 1792876202799
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792875541730
-lastSeenAt: 1792875541730
+firstSeenAt: 1792876202799
+lastSeenAt: 1792876202799
 fingerprint: null
 payload:
   for: DB9_every_repo_generates_its_registry
@@ -116,7 +116,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 2 · ON THE CRITICAL PATH · blocked by DB0c_reading
+      - layer 2 · blocked by DB0c_reading
       - 'depends on (1): DB0c_reading · all upstream 4'
       - >-
         needed by (2): DB21_one_registry_schema_every_level,

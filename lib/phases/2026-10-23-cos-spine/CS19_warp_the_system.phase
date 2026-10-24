@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::CS19_warp_the_system
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::CS19_warp_the_system
+context: pipeline phase CS19_warp_the_system of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: CS19_warp_the_system (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792876203198
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203198
+lastSeenAt: 1792876203198
+fingerprint: null
+payload:
+  id: CS19_warp_the_system
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-self/systems.js
+    - warp/registry-components.js
+    - warp/compartment.json
+    - warp/spec/warp.spec
+  depends_on:
+    - CS18_one_copy_of_the_primitives
+    - CS_D11_warp_is_a_system
+  blocks: []
+  spec: null
+  graph: 9b8f988d463f4f16
