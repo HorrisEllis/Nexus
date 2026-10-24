@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_erosmancer_os
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_erosmancer_os
+context: pipeline phase RF3_erosmancer_os of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: RF3_erosmancer_os (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792875542209
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875542209
+lastSeenAt: 1792875542209
+fingerprint: null
+payload:
+  id: RF3_erosmancer_os
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/erosmancer
+    - clear-glass/erosmancer-os
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 11517b6d7453f1b2

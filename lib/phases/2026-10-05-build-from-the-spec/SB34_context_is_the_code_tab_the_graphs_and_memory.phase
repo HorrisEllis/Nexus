@@ -9,11 +9,11 @@ intent: null
 summary: SB34_context_is_the_code_tab_the_graphs_and_memory (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676910
+exported_at: 1792874369339
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676910
-lastSeenAt: 1792787676910
+firstSeenAt: 1792874369339
+lastSeenAt: 1792874369339
 fingerprint: null
 payload:
   id: SB34_context_is_the_code_tab_the_graphs_and_memory
@@ -30,4 +30,4 @@ payload:
     - SB33_the_agent_runs_the_pipeline
   blocks: []
   spec: null
-  graph: 2adfa9887db541f0
+  graph: 732015727fbaacc8

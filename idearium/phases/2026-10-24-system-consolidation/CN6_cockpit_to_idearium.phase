@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-system-consolidation-phasemap.spec::CN6_cockpit_to_idearium
+type: phase
+id: docs_2026-10-24-system-consolidation-phasemap.spec::CN6_cockpit_to_idearium
+context: pipeline phase CN6_cockpit_to_idearium of docs/2026-10-24-system-consolidation-phasemap.spec
+intent: null
+summary: CN6_cockpit_to_idearium (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371410
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371410
+lastSeenAt: 1792874371410
+fingerprint: null
+payload:
+  id: CN6_cockpit_to_idearium
+  map: docs/2026-10-24-system-consolidation-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - idearium/forge-ide
+    - orchestrator/lib/spec-drift.js
+  depends_on:
+    - CN0_the_rule_in_force
+  blocks: []
+  spec: null
+  graph: ce51d1857853636b

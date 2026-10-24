@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RF3_cockpit_to_idearium:91b5a911239e5d5f
+type: graph
+id: phase:RF3_cockpit_to_idearium:91b5a911239e5d5f
+context: dependency graph of phase RF3_cockpit_to_idearium
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792875542208
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875542208
+lastSeenAt: 1792875542208
+fingerprint: null
+payload:
+  for: RF3_cockpit_to_idearium
+  kind: phase
+  repo: null
+  hash: 91b5a911239e5d5f
+  nodes:
+    - path: lib/architecture-apply.js
+      role: changes
+      exists: true
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_cli
+    dependents:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_changelogs_to_docs
+    upstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_cli
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV1_cockpit
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV5_sentinel
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+    downstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_changelogs_to_docs
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_changelogs_to_docs
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - 'depends on (1): MV13_cli · all upstream 5'
+      - 'needed by (1): RF3_changelogs_to_docs · finishing it unlocks RF3_changelogs_to_docs'
+    edges:
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_cli
+        kind: inferred

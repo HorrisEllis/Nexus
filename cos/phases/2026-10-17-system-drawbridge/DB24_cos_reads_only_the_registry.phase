@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB24_cos_reads_only_the_registry
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB24_cos_reads_only_the_registry
+context: pipeline phase DB24_cos_reads_only_the_registry of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB24_cos_reads_only_the_registry (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792875541764
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875541764
+lastSeenAt: 1792875541764
+fingerprint: null
+payload:
+  id: DB24_cos_reads_only_the_registry
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager.js
+    - cos/kernel.js
+    - cos/compartment/process-runner.js
+  depends_on:
+    - DB22_the_root_and_the_missing_four
+    - DB11_cos_compartment_per_system
+  blocks: []
+  spec: null
+  graph: 988f78644703e222

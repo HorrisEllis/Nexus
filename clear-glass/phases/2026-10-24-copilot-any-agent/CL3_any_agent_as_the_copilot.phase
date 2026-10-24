@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-copilot-any-agent-phasemap.spec::CL3_any_agent_as_the_copilot
+type: phase
+id: docs_2026-10-24-copilot-any-agent-phasemap.spec::CL3_any_agent_as_the_copilot
+context: pipeline phase CL3_any_agent_as_the_copilot of docs/2026-10-24-copilot-any-agent-phasemap.spec
+intent: null
+summary: CL3_any_agent_as_the_copilot (ui) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371332
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371332
+lastSeenAt: 1792874371332
+fingerprint: null
+payload:
+  id: CL3_any_agent_as_the_copilot
+  map: docs/2026-10-24-copilot-any-agent-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - clear-glass/renderer/copilot-cli.js
+    - clear-glass/src/copilot/bridge.js
+    - copilot/server.js
+    - clear-glass/test/copilot-cli.test.js
+  depends_on:
+    - CL2_a_pick_never_falls_back_in_silence
+  blocks:
+    - MOD-CA-PICK
+  spec: clear-glass/spec/copilot-any-agent.spec
+  graph: 1c84c8fbf8dba002

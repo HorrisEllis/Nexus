@@ -414,3 +414,90 @@ spec:
         the spec: lib/drawbridge.js over the system's own registry-components.js and contracts/handshake.js, lib/tunnel.js with
         the three tunnels, sandbox.json read by COS at create. The catalog regenerated from it, as genesis's is.
       proof: "a system scaffolded from the fork refuses an undeclared crossing with a receipt and crosses each tunnel after the handshake (tests/sandbox.test.js in the skeleton passes)"
+
+  # ── ADDENDUM 2026-10-24 (g) — one registry at every level of recursion; COS agnostic; autopilot to the orchestrator ──
+  # Context: RF2 had just put every folder inside one of the 15 systems, and the census showed 2 of 14 sovereign. The coder was
+  # reporting how Nexus now starts (npm run start:all → lib/nexus/autopilot.js) when he wrote:
+  # James, 2026-10-24: "what about moving autopilot ot the porchastrator folder?
+  # remember that nexus uses a component registry for each incremement. so nexus root, then each system, as the event bus interaction
+  # contract component registry as the spine for wiring each level of recursion.
+  # then cos will use the same registry, same with the ui floating on top, with handshake verification and an event ledger.
+  # that makes each system, able to be load balanced, throttled, paused, rewound, despawned, build, created,etc. immense leverage. cos
+  # is agnostic"
+  # Before it, his own words this extends: addendum (a) 2026-10-17 "interaction contract and event bus and queue and dependancy and
+  # wiring harness and spine … cos is the isolated compartment for each system using the regisry as a drawbridge"; DB7 "ui floats ontop".
+  addendum_g:
+    decided:
+      - "One registry shape at every level of recursion: Nexus root → each system → its components. At each level the registry is
+        the event bus, the interaction contract and the component registry together, and it is the spine that wires that level to the
+        one below (his words)."
+      - "COS uses the same registry and nothing else, so COS is agnostic: it knows a registry, not a system (his words)."
+      - "The UI floats on top of the same registry, with handshake verification and an event ledger (his words; DB7, DB12)."
+      - "What it buys, in his words: each system can be load balanced, throttled, paused, rewound, despawned, built and created."
+    reading_to_confirm: >-
+      The coder's reading, to confirm: "for each incremement" = for each level of nesting (root, system, component), one schema for
+      all of them, so the same code reads any level. "build, created" = COS scaffolds a new system from the registry template
+      (DB11/DB20) and builds it, the same as any other.
+    autopilot_reading: >-
+      "what about moving autopilot ot the porchastrator folder?" was asked as a question; the coder's recommendation is yes, as
+      orchestrator/autopilot.js. Autopilot is the supervisor that starts and restarts every system, which is orchestration. One
+      constraint: autopilot also restarts the orchestrator's server, so it stays its own process. A folder is not a process: it moves
+      in the tree, and still runs beside the server, not inside it. COS keeps finding old releases (lib/nexus/autopilot.js,
+      nexus/autopilot.js) through runtime.js entryOf. To confirm.
+    found_2026_10_24:
+      registries: "11 of the 15 systems have registry-components.js (architect, clear-glass, copilot, cortex, diagnostic, guardian,
+        idearium, intelligence, loom, ollama, versionium). None for orchestrator, components, cos, core (lib), and none for Nexus's root."
+      merged_view: "lib/system-registry.js merges autopilot's ALL_KERNELS, diagnostic's SYSTEMS and version.js modules (read-only);
+        lib/drawbridge-registry.js registryOf/graph reads each system's registry (DB9)."
+      lifecycle: "cos/spec/cos-spine.spec: spawn/despawn/balance of compartments (process-runner), pause/resume/checkpoint/rewind
+        (cos/workspace/vm-control.js), 'a person's acts or a rule he set; an agent may read and propose'. Not found: throttle,
+        load balancing beyond the spec's spawn-and-balance."
+  phases_added_g:
+    DB21_one_registry_schema_every_level:
+      status: OPEN
+      depends_on: [DB16_a_registry_for_each_system, DB9_every_repo_generates_its_registry]
+      files: [loom/templates/registry-level.spec, lib/registry-level.js, tests/modules/test-registry-level.test.js]
+      does: >-
+        One schema for a registry at any level: level (root | system | component), id, its children (each a registry of the next
+        level), the events it emits and accepts (the bus), the routes and commands it offers (the contract), its components and their
+        wires (the registry), and its lifecycle (which verbs it supports). lib/registry-level.js reads and validates any level and walks
+        the tree. The existing registry-components.js files are read as the system level unchanged (§8.6).
+      proof: "the 11 existing system registries validate as level 'system'; a component registry validates as 'component'; one walk from the root reaches every system"
+    DB22_the_root_and_the_missing_four:
+      status: OPEN
+      depends_on: [DB21_one_registry_schema_every_level]
+      files: [registry-components.js, orchestrator/registry-components.js, components/registry-components.js, cos/registry-components.js, lib/registry-components.js]
+      does: "Nexus's root registry (its children are the 15 systems) and registries for orchestrator, components, cos and core, written from what each does today (§0.1)."
+      proof: "the walk from the root reaches all 15; each new registry's routes are served (loom's declared ≠ served scanners)"
+    DB23_autopilot_to_the_orchestrator:
+      status: OPEN
+      depends_on: []
+      files: [orchestrator/autopilot.js, lib/nexus/autopilot.js, package.json, cos/app/runtime.js, lib/nexus-self/systems.js]
+      does: >-
+        lib/nexus/autopilot.js → orchestrator/autopilot.js through the refactor tool (lib/architecture-apply.js), still its own
+        process. package.json scripts and COS's entryOf learn the new path, keeping the old ones for installed releases.
+      proof: "npm run start:all boots every system from orchestrator/autopilot.js; a COS release with the old path still starts"
+    DB24_cos_reads_only_the_registry:
+      status: OPEN
+      depends_on: [DB22_the_root_and_the_missing_four, DB11_cos_compartment_per_system]
+      files: [cos/manager.js, cos/kernel.js, cos/compartment/process-runner.js]
+      does: >-
+        COS learns what to run from the registry walk alone (no list of Nexus's systems in COS): each system-level registry is a
+        compartment, its lifecycle verbs are what COS may do to it. A registry COS has never seen runs the same way (agnostic).
+      proof: "a fixture registry tree with a fake system COS has never seen is spawned, health-checked and despawned"
+    DB25_the_lifecycle_verbs:
+      status: OPEN
+      depends_on: [DB24_cos_reads_only_the_registry]
+      files: [cos/manager.js, cos/workspace/vm-control.js, cos/compartment/process-runner.js, idearium/cli/route-commands.js]
+      does: >-
+        Each verb a registry declares, for any system, through one route and one command row: create, build, spawn, despawn, pause,
+        resume, rewind (vm-control's checkpoints), throttle (a rate cap on its routes at the drawbridge) and balance (more than one
+        instance behind its registry). Each act is a person's or a rule he set (cos-spine.spec), on the event ledger.
+      proof: "each verb on a fixture system: the act, its ledger row, and the state after; an agent's call is a proposal, not the act"
+    DB26_the_ui_floats_on_the_registry:
+      status: OPEN
+      depends_on: [DB25_the_lifecycle_verbs, DB12_the_ui_handshake]
+      files: [idearium/ui/desktop.html, idearium/ui/js/registry-view.js]
+      does: "A view built only from the registry walk and the event ledger: every level, its state, its verbs. It shakes hands first (DB12)."
+      proof: "driven in Clear Glass: the tree shows; a verb runs and its ledger row appears; an undeclared call is refused and shown"
+  build_order_g: [DB23, DB21, DB22, DB24, DB25, DB26]

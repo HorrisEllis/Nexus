@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-agent-orchestration-phasemap.spec::AU2_trial_automatic
+type: phase
+id: docs_2026-10-24-agent-orchestration-phasemap.spec::AU2_trial_automatic
+context: pipeline phase AU2_trial_automatic of docs/2026-10-24-agent-orchestration-phasemap.spec
+intent: null
+summary: AU2_trial_automatic (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371321
+lastSeenAt: 1792874371321
+fingerprint: null
+payload:
+  id: AU2_trial_automatic
+  map: docs/2026-10-24-agent-orchestration-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - docs/framework-trial/trial.js
+  depends_on:
+    - AU1_automation_union
+  blocks: []
+  spec: null
+  graph: 560d564bd58e7255

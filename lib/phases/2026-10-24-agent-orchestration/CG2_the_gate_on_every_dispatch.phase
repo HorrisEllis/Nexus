@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-agent-orchestration-phasemap.spec::CG2_the_gate_on_every_dispatch
+type: phase
+id: docs_2026-10-24-agent-orchestration-phasemap.spec::CG2_the_gate_on_every_dispatch
+context: pipeline phase CG2_the_gate_on_every_dispatch of docs/2026-10-24-agent-orchestration-phasemap.spec
+intent: null
+summary: CG2_the_gate_on_every_dispatch (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371312
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371312
+lastSeenAt: 1792874371312
+fingerprint: null
+payload:
+  id: CG2_the_gate_on_every_dispatch
+  map: docs/2026-10-24-agent-orchestration-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.239
+  files:
+    - lib/repo-agent.js
+    - tests/modules/test-agent-confidence-gate.test.js
+  depends_on:
+    - CG1_the_confidence_gate_backend
+  blocks: []
+  spec: docs/brainos-in-idearium.spec
+  graph: 478789e0af56d297

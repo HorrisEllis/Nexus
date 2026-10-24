@@ -7,11 +7,11 @@ intent: null
 summary: 45 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841756290
+exported_at: 1792874371451
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841756290
-lastSeenAt: 1792841756290
+firstSeenAt: 1792874371451
+lastSeenAt: 1792874371451
 fingerprint: null
 payload:
   for: AM6_perplexity_confidence_loop
@@ -299,8 +299,7 @@ payload:
     blockedBy:
       - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
       - docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
-    unlocks:
-      - docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+    unlocks: []
     conflicts:
       - with: docs/agent-model-and-user-continuity-phasemap.spec::AM3_open_ended_grounded_conversation
         files:
@@ -313,9 +312,7 @@ payload:
     lines:
       - layer 3 · blocked by AM1_per_agent_learned_model, AM5_ambiguity_triggered_pull
       - 'depends on (2): AM1_per_agent_learned_model, AM5_ambiguity_triggered_pull · all upstream 4'
-      - >-
-        needed by (1): AM7_agent_switch_continuity_and_chat_recall · all downstream 3 · finishing it
-        unlocks AM7_agent_switch_continuity_and_chat_recall
+      - 'needed by (1): AM7_agent_switch_continuity_and_chat_recall · all downstream 3'
       - >-
         same files as AM3_open_ended_grounded_conversation with no order between them:
         lib/gap-field.js

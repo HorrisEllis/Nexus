@@ -7,11 +7,11 @@ intent: null
 summary: SB32_context_is_never_optional (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676905
+exported_at: 1792874369331
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676905
-lastSeenAt: 1792787676905
+firstSeenAt: 1792874369331
+lastSeenAt: 1792874369331
 fingerprint: null
 payload:
   id: SB32_context_is_never_optional
@@ -26,4 +26,4 @@ payload:
     - SB3_the_section_prompt_is_domain_agnostic
   blocks: []
   spec: null
-  graph: 811c78496a6d6038
+  graph: 8bf4e61aca2ad9f9

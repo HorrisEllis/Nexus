@@ -7,11 +7,11 @@ intent: null
 summary: GM5_the_context_ladder (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792841755918
+exported_at: 1792874370854
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755918
-lastSeenAt: 1792841755918
+firstSeenAt: 1792874370854
+lastSeenAt: 1792874370854
 fingerprint: null
 payload:
   id: GM5_the_context_ladder
@@ -27,4 +27,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 2a7c6378cda50964
+  graph: 73f5e7d1d13f7e54

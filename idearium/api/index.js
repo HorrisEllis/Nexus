@@ -9158,7 +9158,7 @@ async function handle(req, res, route, query, body) {
     }
     case 'repo.phases.nodes': {
       // 0.60.229 SL9 — James, 2026-10-23: "decompose the phases into .phase with the dependancy graph per phase node. then move them into the
-      // repsective systems". The nodes are written by the compile step (node emerge/compiler/phase-specs.js --all), committed with the code;
+      // repsective systems". The nodes are written by the compile step (node lib/emerge/compiler/phase-specs.js --all), committed with the code;
       // this reads what is written, through lib only (idearium → emerge would be a new crossing, DG2): the nodes per owner system, the
       // phases of the maps with no node yet, and nodes whose phase is in no map any more.
       const repo = getRepoLayer().get(params.uuid);
@@ -9183,7 +9183,7 @@ async function handle(req, res, route, query, body) {
       }
       const missing = [...want].filter(k => !have.has(k)).sort(), stale = [...have.keys()].filter(k => !want.has(k)).sort();
       return ok(res, { nodes: have.size, phases: want.size, bySystem, missing: missing.slice(0, 200), missingCount: missing.length, stale: stale.map(k => ({ key: k, file: have.get(k) })).slice(0, 200), staleCount: stale.length,
-        remedy: missing.length || stale.length ? 'write them: node emerge/compiler/phase-specs.js --all (the compile step; the nodes are committed with the code)' : null });
+        remedy: missing.length || stale.length ? 'write them: node lib/emerge/compiler/phase-specs.js --all (the compile step; the nodes are committed with the code)' : null });
     }
     case 'repo.phases.groom': {
       // 0.60.227 SL3 — James, 2026-10-23: "need to do something about the dependancy graph." lib/phase-groom.js: files from a phase's own

@@ -1,0 +1,118 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CN5_emerge_home:4c15b70cf461a9df
+type: graph
+id: phase:CN5_emerge_home:4c15b70cf461a9df
+context: dependency graph of phase CN5_emerge_home
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792874371408
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371408
+lastSeenAt: 1792874371408
+fingerprint: null
+payload:
+  for: CN5_emerge_home
+  kind: phase
+  repo: null
+  hash: 4c15b70cf461a9df
+  nodes:
+    - path: lib/emerge/compiler/phase-specs.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/kg-builder.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pipeline-nodes.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/emerge/compiler/kg-builder.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-files.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-graph.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/pipeline-nodes.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/node-export.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D3_emerge_home
+    dependents:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+    upstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D1_what_is_a_system
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D3_emerge_home
+    downstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+    blockedBy:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by CN0_the_rule_in_force
+      - 'depends on (2): CN0_the_rule_in_force, CN_D3_emerge_home · all upstream 3'
+      - 'needed by (1): CN11_version_and_record'
+    edges:
+      - from: docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+        kind: declared
+      - from: docs/2026-10-24-system-consolidation-phasemap.spec::CN_D3_emerge_home
+        kind: declared

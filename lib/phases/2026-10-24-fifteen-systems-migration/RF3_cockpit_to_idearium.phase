@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_cockpit_to_idearium
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_cockpit_to_idearium
+context: pipeline phase RF3_cockpit_to_idearium of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: RF3_cockpit_to_idearium (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792875542208
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875542208
+lastSeenAt: 1792875542208
+fingerprint: null
+payload:
+  id: RF3_cockpit_to_idearium
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/cockpit
+    - idearium/cockpit
+    - lib/architecture-apply.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 91b5a911239e5d5f

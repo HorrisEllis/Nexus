@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_primitives_one_copy
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_primitives_one_copy
+context: pipeline phase RF4_primitives_one_copy of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: RF4_primitives_one_copy (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792875542211
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875542211
+lastSeenAt: 1792875542211
+fingerprint: null
+payload:
+  id: RF4_primitives_one_copy
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/warp/core
+    - lib/emerge/siso
+    - lib/siso
+    - lib/siso/core
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 67dd3343a5ab8eab

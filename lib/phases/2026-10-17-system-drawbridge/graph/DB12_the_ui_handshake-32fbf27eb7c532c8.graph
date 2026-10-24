@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841755859
+exported_at: 1792875541736
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755859
-lastSeenAt: 1792841755859
+firstSeenAt: 1792875541736
+lastSeenAt: 1792875541736
 fingerprint: null
 payload:
   for: DB12_the_ui_handshake
@@ -269,6 +269,7 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
     dependents:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB14_heartbeat_over_routes
       - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
@@ -287,6 +288,11 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB18_nodes_in_relation_to_their_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB24_cos_reads_only_the_registry
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
       - docs/2026-10-17-system-drawbridge-phasemap.spec::P33a_a_registry_for_any_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
       - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
@@ -321,9 +327,9 @@ payload:
         depends on (3): DB0c_reading, DB10_shadow_and_negative_space_at_the_drawbridge,
         DB11_cos_compartment_per_system · all upstream 7
       - >-
-        needed by (3): DB13_the_tunnel, DB14_heartbeat_over_routes,
-        P33b_each_system_runs_its_listener · all downstream 23 · finishing it unlocks
-        DB13_the_tunnel, DB14_heartbeat_over_routes
+        needed by (4): DB26_the_ui_floats_on_the_registry, DB13_the_tunnel,
+        DB14_heartbeat_over_routes, P33b_each_system_runs_its_listener · all downstream 28 ·
+        finishing it unlocks DB13_the_tunnel, DB14_heartbeat_over_routes
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges:
       - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading

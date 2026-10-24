@@ -160,3 +160,11 @@ phases:
 order: >-
   CN0 first (the rule in force, no moves). Then CN1–CN10 each independent (one folder each, its own commit, reversible), gated by CN0.
   CN11 last (the record, after every move). emerge (CN5) waits on his CN_D3 choice. Nothing moves until he okays this map.
+
+# ## ADDENDUM 2026-10-24 (0.60.241) — RF2 applied the folding first; this map stays as his placement record
+# The same day, another session's RF2 (docs/2026-10-24-fifteen-systems-migration-phasemap.spec) moved every folder, after James said
+# "15 systems. the rest of the folders need to migrate." and "yes start rf2, security goes with remote desktop". Already done there:
+# CN1 (lib/warp), CN2 (lib/siso), CN3 (orchestrator/auth), CN4's mesh (guardian/mesh). Where they differ, his words decide.
+# The differences are listed in that map's ADDENDUM (b), which also carries the phases that close them (RF3_cockpit_to_idearium,
+# RF3_erosmancer_os). His CN_D3 answer came 2026-10-24: "emerge and warp consolidated. spec compiler and idearium consolidate."
+# (RF4_* there.) Nothing here is deleted (§0.3).

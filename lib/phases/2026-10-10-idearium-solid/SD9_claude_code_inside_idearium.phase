@@ -7,11 +7,11 @@ intent: null
 summary: SD9_claude_code_inside_idearium (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677233
+exported_at: 1792874369854
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677233
-lastSeenAt: 1792787677233
+firstSeenAt: 1792874369854
+lastSeenAt: 1792874369854
 fingerprint: null
 payload:
   id: SD9_claude_code_inside_idearium
@@ -25,4 +25,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 681f598deb142c6d
+  graph: 6760b96b54a10390

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-agent-orchestration-phasemap.spec::CG1_the_confidence_gate_backend
+type: phase
+id: docs_2026-10-24-agent-orchestration-phasemap.spec::CG1_the_confidence_gate_backend
+context: >-
+  pipeline phase CG1_the_confidence_gate_backend of
+  docs/2026-10-24-agent-orchestration-phasemap.spec
+intent: null
+summary: CG1_the_confidence_gate_backend (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371310
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371310
+lastSeenAt: 1792874371310
+fingerprint: null
+payload:
+  id: CG1_the_confidence_gate_backend
+  map: docs/2026-10-24-agent-orchestration-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/agent-confidence-gate.js
+    - tests/modules/test-agent-confidence-gate.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - CG_D1_gate_home
+    - CG_D2_threshold
+    - CG_D3_order
+  blocks: []
+  spec: docs/brainos-in-idearium.spec
+  graph: 489d66ee3a0491dc

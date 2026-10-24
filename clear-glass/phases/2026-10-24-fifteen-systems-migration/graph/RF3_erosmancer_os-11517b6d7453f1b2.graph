@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RF3_erosmancer_os:11517b6d7453f1b2
+type: graph
+id: phase:RF3_erosmancer_os:11517b6d7453f1b2
+context: dependency graph of phase RF3_erosmancer_os
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792875542209
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875542209
+lastSeenAt: 1792875542209
+fingerprint: null
+payload:
+  for: RF3_erosmancer_os
+  kind: phase
+  repo: null
+  hash: 11517b6d7453f1b2
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []
