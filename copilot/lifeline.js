@@ -263,7 +263,9 @@ async function _tryGuardian(prompt, opts = {}) {
     // waits up to 60s, then falls back to the shared tab). Checking whether the SHARED
     // provider tab is connected refused the job before guardian could open the one it
     // needed. Skipped for an agentId job; guardian decides with real evidence.
-    if (opts.agentId) { /* guardian opens the repo's own tab — no shared-tab pre-check */ }
+    // §0.60.231 CL1 — James, 2026-10-24: "can you get the cli working for guardian". A person's own pick (openTab) is not refused for a tab
+    // that is not open yet: guardian's dispatcher opens it and the job flushes when it connects, as for a repo agent's job (above).
+    if (opts.agentId || opts.openTab) { /* guardian opens the tab (the repo's own, or the picked agent's) — no shared-tab pre-check */ }
     else if (ragProvider && ragProvider !== 'auto') {
       const provCheck = await _get(`${GD_URL}/providers`, 3000).catch(() => null);
       // §BUGFIX 2026-08-28, RE-APPLIED — this exact fix (originally
@@ -336,6 +338,7 @@ async function _tryGuardian(prompt, opts = {}) {
       // confirmed by direct trace, not assumed. Only meaningful for a
       // guardian-routed (browser-tab) dispatch.
       agentId:    opts.agentId || undefined,
+      openTab:    opts.openTab === true ? true : undefined,   // §0.60.231 CL1 — guardian opens the picked agent's tab and waits
       canonical:  typeof opts.canonical === 'string' ? opts.canonical : undefined,   // 0.39.265 — the meaning, when prompt is a reworded variant
       requestId:  opts.requestId,
       sessionId:  opts.sessionId,
@@ -524,7 +527,13 @@ async function _routeInner(prompt, opts = {}) {
       _persist({ ...opts, prompt, requestId }, result, 'explicit_agent_request');
       return result;
     }
-    // Explicit request failed — fall through to the normal cascade.
+    // §0.60.231 CL2 — his pick (strict) never falls to another model in silence: the reply was labelled "guardian · chatgpt" while Ollama's
+    // qwen had answered. The agent's own failure goes back, with Guardian's reason.
+    if (opts.strict) {
+      const why = (guardianResult && guardianResult.error) || 'it gave no answer';
+      return { ok: false, text: null, error: `${explicitAgent} could not answer: ${why}`, provider_used: explicitAgent, jobId: (guardianResult && guardianResult.jobId) || null, strict: true, requestId };
+    }
+    // Explicit request failed — fall through to the normal cascade (copilot decides: not a person's pick).
   }
 
   // §FIX 2026-09-07 (merge) — James's real toggle UI (ui/tv-shell's
@@ -587,7 +596,7 @@ async function _routeInner(prompt, opts = {}) {
       ? {
           ok: true, text: ollamaOnlyResult.text,
           confidence: ollamaOnlyResult.confidence,
-          provider_used: 'ollama', escalated: false, requestId,
+          provider_used: opts.model ? `ollama:${opts.model}` : 'ollama', escalated: false, requestId,   // §0.60.231 CL4 — the model that answered
         }
       : {
           ok: false, text: null, confidence: 0,

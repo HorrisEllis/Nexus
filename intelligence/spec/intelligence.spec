@@ -313,3 +313,30 @@ spec:
 # POST /api/intelligence/cfr/delta { pairs: [[prev, curr], …] } → { deltas: [{ tension, friction, slope }] } (at most 5000 pairs),
 # in routes.js OWNED and registry-components.js (intelligence.cfr.delta). Idearium's flight route calls it through
 # lib/nexus-client.js; intelligence down → the flight says tension is unavailable. The ratchet is back at 540.
+
+# ── ADDENDUM 2026-10-24 (0.60.231) — the crystallizer gate: intuition regulated upstream ──────────────────────────
+# James, 2026-10-24: "b, tighten the crystallizer threshold."
+# Context: the earlier analysis of RAID's SNR filter and intelligence/RFR2 against his framework (docs/innovation-
+# toolkit.framework) surfaced the framework's own named weak pillar in the code — "intuition must be regulated and
+# grounded", but the crystallizer latched a co-occurrence as crystallised at count 3 (confidence count/20 = 15%) and the
+# lift/noise brake (_scanMetaPatterns, §1.5) only caught it a META_SCAN_MS (3 min) later. Accelerator upstream, regulator
+# downstream. The fix moves the regulator upstream, to the gate.
+# WHAT: intelligence/index.js _coOccurrenceLift — an event-level base-rate lift: observed co-occurrences ÷ chance
+#   expectation (freqA·freqB·window/span). A co-occurrence crystallises only when it (1) clears the count floor
+#   (_crystallizeThreshold, James's "once twice three times", kept), AND (2) beats chance by CRYSTALLIZE_LIFT_MIN (1.5,
+#   the same bar _scanMetaPatterns uses downstream), AND (3) is not a known structural noise type. Otherwise it is HELD as
+#   status:'hypothesis' (crystallised:false): kept, written and counted (§0.3 lose nothing), promoted when it earns it.
+# DRIFT FOUND AND FIXED (§0.1): a first cut passed the CUMULATIVE count to the lift while the frequencies are windowed —
+#   the ratio drifts upward forever and eventually crystallises everything, the very inflation the gate exists to stop.
+#   The lift now reads a full-window co-occurrence tally (coOccurWindow, no cursor gate) over full-window frequencies
+#   (_typeFrequency) — a clean, drift-free, same-window ratio. The cumulative count drives only the floor/latch.
+# CONSUMERS: getContext no longer feeds an ungrounded hypothesis as if settled (a co_occurrence with status:'hypothesis'
+#   is excluded even when its count-derived confidence reads ≥0.6; precursor/bottleneck/older rows, which carry no status,
+#   are unaffected). The bus announcement is unchanged in mechanism — a hypothesis simply never crosses into crystallised,
+#   so it is never announced (what liminal-space and other listeners hold a belief off).
+# SCHEMA: schema.bep_pattern and schemas.js gain `lift` (number) and `status` ('crystallised'|'hypothesis').
+# PROOF: tests/modules/intelligence.test.js 15/15. D1/D2 now prove a heartbeat pair that cannot beat base rate is held as
+#   a hypothesis and never announced; F0–F5 prove the pure gate directly — a rare exclusive pair beats base rate, a loud
+#   chance-rate pair and a whole-stream burst do not, degenerate inputs return 0 (held), and lift is monotone in observed.
+# NOTE (said, not hidden, §1.2): tests/modules/test-intelligence-bridge.js is red on main for an unrelated reason —
+#   it requires cortex/core/raid/intelligence-bridge, a module that does not exist in this checkout. Not touched here.
