@@ -338,6 +338,9 @@ class CoPilotBridge {
     if (action === 'readPage' || action === 'page.read') return this._ipcPost('/cli/page/read', { agentId: aid, maxText: cmd.maxText });
     // §GA1 0.60.161 — "fill this in for me" on a Fiverr gig page: run the engine, do not chat
     if (action === 'autofill.gig') return this._ipcPost('/cli/autofill/gig/autofill', { agentId: aid, offer: cmd.offer || '', profileId: cmd.profileId || null, minConfidence: cmd.minConfidence || 'medium' });
+    if (action === 'autofill.pick') return this._ipcPost('/cli/autofill/pick', { agentId: aid, fieldType: cmd.fieldType || '', profileId: cmd.profileId || null, label: cmd.label || null }, 5 * 60000);
+    if (action === 'autofill.learned') return this._ipcGet(`/cli/autofill/learned${cmd.url ? `?url=${encodeURIComponent(cmd.url)}` : ''}`);
+    if (action === 'autofill.forget') return this._ipcPost('/cli/autofill/forget', { url: cmd.url || '', fieldKey: cmd.fieldKey || '' });
     if (action === 'autofill.learn') return this._ipcPost('/cli/autofill/learn', { agentId: aid, fieldKey: cmd.fieldKey || '', fieldType: cmd.fieldType || '', url: cmd.url || null });
     if (action === 'invoke' || action === 'ipc') return this._ipcPost('/cli/invoke', { channel: cmd.channel, args: cmd.args, agentId: aid });
     if (action === 'channels') return this._ipcGet(`/cli/invoke${cmd.query ? `?q=${encodeURIComponent(cmd.query)}` : ''}`);
@@ -498,8 +501,8 @@ class CoPilotBridge {
     const r = await this._httpGetBridge(`http://127.0.0.1:${this._ipcPort()}${p}`, 15000);
     try { return JSON.parse(r.body); } catch (_) { return { ok: false, error: `bad reply from ${p}` }; }
   }
-  async _ipcPost(p, body) {
-    const r = await this._httpPostBridge(`http://127.0.0.1:${this._ipcPort()}${p}`, body, 60000);
+  async _ipcPost(p, body, timeoutMs = 60000) {   // §JA3 — a pick waits on the person, so its caller passes a longer wait
+    const r = await this._httpPostBridge(`http://127.0.0.1:${this._ipcPort()}${p}`, body, timeoutMs);
     try { return JSON.parse(r.body); } catch (_) { return { ok: false, error: `bad reply from ${p}` }; }
   }
 

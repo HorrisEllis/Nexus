@@ -227,7 +227,7 @@ function matchFields(domFields, profile, opts = {}) {
   return matches;
 }
 
-module.exports = { matchFields, fieldKeysOf, learnKey, learnedFromSettings, LEARNED_PREFIX, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
+module.exports = { matchFields, fieldKeysOf, valueFor: _valueFor, learnKey, learnedFromSettings, LEARNED_PREFIX, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
 
 // §BUILT 2026-09-19 — James: "library ui." Extracted here after finding
 // the exact same detect/fill orchestration (query -> match -> filter ->
@@ -256,7 +256,9 @@ async function detectFields(dom, autofillStore, { agentId = 'default', profileId
   if (!profile) return { error: `no autofill profile "${profileId}"` };
   const domFields = await dom.handleQuery({ agentId, selector: 'input, select, textarea' });
   if (domFields?.error) return { error: domFields.error };
-  return { profileId, totalFields: domFields.length, matches: matchFields(domFields, profile, { vars, learned }) };
+  const matches = matchFields(domFields, profile, { vars, learned });
+  // §JA4 — the preview says what it cannot place too, so the panel offers a Pick before anything is typed
+  return { profileId, totalFields: domFields.length, matches, needsPick: require('./learn-pick.js').needsPick(domFields, profile, matches) };
 }
 
 /** fillFields(dom, autofillStore, {agentId, profileId, minConfidence, learned}) — real fill, real per-field report.
@@ -280,5 +282,8 @@ async function fillFields(dom, autofillStore, { agentId = 'default', profileId, 
       else filled.push({ cgId: m.cgId, fieldType: m.fieldType, confidence: m.confidence, source: m.source });
     } catch (err) { failed.push({ cgId: m.cgId, fieldType: m.fieldType, error: err.message }); }
   }
-  return { profileId, totalFields: domFields.length, filled, skipped, failed };
+  // §JA3 0.60.230 — what this fill could not place, so the element picker can ask for it (src/autofill/learn-pick.js needsPick):
+  // the profile's types no field took, and the page's boxes nothing matched. Required lazily: learn-pick requires this file.
+  const needsPick = require('./learn-pick.js').needsPick(domFields, profile, allMatches);
+  return { profileId, totalFields: domFields.length, filled, skipped, failed, needsPick };
 }

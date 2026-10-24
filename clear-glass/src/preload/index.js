@@ -359,6 +359,10 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     deleteProfile: (id)           => ipcRenderer.invoke('autofill:profile:delete', { id }),
     detect: (profileId, agentId)  => ipcRenderer.invoke('autofill:detect', { profileId, agentId }),
     fill:   (profileId, agentId, minConfidence, vars) => ipcRenderer.invoke('autofill:fill', { profileId, agentId, minConfidence, vars }),
+    // §JA3/JA4 — the element picker on a field the fill could not place; what was learned per site, and its Forget (src/autofill/learn-pick.js)
+    pick:    (payload)          => ipcRenderer.invoke('autofill:pick', payload),
+    learned: (url)              => ipcRenderer.invoke('autofill:learned', { url }),
+    forget:  (url, fieldKey)    => ipcRenderer.invoke('autofill:forget', { url, fieldKey }),
     // §0.39.265 — cover letters / Upwork & Fiverr proposals (src/autofill/proposal.js)
     proposal: (payload)   => ipcRenderer.invoke('autofill:proposal', payload),
     readPage: (agentId)   => ipcRenderer.invoke('autofill:readPage', { agentId }),
