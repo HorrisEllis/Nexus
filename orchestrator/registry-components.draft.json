@@ -191,12 +191,12 @@
   ],
   "sovereignty": {
     "sovereign": false,
-    "out": 38,
+    "out": 37,
     "in": 11,
     "blockers": {
       "data": 4,
       "primitive": 4,
-      "capability": 30
+      "capability": 29
     },
     "list": {
       "data": [
@@ -308,11 +308,6 @@
           "from": "orchestrator/lib/spec-drift.js",
           "to": "intelligence/gap/predicate.js",
           "system": "intelligence"
-        },
-        {
-          "from": "orchestrator/orchestrator.js",
-          "to": "auth/index.js",
-          "system": "auth"
         },
         {
           "from": "orchestrator/orchestrator.js",

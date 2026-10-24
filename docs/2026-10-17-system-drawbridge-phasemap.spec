@@ -248,7 +248,7 @@ spec:
         A system declares in its registry which of its events a person should see (toasts: [{ event, level, text }]). The UI
         toasts what the registry says instead of a list in app.js, so the UI holds no knowledge of its own (disposable).
     DB16_a_registry_for_each_system:
-      status: "PARTLY BUILT 0.60.229 — drafted for all 16 systems with none (lib/registry-draft.js; <system>/registry-components.draft.json); OPEN: his acceptance, system by system"
+      status: "PARTLY BUILT 0.60.229 — drafted for the 8 systems with none (0.60.230: cli, cockpit, cos, emergence, meta, nexus, orchestrator, warp; lib/registry-draft.js; <system>/registry-components.draft.json); OPEN: his acceptance, system by system"
       does: >-
         A registry drafted for every system that has none (cos, nexus, warp, orchestrator, meta, siso, cli, cockpit,
         diagnostic, auth, mesh; then remote-desktop, emergence, jaa, erosmancer, sentinel, security) from its source: the
@@ -435,3 +435,26 @@ the choice "1 registries per system (DB16), COS first … 2 specs via local mode
 - **Found, not this change's:** test-system-boundary SB-06/SB-08 fail on the committed tree too — three crossings not in the baseline
   (idearium/repo/roadmap-import.js → loom/scanners/phasemap-map.js since 0.60.199; lib/phase-dag.js → the same; lib/verify-first.js →
   cos/testenv/run-target.js). Reported.
+
+## ADDENDUM 2026-10-24 (0.60.230) — his decision: eight folders are not systems
+James, 2026-10-24, reading the coder's "auth, erosmancer, jaa, mesh, remote-desktop, security, sentinel and siso already reach into no other
+system" (0.60.229's report, which counted them as the systems closest to sovereign): "Aren't systems. They should have been dealt with already"
+- **His decision:** those eight are not systems. His axiom §5.9 already said so ("a primitive with none of these [state, lifecycle,
+  persistence, execution] is not a system", docs/2026-10-17-decisions-by-the-axioms.spec); the census (lib/system-boundary.js) never
+  applied it, and DB16 drafted registries for them. That cost: eight drafts and a wrong "closest to sovereign" list in 0.60.229.
+- **What it changed:** lib/system-boundary.js FOLDED, each one's home read from who uses it — auth → orchestrator (its only user,
+  orchestrator/orchestrator.js), mesh → guardian (guardian/routes/mesh.js), jaa → guardian (its schema is "Guardian v8 — Schema"), siso → the
+  kernel (a primitive cos, emerge and idearium use; PRIMITIVES already said so); erosmancer, remote-desktop, security, sentinel → parked
+  (nothing requires them; a use of one is reported as parkedUses, never hidden). Their files count as their home's; they are never listed
+  as systems; their eight drafts were withdrawn (generated output, regenerable: nothing lost).
+- **The same mistake one level down, decided by the axioms (§5.9; DB16's open question, the coder's reading, to confirm):** the parts of
+  other systems (contracts, hooks, service, components, architecture-spec, seams) and the faces (ui, tablet) were listed as "sovereign".
+  lib/system-boundary.js PARTS: still scanned (crossings into hooks/ are real edges), never in the sovereignty list. lib/registry-draft.js
+  reads the same lists (one truth).
+- **"They should have been dealt with already" — what is left, to confirm:** the table only counts them right. Dealing with them means
+  moving each into its home (DB17: auth/ into orchestrator/, mesh/ and jaa/ into guardian/, siso/ beside the kernel) and archiving the parked
+  four (§0.3: archive, not delete). The coder's reading is that he wants that done; erosmancer (231 files, its own OS spec) may be his own
+  project rather than parked code — his to say.
+- **Found and fixed on the way:** 0.60.229 put the drafts' route case between `case 'system.registry':` and `case 'system.registry.one':`,
+  so GET /api/system/registry answered with the drafts instead of the dependency graph (test-drawbridge-registry SR-07). Moved; guarded.
+- **Measured now:** 20 systems; none sovereign. Fewest ways out: cockpit 1 (data), warp 1, emerge 4, cos 4 (1 data, 3 primitive into warp/core).

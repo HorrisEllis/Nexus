@@ -328,11 +328,11 @@
   ],
   "sovereignty": {
     "sovereign": false,
-    "out": 5,
+    "out": 4,
     "in": 73,
     "blockers": {
       "data": 1,
-      "primitive": 4,
+      "primitive": 3,
       "capability": 0
     },
     "list": {
@@ -344,11 +344,6 @@
         }
       ],
       "primitive": [
-        {
-          "from": "cos/manager.js",
-          "to": "siso/index.js",
-          "system": "siso"
-        },
         {
           "from": "cos/siso/index.js",
           "to": "warp/core/Event.js",

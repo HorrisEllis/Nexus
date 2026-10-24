@@ -10,6 +10,8 @@
  *   RD-02  missing(): every system with no registry-components.js, never a folder DB16 reads as part of another system; each has its
  *          draft written as registry-components.draft.json, and the written draft is the one the tree gives now
  *   RD-03  no draft is in force: no system without a registry gained a registry-components.js; loom's loadAll reads no draft
+ *   RD-05  0.60.230 his "Aren't systems": auth, erosmancer, jaa, mesh, remote-desktop, security, sentinel, siso folded or parked; the
+ *          parts (contracts, hooks, ui …) not listed; no draft for any of them
  *   RD-04  the real API: the list lowest friction first; one draft says written / not accepted; the command rows reach both
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -75,11 +77,29 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
     const d = (await quiet(() => api._route('GET', '/api/system/registry/cos/draft'))).json;
     assert.deepStrictEqual([d.systemId, d.written, d.accepted], ['cos', true, false]);
     assert.strictEqual((await quiet(() => api._route('GET', '/api/system/registry/nope/draft'))).status, 404);
+    const g = (await quiet(() => api._route('GET', '/api/system/registry'))).json;
+    assert.ok(g.systems && g.systems[0].declared && Array.isArray(g.edges), 'GET /api/system/registry is still the dependency graph (0.60.229 made it fall through into the drafts)');
     const C = require(path.join(ROOT, 'idearium/cli/route-commands.js'));
     const rows = (Array.isArray(C) ? C : C.SPEC || Object.values(C).find(Array.isArray));
     const r = rows.find(x => x.key === 'system.drafts');
     assert.deepStrictEqual(r.req({ args: [], flags: {} }), { method: 'GET', path: '/api/system/registry-drafts' });
     assert.deepStrictEqual(r.req({ args: ['cos'], flags: {} }), { method: 'GET', path: '/api/system/registry/cos/draft' });
+  });
+
+  await test('RD-05', "his 2026-10-24 \"Aren't systems\": the eight are folded into their home or parked, never listed, never drafted", () => {
+    const SB = require(path.join(ROOT, 'lib/system-boundary.js'));
+    assert.deepStrictEqual(Object.keys(SB.FOLDED).sort(), ['auth', 'erosmancer', 'jaa', 'mesh', 'remote-desktop', 'security', 'sentinel', 'siso']);
+    const sys = SB.systems(ROOT);
+    for (const f of Object.keys(SB.FOLDED)) assert.ok(!sys.includes(f), `${f} is not a system`);   // the parts stay in the scan (crossings into hooks/ are real edges); they leave only the sovereignty list
+    const scan = SB.scan({ root: ROOT });
+    assert.ok(!scan.crossings.some(c => c.from === 'orchestrator/orchestrator.js' && /^auth\//.test(c.to)), 'auth is orchestrator\'s: its use is internal');
+    const toSiso = scan.crossings.filter(c => /^siso\//.test(c.to));
+    assert.ok(toSiso.length && toSiso.every(c => c.toSystem === 'lib' && c.kind === 'kernel'), 'siso is a primitive: a use of the kernel');
+    assert.deepStrictEqual(scan.parkedUses, [], 'nothing uses a parked folder (it would be said here)');
+    const sov = SB.sovereignty({ root: ROOT });
+    assert.ok(!sov.systems.some(r => SB.PARTS.includes(r.system) || SB.FOLDED[r.system]), 'the sovereignty list holds systems only');
+    for (const f of Object.keys(SB.FOLDED)) assert.ok(!fs.existsSync(path.join(ROOT, f, 'registry-components.draft.json')), `${f}: its draft was withdrawn`);
+    assert.ok(!RD.missing({ root: ROOT }).some(m => SB.FOLDED[m] || SB.PARTS.includes(m)));
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`);

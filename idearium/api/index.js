@@ -6010,7 +6010,6 @@ async function handle(req, res, route, query, body) {
       if (!t.ok) return err(res, 404, t.error);
       return ok(res, { ...t, heartbeat: await SYS.heartbeat(t.name) });
     }
-    case 'system.registry':
     case 'system.registry.drafts': case 'system.registry.draft': {
       // 0.60.229 DB16 — a draft is built fresh from the tree each time; whether it is written (<system>/registry-components.draft.json) and
       // accepted (renamed to registry-components.js) is said, so the answer is never a stale copy
@@ -6022,6 +6021,7 @@ async function handle(req, res, route, query, body) {
       list.sort((a, b) => (a.out - b.out) || (a.reachedInto - b.reachedInto) || a.system.localeCompare(b.system));
       return ok(res, { systems: list, order: 'lowest friction first: fewest ways out, then fewest files others reach into (CS_D7)' });
     }
+    case 'system.registry':
     case 'system.registry.one':
     case 'system.registry.settle': {   // 0.60.127 DB9 + DB10 (docs/2026-10-17-system-drawbridge-phasemap.spec, addendum a)
       const SR = _require('../../lib/drawbridge-registry.js');
