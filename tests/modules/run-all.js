@@ -454,6 +454,7 @@ const SUITES = [
   'test-cos-run-target.test.js',     // 0.60.166 CT1 — the gate's test runs inside COS's process sandbox (clean env, timeout, output cap); portable, no KVM needed
   'test-tf-already-done.test.js',      // 0.60.167 — a phase whose files already exist is not stuck forever on test_first:require (TF.decide: passes-already+exists = already satisfied)
   'test-autofill-learned.test.js',     // 0.60.225 JA1 — the autofill matcher consults a per-site learned map (a picked field fills every time); works for micro1/Mercor/Turing/etc
+  'test-autofill-learn-save.test.js',   // 0.60.226 JA2 — a picked field saves per-origin to site-settings (autofill.field.<key>) and the fill path reads it back
   'test-stream-fallback.test.js',  // 0.60.191 R1/I1 — the DOM mutator's stream at the node anchor, kept as a partial .response; the last fallback before a re-send
   'test-approval-chain.test.js',  // 0.60.190 APV — an approved change: its entry in the Versionium commit of its diff, the change log route/row/drawer, the orchestrator's ledger
   'test-phase-census.test.js',  // 0.60.188 CNS1 — every phase judged against its evidence; short ids, mapping commits and map citations are not evidence

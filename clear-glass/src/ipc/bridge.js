@@ -576,7 +576,7 @@ class IpcBridge {
     // path would use, not a second implementation of either.
     this.app.post('/cli/autofill/detect', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
-      try { res.json(await _autofillDetect(this.dom, this.autofillStore, { agentId: req.body?.agentId || 'default', profileId: req.body?.profileId })); }
+      try { const agentId = req.body?.agentId || 'default'; res.json(await _autofillDetect(this.dom, this.autofillStore, { agentId, profileId: req.body?.profileId, learned: this._learnedFields(agentId) })); }
       catch (e) { res.status(500).json({ error: e.message }); }
     });
     // §0.39.301 — the gig writer's second door (src/autofill/gig.js), same functions the autofill:gig* IPC uses.
@@ -603,10 +603,27 @@ class IpcBridge {
     this.app.post('/cli/autofill/fill', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
       try {
+        const agentId = req.body?.agentId || 'default';
         res.json(await _autofillFill(this.dom, this.autofillStore, {
-          agentId: req.body?.agentId || 'default', profileId: req.body?.profileId, minConfidence: req.body?.minConfidence || 'medium',
+          agentId, profileId: req.body?.profileId, minConfidence: req.body?.minConfidence || 'medium', learned: this._learnedFields(agentId),
         }));
       } catch (e) { res.status(500).json({ error: e.message }); }
+    });
+    // §JA2 0.60.226 — James, 2026-10-23: "then the phases with the per site settings." Teach the autofill a field it missed:
+    // a picked field (its key = fieldKeysOf(el)[0]) → a fieldType, saved per-origin in site-settings. The fill path above reads
+    // it back (learned), so on this site the field fills every time. The pick itself is JA3 (the element picker); this is its home.
+    this.app.post('/cli/autofill/learn', async (req, res) => {
+      if (!this.siteSettings) return res.status(503).json({ error: 'siteSettings unavailable' });
+      const agentId = req.body?.agentId || 'default';
+      const url = req.body?.url || this._pageUrl(agentId);
+      const fieldKey = String(req.body?.fieldKey || '').trim().toLowerCase();
+      const fieldType = String(req.body?.fieldType || '').trim();
+      if (!url) return res.status(400).json({ error: 'no page url (open the application in a tab, or pass url)' });
+      if (!fieldKey || !fieldType) return res.status(400).json({ error: 'fieldKey and fieldType are required' });
+      const ok = this.siteSettings.set(url, require('../autofill/matcher.js').learnKey(fieldKey), fieldType);
+      if (!ok) return res.status(400).json({ error: `could not save for ${url}` });
+      try { this.postEvent?.('autofill.learned', { origin: (() => { try { return new URL(url).origin; } catch (_) { return url; } })(), fieldKey, fieldType, ts: Date.now() }); } catch (_) {}
+      res.json({ ok: true, origin: (() => { try { return new URL(url).origin; } catch (_) { return url; } })(), fieldKey, fieldType, learned: require('../autofill/matcher.js').learnedFromSettings(this.siteSettings.getAllForOrigin(url)) });
     });
 
     // §BUILT 2026-09-21 — James: "answering on screen questions." Backend
@@ -2036,6 +2053,17 @@ class IpcBridge {
     try { this.autofillStore.setLastGig(r.gig); } catch (_) {}   // §GA1a — the panel and the co-pilot fill the same gig
     this.postEvent('autofill.gig.drafted', { profileId, title: r.gig.title, tags: r.gig.tags.length, packages: Object.keys(r.gig.packages).length, warnings: r.warnings.length, ts: Date.now() });
     return { ok: true, gig: r.gig, warnings: r.warnings, parts: G.gigParts(r.gig), text: G.gigText(r.gig) };
+  }
+  // §JA2 0.60.226 — the page's url for a tab (for per-site learned fields), via the real driver as the gig path does.
+  _pageUrl(agentId = 'default') {
+    try { const wc = this.driver && this.driver._getWebContents(agentId); const u = wc && wc.getURL(); return u || null; } catch (_) { return null; }
+  }
+  // §JA2 — the learned field map ({ fieldKey → fieldType }) for the tab's origin, read from site-settings. Empty when none/unknown.
+  _learnedFields(agentId = 'default') {
+    try { const url = this._pageUrl(agentId); if (!url || !this.siteSettings) return null;
+      const m = require('../autofill/matcher.js').learnedFromSettings(this.siteSettings.getAllForOrigin(url));
+      return Object.keys(m).length ? m : null;
+    } catch (_) { return null; }
   }
   // §GA1 0.60.161 — James, 2026-10-19: "yes." One door the co-pilot calls for "fill this in for me" on a Fiverr gig page, so it
   // runs the engine instead of chatting (the screenshot). Either, its choice (GA0a): a gig already written is used; else, given

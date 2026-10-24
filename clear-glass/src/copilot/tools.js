@@ -152,6 +152,7 @@ const TOOLS = [
   // §GA1 0.60.161 — James: "need help with the autofill for fiverr." / "yes." Fill the Fiverr GIG EDITOR open in the current tab.
   // This is the tool for "fill this in for me" on a gig-creation page — NOT opportunity.prepare (that fills job applications).
   { name: 'autofill.gig',     cat: 'nexus',    desc: 'Fill the Fiverr gig editor open in this tab. Uses the gig already written; if none, writes one from the active Fiverr profile and your one-line offer, then fills. Never saves or publishes. Give `offer` (one line of what the gig offers) when no gig is written yet.', params: { offer: 'string?', profileId: 'string?', minConfidence: 'string?', agentId: 'string?' } },
+  { name: 'autofill.learn',   cat: 'nexus',    desc: 'Teach the autofill a field it missed on a job-application page: map a field (its key — a label/name/id) to a fieldType (e.g. github, linkedin, email). Saved per-site, so it fills on this site every time after. `fieldKey` is the field\'s label/name/id; `fieldType` is what goes there.', params: { fieldKey: 'string', fieldType: 'string', url: 'string?', agentId: 'string?' } },
   { name: 'opportunity.prepare', cat: 'nexus', desc: 'Open the application page and fill it (autofill + answer bank + drafts) — stopsbefore submit', params: { id: 'string' } },
 ];
 

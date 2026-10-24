@@ -151,6 +151,19 @@ function _matchByLabel(text) {
  * a field whose purpose is identified but the profile has nothing to
  * put there is not included (nothing to fill, not a failure).
  */
+// §JA2 0.60.226 — the learn-loop's per-site home. A learned pick is stored in site-settings under the page's origin, keyed
+// `autofill.field.<fieldKey>` = <fieldType>. learnKey() builds that key; learnedFromSettings() reads the whole learned map back
+// out of getAllForOrigin(url). Both pure, so the save door and the fill path agree on the format and this is testable with no store.
+const LEARNED_PREFIX = 'autofill.field.';
+function learnKey(fieldKey) { return LEARNED_PREFIX + String(fieldKey || '').trim().toLowerCase(); }
+function learnedFromSettings(allForOrigin = {}) {
+  const out = {};
+  for (const [k, v] of Object.entries(allForOrigin || {})) {
+    if (k.startsWith(LEARNED_PREFIX) && v) out[k.slice(LEARNED_PREFIX.length)] = String(v);
+  }
+  return out;
+}
+
 // §JA1 — a field's stable identities, lowercased, in priority order. The learn-loop's save path (JA2, the element picker)
 // keys a learned part→fieldType entry by one of these, so matchFields and the picker agree on what identifies a field.
 function fieldKeysOf(field = {}) {
@@ -214,7 +227,7 @@ function matchFields(domFields, profile, opts = {}) {
   return matches;
 }
 
-module.exports = { matchFields, fieldKeysOf, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
+module.exports = { matchFields, fieldKeysOf, learnKey, learnedFromSettings, LEARNED_PREFIX, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
 
 // §BUILT 2026-09-19 — James: "library ui." Extracted here after finding
 // the exact same detect/fill orchestration (query -> match -> filter ->

@@ -110,3 +110,22 @@ pattern GA2–GA5 name; no new store.
 - **Open (the rest of the loop, general form of GA2–GA5):** JA2 save a pick to site-settings (autofill.field.<key>) under the
   application's origin; JA3 the element picker on a missed field; JA4 the UI + the IPC loading learned from site-settings on fill;
   and a real Clear Glass fill on one live listing (his login).
+
+## ADDENDUM 2026-10-23 (JA2, 0.60.226) — the pick is saved per site, and the fill path reads it back
+James, 2026-10-23: "then the phases with the per site settings."
+JA1 made matchFields *consult* a learned map; it never *saved* one, and nothing loaded it on a real fill. JA2 closes that loop
+for the general application matcher, the per-site home GA3/GA4 name — reusing the existing SiteSettingsStore (§8.6, no new store).
+- **Built (backend → route → command → agent, his order 2026-10-07):**
+  - clear-glass/src/autofill/matcher.js — two pure helpers so the save door and the fill path agree on one format:
+    `learnKey(fieldKey)` → `autofill.field.<fieldKey>` (lowercased, trimmed); `learnedFromSettings(allForOrigin)` → the
+    `{fieldKey→fieldType}` map matchFields already consumes (prefix-scoped, so unrelated site-settings keys are ignored). Exported.
+  - clear-glass/src/ipc/bridge.js — `POST /cli/autofill/learn` ({fieldKey, fieldType, url?}) saves
+    siteSettings.set(origin, learnKey, fieldType) under the tab's normalized origin; `_pageUrl(agentId)` / `_learnedFields(agentId)`
+    load learnedFromSettings(getAllForOrigin(url)) and `/cli/autofill/{detect,fill}` now pass that learned map to the matcher, so a
+    taught field fills on that site on the next visit without being asked again.
+  - clear-glass/src/copilot/tools.js + copilot/bridge.js — the `autofill.learn` tool and its dispatch, so an agent can teach a
+    field through the same door a person uses.
+  - Test tests/modules/test-autofill-learn-save.test.js JA2 3/3 (pure round-trip prefix-scoped; per-origin isolation on the real
+    SiteSettingsStore; a saved pick drives matchFields to fill a pattern-missed field end-to-end).
+- **Open:** JA3 the element picker pops up on a missed field (reuse renderer/selector-check.js + selector-assign); JA4 the UI for
+  the learn-loop (the fill path already loads learned); and a real Clear Glass fill on one live listing (his login, his machine).
