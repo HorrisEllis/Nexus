@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682411
+exported_at: 1792880100801
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682411
-lastSeenAt: 1792877682411
+firstSeenAt: 1792880100801
+lastSeenAt: 1792880100801
 fingerprint: null
 payload:
   for: CS9_every_project_a_compartment
@@ -299,6 +299,8 @@ payload:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
@@ -313,7 +315,7 @@ payload:
       - >-
         depends on (3): CS4_every_system_a_compartment, CS1_a_version_is_a_system_state,
         CS_D6_every_project_a_compartment · all upstream 38
-      - 'needed by (1): CS10_hats_bound_to_the_compartment'
+      - 'needed by (1): CS10_hats_bound_to_the_compartment · all downstream 3'
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
         kind: declared

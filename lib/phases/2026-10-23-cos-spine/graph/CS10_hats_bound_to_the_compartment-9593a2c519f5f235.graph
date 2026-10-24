@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682412
+exported_at: 1792880100802
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682412
-lastSeenAt: 1792877682412
+firstSeenAt: 1792880100802
+lastSeenAt: 1792880100802
 fingerprint: null
 payload:
   for: CS10_hats_bound_to_the_compartment
@@ -218,7 +218,8 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
-    dependents: []
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
       - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
@@ -261,7 +262,9 @@ payload:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV5_clear_glass_guardian_orchestrator
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
-    downstream: []
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
@@ -276,7 +279,7 @@ payload:
       - >-
         depends on (3): CS9_every_project_a_compartment, CS5_caps_per_compartment,
         CS3_the_registry_is_the_bridge · all upstream 41
-      - 'needed by (0): —'
+      - 'needed by (1): MG7_automation_macros_and_hats · all downstream 2'
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
         kind: declared

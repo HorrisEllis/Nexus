@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841755511
+exported_at: 1792880099945
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755511
-lastSeenAt: 1792841755511
+firstSeenAt: 1792880099945
+lastSeenAt: 1792880099945
 fingerprint: null
 payload:
   for: COSA3_run_and_supervise
@@ -105,6 +105,9 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy: []
     unlocks:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA4_switch_and_rollback
@@ -117,7 +120,7 @@ payload:
       - 'depends on (1): COSA2_runtime_and_dependencies · all upstream 2'
       - >-
         needed by (4): COSA4_switch_and_rollback, COSA8_other_projects, COSA9_idearium_sync,
-        CS4a_cos_boots_alone · all downstream 17 · finishing it unlocks COSA4_switch_and_rollback,
+        CS4a_cos_boots_alone · all downstream 20 · finishing it unlocks COSA4_switch_and_rollback,
         COSA8_other_projects, COSA9_idearium_sync
     edges:
       - from: docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies

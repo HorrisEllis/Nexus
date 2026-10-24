@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677018
+exported_at: 1792880099213
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677018
-lastSeenAt: 1792787677018
+firstSeenAt: 1792880099213
+lastSeenAt: 1792880099213
 fingerprint: null
 payload:
   for: OS1_compartments_as_operating_systems
@@ -122,6 +122,8 @@ payload:
       - docs/2026-10-05-cos-machines-phasemap.spec::OS2_images_downloaded_and_kept_current
       - docs/2026-10-05-cos-machines-phasemap.spec::SU1_the_setup_asks_the_os_and_its_version
       - docs/2026-10-05-cos-machines-phasemap.spec::SU2_every_language_and_the_repos_own_dependencies
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy: []
     unlocks:
       - docs/2026-10-05-cos-machines-phasemap.spec::OS2_images_downloaded_and_kept_current
@@ -133,7 +135,7 @@ payload:
       - 'depends on (1): VM1_control_like_vmware'
       - >-
         needed by (3): OS2_images_downloaded_and_kept_current, AP2_test_on_the_android_compartment,
-        EL1_electron_compiler · all downstream 7 · finishing it unlocks
+        EL1_electron_compiler · all downstream 9 · finishing it unlocks
         OS2_images_downloaded_and_kept_current, EL1_electron_compiler
     edges:
       - from: docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware

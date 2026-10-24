@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682023
+exported_at: 1792880100332
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682023
-lastSeenAt: 1792877682023
+firstSeenAt: 1792880100332
+lastSeenAt: 1792880100332
 fingerprint: null
 payload:
   for: DB6_move_the_crossings
@@ -56,6 +56,9 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
     unlocks: []
@@ -64,7 +67,7 @@ payload:
     lines:
       - layer 7 · blocked by SV7_intelligence_cos_cortex
       - 'depends on (1): SV7_intelligence_cos_cortex · all upstream 9'
-      - 'needed by (2): CS4_every_system_a_compartment, CS11_raid_in_the_exe · all downstream 8'
+      - 'needed by (2): CS4_every_system_a_compartment, CS11_raid_in_the_exe · all downstream 11'
     edges:
       - from: docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
         kind: declared

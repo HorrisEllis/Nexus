@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682409
+exported_at: 1792880100800
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682409
-lastSeenAt: 1792877682409
+firstSeenAt: 1792880100800
+lastSeenAt: 1792880100800
 fingerprint: null
 payload:
   for: CS7_spawn_despawn_and_balance
@@ -41,6 +41,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
     dependents:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
       - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
@@ -84,6 +85,8 @@ payload:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
@@ -91,9 +94,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 10 · blocked by CS5_caps_per_compartment, CS11_raid_in_the_exe
+      - layer 10 · ON THE CRITICAL PATH · blocked by CS5_caps_per_compartment, CS11_raid_in_the_exe
       - 'depends on (2): CS5_caps_per_compartment, CS11_raid_in_the_exe · all upstream 40'
-      - 'needed by (1): CS8_the_cos_screen'
+      - 'needed by (2): CS8_the_cos_screen, MG4_resources_per_compartment · all downstream 3'
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
         kind: declared

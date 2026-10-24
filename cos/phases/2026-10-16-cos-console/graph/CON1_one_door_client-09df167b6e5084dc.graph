@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792787677680
+exported_at: 1792880100151
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677680
-lastSeenAt: 1792787677680
+firstSeenAt: 1792880100151
+lastSeenAt: 1792880100151
 fingerprint: null
 payload:
   for: CON1_one_door_client
@@ -39,6 +39,8 @@ payload:
       - docs/2026-10-16-cos-console-phasemap.spec::CON5_pane
       - docs/2026-10-16-cos-console-phasemap.spec::CON8_nexus_server_hook
       - docs/2026-10-16-cos-console-phasemap.spec::CON9_configure
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy: []
     unlocks:
       - docs/2026-10-16-cos-console-phasemap.spec::CON2_grammar_and_completion
@@ -51,7 +53,7 @@ payload:
       - 'depends on (0): —'
       - >-
         needed by (5): CON2_grammar_and_completion, CON3_system_controls, CON4_safety_gate,
-        CON8_nexus_server_hook, CON9_configure · all downstream 6 · finishing it unlocks
+        CON8_nexus_server_hook, CON9_configure · all downstream 8 · finishing it unlocks
         CON2_grammar_and_completion, CON4_safety_gate, CON8_nexus_server_hook
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges: []

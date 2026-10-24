@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677843
+exported_at: 1792880100387
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677843
-lastSeenAt: 1792787677843
+firstSeenAt: 1792880100387
+lastSeenAt: 1792880100387
 fingerprint: null
 payload:
   for: DB19_genesis_sandboxed_fork
@@ -69,6 +69,7 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
     downstream:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
     blockedBy: []
     unlocks:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
@@ -77,7 +78,9 @@ payload:
     lines:
       - layer 6 · ready
       - 'depends on (1): DB13_the_tunnel · all upstream 9'
-      - 'needed by (1): DB20_sealed_archetype · finishing it unlocks DB20_sealed_archetype'
+      - >-
+        needed by (1): DB20_sealed_archetype · all downstream 2 · finishing it unlocks
+        DB20_sealed_archetype
     edges:
       - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
         kind: declared

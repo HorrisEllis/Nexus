@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682040
+exported_at: 1792880100349
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682040
-lastSeenAt: 1792877682040
+firstSeenAt: 1792880100349
+lastSeenAt: 1792880100349
 fingerprint: null
 payload:
   for: DB12_the_ui_handshake
@@ -270,6 +270,7 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
     dependents:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB14_heartbeat_over_routes
       - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
@@ -310,6 +311,11 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy:
@@ -329,9 +335,9 @@ payload:
         depends on (3): DB0c_reading, DB10_shadow_and_negative_space_at_the_drawbridge,
         DB11_cos_compartment_per_system · all upstream 7
       - >-
-        needed by (4): DB26_the_ui_floats_on_the_registry, DB13_the_tunnel,
-        DB14_heartbeat_over_routes, P33b_each_system_runs_its_listener · all downstream 30 ·
-        finishing it unlocks DB13_the_tunnel, DB14_heartbeat_over_routes
+        needed by (5): DB26_the_ui_floats_on_the_registry, MG1_loom_on_its_registry_spine,
+        DB13_the_tunnel, DB14_heartbeat_over_routes, P33b_each_system_runs_its_listener · all
+        downstream 35 · finishing it unlocks DB13_the_tunnel, DB14_heartbeat_over_routes
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges:
       - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading

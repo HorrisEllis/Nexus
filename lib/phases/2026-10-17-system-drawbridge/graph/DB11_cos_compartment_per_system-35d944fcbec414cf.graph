@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792879718639
+exported_at: 1792880100347
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792879718639
-lastSeenAt: 1792879718639
+firstSeenAt: 1792880100347
+lastSeenAt: 1792880100347
 fingerprint: null
 payload:
   for: DB11_cos_compartment_per_system
@@ -297,6 +297,11 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy:
@@ -309,7 +314,7 @@ payload:
       - 'depends on (1): DB0c_reading · all upstream 4'
       - >-
         needed by (3): DB24_cos_reads_only_the_registry, CS4_every_system_a_compartment,
-        DB12_the_ui_handshake · all downstream 31
+        DB12_the_ui_handshake · all downstream 36
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges:
       - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading

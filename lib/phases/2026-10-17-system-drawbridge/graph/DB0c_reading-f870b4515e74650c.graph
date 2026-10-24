@@ -7,11 +7,11 @@ intent: null
 summary: 35 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682032
+exported_at: 1792880100341
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682032
-lastSeenAt: 1792877682032
+firstSeenAt: 1792880100341
+lastSeenAt: 1792880100341
 fingerprint: null
 payload:
   for: DB0c_reading
@@ -313,6 +313,11 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy:
@@ -335,7 +340,7 @@ payload:
       - >-
         needed by (5): DB9_every_repo_generates_its_registry,
         DB10_shadow_and_negative_space_at_the_drawbridge, DB11_cos_compartment_per_system,
-        DB12_the_ui_handshake, DB16_a_registry_for_each_system · all downstream 34 · finishing it
+        DB12_the_ui_handshake, DB16_a_registry_for_each_system · all downstream 39 · finishing it
         unlocks DB9_every_repo_generates_its_registry, DB11_cos_compartment_per_system,
         DB16_a_registry_for_each_system
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

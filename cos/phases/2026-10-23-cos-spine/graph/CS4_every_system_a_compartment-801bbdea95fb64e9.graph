@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792879719065
+exported_at: 1792880100797
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792879719065
-lastSeenAt: 1792879719065
+firstSeenAt: 1792880100797
+lastSeenAt: 1792880100797
 fingerprint: null
 payload:
   for: CS4_every_system_a_compartment
@@ -222,6 +222,9 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
       - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
@@ -236,16 +239,17 @@ payload:
     dangling: []
     lines:
       - >-
-        layer 8 · blocked by CS4a_cos_boots_alone, CS3_the_registry_is_the_bridge,
-        CS_D7_sovereign_first, DB6_move_the_crossings, DB16_a_registry_for_each_system,
-        DB4_one_bus_per_system, DB5_the_handshake_for_every_system, DB11_cos_compartment_per_system
+        layer 8 · ON THE CRITICAL PATH · blocked by CS4a_cos_boots_alone,
+        CS3_the_registry_is_the_bridge, CS_D7_sovereign_first, DB6_move_the_crossings,
+        DB16_a_registry_for_each_system, DB4_one_bus_per_system, DB5_the_handshake_for_every_system,
+        DB11_cos_compartment_per_system
       - >-
         depends on (8): CS4a_cos_boots_alone, CS3_the_registry_is_the_bridge, CS_D7_sovereign_first,
         DB6_move_the_crossings, DB16_a_registry_for_each_system, DB4_one_bus_per_system,
         DB5_the_handshake_for_every_system, DB11_cos_compartment_per_system · all upstream 34
       - >-
         needed by (4): CS5_caps_per_compartment, CS6_rebuild_from_the_spec,
-        CS9_every_project_a_compartment, CS11_raid_in_the_exe · all downstream 7
+        CS9_every_project_a_compartment, CS11_raid_in_the_exe · all downstream 10
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677523
+exported_at: 1792880099943
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677523
-lastSeenAt: 1792787677523
+firstSeenAt: 1792880099943
+lastSeenAt: 1792880099943
 fingerprint: null
 payload:
   for: COSA1_version_store_and_import
@@ -192,6 +192,9 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy: []
     unlocks:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
@@ -206,7 +209,7 @@ payload:
       - 'depends on (0): —'
       - >-
         needed by (5): COSA2_runtime_and_dependencies, COSA6_the_exe, COSA7_clear_glass_delivers,
-        COSA9_idearium_sync, COSA13_auto_update · all downstream 22 · finishing it unlocks
+        COSA9_idearium_sync, COSA13_auto_update · all downstream 25 · finishing it unlocks
         COSA2_runtime_and_dependencies, COSA6_the_exe, COSA7_clear_glass_delivers,
         COSA9_idearium_sync, COSA13_auto_update
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

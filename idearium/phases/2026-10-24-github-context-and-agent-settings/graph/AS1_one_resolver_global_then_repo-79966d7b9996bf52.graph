@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792874371389
+exported_at: 1792880100924
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371389
-lastSeenAt: 1792874371389
+firstSeenAt: 1792880100924
+lastSeenAt: 1792880100924
 fingerprint: null
 payload:
   for: AS1_one_resolver_global_then_repo
@@ -221,11 +221,14 @@ payload:
     deps:
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
     dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH3_sync_per_compartment
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS2_each_provider_its_own_profile
     upstream:
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
     downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG6_settings_by_template_and_type
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS2_each_provider_its_own_profile
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH3_sync_per_compartment
       - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH4_the_link_as_an_injection_method
@@ -248,8 +251,9 @@ payload:
       - layer 1 · ready
       - 'depends on (1): GC0d_layers'
       - >-
-        needed by (2): GH3_sync_per_compartment, AS2_each_provider_its_own_profile · all downstream
-        3 · finishing it unlocks AS2_each_provider_its_own_profile
+        needed by (3): MG6_settings_by_template_and_type, GH3_sync_per_compartment,
+        AS2_each_provider_its_own_profile · all downstream 5 · finishing it unlocks
+        AS2_each_provider_its_own_profile
       - >-
         same files as GH1_a_compartment_gets_its_github_repo with no order between them:
         idearium/api/index.js, idearium/cli/route-commands.js

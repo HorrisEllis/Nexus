@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792879718673
+exported_at: 1792880100397
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792879718673
-lastSeenAt: 1792879718673
+firstSeenAt: 1792880100397
+lastSeenAt: 1792880100397
 fingerprint: null
 payload:
   for: DB24_cos_reads_only_the_registry
@@ -148,6 +148,7 @@ payload:
     downstream:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
@@ -161,7 +162,7 @@ payload:
         depends on (2): DB22_the_root_and_the_missing_four, DB11_cos_compartment_per_system · all
         upstream 12
       - >-
-        needed by (1): DB25_the_lifecycle_verbs · all downstream 2 · finishing it unlocks
+        needed by (1): DB25_the_lifecycle_verbs · all downstream 3 · finishing it unlocks
         DB25_the_lifecycle_verbs
     edges:
       - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four

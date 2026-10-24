@@ -1,0 +1,109 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MG1_loom_on_its_registry_spine:b94506b8e5eebd15
+type: graph
+id: phase:MG1_loom_on_its_registry_spine:b94506b8e5eebd15
+context: dependency graph of phase MG1_loom_on_its_registry_spine
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792880100853
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100853
+lastSeenAt: 1792880100853
+fingerprint: null
+payload:
+  for: MG1_loom_on_its_registry_spine
+  kind: phase
+  repo: null
+  hash: b94506b8e5eebd15
+  nodes:
+    - path: loom/event-taxonomy.js
+      role: changes
+      exists: false
+      system: loom
+    - path: loom/interaction-contract.json
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/registry-components.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: loom/server.js
+      to: loom/registry-components.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: loom/registry-components.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
+    blockedBy:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 8 · blocked by DB21_one_registry_schema_every_level, DB12_the_ui_handshake,
+        CS3_the_registry_is_the_bridge, MG0b_the_full_spec
+      - >-
+        depends on (4): DB21_one_registry_schema_every_level, DB12_the_ui_handshake,
+        CS3_the_registry_is_the_bridge, MG0b_the_full_spec · all upstream 22
+      - 'needed by (1): MG2_genesis_compartments_through_the_registry'
+    edges:
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+        kind: declared
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+        kind: declared
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+        kind: declared

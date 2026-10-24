@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682413
+exported_at: 1792880100804
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682413
-lastSeenAt: 1792877682413
+firstSeenAt: 1792880100804
+lastSeenAt: 1792880100804
 fingerprint: null
 payload:
   for: CS11_raid_in_the_exe
@@ -230,6 +230,8 @@ payload:
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
@@ -245,7 +247,7 @@ payload:
       - >-
         depends on (4): CS4_every_system_a_compartment, DB6_move_the_crossings,
         IM6_cortex_unclumped, CS_D8_raid_home · all upstream 37
-      - 'needed by (1): CS7_spawn_despawn_and_balance · all downstream 2'
+      - 'needed by (1): CS7_spawn_despawn_and_balance · all downstream 4'
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
         kind: declared

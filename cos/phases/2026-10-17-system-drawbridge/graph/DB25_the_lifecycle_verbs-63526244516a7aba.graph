@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792879718676
+exported_at: 1792880100401
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792879718676
-lastSeenAt: 1792879718676
+firstSeenAt: 1792880100401
+lastSeenAt: 1792880100401
 fingerprint: null
 payload:
   for: DB25_the_lifecycle_verbs
@@ -246,6 +246,7 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
     downstream:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB24_cos_reads_only_the_registry
     unlocks: []
@@ -254,7 +255,7 @@ payload:
     lines:
       - layer 10 · blocked by DB24_cos_reads_only_the_registry
       - 'depends on (1): DB24_cos_reads_only_the_registry · all upstream 13'
-      - 'needed by (1): DB26_the_ui_floats_on_the_registry'
+      - 'needed by (1): DB26_the_ui_floats_on_the_registry · all downstream 2'
     edges:
       - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB24_cos_reads_only_the_registry
         kind: declared

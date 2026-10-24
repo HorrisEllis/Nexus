@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792879045954
+exported_at: 1792880100966
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792879045954
-lastSeenAt: 1792879045954
+firstSeenAt: 1792880100966
+lastSeenAt: 1792880100966
 fingerprint: null
 payload:
   for: SV1_every_table_has_one_owner
@@ -232,6 +232,9 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV5_clear_glass_guardian_orchestrator
@@ -247,7 +250,7 @@ payload:
       - layer 1 · ready
       - 'depends on (1): SV0_the_census_tells_the_truth'
       - >-
-        needed by (1): SV3_components_and_architect · all downstream 15 · finishing it unlocks
+        needed by (1): SV3_components_and_architect · all downstream 18 · finishing it unlocks
         SV3_components_and_architect
     edges:
       - from: docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
