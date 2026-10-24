@@ -146,7 +146,7 @@ const GET = (p) => new Promise((resolve) => {
     });
 
     await test('T4-011', 'trail animation walks only hops whose system is a real node — a pulse never travels an unobserved edge', async () => {
-      const html = fs.readFileSync(path.join(ROOT, 'tablet/index.html'), 'utf8');
+      const html = fs.readFileSync(path.join(ROOT, 'cos', 'tablet', 'index.html'), 'utf8');
       assert.ok(/function animateTrails/.test(html));
       assert.ok(/\.map\(h => pos\[h\.system\]\)\.filter\(Boolean\)/.test(html),
         'hops with no corresponding node must be filtered out, not invented');
@@ -170,7 +170,7 @@ const GET = (p) => new Promise((resolve) => {
     });
 
     await test('T4-008', 'BRAIN VIEW draws only observed edges, labels unknowns, and states the trail limitation in the UI itself', async () => {
-      const html = fs.readFileSync(path.join(ROOT, 'tablet/index.html'), 'utf8');
+      const html = fs.readFileSync(path.join(ROOT, 'cos', 'tablet', 'index.html'), 'utf8');
       assert.ok(/data-v="brain"/.test(html), 'the brain view must be reachable');
       assert.ok(/loadBrain/.test(html));
       // No consumers observed → no line drawn. Drawing a producer as connected
@@ -191,7 +191,7 @@ const GET = (p) => new Promise((resolve) => {
     });
 
     await test('T4-009', 'the inline UI script still parses after the brain view was added', async () => {
-      const html = fs.readFileSync(path.join(ROOT, 'tablet/index.html'), 'utf8');
+      const html = fs.readFileSync(path.join(ROOT, 'cos', 'tablet', 'index.html'), 'utf8');
       new Function(html.match(/<script>([\s\S]*)<\/script>/)[1]);
     });
   } finally {
