@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL10_the_pipeline_simulated
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL10_the_pipeline_simulated
+context: pipeline phase SL10_the_pipeline_simulated of docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL10_the_pipeline_simulated (integration) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792816517597
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792816517597
+lastSeenAt: 1792816517597
+fingerprint: null
+payload:
+  id: SL10_the_pipeline_simulated
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: integration
+  status: >-
+    DONE 0.60.230 — test-pipeline-sim 25/25, eight runs in a row green after the last fix (one
+    earlier run had a failure not captured, not reproduced)
+  files:
+    - tests/modules/test-pipeline-sim.test.js
+    - tests/modules/run-all.js
+    - cortex/core/raid/contract-adapters.js
+    - idearium/api/index.js
+    - idearium/ui/js/plan-panel.js
+    - idearium/cli/index.js
+  depends_on:
+    - SL7_build_again_is_asked_for
+    - SL8_the_agent_maps_what_nexus_cannot
+  blocks:
+    - MOD-SL-SIM
+  spec: docs/self-building-loop.spec
+  graph: 1acb38d7cc404522

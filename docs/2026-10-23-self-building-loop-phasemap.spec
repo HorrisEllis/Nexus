@@ -254,10 +254,10 @@ phases_added_2026_10_23:
     proof: "node emerge/compiler/phase-specs.js --all writes one .phase per phase (counts match the DAG's), --check clean right after"
 
   SL10_the_pipeline_simulated:
-    status: OPEN
+    status: DONE 0.60.230 — test-pipeline-sim 25/25, eight runs in a row green after the last fix (one earlier run had a failure not captured, not reproduced)
     layer: integration
     depends_on: [SL7_build_again_is_asked_for, SL8_the_agent_maps_what_nexus_cannot]
-    files: [tests/modules/test-pipeline-sim.test.js, tests/modules/run-all.js]
+    files: [tests/modules/test-pipeline-sim.test.js, tests/modules/run-all.js, cortex/core/raid/contract-adapters.js, idearium/api/index.js, idearium/ui/js/plan-panel.js, idearium/cli/index.js]
     spec: docs/self-building-loop.spec
     blocks: [MOD-SL-SIM]
     does: >-
@@ -342,3 +342,31 @@ systems, or sort them at least."
   main (roadmap-import → loom, phase-dag → loom, verify-first → cos), which predate this map and are not fixed here.
 - The route reads what is written, through lib (idearium → emerge would be a new crossing): GET /api/repos/:uuid/phases/nodes, `repo nodes`,
   the rail's "phase nodes". Writing stays the compile step, committed with the code.
+
+## ADDENDUM 2026-10-24 (0.60.230) — SL10 built; what the simulations found, each fixed at its root
+James, 2026-10-23: "run deep and recursive simulations, of every possible failure mode, loop until we get a solid pipeline."
+- tests/modules/test-pipeline-sim.test.js: 25 scenarios on the real route, repo layer, inject path, contract scheduler and proof run; only the
+  model is scripted. From scratch (A01–A13: good, no reply, timeout, prose, refusal, a spec instead of code, wrong path, outside the repo,
+  syntax error, partial file, unclosed fence, the other file's code, flaky once), extending (E01 keeps a consumer's export, E02 drops it),
+  the gates (G01–G09: finding, decision, open dep, cycle with and without anyway, dangling, no graph with and without the agent, complete
+  with and without rebuild, unknown phase), and the UI (U01).
+- The loop, in order (each a root cause, each re-run across the whole matrix):
+  1. The first matrix design was wrong, said: after A01 every scenario resumed its checkpoints and passed without the agent. Correct
+     pipeline behaviour (CP-03 pins it); each scenario now builds a fresh phase.
+  2. DG3's "anyway overrides DAG_INVALID, said on the run" was not said: a build past a cycle recorded nothing. Every row now carries
+     dagOverride (the problems overridden).
+  3. Every failed brick in the contract audit said only FAILED: a syntax error, a refusal and no reply ended identical in the record (§1.2).
+     audit() now gives each non-passing brick its failure: the executor's own error first, the check's feedback after.
+  4. Under it: a file repo-inject refused (an unsafe path, code that does not parse, an unclosed fence) was reported as "the reply did not
+     bring back <file>" — the refusal was dropped. It is carried now (_refusedWhy): "… — refused: does not parse as js: SyntaxError …".
+  5. A reply with the right code under a wrong path left that file proposed in the review queue once per attempt (3 identical proposals
+     from one failed brick), or in auto mode written to disk. Decided by the axioms (REVERSIBILITY, §0.3): a stray the brick never asked
+     for, from a reply that failed it, is rejected (or reverted when applied) with its reason, kept in the record, never deleted.
+  6. test-plan-lands PL-31 (red on main): the route table shadowed the hand-written `repo plan --dry --file <spec>`; that form goes to its
+     handler again. The other collision, `log`, is left: its row replaced the Vortex snapshot log with Nexus's logs, which reads as
+     deliberate (said, not changed).
+- What the matrix confirmed already held, with no change: a refusal is blocked at the reply gate; an export removed from a file a consumer
+  requires is refused by repo-inject ("it removes export") and the brick fails; a flaky agent recovers on retry; the transient class does
+  not burn retries; every failing run ends (no hang) within its attempts.
+- Said, not hidden: one traced run before the last fix showed a single failure whose name was not captured; it did not reproduce in the
+  eight runs after.

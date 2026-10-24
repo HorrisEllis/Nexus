@@ -877,6 +877,12 @@ function _emitLedger(type, payload = {}) {
 // ladder and was thrown away. A delivered path counts as the expected one when it is the expected path under the map's own root folder
 // (the first segment of a nested map's path), or under exactly one top-level folder when the expected path has a folder of its own —
 // never a bare file-name match, so a stray index.js elsewhere is still not the file.
+// §0.60.230 SL10 — what repo-inject refused in a reply (an unsafe path, an unclosed fence, code that does not parse) is the cause of a file
+// that "did not come back"; it was dropped, so a syntax error and an empty reply ended with the same words
+function _refusedWhy(r) {
+  const ref = ((r && r.injects && r.injects.refused) || []).map(x => x && x.reason).filter(Boolean);
+  return ref.length ? ` — refused: ${[...new Set(ref)].slice(0, 3).join('; ')}`.slice(0, 400) : '';
+}
 function _underMapRoot(mapPath, expected, delivered) {
   const want = new Set(expected || []);
   const root = String(mapPath || '').includes('/') ? `${String(mapPath).split('/')[0]}/` : null;
@@ -915,7 +921,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // DAG of every phasemap of this repo (lib/phase-dag.js): a phase in a cycle, or whose depends_on names no phase anywhere, is not
   // built (anyway: true overrides, said). Its slice (upstream, downstream, layer, critical path, unlocks, file conflicts) goes on
   // its graph below, so the run rows, the node and the agent see where the phase sits in the whole.
-  let dagSlice = null;
+  let dagSlice = null, dagOverride = null;
   try {
     const PD = _require('../../lib/phase-dag.js');
     const mappedBy = {}; for (const p of view.phases || []) if (p.mapped) mappedBy[`${p.map}::${p.phase_key}`] = p.mapped;
@@ -923,6 +929,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     dagSlice = PD.slice(dag, `${map}::${phase}`);
     const probs = PD.problems(dag, `${map}::${phase}`).filter(x => !/is not in any phasemap/.test(x));
     if (probs.length && !anyway) return { ok: false, status: 409, error: `not built: ${phase} — ${probs.join('; ')}`, extra: { code: 'DAG_INVALID', problems: probs, dag: dagSlice } };
+    if (probs.length) dagOverride = probs;   // §0.60.230 SL10 — built anyway past DAG_INVALID: said on every row of the run (DG3's "said on the run" was not)
   } catch (e) { dagSlice = { error: `the DAG could not be built: ${e.message}` }; }
   // §0.60.147 DG2 — James, 2026-10-18: "each phase, has to have a dependany graph before executing." The graph (lib/phase-graph.js)
   // is assembled from the phase's mapping (MP1), DG1's view of its depends_on and the boundary census's systems; with none, the
@@ -1015,7 +1022,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     ...(rebuilding ? { rebuild: true } : {}),   // §0.60.226 SL7 — a complete phase built again, on request
     ...(agentMap && agentMap.ok ? { mappedBy: { by: agentMap.by, asked: agentMap.asked, files: agentMap.files, dependsOn: agentMap.dependsOn } } : {}),   // §0.60.228 SL8 — the graph came from the agent's checked mapping
     startedBy: startedBy || { who: 'unknown', whence: 'unknown' },   // 0.60.188 RC7 — who started this run, on every row
-    ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}),   // §0.60.125 DG1 — built anyway: what was still open, on every row
+    ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}),
+    ...(dagOverride ? { dagOverride } : {}),   // §0.60.230 SL10 — built anyway past a cycle or a dangling depends_on: which   // §0.60.125 DG1 — built anyway: what was still open, on every row
     graphHash: phaseGraph.hash, graphFile: phaseGraphFile ? path.relative(IDEARIUM_DATA_DIR, phaseGraphFile).replace(/\\/g, '/') : null };   // §0.60.147 DG2 — the graph it was built against
   _emitLedger('idearium.phase.run.started', { runId, repoUuid: repo.uuid, map, phase, title: node.title || null, startedBy: base.startedBy, causedBy: base.startedBy.who });   // 0.60.190 APV4
 
@@ -1335,6 +1343,22 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       if (state !== 'replied') SH.drop(shadow);
       else { const got = SH.settle(shadow, { files: _underMapRoot(map, files, ((r.injects && r.injects.injects) || []).map(i => i.path || i.file).filter(Boolean)) }); if (!got.ok) { state = 'incomplete'; absent = got.absent.files; } }
     }
+    // §0.60.230 SL10 — a reply that did not bring back the brick's file but wrote others (the right code under a wrong path) left each of
+    // them proposed in the review queue, once per attempt (3 identical proposals for one failed brick), or in auto mode written to disk.
+    // The brick never asked for them and its reply failed: a proposal is rejected, an applied one reverted, each with its reason —
+    // kept in the record, never deleted (REVERSIBILITY, §0.3); applied again by hand if he wants one.
+    let strays = null;
+    if (absent) {
+      const want = new Set(files);
+      const RIs = _require('../../lib/repo-inject.js');
+      const why = `the reply to ${session} did not bring back ${absent.join(', ')}; this file was not asked for by the brick`;
+      for (const it of (r.injects && r.injects.injects) || []) {
+        const pth = it.path || it.file; if (!pth || want.has(pth) || want.has(_underMapRoot(map, files, [pth])[0]) || !it.uuid) continue;
+        let done = null;
+        try { done = it.status === 'applied' ? RIs.revert(it.uuid, { layer: getRepoLayer(), force: true }) : RIs.reject(it.uuid, { reason: why }); } catch (e) { done = { ok: false, errors: [e.message] }; }
+        (strays = strays || []).push({ path: pth, inject: it.uuid, undone: done && done.ok ? (it.status === 'applied' ? 'reverted' : 'rejected') : `not undone: ${((done && done.errors) || []).join('; ')}` });
+      }
+    }
     // §0.39.355 PB2 — James: "it needs to actually build it". A build whose reply changed no file (nothing written,
     // staged or proposed, by a fenced block or a code_edit / code_write / code_batch call) did not build: incomplete,
     // so the ladder climbs instead of ending on prose.
@@ -1348,8 +1372,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     }
     // §0.60.145 TL2a — every job of this gate so far has now been judged: never reused again
     try { _require('../../lib/gate-context.js').handled(target.uuid, gateKey, { by: session, state }); } catch (_) {}
-    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(reused ? { reused } : {}), ...(gateNote ? { gateContext: gateNote.length } : {}), ...(absent ? { absent } : {}), ...(unchanged ? { unchanged: true } : {}), ...(missingExports ? { missingExports } : {}), ...(verifyWhy ? { expectFailed: true } : {}),
-      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : verifyWhy ? verifyWhy.slice(0, 900) : missingExports && missingExports.length ? `${files[0]} came back without ${missingExports.join(', ')} — the plan says it exports ${missingExports.length === 1 ? 'it' : 'them'}` : null)),
+    const row = { uuid: `${session}-${state}`, ...base, state, snapshot: commitId, ...(ck || {}), ...(reused ? { reused } : {}), ...(gateNote ? { gateContext: gateNote.length } : {}), ...(absent ? { absent } : {}), ...(strays ? { strays } : {}), ...(unchanged ? { unchanged: true } : {}), ...(missingExports ? { missingExports } : {}), ...(verifyWhy ? { expectFailed: true } : {}),
+      error: r && !r.ok ? String(r.error || 'agent failed').slice(0, 500) : (state === 'blocked' ? ((r.injects.refused || [])[0] || {}).reason || 'blocked at its gate' : (absent ? `the reply did not bring back ${absent.join(', ')}${_refusedWhy(r)}` : unchanged ? 'the reply changed no file — nothing was written, staged or proposed' : verifyWhy ? verifyWhy.slice(0, 900) : missingExports && missingExports.length ? `${files[0]} came back without ${missingExports.join(', ')} — the plan says it exports ${missingExports.length === 1 ? 'it' : 'them'}` : null)),
       // 0.60.27 — with no ladder a failed reply that does not name its agent was recorded with no provider (found by AG1a's
       // count: one failed call missing). The call's own agent is known: the backend it was sent to.
       provider: (rg && rg.provider) || (r && (r.providerUsed || r.provider)) || (dp && (dp.provider || (dp.backend === 'ollama' && dp.model ? `ollama:${dp.model}` : dp.backend))) || null,
