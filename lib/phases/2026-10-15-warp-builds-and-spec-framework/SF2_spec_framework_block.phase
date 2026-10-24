@@ -9,11 +9,11 @@ intent: null
 summary: SF2_spec_framework_block (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677632
+exported_at: 1792841755640
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677632
-lastSeenAt: 1792787677632
+firstSeenAt: 1792841755640
+lastSeenAt: 1792841755640
 fingerprint: null
 payload:
   id: SF2_spec_framework_block
@@ -30,4 +30,4 @@ payload:
     - SF1_intent_blocks
   blocks: []
   spec: null
-  graph: f3369f9f0bb0ba75
+  graph: a1e1183dc93e69cb

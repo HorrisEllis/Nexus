@@ -7,11 +7,11 @@ intent: null
 summary: MR8_crystallization (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676639
+exported_at: 1792841754459
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676639
-lastSeenAt: 1792787676639
+firstSeenAt: 1792841754459
+lastSeenAt: 1792841754459
 fingerprint: null
 payload:
   id: MR8_crystallization
@@ -20,11 +20,11 @@ payload:
   layer: null
   status: OPEN
   files:
-    - warp/dispatch/population.js
-    - emerge/core/constraint.js
+    - lib/warp/dispatch/population.js
+    - lib/emerge/core/constraint.js
   depends_on:
     - MR7_recipes
     - EM2_warp_his_own
   blocks: []
   spec: null
-  graph: b7db5295beb68216
+  graph: e4a6c40a989a33c9

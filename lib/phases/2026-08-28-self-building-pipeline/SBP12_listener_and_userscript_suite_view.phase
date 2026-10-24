@@ -9,11 +9,11 @@ intent: null
 summary: SBP12_listener_and_userscript_suite_view (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675484
+exported_at: 1792841753417
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675484
-lastSeenAt: 1792787675484
+firstSeenAt: 1792841753417
+lastSeenAt: 1792841753417
 fingerprint: null
 payload:
   id: SBP12_listener_and_userscript_suite_view
@@ -26,7 +26,7 @@ payload:
     - lib/agent-system/contracts.js
     - lib/gemini-toolbox/agent-contracts.js
     - lib/account-registry.js
-    - ui/home/areas/agent-suite.js
+    - lib/ui/home/areas/agent-suite.js
     - lib/agent-tools/tools/identity/hat-forge.js
     - lib/hat-forge.js
     - clear-glass/src/mesh/agent-mesh.js
@@ -34,4 +34,4 @@ payload:
     - SBP9_hat_forge_real_hats
   blocks: []
   spec: null
-  graph: dc9e3b5d6c5777b3
+  graph: e127094c108d2890

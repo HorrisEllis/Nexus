@@ -7,11 +7,11 @@ intent: null
 summary: OB10_sigma_role_intent_map (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678271
+exported_at: 1792841756467
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678271
-lastSeenAt: 1792787678271
+firstSeenAt: 1792841756467
+lastSeenAt: 1792841756467
 fingerprint: null
 payload:
   id: OB10_sigma_role_intent_map
@@ -25,4 +25,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 4415c9c48a379a34
+  graph: 8dfabb35bc64f400

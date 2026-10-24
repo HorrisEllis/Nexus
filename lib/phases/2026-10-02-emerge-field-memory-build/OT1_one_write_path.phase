@@ -7,11 +7,11 @@ intent: null
 summary: OT1_one_write_path (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676614
+exported_at: 1792841754435
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676614
-lastSeenAt: 1792787676614
+firstSeenAt: 1792841754435
+lastSeenAt: 1792841754435
 fingerprint: null
 payload:
   id: OT1_one_write_path
@@ -22,10 +22,10 @@ payload:
   files:
     - lib/context-atlas.js
     - cortex/memory/jaa-db.js
-    - emerge/core/transition.js
+    - lib/emerge/core/transition.js
     - docs/nexstore-writers.yaml
   depends_on:
     - RF1_relational_field
   blocks: []
   spec: null
-  graph: 7c9eae93ea3da6cd
+  graph: 75cbdba5ca5a6d35

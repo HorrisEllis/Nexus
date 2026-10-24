@@ -7,11 +7,11 @@ intent: null
 summary: FR6_flight_data (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677750
+exported_at: 1792841755756
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677750
-lastSeenAt: 1792787677750
+firstSeenAt: 1792841755756
+lastSeenAt: 1792841755756
 fingerprint: null
 payload:
   id: FR6_flight_data
@@ -30,4 +30,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 05ad1f0362cc7289
+  graph: 7725b9de7334f895

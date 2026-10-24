@@ -7,11 +7,11 @@ intent: null
 summary: DB12_the_ui_handshake (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677823
+exported_at: 1792841755859
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677823
-lastSeenAt: 1792787677823
+firstSeenAt: 1792841755859
+lastSeenAt: 1792841755859
 fingerprint: null
 payload:
   id: DB12_the_ui_handshake
@@ -29,4 +29,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: f3192f7dde8331e8
+  graph: 32fbf27eb7c532c8

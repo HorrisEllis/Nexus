@@ -1,0 +1,242 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF5_wiring_gap_bridge:6f1b4c7974ce3a8c
+type: graph
+id: phase:SF5_wiring_gap_bridge:6f1b4c7974ce3a8c
+context: dependency graph of phase SF5_wiring_gap_bridge
+intent: null
+summary: 29 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753281
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753281
+lastSeenAt: 1792841753281
+fingerprint: null
+payload:
+  for: SF5_wiring_gap_bridge
+  kind: phase
+  repo: null
+  hash: 6f1b4c7974ce3a8c
+  nodes:
+    - path: lib/autonomous-repair.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/dangling-report.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/scanners/wiring-gaps.js
+      role: changes
+      exists: true
+      system: loom
+    - path: copilot/lib/lifeline-contracts.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/gap-finder/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/diagnostic/system-priority.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: copilot/repair-on-prompt.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/triggers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: loom/scanners/dangling-report.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-store.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/autonomous-repair.js
+      to: copilot/repair-on-prompt.js
+      kind: requires
+    - from: lib/autonomous-repair.js
+      to: lib/triggers.js
+      kind: requires
+    - from: copilot/lib/lifeline-contracts.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/gap-finder/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/system-priority.js
+      to: lib/gap-field.js
+      kind: requires
+  crossings:
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/autonomous-repair.js
+      to: copilot/repair-on-prompt.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-22-session-full-phasemap.spec::SF6_wiring_gaps_applied
+    upstream: []
+    downstream:
+      - docs/2026-08-22-session-full-phasemap.spec::SF6_wiring_gaps_applied
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-22-session-full-phasemap.spec::SF6_wiring_gaps_applied
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): SF6_wiring_gaps_applied · finishing it unlocks SF6_wiring_gaps_applied'
+    edges: []

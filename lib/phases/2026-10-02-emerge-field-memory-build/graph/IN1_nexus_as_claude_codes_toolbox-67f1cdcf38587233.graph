@@ -1,0 +1,207 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IN1_nexus_as_claude_codes_toolbox:67f1cdcf38587233
+type: graph
+id: phase:IN1_nexus_as_claude_codes_toolbox:67f1cdcf38587233
+context: dependency graph of phase IN1_nexus_as_claude_codes_toolbox
+intent: null
+summary: 21 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754525
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754525
+lastSeenAt: 1792841754525
+fingerprint: null
+payload:
+  for: IN1_nexus_as_claude_codes_toolbox
+  kind: phase
+  repo: null
+  hash: 67f1cdcf38587233
+  nodes:
+    - path: .mcp.json
+      role: changes
+      exists: true
+      system: null
+    - path: lib/introspect.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/reflection.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/lib/mcp-server.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/mcp-stdio.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/cli/nexus.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/reflection.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/nexus-full-audit.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/bda/kernel.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/nexus/command.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-contract-check.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/lib/mcp-tools-tokensave.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/lib/mcp-server.js
+      to: lib/event-contract-check.js
+      kind: requires
+    - from: orchestrator/lib/mcp-server.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: orchestrator/lib/mcp-server.js
+      to: orchestrator/lib/mcp-tools-tokensave.js
+      kind: requires
+    - from: lib/introspect.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/reflection.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/reflection.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/reflection.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: lib/reflection.js
+      to: intelligence/bda/kernel.js
+      kind: requires
+    - from: lib/reflection.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: lib/cli/nexus.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: tests/nexus-full-audit.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/introspect.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/introspect.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/reflection.js
+      kind: requires
+    - from: tests/modules/reflection.test.js
+      to: lib/reflection.js
+      kind: requires
+  crossings:
+    - from: lib/reflection.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/reflection.js
+      to: intelligence/bda/kernel.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/reflection.js
+      to: intelligence/gap/predicate.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/cli/nexus.js
+      to: orchestrator/lib/mcp-server.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - 'depends on (3): EM0_ground, GA1_guardian_source_of_truth, EV0_contracts_for_every_system'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        kind: declared

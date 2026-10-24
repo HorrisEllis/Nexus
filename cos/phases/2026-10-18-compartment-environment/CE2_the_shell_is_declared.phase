@@ -7,11 +7,11 @@ intent: null
 summary: CE2_the_shell_is_declared (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677849
+exported_at: 1792841755886
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677849
-lastSeenAt: 1792787677849
+firstSeenAt: 1792841755886
+lastSeenAt: 1792841755886
 fingerprint: null
 payload:
   id: CE2_the_shell_is_declared
@@ -26,4 +26,4 @@ payload:
     - CE1_the_compartment_machine
   blocks: []
   spec: null
-  graph: 95cc76040589304d
+  graph: 754fa41e3a026091

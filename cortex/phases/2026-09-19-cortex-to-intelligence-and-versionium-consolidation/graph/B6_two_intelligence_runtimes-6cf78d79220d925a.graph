@@ -1,0 +1,171 @@
+envelope: 1
+uuid: nexus-export-graph-phase:B6_two_intelligence_runtimes:6cf78d79220d925a
+type: graph
+id: phase:B6_two_intelligence_runtimes:6cf78d79220d925a
+context: dependency graph of phase B6_two_intelligence_runtimes
+intent: null
+summary: 16 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753888
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753888
+lastSeenAt: 1792841753888
+fingerprint: null
+payload:
+  for: B6_two_intelligence_runtimes
+  kind: phase
+  repo: null
+  hash: 6cf78d79220d925a
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: intelligence/server.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/lib/pulse.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+  crossings:
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: cortex
+      toSystem: orchestrator
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P2_intelligence_gains_routes
+        files:
+          - intelligence/server.js
+      - with: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P5_retire_second_runtime
+        files:
+          - cortex/boot.js
+      - with: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D5_new
+        files:
+          - cortex/boot.js
+          - intelligence/server.js
+      - with: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D3_snapshot
+        files:
+          - intelligence/server.js
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+      - >-
+        same files as P2_intelligence_gains_routes with no order between them:
+        intelligence/server.js
+      - 'same files as P5_retire_second_runtime with no order between them: cortex/boot.js'
+      - 'same files as D5_new with no order between them: cortex/boot.js, intelligence/server.js'
+      - 'same files as D3_snapshot with no order between them: intelligence/server.js'
+    edges: []

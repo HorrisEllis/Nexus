@@ -6,14 +6,14 @@ context: >-
   pipeline phase DBG1_consolidate_debug_surfaces of
   docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
 intent: null
-summary: DBG1_consolidate_debug_surfaces (?) — 3 file(s)
+summary: DBG1_consolidate_debug_surfaces (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675779
+exported_at: 1792841753725
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675779
-lastSeenAt: 1792787675779
+firstSeenAt: 1792841753725
+lastSeenAt: 1792841753725
 fingerprint: null
 payload:
   id: DBG1_consolidate_debug_surfaces
@@ -22,10 +22,8 @@ payload:
   layer: null
   status: OPEN
   files:
-    - cli/cfr-debug.js
-    - cli/diagnose.js
-    - cli/sentinel.js
+    - lib/cli/cfr-debug.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 251300f01adf0239
+  graph: 0e0abf65d62c7922

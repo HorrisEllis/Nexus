@@ -7,11 +7,11 @@ intent: null
 summary: SB9_the_spec_is_a_spec_file (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676824
+exported_at: 1792841754656
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676824
-lastSeenAt: 1792787676824
+firstSeenAt: 1792841754656
+lastSeenAt: 1792841754656
 fingerprint: null
 payload:
   id: SB9_the_spec_is_a_spec_file
@@ -28,4 +28,4 @@ payload:
     - SB1_templates_are_the_default_frame
   blocks: []
   spec: null
-  graph: 2a0075e7f7a66b99
+  graph: 0a0ee3941e0a9c9a

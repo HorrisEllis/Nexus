@@ -7,11 +7,11 @@ intent: null
 summary: P1_schema_table_in_cortex (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678189
+exported_at: 1792841756379
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678189
-lastSeenAt: 1792787678189
+firstSeenAt: 1792841756379
+lastSeenAt: 1792841756379
 fingerprint: null
 payload:
   id: P1_schema_table_in_cortex
@@ -21,8 +21,8 @@ payload:
   status: OPEN
   files:
     - lib/nexstore/types.js
-    - contracts/SYSTEM-CONTRACTS.js
+    - lib/contracts/SYSTEM-CONTRACTS.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 8a7709b7b3706ea7
+  graph: 7a45c9928b49cec7

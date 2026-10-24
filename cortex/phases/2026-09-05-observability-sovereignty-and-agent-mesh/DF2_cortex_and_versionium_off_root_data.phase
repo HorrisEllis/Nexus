@@ -6,14 +6,14 @@ context: >-
   pipeline phase DF2_cortex_and_versionium_off_root_data of
   docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
 intent: null
-summary: DF2_cortex_and_versionium_off_root_data (?) — 2 file(s)
+summary: DF2_cortex_and_versionium_off_root_data (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675789
+exported_at: 1792841753735
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675789
-lastSeenAt: 1792787675789
+firstSeenAt: 1792841753735
+lastSeenAt: 1792841753735
 fingerprint: null
 payload:
   id: DF2_cortex_and_versionium_off_root_data
@@ -23,9 +23,8 @@ payload:
   status: OPEN
   files:
     - cortex/memory/jaa-db.js
-    - warp/core/StreamLog.js
   depends_on:
     - VSB1_fix_versionium_split_brain
   blocks: []
   spec: null
-  graph: 878b01658023f007
+  graph: c96f8a628c4e5351

@@ -7,11 +7,11 @@ intent: null
 summary: PF2_yielding_ingest (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676359
+exported_at: 1792841754240
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676359
-lastSeenAt: 1792787676359
+firstSeenAt: 1792841754240
+lastSeenAt: 1792841754240
 fingerprint: null
 payload:
   id: PF2_yielding_ingest
@@ -24,4 +24,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 9f9a7bc28177655b
+  graph: 5800af0c56705480

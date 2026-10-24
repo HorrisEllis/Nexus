@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N26_work_surface_and_tv_ui_from_contracts:b7fde31682dae160
+type: graph
+id: phase:N26_work_surface_and_tv_ui_from_contracts:b7fde31682dae160
+context: dependency graph of phase N26_work_surface_and_tv_ui_from_contracts
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754182
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754182
+lastSeenAt: 1792841754182
+fingerprint: null
+payload:
+  for: N26_work_surface_and_tv_ui_from_contracts
+  kind: phase
+  repo: null
+  hash: b7fde31682dae160
+  nodes:
+    - path: ui/contract-renderer.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N25_manage_button_enterprise
+    dependents: []
+    upstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N25_manage_button_enterprise
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): N25_manage_button_enterprise'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-29-nex-node-store-phasemap.spec::N25_manage_button_enterprise
+        kind: declared

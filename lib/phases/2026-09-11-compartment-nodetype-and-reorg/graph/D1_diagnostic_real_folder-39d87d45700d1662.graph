@@ -1,0 +1,338 @@
+envelope: 1
+uuid: nexus-export-graph-phase:D1_diagnostic_real_folder:39d87d45700d1662
+type: graph
+id: phase:D1_diagnostic_real_folder:39d87d45700d1662
+context: dependency graph of phase D1_diagnostic_real_folder
+intent: null
+summary: 37 node(s), 10 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753776
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753776
+lastSeenAt: 1792841753776
+fingerprint: null
+payload:
+  for: D1_diagnostic_real_folder
+  kind: phase
+  repo: null
+  hash: 39d87d45700d1662
+  nodes:
+    - path: architect/service.js
+      role: changes
+      exists: true
+      system: architect
+    - path: cortex/core/raid/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/gap-finder/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: diagnostic/lib/diagnostic-contract.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: docs/diagnostic.spec
+      role: changes
+      exists: false
+      system: null
+    - path: guardian/lib/gap-hunter.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/diagnostic-causal.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/file-integrity.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gap-relay.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-connect.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-check.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/routing-ir.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/lib/heal-loop.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/api-dispatch.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/spec-engine/chunk-dispatch.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-system/submit.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/generate-agent-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/contract/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/snr-filter.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/tunables.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/sigma.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/constitutional-ai.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/execution-pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/replay-engine.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/index.js
+      to: cortex/core/raid/snr-filter.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/core/raid/tunables.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/contract/index.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/execution-pipeline.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/constitutional-ai.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: cortex/gap-finder/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/routing-ir.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: diagnostic/lib/heal-loop.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: guardian/server.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/agent-system/submit.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/agent-tools/generate-agent-nodes.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/index.js
+      to: intelligence/cfr/sigma.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/index.js
+      to: intelligence/bda/index.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/lib/heal-loop.js
+      to: cortex/core/raid/index.js
+      fromSystem: diagnostic
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/api-dispatch.js
+      to: cortex/core/raid/index.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/lib/dispatcher.js
+      to: cortex/core/raid/index.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: cortex/core/raid/index.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/agent-system/submit.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/generate-agent-nodes.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+    dependents:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D2_self_heal_migration
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR2_decentralize_interaction_contracts
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR1_architect_retirement_and_hooks_to_loom
+    upstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+    downstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR1_architect_retirement_and_hooks_to_loom
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR2_decentralize_interaction_contracts
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D2_self_heal_migration
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N3_stray_root_files_found_after_N1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D2_self_heal_migration
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR2_decentralize_interaction_contracts
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): T1_extend_system_scaffold'
+      - >-
+        needed by (4): D2_self_heal_migration, AR2_decentralize_interaction_contracts,
+        N2_root_nexus_js_to_nexus_folder, AR1_architect_retirement_and_hooks_to_loom · all
+        downstream 5 · finishing it unlocks D2_self_heal_migration,
+        AR2_decentralize_interaction_contracts
+    edges:
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+        kind: declared

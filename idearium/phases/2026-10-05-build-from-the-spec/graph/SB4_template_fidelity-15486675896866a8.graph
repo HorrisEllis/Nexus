@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB4_template_fidelity:15486675896866a8
+type: graph
+id: phase:SB4_template_fidelity:15486675896866a8
+context: dependency graph of phase SB4_template_fidelity
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754640
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754640
+lastSeenAt: 1792841754640
+fingerprint: null
+payload:
+  for: SB4_template_fidelity
+  kind: phase
+  repo: null
+  hash: 15486675896866a8
+  nodes:
+    - path: idearium/spec-engine/templates/architecture-spec.template.yaml
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/templates/genesis.spec
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/index.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/inject-gate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/store.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB5_nexus_rebuilds_a_system_from_its_spec
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB14_reuse_compounds
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB5_nexus_rebuilds_a_system_from_its_spec
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB6_hundreds_of_specs
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB5_nexus_rebuilds_a_system_from_its_spec
+    conflicts:
+      - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
+        files:
+          - lib/nexus-self/systems.js
+      - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB23_a_new_system_slots_in
+        files:
+          - lib/nexus-self/systems.js
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - 'depends on (1): SB17_the_system_template_is_complete · all upstream 3'
+      - >-
+        needed by (1): SB5_nexus_rebuilds_a_system_from_its_spec · all downstream 3 · finishing it
+        unlocks SB5_nexus_rebuilds_a_system_from_its_spec
+      - >-
+        same files as SB20_each_system_owns_its_own with no order between them:
+        lib/nexus-self/systems.js
+      - >-
+        same files as SB23_a_new_system_slots_in with no order between them:
+        lib/nexus-self/systems.js
+    edges:
+      - from: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+        kind: declared

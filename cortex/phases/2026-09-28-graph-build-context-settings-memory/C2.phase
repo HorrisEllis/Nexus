@@ -7,11 +7,11 @@ intent: null
 summary: C2 (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676124
+exported_at: 1792841754073
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676124
-lastSeenAt: 1792787676124
+firstSeenAt: 1792841754073
+lastSeenAt: 1792841754073
 fingerprint: null
 payload:
   id: C2
@@ -27,4 +27,4 @@ payload:
     - C1
   blocks: []
   spec: null
-  graph: b34cbf403596480b
+  graph: 842f49b7549b7e11

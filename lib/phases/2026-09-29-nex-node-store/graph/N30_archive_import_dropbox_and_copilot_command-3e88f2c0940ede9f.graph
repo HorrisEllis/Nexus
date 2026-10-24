@@ -1,0 +1,261 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N30_archive_import_dropbox_and_copilot_command:3e88f2c0940ede9f
+type: graph
+id: phase:N30_archive_import_dropbox_and_copilot_command:3e88f2c0940ede9f
+context: dependency graph of phase N30_archive_import_dropbox_and_copilot_command
+intent: null
+summary: 35 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754192
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754192
+lastSeenAt: 1792841754192
+fingerprint: null
+payload:
+  for: N30_archive_import_dropbox_and_copilot_command
+  kind: phase
+  repo: null
+  hash: 3e88f2c0940ede9f
+  nodes:
+    - path: clear-glass/src/copilot/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/verbs.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cli/import-history.js
+      role: changes
+      exists: false
+      system: null
+    - path: cos/testenv/setup-job.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/archive-import.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/history-import-job.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/maps/one-idearium-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: tests/modules/test-history-import-job.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/probe/archive-import-chromium.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-carve.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/installer.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/setup-job.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-repo-carve.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/setup-job.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N27_history_import_from_700_zips
+    dependents: []
+    upstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N27_history_import_from_700_zips
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): N27_history_import_from_700_zips'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-29-nex-node-store-phasemap.spec::N27_history_import_from_700_zips
+        kind: declared

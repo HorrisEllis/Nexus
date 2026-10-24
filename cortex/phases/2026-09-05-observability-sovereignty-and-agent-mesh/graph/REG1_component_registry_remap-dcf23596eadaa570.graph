@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:REG1_component_registry_remap:dcf23596eadaa570
+type: graph
+id: phase:REG1_component_registry_remap:dcf23596eadaa570
+context: dependency graph of phase REG1_component_registry_remap
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792841753740
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753740
+lastSeenAt: 1792841753740
+fingerprint: null
+payload:
+  for: REG1_component_registry_remap
+  kind: phase
+  repo: null
+  hash: dcf23596eadaa570
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::SPEC1_rewrite_nexus_spec
+    upstream: []
+    downstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::SPEC1_rewrite_nexus_spec
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::SPEC1_rewrite_nexus_spec
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): SPEC1_rewrite_nexus_spec · finishing it unlocks SPEC1_rewrite_nexus_spec'
+    edges: []

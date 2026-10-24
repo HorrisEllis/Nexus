@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B3_availability_tier
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B3_availability_tier
+context: >-
+  pipeline phase B3_availability_tier of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: B3_availability_tier (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753884
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753884
+lastSeenAt: 1792841753884
+fingerprint: null
+payload:
+  id: B3_availability_tier
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f68d2fbfc81ad872

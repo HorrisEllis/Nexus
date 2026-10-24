@@ -9,11 +9,11 @@ intent: null
 summary: SB18_the_system_template_is_used (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676868
+exported_at: 1792841754702
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676868
-lastSeenAt: 1792787676868
+firstSeenAt: 1792841754702
+lastSeenAt: 1792841754702
 fingerprint: null
 payload:
   id: SB18_the_system_template_is_used
@@ -30,4 +30,4 @@ payload:
     - SB1_templates_are_the_default_frame
   blocks: []
   spec: null
-  graph: 518b2cbff03e266a
+  graph: 392677d8e3c348b1

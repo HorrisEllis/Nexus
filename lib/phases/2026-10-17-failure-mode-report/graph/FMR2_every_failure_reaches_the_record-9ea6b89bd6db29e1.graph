@@ -1,0 +1,296 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FMR2_every_failure_reaches_the_record:9ea6b89bd6db29e1
+type: graph
+id: phase:FMR2_every_failure_reaches_the_record:9ea6b89bd6db29e1
+context: dependency graph of phase FMR2_every_failure_reaches_the_record
+intent: null
+summary: 32 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755788
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755788
+lastSeenAt: 1792841755788
+fingerprint: null
+payload:
+  for: FMR2_every_failure_reaches_the_record
+  kind: phase
+  repo: null
+  hash: 9ea6b89bd6db29e1
+  nodes:
+    - path: clear-glass/src/diagnostic/error-capture.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/failure-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/cos-debug-report.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/error-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/failure-post.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/flight-data.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-verify.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/failure-mode-forensics.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/playground/branch.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/runtime/run.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/detect.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/installer.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/ledger-sse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/self-heal/failure-intake.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/self-heal/failure-intake.js
+      to: cortex/self-heal/failure-mode-forensics.js
+      kind: requires
+    - from: lib/failure-post.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: lib/error-log.js
+      to: lib/ledger-sse.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/runtime/run.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/branch.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/self-heal/failure-intake.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/self-heal/failure-intake.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/failure-post.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/error-log.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: lib/build-verify.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/diagnostic/error-capture.js
+      kind: requires
+  crossings:
+    - from: lib/cos-run.js
+      to: cos/runtime/run.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/installer.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+    dependents:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR3_the_report
+    upstream:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+    downstream:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR10_it_compounds
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR11_import_into_any_test_env
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR3_the_report
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR4_the_macro_bundle
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR7_a_fix_proven_by_its_macro
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR8_the_report_on_screen
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM6_crystallized_from_what_was_approved
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR3_the_report
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): FMR0_causality_measured'
+      - 'needed by (1): FMR3_the_report · all downstream 9 · finishing it unlocks FMR3_the_report'
+    edges:
+      - from: docs/2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+        kind: inferred

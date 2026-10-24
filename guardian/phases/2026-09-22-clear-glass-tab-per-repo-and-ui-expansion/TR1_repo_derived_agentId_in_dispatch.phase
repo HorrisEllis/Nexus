@@ -9,11 +9,11 @@ intent: null
 summary: TR1_repo_derived_agentId_in_dispatch (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675992
+exported_at: 1792841753928
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675992
-lastSeenAt: 1792787675992
+firstSeenAt: 1792841753928
+lastSeenAt: 1792841753928
 fingerprint: null
 payload:
   id: TR1_repo_derived_agentId_in_dispatch
@@ -28,8 +28,8 @@ payload:
     - guardian/ask.js
     - guardian/lib/dispatcher.js
     - guardian/lib/ncp.js
-    - ui/ncp.js
+    - lib/ui/ncp.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 5c03d66d2ea72bc7
+  graph: d3e92350dab80826

@@ -1,0 +1,305 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM8_lifeline_as_general_channel_and_reasoning_upgrade:1c84c72e4365c3a4
+type: graph
+id: phase:AM8_lifeline_as_general_channel_and_reasoning_upgrade:1c84c72e4365c3a4
+context: dependency graph of phase AM8_lifeline_as_general_channel_and_reasoning_upgrade
+intent: null
+summary: 35 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756293
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756293
+lastSeenAt: 1792841756293
+fingerprint: null
+payload:
+  for: AM8_lifeline_as_general_channel_and_reasoning_upgrade
+  kind: phase
+  repo: null
+  hash: 1c84c72e4365c3a4
+  nodes:
+    - path: copilot/lib/lifeline-contracts.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: guardian/agents/chatgpt-mode.js
+      role: changes
+      exists: false
+      system: guardian
+    - path: guardian/ask.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/agent-system/contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/contracts/nexus-interaction-contract.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gemini-toolbox/agent-contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gemini-toolbox/injection.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ollama/server.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/reword.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/query/ambiguity-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-confidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/lifeline-fluid-routing.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-lifeline-ollama-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/routing-ir.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/lifeline.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: cortex/core/raid/routing-ir.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/event-types.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/lib/reword.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/recursive-diagnose.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: tests/modules/copilot-confidence.test.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: tests/modules/lifeline-fluid-routing.test.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: tests/modules/test-lifeline-ollama-dispatch.test.js
+      to: copilot/lifeline.js
+      kind: requires
+  crossings:
+    - from: copilot/lifeline.js
+      to: cortex/core/raid/routing-ir.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lifeline.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: copilot/lifeline.js
+      fromSystem: cortex
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      fromSystem: cortex
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: copilot/lifeline.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+    dependents: []
+    upstream:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM4_full_user_continuity
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+    downstream: []
+    blockedBy:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 5 · blocked by AM1_per_agent_learned_model,
+        AM7_agent_switch_continuity_and_chat_recall
+      - >-
+        depends on (2): AM1_per_agent_learned_model, AM7_agent_switch_continuity_and_chat_recall ·
+        all upstream 6
+      - 'needed by (0): —'
+    edges:
+      - from: docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
+        kind: declared
+      - from: docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+        kind: declared

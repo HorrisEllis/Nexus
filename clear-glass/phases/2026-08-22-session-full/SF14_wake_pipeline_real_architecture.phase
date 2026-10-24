@@ -7,11 +7,11 @@ intent: null
 summary: SF14_wake_pipeline_real_architecture (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675373
+exported_at: 1792841753298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675373
-lastSeenAt: 1792787675373
+firstSeenAt: 1792841753298
+lastSeenAt: 1792841753298
 fingerprint: null
 payload:
   id: SF14_wake_pipeline_real_architecture
@@ -20,11 +20,11 @@ payload:
   layer: null
   status: OPEN
   files:
-    - cli/nexus-repl.js
     - clear-glass/src/screen-qa/detector.js
+    - lib/cli/nexus-repl.js
     - cortex/cortex-v2.js
     - clear-glass/src/copilot/wake-relay.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 197e4087240a93cd
+  graph: 9d80a323ba1ebbb4

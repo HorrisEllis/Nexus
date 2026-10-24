@@ -1,0 +1,303 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AR1_architect_retirement_and_hooks_to_loom:9a084bd8c287d669
+type: graph
+id: phase:AR1_architect_retirement_and_hooks_to_loom:9a084bd8c287d669
+context: dependency graph of phase AR1_architect_retirement_and_hooks_to_loom
+intent: null
+summary: 39 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753786
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753786
+lastSeenAt: 1792841753786
+fingerprint: null
+payload:
+  for: AR1_architect_retirement_and_hooks_to_loom
+  kind: phase
+  repo: null
+  hash: 9a084bd8c287d669
+  nodes:
+    - path: architect/service.js
+      role: changes
+      exists: true
+      system: architect
+    - path: architect/src/spec/Blueprint.js
+      role: changes
+      exists: true
+      system: architect
+    - path: copilot/intents.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: docs/hooks-migration.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/agent-tools/tools/clear-glass/command-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-status.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ollama/lib/command-index.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: scripts/generate-hooks.js
+      role: changes
+      exists: true
+      system: null
+    - path: scripts/verify-wires.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/nerve-phase0-phase1.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/nexus-nerve.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nerve-gap-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nerve-ollama-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/failure-intake.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/consumer-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/lib/pulse.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/consumer-registry.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/self-heal/failure-intake.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intents.js
+      kind: requires
+    - from: lib/nerve-gap-bridge.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: lib/nerve-ollama-bridge.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings:
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: cortex
+      toSystem: orchestrator
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::I1_boot_js_intelligence_routes
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N1_root_md_consolidation
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+    dependents: []
+    upstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::I1_boot_js_intelligence_routes
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N1_root_md_consolidation
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+    downstream: []
+    blockedBy:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::I1_boot_js_intelligence_routes
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+    unlocks: []
+    conflicts:
+      - with: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::X1_node_decomposition_tool
+        files:
+          - cortex/boot.js
+          - lib/tool-index.js
+          - lib/agent-tools/tools/clear-glass/command-index.js
+          - ollama/lib/command-index.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by I1_boot_js_intelligence_routes, D1_diagnostic_real_folder
+      - >-
+        depends on (4): I1_boot_js_intelligence_routes, D1_diagnostic_real_folder,
+        N1_root_md_consolidation, T1_extend_system_scaffold
+      - 'needed by (0): —'
+      - >-
+        same files as X1_node_decomposition_tool with no order between them: cortex/boot.js,
+        lib/tool-index.js, lib/agent-tools/tools/clear-glass/command-index.js,
+        ollama/lib/command-index.js
+    edges:
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::I1_boot_js_intelligence_routes
+        kind: inferred
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+        kind: inferred
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N1_root_md_consolidation
+        kind: inferred
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+        kind: inferred

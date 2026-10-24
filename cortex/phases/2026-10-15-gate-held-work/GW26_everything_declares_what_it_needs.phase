@@ -9,11 +9,11 @@ intent: null
 summary: GW26_everything_declares_what_it_needs (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677584
+exported_at: 1792841755587
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677584
-lastSeenAt: 1792787677584
+firstSeenAt: 1792841755587
+lastSeenAt: 1792841755587
 fingerprint: null
 payload:
   id: GW26_everything_declares_what_it_needs
@@ -31,4 +31,4 @@ payload:
     - GW1_the_baton
   blocks: []
   spec: null
-  graph: c970dbd56ce21cc0
+  graph: 092ebe54b25611cd

@@ -9,11 +9,11 @@ intent: null
 summary: DH5_diagnostic_heals (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792820687078
+exported_at: 1792841756249
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820687078
-lastSeenAt: 1792820687078
+firstSeenAt: 1792841756249
+lastSeenAt: 1792841756249
 fingerprint: null
 payload:
   id: DH5_diagnostic_heals
@@ -31,4 +31,4 @@ payload:
     - DH0c_a_heal_is_proven_by_its_expectation
   blocks: []
   spec: null
-  graph: d75b53f00880ee63
+  graph: aa5dfededf7ad95a

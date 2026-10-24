@@ -3751,7 +3751,7 @@ function handleExtendedRoutes(req, res, url, method) {
 
   // Static UI assets
   if (method==='GET' && url.pathname.startsWith('/ui/')) {
-    const assetPath = require('path').join(__dirname, '..', url.pathname);
+    const assetPath = require('path').join(__dirname, '..', 'lib', url.pathname);   // 0.60.237 RF2: ui/ moved into lib/ui/; the URL stays /ui/…
     try {
       const data = require('fs').readFileSync(assetPath);
       const ext = require('path').extname(url.pathname);

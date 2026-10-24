@@ -1,0 +1,112 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DBG1_consolidate_debug_surfaces:0e0abf65d62c7922
+type: graph
+id: phase:DBG1_consolidate_debug_surfaces:0e0abf65d62c7922
+context: dependency graph of phase DBG1_consolidate_debug_surfaces
+intent: null
+summary: 6 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753725
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753725
+lastSeenAt: 1792841753725
+fingerprint: null
+payload:
+  for: DBG1_consolidate_debug_surfaces
+  kind: phase
+  repo: null
+  hash: 0e0abf65d62c7922
+  nodes:
+    - path: lib/cli/cfr-debug.js
+      role: changes
+      exists: true
+      system: lib
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/delta.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/sigma.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/delta.js
+      kind: requires
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+  crossings:
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/sigma.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/delta.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/graph.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF7_three_disconnected_debug_surfaces
+    dependents: []
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF7_three_disconnected_debug_surfaces
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): RF7_three_disconnected_debug_surfaces'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF7_three_disconnected_debug_surfaces
+        kind: inferred

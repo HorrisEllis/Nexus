@@ -1,0 +1,219 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ND4_commands_and_capabilities_from_the_schemas:9774247f00280fa1
+type: graph
+id: phase:ND4_commands_and_capabilities_from_the_schemas:9774247f00280fa1
+context: dependency graph of phase ND4_commands_and_capabilities_from_the_schemas
+intent: null
+summary: 22 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756189
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756189
+lastSeenAt: 1792841756189
+fingerprint: null
+payload:
+  for: ND4_commands_and_capabilities_from_the_schemas
+  kind: phase
+  repo: null
+  hash: 9774247f00280fa1
+  nodes:
+    - path: lib/node-schemas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-surface.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/system-nodes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/node-registry.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/lib/domain-nodes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/cli/nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-pipeline-nodes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-node-relations.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-export-idea-tagged-query.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/system-nodes.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/repo-agent-node.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/node-registry.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: lib/cli/nodes.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: tests/modules/test-system-node-relations.test.js
+      to: lib/system-nodes.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: intelligence/lib/domain-nodes.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/modules/test-pipeline-nodes.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-export-idea-tagged-query.test.js
+      to: lib/node-schemas.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 12
+    deps:
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND_D4_schema_driven_commands
+    dependents:
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB18_nodes_in_relation_to_their_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB3_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND2_one_node_route_for_every_system
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND_D1_the_file_is_the_node
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND_D2_the_owner_writes
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND_D3_generated_types_are_not_agents_to_write
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND_D4_schema_driven_commands
+    downstream:
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND6_the_nodes_screen
+    blockedBy:
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND_D4_schema_driven_commands
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 12 · ON THE CRITICAL PATH · blocked by ND3_each_server_serves_its_nodes,
+        ND_D4_schema_driven_commands
+      - >-
+        depends on (2): ND3_each_server_serves_its_nodes, ND_D4_schema_driven_commands · all
+        upstream 20
+      - 'needed by (1): ND5_every_agent_reaches_every_system · all downstream 2'
+    edges:
+      - from: docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+        kind: declared
+      - from: docs/2026-10-22-system-node-db-phasemap.spec::ND_D4_schema_driven_commands
+        kind: declared

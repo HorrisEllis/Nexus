@@ -7,11 +7,11 @@ intent: null
 summary: DB0c_reading (?) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677818
+exported_at: 1792841755852
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677818
-lastSeenAt: 1792787677818
+firstSeenAt: 1792841755852
+lastSeenAt: 1792841755852
 fingerprint: null
 payload:
   id: DB0c_reading
@@ -22,16 +22,16 @@ payload:
   files:
     - lib/shadow.js
     - lib/gap-field.js
-    - emergence/vendor/rfr2/liminal/negative-space.js
     - idearium/repo/architecture.js
     - lib/system-registry.js
     - lib/version.js
     - docs/seam-queue.spec
-    - nexus/nexus-bus.js
     - lib/cos-bridge.js
+    - lib/emergence/vendor/rfr2/liminal/negative-space.js
     - lib/drawbridge-registry.js
     - orchestrator/lib/contract-handshake.js
+    - lib/nexus/nexus-bus.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 4b5a65d5e733f86f
+  graph: f870b4515e74650c

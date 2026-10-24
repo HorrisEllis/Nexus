@@ -1,0 +1,331 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM10_thinking_partner_rename_and_ui_builder:0304b8ec3f70eeb5
+type: graph
+id: phase:AM10_thinking_partner_rename_and_ui_builder:0304b8ec3f70eeb5
+context: dependency graph of phase AM10_thinking_partner_rename_and_ui_builder
+intent: null
+summary: 29 node(s), 13 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756296
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756296
+lastSeenAt: 1792841756296
+fingerprint: null
+payload:
+  for: AM10_thinking_partner_rename_and_ui_builder
+  kind: phase
+  repo: null
+  hash: 0304b8ec3f70eeb5
+  nodes:
+    - path: copilot/lib/self-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/push-recall.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/agent-model.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/reflection.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/identity/copilot-identity.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/switch-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chains.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/command-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/connections.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/intent-hat-router.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/scheduler.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-control.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/reflection.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/nexus-awareness.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/bda/kernel.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/reflection.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/reflection.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/reflection.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: lib/reflection.js
+      to: intelligence/bda/kernel.js
+      kind: requires
+    - from: lib/reflection.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: lib/reflection.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/nexus-awareness.js
+      kind: requires
+    - from: tests/modules/reflection.test.js
+      to: lib/reflection.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/copilot-identity.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/switch-agent.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/chains.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/command-builder.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/connections.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/intent-hat-router.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/scheduler.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/system-control.js
+      to: copilot/lib/self-model.js
+      kind: requires
+  crossings:
+    - from: lib/reflection.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/reflection.js
+      to: intelligence/bda/kernel.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/reflection.js
+      to: intelligence/gap/predicate.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/copilot-identity.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/switch-agent.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/chains.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/command-builder.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/connections.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/constant-autonomy.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/intent-hat-router.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/scheduler.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/system-control.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM3_open_ended_grounded_conversation
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+    dependents: []
+    upstream:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM3_open_ended_grounded_conversation
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM4_full_user_continuity
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+    downstream: []
+    blockedBy:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM3_open_ended_grounded_conversation
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+    unlocks: []
+    conflicts:
+      - with: docs/agent-model-and-user-continuity-phasemap.spec::AM9_get_to_know_you_and_idea_capture
+        files:
+          - copilot/server.js
+          - cortex/push-recall.js
+    dangling: []
+    lines:
+      - >-
+        layer 5 · blocked by AM3_open_ended_grounded_conversation,
+        AM7_agent_switch_continuity_and_chat_recall
+      - >-
+        depends on (2): AM3_open_ended_grounded_conversation,
+        AM7_agent_switch_continuity_and_chat_recall · all upstream 7
+      - 'needed by (0): —'
+      - >-
+        same files as AM9_get_to_know_you_and_idea_capture with no order between them:
+        copilot/server.js, cortex/push-recall.js
+    edges:
+      - from: docs/agent-model-and-user-continuity-phasemap.spec::AM3_open_ended_grounded_conversation
+        kind: declared
+      - from: docs/agent-model-and-user-continuity-phasemap.spec::AM7_agent_switch_continuity_and_chat_recall
+        kind: declared

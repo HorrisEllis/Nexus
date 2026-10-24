@@ -6,14 +6,14 @@ context: >-
   pipeline phase GC1_global_component_reuse_store of
   docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
 intent: null
-summary: GC1_global_component_reuse_store (?) — 5 file(s)
+summary: GC1_global_component_reuse_store (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792822478700
+exported_at: 1792841756477
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478700
-lastSeenAt: 1792822478700
+firstSeenAt: 1792841756477
+lastSeenAt: 1792841756477
 fingerprint: null
 payload:
   id: GC1_global_component_reuse_store
@@ -25,9 +25,8 @@ payload:
     - docs/2026-10-07-compartment-control-and-activity-phasemap.spec
     - lib/nexus-self/inject-gate.js
     - idearium/repo/nexus-self.js
-    - nexus/autopilot.js
     - tests/modules/test-system-control.test.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 5905dedcc5f2f956
+  graph: be01744966f6d9b1

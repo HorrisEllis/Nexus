@@ -9,11 +9,11 @@ intent: null
 summary: SF4_compile_on_collect (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677635
+exported_at: 1792841755642
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677635
-lastSeenAt: 1792787677635
+firstSeenAt: 1792841755642
+lastSeenAt: 1792841755642
 fingerprint: null
 payload:
   id: SF4_compile_on_collect
@@ -23,7 +23,7 @@ payload:
   status: DONE (0.60.67)
   files:
     - lib/spec-collect.js
-    - emerge/compiler/index.js
+    - lib/emerge/compiler/index.js
     - lib/repo-inject.js
     - idearium/lib/config-core.cjs
     - idearium/api/index.js
@@ -34,4 +34,4 @@ payload:
     - SF3_collect_the_spec
   blocks: []
   spec: null
-  graph: aadcbf4561eb1533
+  graph: f5d0bc843f18391f

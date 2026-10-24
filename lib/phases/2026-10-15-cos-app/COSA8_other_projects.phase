@@ -7,11 +7,11 @@ intent: null
 summary: COSA8_other_projects (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677530
+exported_at: 1792841755516
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677530
-lastSeenAt: 1792787677530
+firstSeenAt: 1792841755516
+lastSeenAt: 1792841755516
 fingerprint: null
 payload:
   id: COSA8_other_projects
@@ -30,4 +30,4 @@ payload:
     - COSA3_run_and_supervise
   blocks: []
   spec: null
-  graph: 5f67a6ff59ecd341
+  graph: 6b085d7e710eb102

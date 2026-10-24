@@ -7,11 +7,11 @@ intent: null
 summary: SC1_scaling_limits_named (foundation) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792820508052
+exported_at: 1792841755977
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820508052
-lastSeenAt: 1792820508052
+firstSeenAt: 1792841755977
+lastSeenAt: 1792841755977
 fingerprint: null
 payload:
   id: SC1_scaling_limits_named
@@ -28,4 +28,4 @@ payload:
     - IN8_any_size
   blocks: []
   spec: null
-  graph: 3ba475514025d6e3
+  graph: bb8e0e72fe556804

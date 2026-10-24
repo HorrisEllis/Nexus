@@ -7,11 +7,11 @@ intent: null
 summary: EM2_warp_his_own (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676603
+exported_at: 1792841754422
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676603
-lastSeenAt: 1792787676603
+firstSeenAt: 1792841754422
+lastSeenAt: 1792841754422
 fingerprint: null
 payload:
   id: EM2_warp_his_own
@@ -20,17 +20,17 @@ payload:
   layer: null
   status: OPEN
   files:
-    - warp/core/Link.js
-    - warp/core/Expectation.js
-    - warp/core/Engine.js
-    - warp/core/Ledger.js
-    - warp/core/Axiom.js
-    - warp/adapters/siso-gates.js
-    - warp/spec/warp.spec
-    - warp/MANIFEST.json
+    - lib/warp/core/Link.js
+    - lib/warp/core/Expectation.js
+    - lib/warp/core/Engine.js
+    - lib/warp/core/Ledger.js
+    - lib/warp/core/Axiom.js
+    - lib/warp/adapters/siso-gates.js
+    - lib/warp/spec/warp.spec
+    - lib/warp/MANIFEST.json
   depends_on:
     - EM1_emerge_core
     - SH1_shadow_space
   blocks: []
   spec: null
-  graph: 43449bdeda43d0e1
+  graph: ab1c4e5df6a686ef

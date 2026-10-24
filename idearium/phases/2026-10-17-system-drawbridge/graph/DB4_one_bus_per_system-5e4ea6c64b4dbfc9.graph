@@ -1,0 +1,173 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB4_one_bus_per_system:5e4ea6c64b4dbfc9
+type: graph
+id: phase:DB4_one_bus_per_system:5e4ea6c64b4dbfc9
+context: dependency graph of phase DB4_one_bus_per_system
+intent: null
+summary: 16 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755837
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755837
+lastSeenAt: 1792841755837
+fingerprint: null
+payload:
+  for: DB4_one_bus_per_system
+  kind: phase
+  repo: null
+  hash: 5e4ea6c64b4dbfc9
+  nodes:
+    - path: cortex/core/raid/event-taxonomy.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/event-taxonomy.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/nexus/nexus-bus.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/alk/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/execution/run-pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-build-context.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/event-taxonomy.cjs
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: tests/modules/test-build-context.test.js
+      to: idearium/event-taxonomy.cjs
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/event-taxonomy.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/run-pipeline.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+    upstream: []
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB14_heartbeat_over_routes
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB18_nodes_in_relation_to_their_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::P33a_a_registry_for_any_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND2_one_node_route_for_every_system
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND4_commands_and_capabilities_from_the_schemas
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+      - docs/2026-10-22-system-node-db-phasemap.spec::ND6_the_nodes_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (2): CS4_every_system_a_compartment, DB0c_reading · all downstream 28'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

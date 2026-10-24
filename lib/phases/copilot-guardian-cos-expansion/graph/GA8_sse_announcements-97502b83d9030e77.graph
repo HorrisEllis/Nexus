@@ -1,0 +1,146 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GA8_sse_announcements:97502b83d9030e77
+type: graph
+id: phase:GA8_sse_announcements:97502b83d9030e77
+context: dependency graph of phase GA8_sse_announcements
+intent: null
+summary: 14 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756363
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756363
+lastSeenAt: 1792841756363
+fingerprint: null
+payload:
+  for: GA8_sse_announcements
+  kind: phase
+  repo: null
+  hash: 97502b83d9030e77
+  nodes:
+    - path: lib/nexus/nexus-connect.js
+      role: changes
+      exists: true
+      system: lib
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/cli/boot-systems.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cli/diagnose.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: ollama/server.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: tests/modules/test-boot-log-fixes.js
+      role: used-by
+      exists: true
+      system: null
+    - path: versionium/server.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: intelligence/lattice/associative-lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/heartbeat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/lib/pulse.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: lib/nexus/nexus-connect.js
+      to: lib/heartbeat.js
+      kind: requires
+    - from: lib/nexus/nexus-connect.js
+      to: intelligence/lattice/associative-lattice.js
+      kind: requires
+    - from: lib/nexus/nexus-connect.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: lib/cli/boot-systems.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: lib/cli/diagnose.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: ollama/server.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: tests/modules/test-boot-log-fixes.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: versionium/server.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+  crossings:
+    - from: lib/nexus/nexus-connect.js
+      to: intelligence/lattice/associative-lattice.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/nexus/nexus-connect.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

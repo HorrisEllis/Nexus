@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792822478485
+exported_at: 1792842797986
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478485
-lastSeenAt: 1792822478485
+firstSeenAt: 1792842797986
+lastSeenAt: 1792842797986
 fingerprint: null
 payload:
   for: MV12_nexus
@@ -36,14 +36,12 @@ payload:
       - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
       - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
     downstream: []
-    blockedBy:
-      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_cli
-      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV11_warp
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 3 · blocked by MV13_cli, MV11_warp
+      - layer 3
       - 'depends on (2): MV13_cli, MV11_warp · all upstream 6'
       - 'needed by (0): —'
     edges:

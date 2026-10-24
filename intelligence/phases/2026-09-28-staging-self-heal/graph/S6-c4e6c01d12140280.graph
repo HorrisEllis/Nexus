@@ -1,0 +1,181 @@
+envelope: 1
+uuid: nexus-export-graph-phase:S6:c4e6c01d12140280
+type: graph
+id: phase:S6:c4e6c01d12140280
+context: dependency graph of phase S6
+intent: null
+summary: 14 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754107
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754107
+lastSeenAt: 1792841754107
+fingerprint: null
+payload:
+  for: S6
+  kind: phase
+  repo: null
+  hash: c4e6c01d12140280
+  nodes:
+    - path: intelligence/alk/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/version-gate/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: guardian/lib/dispatcher.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/rfr2/clip/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/query/meta-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/meta/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/alk/index.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: architect/service.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/meta-query.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: lib/meta/index.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: intelligence/rfr2/clip/index.js
+      to: intelligence/rfr2/version-gate/index.js
+      kind: requires
+    - from: intelligence/rfr2/index.js
+      to: intelligence/rfr2/version-gate/index.js
+      kind: requires
+  crossings:
+    - from: architect/service.js
+      to: intelligence/alk/index.js
+      fromSystem: architect
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/alk/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/query/meta-query.js
+      to: intelligence/alk/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/meta/index.js
+      to: intelligence/alk/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+    dependents:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    upstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+    downstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    blockedBy:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+    unlocks:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by S5
+      - 'depends on (1): S5 · all upstream 7'
+      - 'needed by (4): S7, L1, A1, X1 · finishing it unlocks S7'
+    edges:
+      - from: docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+        kind: declared

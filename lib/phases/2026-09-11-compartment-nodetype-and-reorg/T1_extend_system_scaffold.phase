@@ -6,14 +6,14 @@ context: >-
   pipeline phase T1_extend_system_scaffold of
   docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
 intent: null
-summary: T1_extend_system_scaffold (?) — 14 file(s)
+summary: T1_extend_system_scaffold (?) — 13 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675821
+exported_at: 1792841753768
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675821
-lastSeenAt: 1792787675821
+firstSeenAt: 1792841753768
+lastSeenAt: 1792841753768
 fingerprint: null
 payload:
   id: T1_extend_system_scaffold
@@ -24,7 +24,6 @@ payload:
   files:
     - loom/templates/system-scaffold.js
     - lib/event-taxonomy-pattern.js
-    - hooks/index.js
     - loom/test/system-scaffold.test.js
     - cos/runtime/run.js
     - cos/testenv/index.js
@@ -39,4 +38,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: c85e7dedf727b889
+  graph: 172691a797c9e8b0

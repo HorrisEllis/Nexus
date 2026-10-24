@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR13_copilot_chat_ui
 context: pipeline phase SR13_copilot_chat_ui of docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
-summary: SR13_copilot_chat_ui (?) — 2 file(s)
+summary: SR13_copilot_chat_ui (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675730
+exported_at: 1792841753676
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675730
-lastSeenAt: 1792787675730
+firstSeenAt: 1792841753676
+lastSeenAt: 1792841753676
 fingerprint: null
 payload:
   id: SR13_copilot_chat_ui
@@ -20,9 +20,8 @@ payload:
   layer: null
   status: OPEN
   files:
-    - ui/agents/chatgpt/index.html
     - lib/loom-map.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 86f6ac2d0b97306a
+  graph: 5f3ef7718c4d1a74

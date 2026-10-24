@@ -7,11 +7,11 @@ intent: null
 summary: FN2_nerve_sees_the_field (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677270
+exported_at: 1792841755156
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677270
-lastSeenAt: 1792787677270
+firstSeenAt: 1792841755156
+lastSeenAt: 1792841755156
 fingerprint: null
 payload:
   id: FN2_nerve_sees_the_field
@@ -28,4 +28,4 @@ payload:
     - FN1_the_field_as_commands
   blocks: []
   spec: null
-  graph: 716118daf05d258b
+  graph: 918d9978fe8f2f7a

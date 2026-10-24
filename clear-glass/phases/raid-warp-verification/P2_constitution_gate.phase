@@ -7,11 +7,11 @@ intent: null
 summary: P2_constitution_gate (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792814558643
+exported_at: 1792841756532
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792814558643
-lastSeenAt: 1792814558643
+firstSeenAt: 1792841756532
+lastSeenAt: 1792841756532
 fingerprint: null
 payload:
   id: P2_constitution_gate
@@ -27,4 +27,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 8aac611e5c52d941
+  graph: 0701ff9554783cc5

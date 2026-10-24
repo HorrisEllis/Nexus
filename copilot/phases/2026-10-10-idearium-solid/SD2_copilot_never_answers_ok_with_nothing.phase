@@ -9,11 +9,11 @@ intent: null
 summary: SD2_copilot_never_answers_ok_with_nothing (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677221
+exported_at: 1792841755104
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677221
-lastSeenAt: 1792787677221
+firstSeenAt: 1792841755104
+lastSeenAt: 1792841755104
 fingerprint: null
 payload:
   id: SD2_copilot_never_answers_ok_with_nothing
@@ -24,8 +24,8 @@ payload:
   files:
     - copilot/server.js
     - copilot/lifeline.js
-    - ui/tv-shell/index.html
+    - lib/ui/tv-shell/index.html
   depends_on: []
   blocks: []
   spec: null
-  graph: 8d00d3029511847a
+  graph: 839dccd8177a1129

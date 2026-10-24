@@ -7,11 +7,11 @@ intent: null
 summary: EM1_emerge_core (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676598
+exported_at: 1792841754419
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676598
-lastSeenAt: 1792787676598
+firstSeenAt: 1792841754419
+lastSeenAt: 1792841754419
 fingerprint: null
 payload:
   id: EM1_emerge_core
@@ -20,21 +20,21 @@ payload:
   layer: null
   status: OPEN
   files:
-    - emerge/core/field.js
-    - emerge/core/constraint.js
-    - emerge/core/transition.js
-    - emerge/core/observation.js
-    - emerge/core/lens.js
-    - emerge/core/gap.js
-    - emerge/core/history.js
-    - emerge/core/level.js
-    - emerge/core/budget.js
-    - emerge/core/seed.js
-    - emerge/core/index.js
-    - emerge/spec/emerge-core.spec
+    - lib/emerge/core/field.js
+    - lib/emerge/core/constraint.js
+    - lib/emerge/core/transition.js
+    - lib/emerge/core/observation.js
+    - lib/emerge/core/lens.js
+    - lib/emerge/core/gap.js
+    - lib/emerge/core/history.js
+    - lib/emerge/core/level.js
+    - lib/emerge/core/budget.js
+    - lib/emerge/core/seed.js
+    - lib/emerge/core/index.js
+    - lib/emerge/spec/emerge-core.spec
   depends_on:
     - EM0_ground
     - EV0_contracts_for_every_system
   blocks: []
   spec: null
-  graph: 73c6df41c03bcc05
+  graph: 3081873fda6fe4b1

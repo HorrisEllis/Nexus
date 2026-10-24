@@ -9,11 +9,11 @@ intent: null
 summary: FN3_the_nerve_shows_it_and_the_field_sees_the_nerve (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677271
+exported_at: 1792841755158
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677271
-lastSeenAt: 1792787677271
+firstSeenAt: 1792841755158
+lastSeenAt: 1792841755158
 fingerprint: null
 payload:
   id: FN3_the_nerve_shows_it_and_the_field_sees_the_nerve
@@ -22,11 +22,11 @@ payload:
   layer: null
   status: OPEN
   files:
-    - ui/tv-shell/nerve/nerve.js
-    - ui/tv-shell/nerve/nerve.html
-    - ui/tv-shell/nerve/nerve.css
+    - lib/ui/tv-shell/nerve/nerve.js
+    - lib/ui/tv-shell/nerve/nerve.html
+    - lib/ui/tv-shell/nerve/nerve.css
   depends_on:
     - FN2_nerve_sees_the_field
   blocks: []
   spec: null
-  graph: 5a5715d4e3cba86c
+  graph: 05327980cfc64f09

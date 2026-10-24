@@ -6,14 +6,14 @@ context: >-
   pipeline phase BR2_brainos_controls_agents of
   docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
 intent: null
-summary: BR2_brainos_controls_agents (?) — 6 file(s)
+summary: BR2_brainos_controls_agents (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675771
+exported_at: 1792841753718
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675771
-lastSeenAt: 1792787675771
+firstSeenAt: 1792841753718
+lastSeenAt: 1792841753718
 fingerprint: null
 payload:
   id: BR2_brainos_controls_agents
@@ -24,7 +24,6 @@ payload:
   files:
     - lib/system-registry.js
     - lib/version.js
-    - ui/forge-shell.html
     - cortex/memory/jaa-db.js
     - lib/vector-memory.js
     - lib/grammar-engine.js
@@ -33,4 +32,4 @@ payload:
     - TC1_tools_get_real_contracts
   blocks: []
   spec: null
-  graph: eee077467b2c6ac8
+  graph: 5bb6eb8127717696

@@ -7,11 +7,11 @@ intent: null
 summary: MR3_gap_driven_search (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676622
+exported_at: 1792841754445
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676622
-lastSeenAt: 1792787676622
+firstSeenAt: 1792841754445
+lastSeenAt: 1792841754445
 fingerprint: null
 payload:
   id: MR3_gap_driven_search
@@ -21,10 +21,10 @@ payload:
   status: OPEN
   files:
     - lib/gap-search.js
-    - emergence/vendor/rfr2/liminal/negative-space.js
-    - emergence/vendor/rfr2/liminal/relational-gaps.js
+    - lib/emergence/vendor/rfr2/liminal/negative-space.js
+    - lib/emergence/vendor/rfr2/liminal/relational-gaps.js
   depends_on:
     - MR1_recall_triad_and_context_table
   blocks: []
   spec: null
-  graph: 9b368a799ea724a4
+  graph: 50ef5e6bc59fe4fe

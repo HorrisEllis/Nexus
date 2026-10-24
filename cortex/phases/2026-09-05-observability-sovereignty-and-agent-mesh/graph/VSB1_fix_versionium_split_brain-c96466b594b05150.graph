@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:VSB1_fix_versionium_split_brain:c96466b594b05150
+type: graph
+id: phase:VSB1_fix_versionium_split_brain:c96466b594b05150
+context: dependency graph of phase VSB1_fix_versionium_split_brain
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753730
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753730
+lastSeenAt: 1792841753730
+fingerprint: null
+payload:
+  for: VSB1_fix_versionium_split_brain
+  kind: phase
+  repo: null
+  hash: c96466b594b05150
+  nodes:
+    - path: cortex/cortex-v2.js
+      role: changes
+      exists: true
+      system: cortex
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF4_versionium_split_brain
+    dependents:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CP2_copilot_versionium_awareness
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF4_versionium_split_brain
+    downstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CP2_copilot_versionium_awareness
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::IDU1_idearium_homepage_and_repo_browser
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RP1_repository_per_system
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CP2_copilot_versionium_awareness
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): RF4_versionium_split_brain'
+      - >-
+        needed by (3): ID2_verify_idearium_reconciliation_reads_right_store,
+        DF2_cortex_and_versionium_off_root_data, CP2_copilot_versionium_awareness · all downstream 5
+        · finishing it unlocks ID2_verify_idearium_reconciliation_reads_right_store,
+        DF2_cortex_and_versionium_off_root_data, CP2_copilot_versionium_awareness
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF4_versionium_split_brain
+        kind: inferred

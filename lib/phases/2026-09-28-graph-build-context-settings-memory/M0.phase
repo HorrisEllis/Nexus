@@ -7,11 +7,11 @@ intent: null
 summary: M0 (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676082
+exported_at: 1792841754041
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676082
-lastSeenAt: 1792787676082
+firstSeenAt: 1792841754041
+lastSeenAt: 1792841754041
 fingerprint: null
 payload:
   id: M0
@@ -20,9 +20,9 @@ payload:
   layer: null
   status: OPEN
   files:
-    - nexus/autopilot.js
+    - lib/nexus/autopilot.js
     - guardian/jaa-store.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 90edb156dad368a7
+  graph: 011c3ee31aecc2e7

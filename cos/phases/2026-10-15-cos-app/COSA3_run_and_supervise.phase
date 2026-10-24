@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
 context: pipeline phase COSA3_run_and_supervise of docs/2026-10-15-cos-app-phasemap.spec
 intent: null
-summary: COSA3_run_and_supervise (?) — 2 file(s)
+summary: COSA3_run_and_supervise (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677525
+exported_at: 1792841755511
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677525
-lastSeenAt: 1792787677525
+firstSeenAt: 1792841755511
+lastSeenAt: 1792841755511
 fingerprint: null
 payload:
   id: COSA3_run_and_supervise
@@ -21,9 +21,8 @@ payload:
   status: BUILT-0.60.88
   files:
     - cos/app/runtime.js
-    - nexus/autopilot.js
   depends_on:
     - COSA2_runtime_and_dependencies
   blocks: []
   spec: null
-  graph: d173bfd7f8056f35
+  graph: 27bbac3faf27d747

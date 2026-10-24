@@ -9,11 +9,11 @@ intent: null
 summary: AM6_raid_contract_gate_before_dispatch (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675577
+exported_at: 1792841753500
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675577
-lastSeenAt: 1792787675577
+firstSeenAt: 1792841753500
+lastSeenAt: 1792841753500
 fingerprint: null
 payload:
   id: AM6_raid_contract_gate_before_dispatch
@@ -27,11 +27,11 @@ payload:
     - guardian/lib/jobs.js
     - tests/create-job-meta.test.js
     - guardian/lib/dispatcher.js
+    - lib/ui/api.js
     - ollama/lib/dispatch.js
-    - ui/api.js
     - lib/tool-forge.js
   depends_on:
     - AM1_raid_intent_contracts_per_agent
   blocks: []
   spec: null
-  graph: 95e22ab925e053e4
+  graph: 4f49e55ffddea8ab

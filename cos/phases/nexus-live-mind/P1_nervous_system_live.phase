@@ -7,11 +7,11 @@ intent: null
 summary: P1_nervous_system_live (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678260
+exported_at: 1792841756452
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678260
-lastSeenAt: 1792787678260
+firstSeenAt: 1792841756452
+lastSeenAt: 1792841756452
 fingerprint: null
 payload:
   id: P1_nervous_system_live
@@ -28,4 +28,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: e25e65b0dc86651a
+  graph: b1293841f49f4324

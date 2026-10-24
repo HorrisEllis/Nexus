@@ -1,0 +1,281 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T3_warp_replaces_siso:b309585d5c4c520c
+type: graph
+id: phase:T3_warp_replaces_siso:b309585d5c4c520c
+context: dependency graph of phase T3_warp_replaces_siso
+intent: null
+summary: 33 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753771
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753771
+lastSeenAt: 1792841753771
+fingerprint: null
+payload:
+  for: T3_warp_replaces_siso
+  kind: phase
+  repo: null
+  hash: b309585d5c4c520c
+  nodes:
+    - path: cos/cli/commands/create.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/host/event-bus.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/siso/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/siso/Stream.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/cli/nexus-cli.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/ring-buffer.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/blueprint/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/ci/ci-keys.smoke.cjs
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/run.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/nodes/create.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playgrounds/factory.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/plugin/installer.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/agent-tools/tools/sandbox/cos-compartment.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-container.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/lib/mco04-cos-work-phase.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/runtime-enum.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/compartment.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/state-store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Event.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Gate.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/StreamLog.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/warp/core/Event.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Stream.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/StreamLog.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/siso/Stream.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/siso/index.js
+      to: lib/warp/core/Event.js
+      kind: requires
+    - from: cos/siso/index.js
+      to: cos/siso/Gate.js
+      kind: requires
+    - from: cos/siso/index.js
+      to: lib/warp/core/Stream.js
+      kind: requires
+    - from: cos/siso/index.js
+      to: lib/warp/core/StreamLog.js
+      kind: requires
+    - from: cos/cli/commands/create.js
+      to: cos/siso/Event.js
+      kind: requires
+    - from: cos/cli/commands/create.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/cli/commands/create.js
+      to: cos/foundation/runtime-enum.js
+      kind: requires
+    - from: cos/cli/commands/create.js
+      to: cos/host/gates/compartment.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/host/event-bus.js
+      to: cos/siso/StreamLog.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/state-store.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cos/blueprint/index.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cos/ci/ci-keys.smoke.cjs
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cos/nodes/create.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cos/playgrounds/factory.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cos/plugin/installer.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/cos-compartment.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: lib/project-container.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: tests/lib/mco04-cos-work-phase.test.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cos/cli/commands/run.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/cli/commands/create.js
+      fromSystem: clear-glass
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/sandbox/cos-compartment.js
+      to: cos/cli/commands/create.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/create.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/project-container.js
+      to: cos/cli/commands/create.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T2_idearium_genesis_alignment
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::C1_cli_per_system_split
+    upstream: []
+    downstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::C1_cli_per_system_split
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T2_idearium_genesis_alignment
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T2_idearium_genesis_alignment
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::C1_cli_per_system_split
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): T2_idearium_genesis_alignment, C1_cli_per_system_split · finishing it unlocks
+        T2_idearium_genesis_alignment, C1_cli_per_system_split
+    edges: []

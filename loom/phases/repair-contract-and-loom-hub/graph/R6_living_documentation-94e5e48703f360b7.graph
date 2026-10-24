@@ -1,0 +1,126 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R6_living_documentation:94e5e48703f360b7
+type: graph
+id: phase:R6_living_documentation:94e5e48703f360b7
+context: dependency graph of phase R6_living_documentation
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756550
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756550
+lastSeenAt: 1792841756550
+fingerprint: null
+payload:
+  for: R6_living_documentation
+  kind: phase
+  repo: null
+  hash: 94e5e48703f360b7
+  nodes:
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/doc-generator.js
+      role: changes
+      exists: true
+      system: loom
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: lib/contracts/SYSTEM-CONTRACTS.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/version.js
+      to: lib/contracts/SYSTEM-CONTRACTS.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+    dependents: []
+    upstream:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (2): R4_loom_ledger_awareness, R5_loom_visual_map · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
+        kind: declared
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+        kind: declared

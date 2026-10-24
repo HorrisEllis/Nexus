@@ -9,11 +9,11 @@ intent: null
 summary: SB3_the_section_prompt_is_domain_agnostic (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676800
+exported_at: 1792841754637
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676800
-lastSeenAt: 1792787676800
+firstSeenAt: 1792841754637
+lastSeenAt: 1792841754637
 fingerprint: null
 payload:
   id: SB3_the_section_prompt_is_domain_agnostic
@@ -27,4 +27,4 @@ payload:
     - SB1_templates_are_the_default_frame
   blocks: []
   spec: null
-  graph: 3b5793a0e3e8bb58
+  graph: d9708daf58bb52e5

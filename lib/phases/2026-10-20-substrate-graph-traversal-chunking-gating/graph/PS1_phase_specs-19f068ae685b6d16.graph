@@ -1,28 +1,28 @@
 envelope: 1
-uuid: nexus-export-graph-phase:PS1_phase_specs:77e8fe5e41ea6ccc
+uuid: nexus-export-graph-phase:PS1_phase_specs:19f068ae685b6d16
 type: graph
-id: phase:PS1_phase_specs:77e8fe5e41ea6ccc
+id: phase:PS1_phase_specs:19f068ae685b6d16
 context: dependency graph of phase PS1_phase_specs
 intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787921001
+exported_at: 1792841756108
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787921001
-lastSeenAt: 1792787921001
+firstSeenAt: 1792841756108
+lastSeenAt: 1792841756108
 fingerprint: null
 payload:
   for: PS1_phase_specs
   kind: phase
   repo: null
-  hash: 77e8fe5e41ea6ccc
+  hash: 19f068ae685b6d16
   nodes:
-    - path: emerge/compiler/phase-specs.js
+    - path: lib/emerge/compiler/phase-specs.js
       role: changes
       exists: true
-      system: emerge
+      system: lib
     - path: lib/pipeline-nodes.js
       role: changes
       exists: true
@@ -39,10 +39,10 @@ payload:
       role: used-by
       exists: true
       system: null
-    - path: emerge/compiler/kg-builder.js
+    - path: lib/emerge/compiler/kg-builder.js
       role: uses
       exists: true
-      system: emerge
+      system: lib
     - path: lib/nexus-self/systems.js
       role: uses
       exists: true
@@ -76,28 +76,28 @@ payload:
       exists: true
       system: lib
   edges:
-    - from: emerge/compiler/phase-specs.js
-      to: emerge/compiler/kg-builder.js
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/emerge/compiler/kg-builder.js
       kind: requires
-    - from: emerge/compiler/phase-specs.js
+    - from: lib/emerge/compiler/phase-specs.js
       to: lib/phase-dag.js
       kind: requires
-    - from: emerge/compiler/phase-specs.js
+    - from: lib/emerge/compiler/phase-specs.js
       to: lib/phase-files.js
       kind: requires
-    - from: emerge/compiler/phase-specs.js
+    - from: lib/emerge/compiler/phase-specs.js
       to: lib/phase-map-auto.js
       kind: requires
-    - from: emerge/compiler/phase-specs.js
+    - from: lib/emerge/compiler/phase-specs.js
       to: lib/phase-graph.js
       kind: requires
-    - from: emerge/compiler/phase-specs.js
+    - from: lib/emerge/compiler/phase-specs.js
       to: lib/phase-plan.js
       kind: requires
-    - from: emerge/compiler/phase-specs.js
+    - from: lib/emerge/compiler/phase-specs.js
       to: lib/nexus-self/systems.js
       kind: requires
-    - from: emerge/compiler/phase-specs.js
+    - from: lib/emerge/compiler/phase-specs.js
       to: lib/node-export.js
       kind: requires
     - from: tests/modules/test-phase-specs.test.js

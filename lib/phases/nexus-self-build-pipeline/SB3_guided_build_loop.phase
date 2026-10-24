@@ -7,11 +7,11 @@ intent: null
 summary: SB3_guided_build_loop (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678296
+exported_at: 1792841756497
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678296
-lastSeenAt: 1792787678296
+firstSeenAt: 1792841756497
+lastSeenAt: 1792841756497
 fingerprint: null
 payload:
   id: SB3_guided_build_loop
@@ -29,4 +29,4 @@ payload:
     - SB2_universal_file_parse
   blocks: []
   spec: null
-  graph: 43e53ddad29a7b4a
+  graph: 55227c9a64bbeaae

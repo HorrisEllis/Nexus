@@ -1,0 +1,97 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL14_seam_to_lib_seam:5ac76d543e2899aa
+type: graph
+id: phase:BL14_seam_to_lib_seam:5ac76d543e2899aa
+context: dependency graph of phase BL14_seam_to_lib_seam
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753350
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753350
+lastSeenAt: 1792841753350
+fingerprint: null
+payload:
+  for: BL14_seam_to_lib_seam
+  kind: phase
+  repo: null
+  hash: 5ac76d543e2899aa
+  nodes:
+    - path: clear-glass/seam/watchdog-gates.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/watchdog.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/seam/build-contract.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/seam/chunk-lifecycle.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/seam/cross-system-status.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: clear-glass/siso/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/seam/gates.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/test/watchdog.test.js
+      to: clear-glass/siso/index.js
+      kind: requires
+    - from: lib/seam/build-contract.js
+      to: lib/warp/core/index.js
+      kind: requires
+    - from: lib/seam/build-contract.js
+      to: lib/seam/gates.js
+      kind: requires
+    - from: clear-glass/seam/watchdog-gates.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: lib/seam/index.js
+      to: lib/seam/build-contract.js
+      kind: requires
+    - from: lib/seam/cross-system-status.js
+      to: lib/seam/chunk-lifecycle.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

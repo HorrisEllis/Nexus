@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P2_constitution_on_the_approve_path:e3c19a94da91f374
+type: graph
+id: phase:P2_constitution_on_the_approve_path:e3c19a94da91f374
+context: dependency graph of phase P2_constitution_on_the_approve_path
+intent: null
+summary: 18 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756524
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756524
+lastSeenAt: 1792841756524
+fingerprint: null
+payload:
+  for: P2_constitution_on_the_approve_path
+  kind: phase
+  repo: null
+  hash: e3c19a94da91f374
+  nodes:
+    - path: clear-glass/renderer/selector-check.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/dom.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/releases/deliver.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/constitutional-ai.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/autofill/learn-pick.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/installer.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/releases/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/constitutional-ai.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-chatgpt-scrape-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/constitutional-ai.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/constitutional-ai.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/constitutional-ai.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: clear-glass/src/autofill/learn-pick.js
+      to: clear-glass/renderer/selector-check.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: clear-glass/src/automation/dom.js
+      kind: requires
+    - from: tests/modules/test-chatgpt-scrape-template.test.js
+      to: clear-glass/src/automation/dom.js
+      kind: requires
+    - from: clear-glass/src/net/installer.js
+      to: clear-glass/src/releases/deliver.js
+      kind: requires
+    - from: clear-glass/src/releases/service.js
+      to: clear-glass/src/releases/deliver.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: clear-glass/src/releases/deliver.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/constitutional-ai.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: lib/constitutional-ai.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/constitutional-ai.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: lib/constitutional-ai.js
+      kind: requires
+    - from: tests/modules/constitutional-ai.test.js
+      to: lib/constitutional-ai.js
+      kind: requires
+  crossings:
+    - from: lib/constitutional-ai.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

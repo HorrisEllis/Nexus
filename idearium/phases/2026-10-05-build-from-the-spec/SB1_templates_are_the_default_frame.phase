@@ -9,11 +9,11 @@ intent: null
 summary: SB1_templates_are_the_default_frame (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676793
+exported_at: 1792841754631
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676793
-lastSeenAt: 1792787676793
+firstSeenAt: 1792841754631
+lastSeenAt: 1792841754631
 fingerprint: null
 payload:
   id: SB1_templates_are_the_default_frame
@@ -28,4 +28,4 @@ payload:
     - SB0_map
   blocks: []
   spec: null
-  graph: 90e92a3e0e88e5e1
+  graph: 7420150bb57a6a33

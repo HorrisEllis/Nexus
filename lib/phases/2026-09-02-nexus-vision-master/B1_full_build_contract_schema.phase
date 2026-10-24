@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
 context: pipeline phase B1_full_build_contract_schema of docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
-summary: B1_full_build_contract_schema (?) — 8 file(s)
+summary: B1_full_build_contract_schema (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675608
+exported_at: 1792841753533
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675608
-lastSeenAt: 1792787675608
+firstSeenAt: 1792841753533
+lastSeenAt: 1792841753533
 fingerprint: null
 payload:
   id: B1_full_build_contract_schema
@@ -22,7 +22,6 @@ payload:
   files:
     - cortex/core/raid/contract-intake.js
     - docs/AXIOMS-v3.1.md
-    - warp/spec/warp.spec
     - lib/account-identity-index.js
     - lib/intent-classifier.js
     - lib/agent-tools/tools/identity/hat-forge.js
@@ -31,4 +30,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 75201db85d2752cc
+  graph: a8b32920b5ca7b40

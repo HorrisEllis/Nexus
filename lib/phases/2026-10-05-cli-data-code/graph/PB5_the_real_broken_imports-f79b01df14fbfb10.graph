@@ -1,0 +1,64 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PB5_the_real_broken_imports:f79b01df14fbfb10
+type: graph
+id: phase:PB5_the_real_broken_imports:f79b01df14fbfb10
+context: dependency graph of phase PB5_the_real_broken_imports
+intent: null
+summary: 3 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754896
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754896
+lastSeenAt: 1792841754896
+fingerprint: null
+payload:
+  for: PB5_the_real_broken_imports
+  kind: phase
+  repo: null
+  hash: f79b01df14fbfb10
+  nodes:
+    - path: erosmancer/erosmancer-os/tests/run.js
+      role: changes
+      exists: false
+      system: null
+    - path: lib/cli/run-supervised.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+  crossings:
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::PB4_imports_inside_text_are_not_imports
+    dependents: []
+    upstream:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::PB4_imports_inside_text_are_not_imports
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): PB4_imports_inside_text_are_not_imports'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-cli-data-code-phasemap.spec::PB4_imports_inside_text_are_not_imports
+        kind: declared
