@@ -90,8 +90,8 @@ const rest  = () => args.filter(a => !a.startsWith('--')).slice(1).join(' ');
 
 const MODULE_CLI = {
   '/guardian': path.join(ROOT, 'guardian/cli.js'),
-  '/cockpit':  path.join(ROOT, 'cockpit/cli.js'),
-  '/forge':    path.join(ROOT, 'cockpit/cli.js'),   // alias
+  '/cockpit':  path.join(ROOT, 'lib', 'cockpit', 'cli.js'),
+  '/forge':    path.join(ROOT, 'lib', 'cockpit', 'cli.js'),   // alias
   '/cortex':   path.join(ROOT, 'cortex/cortex.js'),
   '/idearium': path.join(ROOT, 'idearium/cli/index.js'),
   '/copilot':  path.join(ROOT, 'copilot/cli.js'),   // moved from cli/co-pilot.js — consolidation pass
