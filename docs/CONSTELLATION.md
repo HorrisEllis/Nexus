@@ -49,3 +49,28 @@ single piece of proof-of-competency: systems design + spec-driven execution, rep
 
 > Not yet done: none of these are merged into this repo, registered as idearium repos, or entered in
 > `docs/PROOF-OF-COMPETENCY.md`. This map is the inventory; the next move is his to choose.
+
+## Update 2026-10-24 — Raven, the master spec corpus, and the true scale (31 repos)
+James: "look. and the docs folder and the phases. 31 repos. github.com/HorrisEllis/Raven"
+
+- **Raven / CorvidObs v0.1.1** (github.com/HorrisEllis/raven) — a camera-first, transparent-UI, voice-logging
+  PWA for observing corvid behaviour: a full signal vocabulary (vocal contact/alarm/mob/food/play,
+  dominance/appeasement). Different domain (animal behaviour), same instinct as the toolkit — map the signals,
+  log the differentials. A clean standalone PWA (README.md, app.js, index.html, sw.js, manifest).
+- **The master spec corpus** (spec.zip) — a `.spec/` folder that is the architectural source for the whole
+  family: Emerge, NEXUS-CORE/CORTEX/GUARDIAN/IDEARIUM/MODULES/ORCHESTRATOR/SELF/VERSIONIUM/SPEC-v9,
+  NEXUS-CAUSAL, causal-nexus, genesis, forge, forge-ide, spec-parser, seam-block, nexus-tab-sovereign,
+  MASTEVOS-v9, RHEON IDE/VOID. Plus the **RHEON Creative Platform** (Creative Universe, Word-Idea-Fire,
+  Studio, Kernel v2.1), **MASTEVOS v1.0.0** (incl. an embodiment-studio), and system specs: AGNOSTIC-STACK-MAP,
+  ARCHITECT, EIDOLON, META-EDITOR, GUARDIAN interaction/GTCI contracts, NEXUS_MASTER_AUDIT. 66 .md, 26 .spec,
+  16 html, 15 svg, 9 docx. This is the "rebuild-if-lost" skeleton at constellation scale.
+- **Scale: 31 repos.** What this file names is a fraction. At 31 repos, hand-mapping in chat does not scale —
+  and that is precisely what idearium is for: ingest a repo, read its `docs/` and its phases, map it. The
+  whole of this session's work (the dependency graph, emerge-as-language, the build pipeline, the
+  consolidation) is the tooling to run a 31-repo sovereign stack as one system.
+
+### The scale-correct next move
+Register the 31 repos into idearium so it reads each repo's docs + phases itself (managerView / phases.js
+already do this for any repo), instead of mapping them by hand. That needs their locations — a GitHub org, a
+list, or add_repo per repo. Alternatively, pick one (ERAVOS, MASTERMIND, the mesh stack, RHEON) and drive it
+to shippable now. His call.
