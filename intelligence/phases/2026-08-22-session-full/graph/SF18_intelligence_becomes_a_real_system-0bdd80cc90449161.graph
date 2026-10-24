@@ -1,28 +1,32 @@
 envelope: 1
-uuid: nexus-export-graph-phase:SF18_intelligence_becomes_a_real_system:6a7cbc42ba0bfa29
+uuid: nexus-export-graph-phase:SF18_intelligence_becomes_a_real_system:0bdd80cc90449161
 type: graph
-id: phase:SF18_intelligence_becomes_a_real_system:6a7cbc42ba0bfa29
+id: phase:SF18_intelligence_becomes_a_real_system:0bdd80cc90449161
 context: dependency graph of phase SF18_intelligence_becomes_a_real_system
 intent: null
-summary: 17 node(s), 1 crossing(s)
+summary: 18 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876199386
+exported_at: 1792877948278
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876199386
-lastSeenAt: 1792876199386
+firstSeenAt: 1792877948278
+lastSeenAt: 1792877948278
 fingerprint: null
 payload:
   for: SF18_intelligence_becomes_a_real_system
   kind: phase
   repo: null
-  hash: 6a7cbc42ba0bfa29
+  hash: 0bdd80cc90449161
   nodes:
     - path: cortex/boot.js
       role: changes
       exists: true
       system: cortex
+    - path: emerge/consumer.js
+      role: changes
+      exists: false
+      system: emerge
     - path: intelligence/consumer.js
       role: changes
       exists: true

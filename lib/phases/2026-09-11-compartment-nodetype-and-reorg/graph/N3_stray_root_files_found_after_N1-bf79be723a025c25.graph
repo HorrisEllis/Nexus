@@ -1,24 +1,28 @@
 envelope: 1
-uuid: nexus-export-graph-phase:N3_stray_root_files_found_after_N1:9a3dab2da2e229cd
+uuid: nexus-export-graph-phase:N3_stray_root_files_found_after_N1:bf79be723a025c25
 type: graph
-id: phase:N3_stray_root_files_found_after_N1:9a3dab2da2e229cd
+id: phase:N3_stray_root_files_found_after_N1:bf79be723a025c25
 context: dependency graph of phase N3_stray_root_files_found_after_N1
 intent: null
-summary: 27 node(s), 6 crossing(s)
+summary: 28 node(s), 6 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876200058
+exported_at: 1792877948897
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876200058
-lastSeenAt: 1792876200058
+firstSeenAt: 1792877948897
+lastSeenAt: 1792877948897
 fingerprint: null
 payload:
   for: N3_stray_root_files_found_after_N1
   kind: phase
   repo: null
-  hash: 9a3dab2da2e229cd
+  hash: bf79be723a025c25
   nodes:
+    - path: emerge/emerge-ide.js
+      role: changes
+      exists: false
+      system: emerge
     - path: lib/blueprint-index.js
       role: changes
       exists: true

@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841753395
+exported_at: 1792876199522
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841753395
-lastSeenAt: 1792841753395
+firstSeenAt: 1792876199522
+lastSeenAt: 1792876199522
 fingerprint: null
 payload:
   for: BR6_copilot_as_agent_chat_model

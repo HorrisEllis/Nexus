@@ -1,24 +1,28 @@
 envelope: 1
-uuid: nexus-export-graph-phase:BR6_copilot_as_agent_chat_model:f3213197b621683c
+uuid: nexus-export-graph-phase:BR6_copilot_as_agent_chat_model:25003ddb3ca8adb8
 type: graph
-id: phase:BR6_copilot_as_agent_chat_model:f3213197b621683c
+id: phase:BR6_copilot_as_agent_chat_model:25003ddb3ca8adb8
 context: dependency graph of phase BR6_copilot_as_agent_chat_model
 intent: null
-summary: 25 node(s), 4 crossing(s)
+summary: 26 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876199522
+exported_at: 1792877948397
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876199522
-lastSeenAt: 1792876199522
+firstSeenAt: 1792877948397
+lastSeenAt: 1792877948397
 fingerprint: null
 payload:
   for: BR6_copilot_as_agent_chat_model
   kind: phase
   repo: null
-  hash: f3213197b621683c
+  hash: 25003ddb3ca8adb8
   nodes:
+    - path: bridge/router.js
+      role: changes
+      exists: false
+      system: bridge
     - path: copilot/lib/user-model.js
       role: changes
       exists: true

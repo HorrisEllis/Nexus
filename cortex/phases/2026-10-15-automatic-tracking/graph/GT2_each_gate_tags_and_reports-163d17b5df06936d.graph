@@ -1,0 +1,282 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GT2_each_gate_tags_and_reports:163d17b5df06936d
+type: graph
+id: phase:GT2_each_gate_tags_and_reports:163d17b5df06936d
+context: dependency graph of phase GT2_each_gate_tags_and_reports
+intent: null
+summary: 27 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877951347
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877951347
+lastSeenAt: 1792877951347
+fingerprint: null
+payload:
+  for: GT2_each_gate_tags_and_reports
+  kind: phase
+  repo: null
+  hash: 163d17b5df06936d
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/worker.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: scripts/mco5-one-real-job.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/mco6-ic9-kill-and-restart.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-dependency-graph.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-boundary.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/event-taxonomy.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-intent-contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contract-repo-provision.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/meta/adversary-suite.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/contract-repo-provision.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/event-taxonomy.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-boundary.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/agent-intent-contract.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/worker.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco5-one-real-job.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco6-ic9-kill-and-restart.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-dependency-graph.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::GA1_the_gate_assesses_before_it_spends
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::KT1_observations_on_a_semantic_tree
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::AU1_addenda_written_for_you
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::CS1_every_brick_a_component
+    upstream: []
+    downstream:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::AU1_addenda_written_for_you
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::CP1_the_contract_panel
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::CS1_every_brick_a_component
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::CX1_context_from_the_dependencies
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::GA1_the_gate_assesses_before_it_spends
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::KT1_observations_on_a_semantic_tree
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::LA1_one_self_model
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::RT2_routed_by_intent_account_and_fallback
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::GA1_the_gate_assesses_before_it_spends
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::KT1_observations_on_a_semantic_tree
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::AU1_addenda_written_for_you
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::CS1_every_brick_a_component
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (4): GA1_the_gate_assesses_before_it_spends, KT1_observations_on_a_semantic_tree,
+        AU1_addenda_written_for_you, CS1_every_brick_a_component · all downstream 8 · finishing it
+        unlocks GA1_the_gate_assesses_before_it_spends, KT1_observations_on_a_semantic_tree,
+        AU1_addenda_written_for_you, CS1_every_brick_a_component
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

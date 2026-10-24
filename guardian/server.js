@@ -3202,7 +3202,7 @@ function handleExtendedRoutes(req, res, url, method) {
   }
 
   if (method === 'POST' && url.pathname === '/api/intake') {
-    bodyJ(req).then(body => {
+    bodyJ(req).then(async body => {   // 0.60.246 GD1 (BCR2, from brave-cori): async, for RAID's queue through its port
       const intake = require('../lib/intake.js');
       // §AGENT-MESH-ARTIFACTS 2026-09-02 — real correlation, not fabricated:
       // if the caller (clear-glass's download-capture.js) didn't supply a
@@ -3217,8 +3217,8 @@ function handleExtendedRoutes(req, res, url, method) {
       let raidQueueId = null;
       if (jobId) {
         try {
-          const raid = require('../cortex/core/raid/contract-intake.js');
-          const match = raid.listQueue().find(r => r.dispatchedJobId === jobId);
+          // 0.60.246 GD1 (BCR2) — RAID's contract queue through its port (Cortex's route), not Cortex's table loaded here
+          const match = (await require('../lib/raid-port.js').listQueue({ n: 500 })).find(r => r.dispatchedJobId === jobId);
           if (match) raidQueueId = match.uuid;
         } catch (_) { /* RAID module load failure is real and honest here — leave null */ }
       }
@@ -3553,34 +3553,28 @@ function handleExtendedRoutes(req, res, url, method) {
       // §RAID + §P97: if no explicit provider, let RAID decide (LAW_I: Ollama first)
       // CFR sigma floor is consulted — chaotic regime deprioritises slower providers.
       if (!_rawProvider || _rawProvider === 'auto') {
-        try {
-          const _raid = require('../cortex/core/raid/index');
-          const _prompt = body.prompt || parsed.prompt || '';
-          // §P97: read CFR field state for sigma-aware routing
-          let _cfrCtx = {};
-          try {
-            const _cfrInfl = require('../lib/nexus/nexus-cfr-influence');
-            _cfrCtx = { sigmaFloor: _cfrInfl.getSigmaFloor?.() || 0,
-                        regime: _cfrInfl.getState?.()?.regime || 'stable' };
-          } catch(_) {}
-          // §BUG FIXED 2026-07-07 — this called `_raid.decide(...)`, which
-          // does not exist: RAID exports `_decide`, and its signature is
-          // _decide(call, health, weights) where call is
-          // {prompt, context:{cfrRegime, cfrSigmaFloor}} — not
-          // (prompt, {preferredAgent, cfrCtx}). Because the call sat inside
-          // the try/catch below, it threw silently on EVERY raw dispatch and
-          // fell through to the 'chatgpt' fallback. RAID has therefore never
-          // actually routed a raw job in Guardian, and the
-          // `[guardian] RAID → ...` log line below has never once printed.
-          // Found while wiring /api/copilot/prompt, which reused this same
-          // broken call.
-          // §0.60.3 — with the health it read (it passed none: every agent counted offline, so 'auto' was always claude)
-          await _raid.ready();
-          const _decision = _raid._decide({ prompt: _prompt, context: { cfrRegime: _cfrCtx.regime, cfrSigmaFloor: _cfrCtx.sigmaFloor } }, _raid._health, _raid._weights);
+        // 0.60.240 GD1 (docs/2026-10-24-guardian-into-cos-phasemap.spec) — Cortex's RAID decides, through its port: it was loaded here
+        // and run with this process's own health and weights, a second RAID that never saw what Cortex learned. Cortex's decide applies
+        // its own CFR field, so Guardian no longer reads nexus-cfr-influence for it. The history of this call is kept:
+        // §BUG FIXED 2026-07-07 — this called `_raid.decide(...)`, which
+        // does not exist: RAID exports `_decide`, and its signature is
+        // _decide(call, health, weights) where call is
+        // {prompt, context:{cfrRegime, cfrSigmaFloor}} — not
+        // (prompt, {preferredAgent, cfrCtx}). Because the call sat inside
+        // the try/catch below, it threw silently on EVERY raw dispatch and
+        // fell through to the 'chatgpt' fallback. RAID has therefore never
+        // actually routed a raw job in Guardian, and the
+        // `[guardian] RAID → ...` log line below has never once printed.
+        // Found while wiring /api/copilot/prompt, which reused this same
+        // broken call.
+        // §0.60.3 — with the health it read (it passed none: every agent counted offline, so 'auto' was always claude)
+        const _decision = await require('../lib/raid-port.js').decide(body.prompt || parsed.prompt || '');
+        if (_decision && _decision.agent) {
           _rawProvider = _decision.agent;
-          console.log(`[guardian] RAID → ${_rawProvider} (${_decision.reason}) σfloor:${_cfrCtx.sigmaFloor}`);
-        } catch(_) {
-          _rawProvider = 'chatgpt'; // RAID not started — fallback
+          console.log(`[guardian] RAID → ${_rawProvider} (${_decision.reason || 'no reason given'})`);
+        } else {
+          _rawProvider = 'chatgpt';   // the fallback it always had, now said
+          console.warn(`[guardian] RAID gave no agent (${(_decision && _decision.error) || 'no answer'}); falling back to chatgpt`);
         }
       }
 
@@ -3608,13 +3602,12 @@ function handleExtendedRoutes(req, res, url, method) {
       // explicit .spec path already uses — not a second implementation.
       if (_shouldEnforceChunking(provider, prompt.length + content.length)) {
         try {
-          const raid = require('../cortex/core/raid');
           // Same RAID approval gate the explicit .spec path already
           // requires (§FIX 2026-06-21's own reasoning: the constraint
           // layer applies "regardless of how the target was chosen") —
           // this path chooses the target automatically by size, but the
           // same gate still has to hold.
-          const approval = raid._approveTool(body.source || 'unknown', (prompt + content).slice(0, 200), { action: 'forge', proof: body.proof });
+          const approval = await require('../lib/raid-port.js').approveTool(body.source || 'unknown', (prompt + content).slice(0, 200), { action: 'forge', proof: body.proof });   // 0.60.246 GD1 (BCR2)
           if (!approval.approved) {
             pRes(res, 403, { ok: false, error: `RAID denied automatic chunking: ${approval.reason}` });
             return;
@@ -3663,8 +3656,7 @@ function handleExtendedRoutes(req, res, url, method) {
       // denies 'forge' by design (gating this with the wrong action name
       // would have silently broken copilot's own basic dispatch).
       try {
-        const raid = require('../cortex/core/raid');
-        const approval = raid._approveTool(body.source || 'unknown', (prompt + content).slice(0, 200), { action: 'chat', proof: body.proof });
+        const approval = await require('../lib/raid-port.js').approveTool(body.source || 'unknown', (prompt + content).slice(0, 200), { action: 'chat', proof: body.proof });   // 0.60.246 GD1 (BCR2)
         if (!approval.approved) {
           pRes(res, 403, { ok: false, error: `RAID denied dispatch: ${approval.reason}` });
           return;
