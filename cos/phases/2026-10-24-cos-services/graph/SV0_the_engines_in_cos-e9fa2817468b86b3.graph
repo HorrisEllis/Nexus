@@ -1,0 +1,154 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV0_the_engines_in_cos:e9fa2817468b86b3
+type: graph
+id: phase:SV0_the_engines_in_cos:e9fa2817468b86b3
+context: dependency graph of phase SV0_the_engines_in_cos
+intent: null
+summary: 17 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877682465
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682465
+lastSeenAt: 1792877682465
+fingerprint: null
+payload:
+  for: SV0_the_engines_in_cos
+  kind: phase
+  repo: null
+  hash: e9fa2817468b86b3
+  nodes:
+    - path: cos/services/anonymous/engines/_engine.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/nexus.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/README.md
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-services.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/services/anonymous/engines/auth.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/autodns.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/billing.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/builder.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/cache.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/catalog.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/ddns.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/dns.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/firewall.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/ftp.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/glue.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/services/anonymous/engines/monitor.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-cos-services.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/services/anonymous/engines/auth.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/autodns.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/billing.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/builder.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/cache.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/catalog.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/ddns.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/dns.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/firewall.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/ftp.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/glue.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+    - from: cos/services/anonymous/engines/monitor.js
+      to: cos/services/anonymous/engines/_engine.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+    upstream: []
+    downstream:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+      - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
+      - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+      - docs/2026-10-24-cos-services-phasemap.spec::SV4_the_doors
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): SV1_a_stack_per_root · all downstream 4 · finishing it unlocks
+        SV1_a_stack_per_root
+    edges: []

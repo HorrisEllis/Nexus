@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-15-personal-chat-import-phasemap.spec::PI3b_the_measured_patterns
 context: pipeline phase PI3b_the_measured_patterns of docs/2026-10-15-personal-chat-import-phasemap.spec
 intent: null
-summary: PI3b_the_measured_patterns (?) — 4 file(s)
+summary: PI3b_the_measured_patterns (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677620
+exported_at: 1792877681755
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677620
-lastSeenAt: 1792787677620
+firstSeenAt: 1792877681755
+lastSeenAt: 1792877681755
 fingerprint: null
 payload:
   id: PI3b_the_measured_patterns
@@ -22,10 +22,11 @@ payload:
   files:
     - guardian/userscript-chat-stream.js
     - clear-glass/src/downloads/chat-ledger.js
+    - cos/services/anonymous/engines/dns.js
     - idearium/ui/js/app.js
     - clear-glass/src/mesh/agent-mesh.js
   depends_on:
     - PI3_the_intelligence_pass
   blocks: []
   spec: null
-  graph: 6edf264fc41eb579
+  graph: 37023ed7c3da779e

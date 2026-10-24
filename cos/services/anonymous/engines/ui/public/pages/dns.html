@@ -1,0 +1,32 @@
+<div class="card">
+  <div class="card-title">Zone <span class="mono" id="zone-origin" style="color:var(--dim);font-weight:400"></span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Type</th><th>Value</th><th>TTL</th><th></th></tr></thead>
+      <tbody id="zone-table"></tbody>
+    </table>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Add a record</div>
+  <div class="frow c3">
+    <div><label for="dns-name">Name</label><input id="dns-name" placeholder="@ or www"></div>
+    <div><label for="dns-type">Type</label>
+      <select id="dns-type">
+        <option>A</option><option>AAAA</option><option>CNAME</option><option>MX</option>
+        <option>TXT</option><option>NS</option><option>SRV</option><option>CAA</option>
+      </select></div>
+    <div><label for="dns-ttl">TTL</label><input id="dns-ttl" type="number" value="300"></div>
+  </div>
+  <div class="frow"><label for="dns-val">Value</label><input id="dns-val" placeholder="use @ for this server's public IP"></div>
+  <div class="actions"><button onclick="panel.addDnsRecord()">Add record</button></div>
+</div>
+<div class="card">
+  <div class="card-title">Record templates</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:12px">Write a whole set of records in one step.</p>
+  <div class="actions">
+    <button class="sec" onclick="panel.applyDnsTemplate('mail')">Mail (MX, SPF, DKIM, DMARC)</button>
+    <button class="sec" onclick="panel.applyDnsTemplate('web')">Web (A, www)</button>
+    <button class="sec" onclick="panel.applyDnsTemplate('ns')">Nameserver glue</button>
+  </div>
+</div>

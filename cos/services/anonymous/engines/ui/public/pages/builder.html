@@ -1,0 +1,61 @@
+<div class="card">
+  <div class="card-title">Deploy a project</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:14px">
+    Drop a <code>.zip</code> of your project. It gets inspected, you confirm what
+    should run, and then it is built and put live. Nothing from the archive is
+    executed until you confirm.</p>
+  <div id="drop-zone" tabindex="0" role="button"
+       style="border:2px dashed var(--edge);border-radius:var(--radius);padding:38px 20px;text-align:center;cursor:pointer;transition:border-color .16s,background .16s">
+    <div id="drop-label" style="font-size:14px;font-weight:600">Drop a .zip here, or click to choose</div>
+    <div style="font-size:12px;color:var(--faint);margin-top:6px">Up to 256 MB</div>
+  </div>
+  <input type="file" id="file-input" accept=".zip,application/zip" style="display:none">
+  <div id="upload-progress" style="display:none;margin-top:14px">
+    <div class="bar"><i id="upload-bar"></i></div>
+    <div id="upload-status" style="font-size:12px;color:var(--dim);margin-top:7px"></div>
+  </div>
+</div>
+
+<div class="card" id="detect-card" style="display:none">
+  <div class="card-title">What was detected</div>
+  <div class="grid4" id="detect-stats"></div>
+  <div id="detect-signals" style="font-size:12px;color:var(--dim);margin-bottom:14px"></div>
+  <div id="detect-notes" style="margin-bottom:16px"></div>
+
+  <div class="frow c2">
+    <div><label for="b-domain">Domain</label><input id="b-domain" placeholder="myproject.example.com"></div>
+    <div><label for="b-port">Port</label><input id="b-port" type="number" placeholder="auto"></div>
+  </div>
+  <div class="frow c2">
+    <div><label for="b-install">Install command</label><input id="b-install" placeholder="none"></div>
+    <div><label for="b-build">Build command</label><input id="b-build" placeholder="none"></div>
+  </div>
+  <div class="frow c2">
+    <div><label for="b-start">Start command</label><input id="b-start" placeholder="none — served as files"></div>
+    <div><label for="b-servedir">Serve directory</label><input id="b-servedir" placeholder="."></div>
+  </div>
+  <div class="hint" style="margin-bottom:14px">Every field is a suggestion — change anything that looks wrong.</div>
+  <div class="actions">
+    <button id="b-confirm">Build and deploy</button>
+    <button class="sec" id="b-discard">Discard</button>
+  </div>
+</div>
+
+<div class="card" id="build-card" style="display:none">
+  <div class="card-title">Build output <span id="build-state" class="badge pending" style="margin-left:6px">pending</span></div>
+  <div class="logbox" id="build-log"></div>
+  <div class="actions">
+    <button class="sec" id="b-cancel">Cancel build</button>
+    <a id="b-visit" href="#" target="_blank" rel="noopener" style="display:none"><button>Open site</button></a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Deploy history</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Archive</th><th>Stack</th><th>Domain</th><th>State</th><th>When</th></tr></thead>
+      <tbody id="build-history"></tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+{
+  "name": "anonymousservers-nexus",
+  "version": "0.1.0",
+  "description": "Sovereign self-hosting platform — anonymousservers.info",
+  "main": "nexus.js",
+  "scripts": {
+    "install": "node install.js",
+    "start": "node nexus.js up",
+    "stop": "node nexus.js stop",
+    "status": "node nexus.js status"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {}
+}

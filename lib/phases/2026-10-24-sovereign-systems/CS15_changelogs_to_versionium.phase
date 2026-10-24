@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::CS15_changelogs_to_versionium
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::CS15_changelogs_to_versionium
+context: pipeline phase CS15_changelogs_to_versionium of docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: CS15_changelogs_to_versionium (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682547
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682547
+lastSeenAt: 1792877682547
+fingerprint: null
+payload:
+  id: CS15_changelogs_to_versionium
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - versionium/server.js
+    - lib/release-notes.js
+    - lib/nexus-releases.js
+    - lib/release-version.js
+    - lib/checks/ck-253-versions.js
+    - scripts/release-zip.js
+    - lib/phase-census.js
+    - lib/spec-census.js
+    - lib/context-atlas.js
+    - lib/readme-generate.js
+    - docs/CLAUDE.md
+  depends_on:
+    - CS12_the_mover_is_proven
+    - CS_D13_changelogs_to_versionium
+  blocks: []
+  spec: null
+  graph: 5691c47d7b3feb0f

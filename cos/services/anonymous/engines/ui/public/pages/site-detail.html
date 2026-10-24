@@ -1,0 +1,77 @@
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <div class="mono" id="detail-title" style="font-size:16px;font-weight:600"></div>
+    <div class="actions" style="margin-top:0">
+      <button class="sec sm" id="detail-visit">Visit site</button>
+    </div>
+  </div>
+</div>
+
+<div id="detail-body">
+  <div class="grid4" id="detail-stats"></div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="panel.siteTab(this,'overview')">Overview</div>
+    <div class="tab" onclick="panel.siteTab(this,'config')">Configuration</div>
+    <div class="tab" onclick="panel.siteTab(this,'files')">Files</div>
+    <div class="tab" onclick="panel.siteTab(this,'logs')">Logs</div>
+    <div class="tab" onclick="panel.siteTab(this,'danger')">Danger zone</div>
+  </div>
+
+  <div class="tabpane active" id="stab-overview">
+    <div class="card">
+      <div class="card-title">Vhost record</div>
+      <pre id="detail-config"></pre>
+    </div>
+  </div>
+
+  <div class="tabpane" id="stab-config">
+    <div class="card">
+      <div class="card-title">Settings</div>
+      <div class="frow c2">
+        <div><label for="detail-stack">Stack</label>
+          <select id="detail-stack">
+            <option value="static">Static</option><option value="php">PHP</option>
+            <option value="node">Node.js</option><option value="python">Python WSGI</option>
+            <option value="wordpress">WordPress</option><option value="proxy">Reverse proxy</option>
+          </select></div>
+        <div><label for="detail-proxy-port">Proxy port</label><input id="detail-proxy-port" type="number"></div>
+      </div>
+      <div class="frow c2">
+        <div><label for="detail-index">Index files</label><input id="detail-index"></div>
+        <div><label for="detail-listing">Directory listing</label>
+          <select id="detail-listing"><option value="false">Off</option><option value="true">On</option></select></div>
+      </div>
+      <div class="actions"><button onclick="panel.updateSiteConfig()">Save configuration</button></div>
+      <div class="hint">Changes apply on the next webserver restart.</div>
+    </div>
+  </div>
+
+  <div class="tabpane" id="stab-files">
+    <div class="card">
+      <div class="card-title">Document root</div>
+      <div class="frow c2">
+        <div><label for="detail-fm-path">Path</label><input id="detail-fm-path"></div>
+        <div style="display:flex;align-items:flex-end"><button class="sec" onclick="panel.detailBrowse()">Browse</button></div>
+      </div>
+      <div id="detail-fm"></div>
+    </div>
+  </div>
+
+  <div class="tabpane" id="stab-logs">
+    <div class="card">
+      <div class="card-title">Web server log</div>
+      <div class="logbox" id="detail-log"></div>
+    </div>
+  </div>
+
+  <div class="tabpane" id="stab-danger">
+    <div class="card">
+      <div class="card-title">Delete this site</div>
+      <p style="color:var(--dim);font-size:13px;margin-bottom:14px">
+        Removes the vhost configuration and stops serving this hostname.
+        Files in the document root are left on disk.</p>
+      <div class="actions"><button class="danger" onclick="panel.deleteSite()">Delete site</button></div>
+    </div>
+  </div>
+</div>

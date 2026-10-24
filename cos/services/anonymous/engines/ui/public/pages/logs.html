@@ -1,0 +1,13 @@
+<div class="card">
+  <div class="card-title">Log source</div>
+  <div class="frow c3">
+    <div><label for="log-engine">Engine</label><select id="log-engine" onchange="panel.loadLogs()"></select></div>
+    <div><label for="log-lines">Lines</label>
+      <select id="log-lines" onchange="panel.loadLogs()">
+        <option value="100">100</option><option value="200" selected>200</option>
+        <option value="500">500</option><option value="1000">1000</option>
+      </select></div>
+    <div style="display:flex;align-items:flex-end"><button class="sec" onclick="panel.loadLogs()">Reload</button></div>
+  </div>
+  <div class="logbox" id="logbox"></div>
+</div>

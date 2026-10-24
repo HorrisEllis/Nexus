@@ -1,0 +1,11 @@
+<div class="card">
+  <div class="card-title">WireGuard</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:14px">
+    Installs a WireGuard server on this machine so you can reach your private network
+    from anywhere, without routing through anyone else's infrastructure.</p>
+  <div class="frow c2">
+    <div><label for="vpn-domain">Domain</label><input id="vpn-domain" placeholder="vpn.example.com"></div>
+    <div style="display:flex;align-items:flex-end"><button onclick="panel.installWireguard()">Install WireGuard</button></div>
+  </div>
+  <div id="vpn-install-result" style="margin-top:10px;font-size:13px"></div>
+</div>

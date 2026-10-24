@@ -1,0 +1,62 @@
+<div class="tabs">
+  <div class="tab active" onclick="panel.domTab(this,'list')">Configured</div>
+  <div class="tab" onclick="panel.domTab(this,'search')">Search</div>
+  <div class="tab" onclick="panel.domTab(this,'add')">Add</div>
+  <div class="tab" onclick="panel.domTab(this,'ns')">Nameservers</div>
+</div>
+
+<div class="tabpane active" id="dtab-list">
+  <div class="card">
+    <div class="card-title">Domains on this server</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Domain</th><th>Tenant</th><th>Nameservers</th><th>Added</th><th></th></tr></thead>
+        <tbody id="domain-table"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="tabpane" id="dtab-search">
+  <div class="card">
+    <div class="card-title">Check availability</div>
+    <div class="frow c2">
+      <div><label for="dom-name">Name</label><input id="dom-name" placeholder="mynewsite"></div>
+      <div><label for="dom-tlds">Extensions</label><input id="dom-tlds" value="com,net,org,io,dev"></div>
+    </div>
+    <div class="actions"><button onclick="panel.searchDomains()">Check</button></div>
+    <div id="dom-results" style="margin-top:14px"></div>
+  </div>
+</div>
+
+<div class="tabpane" id="dtab-add">
+  <div class="card">
+    <div class="card-title">Point a domain here</div>
+    <div class="frow c2">
+      <div><label for="add-domain">Domain</label><input id="add-domain" placeholder="example.com"></div>
+      <div><label for="add-tenant">Tenant</label><input id="add-tenant" value="default"></div>
+    </div>
+    <div class="actions"><button onclick="panel.addDomain()">Add domain</button></div>
+    <div id="add-domain-result" style="margin-top:10px;font-size:13px"></div>
+  </div>
+</div>
+
+<div class="tabpane" id="dtab-ns">
+  <div class="card">
+    <div class="card-title">Registrar instructions</div>
+    <div class="frow c2">
+      <div><label for="ns-domain">Domain</label><input id="ns-domain" placeholder="example.com"></div>
+      <div><label for="ns-registrar">Registrar</label>
+        <select id="ns-registrar">
+          <option value="generic">Generic</option><option value="namecheap">Namecheap</option>
+          <option value="godaddy">GoDaddy</option><option value="cloudflare">Cloudflare</option>
+          <option value="porkbun">Porkbun</option>
+        </select></div>
+    </div>
+    <div class="actions">
+      <button class="sec" onclick="panel.getNsInstructions()">Show instructions</button>
+      <button class="sec" onclick="panel.applyNsGlue()">Write NS and SOA records</button>
+    </div>
+    <div id="ns-instructions" style="margin-top:14px"></div>
+  </div>
+</div>

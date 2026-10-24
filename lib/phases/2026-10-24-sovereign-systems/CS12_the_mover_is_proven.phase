@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+context: pipeline phase CS12_the_mover_is_proven of docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: CS12_the_mover_is_proven (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682543
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682543
+lastSeenAt: 1792877682543
+fingerprint: null
+payload:
+  id: CS12_the_mover_is_proven
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/architecture-apply.js
+    - tests/modules/test-architecture-apply.test.js
+    - tests/modules/run-all.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b86ae739bc64e59a

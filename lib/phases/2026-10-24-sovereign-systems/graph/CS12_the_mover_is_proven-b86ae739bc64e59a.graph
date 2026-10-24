@@ -1,0 +1,96 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS12_the_mover_is_proven:b86ae739bc64e59a
+type: graph
+id: phase:CS12_the_mover_is_proven:b86ae739bc64e59a
+context: dependency graph of phase CS12_the_mover_is_proven
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877682543
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682543
+lastSeenAt: 1792877682543
+fingerprint: null
+payload:
+  for: CS12_the_mover_is_proven
+  kind: phase
+  repo: null
+  hash: b86ae739bc64e59a
+  nodes:
+    - path: lib/architecture-apply.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-architecture-apply.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/run-all.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS13_autopilot_to_orchestrator
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS14_cli_inside_nexus
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS15_changelogs_to_versionium
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS16_erosmancer_os
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS17_cockpit_home
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS18_one_copy_of_the_primitives
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV2_core_files_go_home
+    upstream: []
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS13_autopilot_to_orchestrator
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS14_cli_inside_nexus
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS15_changelogs_to_versionium
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS16_erosmancer_os
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS17_cockpit_home
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS18_one_copy_of_the_primitives
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS19_warp_the_system
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS20_spec_compiler_and_ide_to_idearium
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS21_the_registry_at_every_level
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV8_warp_sovereign
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS16_erosmancer_os
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS18_one_copy_of_the_primitives
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV2_core_files_go_home
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (7): CS13_autopilot_to_orchestrator, CS14_cli_inside_nexus,
+        CS15_changelogs_to_versionium, CS16_erosmancer_os, CS17_cockpit_home,
+        CS18_one_copy_of_the_primitives, SV2_core_files_go_home · all downstream 24 · finishing it
+        unlocks CS16_erosmancer_os, CS18_one_copy_of_the_primitives, SV2_core_files_go_home
+    edges: []

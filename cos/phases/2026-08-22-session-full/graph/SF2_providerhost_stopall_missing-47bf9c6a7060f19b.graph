@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF2_providerhost_stopall_missing:47bf9c6a7060f19b
+type: graph
+id: phase:SF2_providerhost_stopall_missing:47bf9c6a7060f19b
+context: dependency graph of phase SF2_providerhost_stopall_missing
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877678859
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877678859
+lastSeenAt: 1792877678859
+fingerprint: null
+payload:
+  for: SF2_providerhost_stopall_missing
+  kind: phase
+  repo: null
+  hash: 47bf9c6a7060f19b
+  nodes:
+    - path: cos/services/anonymous/nexus.js
+      role: changes
+      exists: true
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

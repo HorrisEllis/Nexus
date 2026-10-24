@@ -1,0 +1,186 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS17_cockpit_home:c25c1ab25dabe4e8
+type: graph
+id: phase:CS17_cockpit_home:c25c1ab25dabe4e8
+context: dependency graph of phase CS17_cockpit_home
+intent: null
+summary: 17 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877682566
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682566
+lastSeenAt: 1792877682566
+fingerprint: null
+payload:
+  for: CS17_cockpit_home
+  kind: phase
+  repo: null
+  hash: c25c1ab25dabe4e8
+  nodes:
+    - path: copilot/cli.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/cli/nexus-cli.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/cli-reasoning.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/grammar-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/cli.js
+      to: lib/grammar-engine.js
+      kind: requires
+    - from: copilot/cli.js
+      to: lib/cli-reasoning.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/spec-parser.js
+      kind: requires
+    - from: lib/cli/nexus-cli.js
+      to: copilot/cli.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/nexus-cli.js
+      to: copilot/cli.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D10_cockpit_home
+    dependents: []
+    upstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D10_cockpit_home
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D10_cockpit_home
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-24-sovereign-systems-phasemap.spec::CS20_spec_compiler_and_ide_to_idearium
+        files:
+          - guardian/server.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by CS12_the_mover_is_proven, CS_D10_cockpit_home
+      - 'depends on (2): CS12_the_mover_is_proven, CS_D10_cockpit_home'
+      - 'needed by (0): —'
+      - >-
+        same files as CS20_spec_compiler_and_ide_to_idearium with no order between them:
+        guardian/server.js
+    edges:
+      - from: docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D10_cockpit_home
+        kind: declared
