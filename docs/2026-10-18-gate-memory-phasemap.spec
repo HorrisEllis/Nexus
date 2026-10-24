@@ -125,7 +125,7 @@ spec:
     GM6_crystallized_from_what_was_approved:
       status: OPEN
       depends_on: [GM3_the_fulfilled_contract_index, "FMR10_it_compounds (failure-mode-report: crystals only on a causal path)"]
-      files: [meta/crystal-lattice.js, cortex/core/raid/contract-index.js]
+      files: [lib/meta/crystal-lattice.js, cortex/core/raid/contract-index.js]
       james: '"cystalization memory"'
       does: "An approved, fulfilled contract crystallizes its pattern (a crystal); a rejected one, its failure (a negative crystal, meta/crystal-lattice.js already has them). Only when a causal path joins the pattern to the outcome — never co-occurrence alone. Intuition (rung 3) then reads crystals that were earned."
     GM7_the_context_panel_per_gate:

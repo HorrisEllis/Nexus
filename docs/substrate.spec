@@ -239,7 +239,7 @@ spec:
 
     - id: IF-LATTICE
       name: crystal-lattice-edges
-      path: meta/crystal-lattice.js
+      path: lib/meta/crystal-lattice.js
       description: "lattice_edges — weighted edges between nodes, success up, failure down, decaying."
       exports: ["_edgeKey(from, to)", "lattice update after a compartment resolution"]
       behavioral_contracts: ["weight floor 0.05; decay every 6 h by LATTICE_DECAY_RATE"]

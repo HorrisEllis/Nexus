@@ -308,7 +308,7 @@ function _registerContractQaQc() {
   if (_qaqcRegistered) return;
   _qaqcRegistered = true;
   let realQaQc = null;
-  try { realQaQc = require('../../../meta/adversary-suite').runQAQC; } catch (_) { /* stays null — real checks just won't run */ }
+  try { realQaQc = require('../../../lib/meta/adversary-suite').runQAQC; } catch (_) { /* stays null — real checks just won't run */ }
 
   compartmentEngine._registerExtensions({
     qaqcLayer: async (compartment) => {

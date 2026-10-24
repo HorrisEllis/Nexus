@@ -53,7 +53,7 @@ spec:
 
     self_learning:
       what: "(domain, verb, outcome) pattern crystallization, real success-rate tracking"
-      files: [meta/crystal-lattice.js]
+      files: [lib/meta/crystal-lattice.js]
       proof: "wired to copilot/intuition.js's real consumer this session — inserted a real crystal, got back the exact shape intuition has expected since it was written (precursor/outcome/count/confidence), where it used to silently render undefined/NaN"
       gap: "write side (compartment-engine.execute() -> crystal-lattice) traced to orchestrator's autonomous-loop, which requires a manual API call with hand-supplied params — not confirmed to fire automatically in production"
 

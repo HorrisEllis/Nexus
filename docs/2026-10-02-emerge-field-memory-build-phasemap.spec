@@ -454,7 +454,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic]
-      files: [lib/case-library.js, emergence/components/pattern-engine/, lib/repo-hat-memory.js, meta/crystal-lattice.js]
+      files: [lib/case-library.js, emergence/components/pattern-engine/, lib/repo-hat-memory.js, lib/meta/crystal-lattice.js]
       does: >-
         Every converged build's EndStateFirst trace (the conditions that led there, walked backward) is stored as a
         RECIPE in the case library; a failed chain as an ANTI-RECIPE (crystal-lattice's negative match). The pattern

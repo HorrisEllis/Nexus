@@ -61,7 +61,7 @@ test('ICW-003', 'the organ loop isolates failure, so a broken core cannot take c
 });
 
 test('ICW-004', 'RETIRED: meta/causal-nexus is gone from disk', () => {
-  assert.ok(!fs.existsSync(path.join(ROOT, 'meta/causal-nexus')),
+  assert.ok(!fs.existsSync(path.join(ROOT, 'lib', 'meta', 'causal-nexus')),
     'the tree must be removed — James: "I don\'t want junk"');
 });
 
@@ -92,7 +92,7 @@ test('ICW-006', 'what was worth keeping was HARVESTED first, not deleted with it
 });
 
 test('ICW-007', 'the meta barrel still resolves with the tree gone', () => {
-  assert.doesNotThrow(() => require('../../meta/index.js'));
+  assert.doesNotThrow(() => require('../../lib/meta/index.js'));
 });
 
 console.log(`\n${passed} passed, ${failed} failed`);
