@@ -248,7 +248,7 @@ if (versionBumpedSystems.length) {
   // that exact priority order — a second, disagreeing priority order
   // here would violate §10.1 (one write/read authority).
   const specCandidates = (sys) => [
-    `${require('../lib/nexus-self/systems.js').dirOf(sys)}/spec/${sys}.spec`, `${require('../lib/nexus-self/systems.js').dirOf(sys)}/${sys}.spec`,   // 0.60.237
+    `${require('../lib/nexus-self/systems.js').dirOf(sys)}/spec/${sys}.spec`, `${require('../lib/nexus-self/systems.js').dirOf(sys)}/${sys}.spec`,   // 0.60.241
   ];
   for (const { system, from, to } of versionBumpedSystems) {
     const existing = specCandidates(system).find(p => fs.existsSync(path.join(ROOT, p)));

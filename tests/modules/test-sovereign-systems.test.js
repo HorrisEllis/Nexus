@@ -85,7 +85,7 @@ test('SV-08 the census: which systems are sovereign, and each blocker named (dat
   const SB = require('../../lib/system-boundary.js');
   assert.deepStrictEqual(['cortex/memory/jaa-db.js', 'lib/nexus/nexus-bus.js', 'intelligence/cfr/field.js'].map(SB.blockerOf), ['data', 'primitive', 'capability']);
   const r = SB.sovereignty({ root: REPO });
-  // 0.60.237 RF2: sentinel/ moved into lib/ (the kernel), so it is no system of its own now; components stays sovereign
+  // 0.60.241 RF2: sentinel/ moved into lib/ (the kernel), so it is no system of its own now; components stays sovereign
   assert.ok(r.sovereign.includes('components') && !r.sovereign.includes('sentinel') && !r.sovereign.includes('nexus-healer'), 'nexus-healer and sentinel are no systems of their own now');
   const one = SB.sovereignty({ root: REPO, system: 'versionium' }).systems[0];
   assert.ok(!one.sovereign && one.list && one.list.data.length === one.blockers.data, JSON.stringify(one.blockers));

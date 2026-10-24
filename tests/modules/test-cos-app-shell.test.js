@@ -12,7 +12,7 @@ const FILES = {
   'tools/hello.js': "console.log(JSON.stringify({ argv: process.argv.slice(2), cwd: process.cwd(), data: process.env.NEXUS_DATA_ROOT, np: process.env.NODE_PATH || '' }))",
   'tools/exit3.js': "console.error('bad'); process.exit(3)",
   'tools/tree.js': "const c = require('child_process').spawn(process.execPath, ['-e', 'setInterval(()=>{},1000)'], { stdio: 'ignore' }); console.log('GRANDCHILD ' + c.pid); setInterval(() => {}, 1000)",
-  'nexus/autopilot.js': "setInterval(() => {}, 1000)",   // a 0.60.70 release: the layout before 0.60.237 (COS runs both)
+  'nexus/autopilot.js': "setInterval(() => {}, 1000)",   // a 0.60.70 release: the layout before 0.60.241 (COS runs both)
   'cli/nexus.js': "console.log('nexus cli ' + process.argv.slice(2).join(' '))",
 };
 function install(root, v = '0.60.70') {

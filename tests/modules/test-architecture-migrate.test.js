@@ -44,7 +44,7 @@ const live = AM.propose(AM.read({ root: path.join(__dirname, '../..') }));
 t('AM-02', 'on Nexus: none of the 15 moves; whatever is left is proposed (none, once RF2 has run)', () => {
   const S = require('../../lib/nexus-self/systems.js');
   const fifteen = new Set(S.SYSTEMS.flatMap(s => s.dirs || []).concat(['lib']));
-  // 0.60.237: every folder has moved, so the live proposal may be empty — that is the finished state, not a failure
+  // 0.60.241: every folder has moved, so the live proposal may be empty — that is the finished state, not a failure
   for (const r of live) assert.ok(!fifteen.has(r.dir), `${r.dir} is one of the 15`);
   for (const r of live.filter(x => x.placed)) assert.ok(/^[a-z-]+\/[^/]+\/$/.test(r.homeDir), r.homeDir);
 });
@@ -62,7 +62,7 @@ t('AM-04', 'path loads are uses: static joins resolve, dynamic ones are skipped'
   const fs = require('fs'), os = require('os'); const root = fs.mkdtempSync(path.join(os.tmpdir(), 'am-'));
   fs.mkdirSync(path.join(root, 'guardian'), { recursive: true }); fs.mkdirSync(path.join(root, 'cli'), { recursive: true });
   fs.writeFileSync(path.join(root, 'guardian/server.js'), "const p = path.join(__dirname, '..', 'ui', 'home', 'index.html');\n// path.join(__dirname, '..', 'tablet', 'x.html')\nconst q = path.join(__dirname, '..', someVar, 'x');\n");
-  // a fake tree (temp dir): these paths are test inputs, not Nexus's own — RF2 had rewritten them once (0.60.237), restored
+  // a fake tree (temp dir): these paths are test inputs, not Nexus's own — RF2 had rewritten them once (0.60.241), restored
   const fx = ['cli', 'sentinel.js'].join('/'), fxTarget = ['sentinel', 'interaction-contract.json'].join('/');
   fs.writeFileSync(path.join(root, fx), `const C = path.join(ROOT, '${fxTarget}');\n`);
   const e = AM.pathEdges({ root, files: ['guardian/server.js', fx] }).map(x => `${x.from}>${x.to}`);

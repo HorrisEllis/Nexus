@@ -61,7 +61,7 @@ async function main() {
     assert.strictEqual(b2.match.ref, 'store:tide.blueprint@1.0.0', JSON.stringify(b2.candidates));
     // exact id
     const { session: s3 } = AR.makeSession({ title: 'x' });
-    add(s3, { name: 'auth', id: 'nexus.orchestrator.auth' });   // 0.60.237 RF2: auth/ moved into orchestrator/ (ids follow paths)
+    add(s3, { name: 'auth', id: 'nexus.orchestrator.auth' });   // 0.60.241 RF2: auth/ moved into orchestrator/ (ids follow paths)
     assert.strictEqual(AR.analyse(s3, idx).components[0].match.ref, 'loom:nexus.orchestrator.auth');
     assert.ok(AR.search(idx, 'spec engine').some(r => /spec-engine/.test(r.id)), 'search finds by words');
     assert.deepStrictEqual(AR.search(idx, ''), []);

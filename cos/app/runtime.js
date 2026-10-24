@@ -17,7 +17,7 @@
 const fs = require('fs'), path = require('path'), net = require('net'), http = require('http'), { spawn, execFileSync } = require('child_process');
 
 const MODULE_ID = 'cos.app.runtime';
-// 0.60.237 RF2 — a release's supervisor lives at lib/nexus/autopilot.js from 0.60.237 on, at nexus/autopilot.js before: COS runs any
+// 0.60.241 RF2 — a release's supervisor lives at lib/nexus/autopilot.js from 0.60.241 on, at nexus/autopilot.js before: COS runs any
 // installed release, so it uses the one the release has (an explicit entry still wins)
 const ENTRIES = ['lib/nexus/autopilot.js', 'nexus/autopilot.js'];
 function entryOf(versionDir, entry) { if (entry) return entry; return ENTRIES.find(e => fs.existsSync(path.join(versionDir, e))) || ENTRIES[0]; }

@@ -22,7 +22,7 @@
  */
 
 import { createRequire } from 'module';
-// 0.60.237 RF2 — lib/nexus-self/systems.js movedId: an id from before a folder moved → its id now (server-only module: Idearium's API)
+// 0.60.241 RF2 — lib/nexus-self/systems.js movedId: an id from before a folder moved → its id now (server-only module: Idearium's API)
 const _movedId = (id) => { try { return createRequire(import.meta.url)('../../lib/nexus-self/systems.js').movedId(id); } catch (_) { return null; } };
 
 
@@ -87,7 +87,7 @@ export function lookup(index, ref) {
   if (index.byRef.has(r)) return index.byRef.get(r);
   const bare = r.replace(/^(loom|store):/, '').replace(/@.*$/, '');
   if (index.byId.has(bare)) return index.byId.get(bare);
-  // 0.60.237 RF2 — a component whose file moved has a new id (ids follow paths); an id saved before the move still finds it
+  // 0.60.241 RF2 — a component whose file moved has a new id (ids follow paths); an id saved before the move still finds it
   const now = _movedId(bare);
   return (now && index.byId.get(now)) || null;
 }

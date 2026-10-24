@@ -27,7 +27,7 @@ function run() {
   const src = fs.readFileSync(path.join(__dirname, '../../architect/service.js'), 'utf8');
 
   test('AP-001', 'architect/service.js now requires nexus-connect.js', () => {
-    assert.ok(/require\(['"]\.\.\/lib\/nexus\/nexus-connect['"]\)/.test(src), 'expected a real require of ../lib/nexus/nexus-connect (nexus/ moved into lib/, 0.60.237)');
+    assert.ok(/require\(['"]\.\.\/lib\/nexus\/nexus-connect['"]\)/.test(src), 'expected a real require of ../lib/nexus/nexus-connect (nexus/ moved into lib/, 0.60.241)');
   });
 
   test('AP-002', 'the old hand-rolled duplicate registration call (raw http.request to /api/register) is gone from registerWithOrchestrator', () => {

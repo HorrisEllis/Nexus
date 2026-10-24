@@ -49,7 +49,7 @@ function homeFiles() {
   const idOf = rel => 'nexus.' + rel.replace(/\.js$/, '').split('/').join('.');
   const out = [];
   for (const rel of rels) {
-    const file = `lib/${rel}`;   // 0.60.237 RF2: the URL is /ui/home/…; the file lives in lib/ui/home/…
+    const file = `lib/${rel}`;   // 0.60.241 RF2: the URL is /ui/home/…; the file lives in lib/ui/home/…
     if (!fs.existsSync(path.join(root, file))) throw new Error(`ui-map: lib/ui/home/index.html links /${rel}, which does not exist (${file})`);
     out.push([file, idOf(rel), []]);
   }
