@@ -36,7 +36,7 @@ const FILES = [
   ]],
   // ErosmancerOS runs with Clear Glass (0.39.264): the supervisor spawns the TypeScript server by path.
   // The source scanner reads .js/.cjs/.mjs only, so ErosmancerOS's server enters the registry here.
-  ['erosmancer/erosmancer-os/src/api/server.ts', 'nexus.erosmancer.erosmancer-os.src.api.server', []],
+  ['clear-glass/erosmancer-os/src/api/server.ts', 'nexus.erosmancer.erosmancer-os.src.api.server', []],
   ['clear-glass/src/eros/supervisor.js', I('clear-glass/src/eros/supervisor.js'), ['nexus.erosmancer.erosmancer-os.src.api.server']],
 ];
 

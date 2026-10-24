@@ -4300,33 +4300,33 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 <details>
 <summary>`erosmancer/` · 27 files</summary>
 
-- `erosmancer/erosmancer-os/CHANGELOG.md`
-- `erosmancer/erosmancer-os/MANIFEST.json`
-- `erosmancer/erosmancer-os/README.md`
-- `erosmancer/erosmancer-os/ROADMAP.md`
-- `erosmancer/erosmancer-os/package.json`
-- `erosmancer/erosmancer-os/src/adaptive/index.ts`
-- `erosmancer/erosmancer-os/src/api/server.ts`
-- `erosmancer/erosmancer-os/src/behavior/index.ts`
-- `erosmancer/erosmancer-os/src/bridge/index.ts`
-- `erosmancer/erosmancer-os/src/dispatcher/index.ts`
-- `erosmancer/erosmancer-os/src/hostile/index.ts`
-- `erosmancer/erosmancer-os/src/index.ts`
-- `erosmancer/erosmancer-os/src/observer/index.ts`
-- `erosmancer/erosmancer-os/src/registry/index.ts`
-- `erosmancer/erosmancer-os/src/replay/index.ts`
-- `erosmancer/erosmancer-os/src/routing/index.ts`
-- `erosmancer/erosmancer-os/src/selector/index.ts`
-- `erosmancer/erosmancer-os/src/telemetry/index.ts`
-- `erosmancer/erosmancer-os/src/types/index.ts`
-- `erosmancer/erosmancer-os/tests/adaptive.test.ts`
-- `erosmancer/erosmancer-os/tests/google-signin.test.ts`
-- `erosmancer/erosmancer-os/tests/hostile.test.ts`
-- `erosmancer/erosmancer-os/tests/integration.test.ts`
-- `erosmancer/erosmancer-os/tests/replay.test.ts`
-- `erosmancer/erosmancer-os/tests/suite.ts`
-- `erosmancer/erosmancer-os/tsconfig.json`
-- `erosmancer/spec/erosmancer.spec`
+- `clear-glass/erosmancer-os/CHANGELOG.md`
+- `clear-glass/erosmancer-os/MANIFEST.json`
+- `clear-glass/erosmancer-os/README.md`
+- `clear-glass/erosmancer-os/ROADMAP.md`
+- `clear-glass/erosmancer-os/package.json`
+- `clear-glass/erosmancer-os/src/adaptive/index.ts`
+- `clear-glass/erosmancer-os/src/api/server.ts`
+- `clear-glass/erosmancer-os/src/behavior/index.ts`
+- `clear-glass/erosmancer-os/src/bridge/index.ts`
+- `clear-glass/erosmancer-os/src/dispatcher/index.ts`
+- `clear-glass/erosmancer-os/src/hostile/index.ts`
+- `clear-glass/erosmancer-os/src/index.ts`
+- `clear-glass/erosmancer-os/src/observer/index.ts`
+- `clear-glass/erosmancer-os/src/registry/index.ts`
+- `clear-glass/erosmancer-os/src/replay/index.ts`
+- `clear-glass/erosmancer-os/src/routing/index.ts`
+- `clear-glass/erosmancer-os/src/selector/index.ts`
+- `clear-glass/erosmancer-os/src/telemetry/index.ts`
+- `clear-glass/erosmancer-os/src/types/index.ts`
+- `clear-glass/erosmancer-os/tests/adaptive.test.ts`
+- `clear-glass/erosmancer-os/tests/google-signin.test.ts`
+- `clear-glass/erosmancer-os/tests/hostile.test.ts`
+- `clear-glass/erosmancer-os/tests/integration.test.ts`
+- `clear-glass/erosmancer-os/tests/replay.test.ts`
+- `clear-glass/erosmancer-os/tests/suite.ts`
+- `clear-glass/erosmancer-os/tsconfig.json`
+- `clear-glass/erosmancer-os/spec/erosmancer.spec`
 
 </details>
 
@@ -6403,7 +6403,7 @@ Emerge reads .eg files, a declarative language with a 569-keyword vocabulary: to
 
 #### `erosmancer/`, `cockpit/`, `products/` — adjacent systems and the products
 
-`erosmancer/erosmancer-os/` is ErosmancerOS, a TypeScript browser-automation platform over the Chrome DevTools Protocol for flows userscripts cannot handle (`erosmancer/spec/erosmancer.spec`). `cockpit/cockpit.spec` is the forge IDE's full specification, with its core in `cockpit/core.js`. The healer that used to stand beside them as its own scaffolded system moved into diagnostic in 0.60.136 (`diagnostic/healer/`). `products/` holds what Nexus is turned into for someone else: `products/flight-recorder/` is Flight Recorder, his "its a product?" (2026-10-16), an undo button and flight recorder for AI coding agents, built inside Nexus with a real boundary and carved out at each release (`products/flight-recorder/product.json` names what it must carry; `products/flight-recorder/bin/flight-recorder.js` runs it on any project folder).
+`clear-glass/erosmancer-os/` is ErosmancerOS, a TypeScript browser-automation platform over the Chrome DevTools Protocol for flows userscripts cannot handle (`clear-glass/erosmancer-os/spec/erosmancer.spec`). `cockpit/cockpit.spec` is the forge IDE's full specification, with its core in `cockpit/core.js`. The healer that used to stand beside them as its own scaffolded system moved into diagnostic in 0.60.136 (`diagnostic/healer/`). `products/` holds what Nexus is turned into for someone else: `products/flight-recorder/` is Flight Recorder, his "its a product?" (2026-10-16), an undo button and flight recorder for AI coding agents, built inside Nexus with a real boundary and carved out at each release (`products/flight-recorder/product.json` names what it must carry; `products/flight-recorder/bin/flight-recorder.js` runs it on any project folder).
 
 #### `architecture-spec/` — how a new system is scaffolded
 

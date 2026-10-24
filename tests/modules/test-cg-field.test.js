@@ -180,11 +180,11 @@ Module._load = function (req, ...rest) { return req === 'electron' ? { BrowserWi
   });
 
   await t('ER-01', 'ErosmancerOS /api/input: coordinates, the verbs, the behaviour engine\'s curved path; main wires the driver to it', () => {
-    const srv = fs.readFileSync(path.join(ROOT, 'erosmancer/erosmancer-os/src/api/server.ts'), 'utf8');
+    const srv = fs.readFileSync(path.join(ROOT, 'clear-glass/erosmancer-os/src/api/server.ts'), 'utf8');
     assert.match(srv, /app\.post\("\/api\/input"/);
     assert.match(srv, /curvedPath\(_lastPointer\.get\(tabId\) \?\? null, \{ x, y \}/);
     assert.match(srv, /"move", "click", "double", "right", "scroll", "type"/);
-    const beh = fs.readFileSync(path.join(ROOT, 'erosmancer/erosmancer-os/src/behavior/index.ts'), 'utf8');
+    const beh = fs.readFileSync(path.join(ROOT, 'clear-glass/erosmancer-os/src/behavior/index.ts'), 'utf8');
     assert.match(beh, /export function curvedPath\(/);
     const main = fs.readFileSync(path.join(ROOT, 'clear-glass/src/main/index.js'), 'utf8');
     assert.match(main, /driver\.erosInput = \(\.\.\.a\) => \(_erosInputFn \?/);

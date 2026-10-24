@@ -168,9 +168,9 @@ await test('WB-05', 'Replay: frames listed (the EC10 list); Replay posts the del
 });
 
 await test('WB-06', 'the fake is faithful: the replay list is what erosmancer-os returns (server.ts sends frames: replay.list(); list() summarises every frame)', () => {
-  const srv = fs.readFileSync(path.join(ROOT, 'erosmancer/erosmancer-os/src/api/server.ts'), 'utf8');
+  const srv = fs.readFileSync(path.join(ROOT, 'clear-glass/erosmancer-os/src/api/server.ts'), 'utf8');
   assert.match(srv, /snapshot: replay\.snapshot\(\), frames: replay\.list\(\)/);
-  const rq = fs.readFileSync(path.join(ROOT, 'erosmancer/erosmancer-os/src/replay/index.ts'), 'utf8');
+  const rq = fs.readFileSync(path.join(ROOT, 'clear-glass/erosmancer-os/src/replay/index.ts'), 'utf8');
   assert.match(rq, /list\(\): Array<\{ frameId: string; tabId: string; commands: number; checkpoint: Checkpoint; createdAt: number; replayCount: number; replaying: boolean \}>/);
   assert.deepStrictEqual(errors, [], errors.join('\n'));
 });

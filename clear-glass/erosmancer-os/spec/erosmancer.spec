@@ -70,3 +70,13 @@ spec:
   # "Cannot read properties of undefined (reading 'defaultLevel')". EROS_LOG_LEVEL limits what
   # telemetry prints (Clear Glass uses info). Proven: tests/modules/test-cg-eros-supervisor.js,
   # a real tsx start connected to a real Chromium DevTools port, then stopped.
+
+
+# ADDENDUM 2026-10-24 (0.60.233) — ErosmancerOS lives in Clear Glass
+# James, 2026-10-24: "move erosmancer to either clearglass or guardian" (after "15 systems … all the systems in idearium" and "Archive.":
+# erosmancer/ is not one of Idearium's systems, and Clear Glass starts it, so it could not be archived without breaking that).
+# Moved to Clear Glass, by the evidence: Clear Glass starts it (clear-glass/src/eros/supervisor.js), wires it (clear-glass/wire/nexus-wire.js,
+# _proxyEros), drives its input ('erosmancer' input path) and runs its workbench; Guardian has no use of it (0 files).
+#   erosmancer/erosmancer-os/   → clear-glass/erosmancer-os/        (git mv: history kept; still the npm workspace, now "clear-glass/erosmancer-os")
+#   erosmancer/spec/erosmancer.spec → clear-glass/erosmancer-os/spec/erosmancer.spec (this file)
+# Its data stays in data/erosmancer. Clear Glass's electron-builder config excludes it from the Clear Glass app (files: "!erosmancer-os/**").

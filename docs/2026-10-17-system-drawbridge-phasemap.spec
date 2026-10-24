@@ -489,3 +489,13 @@ James, 2026-10-24: "Archive." — his answer to the coder's "1. Home or archive 
 - **A regression of 0.60.230, found and fixed:** test-cos-compartment-template CT-03/CT-04 used sentinel as the sovereign example; 0.60.230
   made sentinel not a system and the test was not run then (it passed at 0.60.229). The example is now components (of his 15, the one that
   requires nothing in another system). CT-07 fails as it did at 0.60.229 (the ratchet's three crossings).
+
+## ADDENDUM 2026-10-24 (0.60.233) — erosmancer moved into Clear Glass
+James, 2026-10-24: "move erosmancer to either clearglass or guardian"
+- **Which, decided by the evidence (§0.1):** Clear Glass. It starts ErosmancerOS (clear-glass/src/eros/supervisor.js), wires it
+  (clear-glass/wire/nexus-wire.js), drives its input and runs its workbench; no Guardian file uses it.
+- **Moved (git mv):** erosmancer/erosmancer-os → clear-glass/erosmancer-os; erosmancer/spec/erosmancer.spec → clear-glass/erosmancer-os/spec/.
+  Every live path updated (the supervisor, the wire, the macro tool, five tests, two loom maps, the npm workspace and lock, the README,
+  the atlases, the spec registry); history (CHANGELOGs, version lines, older maps) left as written. lib/system-boundary.js FOLDED no longer
+  needs an entry for it. Clear Glass's electron-builder config excludes it from the app.
+- **Left:** sentinel, still parked (its CLI and two tests).

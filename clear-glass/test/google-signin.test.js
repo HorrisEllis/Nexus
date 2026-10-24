@@ -8,7 +8,7 @@
 //   contexts  Firefox-persona profiles: current versions, no "Windows NT 11.0", stale stored ones refreshed, no client hints
 //   proxy     the PAC never sends sign-in through Tor or a collision blackhole; the TLS proxy raw-tunnels sign-in hosts
 //   readers   the semantic-tree reader attaches no debugger on a sign-in page
-// (ErosmancerOS's part: erosmancer/erosmancer-os/tests/google-signin.test.ts.) Fakes only: Electron and Google cannot run here.
+// (ErosmancerOS's part: clear-glass/erosmancer-os/tests/google-signin.test.ts.) Fakes only: Electron and Google cannot run here.
 const assert = require('assert');
 const { EventEmitter } = require('events');
 const fs = require('fs');

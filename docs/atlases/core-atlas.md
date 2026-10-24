@@ -129,7 +129,7 @@ Since 0.39.341 (SY2 — James: "cos needs to be a nested compartment", then "Its
 
 `emerge/` reads .eg files, a declarative language: tokenizer, a parser gated on signal-to-noise, kernel and emitter (`emerge/emerge-kernel.js`), code generation through Ollama for the gaps (`emerge/emerge-codegen-v2.js`), and the spec compiler in `emerge/compiler/` whose T0 to T3 pipeline queries cortex first (`emerge/cortex-query/`). Its specs are `emerge/spec/emerge.spec` and `emerge/SPEC_COMPILER.spec`.
 
-`erosmancer/erosmancer-os/` is ErosmancerOS, a TypeScript engine that drives a browser over the Chrome DevTools Protocol: behavior profiles for human-like input, routing, hostile-page detection, replay and adaptive memory, served on port 7432 by `erosmancer/erosmancer-os/src/api/server.ts`. Since 0.39.264 Clear Glass starts it with itself and connects it to its own DevTools port (`clear-glass/src/eros/supervisor.js`). Its spec is `erosmancer/spec/erosmancer.spec`.
+`clear-glass/erosmancer-os/` is ErosmancerOS, a TypeScript engine that drives a browser over the Chrome DevTools Protocol: behavior profiles for human-like input, routing, hostile-page detection, replay and adaptive memory, served on port 7432 by `clear-glass/erosmancer-os/src/api/server.ts`. Since 0.39.264 Clear Glass starts it with itself and connects it to its own DevTools port (`clear-glass/src/eros/supervisor.js`). Its spec is `clear-glass/erosmancer-os/spec/erosmancer.spec`.
 
 `cockpit/cockpit.spec` is the forge IDE's full specification, with its core in `cockpit/core.js` and its pipeline in `cockpit/pipeline.js`. The healer, once a system scaffolded by loom's generator beside these, moved into diagnostic in 0.60.136 (his call: diagnostic and the healer are one system): `diagnostic/healer/api/index.js`, with its spec in `diagnostic/spec/healer.spec.md`.
 
@@ -903,120 +903,120 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `emergence/vendor/rfr2/liminal/structural.js` (96 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ STRUCTURAL MODULE · modules/structural/index.js · v1.0.0 ║  
   exports MODULE_ID, MODULE_VERSION, MODULE_UUID, StructuralAssumptionModule · requires 2 · required by 0
 
-#### `erosmancer/erosmancer-os/`
+#### `clear-glass/erosmancer-os/`
 
 6 other file(s).
 
-- other: `erosmancer/erosmancer-os/CHANGELOG.md`, `erosmancer/erosmancer-os/MANIFEST.json`, `erosmancer/erosmancer-os/README.md`, `erosmancer/erosmancer-os/ROADMAP.md`, `erosmancer/erosmancer-os/package.json`, `erosmancer/erosmancer-os/tsconfig.json`
+- other: `clear-glass/erosmancer-os/CHANGELOG.md`, `clear-glass/erosmancer-os/MANIFEST.json`, `clear-glass/erosmancer-os/README.md`, `clear-glass/erosmancer-os/ROADMAP.md`, `clear-glass/erosmancer-os/package.json`, `clear-glass/erosmancer-os/tsconfig.json`
 
-#### `erosmancer/erosmancer-os/src/`
+#### `clear-glass/erosmancer-os/src/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/index.ts` (291 lines) — // ============================================================ // ErosmancerOS — Orchestrator v2  
+- `clear-glass/erosmancer-os/src/index.ts` (291 lines) — // ============================================================ // ErosmancerOS — Orchestrator v2  
   exports ErosmancerOS, DEFAULT_CONFIG, BEHAVIOR_DEFAULTS, BehaviorEngine, BEHAVIOR_PROFILES, RoutingEngine +3
 
-#### `erosmancer/erosmancer-os/src/adaptive/`
+#### `clear-glass/erosmancer-os/src/adaptive/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/adaptive/index.ts` (399 lines) — // ============================================================ // ErosmancerOS — Adaptive Layer  
+- `clear-glass/erosmancer-os/src/adaptive/index.ts` (399 lines) — // ============================================================ // ErosmancerOS — Adaptive Layer  
   exports PatternMemory, StrategyOptimizer
 
-#### `erosmancer/erosmancer-os/src/api/`
+#### `clear-glass/erosmancer-os/src/api/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/api/server.ts` (753 lines) — // ============================================================ // ErosmancerOS — API Server v2  
+- `clear-glass/erosmancer-os/src/api/server.ts` (753 lines) — // ============================================================ // ErosmancerOS — API Server v2  
   exports app, server · requires 1 · required by 1
 
-#### `erosmancer/erosmancer-os/src/behavior/`
+#### `clear-glass/erosmancer-os/src/behavior/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/behavior/index.ts` (569 lines) — Box-Muller transform → normal distribution sample  
+- `clear-glass/erosmancer-os/src/behavior/index.ts` (569 lines) — Box-Muller transform → normal distribution sample  
   exports curvedPath, BEHAVIOR_PROFILES, BehaviorEngine
 
-#### `erosmancer/erosmancer-os/src/bridge/`
+#### `clear-glass/erosmancer-os/src/bridge/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/bridge/index.ts` (407 lines) — // ============================================================ // ErosmancerOS — Bridge Core (continued)  
+- `clear-glass/erosmancer-os/src/bridge/index.ts` (407 lines) — // ============================================================ // ErosmancerOS — Bridge Core (continued)  
   exports GOOGLE_SIGNIN_HOST, isGoogleSignin, BridgeCore
 
-#### `erosmancer/erosmancer-os/src/dispatcher/`
+#### `clear-glass/erosmancer-os/src/dispatcher/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/dispatcher/index.ts` (490 lines) — // ============================================================ // ErosmancerOS — Signal Dispatcher  
+- `clear-glass/erosmancer-os/src/dispatcher/index.ts` (490 lines) — // ============================================================ // ErosmancerOS — Signal Dispatcher  
   exports SignalDispatcher
 
-#### `erosmancer/erosmancer-os/src/hostile/`
+#### `clear-glass/erosmancer-os/src/hostile/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/hostile/index.ts` (471 lines) — // ============================================================ // ErosmancerOS — Hostile Detection  
+- `clear-glass/erosmancer-os/src/hostile/index.ts` (471 lines) — // ============================================================ // ErosmancerOS — Hostile Detection  
   exports HostileDetection
 
-#### `erosmancer/erosmancer-os/src/observer/`
+#### `clear-glass/erosmancer-os/src/observer/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/observer/index.ts` (470 lines) — // ============================================================ // ErosmancerOS — DOM Observer  
+- `clear-glass/erosmancer-os/src/observer/index.ts` (470 lines) — // ============================================================ // ErosmancerOS — DOM Observer  
   exports DOMObserver, ShadowDOMMapper
 
-#### `erosmancer/erosmancer-os/src/registry/`
+#### `clear-glass/erosmancer-os/src/registry/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/registry/index.ts` (394 lines) — // ============================================================ // ErosmancerOS — Node Registry  
+- `clear-glass/erosmancer-os/src/registry/index.ts` (394 lines) — // ============================================================ // ErosmancerOS — Node Registry  
   exports NodeRegistry
 
-#### `erosmancer/erosmancer-os/src/replay/`
+#### `clear-glass/erosmancer-os/src/replay/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/replay/index.ts` (355 lines) — // ============================================================ // ErosmancerOS — ScriptReplayQueue  
+- `clear-glass/erosmancer-os/src/replay/index.ts` (355 lines) — // ============================================================ // ErosmancerOS — ScriptReplayQueue  
   exports ScriptReplayQueue · requires 0 · required by 1
 
-#### `erosmancer/erosmancer-os/src/routing/`
+#### `clear-glass/erosmancer-os/src/routing/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/routing/index.ts` (349 lines) — // ============================================================ // ErosmancerOS — Routing Engine  
+- `clear-glass/erosmancer-os/src/routing/index.ts` (349 lines) — // ============================================================ // ErosmancerOS — Routing Engine  
   exports RoutingEngine
 
-#### `erosmancer/erosmancer-os/src/selector/`
+#### `clear-glass/erosmancer-os/src/selector/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/selector/index.ts` (404 lines) — // ============================================================ // ErosmancerOS — Selector Engine  
+- `clear-glass/erosmancer-os/src/selector/index.ts` (404 lines) — // ============================================================ // ErosmancerOS — Selector Engine  
   exports SelectorEngine
 
-#### `erosmancer/erosmancer-os/src/telemetry/`
+#### `clear-glass/erosmancer-os/src/telemetry/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/telemetry/index.ts` (144 lines) — // ============================================================ // ErosmancerOS — Telemetry  
+- `clear-glass/erosmancer-os/src/telemetry/index.ts` (144 lines) — // ============================================================ // ErosmancerOS — Telemetry  
   exports Telemetry
 
-#### `erosmancer/erosmancer-os/src/types/`
+#### `clear-glass/erosmancer-os/src/types/`
 
 1 code file(s).
 
-- `erosmancer/erosmancer-os/src/types/index.ts` (471 lines) — // ============================================================ // ErosmancerOS — Core Types  
+- `clear-glass/erosmancer-os/src/types/index.ts` (471 lines) — // ============================================================ // ErosmancerOS — Core Types  
   exports NodeSchema, TabSchema, DEFAULT_CONFIG, BEHAVIOR_DEFAULTS
 
-#### `erosmancer/erosmancer-os/tests/`
+#### `clear-glass/erosmancer-os/tests/`
 
 6 test file(s).
 
 
-#### `erosmancer/spec/`
+#### `clear-glass/erosmancer-os/spec/`
 
 1 other file(s).
 
-- other: `erosmancer/spec/erosmancer.spec`
+- other: `clear-glass/erosmancer-os/spec/erosmancer.spec`
 
 #### `hooks/`
 

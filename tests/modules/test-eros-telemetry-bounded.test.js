@@ -27,7 +27,7 @@ const lines = (p) => fs.existsSync(p) ? fs.readFileSync(p, 'utf8').split('\n').f
     process.env.EROS_LOG_LEVEL = 'error';   // keep the console quiet
     // the real source, loaded as an ES module (erosmancer-os has no "type": "module"; its type import is erased)
     const mts = path.join(dir, 'telemetry.mts');
-    fs.writeFileSync(mts, fs.readFileSync(path.join(ROOT, 'erosmancer/erosmancer-os/src/telemetry/index.ts'), 'utf8'));
+    fs.writeFileSync(mts, fs.readFileSync(path.join(ROOT, 'clear-glass/erosmancer-os/src/telemetry/index.ts'), 'utf8'));
     const { Telemetry } = await import(mts);
     const p = path.join(dir, 'telemetry.jsonl');
     const t = new Telemetry({ persistPath: p, maxEvents: 1000, flushIntervalMs: 60000 });

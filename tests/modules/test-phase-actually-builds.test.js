@@ -109,7 +109,7 @@ function tmp(files) {
     const broken = r.brokenRelative.map(b => b.file);
     assert.ok(!broken.includes('cli/run-supervised.js'), 'cli/run-supervised.js resolves');
     assert.ok(!broken.some(f => f.startsWith('erosmancer/')), 'no erosmancer broken import');
-    assert.ok(fs.existsSync(path.join(ROOT, 'erosmancer/erosmancer-os/tests/_archive/run.js')), 'kept (§0.3)');
+    assert.ok(fs.existsSync(path.join(ROOT, 'clear-glass/erosmancer-os/tests/_archive/run.js')), 'kept (§0.3)');
     // what is left: test suites of modules that are gone — already crashing in run-all; his call, listed in the map
     const left = new Set(broken);
     for (const f of left) assert.ok(/^tests\//.test(f), `only tests are left: ${f}`);

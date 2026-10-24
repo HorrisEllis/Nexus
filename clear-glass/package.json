@@ -24,6 +24,7 @@
   "build": {
     "appId": "world.rheon.clear-glass",
     "productName": "Clear Glass",
+    "files": ["**/*", "!erosmancer-os/**"],
     "directories": {
       "output": "dist"
     },

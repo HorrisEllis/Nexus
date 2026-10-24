@@ -12,7 +12,7 @@
  *
  *   start()   if something already answers on EROS_PORT, it is used as is
  *             (a hand-started ErosmancerOS keeps working). Otherwise
- *             erosmancer/erosmancer-os/src/api/server.ts is started with tsx
+ *             clear-glass/erosmancer-os/src/api/server.ts is started with tsx
  *             (a root devDependency through the erosmancer-os workspace — no
  *             build step), and start() resolves once /api/health answers.
  *   crash     restarted with backoff (1s, 2s, 4s … 30s); five crashes inside
@@ -33,7 +33,7 @@ const http = require('http');
 const { spawn, spawnSync } = require('child_process');
 
 const NEXUS_ROOT = path.resolve(__dirname, '..', '..', '..');
-const EROS_DIR = path.join(NEXUS_ROOT, 'erosmancer', 'erosmancer-os');
+const EROS_DIR = path.join(NEXUS_ROOT, 'clear-glass', 'erosmancer-os')   // 0.60.233 moved into Clear Glass (James: "move erosmancer to either clearglass or guardian");
 const SERVER_TS = path.join(EROS_DIR, 'src', 'api', 'server.ts');
 
 function _health(port, timeoutMs = 1500) {

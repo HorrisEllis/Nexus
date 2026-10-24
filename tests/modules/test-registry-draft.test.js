@@ -90,7 +90,8 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
 
   await test('RD-05', "his 2026-10-24 \"Aren't systems\": the eight are folded into their home or parked, never listed, never drafted", () => {
     const SB = require(path.join(ROOT, 'lib/system-boundary.js'));
-    assert.deepStrictEqual(Object.keys(SB.FOLDED).sort(), ['auth', 'erosmancer', 'jaa', 'mesh', 'sentinel', 'siso'], 'remote-desktop and security were archived (0.60.232)');
+    assert.deepStrictEqual(Object.keys(SB.FOLDED).sort(), ['auth', 'jaa', 'mesh', 'sentinel', 'siso'], 'remote-desktop and security archived (0.60.232); erosmancer moved into clear-glass (0.60.233)');
+    assert.ok(!fs.existsSync(path.join(ROOT, 'erosmancer')) && fs.existsSync(path.join(ROOT, 'clear-glass/erosmancer-os/src/api/server.ts')), 'ErosmancerOS lives in Clear Glass');
     const sys = SB.systems(ROOT);
     for (const f of Object.keys(SB.FOLDED)) assert.ok(!sys.includes(f), `${f} is not a system`);   // the parts stay in the scan (crossings into hooks/ are real edges); they leave only the sovereignty list
     const scan = SB.scan({ root: ROOT });

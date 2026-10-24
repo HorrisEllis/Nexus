@@ -34,9 +34,9 @@ const FILES = [
     I('lib/economy/gate.js'), I('lib/economy/ledger.js'), I('lib/economy/store.js'), I('lib/economy/tokens.js'),
   ]],
   ['idearium/ui/settings.html', I('idearium/ui/settings.html'), [I('idearium/api/index.js')]],   // HTTP /api/economy*
-  ['erosmancer/erosmancer-os/src/replay/index.ts', I('erosmancer/erosmancer-os/src/replay/index.ts'), []],
-  ['erosmancer/erosmancer-os/src/api/server.ts', I('erosmancer/erosmancer-os/src/api/server.ts'), [
-    I('erosmancer/erosmancer-os/src/replay/index.ts'),         // import { ScriptReplayQueue } — snapshot(), list() (EC10)
+  ['clear-glass/erosmancer-os/src/replay/index.ts', I('clear-glass/erosmancer-os/src/replay/index.ts'), []],
+  ['clear-glass/erosmancer-os/src/api/server.ts', I('clear-glass/erosmancer-os/src/api/server.ts'), [
+    I('clear-glass/erosmancer-os/src/replay/index.ts'),         // import { ScriptReplayQueue } — snapshot(), list() (EC10)
   ]],
 ];
 
@@ -63,7 +63,7 @@ const CONSUMERS = [
   [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.161 autofill.gig -> /cli/autofill/gig/autofill (_gigAutofill)'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig.js'), '_gigAutofill/_gigFill/_gigDraft: write and fill a Fiverr gig'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/store.js'), '0.60.161 GA1a getLastGig/setLastGig: the panel and the co-pilot fill the same gig'],
-  [I('clear-glass/src/main/index.js'), I('erosmancer/erosmancer-os/src/api/server.ts'), '_proxyEros: /eros/* → /api/*'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/erosmancer-os/src/api/server.ts'), '_proxyEros: /eros/* → /api/*'],
 ];
 
 function mapEconomy(driver) {
