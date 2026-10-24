@@ -160,3 +160,11 @@ phases:
 order: >-
   CN0 first (the rule in force, no moves). Then CN1–CN10 each independent (one folder each, its own commit, reversible), gated by CN0.
   CN11 last (the record, after every move). emerge (CN5) waits on his CN_D3 choice. Nothing moves until he okays this map.
+
+## ADDENDUM 2026-10-24 (BC_D1) — emerge home decided: a system, warp folded in
+James, 2026-10-24: "okay warp and emerge." (confirmed, answering the brave-cori reconciliation — docs/2026-10-24-brave-cori-reconciliation.spec BC_D1).
+CN_D3 above was OPEN (the coder recommended lib/emerge; James proposed idearium/emerge). It is now DECIDED, and neither reading won: emerge is its
+OWN SYSTEM with warp folded into it (docs/2026-10-24-emerge-warp-system-phasemap.spec, ported from the brave-cori line). This SUPERSEDES CN5 (emerge
+→ lib/emerge) and the RF2 plan's "emerge, warp → core" (lib/version.js 0.60.235 line); both are kept (§0.3). Consequences: emerge comes off the
+archive/core list; RF2's remaining "12 folders into lib" must EXCLUDE emerge and warp; warp is no longer CN1 (warp → lib/warp) but folds into emerge
+(EW1). The build of this lands through the reconciliation's BCR3, not CN5.

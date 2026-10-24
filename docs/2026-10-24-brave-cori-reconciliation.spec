@@ -37,21 +37,20 @@ read:
 
 decisions:
   BC_D1_emerge_home:
-    status: OPEN — his call (USER_AUTONOMY); the two lines diverge here
+    status: DECIDED 2026-10-24 by James — "A system, warp folded in"
     asked: "emerge: a top-level SYSTEM with warp folded in (brave-cori, his 'okay warp and emerge'), or folded into core/lib (main's RF2 plan, 'emerge, warp → core', not yet applied in batch 1)?"
     chosen: >-
-      To confirm. Main's consolidation left CN_D3 (emerge home) OPEN; brave-cori ANSWERED it on his word — "okay warp and emerge" =
-      emerge is its own system, warp folded into it. The coder reads his brave-cori quote as the later, explicit decision, so it
-      supersedes the RF2 plan to send emerge to core (§0.3, by a dated addendum, both kept). His to confirm, because RF2 is also his.
+      emerge is its own system, warp folded into it. His brave-cori call "okay warp and emerge", confirmed here, is the later explicit
+      decision: it answers main's still-OPEN CN_D3 and SUPERSEDES the RF2 plan to send emerge to core (§0.3, by a dated addendum on the
+      consolidation map, both kept). emerge comes off the archive/core list; RF2's remaining "12 folders into lib" must exclude emerge and warp.
   BC_D2_cos_compartments:
-    status: OPEN — his call (direction)
+    status: DECIDED 2026-10-24 by James — "Yes — layer it on RF2"
     asked: "adopt brave-cori's COS-compartment + kernel-port model on main (systems reach each other only through ports; each in a COS compartment), on top of RF2's placement?"
     chosen: >-
-      To confirm. The coder's reading: yes — RF2 placed the folders (done, in main) and brave-cori's ports + COS compartments are the
-      NEXT layer his quotes ask for ("get every system in a cos compartment"). They compose: RF2 is where the code lives, the ports
-      are how it is reached. But it is a real architectural direction and a cost, so it is his to set, not the coder's by the axioms.
+      Yes. RF2 placed the folders (done, in main); brave-cori's kernel ports + COS compartments are the next layer — a system reaches
+      another only through its port, each in a COS compartment. They compose: RF2 is where the code lives, the ports are how it is reached.
   BC_D3_how_to_bring_it_in:
-    status: OPEN — the coder recommends port, not force-merge
+    status: DECIDED 2026-10-24 by James — "Port it phase-by-phase"
     chosen: >-
       Do NOT merge #161 as-is: it is dirty, 51 behind, and its fold commits re-do RF2 and collide on paths and versions. Instead PORT
       its unique work onto a fresh branch off current main, phase by phase (cos/services, the kernel ports, the 5 specs, the 6 tests,
@@ -60,12 +59,12 @@ decisions:
 
 phases:
   BCR0_the_decisions:
-    status: OPEN
+    status: DONE 0.60.241
     layer: library
     depends_on: []
     files: [docs/2026-10-24-brave-cori-reconciliation.spec]
     does: "his three calls above (emerge home, COS direction, how to bring it in) answered before anything is ported."
-    proof: "BC_D1–BC_D3 marked DECIDED with his words"
+    proof: "BC_D1 (emerge a system, warp folded) · BC_D2 (adopt COS + kernel-port, layered on RF2) · BC_D3 (port phase-by-phase) all DECIDED 2026-10-24 with his words"
 
   BCR1_cos_services:
     status: OPEN
@@ -84,12 +83,16 @@ phases:
     proof: "the ports load; a system's cross-calls go through its port; the 6 brave-cori tests green; the ratchet shows the ports, not raw crossings"
 
   BCR3_emerge_and_loom_decisions:
-    status: OPEN
+    status: PARTLY 0.60.241 — the decisions and maps are ON main; the builds (EW/LM/GD phases) remain
     layer: integration
     depends_on: [BCR0_the_decisions, BC_D1_emerge_home]
-    files: [docs/2026-10-24-emerge-warp-system-phasemap.spec, docs/2026-10-24-loom-into-cos-phasemap.spec, docs/2026-10-24-guardian-into-cos-phasemap.spec]
-    does: "bring his recorded decisions in as addenda on main's consolidation/placement maps (emerge a system with warp folded; loom and guardian into COS), superseding the RF2 plan where they diverge (§0.3, both kept)."
-    proof: "main's CN_D3 closed by his emerge decision; the three COS phasemaps registered in SPEC-REGISTRY"
+    files: [docs/2026-10-24-emerge-warp-system-phasemap.spec, docs/2026-10-24-loom-into-cos-phasemap.spec, docs/2026-10-24-guardian-into-cos-phasemap.spec, docs/2026-10-24-system-consolidation-phasemap.spec]
+    does: >-
+      DONE 0.60.241: the three COS/emerge phasemaps ported verbatim from brave-cori (§0.3, his record unchanged), and the emerge
+      decision recorded as an addendum on the consolidation map (BC_D1 closes CN_D3, supersedes the RF2 emerge→core plan, both kept).
+      REMAINS: the actual builds those maps describe (emerge-as-system with warp folded; loom and guardian into COS) land through
+      their own phases, after BCR2 (the ports they stand on). Their version numbers inside are brave-cori's; re-numbered when built on main.
+    proof: "the three phasemaps on main; the consolidation map's CN_D1 addendum; next the EW/LM/GD phases build against them"
 
   BCR4_close_or_archive_161:
     status: OPEN
