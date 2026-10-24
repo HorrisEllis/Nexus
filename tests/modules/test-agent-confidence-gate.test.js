@@ -116,6 +116,38 @@ test('E2', 'a genuine unknown (no confidence, no snr) reads below threshold and 
   assert.ok(order.length > 0, 'the ladder ran for an unknown');
 });
 
+// ── G: CG2 — the gate on repo-agent.dispatch (the pre-send confidence read) ───
+// repo-agent._preDispatchConfidence turns the context dispatch already gathered
+// into a confidence read, so a well-grounded request proceeds and a thin one
+// runs the ladder. Pure, so tested without a dispatch.
+const RA = require('../../lib/repo-agent.js');
+
+test('G1', 'rich context (worksurface + deps graph + memory) reads at or above 75% — proceeds', () => {
+  const c = RA._preDispatchConfidence({ chunks: [1, 2, 3], chars: 1200, graph: {}, memoryHits: 4 });
+  assert.ok(c >= 0.75, `rich context should clear the floor, got ${c}`);
+});
+
+test('G2', 'no context reads below 75% — the ladder runs and James is asked last', async () => {
+  const c = RA._preDispatchConfidence(null);
+  assert.ok(c < 0.75, `empty context must be below the floor, got ${c}`);
+  // feed that read into the gate with reused-context rungs + a prereqs asker
+  const order = [];
+  const r = await gate({ confidence: c, message: 'x' }, {
+    buildWorksurface: async (_i, st) => { order.push('worksurface'); return { context: null, confidence: st.confidence }; },
+    compileDeps:      async (_i, st) => { order.push('dependencies'); return { context: null, confidence: st.confidence }; },
+    findContext:      async (_i, st) => { order.push('context'); return { context: null, confidence: st.confidence }; },
+    askUser:          async () => { order.push('ask-user'); return { answered: false, context: 'recorded prereq question(s) for James' }; },
+  });
+  assert.deepStrictEqual(order, ['worksurface', 'dependencies', 'context', 'ask-user']);
+  assert.strictEqual(r.asked, true, 'James is asked last when context stays thin');
+  assert.strictEqual(r.context.user, 'recorded prereq question(s) for James');
+});
+
+test('G3', 'a caller-supplied confidence or an SNR result overrides the context estimate', () => {
+  assert.strictEqual(RA._preDispatchConfidence(null, { caller: 0.95 }), 0.95);
+  assert.strictEqual(RA._preDispatchConfidence(null, { snr: { type: 'invariant', snr: 1 } }), 1);
+});
+
 async function run() {
   for (const { id, desc, fn } of reg) {
     try { await fn(); console.log(`  ✓ ${id} ${desc}`); passed++; }

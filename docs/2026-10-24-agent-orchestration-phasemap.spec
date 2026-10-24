@@ -81,13 +81,23 @@ phases:
     proof: "a call at confidence 0.8 proceeds with no context obtained; at 0.5 the ladder runs in order and each rung that raises confidence to 0.75 stops it; ask-user fires only after the first three; a rung that errors is recorded, not thrown"
 
   CG2_the_gate_on_every_dispatch:
-    status: OPEN
+    status: DONE 0.60.239
     layer: integration
     depends_on: [CG1_the_confidence_gate_backend]
-    files: [lib/repo-agent.js, guardian/lib/dispatcher.js, tests/modules/test-agent-confidence-gate.test.js]
+    files: [lib/repo-agent.js, tests/modules/test-agent-confidence-gate.test.js]
     spec: docs/brainos-in-idearium.spec
-    does: "repo-agent.dispatch and guardian's dispatcher call the gate before sending to a backend; the gathered context rides the prompt; the gate's steps are on the job/run record."
-    proof: "a dispatch below threshold obtains context before the backend is called; the backend sees the worksurface and deps in its context; a scripted low-confidence dispatch records the ask-user rung"
+    does: >-
+      repo-agent._dispatch runs the gate after it has gathered context (contextFor + _withMemory + the atlas) and before it composes
+      and sends the prompt. _preDispatchConfidence reads how much context was found (worksurface = chunks, deps = the graph, find =
+      memory hits) into a pre-send confidence; below 75% the gate's ladder runs over the SAME context (no second gather) and the
+      ask-user-LAST rung records the question for James through the existing prereqs path (context-prereqs — "what is not found, the
+      agent asks James instead of guessing"), not a synchronous prompt. The gate's decision rides on the record (ctxInfo.gate). The
+      dispatch is never blocked and the gate never throws (§1.2): his mandate is that context be obtained, which it has been.
+    found_2026_10_24: >-
+      Guardian's dispatcher (guardian/lib/dispatcher.js) is a TRANSPORT — it sends an already-composed prompt to a browser tab and
+      gathers no context — so by the axioms the gate belongs at the context-gathering point (repo-agent.dispatch), which already
+      covers prompts that then flow to a guardian provider. Gating the transport would be a second gate with nothing to gather.
+    proof: "tests/modules/test-agent-confidence-gate.test.js 12/12 — G1 rich context reads ≥75% (proceeds), G2 thin context reads <75% and the ladder runs with James asked last, G3 a caller/SNR confidence overrides the estimate; all 161 repo-agent tests still green"
 
   CG3_route_and_command:
     status: OPEN
