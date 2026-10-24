@@ -1033,7 +1033,7 @@ New entries go at the top: date, his words, context, what it shows, evidence.
     `test-processes` and `test-processes-ui`. The screens are driven in Clear Glass;
   - docs/2026-10-23-site-profile-processes-phasemap.spec SP1–SP6.
 
-### 2026-10-24 — 0.60.225, 0.60.226, 0.60.230, 0.60.231: an autofill that asks once, and remembers per site
+### 2026-10-24 — 0.60.225, 0.60.226, 0.60.230–0.60.232: an autofill that asks once, and remembers per site
 - **His words:** 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for him. saves to
   per site settings, and as a macro or automation and updates the autofill." · 2026-10-23: "make sure it works for these" (micro1,
   Mercor, Turing, RemoExperts…) · "then the phases with the per site settings." · 2026-10-24: "ja3".
@@ -1045,10 +1045,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   checked: a pick must name exactly one field on the page, or it is refused with the reason. A miss is reported, not hidden. One
   instruction from him spans the matcher, the store, the picker and the agents' tools.
 - **Checkable:**
-  - `CHANGELOG-0.60.225.md`, `CHANGELOG-0.60.226.md`, `CHANGELOG-0.60.230.md`, `CHANGELOG-0.60.231.md`;
+  - `CHANGELOG-0.60.225.md`, `CHANGELOG-0.60.226.md`, `CHANGELOG-0.60.230.md`, `CHANGELOG-0.60.231.md`, `CHANGELOG-0.60.232.md`;
   - `tests/modules/test-autofill-learned.test.js` (4), `test-autofill-learn-save.test.js` (3), `test-autofill-learn-pick.test.js` (5),
-    `test-autofill-learn-ui.test.js` (3, the screen driven in Clear Glass: Pick, the learned list, Forget);
-  - `docs/2026-10-19-gig-autofill-and-learn-phasemap.spec` JA1–JA4.
+    `test-autofill-learn-ui.test.js` (3, the screen driven in Clear Glass: Pick, the learned list, Forget),
+    `test-autofill-learn-macro.test.js` (5, the pick as a macro; one on a real page with the real dom mesh and selector-check);
+  - `docs/2026-10-19-gig-autofill-and-learn-phasemap.spec` JA1–JA5.
+  - His one sentence of 2026-10-19 named three homes for a pick: per-site settings, a macro or automation, and the autofill. All
+    three are built (JA2, JA5, JA1), each by reusing what Nexus had.
 
   Every learned field can be seen and undone on screen (Forget), so a wrong pick costs one click.
 

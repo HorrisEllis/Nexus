@@ -123,6 +123,20 @@ spec:
       does: "The Autofill panel: after a fill or a preview, the unplaced fields each get a 'Pick' (IPC autofill:pick); the learned fields per site are listed with a Forget (§0.3 reversible). Backend first: learn-pick.js listLearned / forgetLearned over the store's own listOrigins / deleteKey; GET|DELETE /cli/autofill/learned; rows `autofill learned|forget`; co-pilot tools autofill.learned / autofill.forget."
       proof: "pure: listLearned across origins (only autofill.field.* keys), forgetLearned removes one and leaves the site's other settings; in Clear Glass (glass.js) the Settings › Autofill page: a Fill with an unplaced github shows a Pick that calls autofill:pick and reports the save; the learned pane lists a real store's entries and Forget removes one"
 
+    JA5_the_pick_is_also_a_macro:
+      status: DONE (0.60.232)
+      depends_on: [JA4_the_learn_loop_ui, GA0b_where_a_pick_is_kept]
+      files: [clear-glass/src/autofill/learn-pick.js, clear-glass/src/ipc/bridge.js, clear-glass/renderer/settings/sections/autofill.js]
+      does: >-
+        His 2026-10-19 "saves to per site settings, and as a macro or automation" — the third home GA0b decided. At the pick, the box is
+        also given a CSS selector by renderer/selector-check.js (key 'input': exactly one match, the editable box picked), kept per-site as
+        autofill.selector.<fieldKey>. From a site's learned fields the macro "autofill <host>" is (re)built: urlPattern <origin>/*, one
+        `type` step per field with a selector ({{param}} text — the profile's values are never stored in the macro, they are given at run),
+        saved through macro.js's own create (delete + create: it refuses a duplicate name; the old row is kept as history, §0.3), and exported
+        as a .macro node into the automation nodes folder (macro.js export) — so it is an automation too. A field with no stable selector is
+        left out of the macro and said; Forget rebuilds the macro without it (and removes it when nothing is left).
+      proof: "pure: macroFor builds steps/params/urlPattern from learned + selectors and lists the fields left out; saveMacro replaces an existing macro and exports the node; pickAndLearn with a fake tab saves the selector and the macro; Forget rebuilds it; on screen the Pick says the macro"
+
   build_order: "GA1 + GA1a first (the 'yes', makes 'fill this in for me' work); then GA2 → GA3 → GA4 (the picker-learn loop); GA5 last (surfaces it)."
   verification_here: "No real Fiverr page or browser in this container: every phase is proven with a fake dom bridge, fake page fields and a fake picker in Clear-Glass-driven tests; the real fill is his machine's (said, not faked)."
 
@@ -191,3 +205,21 @@ learned fields per site with a Forget).
 - **Proof:** tests/modules/test-autofill-learn-ui.test.js JA4 3/3, the screen driven in Clear Glass (glass.js) over the real learn-pick.js
   and a real per-origin store (the pick's tab is a fake one; no live page here).
 - **Still open:** the macro home of his "as a macro or automation" (to confirm with him); a real fill on a live listing (his login).
+
+## ADDENDUM 2026-10-24 (JA5, 0.60.232) — the pick is also a macro and an automation node
+James, 2026-10-24: "merge and push. yes make the macro too." — his answer to the coder's question after JA4: his 2026-10-19 words also
+say the pick saves "as a macro or automation"; JA3/JA4 saved it only to per-site settings (read "to confirm" in the JA3 addendum).
+This closes that reading: GA0b's third home is built for the general autofill. "merge and push" was done first: PR #152 (JA3+JA4) merged
+to main at e05a5ed8; the branch was restarted from main for this phase.
+- **Built:** learn-pick.js selectorScript / macroFor / saveMacro / macroName; resolveScript returns the box's own xpath (a label click
+  resolves to its box); pickAndLearn keeps autofill.selector.<fieldKey> and saves the macro; forgetLearned drops the selector; bridge
+  _autofillMacroDoor (macroTool + automation NODES_DIR) and _autofillForget (forget, then rebuild the macro); the Pick message and the
+  learned list say the macro. Loom: economy-map edges learn-pick → selector-check, bridge → macro.js and automation-engine.
+- **Decided by his axioms:** §8.6 reuse — selector-check.js gives the selector (key 'input'), macro.js stores and validates the macro,
+  its export writes the .macro node (the automation form); no new store. §0.3 — a macro is replaced by delete + create, which keeps
+  the old row as history. §4.3 (cybersecurity-grade privacy) — the profile's values never enter the macro; each step types a {{param}}
+  given at run. §1.2 — a field with no stable selector is still learned and is said to be left out of the macro.
+- **Proof:** tests/modules/test-autofill-learn-macro.test.js JA5 5/5 — including a REAL page in Clear Glass (glass.js) with the real dom
+  mesh and selector-check.js, and the real macro.js create validation; test-autofill-learn-ui.test.js JA4 3/3 now checks the macro on
+  screen.
+- **Open:** a real fill on a live listing (his login, his machine).

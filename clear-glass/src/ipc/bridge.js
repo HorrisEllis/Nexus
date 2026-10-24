@@ -631,9 +631,8 @@ class IpcBridge {
       if (!this.siteSettings) return res.status(503).json({ error: 'siteSettings unavailable' });
       res.json({ ok: true, learned: require('../autofill/learn-pick.js').listLearned(this.siteSettings, req.query?.url || null) });
     });
-    const forget = (req, res) => {   // DELETE /cli/autofill/learned?url&fieldKey, and POST /cli/autofill/forget {url, fieldKey} (the co-pilot's door)
-      const r = require('../autofill/learn-pick.js').forgetLearned(this.siteSettings, req.query?.url || req.body?.url, req.query?.fieldKey || req.body?.fieldKey);
-      if (r.ok) { try { this.postEvent?.('autofill.forgotten', { origin: r.origin, fieldKey: r.fieldKey, ts: Date.now() }); } catch (_) {} }
+    const forget = async (req, res) => {   // DELETE /cli/autofill/learned?url&fieldKey, and POST /cli/autofill/forget {url, fieldKey} (the co-pilot's door)
+      const r = await this._autofillForget(req.query?.url || req.body?.url, req.query?.fieldKey || req.body?.fieldKey);
       res.status(r.ok ? 200 : (this.siteSettings ? 404 : 503)).json(r);
     };
     this.app.delete('/cli/autofill/learned', forget);
@@ -1662,11 +1661,7 @@ class IpcBridge {
     });
     // §JA4 0.60.231 — the panel's "Fields it learned" list and its Forget
     ipcMain.handle('autofill:learned', async (e, { url = null } = {}) => ({ ok: true, learned: require('../autofill/learn-pick.js').listLearned(this.siteSettings, url) }));
-    ipcMain.handle('autofill:forget', async (e, { url, fieldKey } = {}) => {
-      const r = require('../autofill/learn-pick.js').forgetLearned(this.siteSettings, url, fieldKey);
-      if (r.ok) { try { this.postEvent?.('autofill.forgotten', { origin: r.origin, fieldKey: r.fieldKey, ts: Date.now() }); } catch (_) {} }
-      return r;
-    });
+    ipcMain.handle('autofill:forget', async (e, { url, fieldKey } = {}) => this._autofillForget(url, fieldKey));
     ipcMain.handle('autofill:fill', async (e, { agentId = 'default', profileId, minConfidence = 'medium', vars } = {}) => {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
       return _autofillFill(this.dom, this.autofillStore, { agentId, profileId, minConfidence, vars, learned: this._learnedFields(agentId) });
@@ -2087,8 +2082,23 @@ class IpcBridge {
   async _autofillPick({ agentId = 'default', fieldType, profileId = null, label = null, fill = true, minConfidence = 'medium' } = {}) {
     let wc = null; try { wc = this.dom && this.dom._getWebContents(agentId); } catch (_) {}
     const r = await require('../autofill/learn-pick.js').pickAndLearn({ wc, dom: this.dom, autofillStore: this.autofillStore, siteSettings: this.siteSettings,
-      fieldType, agentId, profileId, label, fill: fill !== false, minConfidence });
+      fieldType, agentId, profileId, label, fill: fill !== false, minConfidence, ...this._autofillMacroDoor() });
     if (r.ok) { try { this.postEvent?.('autofill.learned', { origin: r.origin, fieldKey: r.fieldKey, fieldType: r.fieldType, by: 'picker', ts: Date.now() }); } catch (_) {} }
+    return r;
+  }
+  // §JA5 0.60.232 — the pick's macro home: macro.js (the same tool every macro door uses) and the automation nodes folder its .macro goes in
+  _autofillMacroDoor() {
+    let nodesDir = null; try { nodesDir = require('../mesh/automation-engine.js').NODES_DIR; } catch (_) {}
+    return { macroTool: this.macroTool || null, nodesDir };
+  }
+  // §JA5 — forget, then rebuild the site's macro without that field (removed when nothing is left)
+  async _autofillForget(url, fieldKey) {
+    const LP = require('../autofill/learn-pick.js');
+    const r = LP.forgetLearned(this.siteSettings, url, fieldKey);
+    if (!r.ok) return r;
+    try { this.postEvent?.('autofill.forgotten', { origin: r.origin, fieldKey: r.fieldKey, ts: Date.now() }); } catch (_) {}
+    const door = this._autofillMacroDoor();
+    if (door.macroTool) r.macro = await LP.saveMacro(door.macroTool, this.siteSettings, url, door);
     return r;
   }
   // §JA2 0.60.226 — the page's url for a tab (for per-site learned fields), via the real driver as the gig path does.
