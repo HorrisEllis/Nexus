@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH2_the_context_brief_at_the_root
+type: phase
+id: docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH2_the_context_brief_at_the_root
+context: >-
+  pipeline phase GH2_the_context_brief_at_the_root of
+  docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+intent: null
+summary: GH2_the_context_brief_at_the_root (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792820475014
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820475014
+lastSeenAt: 1792820475014
+fingerprint: null
+payload:
+  id: GH2_the_context_brief_at_the_root
+  map: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-github.js
+    - lib/context-atlas.js
+    - lib/repo-notes.js
+  depends_on:
+    - GH1_a_compartment_gets_its_github_repo
+  blocks: []
+  spec: null
+  graph: 4b61d2ee6d98ba20

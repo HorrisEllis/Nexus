@@ -437,7 +437,7 @@ function registerNexusUriActions() {
   // — a nexus:// link is never sufficient by itself to join a session.
   nexusUri.registerAction('remote-desktop', ({ sessionId }) => {
     const path = require('path');
-    const viewerPath = path.join(__dirname, '..', '..', '..', 'remote-desktop', 'viewer.html');
+    const viewerPath = path.join(__dirname, '..', '..', '..', 'cos', 'remote-desktop', 'viewer.html');
     const w = new BrowserWindow(WindowFrame.withDark({ width: 1024, height: 768 }));
     w.loadFile(viewerPath, { search: `session=${sessionId}` });
     windows.set(`remote-desktop-${sessionId}`, w);

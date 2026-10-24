@@ -9,11 +9,11 @@ intent: null
 summary: SB52_proven_on_the_proposed_code (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676957
+exported_at: 1792822477173
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676957
-lastSeenAt: 1792787676957
+firstSeenAt: 1792822477173
+lastSeenAt: 1792822477173
 fingerprint: null
 payload:
   id: SB52_proven_on_the_proposed_code
@@ -30,4 +30,4 @@ payload:
     - SB51_a_phase_built_in_chunks
   blocks: []
   spec: null
-  graph: e7942c807caa456b
+  graph: 78cfe7c733ed23ee

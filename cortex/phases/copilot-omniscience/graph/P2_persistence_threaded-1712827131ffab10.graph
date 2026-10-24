@@ -1,0 +1,256 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P2_persistence_threaded:1712827131ffab10
+type: graph
+id: phase:P2_persistence_threaded:1712827131ffab10
+context: dependency graph of phase P2_persistence_threaded
+intent: null
+summary: 27 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822478597
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478597
+lastSeenAt: 1792822478597
+fingerprint: null
+payload:
+  for: P2_persistence_threaded
+  kind: phase
+  repo: null
+  hash: 1712827131ffab10
+  nodes:
+    - path: copilot/lib/user-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/router.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/routing-ir.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/governance/ask-james.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-user-model-radiate.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/user-model.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/contract/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/snr-filter.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/tunables.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/sigma.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/constitutional-ai.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/execution-pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/replay-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/lib/user-model.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/core/raid/snr-filter.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/core/raid/tunables.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/contract/index.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/execution-pipeline.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/constitutional-ai.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/governance/ask-james.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: tests/modules/test-user-model-radiate.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: tests/modules/user-model.test.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/routing-ir.js
+      to: cortex/core/raid/index.js
+      kind: requires
+  crossings:
+    - from: copilot/lib/user-model.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cortex/core/raid/index.js
+      to: intelligence/cfr/sigma.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/index.js
+      to: intelligence/bda/index.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/governance/ask-james.js
+      to: copilot/lib/user-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: orchestrator/lib/request-handler.js
+      to: copilot/lib/user-model.js
+      fromSystem: orchestrator
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: copilot/lib/user-model.js
+      fromSystem: orchestrator
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

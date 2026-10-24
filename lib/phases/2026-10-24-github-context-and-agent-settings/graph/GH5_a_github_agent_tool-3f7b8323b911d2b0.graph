@@ -1,0 +1,264 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GH5_a_github_agent_tool:3f7b8323b911d2b0
+type: graph
+id: phase:GH5_a_github_agent_tool:3f7b8323b911d2b0
+context: dependency graph of phase GH5_a_github_agent_tool
+intent: null
+summary: 28 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792820475024
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820475024
+lastSeenAt: 1792820475024
+fingerprint: null
+payload:
+  for: GH5_a_github_agent_tool
+  kind: phase
+  repo: null
+  hash: 3f7b8323b911d2b0
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/github.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/repo-github.js
+      role: changes
+      exists: false
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/ask.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/tool-runtime.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/framework-builder.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/generate-tool-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/loom/harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/user-guide-generator.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tool-call-listener.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/diagnostic/diagnose.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/move-data.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/run-command.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/run-pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/read-file.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-config.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-config.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/event-types.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tool-call-listener.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/query/read-file.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/run-command.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/diagnostic/diagnose.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/move-data.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/execution/run-pipeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: intelligence/framework-builder.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/generate-tool-nodes.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tool-guide.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/loom/harness.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/tool-layers.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/user-guide-generator.js
+      to: lib/agent-tools/index.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH1_a_compartment_gets_its_github_repo
+    dependents:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH6_send_a_requested_file
+    upstream:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0a_one_github_repo_per_compartment
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0c_private_by_default
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH1_a_compartment_gets_its_github_repo
+    downstream:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH6_send_a_requested_file
+    blockedBy:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH1_a_compartment_gets_its_github_repo
+    unlocks:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH6_send_a_requested_file
+    conflicts:
+      - with: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH2_the_context_brief_at_the_root
+        files:
+          - lib/repo-github.js
+      - with: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH3_sync_per_compartment
+        files:
+          - lib/repo-github.js
+          - idearium/cli/route-commands.js
+      - with: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+        files:
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by GH1_a_compartment_gets_its_github_repo
+      - 'depends on (1): GH1_a_compartment_gets_its_github_repo · all upstream 3'
+      - 'needed by (1): GH6_send_a_requested_file · finishing it unlocks GH6_send_a_requested_file'
+      - >-
+        same files as GH2_the_context_brief_at_the_root with no order between them:
+        lib/repo-github.js
+      - >-
+        same files as GH3_sync_per_compartment with no order between them: lib/repo-github.js,
+        idearium/cli/route-commands.js
+      - >-
+        same files as AS1_one_resolver_global_then_repo with no order between them:
+        idearium/cli/route-commands.js
+    edges:
+      - from: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH1_a_compartment_gets_its_github_repo
+        kind: declared

@@ -4,14 +4,14 @@ type: phase
 id: docs_nexus-live-mind-phasemap.spec::P3_diagnostic_kernel
 context: pipeline phase P3_diagnostic_kernel of docs/nexus-live-mind-phasemap.spec
 intent: null
-summary: P3_diagnostic_kernel (?) — 11 file(s)
+summary: P3_diagnostic_kernel (?) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678261
+exported_at: 1792822704897
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678261
-lastSeenAt: 1792787678261
+firstSeenAt: 1792822704897
+lastSeenAt: 1792822704897
 fingerprint: null
 payload:
   id: P3_diagnostic_kernel
@@ -20,7 +20,6 @@ payload:
   layer: null
   status: OPEN
   files:
-    - service/nexus-diagnostic.js
     - cortex/gap-finder/index.js
     - cortex/boot.js
     - lib/gap-field.js
@@ -36,4 +35,4 @@ payload:
     - P2_snapshot_on_sigma
   blocks: []
   spec: null
-  graph: 75ac0a6dcf420224
+  graph: 18615a25df10af8b

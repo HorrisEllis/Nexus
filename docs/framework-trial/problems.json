@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "note": "Six problems fixed before any run (2026-10-24). P1-P3 have a known answer (from Nexus's own record); P4-P6 are scored by rubric. The `prompt` is all a model sees; `rubric` and `key` are for the judge only.",
+  "problems": [
+    {
+      "id": "P1",
+      "domain": "software (checkable)",
+      "title": "A retry that never happens",
+      "prompt": "A build system asks an AI 'test writer' to write a test BEFORE any code for a phase. The test is run against the repository: if it FAILS (the code isn't written yet) it is accepted; if it PASSES already, it proves nothing, so the writer is asked again with the reason. After two unusable tests the build stops.\n\nThe relevant code (simplified):\n\n```js\nfunction decide(verdict, { alreadyDone = false } = {}) {\n  if (verdict === 'fails-as-expected' || verdict === 'not-run') return 'accept';\n  if (verdict === 'passes-already' && alreadyDone) return 'accept-already'; // added later: a phase whose files already exist on disk can never get a failing test, so a passing test is kept as a regression test\n  return 'reject';\n}\n// in the build:\nconst alreadyDone = planFiles.every(p => fs.existsSync(path.join(repoDir, p)));\nfor (let n = 1; n <= 2 && !got; n++) {\n  const code = await askTestWriter(brief({ feedback: fb }));\n  const v = await validate(code);              // runs the test with no new code\n  const d = decide(v.verdict, { alreadyDone });\n  if (d === 'accept' || d === 'accept-already') got = { code };\n  else fb = `${v.verdict}: ${v.why}`;          // the second ask carries what was wrong\n}\n```\n\nA test suite checks this. Test TF-03 runs first on a repository: the writer returns a good test, the phase's code is then written and proven, and TF-03 passes. Test TF-04 runs next, on the same repository, with the writer stubbed to always return `require('node:assert').ok(true);` (a test that passes before any code is written). TF-04 expects the writer to be asked twice, the second time with what was wrong, and then the build to stop. It fails: the writer was asked only once.\n\nWhy does TF-04 fail, and what should be done about it?",
+      "key": "TF-04 runs on the repo TF-03 already built, so the phase's files exist on disk: alreadyDone is true. The vacuous test passes ('passes-already'), and the later accept-already rule accepts it as a regression test on the first ask, so there is no retry. The test's premise predates that rule. Two fixes: (1) give TF-04 its own fresh phase (or a repo where the files don't exist yet), and (2) the real gap: accept-already accepts a vacuous test (one that exercises nothing) as a 'regression test'; it should require that the test actually reaches the phase's code (it imports or names the phase's files, or fails against a stub or mutation).",
+      "rubric": {
+        "levels": {
+          "1_minimal": "Says the first test was accepted, so no second ask happened (the loop exited on attempt 1).",
+          "2_optimal": "Traces it to alreadyDone being true because TF-03 left the files on disk, combined with the accept-already rule; proposes a fresh phase/repo for TF-04.",
+          "3_exceptional": "Also names the real defect: a vacuous test is accepted as a regression test; proposes a check that the test exercises the phase's code."
+        },
+        "checks": ["root cause: accept-already + alreadyDone", "names shared state between TF-03 and TF-04", "flags the vacuous-test acceptance as a defect", "proposes a concrete fix", "does not just 'make the test expect 1'"]
+      }
+    },
+    {
+      "id": "P2",
+      "domain": "software (checkable)",
+      "title": "The file is there, so what is broken?",
+      "prompt": "An AI build pipeline builds a project phase by phase. Phase SP5 needs one file, lib/title.js, and its proof is a test, tests/sp5-title.test.js. For two days every build of SP5 fails: the build step, the proof run and the coding agent all report lib/title.js as missing, and each agent attempt writes a new lib/title.js, but the next build still reports it missing. The owner opens the project's file browser and can see title.js in the project, under lib/.\n\nFacts: the project was imported on October 15 from a zip file named looking-glass-bundle-v0_4.zip. On October 20 the importer was changed so that it 'strips a zip's single wrapper folder'. Other phases of the same project that were created after October 20 build fine.\n\nWhat is broken, and what should be done about it?",
+      "key": "The project was imported before wrapper-stripping existed, so everything sits under looking-glass-bundle-v0_4/ (the zip's wrapper folder). The file the owner sees is looking-glass-bundle-v0_4/lib/title.js; the build, proof and agent look at <root>/lib/title.js. Each attempt wrote a second lib/title.js at the root, which the tooling then also missed or mismatched. Fix: lift the project out of its single wrapper folder to the root (moving, not deleting; the stray root copies archived first), and make path checks tolerate or detect a wrapper folder.",
+      "rubric": {
+        "levels": {
+          "1_minimal": "Suspects a path mismatch between where the file is and where the tools look.",
+          "2_optimal": "Identifies the wrapper folder from the pre-Oct-20 import as the cause; proposes lifting the project to the root.",
+          "3_exceptional": "Also handles the duplicate root copies the agents wrote (archive, don't delete) and proposes a guard so a wrapped import is detected."
+        },
+        "checks": ["path mismatch named", "wrapper folder from the old import identified", "fix moves files rather than rewriting the phase", "duplicates handled safely", "a prevention or detection step"]
+      }
+    },
+    {
+      "id": "P3",
+      "domain": "software decision (checkable)",
+      "title": "A build that refuses for a missing atlas",
+      "prompt": "An AI build system takes a snapshot of a repository before every phase build, so a build can always be undone. The snapshot step refuses: 'no snapshot: repo has not been through the import pipeline (no atlas.json) - run POST /api/repos/:uuid/chunk first'. The atlas is a generated summary of the repository's files. The import pipeline that writes it is slow (minutes on a large repo). The build's planner decides what to change by reading the repository's component registry (the components and how they connect), which is generated by the same indexing.\n\nThe team proposes: 'make every build run the full import pipeline first, so the atlas always exists.' What should they do?",
+      "key": "Question the requirement: the build never reads atlas.json; the snapshot required the wrong artifact. The planner reads the component registry, so the snapshot should record the registry (what the build actually stands on), and when a repo has not been indexed at all, run the indexing once (not every build) and snapshot again. The atlas can still be recorded but not required. Running the full pipeline before every build pays a large cost to satisfy a requirement nothing depends on.",
+      "rubric": {
+        "levels": {
+          "1_minimal": "Notes running the full pipeline every build is costly; suggests running it only when the atlas is missing.",
+          "2_optimal": "Questions whether the build needs the atlas at all; notes the planner reads the registry, so the requirement is on the wrong artifact.",
+          "3_exceptional": "Proposes the snapshot record and require the registry; index once when absent; keep the atlas as optional; names how to verify nothing reads the atlas."
+        },
+        "checks": ["questions the requirement itself", "identifies the registry as what the build depends on", "avoids per-build full pipeline", "proposes verification (grep / test) that the atlas is unread", "keeps reversibility (snapshot) intact"]
+      }
+    },
+    {
+      "id": "P4",
+      "domain": "plan (rubric)",
+      "title": "First paying client in 30 days",
+      "prompt": "A self-taught developer has spent seven months, alone, building a large AI-assisted software system (dozens of services, a browser, a build pipeline, thousands of tests). They have no formal job history in software, no money for ads or paid APIs, and a mid-range desktop PC. They need income urgently. Write a plan to get their first paying client within 30 days.",
+      "rubric": {
+        "levels": {
+          "1_minimal": "A generic list (make a portfolio, join freelancing sites, network).",
+          "2_optimal": "A specific offer derived from what they have already built, a named channel, concrete daily actions, and proof assets drawn from the existing work.",
+          "3_exceptional": "Also defines minimal / optimal / exceptional outcomes for day 30, names the plan's failure modes with a contingency for each, and separates fixed constraints from movable ones."
+        },
+        "checks": ["offer is specific, not generic", "uses existing work as proof", "daily or weekly actions", "success defined in levels", "failure modes and contingencies", "respects the no-money constraint"]
+      }
+    },
+    {
+      "id": "P5",
+      "domain": "invention (rubric)",
+      "title": "Agents that use websites without seeing them",
+      "prompt": "Design a way for AI agents to operate ordinary websites (log in, fill forms, read results) reliably, without screenshots or a vision model, on a $0 budget and consumer hardware. The websites are not designed for agents and change without notice.",
+      "rubric": {
+        "levels": {
+          "1_minimal": "Use the DOM / accessibility tree with selectors.",
+          "2_optimal": "A concrete design: a structured map of the page (blocks, roles, labels), intent-to-element matching, verification of each action's effect, and recovery when the page changes.",
+          "3_exceptional": "Also: learning from outcomes (which element worked for which intent on which kind of page), named failure modes (dynamic content, anti-bot, iframes, auth) with handling, and a way to test the design cheaply."
+        },
+        "checks": ["no vision dependency", "action effects verified", "handles page changes", "learns from outcomes", "failure modes named", "fits $0 / consumer hardware"]
+      }
+    },
+    {
+      "id": "P6",
+      "domain": "people decision (rubric)",
+      "title": "The missed deadlines",
+      "prompt": "On a four-person volunteer project, one contributor has missed the last three deadlines they agreed to. Reminders haven't changed anything. Their past work was good. The project lead is considering removing them from the project. What should the lead do?",
+      "rubric": {
+        "levels": {
+          "1_minimal": "Talk to them before deciding; set clearer expectations.",
+          "2_optimal": "Separates the pattern (three misses, after good work) from its cause (unknown: capacity, clarity, motivation, circumstances); proposes a conversation aimed at the cause and a small, reversible next step before removal.",
+          "3_exceptional": "Also: treats any read of the person as a hypothesis to test, not a fact; checks what changed (the work, the deadlines, the person's situation); defines what would count as resolved; names the failure modes of both removing and keeping them."
+        },
+        "checks": ["pattern vs cause separated", "reads of the person held as hypotheses", "reversible first step", "success criteria defined", "failure modes of each option", "looks at what is absent or changed, not only the misses"]
+      }
+    }
+  ]
+}

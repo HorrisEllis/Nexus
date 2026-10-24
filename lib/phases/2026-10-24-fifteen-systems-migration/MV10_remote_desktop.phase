@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV10_remote_desktop
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV10_remote_desktop
+context: pipeline phase MV10_remote_desktop of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV10_remote_desktop (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792821071279
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071279
+lastSeenAt: 1792821071279
+fingerprint: null
+payload:
+  id: MV10_remote_desktop
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - remote-desktop/
+    - cos/remote-desktop/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1245b5713748f8a7

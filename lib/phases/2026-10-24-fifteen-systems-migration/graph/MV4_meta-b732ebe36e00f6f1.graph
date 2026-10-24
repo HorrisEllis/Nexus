@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV4_meta:b732ebe36e00f6f1
+type: graph
+id: phase:MV4_meta:b732ebe36e00f6f1
+context: dependency graph of phase MV4_meta
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792822478479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478479
+lastSeenAt: 1792822478479
+fingerprint: null
+payload:
+  for: MV4_meta
+  kind: phase
+  repo: null
+  hash: b732ebe36e00f6f1
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

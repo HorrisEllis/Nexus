@@ -1,0 +1,280 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P5_retire_second_runtime:ab577dbf90759953
+type: graph
+id: phase:P5_retire_second_runtime:ab577dbf90759953
+context: dependency graph of phase P5_retire_second_runtime
+intent: null
+summary: 28 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822476342
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476342
+lastSeenAt: 1792822476342
+fingerprint: null
+payload:
+  for: P5_retire_second_runtime
+  kind: phase
+  repo: null
+  hash: ab577dbf90759953
+  nodes:
+    - path: copilot/lib/user-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/router.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/governance/ask-james.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-user-model-radiate.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/user-model.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: hooks/index.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: orchestrator/lib/pulse.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/governance/ask-james.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: tests/modules/test-user-model-radiate.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: tests/modules/user-model.test.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/index.js
+      kind: requires
+  crossings:
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: cortex
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: nexus/nexus-bus.js
+      fromSystem: cortex
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: hooks/index.js
+      fromSystem: cortex
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/governance/ask-james.js
+      to: copilot/lib/user-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: orchestrator/lib/request-handler.js
+      to: copilot/lib/user-model.js
+      fromSystem: orchestrator
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: copilot/lib/user-model.js
+      fromSystem: orchestrator
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+    dependents:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P7_hostile_verify_and_ship
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D5_new
+    upstream:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D4_names
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P0_map
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P2_intelligence_gains_routes
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P3_cortex_becomes_forwarder
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+      - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::D1
+      - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::D2
+    downstream:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D3_snapshot
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D5_new
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P7_hostile_verify_and_ship
+    blockedBy:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+    unlocks: []
+    conflicts:
+      - with: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B6_two_intelligence_runtimes
+        files:
+          - cortex/boot.js
+    dangling: []
+    lines:
+      - layer 5 · blocked by P4_repoint_callers
+      - 'depends on (1): P4_repoint_callers · all upstream 8'
+      - 'needed by (2): P7_hostile_verify_and_ship, D5_new · all downstream 3'
+      - 'same files as B6_two_intelligence_runtimes with no order between them: cortex/boot.js'
+    edges:
+      - from: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+        kind: declared

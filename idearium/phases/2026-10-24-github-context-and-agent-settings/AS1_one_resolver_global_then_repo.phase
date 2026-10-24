@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+type: phase
+id: docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+context: >-
+  pipeline phase AS1_one_resolver_global_then_repo of
+  docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+intent: null
+summary: AS1_one_resolver_global_then_repo (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478496
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478496
+lastSeenAt: 1792822478496
+fingerprint: null
+payload:
+  id: AS1_one_resolver_global_then_repo
+  map: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-settings.js
+    - lib/repo-agent.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/settings.html
+  depends_on:
+    - GC0d_layers
+  blocks: []
+  spec: null
+  graph: 5201c36903685dac

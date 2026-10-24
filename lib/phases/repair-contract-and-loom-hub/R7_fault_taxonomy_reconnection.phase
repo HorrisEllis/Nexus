@@ -4,14 +4,14 @@ type: phase
 id: docs_repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
 context: pipeline phase R7_fault_taxonomy_reconnection of docs/repair-contract-and-loom-hub-phasemap.spec
 intent: null
-summary: R7_fault_taxonomy_reconnection (?) — 9 file(s)
+summary: R7_fault_taxonomy_reconnection (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678340
+exported_at: 1792822704976
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678340
-lastSeenAt: 1792787678340
+firstSeenAt: 1792822704976
+lastSeenAt: 1792822704976
 fingerprint: null
 payload:
   id: R7_fault_taxonomy_reconnection
@@ -21,7 +21,6 @@ payload:
   status: OPEN
   files:
     - cortex/self-heal/fault-taxonomy.js
-    - service/nexus-diagnostic.js
     - docs/self-heal.spec
     - docs/escalation.spec
     - diagnostic/nexus-diagnostic.js
@@ -32,4 +31,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 3fb547b4cfbe5881
+  graph: 88c6c02aa5089a74

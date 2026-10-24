@@ -1,0 +1,239 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DG3_the_whole_dag:cd43eaf82d452fb7
+type: graph
+id: phase:DG3_the_whole_dag:cd43eaf82d452fb7
+context: dependency graph of phase DG3_the_whole_dag
+intent: null
+summary: 27 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822478273
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478273
+lastSeenAt: 1792822478273
+fingerprint: null
+payload:
+  for: DG3_the_whole_dag
+  kind: phase
+  repo: null
+  hash: cd43eaf82d452fb7
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/phase-dag.js
+      role: changes
+      exists: true
+      system: lib
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phase-mapping.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-deps-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-groom.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-architecture-migrate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/core/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/spatial/lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/core/index.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/repo/phase-mapping.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/build-queue.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-census.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-deps-gate.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-groom.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: tests/modules/test-architecture-migrate.test.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: false
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG4_nexus_maps_meet_the_standard
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG5_dag_in_the_brief_and_the_ui
+    upstream: []
+    downstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG4_nexus_maps_meet_the_standard
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG5_dag_in_the_brief_and_the_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG4_nexus_maps_meet_the_standard
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG5_dag_in_the_brief_and_the_ui
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): DG4_nexus_maps_meet_the_standard, DG5_dag_in_the_brief_and_the_ui · finishing
+        it unlocks DG4_nexus_maps_meet_the_standard, DG5_dag_in_the_brief_and_the_ui
+    edges: []

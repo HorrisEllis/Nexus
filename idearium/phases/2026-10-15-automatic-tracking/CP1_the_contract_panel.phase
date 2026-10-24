@@ -7,11 +7,11 @@ intent: null
 summary: CP1_the_contract_panel (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677462
+exported_at: 1792822477742
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677462
-lastSeenAt: 1792787677462
+firstSeenAt: 1792822477742
+lastSeenAt: 1792822477742
 fingerprint: null
 payload:
   id: CP1_the_contract_panel
@@ -27,4 +27,4 @@ payload:
     - CX1_context_from_the_dependencies
   blocks: []
   spec: null
-  graph: c237d6f98a19ae59
+  graph: 74dcff4d5f3b4b1e

@@ -9,11 +9,11 @@ intent: null
 summary: IL1_spec_library_as_ideas (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676515
+exported_at: 1792822476754
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676515
-lastSeenAt: 1792787676515
+firstSeenAt: 1792822476754
+lastSeenAt: 1792822476754
 fingerprint: null
 payload:
   id: IL1_spec_library_as_ideas
@@ -30,4 +30,4 @@ payload:
     - DI1_chunking_for_data_ingestion
   blocks: []
   spec: null
-  graph: 562cd46bda388a55
+  graph: 96c01a3b65ef6210

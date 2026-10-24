@@ -9,11 +9,11 @@ intent: null
 summary: RQ25_progress_is_evidence_not_activity (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677386
+exported_at: 1792822477659
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677386
-lastSeenAt: 1792787677386
+firstSeenAt: 1792822477659
+lastSeenAt: 1792822477659
 fingerprint: null
 payload:
   id: RQ25_progress_is_evidence_not_activity
@@ -32,4 +32,4 @@ payload:
     - RQ23_acceptance_conditions_that_cannot_be_moved
   blocks: []
   spec: null
-  graph: 20b27d207cb31ec8
+  graph: a5c5eb430ac05891

@@ -9,11 +9,11 @@ intent: null
 summary: SF18_intelligence_becomes_a_real_system (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675380
+exported_at: 1792822475712
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675380
-lastSeenAt: 1792787675380
+firstSeenAt: 1792822475712
+lastSeenAt: 1792822475712
 fingerprint: null
 payload:
   id: SF18_intelligence_becomes_a_real_system
@@ -30,4 +30,4 @@ payload:
     - SF17_intelligence_system_all_4_phases
   blocks: []
   spec: null
-  graph: 9ed23465f0df57af
+  graph: b3f9f594064e5d03

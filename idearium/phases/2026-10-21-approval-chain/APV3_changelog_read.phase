@@ -7,11 +7,11 @@ intent: null
 summary: APV3_changelog_read (api) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678002
+exported_at: 1792822478356
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678002
-lastSeenAt: 1792787678002
+firstSeenAt: 1792822478356
+lastSeenAt: 1792822478356
 fingerprint: null
 payload:
   id: APV3_changelog_read
@@ -28,4 +28,4 @@ payload:
   blocks:
     - MOD-APV-READ
   spec: docs/approval-chain.spec
-  graph: a8799b04b953ec28
+  graph: dc75b22caf0aa331

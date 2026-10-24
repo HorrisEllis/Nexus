@@ -7,11 +7,11 @@ intent: null
 summary: GQ5_command (cli) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677881
+exported_at: 1792820508015
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677881
-lastSeenAt: 1792787677881
+firstSeenAt: 1792820508015
+lastSeenAt: 1792820508015
 fingerprint: null
 payload:
   id: GQ5_command
@@ -27,4 +27,4 @@ payload:
   blocks:
     - '"quality_command"'
   spec: null
-  graph: 176adf36740d9ccb
+  graph: 34f5faae75b0451c

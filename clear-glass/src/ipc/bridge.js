@@ -576,7 +576,7 @@ class IpcBridge {
     // path would use, not a second implementation of either.
     this.app.post('/cli/autofill/detect', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
-      try { res.json(await _autofillDetect(this.dom, this.autofillStore, { agentId: req.body?.agentId || 'default', profileId: req.body?.profileId })); }
+      try { const agentId = req.body?.agentId || 'default'; res.json(await _autofillDetect(this.dom, this.autofillStore, { agentId, profileId: req.body?.profileId, learned: this._learnedFields(agentId) })); }
       catch (e) { res.status(500).json({ error: e.message }); }
     });
     // §0.39.301 — the gig writer's second door (src/autofill/gig.js), same functions the autofill:gig* IPC uses.
@@ -603,10 +603,44 @@ class IpcBridge {
     this.app.post('/cli/autofill/fill', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
       try {
+        const agentId = req.body?.agentId || 'default';
         res.json(await _autofillFill(this.dom, this.autofillStore, {
-          agentId: req.body?.agentId || 'default', profileId: req.body?.profileId, minConfidence: req.body?.minConfidence || 'medium',
+          agentId, profileId: req.body?.profileId, minConfidence: req.body?.minConfidence || 'medium', learned: this._learnedFields(agentId),
         }));
       } catch (e) { res.status(500).json({ error: e.message }); }
+    });
+    // §JA2 0.60.226 — James, 2026-10-23: "then the phases with the per site settings." Teach the autofill a field it missed:
+    // a picked field (its key = fieldKeysOf(el)[0]) → a fieldType, saved per-origin in site-settings. The fill path above reads
+    // it back (learned), so on this site the field fills every time. The pick itself is JA3 (the element picker); this is its home.
+    this.app.post('/cli/autofill/learn', async (req, res) => {
+      if (!this.siteSettings) return res.status(503).json({ error: 'siteSettings unavailable' });
+      const agentId = req.body?.agentId || 'default';
+      const url = req.body?.url || this._pageUrl(agentId);
+      // §JA3 — one save path: learn-pick.js saveLearned (the element pick below saves through it too)
+      const r = require('../autofill/learn-pick.js').saveLearned(this.siteSettings, url, req.body?.fieldKey, req.body?.fieldType);
+      if (!r.ok) return res.status(400).json({ error: r.error });
+      try { this.postEvent?.('autofill.learned', { origin: r.origin, fieldKey: r.fieldKey, fieldType: r.fieldType, ts: Date.now() }); } catch (_) {}
+      res.json(r);
+    });
+    // §JA3 0.60.230 — James, 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for
+    // him. saves to per site settings ... and updates the autofill." · 2026-10-24: "ja3". The Guardian picker opens in the
+    // application's tab for one fieldType (a fill's needsPick.unplaced); he clicks the box; it is checked, saved per-site through
+    // saveLearned, and the page is filled again. Resolves when he picks or cancels.
+    // §JA4 0.60.231 — what was learned, per site, and its undo (§0.3 reversible): learn-pick.js listLearned / forgetLearned.
+    this.app.get('/cli/autofill/learned', (req, res) => {
+      if (!this.siteSettings) return res.status(503).json({ error: 'siteSettings unavailable' });
+      res.json({ ok: true, learned: require('../autofill/learn-pick.js').listLearned(this.siteSettings, req.query?.url || null) });
+    });
+    const forget = async (req, res) => {   // DELETE /cli/autofill/learned?url&fieldKey, and POST /cli/autofill/forget {url, fieldKey} (the co-pilot's door)
+      const r = await this._autofillForget(req.query?.url || req.body?.url, req.query?.fieldKey || req.body?.fieldKey);
+      res.status(r.ok ? 200 : (this.siteSettings ? 404 : 503)).json(r);
+    };
+    this.app.delete('/cli/autofill/learned', forget);
+    this.app.post('/cli/autofill/forget', forget);
+    this.app.post('/cli/autofill/pick', async (req, res) => {
+      if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
+      const r = await this._autofillPick(req.body || {});
+      res.status(r.ok || r.cancelled ? 200 : 400).json(r);
     });
 
     // §BUILT 2026-09-21 — James: "answering on screen questions." Backend
@@ -1619,11 +1653,18 @@ class IpcBridge {
     ipcMain.handle('autofill:profile:delete', async (e, d) => this.autofillStore?.deleteProfile(d.id));
     ipcMain.handle('autofill:detect', async (e, { agentId = 'default', profileId } = {}) => {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
-      return _autofillDetect(this.dom, this.autofillStore, { agentId, profileId });
+      return _autofillDetect(this.dom, this.autofillStore, { agentId, profileId, learned: this._learnedFields(agentId) });   // §JA3 — the panel's door reads the learned map too
     });
+    ipcMain.handle('autofill:pick', async (e, d = {}) => {   // §JA3 — the panel's Pick (JA4)
+      if (!this.dom || !this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+      return this._autofillPick(d);
+    });
+    // §JA4 0.60.231 — the panel's "Fields it learned" list and its Forget
+    ipcMain.handle('autofill:learned', async (e, { url = null } = {}) => ({ ok: true, learned: require('../autofill/learn-pick.js').listLearned(this.siteSettings, url) }));
+    ipcMain.handle('autofill:forget', async (e, { url, fieldKey } = {}) => this._autofillForget(url, fieldKey));
     ipcMain.handle('autofill:fill', async (e, { agentId = 'default', profileId, minConfidence = 'medium', vars } = {}) => {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
-      return _autofillFill(this.dom, this.autofillStore, { agentId, profileId, minConfidence, vars });
+      return _autofillFill(this.dom, this.autofillStore, { agentId, profileId, minConfidence, vars, learned: this._learnedFields(agentId) });
     });
 
     // §0.39.265 — James: "expand the job application autofill … maybe add fiverr
@@ -2036,6 +2077,40 @@ class IpcBridge {
     try { this.autofillStore.setLastGig(r.gig); } catch (_) {}   // §GA1a — the panel and the co-pilot fill the same gig
     this.postEvent('autofill.gig.drafted', { profileId, title: r.gig.title, tags: r.gig.tags.length, packages: Object.keys(r.gig.packages).length, warnings: r.warnings.length, ts: Date.now() });
     return { ok: true, gig: r.gig, warnings: r.warnings, parts: G.gigParts(r.gig), text: G.gigText(r.gig) };
+  }
+  // §JA3 0.60.230 — the pick, for the route and the IPC door: the tab the fill used (the dom bridge's), the picker, the save, a refill.
+  async _autofillPick({ agentId = 'default', fieldType, profileId = null, label = null, fill = true, minConfidence = 'medium' } = {}) {
+    let wc = null; try { wc = this.dom && this.dom._getWebContents(agentId); } catch (_) {}
+    const r = await require('../autofill/learn-pick.js').pickAndLearn({ wc, dom: this.dom, autofillStore: this.autofillStore, siteSettings: this.siteSettings,
+      fieldType, agentId, profileId, label, fill: fill !== false, minConfidence, ...this._autofillMacroDoor() });
+    if (r.ok) { try { this.postEvent?.('autofill.learned', { origin: r.origin, fieldKey: r.fieldKey, fieldType: r.fieldType, by: 'picker', ts: Date.now() }); } catch (_) {} }
+    return r;
+  }
+  // §JA5 0.60.232 — the pick's macro home: macro.js (the same tool every macro door uses) and the automation nodes folder its .macro goes in
+  _autofillMacroDoor() {
+    let nodesDir = null; try { nodesDir = require('../mesh/automation-engine.js').NODES_DIR; } catch (_) {}
+    return { macroTool: this.macroTool || null, nodesDir };
+  }
+  // §JA5 — forget, then rebuild the site's macro without that field (removed when nothing is left)
+  async _autofillForget(url, fieldKey) {
+    const LP = require('../autofill/learn-pick.js');
+    const r = LP.forgetLearned(this.siteSettings, url, fieldKey);
+    if (!r.ok) return r;
+    try { this.postEvent?.('autofill.forgotten', { origin: r.origin, fieldKey: r.fieldKey, ts: Date.now() }); } catch (_) {}
+    const door = this._autofillMacroDoor();
+    if (door.macroTool) r.macro = await LP.saveMacro(door.macroTool, this.siteSettings, url, door);
+    return r;
+  }
+  // §JA2 0.60.226 — the page's url for a tab (for per-site learned fields), via the real driver as the gig path does.
+  _pageUrl(agentId = 'default') {
+    try { const wc = this.driver && this.driver._getWebContents(agentId); const u = wc && wc.getURL(); return u || null; } catch (_) { return null; }
+  }
+  // §JA2 — the learned field map ({ fieldKey → fieldType }) for the tab's origin, read from site-settings. Empty when none/unknown.
+  _learnedFields(agentId = 'default') {
+    try { const url = this._pageUrl(agentId); if (!url || !this.siteSettings) return null;
+      const m = require('../autofill/matcher.js').learnedFromSettings(this.siteSettings.getAllForOrigin(url));
+      return Object.keys(m).length ? m : null;
+    } catch (_) { return null; }
   }
   // §GA1 0.60.161 — James, 2026-10-19: "yes." One door the co-pilot calls for "fill this in for me" on a Fiverr gig page, so it
   // runs the engine instead of chatting (the screenshot). Either, its choice (GA0a): a gig already written is used; else, given

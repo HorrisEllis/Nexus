@@ -152,6 +152,11 @@ const TOOLS = [
   // §GA1 0.60.161 — James: "need help with the autofill for fiverr." / "yes." Fill the Fiverr GIG EDITOR open in the current tab.
   // This is the tool for "fill this in for me" on a gig-creation page — NOT opportunity.prepare (that fills job applications).
   { name: 'autofill.gig',     cat: 'nexus',    desc: 'Fill the Fiverr gig editor open in this tab. Uses the gig already written; if none, writes one from the active Fiverr profile and your one-line offer, then fills. Never saves or publishes. Give `offer` (one line of what the gig offers) when no gig is written yet.', params: { offer: 'string?', profileId: 'string?', minConfidence: 'string?', agentId: 'string?' } },
+  { name: 'autofill.learn',   cat: 'nexus',    desc: 'Teach the autofill a field it missed on a job-application page: map a field (its key — a label/name/id) to a fieldType (e.g. github, linkedin, email). Saved per-site, so it fills on this site every time after. `fieldKey` is the field\'s label/name/id; `fieldType` is what goes there.', params: { fieldKey: 'string', fieldType: 'string', url: 'string?', agentId: 'string?' } },
+  // §JA3 0.60.230 — James: "if he doesn't understand, have the element picker popup for me to select the element for him."
+  { name: 'autofill.pick',    cat: 'nexus',    desc: 'When a fill left a field type unplaced (the fill result\'s needsPick.unplaced), pop the element picker in this tab so the person clicks the box for it. The pick is checked, saved per-site, and the page is filled again. Waits for the person (up to 5 min). `fieldType` is what goes there (e.g. github, linkedin).', params: { fieldType: 'string', profileId: 'string?', label: 'string?', agentId: 'string?' } },
+  { name: 'autofill.learned', cat: 'nexus',    desc: 'The fields the autofill has been taught, per site: [{ origin, fieldKey, fieldType }]. Give `url` for one site.', params: { url: 'string?' } },
+  { name: 'autofill.forget',  cat: 'nexus',    desc: 'Forget one taught field on one site (the next fill asks again). `fieldKey` as autofill.learned lists it.', params: { url: 'string', fieldKey: 'string' } },
   { name: 'opportunity.prepare', cat: 'nexus', desc: 'Open the application page and fill it (autofill + answer bank + drafts) — stopsbefore submit', params: { id: 'string' } },
 ];
 

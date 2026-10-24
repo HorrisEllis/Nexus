@@ -7,11 +7,11 @@ intent: null
 summary: FM1_file_manager (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677891
+exported_at: 1792822478222
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677891
-lastSeenAt: 1792787677891
+firstSeenAt: 1792822478222
+lastSeenAt: 1792822478222
 fingerprint: null
 payload:
   id: FM1_file_manager
@@ -27,4 +27,4 @@ payload:
     - NM1_one_name_per_file
   blocks: []
   spec: null
-  graph: 30ae3862a6fbedde
+  graph: e0543c6f107072a8

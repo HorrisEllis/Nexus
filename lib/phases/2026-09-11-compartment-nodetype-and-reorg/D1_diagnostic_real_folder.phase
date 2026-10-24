@@ -6,14 +6,14 @@ context: >-
   pipeline phase D1_diagnostic_real_folder of
   docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
 intent: null
-summary: D1_diagnostic_real_folder (?) — 15 file(s)
+summary: D1_diagnostic_real_folder (?) — 14 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675828
+exported_at: 1792822702218
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675828
-lastSeenAt: 1792787675828
+firstSeenAt: 1792822702218
+lastSeenAt: 1792822702218
 fingerprint: null
 payload:
   id: D1_diagnostic_real_folder
@@ -22,7 +22,6 @@ payload:
   layer: null
   status: OPEN
   files:
-    - service/nexus-diagnostic.js
     - cortex/core/raid/index.js
     - cortex/gap-finder/index.js
     - architect/service.js
@@ -41,4 +40,4 @@ payload:
     - T1_extend_system_scaffold
   blocks: []
   spec: null
-  graph: 326872f5777c2e88
+  graph: 475c655800cebc65

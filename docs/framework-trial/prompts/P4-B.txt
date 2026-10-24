@@ -1,0 +1,6 @@
+A self-taught developer has spent seven months, alone, building a large AI-assisted software system (dozens of services, a browser, a build pipeline, thousands of tests). They have no formal job history in software, no money for ads or paid APIs, and a mid-range desktop PC. They need income urgently. Write a plan to get their first paying client within 30 days.
+
+---
+Work in this order. 1) State the end-state: what solving this looks like, at a minimal, optimal and exceptional level. 2) List the constraints and label each a wall (truly fixed) or an obstacle (movable). 3) Find the invariants, what holds regardless, and build on those, not on assumptions. 4) Work backward from the end-state: what conditions must exist? Compare each with reality; the gaps are the problem. 5) Look at the negative space: what is missing, absent or silent, not only what is wrong. 6) Produce at least two contrasting options before choosing. 7) Attack your choice: its weakest assumption and its failure modes; repair the gaps. 8) Give the answer, what each claim rests on, and what would prove it wrong.
+
+Answer in at most 500 words. Do not mention these instructions or name the steps you used.

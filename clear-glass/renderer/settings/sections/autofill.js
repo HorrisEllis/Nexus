@@ -73,19 +73,47 @@
     if (r) { toast('Profile saved'); rerender(); }
   }
 
-  async function fillFlow(p) {
+  // §JA3/JA4 0.60.231 — James, 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for
+  // him. saves to per site settings ... and updates the autofill." What a fill could not place gets a Pick: the element picker opens in
+  // the tab (src/autofill/learn-pick.js through autofill:pick), he clicks the box, it is saved for that site and the page filled again.
+  const TYPE_LABEL = Object.fromEntries([...FIELDS.map(([k, l]) => [k, l]), ['linkedin', 'LinkedIn URL'], ['portfolio', 'Portfolio URL'], ['cover-letter', 'Cover letter']]);
+  const typeLabel = (t) => TYPE_LABEL[t] || t;
+  function pickLines(needsPick, { agentId, profileId, minConfidence, line, onLearned }) {
+    const types = (needsPick && needsPick.unplaced) || [];
+    if (!types.length || !(cg.autofill && cg.autofill.pick)) return [];
+    const box = h('div', { class: 'af-pick' });
+    const status = h('div', { class: 'af-line', 'aria-live': 'polite' });
+    const paint = (list) => box.replaceChildren(...list.map(t => btn(`Pick ${typeLabel(t)}`, (e) => busy(e.currentTarget, async () => {
+      status.className = 'af-line'; status.textContent = `In the tab: click the box for ${typeLabel(t)} (arrows to move, Enter or USE to choose, Esc cancels)…`;
+      // read directly, not through call(): a cancel or a refused pick is an answer to show here, not a failure toast
+      const r = (await cg.autofill.pick({ agentId, fieldType: t, profileId, minConfidence, label: typeLabel(t) })) || { ok: false, error: 'no response (backend not wired?)' };
+      if (!r.ok) { status.className = `af-line ${r.cancelled ? '' : 'bad'}`.trim(); status.textContent = r.cancelled ? `Cancelled — nothing saved for ${typeLabel(t)}.` : `Not saved: ${r.error}`; return; }
+      const filled = (r.fill && r.fill.filled) ? r.fill.filled.length : 0;
+      status.className = 'af-line ok';
+      // §JA5 — and where it went as a macro (his "as a macro or automation"): in the site's macro, or why not
+      const mac = r.macro ? (r.macro.ok ? (r.selector ? ` Saved in the macro \u201C${r.macro.name}\u201D (${r.macro.steps} step${r.macro.steps === 1 ? '' : 's'}).` : ` Not in the macro: ${r.selectorWhy}.`) : ` The macro was not saved: ${r.macro.error}.`) : '';
+      status.textContent = `Learned for ${r.origin}: "${r.fieldKey}" is ${typeLabel(t)} — filled ${filled} field(s).${mac}${r.warning ? ` ${r.warning}` : ''}`;
+      paint(((r.fill && r.fill.needsPick) ? r.fill.needsPick.unplaced : list.filter(x => x !== t)));
+      if (onLearned) onLearned();
+    }), 'sm')));
+    paint(types);
+    return [line(`Not placed on this page (${types.length}): ${types.map(typeLabel).join(', ')} — pick the box for each and it is remembered for this site:`), box, status];
+  }
+
+  async function fillFlow(p, onLearned) {
     const agents = await agentOptions();
     if (!agents.length) throw new Error('Open the tab with the form first.');
     const target = select(agents);
     const conf = select([{ value: 'high', label: 'High only' }, { value: 'medium', label: 'Medium and up' }, { value: 'low', label: 'Low and up' }], 'medium');
     const out = h('div', { class: 'af-out', 'aria-live': 'polite' });
     const line = (text, kind = '') => h('div', { class: `af-line ${kind}`.trim(), text });
+    const picking = () => ({ agentId: target.value, profileId: p.id, minConfidence: conf.value, line, onLearned });
     const detect = btn('Preview matches', (e) => busy(e.currentTarget, async () => {
       out.replaceChildren(line('Looking at the page…'));
       const r = await call(() => cg.autofill.detect(p.id, target.value), 'detect');
       out.replaceChildren(...((r.matches || []).length
         ? [line(`${r.matches.length} of ${r.totalFields} field${r.totalFields === 1 ? '' : 's'} on the page match this profile:`), ...r.matches.map(m => line(`${m.fieldType} \u2014 ${m.confidence} confidence \u2014 ${m.source}${m.needsEdit ? ' \u2014 template still has {{placeholders}}, left for you' : ''}`, `c-${m.confidence}`))]
-        : [line(`No field matches (${r.totalFields || 0} on the page).`)]));
+        : [line(`No field matches (${r.totalFields || 0} on the page).`)]), ...pickLines(r.needsPick, picking()));
     }), 'sm');
     const doFill = btn('Fill', (e) => busy(e.currentTarget, async () => {
       out.replaceChildren(line('Filling…'));
@@ -93,7 +121,7 @@
       const lines = [line(`Filled ${(r.filled || []).length} field(s) — nothing is submitted.`, 'ok')];
       if (r.skipped && r.skipped.length) lines.push(line(`Left ${r.skipped.length} below \u201C${conf.value}\u201D confidence for you`));
       (r.failed || []).forEach(x => lines.push(line(`${x.fieldType}: ${x.error}`, 'bad')));
-      out.replaceChildren(...lines);
+      out.replaceChildren(...lines, ...pickLines(r.needsPick, picking()));
     }), 'sm primary');
     await modal({ title: `Fill a form with \u201C${p.label}\u201D`, wide: true, body: [h('div', { class: 'grid' }, field('Tab', target), field('Fill fields matched with', conf)), h('div', { class: 'af-acts' }, detect, doFill), out] });
   }
@@ -286,12 +314,31 @@
       h('div', { class: 'grid' }, field('Tab', target), field('Fill fields matched with', conf)), h('div', { class: 'af-acts' }, preview, doFill), out] });
   }
 
+  // §JA4 0.60.231 — what the autofill was taught, per site, each with a Forget (§0.3 reversible: the next fill there asks again)
+  function learnedPane(learned, rerender) {
+    if (!(cg.autofill && cg.autofill.learned)) return null;
+    const rows = []; let origin = null;
+    for (const l of learned) {
+      if (l.origin !== origin) { origin = l.origin; rows.push(h('div', { class: 'af-site', text: origin })); }
+      rows.push(row(`\u201C${l.fieldKey}\u201D`, `is ${typeLabel(l.fieldType)}${l.selector ? ` \u00B7 in the macro \u201C${l.macro}\u201D` : ' \u00B7 not in the macro (no stable selector)'}`,
+        btn('Forget', async () => {
+          if (!(await confirmDo(`Forget \u201C${l.fieldKey}\u201D on ${l.origin}?`, 'The next fill on this site asks for it again.', 'Forget'))) return;
+          const r = await busy(null, () => call(() => cg.autofill.forget(l.origin, l.fieldKey), 'forget'));
+          if (r && r.ok === false) return toast(r.error, 'bad');
+          toast('Forgotten'); rerender();
+        }, 'sm danger')));
+    }
+    return pane({ title: 'Fields it learned', sub: 'Boxes you picked (or taught by name) on a site the autofill could not read. Each fills on that site every time, and is a step in that site\u2019s macro (Settings \u203A Macros).', flush: true,
+      body: rows.length ? rows : empty('Nothing learned yet. When a fill leaves a field unplaced, Pick the box for it in the Fill dialog.') });
+  }
+
   section({
     id: 'autofill', group: 'Browser', icon: '\u270E', label: 'Autofill & answers',
     keywords: 'autofill profile job application screen question answer ctrl shift a resume cover letter address phone email fill form detect upwork fiverr freelance proposal gig salary',
     blurb: 'Profiles Clear Glass fills forms from, and how it answers open questions on a page (Ctrl+Shift+A or right-click \u2192 Answer this question).',
     async render({ tools, rerender }) {
-      const [profiles, s] = await Promise.all([call(() => cg.autofill.listProfiles(), 'profiles'), call(() => cg.api.get(), 'settings')]);
+      const [profiles, s, lr] = await Promise.all([call(() => cg.autofill.listProfiles(), 'profiles'), call(() => cg.api.get(), 'settings'),
+        cg.autofill.learned ? call(() => cg.autofill.learned(), 'learned fields').catch(() => ({ learned: [] })) : Promise.resolve({ learned: [] })]);
       tools.append(btn('New profile', () => profileEditor(null, rerender), 'primary'));
       const save = (patch) => call(() => cg.api.set(patch), 'save');
       const minConf = select([{ value: 'high', label: 'High only' }, { value: 'medium', label: 'Medium and up' }, { value: 'low', label: 'Low and up' }], s.screenQaMinConfidence || 'medium');
@@ -303,11 +350,12 @@
       return [
         pane({ title: 'Profiles', sub: 'Filling never submits a form. Low-confidence matches are left for you.', flush: true, body: profiles.length ? profiles.map(p => row(p.label, `${Object.keys(p.fields || {}).length} fields${p.documents && Object.keys(p.documents).length ? ` \u00B7 ${Object.keys(p.documents).join(', ')}` : ''} \u00B7 updated ${ago(p.updatedAt)}${s.screenQaProfileId === p.id ? ' \u00B7 used for answers' : ''}`,
           chip(`${completeness(p)}% complete`, completeness(p) >= 75 ? 'ok' : 'warn'),
-          btn('Fill a tab', () => fillFlow(p).catch(e => toast(e.message, 'bad')), 'sm primary'),
+          btn('Fill a tab', () => fillFlow(p, rerender).catch(e => toast(e.message, 'bad')), 'sm primary'),
           btn('Edit', () => profileEditor(p, rerender), 'sm'),
           btn('Duplicate', () => profileEditor(p, rerender, { copy: true }), 'sm'),
           btn('Delete', async () => { if (await confirmDo(`Delete “${p.label}”?`, 'Forms can no longer be filled from it.', 'Delete')) { await busy(null, () => call(() => cg.autofill.deleteProfile(p.id), 'delete')); rerender(); } }, 'sm danger')))
           : empty('No profiles yet.', btn('Create one', () => profileEditor(null, rerender), 'sm')) }),
+        learnedPane((lr && lr.learned) || [], rerender),
         proposalPane(profiles),
         gigPane(profiles),
         pane({ title: 'Answering questions on screen', body: [

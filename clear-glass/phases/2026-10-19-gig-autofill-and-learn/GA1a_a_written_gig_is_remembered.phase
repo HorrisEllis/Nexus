@@ -9,11 +9,11 @@ intent: null
 summary: GA1a_a_written_gig_is_remembered (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677884
+exported_at: 1792814522020
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677884
-lastSeenAt: 1792787677884
+firstSeenAt: 1792814522020
+lastSeenAt: 1792814522020
 fingerprint: null
 payload:
   id: GA1a_a_written_gig_is_remembered
@@ -27,4 +27,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: f600c0df5b9c0f5c
+  graph: dfa9db0a9ad9b3e7

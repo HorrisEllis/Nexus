@@ -7,11 +7,11 @@ intent: null
 summary: V1_fonts_local (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676743
+exported_at: 1792822476957
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676743
-lastSeenAt: 1792787676743
+firstSeenAt: 1792822476957
+lastSeenAt: 1792822476957
 fingerprint: null
 payload:
   id: V1_fonts_local
@@ -24,4 +24,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 032a1c9ee94025d4
+  graph: 8719a547cb06c4c2

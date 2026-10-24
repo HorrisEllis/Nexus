@@ -7,11 +7,11 @@ intent: null
 summary: SB23_a_new_system_slots_in (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676881
+exported_at: 1792820506881
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676881
-lastSeenAt: 1792787676881
+firstSeenAt: 1792820506881
+lastSeenAt: 1792820506881
 fingerprint: null
 payload:
   id: SB23_a_new_system_slots_in
@@ -30,4 +30,4 @@ payload:
     - SB21_deterministic_parts_grow_with_the_system
   blocks: []
   spec: null
-  graph: d8c8e1bb9fdc8301
+  graph: bb7744f30f64e94a

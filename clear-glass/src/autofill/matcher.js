@@ -151,6 +151,27 @@ function _matchByLabel(text) {
  * a field whose purpose is identified but the profile has nothing to
  * put there is not included (nothing to fill, not a failure).
  */
+// §JA2 0.60.226 — the learn-loop's per-site home. A learned pick is stored in site-settings under the page's origin, keyed
+// `autofill.field.<fieldKey>` = <fieldType>. learnKey() builds that key; learnedFromSettings() reads the whole learned map back
+// out of getAllForOrigin(url). Both pure, so the save door and the fill path agree on the format and this is testable with no store.
+const LEARNED_PREFIX = 'autofill.field.';
+function learnKey(fieldKey) { return LEARNED_PREFIX + String(fieldKey || '').trim().toLowerCase(); }
+function learnedFromSettings(allForOrigin = {}) {
+  const out = {};
+  for (const [k, v] of Object.entries(allForOrigin || {})) {
+    if (k.startsWith(LEARNED_PREFIX) && v) out[k.slice(LEARNED_PREFIX.length)] = String(v);
+  }
+  return out;
+}
+
+// §JA1 — a field's stable identities, lowercased, in priority order. The learn-loop's save path (JA2, the element picker)
+// keys a learned part→fieldType entry by one of these, so matchFields and the picker agree on what identifies a field.
+function fieldKeysOf(field = {}) {
+  const parts = [field.attrs?.id || field.id_attr, field.name, field.label, field.attrs?.['aria-label'], field.attrs?.placeholder];
+  const seen = new Set();
+  return parts.map(x => String(x || '').trim().toLowerCase()).filter(k => k && !seen.has(k) && seen.add(k));
+}
+
 function matchFields(domFields, profile, opts = {}) {
   if (!Array.isArray(domFields)) throw new Error('matchFields: domFields must be a real array (the dom_query result)');
   if (!profile || typeof profile.fields !== 'object') throw new Error('matchFields: profile must be a real AutofillProfile with a fields map');
@@ -172,7 +193,13 @@ function matchFields(domFields, profile, opts = {}) {
     const byLabel = _matchByLabel(field.label) || _matchByLabel(field.attrs?.['aria-label']);
 
     let fieldType = null, confidence = null, source = null;
-    if (autocompleteToken) { fieldType = autocompleteToken; confidence = 'high'; source = 'autocomplete'; }
+    // §JA1 0.60.225 — James, 2026-10-23: "make sure it works for these" (micro1, Mercor, Turing, RemoExperts…). A field the
+    // patterns miss on a specific site is taught once with the element picker and remembered per-site: opts.learned maps a
+    // field's own identity (its id / name / label / aria-label, lowercased) to a fieldType. A human pick is the highest
+    // authority, so it is checked before the patterns. Pure: the caller (fillFields) loads learned from site-settings per origin.
+    const learnedKey = opts.learned ? fieldKeysOf(field).find(k => Object.prototype.hasOwnProperty.call(opts.learned, k)) : null;
+    if (learnedKey)        { fieldType = opts.learned[learnedKey]; confidence = 'high'; source = 'learned'; }
+    else if (autocompleteToken) { fieldType = autocompleteToken; confidence = 'high'; source = 'autocomplete'; }
     else if (byName)       { fieldType = byName;            confidence = 'medium'; source = 'name'; }
     else if (byId)         { fieldType = byId;               confidence = 'medium'; source = 'id'; }
     else if (byLabel)      { fieldType = byLabel;            confidence = 'medium'; source = 'label'; }
@@ -200,7 +227,7 @@ function matchFields(domFields, profile, opts = {}) {
   return matches;
 }
 
-module.exports = { matchFields, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
+module.exports = { matchFields, fieldKeysOf, valueFor: _valueFor, learnKey, learnedFromSettings, LEARNED_PREFIX, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
 
 // §BUILT 2026-09-19 — James: "library ui." Extracted here after finding
 // the exact same detect/fill orchestration (query -> match -> filter ->
@@ -223,24 +250,28 @@ function _siteChoice(dom, agentId, profileId) {
 }
 
 /** detectFields(dom, autofillStore, {agentId, profileId}) — real preview, no fill. */
-async function detectFields(dom, autofillStore, { agentId = 'default', profileId, vars } = {}) {
+async function detectFields(dom, autofillStore, { agentId = 'default', profileId, vars, learned } = {}) {
   const sc = _siteChoice(dom, agentId, profileId); if (sc.error) return { error: sc.error }; profileId = sc.profileId;
   const profile = autofillStore.getProfile(profileId);
   if (!profile) return { error: `no autofill profile "${profileId}"` };
   const domFields = await dom.handleQuery({ agentId, selector: 'input, select, textarea' });
   if (domFields?.error) return { error: domFields.error };
-  return { profileId, totalFields: domFields.length, matches: matchFields(domFields, profile, { vars }) };
+  const matches = matchFields(domFields, profile, { vars, learned });
+  // §JA4 — the preview says what it cannot place too, so the panel offers a Pick before anything is typed
+  return { profileId, totalFields: domFields.length, matches, needsPick: require('./learn-pick.js').needsPick(domFields, profile, matches) };
 }
 
-/** fillFields(dom, autofillStore, {agentId, profileId, minConfidence}) — real fill, real per-field report. */
-async function fillFields(dom, autofillStore, { agentId = 'default', profileId, minConfidence = 'medium', vars } = {}) {
+/** fillFields(dom, autofillStore, {agentId, profileId, minConfidence, learned}) — real fill, real per-field report.
+ *  §JA1 — learned is the per-site taught map ({ fieldKey → fieldType }) the caller loads from site-settings for the page's
+ *  origin; it overrides the patterns so a field a platform (micro1, Mercor…) labels oddly, once picked, fills every time. */
+async function fillFields(dom, autofillStore, { agentId = 'default', profileId, minConfidence = 'medium', vars, learned } = {}) {
   const sc = _siteChoice(dom, agentId, profileId); if (sc.error) return { error: sc.error }; profileId = sc.profileId;
   const profile = autofillStore.getProfile(profileId);
   if (!profile) return { error: `no autofill profile "${profileId}"` };
   const domFields = await dom.handleQuery({ agentId, selector: 'input, select, textarea' });
   if (domFields?.error) return { error: domFields.error };
   const floor = CONFIDENCE_RANK[minConfidence] || CONFIDENCE_RANK.medium;
-  const allMatches = matchFields(domFields, profile, { vars });
+  const allMatches = matchFields(domFields, profile, { vars, learned });
   const toFill = allMatches.filter(m => CONFIDENCE_RANK[m.confidence] >= floor);
   const skipped = allMatches.filter(m => !toFill.includes(m)).map(m => ({ cgId: m.cgId, fieldType: m.fieldType, confidence: m.confidence, reason: m.needsEdit ? 'template still has {{placeholders}} to fill' : 'below minConfidence' }));
   const filled = [], failed = [];
@@ -251,5 +282,8 @@ async function fillFields(dom, autofillStore, { agentId = 'default', profileId, 
       else filled.push({ cgId: m.cgId, fieldType: m.fieldType, confidence: m.confidence, source: m.source });
     } catch (err) { failed.push({ cgId: m.cgId, fieldType: m.fieldType, error: err.message }); }
   }
-  return { profileId, totalFields: domFields.length, filled, skipped, failed };
+  // §JA3 0.60.230 — what this fill could not place, so the element picker can ask for it (src/autofill/learn-pick.js needsPick):
+  // the profile's types no field took, and the page's boxes nothing matched. Required lazily: learn-pick requires this file.
+  const needsPick = require('./learn-pick.js').needsPick(domFields, profile, allMatches);
+  return { profileId, totalFields: domFields.length, filled, skipped, failed, needsPick };
 }

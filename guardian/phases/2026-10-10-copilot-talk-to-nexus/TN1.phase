@@ -7,11 +7,11 @@ intent: null
 summary: TN1 (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677188
+exported_at: 1792822477412
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677188
-lastSeenAt: 1792787677188
+firstSeenAt: 1792822477412
+lastSeenAt: 1792822477412
 fingerprint: null
 payload:
   id: TN1
@@ -22,8 +22,8 @@ payload:
   files:
     - idearium/cli/route-commands.js
     - architect/src/spec/Blueprint.js
+    - clear-glass/erosmancer/erosmancer-os/src/dispatcher/index.ts
     - clear-glass/renderer/guardian-picker.js
-    - clear-glass/src/driver/glass.js
     - guardian/nexus-hey-claude.user.js
     - guardian/userscript-chatgpt.js
     - guardian/userscript-claude.js
@@ -31,4 +31,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 6f462d9a0ad9d3e2
+  graph: 32c7f9698ed2b970

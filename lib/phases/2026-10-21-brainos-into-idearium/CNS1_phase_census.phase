@@ -7,11 +7,11 @@ intent: null
 summary: CNS1_phase_census (foundation) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678007
+exported_at: 1792822478362
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678007
-lastSeenAt: 1792787678007
+firstSeenAt: 1792822478362
+lastSeenAt: 1792822478362
 fingerprint: null
 payload:
   id: CNS1_phase_census
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-BX-PHASE-CENSUS
   spec: docs/brainos-in-idearium.spec
-  graph: ac4aa4a9dde1d8b0
+  graph: 576dec22d027e819

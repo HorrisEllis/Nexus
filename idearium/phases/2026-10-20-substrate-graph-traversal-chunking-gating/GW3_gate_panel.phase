@@ -9,11 +9,11 @@ intent: null
 summary: GW3_gate_panel (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677993
+exported_at: 1792822478345
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677993
-lastSeenAt: 1792787677993
+firstSeenAt: 1792822478345
+lastSeenAt: 1792822478345
 fingerprint: null
 payload:
   id: GW3_gate_panel
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-GATE-PANEL
   spec: docs/substrate.spec
-  graph: 69c269bf13faff30
+  graph: f96ac00a48cb7b6b

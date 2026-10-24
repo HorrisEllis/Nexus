@@ -103,7 +103,7 @@ phases:
       not fixed: it is unused.
   GS7_no_debugger_on_signin:
     status: BUILT 0.60.108
-    files: [erosmancer/erosmancer-os/src/bridge/index.ts, clear-glass/src/page/semantic-tree.js]
+    files: [clear-glass/erosmancer/erosmancer-os/src/bridge/index.ts, clear-glass/src/page/semantic-tree.js]
     does: >-
       ErosmancerOS refuses to attach to a tab on Google's sign-in (Target.getTargetInfo first). When an attached tab
       navigates into sign-in (Target.targetInfoChanged), it detaches and emits tab:detached. The semantic-tree reader

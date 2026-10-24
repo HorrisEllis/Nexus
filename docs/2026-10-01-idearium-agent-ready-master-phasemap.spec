@@ -373,7 +373,7 @@ spec:
       status: 'LATER — off the path — performance, data census, VMs, Clear Glass and UI polish come after the loop works (declutter 2026-10-09)'
       status_before: "PINNED — James, 2026-10-05: \"Put a pin in the Remote Desktop.\" Mapped, not built; the decision below stays open."
       depends_on: [DK2_desktop_setup_popup]
-      files: [remote-desktop/, idearium/ui/desktop.html, cos/testenv/provision.js]
+      files: [cos/remote-desktop/, idearium/ui/desktop.html, cos/testenv/provision.js]
       james: '"when clicking on setup desktop, i want to have a popup with the progress. like show me what its doing. like when you run setup in the run menu in idearium. like I want a setup screen, asking for the username and password. and i want options for the vm, like vmware. like compartment destkop. also the vnc, what about replacing it with the remote desktop project in the remote desktop."'
       found: >-
         remote-desktop/ is James's WebRTC screen share: signal.js (signalling + token gate), host.html (getDisplayMedia),

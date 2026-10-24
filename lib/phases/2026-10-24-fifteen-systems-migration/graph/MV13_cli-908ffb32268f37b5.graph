@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV13_cli:908ffb32268f37b5
+type: graph
+id: phase:MV13_cli:908ffb32268f37b5
+context: dependency graph of phase MV13_cli
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792822478486
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478486
+lastSeenAt: 1792822478486
+fingerprint: null
+payload:
+  for: MV13_cli
+  kind: phase
+  repo: null
+  hash: 908ffb32268f37b5
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV1_cockpit
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV5_sentinel
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
+    dependents:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV12_nexus
+    upstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV1_cockpit
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV5_sentinel
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+    downstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV12_nexus
+    blockedBy:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV1_cockpit
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV5_sentinel
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by MV1_cockpit, MV9_emerge, MV5_sentinel, MV7_siso
+      - 'depends on (4): MV1_cockpit, MV9_emerge, MV5_sentinel, MV7_siso'
+      - 'needed by (1): MV12_nexus'
+    edges:
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV1_cockpit
+        kind: declared
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+        kind: declared
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV5_sentinel
+        kind: declared
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
+        kind: declared

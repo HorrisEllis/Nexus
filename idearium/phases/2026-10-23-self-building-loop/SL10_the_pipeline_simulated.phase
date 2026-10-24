@@ -7,11 +7,11 @@ intent: null
 summary: SL10_the_pipeline_simulated (integration) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792816517597
+exported_at: 1792822478455
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792816517597
-lastSeenAt: 1792816517597
+firstSeenAt: 1792822478455
+lastSeenAt: 1792822478455
 fingerprint: null
 payload:
   id: SL10_the_pipeline_simulated
@@ -34,4 +34,4 @@ payload:
   blocks:
     - MOD-SL-SIM
   spec: docs/self-building-loop.spec
-  graph: 1acb38d7cc404522
+  graph: 35d2671c3e5e5007

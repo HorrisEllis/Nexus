@@ -7,11 +7,11 @@ intent: null
 summary: COSA10_compartment_window (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677532
+exported_at: 1792822477818
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677532
-lastSeenAt: 1792787677532
+firstSeenAt: 1792822477818
+lastSeenAt: 1792822477818
 fingerprint: null
 payload:
   id: COSA10_compartment_window
@@ -29,4 +29,4 @@ payload:
     - COSA9_idearium_sync
   blocks: []
   spec: null
-  graph: b221406d3e785772
+  graph: dbca6a1f8bcb469d

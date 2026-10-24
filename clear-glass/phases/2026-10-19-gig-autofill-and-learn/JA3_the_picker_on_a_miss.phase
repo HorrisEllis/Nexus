@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::JA3_the_picker_on_a_miss
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::JA3_the_picker_on_a_miss
+context: pipeline phase JA3_the_picker_on_a_miss of docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: JA3_the_picker_on_a_miss (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792814522032
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814522032
+lastSeenAt: 1792814522032
+fingerprint: null
+payload:
+  id: JA3_the_picker_on_a_miss
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/learn-pick.js
+    - clear-glass/src/autofill/matcher.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/copilot/tools.js
+    - clear-glass/src/copilot/bridge.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - JA2_a_pick_is_saved_per_site
+  blocks: []
+  spec: null
+  graph: 5c93f0806d60b930

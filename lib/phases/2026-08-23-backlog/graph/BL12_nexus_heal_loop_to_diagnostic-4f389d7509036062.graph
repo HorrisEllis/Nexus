@@ -1,0 +1,219 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL12_nexus_heal_loop_to_diagnostic:4f389d7509036062
+type: graph
+id: phase:BL12_nexus_heal_loop_to_diagnostic:4f389d7509036062
+context: dependency graph of phase BL12_nexus_heal_loop_to_diagnostic
+intent: null
+summary: 22 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822701751
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822701751
+lastSeenAt: 1792822701751
+fingerprint: null
+payload:
+  for: BL12_nexus_heal_loop_to_diagnostic
+  kind: phase
+  repo: null
+  hash: 4f389d7509036062
+  nodes:
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: docs/diagnostic-phase-map.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/nexus-config.js
+      role: changes
+      exists: true
+      system: lib
+    - path: diagnostic/cli.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/lib/heal-loop.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/server.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-manifest.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: diagnostic/config.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: diagnostic/lib/wire-integrity.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-engines.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ico.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/data-home.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ico.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/lib/wire-integrity.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/diagnostic-engines.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/config.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: diagnostic/cli.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+    - from: diagnostic/server.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+    - from: diagnostic/lib/heal-loop.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/system-manifest.js
+      to: lib/nexus-config.js
+      kind: requires
+  crossings:
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      fromSystem: diagnostic
+      toSystem: loom
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL11_orchestrator_folder_consolidation
+    dependents: []
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL11_orchestrator_folder_consolidation
+      - docs/2026-08-23-backlog-phasemap.spec::BL7_emerge_files_to_emerge_folder
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): BL11_orchestrator_folder_consolidation · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL11_orchestrator_folder_consolidation
+        kind: inferred

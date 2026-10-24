@@ -1,0 +1,302 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CA7_constant_autonomy:fbcc8e9d8af7ed20
+type: graph
+id: phase:CA7_constant_autonomy:fbcc8e9d8af7ed20
+context: dependency graph of phase CA7_constant_autonomy
+intent: null
+summary: 35 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822478551
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478551
+lastSeenAt: 1792822478551
+fingerprint: null
+payload:
+  for: CA7_constant_autonomy
+  kind: phase
+  repo: null
+  hash: fbcc8e9d8af7ed20
+  nodes:
+    - path: clear-glass/renderer/library/sections/macros.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/page-map-panel.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/shell/menus.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: intelligence/relational-field.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/case-library.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/execution-pipeline.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/integrity-revert.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/maps/observability-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/run-pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chunk-build-orchestrator.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/command-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/case-library.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/compartment-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-phase-compartment.test.mjs
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/snapshot/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/autonomous-loop.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/constitutional-ai.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/scheduler.js
+      role: uses
+      exists: true
+      system: lib
+    - path: meta/adversary-suite.js
+      role: uses
+      exists: true
+      system: meta
+    - path: meta/crystal-lattice.js
+      role: uses
+      exists: true
+      system: meta
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/constant-autonomy.js
+      to: lib/scheduler.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: lib/autonomous-loop.js
+      kind: requires
+    - from: lib/case-library.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/case-library.js
+      to: meta/crystal-lattice.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/constitutional-ai.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: meta/adversary-suite.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/constant-autonomy.js
+      kind: requires
+    - from: lib/autonomous-loop.js
+      to: lib/case-library.js
+      kind: requires
+    - from: tests/modules/case-library.test.js
+      to: lib/case-library.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/command-builder.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: tests/modules/compartment-engine.test.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: tests/modules/idearium-phase-compartment.test.mjs
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/execution-pipeline.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/run-pipeline.js
+      to: lib/execution-pipeline.js
+      kind: requires
+    - from: lib/chunk-build-orchestrator.js
+      to: lib/execution-pipeline.js
+      kind: requires
+  crossings:
+    - from: lib/constant-autonomy.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/case-library.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/case-library.js
+      to: meta/crystal-lattice.js
+      fromSystem: lib
+      toSystem: meta
+      kind: upward
+      known: true
+    - from: lib/compartment-engine.js
+      to: cortex/snapshot/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/compartment-engine.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: lib/compartment-engine.js
+      to: meta/adversary-suite.js
+      fromSystem: lib
+      toSystem: meta
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
+      - docs/copilot-autonomous-phasemap.spec::CA2_triggers_conditions
+      - docs/copilot-autonomous-phasemap.spec::CA6_self_building_commands
+    dependents: []
+    upstream:
+      - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
+      - docs/copilot-autonomous-phasemap.spec::CA2_triggers_conditions
+      - docs/copilot-autonomous-phasemap.spec::CA3_pipeline_chains
+      - docs/copilot-autonomous-phasemap.spec::CA6_self_building_commands
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4
+      - >-
+        depends on (3): CA1_scheduler, CA2_triggers_conditions, CA6_self_building_commands · all
+        upstream 4
+      - 'needed by (0): —'
+    edges:
+      - from: docs/copilot-autonomous-phasemap.spec::CA1_scheduler
+        kind: declared
+      - from: docs/copilot-autonomous-phasemap.spec::CA2_triggers_conditions
+        kind: declared
+      - from: docs/copilot-autonomous-phasemap.spec::CA6_self_building_commands
+        kind: declared

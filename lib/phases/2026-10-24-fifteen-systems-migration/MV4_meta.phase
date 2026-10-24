@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV4_meta
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV4_meta
+context: pipeline phase MV4_meta of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV4_meta (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478479
+lastSeenAt: 1792822478479
+fingerprint: null
+payload:
+  id: MV4_meta
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - meta/
+    - lib/meta/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b732ebe36e00f6f1

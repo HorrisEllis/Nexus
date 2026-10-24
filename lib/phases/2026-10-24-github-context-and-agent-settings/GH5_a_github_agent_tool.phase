@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH5_a_github_agent_tool
+type: phase
+id: docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH5_a_github_agent_tool
+context: >-
+  pipeline phase GH5_a_github_agent_tool of
+  docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+intent: null
+summary: GH5_a_github_agent_tool (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792820475024
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820475024
+lastSeenAt: 1792820475024
+fingerprint: null
+payload:
+  id: GH5_a_github_agent_tool
+  map: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/nexus/github.js
+    - lib/agent-tools/index.js
+    - lib/repo-github.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - GH1_a_compartment_gets_its_github_repo
+  blocks: []
+  spec: null
+  graph: 3f7b8323b911d2b0

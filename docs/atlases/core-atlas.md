@@ -24,28 +24,31 @@ nexus/
   nexus/              autopilot, the event bus, query and connect layers
   warp/               the five-primitive event spine
   siso/               single input, single output — Event, Gate, Stream, StreamLog
-  jaa/                the JAA table schema
+  (retired) jaa           retired 2026-10-24 — the JAA table schema
   contracts/          the NEXUS interaction contract and contract node types
   hooks/              per-system hook declarations
-  seams/              seam contracts and the port table
-  auth/               sovereign authentication
-  security/           the signed signaling envelope
+  (retired) seams  retired 2026-10-24 — seam contracts and the port table
+  orchestrator/auth/  orchestrator — sovereign authentication
+  cos/security/       cos — the encrypted remote-session channel and kill switch
   meta/               domain-agnostic measurement
-  mesh/               networking daemons ported from BrainOS
-  remote-desktop/     remote desktop host, viewer and bridge-os-core
+  guardian/mesh/      guardian — networking daemons ported from BrainOS
+  cos/remote-desktop/  cos — remote desktop host, viewer and bridge-os-core (COS front end)
   emerge/             the .eg DSL runtime and the spec compiler
-  erosmancer/         ErosmancerOS — CDP browser automation
+  clear-glass/erosmancer/  clear-glass — ErosmancerOS, CDP browser automation
   cockpit/            the forge IDE spec and core
-  architecture-spec/  the scaffold every new system is built on
-  service/            ICO kernel service wrappers
+  idearium/architecture-spec/  idearium — the scaffold every new system is built on
+  (service split)     split 2026-10-24 — guardian/guardian-service.js, cortex/cortex-service.js, idearium/idearium-service.js
   sentinel/           the sentinel's interaction contract
   scripts/            verification and release scripts
   skills/             session skills
-  tablet/             the tablet homepage and 3D map
+  cos/tablet/         cos — the tablet homepage and 3D map (COS front end)
   ui/                 the UI shells
   docs/               the written record
   tests/              the proof
 ```
+
+> **2026-10-24 (0.60.236, RF2).** James: "need the systems soveriegn" · "remote desktop, tablet was meant to tbe the front end for cos" · "security goes with remote desktop". The folders that were not one of the 15 systems moved into the system that uses them (lib/architecture-apply.js; git kept each file's history): auth → orchestrator, mesh → guardian, idearium/architecture-spec → idearium, erosmancer → clear-glass, remote-desktop, security and tablet → cos, service/ split into guardian, cortex and idearium; jaa and seams retired to _archive/2026-10-24-retired-systems/. The rest (cockpit, contracts, hooks, meta, sentinel, siso, ui, emerge, emergence, warp, nexus, cli) are next, into lib/.
+
 
 ---
 
@@ -99,19 +102,19 @@ Since 0.39.341 (SY2 — James: "cos needs to be a nested compartment", then "Its
 
 `nexus/autopilot.js` starts every kernel in dependency phases and supervises them, restarting with backoff. `nexus/nexus-bus.js` is the common event fabric, `nexus/nexus-query.js` one query interface over every system, and `nexus/nexus-connect.js` the cross-system call, with a UUID on every call and every failure loud.
 
-`siso/` is the pattern: one input, one output, state in the data structure, transformation as events (`siso/Gate.js`, `siso/Stream.js`, `siso/StreamLog.js`, spec `siso/spec/siso.spec`), credited to Jonathan Bailey. `warp/` is the standalone devkit that hardens it: five primitives in `warp/core/` (Event, Gate, Stream, StreamLog, Axiom), and dispatch with canonical digests, a delta cache, cascades and pre-generation in `warp/dispatch/`. Its spec, `warp/spec/warp.spec`, keeps the dependency one way: NEXUS imports WARP, never the reverse. `jaa/schema.sql` and `jaa/schema-full.sql` define the JAA tables every row of state lives in.
+`siso/` is the pattern: one input, one output, state in the data structure, transformation as events (`siso/Gate.js`, `siso/Stream.js`, `siso/StreamLog.js`, spec `siso/spec/siso.spec`), credited to Jonathan Bailey. `warp/` is the standalone devkit that hardens it: five primitives in `warp/core/` (Event, Gate, Stream, StreamLog, Axiom), and dispatch with canonical digests, a delta cache, cascades and pre-generation in `warp/dispatch/`. Its spec, `warp/spec/warp.spec`, keeps the dependency one way: NEXUS imports WARP, never the reverse. the JAA table schema (jaa/, retired 2026-10-24, kept in the archive) and the JAA table schema (jaa/, retired 2026-10-24, kept in the archive) define the JAA tables every row of state lives in.
 
 ---
 
 ## Declared connections: contracts/, hooks/, seams/
 
-`contracts/nexus-interaction-contract.js` is the one table of every endpoint, port, SSE event and command, and `contracts/nodes/` holds the contract node types: axioms, bottlenecks, causal physics, deltas, edges, events, faults, gaps, ledgers, self-awareness, systems and verification contracts. `hooks/index.js` is the living hook registry, read before any system boots, with one declaration file per system (`hooks/cortex.hooks.js`, `hooks/guardian.hooks.js`, `hooks/idearium.hooks.js` and the rest) and `hooks/side-effect-parser.js` to find side effects a hook did not declare. `seams/seam-contracts.js` declares every seam and holds the port table.
+`contracts/nexus-interaction-contract.js` is the one table of every endpoint, port, SSE event and command, and `contracts/nodes/` holds the contract node types: axioms, bottlenecks, causal physics, deltas, edges, events, faults, gaps, ledgers, self-awareness, systems and verification contracts. `hooks/index.js` is the living hook registry, read before any system boots, with one declaration file per system (`hooks/cortex.hooks.js`, `hooks/guardian.hooks.js`, `hooks/idearium.hooks.js` and the rest) and `hooks/side-effect-parser.js` to find side effects a hook did not declare. the seam contracts (seams/, retired 2026-10-24, kept in the archive) declares every seam and holds the port table.
 
 ---
 
-## Trust: auth/, security/
+## Trust: auth/, cos/security/
 
-`auth/index.js` is the sovereign authentication layer: each client has an RSA keypair and signs its requests, and `auth/policy.json` says who may do what; `auth/client.js` is the caller's side. `security/signaling-envelope.js` signs the remote-desktop signaling channel so a replayed or hijacked session is refused, closing two items in `remote-desktop/remote-desktop.spec`.
+`orchestrator/auth/index.js` is the sovereign authentication layer: each client has an RSA keypair and signs its requests, and `orchestrator/auth/policy.json` says who may do what; `orchestrator/auth/client.js` is the caller's side. `cos/security/signaling-envelope.js` signs the remote-desktop signaling channel so a replayed or hijacked session is refused, closing two items in `cos/remote-desktop/remote-desktop.spec`.
 
 ---
 
@@ -123,23 +126,23 @@ Since 0.39.341 (SY2 — James: "cos needs to be a nested compartment", then "Its
 
 ## Adjacent systems
 
-`mesh/` holds networking daemons ported from BrainOS and kept optional: DNS, dynamic DNS, a reverse proxy and a firewall (`mesh/lib/dns-server.js`, `mesh/lib/ddns.js`, `mesh/lib/reverse-proxy.js`, `mesh/lib/firewall.js`), started by `mesh/daemons.js`.
+`guardian/mesh/` holds networking daemons ported from BrainOS and kept optional: DNS, dynamic DNS, a reverse proxy and a firewall (`guardian/mesh/lib/dns-server.js`, `guardian/mesh/lib/ddns.js`, `guardian/mesh/lib/reverse-proxy.js`, `guardian/mesh/lib/firewall.js`), started by `guardian/mesh/daemons.js`.
 
-`remote-desktop/` controls another machine: a host page (`remote-desktop/host.html`), a viewer (`remote-desktop/viewer.html`), input authorization and injection (`remote-desktop/input-auth.js`, `remote-desktop/input-injector.js`), signaling (`remote-desktop/signal.js`), an Electron bridge (`remote-desktop/bridge-electron/main.js`) and the vendored `remote-desktop/bridge-os-core/` for identity and keys. `remote-desktop/remote-desktop.spec` orders its build as a bottom-up phasemap.
+`cos/remote-desktop/` controls another machine: a host page (`cos/remote-desktop/host.html`), a viewer (`cos/remote-desktop/viewer.html`), input authorization and injection (`cos/remote-desktop/input-auth.js`, `cos/remote-desktop/input-injector.js`), signaling (`cos/remote-desktop/signal.js`), an Electron bridge (`cos/remote-desktop/bridge-electron/main.js`) and the vendored `cos/remote-desktop/bridge-os-core/` for identity and keys. `cos/remote-desktop/remote-desktop.spec` orders its build as a bottom-up phasemap.
 
 `emerge/` reads .eg files, a declarative language: tokenizer, a parser gated on signal-to-noise, kernel and emitter (`emerge/emerge-kernel.js`), code generation through Ollama for the gaps (`emerge/emerge-codegen-v2.js`), and the spec compiler in `emerge/compiler/` whose T0 to T3 pipeline queries cortex first (`emerge/cortex-query/`). Its specs are `emerge/spec/emerge.spec` and `emerge/SPEC_COMPILER.spec`.
 
-`erosmancer/erosmancer-os/` is ErosmancerOS, a TypeScript engine that drives a browser over the Chrome DevTools Protocol: behavior profiles for human-like input, routing, hostile-page detection, replay and adaptive memory, served on port 7432 by `erosmancer/erosmancer-os/src/api/server.ts`. Since 0.39.264 Clear Glass starts it with itself and connects it to its own DevTools port (`clear-glass/src/eros/supervisor.js`). Its spec is `erosmancer/spec/erosmancer.spec`.
+`clear-glass/erosmancer/erosmancer-os/` is ErosmancerOS, a TypeScript engine that drives a browser over the Chrome DevTools Protocol: behavior profiles for human-like input, routing, hostile-page detection, replay and adaptive memory, served on port 7432 by `clear-glass/erosmancer/erosmancer-os/src/api/server.ts`. Since 0.39.264 Clear Glass starts it with itself and connects it to its own DevTools port (`clear-glass/src/eros/supervisor.js`). Its spec is `clear-glass/erosmancer/spec/erosmancer.spec`.
 
 `cockpit/cockpit.spec` is the forge IDE's full specification, with its core in `cockpit/core.js` and its pipeline in `cockpit/pipeline.js`. The healer, once a system scaffolded by loom's generator beside these, moved into diagnostic in 0.60.136 (his call: diagnostic and the healer are one system): `diagnostic/healer/api/index.js`, with its spec in `diagnostic/spec/healer.spec.md`.
 
-`architecture-spec/` is the base a new sovereign system is built on before it has features: components, hooks and wires compiled into a lattice (`architecture-spec/registry/lattice.js`), a watcher per node type (`architecture-spec/registry/watcher.js`), friction (`architecture-spec/registry/friction.js`), decomposition (`architecture-spec/registry/decompose.js`), phases (`architecture-spec/registry/phases.js`), and the atlas tools (`architecture-spec/registry/create-atlas.js`, `architecture-spec/registry/edit-atlas.js`, `architecture-spec/registry/nexus-atlas-aggregate.js`). Its own atlas is `architecture-spec-atlas.md`.
+`idearium/architecture-spec/` is the base a new sovereign system is built on before it has features: components, hooks and wires compiled into a lattice (`idearium/architecture-spec/registry/lattice.js`), a watcher per node type (`idearium/architecture-spec/registry/watcher.js`), friction (`idearium/architecture-spec/registry/friction.js`), decomposition (`idearium/architecture-spec/registry/decompose.js`), phases (`idearium/architecture-spec/registry/phases.js`), and the atlas tools (`idearium/architecture-spec/registry/create-atlas.js`, `idearium/architecture-spec/registry/edit-atlas.js`, `idearium/architecture-spec/registry/nexus-atlas-aggregate.js`). Its own atlas is `architecture-spec-atlas.md`.
 
 ---
 
-## Operations: service/, sentinel/, scripts/, skills/, tablet/
+## Operations: service/, sentinel/, scripts/, skills/, cos/tablet/
 
-`service/guardian-service.js` and `service/idearium-service.js` boot a kernel as a supervised ICO service with every lifecycle event in its ledger. `sentinel/interaction-contract.json` is the sentinel's contract. `scripts/` holds release and verification tools: `scripts/verify-boot.js`, `scripts/verify-wires.js`, `scripts/precommit-check.js`, `scripts/run-verification-manifest.cjs`, `scripts/bump-version.py`. `skills/` holds session skills (`skills/nexus-session-changelog/SKILL.md`, `skills/james-brooks/SKILL.md`). `tablet/` is the tablet homepage (`tablet/index.html`) and its 3D map (`tablet/map3d.html`).
+`guardian/guardian-service.js` and `idearium/idearium-service.js` boot a kernel as a supervised ICO service with every lifecycle event in its ledger. `sentinel/interaction-contract.json` is the sentinel's contract. `scripts/` holds release and verification tools: `scripts/verify-boot.js`, `scripts/verify-wires.js`, `scripts/precommit-check.js`, `scripts/run-verification-manifest.cjs`, `scripts/bump-version.py`. `skills/` holds session skills (`skills/nexus-session-changelog/SKILL.md`, `skills/james-brooks/SKILL.md`). `cos/tablet/` is the tablet homepage (`cos/tablet/index.html`) and its 3D map (`cos/tablet/map3d.html`).
 
 ---
 
@@ -174,9 +177,9 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 ## What the registry knows (generated)
 
-> Generated by `scripts/generate-atlases.js` from loom's registry and events (loom/data/registry.json, loom/data/events.json — data, outside the snapshot, so written plain) and the tree itself, 2026-10-21. Everything between the markers is rewritten on the next run — write narrative above them. The same facts, one component at a time, are what `lib/registry-harness.js` hands a repo agent (loom.card.tool).
+> Generated by `scripts/generate-atlases.js` from loom's registry and events (loom/data/registry.json, loom/data/events.json — data, outside the snapshot, so written plain) and the tree itself, 2026-10-24. Everything between the markers is rewritten on the next run — write narrative above them. The same facts, one component at a time, are what `lib/registry-harness.js` hands a repo agent (loom.card.tool).
 
-**2868** files · **1651** code files · **9** registry components declared here · **274** events emitted · **97** heard · **9** routes · **178** code files with a covering test
+**4475** files · **1594** code files · **9** registry components declared here · **181** events emitted · **66** heard · **9** routes · **166** code files with a covering test
 
 ### Routes (9)
 
@@ -190,7 +193,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - POST /api/snapshot — Snapshot before applying patch · declared in `emerge/registry-components.js`
 - POST /compile — Compile .emerge spec → T0/T1/T2 pipeline · declared in `emerge/registry-components.js`
 
-### Events it emits (274) — and who hears them
+### Events it emits (181) — and who hears them
 
 - **guardian.ncp.sync_result** — from `tests/modules/test-chat-sync-agent-routing.test.js` → `guardian/lib/chat-sync.js` (guardian), `guardian/lib/chat-transcripts.js` (guardian)
 - **anomaly.detected** — from `lib/config-governance.js`, `tests/modules/test-escalation.js` +2 → `cortex/orion/index.js` (cortex), `tests/modules/test-config-governance.js`, `tests/nexus-full-audit.js`
@@ -205,35 +208,15 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - **guardian.job.chunk** — from `tests/modules/test-guardian-mesh-client.js` → `tests/modules/test-live-everywhere.test.js`, `tests/modules/test-work-journal.test.js`
 - **guardian.job.timeout** — from `tests/modules/test-economy-guardian.test.js` → `tests/modules/test-back-and-forth.test.js`, `tests/modules/test-profile-tabs.test.js`
 - **ico:ledger:fork** — from `lib/ico.js` → `tests/full.test.js`, `tests/modules/test-ico-ledger-writethrough.js`
-- **input:rate_limited** — from `remote-desktop/input-injector.js` → `remote-desktop/bridge-electron/main.js`, `remote-desktop/tests/test-input-injector.js`
-- **input:rejected** — from `remote-desktop/input-injector.js` → `remote-desktop/bridge-electron/main.js`, `remote-desktop/tests/test-input-injector.js`
-- **bus:basic** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:enrich** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:err.safe** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:multi** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:mutate** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:off** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:once** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:seq** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:sig.check** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:ts** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:unsub** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
 - **cortex.orion.classified** — from `tests/modules/test-raid-orion-wiring.js` → `tests/modules/test-orion.js`
-- **enrich:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
-- **err:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
 - **guardian.tool.called** — from `tests/modules/tool-call-listener.test.js` → `lib/agent-tools/tool-call-listener.js`
 - **ico:crystal:formed** — from `lib/ico.js` → `tests/full.test.js`
 - **ico:drop** — from `lib/ico.js` → `tests/full.test.js`
 - **ico:failure** — from `lib/ico.js` → `tests/full.test.js`
 - **ico:pipe:error** — from `lib/ico.js` → `tests/full.test.js`
-- **input:injected** — from `remote-desktop/input-injector.js` → `remote-desktop/tests/test-input-injector.js`
-- **net.dns.add_record** — from `mesh/lib/ddns.js` → `mesh/lib/dns-server.js`
-- **once:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
 - **shadow.declared** — from `lib/shadow.js` → `tests/modules/test-shadow.test.js`
 - **shadow.settled** — from `lib/shadow.js` → `tests/modules/test-shadow.test.js`
 - **store.flushed** — from `tests/modules/test-registry-harness.test.js` → `tests/modules/test-registry-harness.test.js`
-- **test:event** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
-- **unsub:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
 - **a.thing.done** — from `tests/modules/test-event-contracts.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **alk.rel.bid.detected** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **alk.rel.bid.response** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
@@ -260,25 +243,45 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - **architect.hook.updated** — from `lib/hook-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **architect.hook.wired** — from `lib/hook-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **artifacts.changed** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **authority:ready** — from `remote-desktop/session-token.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **blueprint.loaded** — from `lib/blueprint.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **bus:all.a** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **bus:all.b** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **bus:meta:observer_error** — from `remote-desktop/bridge-os-core/bridge-core/bus.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **bus:wild.1** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **bus:wild.2** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **capture.test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **causal:record** — from `emergence/loop.js`, `emergence/test/loop.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **cfr:create** — from `emergence/loop.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **cfr.influence.applied** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **cfr.influence.diagnostic_requested** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- … 194 more — loom.find.tool kind "event"
+- **cfr.influence.guardian_throttled** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cfr.influence.guardian_unthrottled** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cfr.influence.snr_floor_cleared** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cfr.influence.snr_floor_raised** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cfr.influence.versionium_accelerated** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ci:run:started** — from `tests/modules/test-event-contracts.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cli.exec.done** — from `cockpit/cli.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **commented.out** — from `tests/modules/test-event-contracts.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **compartment.spawned** — from `lib/compartment-engine.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **compiler.check** — from `tests/modules/test-event-contracts.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **component.deprecated** — from `lib/component-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **component.hard_deleted** — from `lib/component-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **component.updated** — from `lib/component-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **config.changed** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **constitution.decision** — from `lib/constitutional-ai.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **contract-registry.axiom.changed** — from `lib/contract-registry-writer.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **contract-registry.violation.flagged** — from `lib/contract-registry-writer.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cortex.memory.updated** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **entropy.changed** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ess:bind** — from `lib/ess.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ess:noise_alert** — from `lib/ess.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ess:resolve** — from `lib/ess.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ess:unbind** — from `lib/ess.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ess:write** — from `lib/ess.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **eventlog.bulk** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **eventlog.push** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **fake.event** — from `tests/modules/test-capability-spec.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- … 101 more — loom.find.tool kind "event"
 
-### Events it hears from elsewhere (59)
+### Events it hears from elsewhere (48)
 
-**architect.snr.flagged** (architect) · **copilot.error.detected** (copilot) · **cortex.gap.found** (orchestrator) · **cortex.raid.decided** · **cortex.self-heal.deep_scan_findings** · **cortex.self-heal.failure_mode** · **cortex.self-heal.fix_proposed** · **cortex.self-heal.fix_staged** · **cortex.self-heal.remediation_requested** · **cortex.self-heal.skipped** · **dom:pick-result** · **escalation.failure_mode** · **escalation.friction.increased** · **gap.found** · **guardian.chat.transcript.recorded** (guardian) · **guardian.economy.fallback** · **guardian.economy.wait** · **guardian:job:complete** · **host:compartment:error** · **host:compartment:runtime-set** · **idearium.spec.collected** · **idearium.spec.compiled** · **job.done** · **liminal.velocity.runaway** · **net.ddns.add_entry** · **net.ddns.force_check** · **net.ddns.update** · **net.dns.allow_domain** · **net.dns.block_domain** · **net.fw.add_rule** · **net.fw.import_json** · **net.fw.remove_rule** · **net.fw.set_vars** · **net.proxy.add_route** · **net.proxy.remove_route** · **nexus.self-build.housekeeping-complete** · **nexus:cookie-request** · **plugin:test:seen** · **raid.route.decided** (cortex) · **raid.route.fulfilled** · **raid.route.no_route** (cortex) · **real.evt** · **ring:evicted** · **ring:pushed** · **shortcut:action** · **spatial.kernel.landscape.updated** · **spatial.resonance.scored** · **sql.plan** · **step.blocked** · **step.passed** · **t.absent** · **t.broken** · **t.build** · **t.lattice** · **t.ledger** · **t.model** · **t.reuse** · **t.vector** · **test:build**
+**architect.snr.flagged** (architect) · **copilot.error.detected** (copilot) · **cortex.gap.found** (orchestrator) · **cortex.raid.decided** · **cortex.self-heal.deep_scan_findings** · **cortex.self-heal.failure_mode** · **cortex.self-heal.fix_proposed** · **cortex.self-heal.fix_staged** · **cortex.self-heal.remediation_requested** · **cortex.self-heal.skipped** · **dom:pick-result** · **escalation.failure_mode** · **escalation.friction.increased** · **gap.found** · **guardian.chat.transcript.recorded** (guardian) · **guardian.economy.fallback** · **guardian.economy.wait** · **guardian:job:complete** · **host:compartment:error** · **host:compartment:runtime-set** · **idearium.spec.collected** · **idearium.spec.compiled** · **job.done** · **liminal.velocity.runaway** · **nexus.self-build.housekeeping-complete** · **nexus:cookie-request** · **plugin:test:seen** · **raid.route.decided** (cortex) · **raid.route.fulfilled** · **raid.route.no_route** (cortex) · **real.evt** · **ring:evicted** · **ring:pushed** · **shortcut:action** · **spatial.kernel.landscape.updated** · **spatial.resonance.scored** · **sql.plan** · **step.blocked** · **step.passed** · **t.absent** · **t.broken** · **t.build** · **t.lattice** · **t.ledger** · **t.model** · **t.reuse** · **t.vector** · **test:build**
 
-### Files, directory by directory (239 directories)
+### Files, directory by directory (512 directories)
 
 #### `.gitignore`
 
@@ -287,55 +290,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   requires 3 · required by 0
 - `test-node-index.js` (106 lines)  
   requires 3 · required by 0
-- other: 410 files (.gitignore, .json, .npmrc, .md, VERSION, .jsonl)
-
-#### `architecture-spec/registry/`
-
-14 code file(s).
-
-- `architecture-spec/registry/api.js` (95 lines) — .architecture/registry/api.js — the real, cross-system-safe surface onto this registry. Other systems (copilot, agents, anything) reach  
-  exports createRegistryApi, query, history · requires 1 · required by 0
-- `architecture-spec/registry/bundle.js` (22 lines) — .architecture/schema/bundle.js — NodeBundle schema + validator. A reference-only grouping of related node ids (a component with its  
-  exports BUNDLE_SCHEMA, checkBundle
-- `architecture-spec/registry/component.js` (21 lines) — .architecture/schema/component.js — Component node schema + validator. Restates loom/schema/component.js COMPONENT_SCHEMA unchanged; scoped  
-  exports COMPONENT_SCHEMA, checkComponent
-- `architecture-spec/registry/config.js` (21 lines) — .architecture/schema/config.js — Config node schema + validator. Deliberately minimal — a config node's whole point is that its value  
-  exports CONFIG_SCHEMA, checkConfig
-- `architecture-spec/registry/create-atlas.js` (129 lines) — .architecture/registry/create-atlas.js — scaffolds a new system atlas from atlas-template.md, pre-filling whatever a real .spec object  
-  exports scaffoldAtlas, synthesize, toCortexMemory
-- `architecture-spec/registry/decompose.js` (139 lines) — .architecture/registry/decompose.js — agnostic decomposition tool. Takes anything with declared seams (cut points) — a phasemap, a  
-  exports findSeamsByTopLevelKeys, decomposePhasemap, migrateToSystemFolders, wireIntoRegistry
-- `architecture-spec/registry/edit-atlas.js` (71 lines) — .architecture/registry/edit-atlas.js — edits ONE module section of an atlas.md by id, without touching anything else in the file. The  
-  exports findSection, editSection
-- `architecture-spec/registry/friction.js` (69 lines) — .architecture/registry/friction.js — per-system self-diagnostic score, computed live from the system's own registry state. Direct  
-  exports computeFriction, computeTension, gapsFromSpecFile
-- `architecture-spec/registry/hook.js` (36 lines) — .architecture/schema/hook.js — Hook node schema + validator. Restates loom/schema/hook.js HOOK_SCHEMA unchanged. type is an open  
-  exports HOOK_SCHEMA, KNOWN_HOOK_TYPES, HOOK_DIRECTIONS, checkHook
-- `architecture-spec/registry/lattice.js` (58 lines) — .architecture/compiler/lattice.js — compiles every Component/Hook/Wire node file into a single CompiledLattice. Generalization of  
-  exports compileLattice
-- `architecture-spec/registry/nexus-atlas-aggregate.js` (54 lines) — .architecture/registry/nexus-atlas-aggregate.js — rolls up idearium's real per-project atlas.json files (repository, fileCount, byLanguage,  
-  exports aggregate · requires 0 · required by 1
-- `architecture-spec/registry/phases.js` (77 lines) — .architecture/registry/phases.js — Phase as a full node kind, not just prose in a phasemap doc. The point: querying "what's the state of  
-  exports PHASE_SCHEMA, PHASE_STATUSES, checkPhase, summarize, oneLine
-- `architecture-spec/registry/watcher.js` (84 lines) — .architecture/registry/watcher.js — live per-type node index + ledger. Generalization of guardian/lib/node-registry.js out of guardian and  
-  exports createWatcher, NODE_TYPES · requires 1 · required by 1
-- `architecture-spec/registry/wire.js` (23 lines) — .architecture/schema/wire.js — Wire node schema + validator. Restates loom/schema/wire.js WIRE_SCHEMA unchanged. A wire is the  
-  exports WIRE_SCHEMA, checkWire
-
-#### `auth/`
-
-2 code · 1 other file(s).
-
-- `auth/client.js` (513 lines) — NEXUS Remote Client First-run: generates RSA-2048 keypair, prints public key for admin to register
-- `auth/index.js` (510 lines)  
-  exports init, handleChallenge, handleHandshake, handleRevoke, handleClients, handleRegisterClient +4 · requires 1 · required by 0
-- other: `auth/policy.json`
-
-#### `auth/keys/`
-
-2 other file(s).
-
-- other: `auth/keys/nexus-private.pem`, `auth/keys/nexus-public.pem`
+- other: 456 files (.gitignore, .json, .npmrc, .md, VERSION, .jsonl)
 
 #### `cli/`
 
@@ -452,9 +407,9 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `docs/`
 
-392 other file(s).
+402 other file(s).
 
-- other: 392 files (.spec, .md, .json, .htm, .yaml, .html)
+- other: 402 files (.spec, .md, .json, .htm, .yaml, .html)
 
 #### `docs/architecture-spec/`
 
@@ -541,8 +496,8 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports check, checkNode, checkEdges, checkPropagation, createInvariantsPipeline, violation +2 · requires 2 · required by 1 · tested by `emerge/test/gap-field.test.js`, `emerge/test/invariants.test.js` +1
 - `emerge/compiler/kg-builder.js` (606 lines) — Knowledge Graph builder Transforms a ParsedSpec into a KnowledgeGraph: a queryable, self-aware  
   exports build, createKGPipeline, buildNode, computeGaps, assignConfidence, DEPTH +1 · requires 2 · required by 2 · tested by `emerge/test/gap-field.test.js`, `emerge/test/invariants.test.js` +4
-- `emerge/compiler/phase-specs.js` (143 lines)  
-  exports MODULE_ID, VERSION, specIds, derive, write, check · requires 6 · required by 0
+- `emerge/compiler/phase-specs.js` (295 lines)  
+  exports MODULE_ID, VERSION, specIds, derive, write, check +3 · requires 6 · required by 0
 - `emerge/compiler/pipeline.js` (546 lines) — compiler/pipeline.js — spec-compiler as a SISO stream THE INSIGHT (from the SISO paper):  
   exports compile, createPipeline, driveAsync, E · requires 10 · required by 2 · tested by `emerge/test/gap-field.test.js`, `emerge/test/kg.test.js` +1
 - `emerge/compiler/reply-engine.js` (447 lines)  
@@ -903,121 +858,6 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `emergence/vendor/rfr2/liminal/structural.js` (96 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ STRUCTURAL MODULE · modules/structural/index.js · v1.0.0 ║  
   exports MODULE_ID, MODULE_VERSION, MODULE_UUID, StructuralAssumptionModule · requires 2 · required by 0
 
-#### `erosmancer/erosmancer-os/`
-
-6 other file(s).
-
-- other: `erosmancer/erosmancer-os/CHANGELOG.md`, `erosmancer/erosmancer-os/MANIFEST.json`, `erosmancer/erosmancer-os/README.md`, `erosmancer/erosmancer-os/ROADMAP.md`, `erosmancer/erosmancer-os/package.json`, `erosmancer/erosmancer-os/tsconfig.json`
-
-#### `erosmancer/erosmancer-os/src/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/index.ts` (291 lines) — // ============================================================ // ErosmancerOS — Orchestrator v2  
-  exports ErosmancerOS, DEFAULT_CONFIG, BEHAVIOR_DEFAULTS, BehaviorEngine, BEHAVIOR_PROFILES, RoutingEngine +3
-
-#### `erosmancer/erosmancer-os/src/adaptive/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/adaptive/index.ts` (399 lines) — // ============================================================ // ErosmancerOS — Adaptive Layer  
-  exports PatternMemory, StrategyOptimizer
-
-#### `erosmancer/erosmancer-os/src/api/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/api/server.ts` (753 lines) — // ============================================================ // ErosmancerOS — API Server v2  
-  exports app, server · requires 1 · required by 1
-
-#### `erosmancer/erosmancer-os/src/behavior/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/behavior/index.ts` (569 lines) — Box-Muller transform → normal distribution sample  
-  exports curvedPath, BEHAVIOR_PROFILES, BehaviorEngine
-
-#### `erosmancer/erosmancer-os/src/bridge/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/bridge/index.ts` (407 lines) — // ============================================================ // ErosmancerOS — Bridge Core (continued)  
-  exports GOOGLE_SIGNIN_HOST, isGoogleSignin, BridgeCore
-
-#### `erosmancer/erosmancer-os/src/dispatcher/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/dispatcher/index.ts` (490 lines) — // ============================================================ // ErosmancerOS — Signal Dispatcher  
-  exports SignalDispatcher
-
-#### `erosmancer/erosmancer-os/src/hostile/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/hostile/index.ts` (471 lines) — // ============================================================ // ErosmancerOS — Hostile Detection  
-  exports HostileDetection
-
-#### `erosmancer/erosmancer-os/src/observer/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/observer/index.ts` (470 lines) — // ============================================================ // ErosmancerOS — DOM Observer  
-  exports DOMObserver, ShadowDOMMapper
-
-#### `erosmancer/erosmancer-os/src/registry/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/registry/index.ts` (394 lines) — // ============================================================ // ErosmancerOS — Node Registry  
-  exports NodeRegistry
-
-#### `erosmancer/erosmancer-os/src/replay/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/replay/index.ts` (355 lines) — // ============================================================ // ErosmancerOS — ScriptReplayQueue  
-  exports ScriptReplayQueue · requires 0 · required by 1
-
-#### `erosmancer/erosmancer-os/src/routing/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/routing/index.ts` (349 lines) — // ============================================================ // ErosmancerOS — Routing Engine  
-  exports RoutingEngine
-
-#### `erosmancer/erosmancer-os/src/selector/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/selector/index.ts` (404 lines) — // ============================================================ // ErosmancerOS — Selector Engine  
-  exports SelectorEngine
-
-#### `erosmancer/erosmancer-os/src/telemetry/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/telemetry/index.ts` (144 lines) — // ============================================================ // ErosmancerOS — Telemetry  
-  exports Telemetry
-
-#### `erosmancer/erosmancer-os/src/types/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/types/index.ts` (471 lines) — // ============================================================ // ErosmancerOS — Core Types  
-  exports NodeSchema, TabSchema, DEFAULT_CONFIG, BEHAVIOR_DEFAULTS
-
-#### `erosmancer/erosmancer-os/tests/`
-
-6 test file(s).
-
-
-#### `erosmancer/spec/`
-
-1 other file(s).
-
-- other: `erosmancer/spec/erosmancer.spec`
-
 #### `hooks/`
 
 11 code file(s).
@@ -1045,15 +885,9 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `hooks/side-effect-parser.js` (121 lines)  
   exports parseSideEffect, structuredSideEffects · requires 0 · required by 1 · tested by `tests/hooks-side-effect-parser.test.js`
 
-#### `jaa/`
-
-2 other file(s).
-
-- other: `jaa/schema-full.sql`, `jaa/schema.sql`
-
 #### `lib/`
 
-285 code · 1 other file(s).
+292 code · 2 other file(s).
 
 - `lib/account-identity-index.js` (61 lines) — a real, stable UUID per (agent, account), not per session. James: "having a uuid for accounts in the cookie  
   exports resolve, touch, forAgent, TABLE, MODULE_ID, VERSION · requires 1 · required by 0
@@ -1097,6 +931,10 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports MODULE_ID, VERSION, SEED, get, observe, interrogationPrompt +4
 - `lib/agent-tool-call.js` (109 lines) — // lib/agent-tool-call.js — real, pure parser for the tool-call syntax a // browser-typed agent reply uses to request a real tool execution.  
   exports parseToolCall, parseAllToolCalls, stripToolCall, formatToolResult, MODULE_ID, VERSION
+- `lib/architecture-apply.js` (191 lines)  
+  exports MODULE_ID, VERSION, plan, apply, check
+- `lib/architecture-migrate.js` (210 lines)  
+  exports MODULE_ID, VERSION, CORE, RETIRED, RETIRED_DIR, read +5
 - `lib/atlas-generate.js` (238 lines)  
   exports generate, sectionFor, splice, walk, atlasFileFor, syncReadme +4 · requires 4 · required by 2
 - `lib/autonomous-loop.js` (114 lines) — // ── lib/autonomous-loop.js ─────────────────────────────────────────────────── // UUID: nexus-autonomous-loop-v1-0000-4000-0000-000000000001  
@@ -1117,6 +955,8 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports VERSION, FILES, BUILDS, NOT_BUILDS, census · requires 1 · required by 2
 - `lib/build-pipeline.js` (141 lines) — HTTP/SSE front door for the closed build loop §GAP CLOSED 2026-07-07 — the closed loop this wraps already exists and  
   exports startBuild, getBuild, listBuilds · requires 1 · required by 1
+- `lib/build-queue.js` (111 lines)  
+  exports VERSION, GROUPS, queue, lines
 - `lib/build-verify.js` (253 lines) — does the code a spec produced actually work? One verification, graded, every failure attributed to one file with the exact error.  
   exports verify, against, baselineOf, keyOf, attributeTest, loadsOf +8 · requires 2 · required by 1 · tested by `tests/modules/test-build-verify.test.js`
 - `lib/bus-subscriptions.js` (259 lines)  
@@ -1145,6 +985,8 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports GROUPS, SCHEMA, BY_KEY, defaults, clean, effective · requires 0 · required by 4 · tested by `clear-glass/test/chats-settings.test.js`, `tests/modules/test-chat-crawl-plan.test.js` +1
 - `lib/chat-index.js` (56 lines) — // lib/chat-index.js — the real-time chat index James asked ClearGlass's // download manager to become: "separated by provider, then agent, then  
   exports buildChatIndex, MODULE_ID, VERSION
+- `lib/chat-ledger-client.js` (45 lines) — read Clear Glass's live chat ledgers through its own routes (0.60.192). James, 2026-10-21: "look in clearglass download manager". His 0.39.278 idea already keeps every chat there as the page…  
+  exports MODULE_ID, VERSION, url, chat, list
 - `lib/chat-logger.js` (287 lines) — NEXUS Chat Logger Logs every AI exchange — NCP, Ollama, direct chat — to JAA's chat_log table  
   exports startSession, getSession, log, buildInjectionContext, sessionSummary, listSessions +3 · requires 1 · required by 2
 - `lib/check-catalogue.js` (95 lines) — QA1: the catalogue runs. Serves cos/spec/check-catalogue.spec (119 checks) and runs the ones that have a runner. component_id: nexus.lib.check-catalogue  
@@ -1163,20 +1005,12 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports generate, load, getDispatchTable, getHelpText, CLI_MAP_PATH, MODULE_ID +1 · requires 3 · required by 1
 - `lib/cli-reasoning.js` (312 lines) — CLI Reasoning Layer (Qwen 0.5b) Qwen 0.5b as the CLI's reasoning layer.  
   exports isAvailable, rephrase, identifyGap, suggestCorrection, agentCheck, resolve +3 · requires 1 · required by 1
-- `lib/code-edit.js` (473 lines)  
+- `lib/code-edit.js` (476 lines)  
   exports VERSION, VIA, planEdits, unifiedDiff, diagnose, current +7 · requires 4 · required by 3
 - `lib/coder-brief.js` (94 lines) — CB1 (0.60.171): the brief a coder gets for one file, in the five parts Gemini said make it code at its best. Map: docs/2026-10-19-pipeline-root-causes-phasemap.spec CB1  
   exports MODULE_ID, VERSION, AXIOM_RULES, stackOf, compose · requires 1 · required by 1
-- `lib/command-builder.js` (182 lines)  
-  exports parseRequest, resolveCapability, buildCommand, getCommand, listCommands, runCommand +3 · requires 4 · required by 1
-- `lib/compartment-dom-ledger.js` (57 lines) — lib/compartment-dom-ledger.js §MCO10 2026-09-13 — James: "stream the DOM to the compartment ledger per  
-  exports recordDomEvent · tested by `tests/modules/mco10-compartment-dom-ledger.test.js`
-- `lib/compartment-engine.js` (455 lines) — // ── lib/compartment-engine.js ───────────────────────────────────────────────── // UUID: nexus-compartment-engine-v1-0000-4000-0000-000000000001  
-  exports spawn, execute, resolve, _registerExtensions, validateWiring, STATUS +2 · requires 8 · required by 0 · emits compartment.spawned · tested by `tests/modules/compartment-engine.test.js`
-- `lib/component-boundary-check.js` (83 lines) — lib/component-boundary-check.js §MCO15 2026-09-13 (Track C — component compiler, boundary detection).  
-  exports checkComponentBoundary · requires 1 · required by 0 · tested by `tests/modules/mco15-component-boundary-check.test.js`
-- … 225 more code files — loom.find.tool
-- other: `lib/repo-prompt-blocks.previous.json`
+- … 232 more code files — loom.find.tool
+- other: `lib/architecture-migrate.decisions.json`, `lib/repo-prompt-blocks.previous.json`
 
 #### `lib/activity-log/`
 
@@ -1733,17 +1567,1595 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `lib/opportunity/store.js` (40 lines) — the opportunity pipeline's persistence: cortex's JAA store, six tables, one ledger. TABLES (none decays — they are not in cortex/memory/tiers.js TABLE_TIERS, so they are long-lived by default):  
   exports T, jaa, ledger, ledgerFor, shortid · requires 1 · required by 3
 
+#### `lib/phases/`
+
+1 other file(s).
+
+- other: `lib/phases/INDEX.md`
+
+#### `lib/phases/2026-08-22-session-full/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-08-22-session-full/SF10_agent_notes.phase`, `lib/phases/2026-08-22-session-full/SF12_end_state_vision_and_full_phase_map_docs.phase`, `lib/phases/2026-08-22-session-full/SF13_orchestrator_agent_pipeline.phase`, `lib/phases/2026-08-22-session-full/SF16_event_types_real_registry.phase`, `lib/phases/2026-08-22-session-full/SF17_intelligence_system_all_4_phases.phase`, `lib/phases/2026-08-22-session-full/SF5_wiring_gap_bridge.phase`, `lib/phases/2026-08-22-session-full/SF7_axiom_8_7.phase`
+
+#### `lib/phases/2026-08-22-session-full/graph/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-08-22-session-full/graph/SF10_agent_notes-2d100608bc826abf.graph`, `lib/phases/2026-08-22-session-full/graph/SF12_end_state_vision_and_full_phase_map_docs-e20580490f498608.graph`, `lib/phases/2026-08-22-session-full/graph/SF13_orchestrator_agent_pipeline-de5ad9a019286d15.graph`, `lib/phases/2026-08-22-session-full/graph/SF16_event_types_real_registry-71639da711eaaf6d.graph`, `lib/phases/2026-08-22-session-full/graph/SF17_intelligence_system_all_4_phases-4c31159075863608.graph`, `lib/phases/2026-08-22-session-full/graph/SF5_wiring_gap_bridge-91251df2a9f05ad8.graph`, `lib/phases/2026-08-22-session-full/graph/SF7_axiom_8_7-0396343d7665f754.graph`
+
+#### `lib/phases/2026-08-22-session-full/graph/_superseded/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-08-22-session-full/graph/_superseded/SF12_end_state_vision_and_full_phase_map_docs-1d20559f29b851d2.graph`, `lib/phases/2026-08-22-session-full/graph/_superseded/SF17_intelligence_system_all_4_phases-8f00a4235b63cc7b.graph`, `lib/phases/2026-08-22-session-full/graph/_superseded/SF7_axiom_8_7-c236c56937c33593.graph`
+
+#### `lib/phases/2026-08-23-backlog/`
+
+8 other file(s).
+
+- other: `lib/phases/2026-08-23-backlog/BL11_orchestrator_folder_consolidation.phase`, `lib/phases/2026-08-23-backlog/BL12_nexus_heal_loop_to_diagnostic.phase`, `lib/phases/2026-08-23-backlog/BL15_agent_tools_tree_restructure.phase`, `lib/phases/2026-08-23-backlog/BL24_userscript_suite_enterprise_grade.phase`, `lib/phases/2026-08-23-backlog/BL25_nexus_options_config.phase`, `lib/phases/2026-08-23-backlog/BL27_agent_suite_consolidation.phase`, `lib/phases/2026-08-23-backlog/BL4_port_element_picker_ux.phase`, `lib/phases/2026-08-23-backlog/BL7_emerge_files_to_emerge_folder.phase`
+
+#### `lib/phases/2026-08-23-backlog/graph/`
+
+8 other file(s).
+
+- other: `lib/phases/2026-08-23-backlog/graph/BL11_orchestrator_folder_consolidation-e8629d7afc8fe155.graph`, `lib/phases/2026-08-23-backlog/graph/BL12_nexus_heal_loop_to_diagnostic-4f389d7509036062.graph`, `lib/phases/2026-08-23-backlog/graph/BL15_agent_tools_tree_restructure-8c572d92803d3fae.graph`, `lib/phases/2026-08-23-backlog/graph/BL24_userscript_suite_enterprise_grade-edba621e935840c5.graph`, `lib/phases/2026-08-23-backlog/graph/BL25_nexus_options_config-abb545081f8c4e3e.graph`, `lib/phases/2026-08-23-backlog/graph/BL27_agent_suite_consolidation-5312857a8c56f41a.graph`, `lib/phases/2026-08-23-backlog/graph/BL4_port_element_picker_ux-8f7a989bfea93b3a.graph`, `lib/phases/2026-08-23-backlog/graph/BL7_emerge_files_to_emerge_folder-3ab7a1f57237920a.graph`
+
+#### `lib/phases/2026-08-23-backlog/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-08-23-backlog/graph/_superseded/BL11_orchestrator_folder_consolidation-d04b773d3d681ed0.graph`, `lib/phases/2026-08-23-backlog/graph/_superseded/BL12_nexus_heal_loop_to_diagnostic-aedd1b0928da63f4.graph`
+
+#### `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/`
+
+8 other file(s).
+
+- other: `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR2_ollama_output_folder_listener.phase`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR3_account_registry_userscript_hook.phase`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR5_build_contract_per_agent_per_intent.phase`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR6_copilot_as_agent_chat_model.phase`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR7_guardian_dispatch_connectivity_sweep.phase`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/ET2_guardian_event_taxonomy.phase`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/ET6_sigma_gates_on_taxonomy.phase`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/SS3_unified_living_model_system_plus_person.phase`
+
+#### `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/`
+
+8 other file(s).
+
+- other: `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR2_ollama_output_folder_listener-c5cdd4d86ddb5b74.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR3_account_registry_userscript_hook-8be6d498ddcef7ec.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR5_build_contract_per_agent_per_intent-36bf07b27fc48bd7.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR6_copilot_as_agent_chat_model-fd8edb04f0f53aaf.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR7_guardian_dispatch_connectivity_sweep-e8d5cbb04e0fb190.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET2_guardian_event_taxonomy-499ad40e6e9c3414.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET6_sigma_gates_on_taxonomy-161a85ba5515e7c0.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/SS3_unified_living_model_system_plus_person-0bbbc7d8adf65f4e.graph`
+
+#### `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/ET2_guardian_event_taxonomy-3864f053a89e1c31.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/ET6_sigma_gates_on_taxonomy-39103ee4912fdf0c.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/SS3_unified_living_model_system_plus_person-b7991f62394431da.graph`
+
+#### `lib/phases/2026-08-28-definition-of-complete/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-08-28-definition-of-complete/DOD4_build_and_expand_from_loom.phase`, `lib/phases/2026-08-28-definition-of-complete/DOD5_maps_snapshots_backups_living_model.phase`, `lib/phases/2026-08-28-definition-of-complete/DOD6_respects_axioms.phase`, `lib/phases/2026-08-28-definition-of-complete/DOD8_contract_conditions_comparison_and_drift_engines.phase`
+
+#### `lib/phases/2026-08-28-definition-of-complete/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-08-28-definition-of-complete/graph/DOD4_build_and_expand_from_loom-8ee63f9d1b09068e.graph`, `lib/phases/2026-08-28-definition-of-complete/graph/DOD5_maps_snapshots_backups_living_model-3908fcdebd5c6049.graph`, `lib/phases/2026-08-28-definition-of-complete/graph/DOD6_respects_axioms-0f8fab7681fae1d5.graph`, `lib/phases/2026-08-28-definition-of-complete/graph/DOD8_contract_conditions_comparison_and_drift_engines-1d10a9ee9575d398.graph`
+
+#### `lib/phases/2026-08-28-self-building-pipeline/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-08-28-self-building-pipeline/SBP10_per_hat_model_assignment.phase`, `lib/phases/2026-08-28-self-building-pipeline/SBP11_agent_tools_registry_awareness.phase`, `lib/phases/2026-08-28-self-building-pipeline/SBP12_listener_and_userscript_suite_view.phase`, `lib/phases/2026-08-28-self-building-pipeline/SBP6_system_schema_inventory.phase`, `lib/phases/2026-08-28-self-building-pipeline/SBP8_agent_mesh_consolidation.phase`, `lib/phases/2026-08-28-self-building-pipeline/SBP9_hat_forge_real_hats.phase`
+
+#### `lib/phases/2026-08-28-self-building-pipeline/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-08-28-self-building-pipeline/graph/SBP10_per_hat_model_assignment-7abdac008edcde3d.graph`, `lib/phases/2026-08-28-self-building-pipeline/graph/SBP11_agent_tools_registry_awareness-10a463896c66d6e4.graph`, `lib/phases/2026-08-28-self-building-pipeline/graph/SBP12_listener_and_userscript_suite_view-dc9e3b5d6c5777b3.graph`, `lib/phases/2026-08-28-self-building-pipeline/graph/SBP6_system_schema_inventory-01abcd223ab08b29.graph`, `lib/phases/2026-08-28-self-building-pipeline/graph/SBP8_agent_mesh_consolidation-5a5600d90602c11e.graph`, `lib/phases/2026-08-28-self-building-pipeline/graph/SBP9_hat_forge_real_hats-7d6322a91f58a6d6.graph`
+
+#### `lib/phases/2026-08-30-interaction-contract-context/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-08-30-interaction-contract-context/IC12_universal_gap_and_symmetry_detection.phase`, `lib/phases/2026-08-30-interaction-contract-context/IC13_agent_mesh_chat_index.phase`, `lib/phases/2026-08-30-interaction-contract-context/IC5_full_input_queue_output_qc_lifecycle.phase`, `lib/phases/2026-08-30-interaction-contract-context/IC7_drift_and_comparison_tracking_in_the_pipeline.phase`
+
+#### `lib/phases/2026-08-30-interaction-contract-context/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-08-30-interaction-contract-context/graph/IC12_universal_gap_and_symmetry_detection-4c68e3f3c0900e7c.graph`, `lib/phases/2026-08-30-interaction-contract-context/graph/IC13_agent_mesh_chat_index-acae83a88cfed8cd.graph`, `lib/phases/2026-08-30-interaction-contract-context/graph/IC5_full_input_queue_output_qc_lifecycle-5cf93f4f44f1c70a.graph`, `lib/phases/2026-08-30-interaction-contract-context/graph/IC7_drift_and_comparison_tracking_in_the_pipeline-57b2a934eab904b3.graph`
+
+#### `lib/phases/2026-08-30-interaction-contract-context/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-08-30-interaction-contract-context/graph/_superseded/IC10_diagnostic_own_real_system_structure-37d61971e616a68c.graph`
+
+#### `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM10_per_agent_wake_words.phase`, `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM14_components_store.phase`, `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM1_spec_as_living_model.phase`, `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM23_atlas_history_versions_calendar.phase`, `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM25_atlas_living_update.phase`, `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM6_who_creates_contracts.phase`
+
+#### `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM10_per_agent_wake_words-181848264f44d530.graph`, `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM14_components_store-c5ab3492fddbea5d.graph`, `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM1_spec_as_living_model-0fafcb56a76e6808.graph`, `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM23_atlas_history_versions_calendar-cc8f2ab0d0593e31.graph`, `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM25_atlas_living_update-fffff5497b586859.graph`, `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM6_who_creates_contracts-916424c3f4eeec02.graph`
+
+#### `lib/phases/2026-09-02-agent-mesh-full-map/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-09-02-agent-mesh-full-map/AM1_raid_intent_contracts_per_agent.phase`, `lib/phases/2026-09-02-agent-mesh-full-map/AM2_first_principles_hat_or_modifier.phase`, `lib/phases/2026-09-02-agent-mesh-full-map/AM3_agent_mesh_folder_consolidation.phase`, `lib/phases/2026-09-02-agent-mesh-full-map/AM5_tool_forge_real_usage_audit.phase`, `lib/phases/2026-09-02-agent-mesh-full-map/AM6_raid_contract_gate_before_dispatch.phase`
+
+#### `lib/phases/2026-09-02-agent-mesh-full-map/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-09-02-agent-mesh-full-map/graph/AM1_raid_intent_contracts_per_agent-e561c466fdbbdbb2.graph`, `lib/phases/2026-09-02-agent-mesh-full-map/graph/AM2_first_principles_hat_or_modifier-0e345d95c9a3188b.graph`, `lib/phases/2026-09-02-agent-mesh-full-map/graph/AM3_agent_mesh_folder_consolidation-6a436c038ec43868.graph`, `lib/phases/2026-09-02-agent-mesh-full-map/graph/AM5_tool_forge_real_usage_audit-28fa7d9090fb0f06.graph`, `lib/phases/2026-09-02-agent-mesh-full-map/graph/AM6_raid_contract_gate_before_dispatch-95e22ab925e053e4.graph`
+
+#### `lib/phases/2026-09-02-nexus-vision-master/`
+
+20 other file(s).
+
+- other: 20 files (.phase)
+
+#### `lib/phases/2026-09-02-nexus-vision-master/graph/`
+
+20 other file(s).
+
+- other: 20 files (.graph)
+
+#### `lib/phases/2026-09-02-nexus-vision-master/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-02-nexus-vision-master/graph/_superseded/SR11_spec_project_import_to_compartment-3ba40fae475bab7c.graph`, `lib/phases/2026-09-02-nexus-vision-master/graph/_superseded/SR3_artifact_extraction_introspect_bridge-4f813123ae64e4bd.graph`
+
+#### `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/VS2_ring_buffer_and_causal_field.phase`, `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/VS3_agent_chat_log_query.phase`
+
+#### `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/VS2_ring_buffer_and_causal_field-a136f794f2a44987.graph`, `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/VS3_agent_chat_log_query-c1653dec5e1a00a7.graph`
+
+#### `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/`
+
+11 other file(s).
+
+- other: `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/BR1_brainos_cross_system_relay.phase`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/BR2_brainos_controls_agents.phase`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/DA1_fix_stale_guardian_coverage_gate.phase`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/DBG1_consolidate_debug_surfaces.phase`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/EVT1_commands_and_tools_emit_events.phase`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/REG1_component_registry_remap.phase`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/RP1_repository_per_system.phase`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/SPEC1_rewrite_nexus_spec.phase`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/TC1_tools_get_real_contracts.phase`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/UX1_design_philosophy_consolidation.phase`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/VSB1_fix_versionium_split_brain.phase`
+
+#### `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/`
+
+11 other file(s).
+
+- other: `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/BR1_brainos_cross_system_relay-74f187aeb527e717.graph`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/BR2_brainos_controls_agents-eee077467b2c6ac8.graph`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/DA1_fix_stale_guardian_coverage_gate-f96bc8899f2f2334.graph`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/DBG1_consolidate_debug_surfaces-251300f01adf0239.graph`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/EVT1_commands_and_tools_emit_events-cd104364a7ca3847.graph`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/REG1_component_registry_remap-2636c28afb4b764e.graph`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/RP1_repository_per_system-95bead78e697c269.graph`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/SPEC1_rewrite_nexus_spec-8486df46c0ff1a3d.graph`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/TC1_tools_get_real_contracts-e88ee91b4fa0d7c3.graph`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/UX1_design_philosophy_consolidation-8518048c60a27800.graph`, `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/VSB1_fix_versionium_split_brain-10cd9ca6595a4662.graph`
+
+#### `lib/phases/2026-09-11-compartment-nodetype-and-reorg/`
+
+9 other file(s).
+
+- other: `lib/phases/2026-09-11-compartment-nodetype-and-reorg/AR1_architect_retirement_and_hooks_to_loom.phase`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/AR2_decentralize_interaction_contracts.phase`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/C1_cli_per_system_split.phase`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/D1_diagnostic_real_folder.phase`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/N1_root_md_consolidation.phase`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/N2_root_nexus_js_to_nexus_folder.phase`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/N3_stray_root_files_found_after_N1.phase`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/T1_extend_system_scaffold.phase`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/X1_node_decomposition_tool.phase`
+
+#### `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/`
+
+9 other file(s).
+
+- other: `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR1_architect_retirement_and_hooks_to_loom-ec476c801239c1a2.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR2_decentralize_interaction_contracts-004da81f2aa79f85.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/C1_cli_per_system_split-7b2166b145a6e248.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/D1_diagnostic_real_folder-475c655800cebc65.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N1_root_md_consolidation-d7ece054f8e1b547.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N2_root_nexus_js_to_nexus_folder-6088de94a4c19d4b.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N3_stray_root_files_found_after_N1-46553cc0a1125676.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/T1_extend_system_scaffold-c85e7dedf727b889.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/X1_node_decomposition_tool-6f5db2348ba53165.graph`
+
+#### `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/AR1_architect_retirement_and_hooks_to_loom-c44714dfce980acf.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/D1_diagnostic_real_folder-326872f5777c2e88.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/X1_node_decomposition_tool-6dc260de77610029.graph`
+
+#### `lib/phases/2026-09-11-sovereign-node-architecture/`
+
+11 other file(s).
+
+- other: `lib/phases/2026-09-11-sovereign-node-architecture/P12_compartment_per_contract.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P19_dynamic_nodes_via_causal_graph.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P1_fix_the_declared_living_maps.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P22_ledger_data_integrity_checker.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P25_universal_per_system_queue.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P30_provider_ping_delta.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P33_every_system_runs_its_node_registry.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P36_an_event_ledger_per_registry.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P38_every_graph_has_its_route_command_and_node.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P3_per_system_node_schemas.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P4_full_node_type_coverage_per_system.phase`
+
+#### `lib/phases/2026-09-11-sovereign-node-architecture/graph/`
+
+11 other file(s).
+
+- other: `lib/phases/2026-09-11-sovereign-node-architecture/graph/P12_compartment_per_contract-8cfd3609296f0e65.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P19_dynamic_nodes_via_causal_graph-14175a5931199ebc.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P1_fix_the_declared_living_maps-6e2243bd608aa76f.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P22_ledger_data_integrity_checker-80f256cd544672ab.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P25_universal_per_system_queue-25f546a0afcd48d4.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P30_provider_ping_delta-81b879ff6f24b8b2.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P33_every_system_runs_its_node_registry-e35fe116fff586c0.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P36_an_event_ledger_per_registry-fbd0abb2a175f847.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P38_every_graph_has_its_route_command_and_node-ba638bb548c28c0d.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P3_per_system_node_schemas-71d0409c318c73a0.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P4_full_node_type_coverage_per_system-7d7cc69568624b23.graph`
+
+#### `lib/phases/2026-09-11-sovereign-node-architecture/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-11-sovereign-node-architecture/graph/_superseded/P25_universal_per_system_queue-624624c871ccb0f6.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/_superseded/P33_every_system_runs_its_node_registry-7955afec14f5b4a5.graph`
+
+#### `lib/phases/2026-09-13-track-b-sovereignty/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-13-track-b-sovereignty/MCO16_component_projections_retracted.phase`
+
+#### `lib/phases/2026-09-13-track-b-sovereignty/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-13-track-b-sovereignty/graph/MCO16_component_projections_retracted-4e9c11ff0b4b91af.graph`
+
+#### `lib/phases/2026-09-19-architect-blueprint-forge-idearium/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-19-architect-blueprint-forge-idearium/P0_place_spec_compiler.phase`
+
+#### `lib/phases/2026-09-19-architect-blueprint-forge-idearium/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-19-architect-blueprint-forge-idearium/graph/P0_place_spec_compiler-816ab40bc00d49c5.graph`
+
+#### `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/B3_availability_tier.phase`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/B5_port_3753_collision.phase`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/D5_new.phase`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P0_map.phase`
+
+#### `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B3_availability_tier-1a4f7859f0f50ce1.graph`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B5_port_3753_collision-3d6b1fadb758d77c.graph`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/D5_new-6de18476e3420697.graph`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P0_map-270831fdfdc19271.graph`
+
+#### `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/_superseded/D5_new-8a8997642f5cb4af.graph`
+
+#### `lib/phases/2026-09-22-brainos-agent-suite/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-09-22-brainos-agent-suite/HT1_hat_manager.phase`, `lib/phases/2026-09-22-brainos-agent-suite/RD1_reader.phase`, `lib/phases/2026-09-22-brainos-agent-suite/TL1_tool_browser.phase`
+
+#### `lib/phases/2026-09-22-brainos-agent-suite/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-09-22-brainos-agent-suite/graph/HT1_hat_manager-c65f629e4c701947.graph`, `lib/phases/2026-09-22-brainos-agent-suite/graph/RD1_reader-ffe56609c225d915.graph`, `lib/phases/2026-09-22-brainos-agent-suite/graph/TL1_tool_browser-c1e834b49a05b3a2.graph`
+
+#### `lib/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/TR2_tab_lifecycle_and_visibility.phase`
+
+#### `lib/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/graph/TR2_tab_lifecycle_and_visibility-f48c6d68235b7c84.graph`
+
+#### `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/A1.phase`, `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/A2.phase`, `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/E1.phase`, `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/R1.phase`, `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/T3.phase`, `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/T7.phase`
+
+#### `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/A1-369bde5ee0a043bb.graph`, `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/A2-fc6a51b24eaf102b.graph`, `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/E1-8b75f1c7cf514a23.graph`, `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/R1-2fc594cd0c71aec9.graph`, `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T3-255b5681dc7d3f96.graph`, `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T7-0870291c8f83c928.graph`
+
+#### `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/N1.phase`, `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/X1.phase`
+
+#### `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/N1-afc3f2d2b1971c2a.graph`, `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/X1-7a889bbcd135db9f.graph`
+
+#### `lib/phases/2026-09-27-agent-hat-memory-download-manager/`
+
+9 other file(s).
+
+- other: `lib/phases/2026-09-27-agent-hat-memory-download-manager/G1.phase`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/G2.phase`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/G4.phase`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/H2.phase`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/H4.phase`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/M1.phase`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/M4.phase`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/O3.phase`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/X1.phase`
+
+#### `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/`
+
+9 other file(s).
+
+- other: `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/G1-a03b49e7e8269c3f.graph`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/G2-ae911f4c7c242c54.graph`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/G4-45ac7ff9b3f272be.graph`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/H2-614a688e1eeeef44.graph`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/H4-3e25fcd3222e73f8.graph`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/M1-6f7e0c6335c28637.graph`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/M4-665ecb7fca2292ef.graph`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/O3-5cacc4d6647c995e.graph`, `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/X1-3523be12dc3e544d.graph`
+
+#### `lib/phases/2026-09-27-components-store-and-atlases/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-09-27-components-store-and-atlases/A1.phase`, `lib/phases/2026-09-27-components-store-and-atlases/A2.phase`, `lib/phases/2026-09-27-components-store-and-atlases/C1.phase`, `lib/phases/2026-09-27-components-store-and-atlases/C3.phase`, `lib/phases/2026-09-27-components-store-and-atlases/C4.phase`
+
+#### `lib/phases/2026-09-27-components-store-and-atlases/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-09-27-components-store-and-atlases/graph/A1-362ff4dd0f06f283.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/A2-c42260b792aebce5.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/C1-c901b0518083f11c.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/C3-9bc63567919d15c7.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/C4-f4160414eefade2b.graph`
+
+#### `lib/phases/2026-09-27-components-store-and-atlases/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-27-components-store-and-atlases/graph/_superseded/C3-6f53d9aa14fc9e97.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/_superseded/C4-1e1f2af6d71358cb.graph`
+
+#### `lib/phases/2026-09-27-idearium-atlas/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-27-idearium-atlas/A2.phase`
+
+#### `lib/phases/2026-09-27-idearium-atlas/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-27-idearium-atlas/graph/A2-f56a8ed10fd0ab19.graph`
+
+#### `lib/phases/2026-09-27-idearium-atlas/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-27-idearium-atlas/graph/_superseded/A2-2ca200087c34a761.graph`
+
+#### `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/T1_suite_process.phase`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/T2_all_tests.phase`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/T3_debug_report.phase`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/X1_system_nodes.phase`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/X4_command_index_spec.phase`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/X5_core_scripts.phase`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/Z1_release.phase`
+
+#### `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T1_suite_process-f9f50c78f096c750.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T2_all_tests-f20e3b22238a10f1.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T3_debug_report-073d1fb7cf9cd997.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X1_system_nodes-46e5cb034f4618e8.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X4_command_index_spec-f0c28b0337bbaf38.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X5_core_scripts-071bcce96653212c.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/Z1_release-8e268e22b5c92e0c.graph`
+
+#### `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/T3_debug_report-7765b07df0393f7b.graph`
+
+#### `lib/phases/2026-09-28-graph-build-context-settings-memory/`
+
+9 other file(s).
+
+- other: `lib/phases/2026-09-28-graph-build-context-settings-memory/A1.phase`, `lib/phases/2026-09-28-graph-build-context-settings-memory/B1.phase`, `lib/phases/2026-09-28-graph-build-context-settings-memory/C1.phase`, `lib/phases/2026-09-28-graph-build-context-settings-memory/C3.phase`, `lib/phases/2026-09-28-graph-build-context-settings-memory/M0.phase`, `lib/phases/2026-09-28-graph-build-context-settings-memory/R0.phase`, `lib/phases/2026-09-28-graph-build-context-settings-memory/SV1.phase`, `lib/phases/2026-09-28-graph-build-context-settings-memory/SV2.phase`, `lib/phases/2026-09-28-graph-build-context-settings-memory/X1.phase`
+
+#### `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/`
+
+9 other file(s).
+
+- other: `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/A1-1b42fcb0ed4d9adc.graph`, `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/B1-78425d6a9af5ccae.graph`, `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/C1-4d3b419ed124ed8e.graph`, `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/C3-d965f28349f6b6fa.graph`, `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/M0-90edb156dad368a7.graph`, `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/R0-9bc06ef9e121c4ef.graph`, `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/SV1-aba511479e53415c.graph`, `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/SV2-233056d110ca606c.graph`, `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/X1-960b6d032d829383.graph`
+
+#### `lib/phases/2026-09-28-staging-self-heal/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-09-28-staging-self-heal/A1.phase`, `lib/phases/2026-09-28-staging-self-heal/C0.phase`, `lib/phases/2026-09-28-staging-self-heal/S1.phase`, `lib/phases/2026-09-28-staging-self-heal/X1.phase`
+
+#### `lib/phases/2026-09-28-staging-self-heal/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-09-28-staging-self-heal/graph/A1-678cef6eb0b005d6.graph`, `lib/phases/2026-09-28-staging-self-heal/graph/C0-0b7235ad10d93e23.graph`, `lib/phases/2026-09-28-staging-self-heal/graph/S1-ff2b556d4de9defe.graph`, `lib/phases/2026-09-28-staging-self-heal/graph/X1-5196f7fe55a3de4b.graph`
+
+#### `lib/phases/2026-09-28-staging-self-heal/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-28-staging-self-heal/graph/_superseded/S1-7fb03e9518bd1d90.graph`
+
+#### `lib/phases/2026-09-29-build-surface/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-09-29-build-surface/BS12_release.phase`, `lib/phases/2026-09-29-build-surface/BS19_copilot_atlas_guide.phase`, `lib/phases/2026-09-29-build-surface/BS1_rewind_hit_test.phase`
+
+#### `lib/phases/2026-09-29-build-surface/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-09-29-build-surface/graph/BS12_release-8f67d5e56dcc7344.graph`, `lib/phases/2026-09-29-build-surface/graph/BS19_copilot_atlas_guide-8cfe36554eded916.graph`, `lib/phases/2026-09-29-build-surface/graph/BS1_rewind_hit_test-338736611c96d096.graph`
+
+#### `lib/phases/2026-09-29-nex-node-store/`
+
+26 other file(s).
+
+- other: 26 files (.phase)
+
+#### `lib/phases/2026-09-29-nex-node-store/graph/`
+
+26 other file(s).
+
+- other: 26 files (.graph)
+
+#### `lib/phases/2026-09-29-nex-node-store/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-29-nex-node-store/graph/_superseded/N29_full_run_only_failures-3ccc80b708b1184e.graph`, `lib/phases/2026-09-29-nex-node-store/graph/_superseded/N30_archive_import_dropbox_and_copilot_command-dedd8b0e675c778d.graph`
+
+#### `lib/phases/2026-09-29-provider-economy/`
+
+9 other file(s).
+
+- other: `lib/phases/2026-09-29-provider-economy/EC0_policy_model.phase`, `lib/phases/2026-09-29-provider-economy/EC10_eros_workbench.phase`, `lib/phases/2026-09-29-provider-economy/EC11_release.phase`, `lib/phases/2026-09-29-provider-economy/EC1_usage_ledger.phase`, `lib/phases/2026-09-29-provider-economy/EC2_gate.phase`, `lib/phases/2026-09-29-provider-economy/EC3_token_constraints.phase`, `lib/phases/2026-09-29-provider-economy/EC4_learning_router.phase`, `lib/phases/2026-09-29-provider-economy/EC5_staging_by_economy.phase`, `lib/phases/2026-09-29-provider-economy/EC7_router_in_builds.phase`
+
+#### `lib/phases/2026-09-29-provider-economy/graph/`
+
+9 other file(s).
+
+- other: `lib/phases/2026-09-29-provider-economy/graph/EC0_policy_model-f08917980459b73a.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC10_eros_workbench-4d940447a9772128.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC11_release-3ddf9b68b334fa07.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC1_usage_ledger-3bb692c134237f3f.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC2_gate-5b5011336adda021.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC3_token_constraints-3231820165317198.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC4_learning_router-5ea981995e6aa2aa.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC5_staging_by_economy-a13ffbca0770c51b.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC7_router_in_builds-e6f92fef8dfca5e3.graph`
+
+#### `lib/phases/2026-09-29-provider-economy/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-29-provider-economy/graph/_superseded/EC10_eros_workbench-27a839ee0a545a60.graph`
+
+#### `lib/phases/2026-09-29-tool-layers-and-pane-memory/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-29-tool-layers-and-pane-memory/P5.phase`
+
+#### `lib/phases/2026-09-29-tool-layers-and-pane-memory/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-29-tool-layers-and-pane-memory/graph/P5-8d626c5118de90a9.graph`
+
+#### `lib/phases/2026-09-30-idearium-coding-flow/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-30-idearium-coding-flow/W0_map.phase`, `lib/phases/2026-09-30-idearium-coding-flow/W6_release.phase`
+
+#### `lib/phases/2026-09-30-idearium-coding-flow/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-30-idearium-coding-flow/graph/W0_map-48e0fd2adc75cbe4.graph`, `lib/phases/2026-09-30-idearium-coding-flow/graph/W6_release-16020646cb3d4924.graph`
+
+#### `lib/phases/2026-10-01-idearium-agent-ready-master/`
+
+21 other file(s).
+
+- other: 21 files (.phase)
+
+#### `lib/phases/2026-10-01-idearium-agent-ready-master/graph/`
+
+21 other file(s).
+
+- other: 21 files (.graph)
+
+#### `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/CI1_compounding_iterate-1ceee25ce29d30d7.graph`, `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/FT1_file_tools_merge_patch_drop-b482bb0cc2b2da5b.graph`, `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/PF3_snapshot_names_changed_files-ef1e8fe4b8bff7c1.graph`
+
+#### `lib/phases/2026-10-01-routing-registry-genesis/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-01-routing-registry-genesis/AR1_architecture_spec.phase`, `lib/phases/2026-10-01-routing-registry-genesis/RG0_map.phase`, `lib/phases/2026-10-01-routing-registry-genesis/RG1_routing_policy_library.phase`, `lib/phases/2026-10-01-routing-registry-genesis/RG9_release.phase`
+
+#### `lib/phases/2026-10-01-routing-registry-genesis/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-01-routing-registry-genesis/graph/AR1_architecture_spec-8cd719427be6e25f.graph`, `lib/phases/2026-10-01-routing-registry-genesis/graph/RG0_map-2dbe0930b534d57a.graph`, `lib/phases/2026-10-01-routing-registry-genesis/graph/RG1_routing_policy_library-6f62f23ea86dfc53.graph`, `lib/phases/2026-10-01-routing-registry-genesis/graph/RG9_release-cf3afc2add05bd8b.graph`
+
+#### `lib/phases/2026-10-01-work-visibility-job-reuse/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-01-work-visibility-job-reuse/J0.phase`, `lib/phases/2026-10-01-work-visibility-job-reuse/J4.phase`
+
+#### `lib/phases/2026-10-01-work-visibility-job-reuse/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-01-work-visibility-job-reuse/graph/J0-e486fc05d2ee7537.graph`, `lib/phases/2026-10-01-work-visibility-job-reuse/graph/J4-d0598b9fa84035cf.graph`
+
+#### `lib/phases/2026-10-02-emerge-field-memory-build/`
+
+28 other file(s).
+
+- other: 28 files (.phase)
+
+#### `lib/phases/2026-10-02-emerge-field-memory-build/graph/`
+
+28 other file(s).
+
+- other: 28 files (.graph)
+
+#### `lib/phases/2026-10-02-emerge-field-memory-build/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-02-emerge-field-memory-build/graph/_superseded/EV0_contracts_for_every_system-26eab57c8fd5152e.graph`
+
+#### `lib/phases/2026-10-02-fractal-graph-any-size-agent/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-02-fractal-graph-any-size-agent/FG2_token_budget_chunking.phase`
+
+#### `lib/phases/2026-10-02-fractal-graph-any-size-agent/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG2_token_budget_chunking-869f29022b91a647.graph`
+
+#### `lib/phases/2026-10-02-spatial-void/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-02-spatial-void/V7_proof.phase`
+
+#### `lib/phases/2026-10-02-spatial-void/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-02-spatial-void/graph/V7_proof-c207baa9194ab90d.graph`
+
+#### `lib/phases/2026-10-02-synthesis-zoom-versionium/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-02-synthesis-zoom-versionium/LV1_fill_the_highest_leverage.phase`
+
+#### `lib/phases/2026-10-02-synthesis-zoom-versionium/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-02-synthesis-zoom-versionium/graph/LV1_fill_the_highest_leverage-cb833cd372794400.graph`
+
+#### `lib/phases/2026-10-02-workshop-codex-rewind/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-02-workshop-codex-rewind/CX0_codex_component_store.phase`, `lib/phases/2026-10-02-workshop-codex-rewind/NX1_nexus_in_a_vm.phase`
+
+#### `lib/phases/2026-10-02-workshop-codex-rewind/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-02-workshop-codex-rewind/graph/CX0_codex_component_store-a6c33671bbad00ca.graph`, `lib/phases/2026-10-02-workshop-codex-rewind/graph/NX1_nexus_in_a_vm-24f038cc5c7b50f4.graph`
+
+#### `lib/phases/2026-10-05-announce-pulse-repair/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-05-announce-pulse-repair/PR1_the_announced_registry_is_the_list.phase`, `lib/phases/2026-10-05-announce-pulse-repair/PR3_negative_space_for_missed_heartbeats.phase`, `lib/phases/2026-10-05-announce-pulse-repair/PR5_repair_for_real.phase`
+
+#### `lib/phases/2026-10-05-announce-pulse-repair/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-05-announce-pulse-repair/graph/PR1_the_announced_registry_is_the_list-641bbd05951e0d82.graph`, `lib/phases/2026-10-05-announce-pulse-repair/graph/PR3_negative_space_for_missed_heartbeats-36f6155753d9c5cc.graph`, `lib/phases/2026-10-05-announce-pulse-repair/graph/PR5_repair_for_real-620eceb6ad914afa.graph`
+
+#### `lib/phases/2026-10-05-build-from-the-spec/`
+
+26 other file(s).
+
+- other: 26 files (.phase)
+
+#### `lib/phases/2026-10-05-build-from-the-spec/graph/`
+
+26 other file(s).
+
+- other: 26 files (.graph)
+
+#### `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/`
+
+9 other file(s).
+
+- other: `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/BC2_the_build_agent_gets_all_of_the_hat_and_repo_context-32034bedc3229b78.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB23_a_new_system_slots_in-d8c8e1bb9fdc8301.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB25_atlas_template_in_his_structure-8782436b6f63495b.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB33_the_agent_runs_the_pipeline-4535cb3c5069ae44.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB36_every_agent_can_use_the_tools-dccbe766f7ed1fa8.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB42_a_repo_expands_from_its_spec-e363fb41c2435456.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB47_built_and_run_in_cos-00c4a05731de14a2.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB48_proof_in_cos_closes_the_phase-054d76a838a4463d.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/WS1_agents_use_the_work_surface-3a87213be2eb4b9d.graph`
+
+#### `lib/phases/2026-10-05-cli-data-code/`
+
+12 other file(s).
+
+- other: `lib/phases/2026-10-05-cli-data-code/CL1_commands_declared_by_their_system.phase`, `lib/phases/2026-10-05-cli-data-code/CT1_one_pending_change_path.phase`, `lib/phases/2026-10-05-cli-data-code/HG1_components_store_map_parses.phase`, `lib/phases/2026-10-05-cli-data-code/HG3_bv09_the_detector_and_files.phase`, `lib/phases/2026-10-05-cli-data-code/HG4_scripts_inside_the_sandbox.phase`, `lib/phases/2026-10-05-cli-data-code/HG7_the_law_and_clear_glass.phase`, `lib/phases/2026-10-05-cli-data-code/HG8_raid_phases_belong_to_cortex.phase`, `lib/phases/2026-10-05-cli-data-code/PB1_no_build_below_a_floor.phase`, `lib/phases/2026-10-05-cli-data-code/PB3_verify_counts_what_this_run_broke.phase`, `lib/phases/2026-10-05-cli-data-code/PB5_the_real_broken_imports.phase`, `lib/phases/2026-10-05-cli-data-code/SY1_fifteen_systems.phase`, `lib/phases/2026-10-05-cli-data-code/SY2_cos_its_own_system.phase`
+
+#### `lib/phases/2026-10-05-cli-data-code/graph/`
+
+12 other file(s).
+
+- other: `lib/phases/2026-10-05-cli-data-code/graph/CL1_commands_declared_by_their_system-17ce5c8f22a70bb7.graph`, `lib/phases/2026-10-05-cli-data-code/graph/CT1_one_pending_change_path-e9d4a2ab8a870183.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG1_components_store_map_parses-dcd4302a4f92f533.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG3_bv09_the_detector_and_files-8f5946737fc02601.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG4_scripts_inside_the_sandbox-a8510e63e202d6f6.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG7_the_law_and_clear_glass-e775e5b9fae4d6a3.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG8_raid_phases_belong_to_cortex-8583fa2b6f57da3a.graph`, `lib/phases/2026-10-05-cli-data-code/graph/PB1_no_build_below_a_floor-aa5354fee35ba1e8.graph`, `lib/phases/2026-10-05-cli-data-code/graph/PB3_verify_counts_what_this_run_broke-3aa1d43480832705.graph`, `lib/phases/2026-10-05-cli-data-code/graph/PB5_the_real_broken_imports-7736bfcd3a2587b3.graph`, `lib/phases/2026-10-05-cli-data-code/graph/SY1_fifteen_systems-2b7d8f61b0358084.graph`, `lib/phases/2026-10-05-cli-data-code/graph/SY2_cos_its_own_system-aac3d8f060ae686c.graph`
+
+#### `lib/phases/2026-10-05-cli-data-code/graph/_superseded/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-05-cli-data-code/graph/_superseded/HG8_raid_phases_belong_to_cortex-dc05cb067c7d5dd0.graph`, `lib/phases/2026-10-05-cli-data-code/graph/_superseded/PB3_verify_counts_what_this_run_broke-2c3748ba8d24ac93.graph`, `lib/phases/2026-10-05-cli-data-code/graph/_superseded/PB5_the_real_broken_imports-64c2d31e9c1a9aff.graph`, `lib/phases/2026-10-05-cli-data-code/graph/_superseded/SY1_fifteen_systems-0b9d29e5e19e2532.graph`, `lib/phases/2026-10-05-cli-data-code/graph/_superseded/SY2_cos_its_own_system-5140e15f0bab147d.graph`
+
+#### `lib/phases/2026-10-05-code-tab-and-one-router/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-05-code-tab-and-one-router/CT1_one_door_for_models.phase`, `lib/phases/2026-10-05-code-tab-and-one-router/CT2_it_learns_and_switches.phase`, `lib/phases/2026-10-05-code-tab-and-one-router/CT6_the_escalation_ladder.phase`, `lib/phases/2026-10-05-code-tab-and-one-router/CT8_live_agent_activity.phase`
+
+#### `lib/phases/2026-10-05-code-tab-and-one-router/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-05-code-tab-and-one-router/graph/CT1_one_door_for_models-73db225aab49ebc2.graph`, `lib/phases/2026-10-05-code-tab-and-one-router/graph/CT2_it_learns_and_switches-5b7e5862f894dcd4.graph`, `lib/phases/2026-10-05-code-tab-and-one-router/graph/CT6_the_escalation_ladder-efb8afe9cf9edd48.graph`, `lib/phases/2026-10-05-code-tab-and-one-router/graph/CT8_live_agent_activity-d4a3a275c6d63391.graph`
+
+#### `lib/phases/2026-10-05-cos-machines/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-05-cos-machines/AP2_test_on_the_android_compartment.phase`
+
+#### `lib/phases/2026-10-05-cos-machines/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-05-cos-machines/graph/AP2_test_on_the_android_compartment-1a8e2550e9c6190b.graph`
+
+#### `lib/phases/2026-10-05-failure-reproduction/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-05-failure-reproduction/FM1_every_ledger_into_rfr2.phase`, `lib/phases/2026-10-05-failure-reproduction/FM3_run_it_in_cos.phase`
+
+#### `lib/phases/2026-10-05-failure-reproduction/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-05-failure-reproduction/graph/FM1_every_ledger_into_rfr2-3f69872ecac3e79c.graph`, `lib/phases/2026-10-05-failure-reproduction/graph/FM3_run_it_in_cos-9c26dcce49a297be.graph`
+
+#### `lib/phases/2026-10-05-spec-workshop-rebuild/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-05-spec-workshop-rebuild/RS1_the_generation_recorder.phase`, `lib/phases/2026-10-05-spec-workshop-rebuild/RS2_replay_rewind_branch.phase`, `lib/phases/2026-10-05-spec-workshop-rebuild/RS3_the_spec_document.phase`, `lib/phases/2026-10-05-spec-workshop-rebuild/RS8_what_converges_becomes_deterministic.phase`
+
+#### `lib/phases/2026-10-05-spec-workshop-rebuild/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-05-spec-workshop-rebuild/graph/RS1_the_generation_recorder-fb8844b445a656ad.graph`, `lib/phases/2026-10-05-spec-workshop-rebuild/graph/RS2_replay_rewind_branch-ed0fd5754ecc8b3a.graph`, `lib/phases/2026-10-05-spec-workshop-rebuild/graph/RS3_the_spec_document-6a4e782e7d9fcab1.graph`, `lib/phases/2026-10-05-spec-workshop-rebuild/graph/RS8_what_converges_becomes_deterministic-14a9d76c2db6ad37.graph`
+
+#### `lib/phases/2026-10-05-verified-primitives/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-05-verified-primitives/VP0_map_and_atlas.phase`, `lib/phases/2026-10-05-verified-primitives/VP1_confidence_from_evidence.phase`, `lib/phases/2026-10-05-verified-primitives/VP2_adversarial_review.phase`, `lib/phases/2026-10-05-verified-primitives/VP4_the_primitive_field.phase`, `lib/phases/2026-10-05-verified-primitives/VP5_provenance.phase`, `lib/phases/2026-10-05-verified-primitives/VP6_debug_and_intelligence_in_the_desktop.phase`
+
+#### `lib/phases/2026-10-05-verified-primitives/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-05-verified-primitives/graph/VP0_map_and_atlas-0153feef7a3d9938.graph`, `lib/phases/2026-10-05-verified-primitives/graph/VP1_confidence_from_evidence-d274b14ef5df1bea.graph`, `lib/phases/2026-10-05-verified-primitives/graph/VP2_adversarial_review-861894593ce759d9.graph`, `lib/phases/2026-10-05-verified-primitives/graph/VP4_the_primitive_field-e222cd9217f780b8.graph`, `lib/phases/2026-10-05-verified-primitives/graph/VP5_provenance-f17055700f5ac665.graph`, `lib/phases/2026-10-05-verified-primitives/graph/VP6_debug_and_intelligence_in_the_desktop-cb17f73919611193.graph`
+
+#### `lib/phases/2026-10-07-compartment-control-and-activity/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-10-07-compartment-control-and-activity/AL1_activity_log.phase`, `lib/phases/2026-10-07-compartment-control-and-activity/CC1_claude_code_lands_like_every_agent.phase`, `lib/phases/2026-10-07-compartment-control-and-activity/CM2_every_command_for_every_agent.phase`, `lib/phases/2026-10-07-compartment-control-and-activity/DT1_desktop_into_the_log.phase`, `lib/phases/2026-10-07-compartment-control-and-activity/DX1_diagnose_it.phase`, `lib/phases/2026-10-07-compartment-control-and-activity/SP1_one_spotlight.phase`, `lib/phases/2026-10-07-compartment-control-and-activity/UN1_nexus_surfaces_in_the_field.phase`
+
+#### `lib/phases/2026-10-07-compartment-control-and-activity/graph/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-10-07-compartment-control-and-activity/graph/AL1_activity_log-a33d6d01469c5bdf.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/CC1_claude_code_lands_like_every_agent-bab5260f8cf63874.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/CM2_every_command_for_every_agent-b960e463b6a6c257.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/DT1_desktop_into_the_log-8ce7b320cd5c0cd0.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/DX1_diagnose_it-589ac7374abdf907.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/SP1_one_spotlight-094a82781d95acdc.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/UN1_nexus_surfaces_in_the_field-6a1c22a94c4ecbba.graph`
+
+#### `lib/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/AL1_activity_log-f60e21ab10d46017.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/CM2_every_command_for_every_agent-96b5745236336c5b.graph`
+
+#### `lib/phases/2026-10-07-idearium-one-surface/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-07-idearium-one-surface/OS1_commits_say_what_they_touched.phase`, `lib/phases/2026-10-07-idearium-one-surface/OS6_proved_on_the_real_page.phase`, `lib/phases/2026-10-07-idearium-one-surface/OS9_the_agent_is_in_the_code_tab.phase`, `lib/phases/2026-10-07-idearium-one-surface/SP3_the_file_tree_is_the_spine.phase`
+
+#### `lib/phases/2026-10-07-idearium-one-surface/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-07-idearium-one-surface/graph/OS1_commits_say_what_they_touched-cd4a72feed007e70.graph`, `lib/phases/2026-10-07-idearium-one-surface/graph/OS6_proved_on_the_real_page-6e7f9d7881770520.graph`, `lib/phases/2026-10-07-idearium-one-surface/graph/OS9_the_agent_is_in_the_code_tab-b061d20cf1e09377.graph`, `lib/phases/2026-10-07-idearium-one-surface/graph/SP3_the_file_tree_is_the_spine-a05d1bb6700d15b8.graph`
+
+#### `lib/phases/2026-10-07-ollama-recorder/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-07-ollama-recorder/OR2_every_call_a_frame.phase`
+
+#### `lib/phases/2026-10-07-ollama-recorder/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-07-ollama-recorder/graph/OR2_every_call_a_frame-350154edf9f42462.graph`
+
+#### `lib/phases/2026-10-07-runtime-load/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-07-runtime-load/PF1_the_stall.phase`, `lib/phases/2026-10-07-runtime-load/PF2_velocity_steers_the_governor.phase`, `lib/phases/2026-10-07-runtime-load/PF6_slow_ticks_name_themselves.phase`
+
+#### `lib/phases/2026-10-07-runtime-load/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-07-runtime-load/graph/PF1_the_stall-7057301b9979c4f4.graph`, `lib/phases/2026-10-07-runtime-load/graph/PF2_velocity_steers_the_governor-5c6b870477e755ff.graph`, `lib/phases/2026-10-07-runtime-load/graph/PF6_slow_ticks_name_themselves-433ed474eed245fb.graph`
+
+#### `lib/phases/2026-10-07-system-expectations/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-07-system-expectations/EX1_the_expectation_schema.phase`, `lib/phases/2026-10-07-system-expectations/EX2_vitals_from_every_process.phase`
+
+#### `lib/phases/2026-10-07-system-expectations/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-07-system-expectations/graph/EX1_the_expectation_schema-19589d1a025b2723.graph`, `lib/phases/2026-10-07-system-expectations/graph/EX2_vitals_from_every_process-8337bd39d03384c4.graph`
+
+#### `lib/phases/2026-10-07-versionium-releases/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-07-versionium-releases/GH1_the_git_bridge.phase`, `lib/phases/2026-10-07-versionium-releases/LT1_provenance_lattice.phase`, `lib/phases/2026-10-07-versionium-releases/RN2_cortex_is_the_bookkeeper.phase`
+
+#### `lib/phases/2026-10-07-versionium-releases/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-07-versionium-releases/graph/GH1_the_git_bridge-6dd3595186ddbb17.graph`, `lib/phases/2026-10-07-versionium-releases/graph/LT1_provenance_lattice-91871c2b63fe20e1.graph`, `lib/phases/2026-10-07-versionium-releases/graph/RN2_cortex_is_the_bookkeeper-86535db74885de3a.graph`
+
+#### `lib/phases/2026-10-09-hardening-pass/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-09-hardening-pass/HP12_a_failure_names_the_agent.phase`, `lib/phases/2026-10-09-hardening-pass/HP18_auto_tries_agents_with_a_tab_first.phase`, `lib/phases/2026-10-09-hardening-pass/HP19_the_simulator_stays.phase`, `lib/phases/2026-10-09-hardening-pass/HP20_a_routing_try_is_not_a_job.phase`, `lib/phases/2026-10-09-hardening-pass/HP4_signals_weighted.phase`, `lib/phases/2026-10-09-hardening-pass/HP5_odd_files_round_trip.phase`
+
+#### `lib/phases/2026-10-09-hardening-pass/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-09-hardening-pass/graph/HP12_a_failure_names_the_agent-bec3f59ad333b46f.graph`, `lib/phases/2026-10-09-hardening-pass/graph/HP18_auto_tries_agents_with_a_tab_first-f11a7f42d67241f0.graph`, `lib/phases/2026-10-09-hardening-pass/graph/HP19_the_simulator_stays-68d2133829f37a8f.graph`, `lib/phases/2026-10-09-hardening-pass/graph/HP20_a_routing_try_is_not_a_job-d5e16036c01329d2.graph`, `lib/phases/2026-10-09-hardening-pass/graph/HP4_signals_weighted-036df943c960cf97.graph`, `lib/phases/2026-10-09-hardening-pass/graph/HP5_odd_files_round_trip-a3b1cad180508350.graph`
+
+#### `lib/phases/2026-10-09-one-model-engine/`
+
+12 other file(s).
+
+- other: `lib/phases/2026-10-09-one-model-engine/ME0_the_inventory_proved.phase`, `lib/phases/2026-10-09-one-model-engine/ME10_nested_ladders_folded.phase`, `lib/phases/2026-10-09-one-model-engine/ME12_callers_moved.phase`, `lib/phases/2026-10-09-one-model-engine/ME13_no_bypass.phase`, `lib/phases/2026-10-09-one-model-engine/ME14_across_callers.phase`, `lib/phases/2026-10-09-one-model-engine/ME15_the_docs_tell_the_truth.phase`, `lib/phases/2026-10-09-one-model-engine/ME1_one_failure_list.phase`, `lib/phases/2026-10-09-one-model-engine/ME2_caller_policy.phase`, `lib/phases/2026-10-09-one-model-engine/ME3_one_engine_one_budget.phase`, `lib/phases/2026-10-09-one-model-engine/ME4_one_attempt_record.phase`, `lib/phases/2026-10-09-one-model-engine/ME5_one_chooser.phase`, `lib/phases/2026-10-09-one-model-engine/ME6_one_learner.phase`
+
+#### `lib/phases/2026-10-09-one-model-engine/graph/`
+
+12 other file(s).
+
+- other: `lib/phases/2026-10-09-one-model-engine/graph/ME0_the_inventory_proved-9d64861419da9a7a.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME10_nested_ladders_folded-4010d5284074ac51.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME12_callers_moved-734d6fb40e0248fb.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME13_no_bypass-5db1b29401ba54fb.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME14_across_callers-0d67fbee2de537c0.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME15_the_docs_tell_the_truth-e4a2663f9650838b.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME1_one_failure_list-6aa7efde8e0d3998.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME2_caller_policy-9ddb1c53e714496d.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME3_one_engine_one_budget-82b28a68e6a7adbb.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME4_one_attempt_record-f2a989a0e8ce7614.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME5_one_chooser-c19c4acf0d80ec8c.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME6_one_learner-a3c93c03d487932a.graph`
+
+#### `lib/phases/2026-10-09-one-model-engine/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-09-one-model-engine/graph/_superseded/ME12_callers_moved-9e7765b848590053.graph`
+
+#### `lib/phases/2026-10-09-one-roadmap/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-09-one-roadmap/OR0_the_census.phase`, `lib/phases/2026-10-09-one-roadmap/OR2_how_done_is_checked.phase`, `lib/phases/2026-10-09-one-roadmap/OR2_the_proposal.phase`, `lib/phases/2026-10-09-one-roadmap/OR3_his_decisions_applied.phase`, `lib/phases/2026-10-09-one-roadmap/OR6_old_code_out.phase`, `lib/phases/2026-10-09-one-roadmap/OR7_the_shelf_combed.phase`
+
+#### `lib/phases/2026-10-09-one-roadmap/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-09-one-roadmap/graph/OR0_the_census-b3f330f789402a35.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR2_how_done_is_checked-438048adff31f436.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR2_the_proposal-87394dbbf51c92a7.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR3_his_decisions_applied-f52f9193180a26cb.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR6_old_code_out-613aca89c535c7bf.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR7_the_shelf_combed-5e186047ef132114.graph`
+
+#### `lib/phases/2026-10-09-one-roadmap/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-09-one-roadmap/graph/_superseded/OR6_old_code_out-6af214e0e32a3243.graph`
+
+#### `lib/phases/2026-10-10-design-surface/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-10-design-surface/DS0_one_token_source.phase`, `lib/phases/2026-10-10-design-surface/DS3_components_are_mods.phase`, `lib/phases/2026-10-10-design-surface/DS5_the_agents_design_too.phase`, `lib/phases/2026-10-10-design-surface/DS6_one_module_contract_nested.phase`, `lib/phases/2026-10-10-design-surface/DS7_tools_are_mods.phase`, `lib/phases/2026-10-10-design-surface/DS8_the_registry_routes_the_ui_reflects.phase`
+
+#### `lib/phases/2026-10-10-design-surface/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-10-design-surface/graph/DS0_one_token_source-385edcecb63311aa.graph`, `lib/phases/2026-10-10-design-surface/graph/DS3_components_are_mods-bb967cfd589a6163.graph`, `lib/phases/2026-10-10-design-surface/graph/DS5_the_agents_design_too-1fd7bef8de2d374a.graph`, `lib/phases/2026-10-10-design-surface/graph/DS6_one_module_contract_nested-fd400d57a71b916d.graph`, `lib/phases/2026-10-10-design-surface/graph/DS7_tools_are_mods-95b991d2ba973682.graph`, `lib/phases/2026-10-10-design-surface/graph/DS8_the_registry_routes_the_ui_reflects-9db061f88abf55a1.graph`
+
+#### `lib/phases/2026-10-10-design-surface/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-10-design-surface/graph/_superseded/DS6_one_module_contract_nested-53a34b1d184d1911.graph`
+
+#### `lib/phases/2026-10-10-idearium-access/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-10-idearium-access/IA5_provider_accounts_per_hat_and_repo.phase`
+
+#### `lib/phases/2026-10-10-idearium-access/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-10-idearium-access/graph/IA5_provider_accounts_per_hat_and_repo-fd55efa3a8901e7f.graph`
+
+#### `lib/phases/2026-10-10-idearium-solid/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-10-10-idearium-solid/SD0_versionium_down_is_said_and_restarted.phase`, `lib/phases/2026-10-10-idearium-solid/SD10_the_adversarial_gate.phase`, `lib/phases/2026-10-10-idearium-solid/SD20_a_starved_machine_does_not_spin.phase`, `lib/phases/2026-10-10-idearium-solid/SD4_agents_live_in_guardian.phase`, `lib/phases/2026-10-10-idearium-solid/SD5_account_fallback.phase`, `lib/phases/2026-10-10-idearium-solid/SD7_blocks_that_generate_themselves.phase`, `lib/phases/2026-10-10-idearium-solid/SD9_claude_code_inside_idearium.phase`
+
+#### `lib/phases/2026-10-10-idearium-solid/graph/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-10-10-idearium-solid/graph/SD0_versionium_down_is_said_and_restarted-d745c23ff321527a.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD10_the_adversarial_gate-903ae831ea1a844a.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD20_a_starved_machine_does_not_spin-91403d453740d322.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD4_agents_live_in_guardian-d79b599501f437b1.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD5_account_fallback-655edc147445e9ca.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD7_blocks_that_generate_themselves-0d8df190210c4970.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD9_claude_code_inside_idearium-681f598deb142c6d.graph`
+
+#### `lib/phases/2026-10-10-idearium-solid/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-10-idearium-solid/graph/_superseded/SD20_a_starved_machine_does_not_spin-76dc07b8a12db6ca.graph`
+
+#### `lib/phases/2026-10-10-self-awareness/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-10-self-awareness/AW2_every_call_says_who_asked.phase`, `lib/phases/2026-10-10-self-awareness/AW4_the_door_reads_the_lattice.phase`
+
+#### `lib/phases/2026-10-10-self-awareness/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-10-self-awareness/graph/AW2_every_call_says_who_asked-a5bd86f3bfadf956.graph`, `lib/phases/2026-10-10-self-awareness/graph/AW4_the_door_reads_the_lattice-4de82ab7f378354b.graph`
+
+#### `lib/phases/2026-10-10-shape-of-nexus/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-10-10-shape-of-nexus/EP1_every_claim_says_how_it_is_known.phase`, `lib/phases/2026-10-10-shape-of-nexus/FN3_the_nerve_shows_it_and_the_field_sees_the_nerve.phase`, `lib/phases/2026-10-10-shape-of-nexus/LR0_the_shared_primitives_are_the_glyph.phase`, `lib/phases/2026-10-10-shape-of-nexus/LR1_each_component_in_the_language_that_fits.phase`, `lib/phases/2026-10-10-shape-of-nexus/OP0_one_options_shape_for_every_system.phase`, `lib/phases/2026-10-10-shape-of-nexus/OP1_every_system_declares_its_options.phase`, `lib/phases/2026-10-10-shape-of-nexus/SH1_one_home_for_every_concept.phase`
+
+#### `lib/phases/2026-10-10-shape-of-nexus/graph/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-10-10-shape-of-nexus/graph/EP1_every_claim_says_how_it_is_known-518303ecd7d85d85.graph`, `lib/phases/2026-10-10-shape-of-nexus/graph/FN3_the_nerve_shows_it_and_the_field_sees_the_nerve-5a5715d4e3cba86c.graph`, `lib/phases/2026-10-10-shape-of-nexus/graph/LR0_the_shared_primitives_are_the_glyph-6952439b2f80c99c.graph`, `lib/phases/2026-10-10-shape-of-nexus/graph/LR1_each_component_in_the_language_that_fits-811033a724b0ca79.graph`, `lib/phases/2026-10-10-shape-of-nexus/graph/OP0_one_options_shape_for_every_system-a172702727a5d91e.graph`, `lib/phases/2026-10-10-shape-of-nexus/graph/OP1_every_system_declares_its_options-954ea8eee677f68e.graph`, `lib/phases/2026-10-10-shape-of-nexus/graph/SH1_one_home_for_every_concept-d30f0553638eb554.graph`
+
+#### `lib/phases/2026-10-10-snapshot-compartments/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-10-snapshot-compartments/SN4_benchmarks_teach.phase`
+
+#### `lib/phases/2026-10-10-snapshot-compartments/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-10-snapshot-compartments/graph/SN4_benchmarks_teach-c23057ec2723dd8b.graph`
+
+#### `lib/phases/2026-10-12-browser-providers-and-work/`
+
+8 other file(s).
+
+- other: `lib/phases/2026-10-12-browser-providers-and-work/CS0_projects_decomposed_into_components.phase`, `lib/phases/2026-10-12-browser-providers-and-work/JB5_varied_wording_true_facts.phase`, `lib/phases/2026-10-12-browser-providers-and-work/MX4_one_system_digest.phase`, `lib/phases/2026-10-12-browser-providers-and-work/PV0_claude_code_is_a_guardian_provider.phase`, `lib/phases/2026-10-12-browser-providers-and-work/PV1_providers_read_from_nodes.phase`, `lib/phases/2026-10-12-browser-providers-and-work/PV2_hats_are_nodes.phase`, `lib/phases/2026-10-12-browser-providers-and-work/PV4_inputs_are_history.phase`, `lib/phases/2026-10-12-browser-providers-and-work/PV5_conversation_carries_across_providers.phase`
+
+#### `lib/phases/2026-10-12-browser-providers-and-work/graph/`
+
+8 other file(s).
+
+- other: `lib/phases/2026-10-12-browser-providers-and-work/graph/CS0_projects_decomposed_into_components-5eac0923400df9d4.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/JB5_varied_wording_true_facts-88d2ca99cff642c0.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/MX4_one_system_digest-b1af60343305fd6c.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV0_claude_code_is_a_guardian_provider-700deffb992647b8.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV1_providers_read_from_nodes-c83ac4b82fb3e70c.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV2_hats_are_nodes-66c258dbf8ec8139.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV4_inputs_are_history-a129834872fdbcc9.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV5_conversation_carries_across_providers-221b5ffcc46bedbf.graph`
+
+#### `lib/phases/2026-10-12-browser-providers-and-work/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-12-browser-providers-and-work/graph/_superseded/CS0_projects_decomposed_into_components-c12a1ca2cc3030ee.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/_superseded/PV1_providers_read_from_nodes-727b5bb6b91c22ad.graph`
+
+#### `lib/phases/2026-10-12-request-spine/`
+
+19 other file(s).
+
+- other: 19 files (.phase)
+
+#### `lib/phases/2026-10-12-request-spine/graph/`
+
+19 other file(s).
+
+- other: 19 files (.graph)
+
+#### `lib/phases/2026-10-12-request-spine/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-12-request-spine/graph/_superseded/RQ17_observe_by_request-33924dbf8607becb.graph`
+
+#### `lib/phases/2026-10-13-gates-that-learn-and-priorities/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-13-gates-that-learn-and-priorities/QA1_the_catalogue_runs.phase`, `lib/phases/2026-10-13-gates-that-learn-and-priorities/RT1_eligibility_then_preference.phase`
+
+#### `lib/phases/2026-10-13-gates-that-learn-and-priorities/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-13-gates-that-learn-and-priorities/graph/QA1_the_catalogue_runs-2f28022294f93cfe.graph`, `lib/phases/2026-10-13-gates-that-learn-and-priorities/graph/RT1_eligibility_then_preference-db32153ad00baf8c.graph`
+
+#### `lib/phases/2026-10-13-identities-tabs-and-automation/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-13-identities-tabs-and-automation/HM0_the_hat_keeps_a_model_of_the_repo.phase`
+
+#### `lib/phases/2026-10-13-identities-tabs-and-automation/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-13-identities-tabs-and-automation/graph/HM0_the_hat_keeps_a_model_of_the_repo-3e7320f2d7cabfcb.graph`
+
+#### `lib/phases/2026-10-13-nexus-memory-gates-and-contract/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-10-13-nexus-memory-gates-and-contract/CT0_the_contract_is_a_reference.phase`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/CT1_dynamic_chunking.phase`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/CT2_ingestion_as_contracts.phase`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/CX0_context_from_dependencies.phase`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/GT0_every_interaction_gated.phase`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/IM0_intent_map_his_to_change.phase`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/PF0_profiles_linked_to_hats.phase`
+
+#### `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT0_the_contract_is_a_reference-df6fb16d25b92bcf.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT1_dynamic_chunking-f7d073f269227f58.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT2_ingestion_as_contracts-ba7095d82e6aabf3.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CX0_context_from_dependencies-dbe7d50a20a425b3.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/GT0_every_interaction_gated-03a2a715a7b70f73.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/IM0_intent_map_his_to_change-6349e71baccd8530.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/PF0_profiles_linked_to_hats-1617b623eba97216.graph`
+
+#### `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/_superseded/CT0_the_contract_is_a_reference-78068c3fef97cff2.graph`
+
+#### `lib/phases/2026-10-13-projects-raid-and-gates/`
+
+10 other file(s).
+
+- other: `lib/phases/2026-10-13-projects-raid-and-gates/CK1_the_catalogue_runs.phase`, `lib/phases/2026-10-13-projects-raid-and-gates/PL0_his_projects_imported_for_real.phase`, `lib/phases/2026-10-13-projects-raid-and-gates/PL2_history_kept.phase`, `lib/phases/2026-10-13-projects-raid-and-gates/PL3_versions_become_history.phase`, `lib/phases/2026-10-13-projects-raid-and-gates/PL4_import_reports_what_is_broken.phase`, `lib/phases/2026-10-13-projects-raid-and-gates/PL6_global_links_seen.phase`, `lib/phases/2026-10-13-projects-raid-and-gates/RD3_the_registry_carries_events.phase`, `lib/phases/2026-10-13-projects-raid-and-gates/RF0_architecture_read.phase`, `lib/phases/2026-10-13-projects-raid-and-gates/RF1_migration_proposed_as_phases.phase`, `lib/phases/2026-10-13-projects-raid-and-gates/RF2_applied_one_phase_at_a_time.phase`
+
+#### `lib/phases/2026-10-13-projects-raid-and-gates/graph/`
+
+10 other file(s).
+
+- other: `lib/phases/2026-10-13-projects-raid-and-gates/graph/CK1_the_catalogue_runs-1f64ff14ad327042.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL0_his_projects_imported_for_real-061b0f3b31ea86d0.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL2_history_kept-5b4cd0e60f00b85b.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL3_versions_become_history-0044abaf283377f6.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL4_import_reports_what_is_broken-463d5b3d9d4f4c22.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL6_global_links_seen-d930008daef10476.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RD3_the_registry_carries_events-f2ceaa39f7c300e5.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF0_architecture_read-c117168ac25aa9f0.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF1_migration_proposed_as_phases-37ed11040317ceba.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF2_applied_one_phase_at_a_time-fcaca59eda2838e7.graph`
+
+#### `lib/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/RF1_migration_proposed_as_phases-0653cb1c1c976e54.graph`
+
+#### `lib/phases/2026-10-15-automatic-tracking/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-15-automatic-tracking/AU1_addenda_written_for_you.phase`, `lib/phases/2026-10-15-automatic-tracking/CS1_every_brick_a_component.phase`, `lib/phases/2026-10-15-automatic-tracking/CX1_context_from_the_dependencies.phase`, `lib/phases/2026-10-15-automatic-tracking/KT1_observations_on_a_semantic_tree.phase`, `lib/phases/2026-10-15-automatic-tracking/LA1_one_self_model.phase`, `lib/phases/2026-10-15-automatic-tracking/MC1_macros_from_repeats.phase`
+
+#### `lib/phases/2026-10-15-automatic-tracking/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-15-automatic-tracking/graph/AU1_addenda_written_for_you-a1c1fe9139548e36.graph`, `lib/phases/2026-10-15-automatic-tracking/graph/CS1_every_brick_a_component-7d658969a189e1e4.graph`, `lib/phases/2026-10-15-automatic-tracking/graph/CX1_context_from_the_dependencies-7fa78ba0b9bcd675.graph`, `lib/phases/2026-10-15-automatic-tracking/graph/KT1_observations_on_a_semantic_tree-3bef71197a9bf793.graph`, `lib/phases/2026-10-15-automatic-tracking/graph/LA1_one_self_model-d1166e769184d12d.graph`, `lib/phases/2026-10-15-automatic-tracking/graph/MC1_macros_from_repeats-611c1e68d8c1dd1b.graph`
+
+#### `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/CS1_capability_spec_and_surface_check.phase`, `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/SP3_the_browser_agent_reads_the_tree.phase`
+
+#### `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/graph/CS1_capability_spec_and_surface_check-a1190cde7dea8320.graph`, `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/graph/SP3_the_browser_agent_reads_the_tree-0f6a46c1ba15a7e6.graph`
+
+#### `lib/phases/2026-10-15-clear-glass-network-posture/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-15-clear-glass-network-posture/NP19_container.phase`
+
+#### `lib/phases/2026-10-15-clear-glass-network-posture/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-15-clear-glass-network-posture/graph/NP19_container-ec54a18411dad545.graph`
+
+#### `lib/phases/2026-10-15-clear-glass-surfaces/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-15-clear-glass-surfaces/PF1_read_the_log.phase`
+
+#### `lib/phases/2026-10-15-clear-glass-surfaces/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-15-clear-glass-surfaces/graph/PF1_read_the_log-5490f29c2a420c27.graph`
+
+#### `lib/phases/2026-10-15-code-tab-run-state/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-10-15-code-tab-run-state/CE12_proof_and_wiring.phase`, `lib/phases/2026-10-15-code-tab-run-state/CE1_the_run_state.phase`, `lib/phases/2026-10-15-code-tab-run-state/CE2_the_task_header.phase`, `lib/phases/2026-10-15-code-tab-run-state/CE3_reply_on_task_gate.phase`, `lib/phases/2026-10-15-code-tab-run-state/CE5_events.phase`, `lib/phases/2026-10-15-code-tab-run-state/CV2_a_version_per_diff.phase`, `lib/phases/2026-10-15-code-tab-run-state/CV5_universal_versioning.phase`
+
+#### `lib/phases/2026-10-15-code-tab-run-state/graph/`
+
+7 other file(s).
+
+- other: `lib/phases/2026-10-15-code-tab-run-state/graph/CE12_proof_and_wiring-dc6801d7a1de9fef.graph`, `lib/phases/2026-10-15-code-tab-run-state/graph/CE1_the_run_state-48bba9cee37fd0d2.graph`, `lib/phases/2026-10-15-code-tab-run-state/graph/CE2_the_task_header-5cf233239ddf24a1.graph`, `lib/phases/2026-10-15-code-tab-run-state/graph/CE3_reply_on_task_gate-6494fb36f98b0242.graph`, `lib/phases/2026-10-15-code-tab-run-state/graph/CE5_events-4e7457d69c24f4b1.graph`, `lib/phases/2026-10-15-code-tab-run-state/graph/CV2_a_version_per_diff-fa951e6ce16e4c3d.graph`, `lib/phases/2026-10-15-code-tab-run-state/graph/CV5_universal_versioning-caf16dc4d08f56cc.graph`
+
+#### `lib/phases/2026-10-15-cos-app/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-15-cos-app/COSA12_vmware_window.phase`, `lib/phases/2026-10-15-cos-app/COSA14_versionium_record.phase`, `lib/phases/2026-10-15-cos-app/COSA5_data_root.phase`, `lib/phases/2026-10-15-cos-app/COSA6_the_exe.phase`, `lib/phases/2026-10-15-cos-app/COSA8_other_projects.phase`, `lib/phases/2026-10-15-cos-app/COSA9_idearium_sync.phase`
+
+#### `lib/phases/2026-10-15-cos-app/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-15-cos-app/graph/COSA12_vmware_window-c348ed645b8dabb1.graph`, `lib/phases/2026-10-15-cos-app/graph/COSA14_versionium_record-19b95401bebec01f.graph`, `lib/phases/2026-10-15-cos-app/graph/COSA5_data_root-8c58d98a92114457.graph`, `lib/phases/2026-10-15-cos-app/graph/COSA6_the_exe-6de6d4ad67498fc0.graph`, `lib/phases/2026-10-15-cos-app/graph/COSA8_other_projects-5f67a6ff59ecd341.graph`, `lib/phases/2026-10-15-cos-app/graph/COSA9_idearium_sync-ddd57d8b3fb336bf.graph`
+
+#### `lib/phases/2026-10-15-fiverr-ledger/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-15-fiverr-ledger/PF0_the_ledger.phase`, `lib/phases/2026-10-15-fiverr-ledger/PF1_the_sources.phase`, `lib/phases/2026-10-15-fiverr-ledger/PF2_the_slots_into_a_gig.phase`
+
+#### `lib/phases/2026-10-15-fiverr-ledger/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-15-fiverr-ledger/graph/PF0_the_ledger-a4583a7c88b46cd6.graph`, `lib/phases/2026-10-15-fiverr-ledger/graph/PF1_the_sources-28198a8912efefda.graph`, `lib/phases/2026-10-15-fiverr-ledger/graph/PF2_the_slots_into_a_gig-6abf349983e78cdf.graph`
+
+#### `lib/phases/2026-10-15-fiverr-ledger/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-15-fiverr-ledger/graph/_superseded/PF1_the_sources-e60ed3365a0a2cec.graph`
+
+#### `lib/phases/2026-10-15-gate-held-work/`
+
+11 other file(s).
+
+- other: `lib/phases/2026-10-15-gate-held-work/GW10_the_listener_knows_what_to_hear.phase`, `lib/phases/2026-10-15-gate-held-work/GW15_every_file_tested.phase`, `lib/phases/2026-10-15-gate-held-work/GW16_parallel_branches_benchmark.phase`, `lib/phases/2026-10-15-gate-held-work/GW18_debug_by_bisect.phase`, `lib/phases/2026-10-15-gate-held-work/GW22_find_before_generate.phase`, `lib/phases/2026-10-15-gate-held-work/GW2_the_run_follows_the_gate.phase`, `lib/phases/2026-10-15-gate-held-work/GW3_a_contract_is_traced.phase`, `lib/phases/2026-10-15-gate-held-work/GW5_agents_are_copilot.phase`, `lib/phases/2026-10-15-gate-held-work/GW6_the_intelligence_system_on_every_gate.phase`, `lib/phases/2026-10-15-gate-held-work/GW7_failure_macro_and_rewind.phase`, `lib/phases/2026-10-15-gate-held-work/GW8_causal_graph_and_failure_mode_field.phase`
+
+#### `lib/phases/2026-10-15-gate-held-work/graph/`
+
+11 other file(s).
+
+- other: `lib/phases/2026-10-15-gate-held-work/graph/GW10_the_listener_knows_what_to_hear-539f9afb9e5ba54e.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW15_every_file_tested-01a6f0bce2e5893d.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW16_parallel_branches_benchmark-7496bd8f1af2a364.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW18_debug_by_bisect-356417f6dfb2bb3d.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW22_find_before_generate-0d881b61d2b990e3.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW2_the_run_follows_the_gate-8f78d99aa885a501.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW3_a_contract_is_traced-7ee6767772d2310d.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW5_agents_are_copilot-a8082de2026469af.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW6_the_intelligence_system_on_every_gate-88688bb77b7d9ade.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW7_failure_macro_and_rewind-9ea220d322030fc4.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW8_causal_graph_and_failure_mode_field-663a3a1b6c41b6e9.graph`
+
+#### `lib/phases/2026-10-15-gate-held-work/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-15-gate-held-work/graph/_superseded/GW22_find_before_generate-ebd47dffa0a8bc56.graph`, `lib/phases/2026-10-15-gate-held-work/graph/_superseded/GW5_agents_are_copilot-6b97cd0bef25edcb.graph`
+
+#### `lib/phases/2026-10-15-macro-node-recording/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-15-macro-node-recording/MR10_capabilities_as_steps.phase`, `lib/phases/2026-10-15-macro-node-recording/MR14_tasks_and_mesh_spec.phase`
+
+#### `lib/phases/2026-10-15-macro-node-recording/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-15-macro-node-recording/graph/MR10_capabilities_as_steps-7fc5751ee0244562.graph`, `lib/phases/2026-10-15-macro-node-recording/graph/MR14_tasks_and_mesh_spec-4cb900f7984eca36.graph`
+
+#### `lib/phases/2026-10-15-one-contract-raid-releases/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-15-one-contract-raid-releases/AT1_atlases_and_specs_from_releases.phase`, `lib/phases/2026-10-15-one-contract-raid-releases/FR1_failure_reports.phase`, `lib/phases/2026-10-15-one-contract-raid-releases/GS1_a_snapshot_per_gate_rewind_and_compare.phase`, `lib/phases/2026-10-15-one-contract-raid-releases/RN2_changelog_from_the_commits.phase`, `lib/phases/2026-10-15-one-contract-raid-releases/ST1_stability_checks.phase`
+
+#### `lib/phases/2026-10-15-one-contract-raid-releases/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-15-one-contract-raid-releases/graph/AT1_atlases_and_specs_from_releases-dc5b8827fb668ce2.graph`, `lib/phases/2026-10-15-one-contract-raid-releases/graph/FR1_failure_reports-dafc215b29905071.graph`, `lib/phases/2026-10-15-one-contract-raid-releases/graph/GS1_a_snapshot_per_gate_rewind_and_compare-019413470fb371c3.graph`, `lib/phases/2026-10-15-one-contract-raid-releases/graph/RN2_changelog_from_the_commits-1e0e93783f21a1c4.graph`, `lib/phases/2026-10-15-one-contract-raid-releases/graph/ST1_stability_checks-73c9424926bf802e.graph`
+
+#### `lib/phases/2026-10-15-personal-chat-import/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-15-personal-chat-import/PI1_the_importer.phase`, `lib/phases/2026-10-15-personal-chat-import/PI3_the_intelligence_pass.phase`
+
+#### `lib/phases/2026-10-15-personal-chat-import/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-15-personal-chat-import/graph/PI1_the_importer-c54409bf4a46b62d.graph`, `lib/phases/2026-10-15-personal-chat-import/graph/PI3_the_intelligence_pass-081c0303b5cee64e.graph`
+
+#### `lib/phases/2026-10-15-personal-chat-import/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-15-personal-chat-import/graph/_superseded/PI1_the_importer-4811bb5810fcbe4d.graph`
+
+#### `lib/phases/2026-10-15-spec-foundation-model/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-15-spec-foundation-model/SF4_the_listener.phase`
+
+#### `lib/phases/2026-10-15-spec-foundation-model/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-15-spec-foundation-model/graph/SF4_the_listener-6ccc005b3e35e04e.graph`
+
+#### `lib/phases/2026-10-15-warp-builds-and-spec-framework/`
+
+10 other file(s).
+
+- other: `lib/phases/2026-10-15-warp-builds-and-spec-framework/IS1_intent_settings_per_repo.phase`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/MP1_nexus_maps_every_phase.phase`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/MP3_builds_get_the_mapped_context.phase`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/SF1_intent_blocks.phase`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/SF2_spec_framework_block.phase`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/SF3_collect_the_spec.phase`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/SF4_compile_on_collect.phase`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/WB0_census.phase`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/WB1_warp_at_the_rung.phase`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/WB2_raid_bricks_and_officiator_through_warp.phase`
+
+#### `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/`
+
+10 other file(s).
+
+- other: `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/IS1_intent_settings_per_repo-6e793c69f386d367.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP1_nexus_maps_every_phase-38eb3640a0730199.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP3_builds_get_the_mapped_context-ea105d5b59c94356.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF1_intent_blocks-a8afa92a489433cd.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF2_spec_framework_block-f3369f9f0bb0ba75.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF3_collect_the_spec-2752c0d140f6df49.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF4_compile_on_collect-aadcbf4561eb1533.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB0_census-9a044eef08fa5b1b.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB1_warp_at_the_rung-9b6591af8b02377f.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB2_raid_bricks_and_officiator_through_warp-c5988e845eadf750.graph`
+
+#### `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/MP3_builds_get_the_mapped_context-a8ea1fb30dbfd70b.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/WB1_warp_at_the_rung-60eb99e47c8e797a.graph`
+
+#### `lib/phases/2026-10-16-agent-work-funnel/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-16-agent-work-funnel/FN0_the_funnel_as_data.phase`, `lib/phases/2026-10-16-agent-work-funnel/FN1_every_door_goes_through_it.phase`, `lib/phases/2026-10-16-agent-work-funnel/FN2_what_is_missing_is_made_first.phase`, `lib/phases/2026-10-16-agent-work-funnel/FN3_every_answer_a_node.phase`
+
+#### `lib/phases/2026-10-16-agent-work-funnel/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-16-agent-work-funnel/graph/FN0_the_funnel_as_data-36bff935bc611507.graph`, `lib/phases/2026-10-16-agent-work-funnel/graph/FN1_every_door_goes_through_it-3eaa762c5d3deb20.graph`, `lib/phases/2026-10-16-agent-work-funnel/graph/FN2_what_is_missing_is_made_first-94e1791ebf408132.graph`, `lib/phases/2026-10-16-agent-work-funnel/graph/FN3_every_answer_a_node-f0fd6a276c7d1d69.graph`
+
+#### `lib/phases/2026-10-16-agent-work-funnel/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-agent-work-funnel/graph/_superseded/FN1_every_door_goes_through_it-1841c94aa41f3eef.graph`
+
+#### `lib/phases/2026-10-16-canvas-compartments/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-16-canvas-compartments/CN3_nested_compartments.phase`, `lib/phases/2026-10-16-canvas-compartments/CN6_canvas_screen.phase`
+
+#### `lib/phases/2026-10-16-canvas-compartments/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-16-canvas-compartments/graph/CN3_nested_compartments-a9434777c262960b.graph`, `lib/phases/2026-10-16-canvas-compartments/graph/CN6_canvas_screen-a122a921c355bbd5.graph`
+
+#### `lib/phases/2026-10-16-canvas-compartments/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-canvas-compartments/graph/_superseded/CN3_nested_compartments-567d60a0f20626fb.graph`
+
+#### `lib/phases/2026-10-16-code-tab-rebuild/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-16-code-tab-rebuild/DK1_procedures_backend.phase`, `lib/phases/2026-10-16-code-tab-rebuild/TB1_read_model_per_tab.phase`, `lib/phases/2026-10-16-code-tab-rebuild/TB3a_tool_calls_saved.phase`, `lib/phases/2026-10-16-code-tab-rebuild/TB4_reuse_responses.phase`, `lib/phases/2026-10-16-code-tab-rebuild/TB7d_node_controls.phase`, `lib/phases/2026-10-16-code-tab-rebuild/TB8_proof_and_wiring.phase`
+
+#### `lib/phases/2026-10-16-code-tab-rebuild/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-16-code-tab-rebuild/graph/DK1_procedures_backend-74a55268895b8cd2.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB1_read_model_per_tab-28d795fe5701a47d.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB3a_tool_calls_saved-7ee37636c61d4d6c.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB4_reuse_responses-cf2073506d98196c.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB7d_node_controls-4f2be3f82aed75ef.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB8_proof_and_wiring-bea6b955a3f4631e.graph`
+
+#### `lib/phases/2026-10-16-code-tab-rebuild/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-code-tab-rebuild/graph/_superseded/DK1_procedures_backend-8caea4d0996d7b22.graph`
+
+#### `lib/phases/2026-10-16-cos-console/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-16-cos-console/CON5_pane.phase`, `lib/phases/2026-10-16-cos-console/CON8_nexus_server_hook.phase`
+
+#### `lib/phases/2026-10-16-cos-console/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-16-cos-console/graph/CON5_pane-8bbaf7e5aa41faf7.graph`, `lib/phases/2026-10-16-cos-console/graph/CON8_nexus_server_hook-fd911e37cdaf9fee.graph`
+
+#### `lib/phases/2026-10-16-durable-work-timeline/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-16-durable-work-timeline/TL1_chunks_land_as_they_arrive.phase`, `lib/phases/2026-10-16-durable-work-timeline/TL2_resume_at_boot.phase`, `lib/phases/2026-10-16-durable-work-timeline/TL3_the_timeline.phase`, `lib/phases/2026-10-16-durable-work-timeline/TL4_rewind_to_a_gate.phase`, `lib/phases/2026-10-16-durable-work-timeline/TL6_proof_and_wiring.phase`
+
+#### `lib/phases/2026-10-16-durable-work-timeline/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-16-durable-work-timeline/graph/TL1_chunks_land_as_they_arrive-477fcfa607154070.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL2_resume_at_boot-a0f0fae0e4e8a429.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL3_the_timeline-c61967b5d3fdb797.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL4_rewind_to_a_gate-218c037d5e3cb485.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL6_proof_and_wiring-2b6b52d3b29be7d3.graph`
+
+#### `lib/phases/2026-10-16-durable-work-timeline/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-durable-work-timeline/graph/_superseded/TL4_rewind_to_a_gate-1b73172e3db632d6.graph`
+
+#### `lib/phases/2026-10-16-eravos-removal/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-16-eravos-removal/ER1_delete_the_system.phase`, `lib/phases/2026-10-16-eravos-removal/ER2_unwire_the_platform.phase`, `lib/phases/2026-10-16-eravos-removal/ER3_unwire_the_screens.phase`
+
+#### `lib/phases/2026-10-16-eravos-removal/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-16-eravos-removal/graph/ER1_delete_the_system-2d6cbb2fd32f8057.graph`, `lib/phases/2026-10-16-eravos-removal/graph/ER2_unwire_the_platform-eccf746a91d275e5.graph`, `lib/phases/2026-10-16-eravos-removal/graph/ER3_unwire_the_screens-b77762163146e22d.graph`
+
+#### `lib/phases/2026-10-16-eravos-removal/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-eravos-removal/graph/_superseded/ER3_unwire_the_screens-39401869987f58e9.graph`
+
+#### `lib/phases/2026-10-16-intent-hat-agent-chain/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-16-intent-hat-agent-chain/IH1_intent_nodes_point_at_hats.phase`, `lib/phases/2026-10-16-intent-hat-agent-chain/IH2_agents_bound.phase`, `lib/phases/2026-10-16-intent-hat-agent-chain/IH3_routers_read_the_chain.phase`, `lib/phases/2026-10-16-intent-hat-agent-chain/IH5_proof_and_wiring.phase`
+
+#### `lib/phases/2026-10-16-intent-hat-agent-chain/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-16-intent-hat-agent-chain/graph/IH1_intent_nodes_point_at_hats-7a8dccf49acfd507.graph`, `lib/phases/2026-10-16-intent-hat-agent-chain/graph/IH2_agents_bound-c734fd5092d03e43.graph`, `lib/phases/2026-10-16-intent-hat-agent-chain/graph/IH3_routers_read_the_chain-7b604cd3c79ab423.graph`, `lib/phases/2026-10-16-intent-hat-agent-chain/graph/IH5_proof_and_wiring-0a8286e69167fdbd.graph`
+
+#### `lib/phases/2026-10-16-mobile-compartments/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-mobile-compartments/MB5_language_checks.phase`
+
+#### `lib/phases/2026-10-16-mobile-compartments/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-mobile-compartments/graph/MB5_language_checks-a070742238698d85.graph`
+
+#### `lib/phases/2026-10-16-nexus-git-sync/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-nexus-git-sync/GS5_release_alignment.phase`
+
+#### `lib/phases/2026-10-16-nexus-git-sync/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-nexus-git-sync/graph/GS5_release_alignment-9cea81dfaa362267.graph`
+
+#### `lib/phases/2026-10-16-plan-sidebar/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-plan-sidebar/PS1_context_recorded.phase`
+
+#### `lib/phases/2026-10-16-plan-sidebar/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-plan-sidebar/graph/PS1_context_recorded-d021d698da4d1307.graph`
+
+#### `lib/phases/2026-10-16-plan-sidebar/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-plan-sidebar/graph/_superseded/PS1_context_recorded-140511f9d8b21da5.graph`
+
+#### `lib/phases/2026-10-16-proposal-evidence/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-16-proposal-evidence/PE1_test_map.phase`, `lib/phases/2026-10-16-proposal-evidence/PE2_evidence.phase`, `lib/phases/2026-10-16-proposal-evidence/PE3_wired_and_gated.phase`, `lib/phases/2026-10-16-proposal-evidence/PE9_infrastructure_failures.phase`
+
+#### `lib/phases/2026-10-16-proposal-evidence/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-16-proposal-evidence/graph/PE1_test_map-ae196f649f98e2e7.graph`, `lib/phases/2026-10-16-proposal-evidence/graph/PE2_evidence-87adde4d74c5c418.graph`, `lib/phases/2026-10-16-proposal-evidence/graph/PE3_wired_and_gated-c822ef9e98c403c2.graph`, `lib/phases/2026-10-16-proposal-evidence/graph/PE9_infrastructure_failures-fbe72f5dec0e8cfb.graph`
+
+#### `lib/phases/2026-10-16-reject-learn-retry/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-16-reject-learn-retry/RL1_classify_the_rejection.phase`, `lib/phases/2026-10-16-reject-learn-retry/RL3_stop_the_regression_before_it_reaches_him.phase`
+
+#### `lib/phases/2026-10-16-reject-learn-retry/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-16-reject-learn-retry/graph/RL1_classify_the_rejection-bdf4c489a42b7497.graph`, `lib/phases/2026-10-16-reject-learn-retry/graph/RL3_stop_the_regression_before_it_reaches_him-3cdd61da21e0b3a9.graph`
+
+#### `lib/phases/2026-10-16-repo-carve/`
+
+12 other file(s).
+
+- other: `lib/phases/2026-10-16-repo-carve/CV2_untangle_with_rf0.phase`, `lib/phases/2026-10-16-repo-carve/FR10_stop_the_ladder.phase`, `lib/phases/2026-10-16-repo-carve/FR1_one_record_per_change.phase`, `lib/phases/2026-10-16-repo-carve/FR2_tested_before_it_lands.phase`, `lib/phases/2026-10-16-repo-carve/FR3_undo_any_change.phase`, `lib/phases/2026-10-16-repo-carve/FR4_stands_alone.phase`, `lib/phases/2026-10-16-repo-carve/FR5_the_demo.phase`, `lib/phases/2026-10-16-repo-carve/FR5_the_demo_note.phase`, `lib/phases/2026-10-16-repo-carve/FR6_flight_data.phase`, `lib/phases/2026-10-16-repo-carve/FR7_the_causal_record.phase`, `lib/phases/2026-10-16-repo-carve/FR8_branches_for_benchmarks.phase`, `lib/phases/2026-10-16-repo-carve/PB1_the_product_boundary.phase`
+
+#### `lib/phases/2026-10-16-repo-carve/graph/`
+
+12 other file(s).
+
+- other: `lib/phases/2026-10-16-repo-carve/graph/CV2_untangle_with_rf0-12a1eb1568c475ca.graph`, `lib/phases/2026-10-16-repo-carve/graph/FR10_stop_the_ladder-fdadb47c70248a9e.graph`, `lib/phases/2026-10-16-repo-carve/graph/FR1_one_record_per_change-969ecbecb227f561.graph`, `lib/phases/2026-10-16-repo-carve/graph/FR2_tested_before_it_lands-53d39bac7d121307.graph`, `lib/phases/2026-10-16-repo-carve/graph/FR3_undo_any_change-c20f74a0da0c1f4c.graph`, `lib/phases/2026-10-16-repo-carve/graph/FR4_stands_alone-7733ba9685bafc07.graph`, `lib/phases/2026-10-16-repo-carve/graph/FR5_the_demo-a03b08442bb825c3.graph`, `lib/phases/2026-10-16-repo-carve/graph/FR5_the_demo_note-332d5e981a6108fb.graph`, `lib/phases/2026-10-16-repo-carve/graph/FR6_flight_data-05ad1f0362cc7289.graph`, `lib/phases/2026-10-16-repo-carve/graph/FR7_the_causal_record-8bee8dc012336255.graph`, `lib/phases/2026-10-16-repo-carve/graph/FR8_branches_for_benchmarks-802a9c769b0443fa.graph`, `lib/phases/2026-10-16-repo-carve/graph/PB1_the_product_boundary-cb390adf322a5601.graph`
+
+#### `lib/phases/2026-10-17-debugging-product/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-17-debugging-product/DP11_the_product_boundary.phase`, `lib/phases/2026-10-17-debugging-product/DP2_one_gap_door.phase`, `lib/phases/2026-10-17-debugging-product/GD1_gaps_from_the_graph_for_any_repo.phase`
+
+#### `lib/phases/2026-10-17-debugging-product/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-17-debugging-product/graph/DP11_the_product_boundary-899986b367f9bf2d.graph`, `lib/phases/2026-10-17-debugging-product/graph/DP2_one_gap_door-2ff9716abc657ff5.graph`, `lib/phases/2026-10-17-debugging-product/graph/GD1_gaps_from_the_graph_for_any_repo-0fec63ba9c0f26c8.graph`
+
+#### `lib/phases/2026-10-17-failure-mode-report/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-17-failure-mode-report/FMR11_import_into_any_test_env.phase`, `lib/phases/2026-10-17-failure-mode-report/FMR1_every_ledger_into_rfr2.phase`, `lib/phases/2026-10-17-failure-mode-report/FMR2_every_failure_reaches_the_record.phase`, `lib/phases/2026-10-17-failure-mode-report/FMR7_a_fix_proven_by_its_macro.phase`
+
+#### `lib/phases/2026-10-17-failure-mode-report/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-17-failure-mode-report/graph/FMR11_import_into_any_test_env-b5e54d1c4aa8322b.graph`, `lib/phases/2026-10-17-failure-mode-report/graph/FMR1_every_ledger_into_rfr2-d672a060fcb71369.graph`, `lib/phases/2026-10-17-failure-mode-report/graph/FMR2_every_failure_reaches_the_record-7d5ad1479d3e7570.graph`, `lib/phases/2026-10-17-failure-mode-report/graph/FMR7_a_fix_proven_by_its_macro-6e7c8d81f12d75e7.graph`
+
+#### `lib/phases/2026-10-17-failure-mode-report/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-17-failure-mode-report/graph/_superseded/FMR11_import_into_any_test_env-53ed35ed7a5f4718.graph`
+
+#### `lib/phases/2026-10-17-infrastructure-migration/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-17-infrastructure-migration/IM1_the_shape_census_as_a_command.phase`, `lib/phases/2026-10-17-infrastructure-migration/IM2_clean_the_redundant.phase`, `lib/phases/2026-10-17-infrastructure-migration/IM3_wire_what_exists.phase`, `lib/phases/2026-10-17-infrastructure-migration/IM5_each_system_to_the_template.phase`, `lib/phases/2026-10-17-infrastructure-migration/IM7_the_ui_on_the_registry.phase`
+
+#### `lib/phases/2026-10-17-infrastructure-migration/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-17-infrastructure-migration/graph/IM1_the_shape_census_as_a_command-3abb3b64d2b71c76.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM2_clean_the_redundant-072ba52c90e90175.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM3_wire_what_exists-44f254336361884c.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM5_each_system_to_the_template-aebf66ab8872db55.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM7_the_ui_on_the_registry-a6263831c386b825.graph`
+
+#### `lib/phases/2026-10-17-infrastructure-migration/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-17-infrastructure-migration/graph/_superseded/IM1_the_shape_census_as_a_command-6d5ddff3294636fc.graph`
+
+#### `lib/phases/2026-10-17-pieces-not-order/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-17-pieces-not-order/PC1_the_point_first.phase`, `lib/phases/2026-10-17-pieces-not-order/PC4_a_procedure_per_kind.phase`
+
+#### `lib/phases/2026-10-17-pieces-not-order/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-17-pieces-not-order/graph/PC1_the_point_first-c775e908897ae8af.graph`, `lib/phases/2026-10-17-pieces-not-order/graph/PC4_a_procedure_per_kind-6ad550aea45b1805.graph`
+
+#### `lib/phases/2026-10-17-system-drawbridge/`
+
+15 other file(s).
+
+- other: 15 files (.phase)
+
+#### `lib/phases/2026-10-17-system-drawbridge/graph/`
+
+15 other file(s).
+
+- other: 15 files (.graph)
+
+#### `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/DB13_the_tunnel-1bdf18b3efb9edf1.graph`, `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/DB17_files_stay_with_their_system-0a30e279c2724858.graph`, `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/DB1_the_census_and_the_ratchet-6bb5eb9cc6cd21f1.graph`, `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/P33a_a_registry_for_any_system-973379dc15f50e89.graph`
+
+#### `lib/phases/2026-10-18-compartment-environment/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-18-compartment-environment/CE3_the_handshake.phase`
+
+#### `lib/phases/2026-10-18-compartment-environment/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-18-compartment-environment/graph/CE3_the_handshake-aa79fe09a96f799d.graph`
+
+#### `lib/phases/2026-10-18-debugging-product/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-18-debugging-product/DBG1_the_key.phase`, `lib/phases/2026-10-18-debugging-product/DBG2_the_case.phase`, `lib/phases/2026-10-18-debugging-product/DBG3_deviation_and_friction_per_run.phase`, `lib/phases/2026-10-18-debugging-product/DBG4_dependency_gaps.phase`, `lib/phases/2026-10-18-debugging-product/DBG6_cases_crystallize.phase`, `lib/phases/2026-10-18-debugging-product/DBG8_in_the_product.phase`
+
+#### `lib/phases/2026-10-18-debugging-product/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-18-debugging-product/graph/DBG1_the_key-6716c6c874b49d8e.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG2_the_case-1fa8c76c4772fdd9.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG3_deviation_and_friction_per_run-3cdc3022f02a4874.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG4_dependency_gaps-1cbb2701c89b4f58.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG6_cases_crystallize-84f9d57bd845faf7.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG8_in_the_product-fb23f2c646765085.graph`
+
+#### `lib/phases/2026-10-18-debugging-product/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-18-debugging-product/graph/_superseded/DBG1_the_key-e4c6f44f796d9405.graph`, `lib/phases/2026-10-18-debugging-product/graph/_superseded/DBG4_dependency_gaps-958076dca62f887c.graph`
+
+#### `lib/phases/2026-10-18-gate-memory/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-18-gate-memory/GM5_the_context_ladder.phase`, `lib/phases/2026-10-18-gate-memory/GM6_crystallized_from_what_was_approved.phase`
+
+#### `lib/phases/2026-10-18-gate-memory/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-18-gate-memory/graph/GM5_the_context_ladder-d71138f7d24e34f1.graph`, `lib/phases/2026-10-18-gate-memory/graph/GM6_crystallized_from_what_was_approved-6f4f97b6125f3591.graph`
+
+#### `lib/phases/2026-10-18-gating-census/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-18-gating-census/GC0_the_census.phase`, `lib/phases/2026-10-18-gating-census/GC1_layer_one.phase`, `lib/phases/2026-10-18-gating-census/L1_primitives_no_decision.phase`, `lib/phases/2026-10-18-gating-census/L2_one_of_each.phase`
+
+#### `lib/phases/2026-10-18-gating-census/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-18-gating-census/graph/GC0_the_census-46d5041e29861a47.graph`, `lib/phases/2026-10-18-gating-census/graph/GC1_layer_one-3f15fb69b24b7b4f.graph`, `lib/phases/2026-10-18-gating-census/graph/L1_primitives_no_decision-af2037ec4c7c7ccd.graph`, `lib/phases/2026-10-18-gating-census/graph/L2_one_of_each-15bb418b41b19b2a.graph`
+
+#### `lib/phases/2026-10-18-gating-census/graph/_superseded/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-18-gating-census/graph/_superseded/GC0_the_census-6e90f2f13b83fa5b.graph`, `lib/phases/2026-10-18-gating-census/graph/_superseded/GC1_layer_one-c6818f0350f0d936.graph`, `lib/phases/2026-10-18-gating-census/graph/_superseded/L1_primitives_no_decision-0a03918617e67a44.graph`
+
+#### `lib/phases/2026-10-19-gate-quality-checks/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-19-gate-quality-checks/GQ1_quality_stream.phase`, `lib/phases/2026-10-19-gate-quality-checks/GQ3_brick_tests.phase`
+
+#### `lib/phases/2026-10-19-gate-quality-checks/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-19-gate-quality-checks/graph/GQ1_quality_stream-78a010f02db9b5e2.graph`, `lib/phases/2026-10-19-gate-quality-checks/graph/GQ3_brick_tests-7bb3b9e18cbc76b9.graph`
+
+#### `lib/phases/2026-10-19-idearium-control/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-19-idearium-control/IM2_promote_to_phase.phase`, `lib/phases/2026-10-19-idearium-control/IM3_ideas_mapped_to_nexus.phase`, `lib/phases/2026-10-19-idearium-control/IX1_everything_linked.phase`, `lib/phases/2026-10-19-idearium-control/NM1_one_name_per_file.phase`, `lib/phases/2026-10-19-idearium-control/VS2_diff_only_backups.phase`
+
+#### `lib/phases/2026-10-19-idearium-control/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-19-idearium-control/graph/IM2_promote_to_phase-3d3122e110bd5fcd.graph`, `lib/phases/2026-10-19-idearium-control/graph/IM3_ideas_mapped_to_nexus-4ab9902894ad0c86.graph`, `lib/phases/2026-10-19-idearium-control/graph/IX1_everything_linked-936103a671e951e6.graph`, `lib/phases/2026-10-19-idearium-control/graph/NM1_one_name_per_file-4139029cd3912f57.graph`, `lib/phases/2026-10-19-idearium-control/graph/VS2_diff_only_backups-536284767e3a671e.graph`
+
+#### `lib/phases/2026-10-19-idearium-control/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-19-idearium-control/graph/_superseded/IM2_promote_to_phase-1569487c0a2437d9.graph`, `lib/phases/2026-10-19-idearium-control/graph/_superseded/IX1_everything_linked-9bb44518c22de6ae.graph`
+
+#### `lib/phases/2026-10-19-infrastructure-spine/`
+
+21 other file(s).
+
+- other: 21 files (.phase)
+
+#### `lib/phases/2026-10-19-infrastructure-spine/graph/`
+
+21 other file(s).
+
+- other: 21 files (.graph)
+
+#### `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/`
+
+8 other file(s).
+
+- other: `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/IN6_systems_onto_the_spine-cdcb05f20732c595.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/IN7_every_phase_and_spec_on_the_spine-ac080692893504b1.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/NC1_neutral_core_boundary-5ed2fce6c3979dcb.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/PN2_dual_read-29e3557d98277a3d.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/PRC1_phase_reality_check-681b3b0a01191eac.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/PRC1_phase_reality_check-fc6855be1061677b.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/SC1_scaling_limits_named-74bbc16498f13eed.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/VC1_a_change_entry_for_every_event-2d6d84c716d3eda0.graph`
+
 #### `lib/phases/2026-10-19-pipeline-root-causes/`
 
-22 other file(s).
+18 other file(s).
 
-- other: 22 files (.phase)
+- other: 18 files (.phase)
 
 #### `lib/phases/2026-10-19-pipeline-root-causes/graph/`
 
-22 other file(s).
+18 other file(s).
 
-- other: 22 files (.graph)
+- other: 18 files (.graph)
+
+#### `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/`
+
+14 other file(s).
+
+- other: 14 files (.graph)
+
+#### `lib/phases/2026-10-19-solid-build-foundation/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-19-solid-build-foundation/AB1_autobuild_loop_and_resume.phase`, `lib/phases/2026-10-19-solid-build-foundation/AB2_hat_aware_ladder.phase`, `lib/phases/2026-10-19-solid-build-foundation/CR1_project_registry_spine.phase`, `lib/phases/2026-10-19-solid-build-foundation/GQ1_quality_stream.phase`, `lib/phases/2026-10-19-solid-build-foundation/GQ3_brick_tests.phase`, `lib/phases/2026-10-19-solid-build-foundation/MF1_model_fit_routing.phase`
+
+#### `lib/phases/2026-10-19-solid-build-foundation/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/2026-10-19-solid-build-foundation/graph/AB1_autobuild_loop_and_resume-8bebaae7ef8ec3d2.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/AB2_hat_aware_ladder-ad9fe7f865a988d6.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/CR1_project_registry_spine-ad00a0602536365c.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/GQ1_quality_stream-85b1ad483b041f8f.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/GQ3_brick_tests-3769b79e631ed6e6.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/MF1_model_fit_routing-933ae7ea59a963fb.graph`
+
+#### `lib/phases/2026-10-19-solid-build-foundation/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-19-solid-build-foundation/graph/_superseded/AB1_autobuild_loop_and_resume-3d44db3a3fb6e381.graph`
+
+#### `lib/phases/2026-10-19-upload-intent-and-page-map/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-19-upload-intent-and-page-map/PM6_nerve_feel.phase`, `lib/phases/2026-10-19-upload-intent-and-page-map/UP1_placement_tool.phase`, `lib/phases/2026-10-19-upload-intent-and-page-map/UP2_learned_placements.phase`, `lib/phases/2026-10-19-upload-intent-and-page-map/UP5_registry_wires_on_apply.phase`, `lib/phases/2026-10-19-upload-intent-and-page-map/UP6_model_for_the_unplaced.phase`
+
+#### `lib/phases/2026-10-19-upload-intent-and-page-map/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-19-upload-intent-and-page-map/graph/PM6_nerve_feel-539b63300c679ad5.graph`, `lib/phases/2026-10-19-upload-intent-and-page-map/graph/UP1_placement_tool-166fb192867b3804.graph`, `lib/phases/2026-10-19-upload-intent-and-page-map/graph/UP2_learned_placements-ce0e81c67e6b36ce.graph`, `lib/phases/2026-10-19-upload-intent-and-page-map/graph/UP5_registry_wires_on_apply-ebe8af443a1f3079.graph`, `lib/phases/2026-10-19-upload-intent-and-page-map/graph/UP6_model_for_the_unplaced-76cb86273b1fc6d5.graph`
 
 #### `lib/phases/2026-10-20-belief-loop/`
 
@@ -1769,65 +3181,47 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 - other: 14 files (.graph)
 
-#### `lib/phases/2026-10-21-adblock/`
+#### `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/`
 
-1 other file(s).
+4 other file(s).
 
-- other: `lib/phases/2026-10-21-adblock/AB0_engine_in_core.phase`
-
-#### `lib/phases/2026-10-21-adblock/graph/`
-
-1 other file(s).
-
-- other: `lib/phases/2026-10-21-adblock/graph/AB0_engine_in_core-00894718c2cca324.graph`
+- other: `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW2_gates_at_every_level-612136b666d5ea1e.graph`, `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW2_gates_at_every_level-b10b437f7e757cde.graph`, `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/PS1_phase_specs-3ff2290d219d6c7c.graph`, `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/PS1_phase_specs-77e8fe5e41ea6ccc.graph`
 
 #### `lib/phases/2026-10-21-approval-chain/`
 
-3 other file(s).
+2 other file(s).
 
-- other: `lib/phases/2026-10-21-approval-chain/APV0_one_record.phase`, `lib/phases/2026-10-21-approval-chain/APV1_change_entry.phase`, `lib/phases/2026-10-21-approval-chain/APV2_commit_carries_it.phase`
+- other: `lib/phases/2026-10-21-approval-chain/APV1_change_entry.phase`, `lib/phases/2026-10-21-approval-chain/APV2_commit_carries_it.phase`
 
 #### `lib/phases/2026-10-21-approval-chain/graph/`
 
-5 other file(s).
+2 other file(s).
 
-- other: `lib/phases/2026-10-21-approval-chain/graph/APV0_one_record-c7db4af169df85e4.graph`, `lib/phases/2026-10-21-approval-chain/graph/APV1_change_entry-84ec3e73d291c157.graph`, `lib/phases/2026-10-21-approval-chain/graph/APV1_change_entry-ac405a9ed94958e7.graph`, `lib/phases/2026-10-21-approval-chain/graph/APV2_commit_carries_it-49cfd8f7769f1070.graph`, `lib/phases/2026-10-21-approval-chain/graph/APV2_commit_carries_it-ddcc8eb6b64febdc.graph`
+- other: `lib/phases/2026-10-21-approval-chain/graph/APV1_change_entry-84ec3e73d291c157.graph`, `lib/phases/2026-10-21-approval-chain/graph/APV2_commit_carries_it-ddcc8eb6b64febdc.graph`
+
+#### `lib/phases/2026-10-21-approval-chain/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-21-approval-chain/graph/_superseded/APV1_change_entry-ac405a9ed94958e7.graph`, `lib/phases/2026-10-21-approval-chain/graph/_superseded/APV2_commit_carries_it-49cfd8f7769f1070.graph`
 
 #### `lib/phases/2026-10-21-brainos-into-idearium/`
 
-9 other file(s).
+3 other file(s).
 
-- other: `lib/phases/2026-10-21-brainos-into-idearium/BX0a_where_it_lands.phase`, `lib/phases/2026-10-21-brainos-into-idearium/BX0b_retire_brainos_page.phase`, `lib/phases/2026-10-21-brainos-into-idearium/BX0c_float.phase`, `lib/phases/2026-10-21-brainos-into-idearium/BX0d_order_against_the_pipeline.phase`, `lib/phases/2026-10-21-brainos-into-idearium/BX0e_true_map_first.phase`, `lib/phases/2026-10-21-brainos-into-idearium/BX10_float.phase`, `lib/phases/2026-10-21-brainos-into-idearium/BX1_census.phase`, `lib/phases/2026-10-21-brainos-into-idearium/BX9_retire.phase`, `lib/phases/2026-10-21-brainos-into-idearium/CNS1_phase_census.phase`
+- other: `lib/phases/2026-10-21-brainos-into-idearium/BX1_census.phase`, `lib/phases/2026-10-21-brainos-into-idearium/BX9_retire.phase`, `lib/phases/2026-10-21-brainos-into-idearium/CNS1_phase_census.phase`
 
 #### `lib/phases/2026-10-21-brainos-into-idearium/graph/`
 
-9 other file(s).
+3 other file(s).
 
-- other: `lib/phases/2026-10-21-brainos-into-idearium/graph/BX0a_where_it_lands-887c778fe1bb2e80.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/BX0b_retire_brainos_page-d48fbcc54cf4612c.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/BX0c_float-46828bfaac71f296.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/BX0d_order_against_the_pipeline-6e650928b8b2c45b.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/BX0e_true_map_first-c6c11a0fa8ed74f3.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/BX10_float-02d52a8059874ada.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/BX1_census-94187d8db6335e81.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/BX9_retire-2bc31a1a8b772044.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/CNS1_phase_census-ee838c5e542aa524.graph`
+- other: `lib/phases/2026-10-21-brainos-into-idearium/graph/BX1_census-94187d8db6335e81.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/BX9_retire-0c410c080c84da17.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/CNS1_phase_census-576dec22d027e819.graph`
 
-#### `lib/phases/2026-10-21-browser-shell/`
+#### `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/`
 
-1 other file(s).
+4 other file(s).
 
-- other: `lib/phases/2026-10-21-browser-shell/BS0_cookie_target.phase`
-
-#### `lib/phases/2026-10-21-browser-shell/graph/`
-
-1 other file(s).
-
-- other: `lib/phases/2026-10-21-browser-shell/graph/BS0_cookie_target-4849b9f58d06e1fb.graph`
-
-#### `lib/phases/2026-10-21-compartment-downloads/`
-
-2 other file(s).
-
-- other: `lib/phases/2026-10-21-compartment-downloads/CD0_kill_default.phase`, `lib/phases/2026-10-21-compartment-downloads/CD0_magnet_client.phase`
-
-#### `lib/phases/2026-10-21-compartment-downloads/graph/`
-
-2 other file(s).
-
-- other: `lib/phases/2026-10-21-compartment-downloads/graph/CD0_kill_default-11d4f021a24dcb20.graph`, `lib/phases/2026-10-21-compartment-downloads/graph/CD0_magnet_client-f1be54eff1795969.graph`
+- other: `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX9_retire-2bc31a1a8b772044.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-7ed45d431576d002.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-ac4aa4a9dde1d8b0.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-ee838c5e542aa524.graph`
 
 #### `lib/phases/2026-10-21-data-layout/`
 
@@ -1839,19 +3233,403 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 5 other file(s).
 
-- other: `lib/phases/2026-10-21-data-layout/graph/DL0_data_census-64f85579f51044f8.graph`, `lib/phases/2026-10-21-data-layout/graph/DL1_clearup_tool-372de2334482d8f2.graph`, `lib/phases/2026-10-21-data-layout/graph/DL2_one_resolver-db5711605437e8fc.graph`, `lib/phases/2026-10-21-data-layout/graph/DL3_rewire_writers-370d1616ff8d75f4.graph`, `lib/phases/2026-10-21-data-layout/graph/DL5_memory_in_cortex-59082cf7b07d2717.graph`
+- other: `lib/phases/2026-10-21-data-layout/graph/DL0_data_census-f0135ef7c3aeb4f1.graph`, `lib/phases/2026-10-21-data-layout/graph/DL1_clearup_tool-e0d483cc4889bc70.graph`, `lib/phases/2026-10-21-data-layout/graph/DL2_one_resolver-c98c0dd03a13e5a3.graph`, `lib/phases/2026-10-21-data-layout/graph/DL3_rewire_writers-7dbe9cbe6436f155.graph`, `lib/phases/2026-10-21-data-layout/graph/DL5_memory_in_cortex-59082cf7b07d2717.graph`
 
-#### `lib/phases/2026-10-21-passwords/`
+#### `lib/phases/2026-10-21-data-layout/graph/_superseded/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-21-data-layout/graph/_superseded/DL0_data_census-64f85579f51044f8.graph`, `lib/phases/2026-10-21-data-layout/graph/_superseded/DL1_clearup_tool-372de2334482d8f2.graph`, `lib/phases/2026-10-21-data-layout/graph/_superseded/DL2_one_resolver-db5711605437e8fc.graph`, `lib/phases/2026-10-21-data-layout/graph/_superseded/DL3_rewire_writers-370d1616ff8d75f4.graph`
+
+#### `lib/phases/2026-10-22-system-node-db/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-22-system-node-db/ND1_every_system_has_its_database.phase`, `lib/phases/2026-10-22-system-node-db/ND2_one_node_route_for_every_system.phase`, `lib/phases/2026-10-22-system-node-db/ND3_each_server_serves_its_nodes.phase`, `lib/phases/2026-10-22-system-node-db/ND4_commands_and_capabilities_from_the_schemas.phase`
+
+#### `lib/phases/2026-10-22-system-node-db/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-22-system-node-db/graph/ND1_every_system_has_its_database-d31a6f77d650fe55.graph`, `lib/phases/2026-10-22-system-node-db/graph/ND2_one_node_route_for_every_system-15ec1ac071c27e69.graph`, `lib/phases/2026-10-22-system-node-db/graph/ND3_each_server_serves_its_nodes-a5ccfda0efc215f8.graph`, `lib/phases/2026-10-22-system-node-db/graph/ND4_commands_and_capabilities_from_the_schemas-ae691a15e3aa12bb.graph`
+
+#### `lib/phases/2026-10-22-system-node-db/graph/_superseded/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND1_every_system_has_its_database-87dd2ec53f3067a4.graph`, `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND3_each_server_serves_its_nodes-e4e6017c5d941f7b.graph`, `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND3_each_server_serves_its_nodes-ea22d024a9a37bb4.graph`
+
+#### `lib/phases/2026-10-23-cos-spine/`
 
 1 other file(s).
 
-- other: `lib/phases/2026-10-21-passwords/PW0_where_passwords_live.phase`
+- other: `lib/phases/2026-10-23-cos-spine/CS10_hats_bound_to_the_compartment.phase`
 
-#### `lib/phases/2026-10-21-passwords/graph/`
+#### `lib/phases/2026-10-23-cos-spine/graph/`
 
 1 other file(s).
 
-- other: `lib/phases/2026-10-21-passwords/graph/PW0_where_passwords_live-770ff409c2df185a.graph`
+- other: `lib/phases/2026-10-23-cos-spine/graph/CS10_hats_bound_to_the_compartment-9593a2c519f5f235.graph`
+
+#### `lib/phases/2026-10-23-self-building-loop/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-23-self-building-loop/SL2_done_by_evidence.phase`, `lib/phases/2026-10-23-self-building-loop/SL3_the_backlog_groomed.phase`, `lib/phases/2026-10-23-self-building-loop/SL5_when_a_proven_change_lands_alone.phase`, `lib/phases/2026-10-23-self-building-loop/SL6_the_loop_counts_itself.phase`, `lib/phases/2026-10-23-self-building-loop/SL9_every_phase_a_node.phase`
+
+#### `lib/phases/2026-10-23-self-building-loop/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-23-self-building-loop/graph/SL2_done_by_evidence-e233725464e7928b.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL3_the_backlog_groomed-9333226d9dad1360.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL5_when_a_proven_change_lands_alone-379b566ca6597dd5.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL6_the_loop_counts_itself-596269867e9d3b8f.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL9_every_phase_a_node-849580405cd11e1a.graph`
+
+#### `lib/phases/2026-10-23-self-building-loop/graph/_superseded/`
+
+12 other file(s).
+
+- other: `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-07f020fcde0980ec.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-7bb9c1e91cb43b0f.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-a5f720db904d7f54.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-f4cbd242e47d17fc.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-596ba88d3bb5ab0a.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-9fd399bb539845a2.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-d984c6d6901fa316.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL5_when_a_proven_change_lands_alone-4cb047583c75887c.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL6_the_loop_counts_itself-fb8338f83e0b2ad5.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-607e664a07b3c690.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-6243f40c578704b7.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-cf5ae14f76bef8fc.graph`
+
+#### `lib/phases/2026-10-24-fifteen-systems-migration/`
+
+39 other file(s).
+
+- other: 39 files (.phase)
+
+#### `lib/phases/2026-10-24-fifteen-systems-migration/graph/`
+
+39 other file(s).
+
+- other: 39 files (.graph)
+
+#### `lib/phases/2026-10-24-fifteen-systems-migration/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-24-fifteen-systems-migration/graph/_superseded/MV11_seams-cde977a3ee02d317.graph`
+
+#### `lib/phases/2026-10-24-github-context-and-agent-settings/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-24-github-context-and-agent-settings/AS2_each_provider_its_own_profile.phase`, `lib/phases/2026-10-24-github-context-and-agent-settings/GH2_the_context_brief_at_the_root.phase`, `lib/phases/2026-10-24-github-context-and-agent-settings/GH4_the_link_as_an_injection_method.phase`, `lib/phases/2026-10-24-github-context-and-agent-settings/GH5_a_github_agent_tool.phase`, `lib/phases/2026-10-24-github-context-and-agent-settings/GH6_send_a_requested_file.phase`
+
+#### `lib/phases/2026-10-24-github-context-and-agent-settings/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-24-github-context-and-agent-settings/graph/AS2_each_provider_its_own_profile-8d89f1159394b129.graph`, `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH2_the_context_brief_at_the_root-4b61d2ee6d98ba20.graph`, `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH4_the_link_as_an_injection_method-5fd840c54ff4624d.graph`, `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH5_a_github_agent_tool-3f7b8323b911d2b0.graph`, `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH6_send_a_requested_file-b5163ccb719b6466.graph`
+
+#### `lib/phases/agent-intelligence-loop/`
+
+2 other file(s).
+
+- other: `lib/phases/agent-intelligence-loop/AP1_pull_toolbox.phase`, `lib/phases/agent-intelligence-loop/AP5_autonomous_build_loop.phase`
+
+#### `lib/phases/agent-intelligence-loop/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/agent-intelligence-loop/graph/AP1_pull_toolbox-0c00d607ee3cf034.graph`, `lib/phases/agent-intelligence-loop/graph/AP5_autonomous_build_loop-fee76168c1767280.graph`
+
+#### `lib/phases/agent-model-and-user-continuity/`
+
+9 other file(s).
+
+- other: `lib/phases/agent-model-and-user-continuity/AM10_thinking_partner_rename_and_ui_builder.phase`, `lib/phases/agent-model-and-user-continuity/AM1_per_agent_learned_model.phase`, `lib/phases/agent-model-and-user-continuity/AM2_incident_debrief.phase`, `lib/phases/agent-model-and-user-continuity/AM3_open_ended_grounded_conversation.phase`, `lib/phases/agent-model-and-user-continuity/AM5_ambiguity_triggered_pull.phase`, `lib/phases/agent-model-and-user-continuity/AM6_perplexity_confidence_loop.phase`, `lib/phases/agent-model-and-user-continuity/AM7_agent_switch_continuity_and_chat_recall.phase`, `lib/phases/agent-model-and-user-continuity/AM8_lifeline_as_general_channel_and_reasoning_upgrade.phase`, `lib/phases/agent-model-and-user-continuity/AM9_get_to_know_you_and_idea_capture.phase`
+
+#### `lib/phases/agent-model-and-user-continuity/graph/`
+
+9 other file(s).
+
+- other: `lib/phases/agent-model-and-user-continuity/graph/AM10_thinking_partner_rename_and_ui_builder-c0328146fae33b3e.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM1_per_agent_learned_model-9f79131e9be93d52.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM2_incident_debrief-04a4544016b9bb00.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM3_open_ended_grounded_conversation-487ff1e8c712e962.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM5_ambiguity_triggered_pull-ca63b016e003ffb7.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM6_perplexity_confidence_loop-adca06647d527ddd.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM7_agent_switch_continuity_and_chat_recall-e7c6fbbbe5175699.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM8_lifeline_as_general_channel_and_reasoning_upgrade-6413a4c688ff13df.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM9_get_to_know_you_and_idea_capture-32fca166c640cfd4.graph`
+
+#### `lib/phases/agent-model-and-user-continuity/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/agent-model-and-user-continuity/graph/_superseded/AM6_perplexity_confidence_loop-200f6a2a6a5cf5dd.graph`
+
+#### `lib/phases/clearglass-agent-suite-and-cfr-loom/`
+
+8 other file(s).
+
+- other: `lib/phases/clearglass-agent-suite-and-cfr-loom/TX10_component_registry_discipline.phase`, `lib/phases/clearglass-agent-suite-and-cfr-loom/TX11_plugin_architecture_decision.phase`, `lib/phases/clearglass-agent-suite-and-cfr-loom/TX14_plugin_system_v1_build.phase`, `lib/phases/clearglass-agent-suite-and-cfr-loom/TX1_clearglass_agent_suite_composition.phase`, `lib/phases/clearglass-agent-suite-and-cfr-loom/TX2_sequential_event_queue.phase`, `lib/phases/clearglass-agent-suite-and-cfr-loom/TX4_provider_tab_tool_loop.phase`, `lib/phases/clearglass-agent-suite-and-cfr-loom/TX7_cfr_diagnostic_for_loom.phase`, `lib/phases/clearglass-agent-suite-and-cfr-loom/TX9_build_contract_file_dir.phase`
+
+#### `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/`
+
+8 other file(s).
+
+- other: `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX10_component_registry_discipline-95d1f8ac41b8d673.graph`, `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX11_plugin_architecture_decision-6659d1b03d369470.graph`, `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX14_plugin_system_v1_build-1a4936ab08174f55.graph`, `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX1_clearglass_agent_suite_composition-19b14f384dffbacc.graph`, `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX2_sequential_event_queue-b723e425972e1faa.graph`, `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX4_provider_tab_tool_loop-9fb61cd3bda009bc.graph`, `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX7_cfr_diagnostic_for_loom-c1a82bad016c63ef.graph`, `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX9_build_contract_file_dir-a144b4f9e9ba9be2.graph`
+
+#### `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/_superseded/TX9_build_contract_file_dir-11f20eb5730c0d6f.graph`
+
+#### `lib/phases/copilot-autonomous/`
+
+6 other file(s).
+
+- other: `lib/phases/copilot-autonomous/CA1_scheduler.phase`, `lib/phases/copilot-autonomous/CA3_pipeline_chains.phase`, `lib/phases/copilot-autonomous/CA4_connections.phase`, `lib/phases/copilot-autonomous/CA5_system_control_and_clearglass.phase`, `lib/phases/copilot-autonomous/CA6_self_building_commands.phase`, `lib/phases/copilot-autonomous/CA7_constant_autonomy.phase`
+
+#### `lib/phases/copilot-autonomous/graph/`
+
+6 other file(s).
+
+- other: `lib/phases/copilot-autonomous/graph/CA1_scheduler-f646093248081abd.graph`, `lib/phases/copilot-autonomous/graph/CA3_pipeline_chains-c33bc76e820f40fa.graph`, `lib/phases/copilot-autonomous/graph/CA4_connections-fd002fc2bc10c045.graph`, `lib/phases/copilot-autonomous/graph/CA5_system_control_and_clearglass-292f947e788fddeb.graph`, `lib/phases/copilot-autonomous/graph/CA6_self_building_commands-4fc1ad9fd3f90dd6.graph`, `lib/phases/copilot-autonomous/graph/CA7_constant_autonomy-fbcc8e9d8af7ed20.graph`
+
+#### `lib/phases/copilot-autonomous/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/copilot-autonomous/graph/_superseded/CA7_constant_autonomy-bcaaa823adb0c656.graph`
+
+#### `lib/phases/copilot-awareness-routing/`
+
+2 other file(s).
+
+- other: `lib/phases/copilot-awareness-routing/CA2_tool_self_awareness.phase`, `lib/phases/copilot-awareness-routing/CA6_routing_config.phase`
+
+#### `lib/phases/copilot-awareness-routing/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/copilot-awareness-routing/graph/CA2_tool_self_awareness-27716cb40c8eca89.graph`, `lib/phases/copilot-awareness-routing/graph/CA6_routing_config-c8ec964b0b80f7cb.graph`
+
+#### `lib/phases/copilot-full-capability/`
+
+1 other file(s).
+
+- other: `lib/phases/copilot-full-capability/P7_continuous_nerve_dom_to_ollama.phase`
+
+#### `lib/phases/copilot-full-capability/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/copilot-full-capability/graph/P7_continuous_nerve_dom_to_ollama-40f6a3bac3b56676.graph`
+
+#### `lib/phases/copilot-guardian-cos-expansion/`
+
+5 other file(s).
+
+- other: `lib/phases/copilot-guardian-cos-expansion/GA1_guardian_nexus_reconciliation.phase`, `lib/phases/copilot-guardian-cos-expansion/GA2_diagnostic_system_depth.phase`, `lib/phases/copilot-guardian-cos-expansion/GA3_guardian_userscript_capability_wiring.phase`, `lib/phases/copilot-guardian-cos-expansion/GA6_spec_builder_depth.phase`, `lib/phases/copilot-guardian-cos-expansion/GA8_sse_announcements.phase`
+
+#### `lib/phases/copilot-guardian-cos-expansion/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/copilot-guardian-cos-expansion/graph/GA1_guardian_nexus_reconciliation-7d4f25c26f8d558f.graph`, `lib/phases/copilot-guardian-cos-expansion/graph/GA2_diagnostic_system_depth-9e9318bacd6bb0d1.graph`, `lib/phases/copilot-guardian-cos-expansion/graph/GA3_guardian_userscript_capability_wiring-378f86881837b81c.graph`, `lib/phases/copilot-guardian-cos-expansion/graph/GA6_spec_builder_depth-d8dcc592e1ac180c.graph`, `lib/phases/copilot-guardian-cos-expansion/graph/GA8_sse_announcements-2285f347862e5b5c.graph`
+
+#### `lib/phases/copilot-omniscience/`
+
+2 other file(s).
+
+- other: `lib/phases/copilot-omniscience/P4_gate_never_actually_verified.phase`, `lib/phases/copilot-omniscience/P6_every_system_reachable.phase`
+
+#### `lib/phases/copilot-omniscience/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/copilot-omniscience/graph/P4_gate_never_actually_verified-8d7d2e038d509427.graph`, `lib/phases/copilot-omniscience/graph/P6_every_system_reachable-7d719f5d40d918b1.graph`
+
+#### `lib/phases/copilot-omniscience/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/copilot-omniscience/graph/_superseded/P4_gate_never_actually_verified-c081947773f7a8cc.graph`
+
+#### `lib/phases/cortex-schema-registry/`
+
+4 other file(s).
+
+- other: `lib/phases/cortex-schema-registry/P1_schema_table_in_cortex.phase`, `lib/phases/cortex-schema-registry/P2_conformance_check_lib.phase`, `lib/phases/cortex-schema-registry/P5_expectation_for_consumers.phase`, `lib/phases/cortex-schema-registry/UM1_schema_for_user_model.phase`
+
+#### `lib/phases/cortex-schema-registry/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/cortex-schema-registry/graph/P1_schema_table_in_cortex-8a7709b7b3706ea7.graph`, `lib/phases/cortex-schema-registry/graph/P2_conformance_check_lib-9d3e03fe9b7e2d00.graph`, `lib/phases/cortex-schema-registry/graph/P5_expectation_for_consumers-eda9550483f4ed1c.graph`, `lib/phases/cortex-schema-registry/graph/UM1_schema_for_user_model-d62896550a607452.graph`
+
+#### `lib/phases/gemini-multiagent-coding/`
+
+4 other file(s).
+
+- other: `lib/phases/gemini-multiagent-coding/P1_per_agent_contracts.phase`, `lib/phases/gemini-multiagent-coding/P2_tree_parse_recall_injection.phase`, `lib/phases/gemini-multiagent-coding/P4_structured_agent_to_agent.phase`, `lib/phases/gemini-multiagent-coding/P5_autonomous_multiagent_loop.phase`
+
+#### `lib/phases/gemini-multiagent-coding/graph/`
+
+4 other file(s).
+
+- other: `lib/phases/gemini-multiagent-coding/graph/P1_per_agent_contracts-0f2fd9ee83912663.graph`, `lib/phases/gemini-multiagent-coding/graph/P2_tree_parse_recall_injection-31411292304becfe.graph`, `lib/phases/gemini-multiagent-coding/graph/P4_structured_agent_to_agent-8f27af99fec90581.graph`, `lib/phases/gemini-multiagent-coding/graph/P5_autonomous_multiagent_loop-7a74916704cceb5b.graph`
+
+#### `lib/phases/idearium-repository-overhaul/`
+
+5 other file(s).
+
+- other: `lib/phases/idearium-repository-overhaul/MCO-A_schemas.phase`, `lib/phases/idearium-repository-overhaul/MCO-E_roadmap_ui.phase`, `lib/phases/idearium-repository-overhaul/MCO-G_git_cicd_credentials.phase`, `lib/phases/idearium-repository-overhaul/MCO4_hooks_wires_flows_tools.phase`, `lib/phases/idearium-repository-overhaul/MCO6_compartment_ownership.phase`
+
+#### `lib/phases/idearium-repository-overhaul/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/idearium-repository-overhaul/graph/MCO-A_schemas-912297af517ed265.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO-E_roadmap_ui-b86c0d6b1a69cd1d.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO-G_git_cicd_credentials-209210182fab359f.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO4_hooks_wires_flows_tools-1792b3e7c6ba3523.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO6_compartment_ownership-e6332bb58736f1e3.graph`
+
+#### `lib/phases/idearium-repository-overhaul/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/idearium-repository-overhaul/graph/_superseded/MCO-E_roadmap_ui-05dd511a8ef21910.graph`, `lib/phases/idearium-repository-overhaul/graph/_superseded/MCO6_compartment_ownership-ccbefa5d407a1b18.graph`
+
+#### `lib/phases/nexus-architecture-rebuild/`
+
+8 other file(s).
+
+- other: `lib/phases/nexus-architecture-rebuild/P10_safe_apply_verify_before_merge.phase`, `lib/phases/nexus-architecture-rebuild/P11_agent_council.phase`, `lib/phases/nexus-architecture-rebuild/P12_fault_logging_first_class.phase`, `lib/phases/nexus-architecture-rebuild/P13_roundtable_shared_council_chat.phase`, `lib/phases/nexus-architecture-rebuild/P14_emergence_axioms_endstate.phase`, `lib/phases/nexus-architecture-rebuild/P2_autopilot_spawn_crash.phase`, `lib/phases/nexus-architecture-rebuild/P8_hat_forge_command.phase`, `lib/phases/nexus-architecture-rebuild/P9_multi_agent_parallel_dispatch.phase`
+
+#### `lib/phases/nexus-architecture-rebuild/graph/`
+
+8 other file(s).
+
+- other: `lib/phases/nexus-architecture-rebuild/graph/P10_safe_apply_verify_before_merge-321a65ed784d8a03.graph`, `lib/phases/nexus-architecture-rebuild/graph/P11_agent_council-2c8598728dc1ff30.graph`, `lib/phases/nexus-architecture-rebuild/graph/P12_fault_logging_first_class-45cc2cf048e77d57.graph`, `lib/phases/nexus-architecture-rebuild/graph/P13_roundtable_shared_council_chat-bbfce2d577125626.graph`, `lib/phases/nexus-architecture-rebuild/graph/P14_emergence_axioms_endstate-7c968ba80520bc34.graph`, `lib/phases/nexus-architecture-rebuild/graph/P2_autopilot_spawn_crash-7b3595f0354c6063.graph`, `lib/phases/nexus-architecture-rebuild/graph/P8_hat_forge_command-dfd13349bbd7e4e9.graph`, `lib/phases/nexus-architecture-rebuild/graph/P9_multi_agent_parallel_dispatch-8ad7c5128e9ee3f3.graph`
+
+#### `lib/phases/nexus-live-mind/`
+
+2 other file(s).
+
+- other: `lib/phases/nexus-live-mind/P3_diagnostic_kernel.phase`, `lib/phases/nexus-live-mind/P6_copilot_programmable.phase`
+
+#### `lib/phases/nexus-live-mind/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/nexus-live-mind/graph/P3_diagnostic_kernel-18615a25df10af8b.graph`, `lib/phases/nexus-live-mind/graph/P6_copilot_programmable-aa8ea0b8ea0f0c37.graph`
+
+#### `lib/phases/nexus-live-mind/graph/_superseded/`
+
+3 other file(s).
+
+- other: `lib/phases/nexus-live-mind/graph/_superseded/P3_diagnostic_kernel-75ac0a6dcf420224.graph`, `lib/phases/nexus-live-mind/graph/_superseded/P3_diagnostic_kernel-9d8fd727a94f0524.graph`, `lib/phases/nexus-live-mind/graph/_superseded/P6_copilot_programmable-52e733c13ed35b06.graph`
+
+#### `lib/phases/nexus-observability-tablet/`
+
+2 other file(s).
+
+- other: `lib/phases/nexus-observability-tablet/OB11_edge_case_mapping.phase`, `lib/phases/nexus-observability-tablet/OB3_movement_map.phase`
+
+#### `lib/phases/nexus-observability-tablet/graph/`
+
+2 other file(s).
+
+- other: `lib/phases/nexus-observability-tablet/graph/OB11_edge_case_mapping-be0ff5bccc30824b.graph`, `lib/phases/nexus-observability-tablet/graph/OB3_movement_map-1750f2d80be7b16d.graph`
+
+#### `lib/phases/nexus-repo-compartment-and-rich-dispatch/`
+
+3 other file(s).
+
+- other: `lib/phases/nexus-repo-compartment-and-rich-dispatch/AG1_agent_nodes_sorted_by_provider.phase`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/GC1_global_component_reuse_store.phase`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/RD1_multi_file_response_parser.phase`
+
+#### `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/AG1_agent_nodes_sorted_by_provider-244704b3a3825cc8.graph`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/GC1_global_component_reuse_store-5905dedcc5f2f956.graph`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/RD1_multi_file_response_parser-747cf5517c059840.graph`
+
+#### `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/_superseded/GC1_global_component_reuse_store-7caeeeea63576bfe.graph`
+
+#### `lib/phases/nexus-repository-system-build/`
+
+3 other file(s).
+
+- other: `lib/phases/nexus-repository-system-build/MCO3_snapshot_compliance.phase`, `lib/phases/nexus-repository-system-build/MCO4_hooks_wires_flows_tools.phase`, `lib/phases/nexus-repository-system-build/MCO7_nexus_systems_as_repo_compartments.phase`
+
+#### `lib/phases/nexus-repository-system-build/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/nexus-repository-system-build/graph/MCO3_snapshot_compliance-00fc7f80a15780aa.graph`, `lib/phases/nexus-repository-system-build/graph/MCO4_hooks_wires_flows_tools-acba9c545837ded9.graph`, `lib/phases/nexus-repository-system-build/graph/MCO7_nexus_systems_as_repo_compartments-b9b0a420afcc0424.graph`
+
+#### `lib/phases/nexus-self-build-pipeline/`
+
+7 other file(s).
+
+- other: `lib/phases/nexus-self-build-pipeline/SB2_universal_file_parse.phase`, `lib/phases/nexus-self-build-pipeline/SB3_guided_build_loop.phase`, `lib/phases/nexus-self-build-pipeline/SB4_decision_lattice_wiring.phase`, `lib/phases/nexus-self-build-pipeline/SB5_self_modification_from_inside.phase`, `lib/phases/nexus-self-build-pipeline/SB6_contract_type_schemas_and_toolbox_directory.phase`, `lib/phases/nexus-self-build-pipeline/SB7_compartments_as_sessions.phase`, `lib/phases/nexus-self-build-pipeline/SB8_tool_agnosticism_and_new_tool_flow.phase`
+
+#### `lib/phases/nexus-self-build-pipeline/graph/`
+
+7 other file(s).
+
+- other: `lib/phases/nexus-self-build-pipeline/graph/SB2_universal_file_parse-2f06c0672e301ca7.graph`, `lib/phases/nexus-self-build-pipeline/graph/SB3_guided_build_loop-43e53ddad29a7b4a.graph`, `lib/phases/nexus-self-build-pipeline/graph/SB4_decision_lattice_wiring-8250b009e094ad56.graph`, `lib/phases/nexus-self-build-pipeline/graph/SB5_self_modification_from_inside-cdb424f27e387b64.graph`, `lib/phases/nexus-self-build-pipeline/graph/SB6_contract_type_schemas_and_toolbox_directory-c5ebdf092da9729b.graph`, `lib/phases/nexus-self-build-pipeline/graph/SB7_compartments_as_sessions-61dd4a0cac5599fd.graph`, `lib/phases/nexus-self-build-pipeline/graph/SB8_tool_agnosticism_and_new_tool_flow-0dad83e5c39c6d0a.graph`
+
+#### `lib/phases/nexus-system-standardization/`
+
+3 other file(s).
+
+- other: `lib/phases/nexus-system-standardization/SS2_config_per_system.phase`, `lib/phases/nexus-system-standardization/SS3_event_driven_handshake_contracts.phase`, `lib/phases/nexus-system-standardization/SS5_diagnostics_reads_and_fixes.phase`
+
+#### `lib/phases/nexus-system-standardization/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/nexus-system-standardization/graph/SS2_config_per_system-21362d473f86d2b4.graph`, `lib/phases/nexus-system-standardization/graph/SS3_event_driven_handshake_contracts-7fca6f4123a25be4.graph`, `lib/phases/nexus-system-standardization/graph/SS5_diagnostics_reads_and_fixes-bbc697df4c8f8e23.graph`
+
+#### `lib/phases/raid-routing-fidelity/`
+
+5 other file(s).
+
+- other: `lib/phases/raid-routing-fidelity/RR2_contract_based_chunking.phase`, `lib/phases/raid-routing-fidelity/RR3_per_agent_config_in_cortex.phase`, `lib/phases/raid-routing-fidelity/RR4_governed_handshake_on_handoff.phase`, `lib/phases/raid-routing-fidelity/RR5_clearglass_accounts_and_features.phase`, `lib/phases/raid-routing-fidelity/RR7_per_system_dashboards_in_tablet.phase`
+
+#### `lib/phases/raid-routing-fidelity/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/raid-routing-fidelity/graph/RR2_contract_based_chunking-9f2225141606bc1a.graph`, `lib/phases/raid-routing-fidelity/graph/RR3_per_agent_config_in_cortex-efff7260225f5d9a.graph`, `lib/phases/raid-routing-fidelity/graph/RR4_governed_handshake_on_handoff-b031ed28511d3eae.graph`, `lib/phases/raid-routing-fidelity/graph/RR5_clearglass_accounts_and_features-022fe3f3a22c597f.graph`, `lib/phases/raid-routing-fidelity/graph/RR7_per_system_dashboards_in_tablet-a97e4c0989831da2.graph`
+
+#### `lib/phases/raid-verification-spine/`
+
+3 other file(s).
+
+- other: `lib/phases/raid-verification-spine/P1_raid_records_every_tool_decision.phase`, `lib/phases/raid-verification-spine/P3_isolate_and_verify_via_cos.phase`, `lib/phases/raid-verification-spine/P6_rewind_on_fail.phase`
+
+#### `lib/phases/raid-verification-spine/graph/`
+
+3 other file(s).
+
+- other: `lib/phases/raid-verification-spine/graph/P1_raid_records_every_tool_decision-b2e3b501e67e23a4.graph`, `lib/phases/raid-verification-spine/graph/P3_isolate_and_verify_via_cos-0019c3a16a9a4f4d.graph`, `lib/phases/raid-verification-spine/graph/P6_rewind_on_fail-b0baf09b7e7c036f.graph`
+
+#### `lib/phases/raid-warp-verification/`
+
+1 other file(s).
+
+- other: `lib/phases/raid-warp-verification/P6_rewind_on_fail.phase`
+
+#### `lib/phases/raid-warp-verification/graph/`
+
+1 other file(s).
+
+- other: `lib/phases/raid-warp-verification/graph/P6_rewind_on_fail-889c72ca60734872.graph`
+
+#### `lib/phases/repair-contract-and-loom-hub/`
+
+10 other file(s).
+
+- other: `lib/phases/repair-contract-and-loom-hub/R10_relational_context_and_reuse.phase`, `lib/phases/repair-contract-and-loom-hub/R1_repair_contract_schema.phase`, `lib/phases/repair-contract-and-loom-hub/R2_real_snapshot_rollback.phase`, `lib/phases/repair-contract-and-loom-hub/R3_autonomous_repair_trigger.phase`, `lib/phases/repair-contract-and-loom-hub/R4_loom_ledger_awareness.phase`, `lib/phases/repair-contract-and-loom-hub/R5_loom_visual_map.phase`, `lib/phases/repair-contract-and-loom-hub/R6_living_documentation.phase`, `lib/phases/repair-contract-and-loom-hub/R7_fault_taxonomy_reconnection.phase`, `lib/phases/repair-contract-and-loom-hub/R8_ui_diagnostic_surfaces_wired_together.phase`, `lib/phases/repair-contract-and-loom-hub/R9_ui_design_philosophy.phase`
+
+#### `lib/phases/repair-contract-and-loom-hub/graph/`
+
+10 other file(s).
+
+- other: `lib/phases/repair-contract-and-loom-hub/graph/R10_relational_context_and_reuse-0e23e7835362642d.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R1_repair_contract_schema-3dd078c3c6681b99.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R2_real_snapshot_rollback-b681fb6ca7cb6813.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R3_autonomous_repair_trigger-4f6cbfa55d7722d6.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R4_loom_ledger_awareness-605c42ef21895483.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R5_loom_visual_map-486b78f53c8cc3c0.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R6_living_documentation-52d5fcd6b04a85b2.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R7_fault_taxonomy_reconnection-88c6c02aa5089a74.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R8_ui_diagnostic_surfaces_wired_together-89ea8783a73fb339.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R9_ui_design_philosophy-bb1f4bfdb151ae73.graph`
+
+#### `lib/phases/repair-contract-and-loom-hub/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/repair-contract-and-loom-hub/graph/_superseded/R2_real_snapshot_rollback-b4af0c3b6772dee3.graph`, `lib/phases/repair-contract-and-loom-hub/graph/_superseded/R7_fault_taxonomy_reconnection-3fb547b4cfbe5881.graph`
 
 #### `lib/seam/`
 
@@ -1929,39 +3707,6 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `lib/uid/normalize.js` (145 lines) — NEXUS UID Normalization Layer Status: pre-release  
   exports normalize, resolveAny, resolveComponent, AliasLedger, _ledger · requires 2 · required by 1
 
-#### `mesh/`
-
-3 code · 1 other file(s).
-
-- `mesh/config.js` (32 lines) — // mesh/config.js — config for the mesh subsystem // UUID: nexus-mesh-config-v1-0000-4700-0000-000000000001  
-  exports DATA_DIR · requires 0 · required by 2
-- `mesh/daemons.js` (72 lines) — // mesh/daemons.js — optional standalone network daemons ported from BrainOS. // UUID: nexus-mesh-daemons-v1-0000-4700-0000-000000000004  
-  exports main · requires 5 · required by 0
-- `mesh/install.js` (151 lines) — // mesh/install.js — wires the ported mesh modules together. // UUID: nexus-mesh-install-v1-0000-4700-0000-000000000002  
-  exports install · requires 1 · required by 0 · emits mesh.ready
-- other: `mesh/README.md`
-
-#### `mesh/lib/`
-
-10 code file(s).
-
-- `mesh/lib/canvas-persistence.js` (436 lines)  
-  exports install, handle, watchdog, upsertNode, removeNode, appendDelta +3
-- `mesh/lib/crypto-engine.js` (557 lines) — NEXUS Crypto Engine — v1.0.0 Standalone cryptographic primitives. Zero external dependencies.  
-  exports CryptoEngine, VERSION, MODULE_UUID
-- `mesh/lib/ddns.js` (216 lines) — BrainOS Dynamic DNS Client No-IP style DDNS. Detects public IP changes, updates records.  
-  exports DDNSClient, getPublicIP · requires 0 · required by 1 · emits net.ddns.entry_added, net.ddns.ip_detected, net.ddns.started, net.ddns.updated +2 · hears net.ddns.add_entry, net.ddns.force_check
-- `mesh/lib/dns-server.js` (508 lines) — BrainOS Custom DNS Server Hook: brainos.dns:dns-server-v5:d0002  
-  exports BrainOSDNS · requires 0 · required by 1 · emits net.ddns.updated, net.dns.block, net.dns.blocklist_imported, net.dns.domain_blocked +4 · hears net.ddns.update, net.dns.add_record, net.dns.allow_domain, net.dns.block_domain
-- `mesh/lib/firewall.js` (299 lines) — BrainOS Firewall Engine Hook: brainos.firewall:firewall-v5:f0003  
-  exports FirewallEngine · requires 0 · required by 1 · emits net.fw.block, net.fw.json_imported, net.fw.logged, net.fw.os_sync +3 · hears net.fw.add_rule, net.fw.import_json, net.fw.remove_rule, net.fw.set_vars
-- `mesh/lib/host-rotation.js` (437 lines) — NEXUS Host Rotation — v1.0.0 Standalone module. Manages alternating host list for bridge connections.
-- `mesh/lib/key-manager.js` (588 lines) — NEXUS Key Manager — v1.0.0 Standalone module. Manages logical key lifecycle:
-- `mesh/lib/mesh-snr-filter.js` (1097 lines)
-- `mesh/lib/port-registry.js` (371 lines) — NEXUS Port Registry — v1.0.0 Standalone module. Tracks port → service mapping.
-- `mesh/lib/reverse-proxy.js` (162 lines) — BrainOS Reverse Proxy HTTP/HTTPS reverse proxy with SNI routing. No port-forward required.  
-  exports ReverseProxy · requires 0 · required by 1 · emits net.proxy.route_added, net.proxy.route_removed, net.proxy.started, system.error · hears net.proxy.add_route, net.proxy.remove_route
-
 #### `meta/`
 
 4 code file(s).
@@ -2014,174 +3759,6 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `products/flight-recorder/lib/versions.js` (40 lines) — FR4a: a project's versions, through Versionium in-process (no server). Product: flight-recorder (part of products/flight-recorder; the branch tool carries every file tagged so)  
   exports commit, list · requires 3 · required by 1
 
-#### `remote-desktop/`
-
-5 code · 6 other file(s).
-
-- `remote-desktop/contracts.js` (52 lines) — interaction contracts for this project. Started as just the remote-desktop/bridge-os-core boundary; now covers  
-  exports validate, CONTRACTS · requires 0 · required by 2
-- `remote-desktop/input-auth.js` (113 lines) — per-message input authentication (closes the phase-4 gap: "no per-message authentication on the input channel — a MITM on a  
-  requires 0 · required by 1 · tested by `remote-desktop/tests/test-input-auth.js`, `remote-desktop/tests/test-input-pipeline.js`
-- `remote-desktop/input-injector.js` (157 lines) — phase 4 deliverable: host_input_listener_and_injector ("per-OS backend behind one interface"), plus input_rate_limiter_coalescer  
-  exports createInputInjector, loggingBackend · requires 1 · required by 1 · emits input:coalesced, input:injected, input:rate_limited, input:rejected +1 · tested by `remote-desktop/tests/test-input-injector.js`, `remote-desktop/tests/test-input-pipeline.js`
-- `remote-desktop/session-token.js` (115 lines) — closes remote-desktop.spec phase 2 gap: 'session_token_issuance' (uses 'secrets_keystore_module' — see notes).  
-  exports createSessionAuthority · requires 3 · required by 1 · emits authority:ready, token:expired, token:issued, token:rejected +2 · tested by `remote-desktop/tests/test-session-token.js`
-- `remote-desktop/signal.js` (114 lines) — // signal.js — core module 0: signaling // Relays offer/answer/ICE between exactly one host and one viewer per session.  
-  exports start · requires 2 · required by 1
-- other: `remote-desktop/README.md`, `remote-desktop/host.html`, `remote-desktop/package-lock.json`, `remote-desktop/package.json`, `remote-desktop/remote-desktop.spec`, `remote-desktop/viewer.html`
-
-#### `remote-desktop/bridge-electron/`
-
-2 code · 1 other file(s).
-
-- `remote-desktop/bridge-electron/main.js` (189 lines) — bridge-electron/main.js — phase 7 (host_application_shell), taken early out of spec order at explicit request. Wraps host.html + signal.js;  
-  requires 3 · required by 0 · hears input:rate_limited, input:rejected
-- `remote-desktop/bridge-electron/preload.js` (32 lines) — the entire Electron-to-renderer surface. host.html degrades gracefully without any of this (checks
-- other: `remote-desktop/bridge-electron/package.json`
-
-#### `remote-desktop/bridge-electron/assets/`
-
-2 other file(s).
-
-- other: `remote-desktop/bridge-electron/assets/icon.png`, `remote-desktop/bridge-electron/assets/tray-icon.png`
-
-#### `remote-desktop/bridge-os-core/`
-
-1 code · 2 other file(s).
-
-- `remote-desktop/bridge-os-core/index.js` (150 lines) — CORE Boots the 7 vital modules (bridge-node/boot.js) and exposes only the  
-  requires 1 · required by 0
-- other: `remote-desktop/bridge-os-core/README.md`, `remote-desktop/bridge-os-core/package.json`
-
-#### `remote-desktop/bridge-os-core/bridge-IME/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-IME/index.js` (480 lines) — bridge-IME/index.js Identity Memory Engine — WHO did WHAT across every protocol over time.  
-  exports IME, createIME · requires 0 · required by 1 · tested by `remote-desktop/bridge-os-core/bridge-IME/tests/test-ime.js`, `remote-desktop/bridge-os-core/bridge-IME/tests/test-ime-deep.js` +3
-
-#### `remote-desktop/bridge-os-core/bridge-IME/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-contracts/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-contracts/index.js` (256 lines) — bridge-contracts/index.js Frozen, versioned interaction contracts between modules.  
-  exports validate, validateAll, contracts · requires 0 · required by 2 · tested by `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`, `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts-deep.js`
-
-#### `remote-desktop/bridge-os-core/bridge-contracts/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-core/`
-
-3 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-core/bus.js` (157 lines) — bridge-core/bus.js Central event bus for bridge-node ecosystem.  
-  exports createBus · requires 1 · required by 2 · emits bus:meta:observer_error
-- `remote-desktop/bridge-os-core/bridge-core/crypto-engine.js` (402 lines) — NEXUS Crypto Engine — v1.0.0 Standalone cryptographic primitives. Zero external dependencies.  
-  exports CryptoEngine, VERSION, MODULE_UUID
-- `remote-desktop/bridge-os-core/bridge-core/index.js` (23 lines) — bridge-core/index.js Common primitives every bridge module imports.  
-  exports Gate, Stream, StreamLog · requires 3 · required by 0 · tested by `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`, `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-
-#### `remote-desktop/bridge-os-core/bridge-core/registry/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-core/registry/index.js` (142 lines) — bridge-core/registry/index.js NodeRegistry — pure state ledger. Observes facts. Emits events. Makes NO decisions.  
-  exports createNodeRegistry, LIFECYCLE · requires 0 · required by 2 · emits node:evicted, node:registered, node:revived, node:state:dead +2
-
-#### `remote-desktop/bridge-os-core/bridge-core/siso/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-core/siso/index.js` (174 lines) — bridge-core/siso/index.js SISO: Event → Gate → Stream → StreamLog  
-  exports Event, Gate, Stream, StreamLog, LOG_LEVELS · requires 0 · required by 2
-
-#### `remote-desktop/bridge-os-core/bridge-core/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-data/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-data/index.js` (170 lines) — bridge-data/index.js Universal data intake pipeline.  
-  exports createDataBus · requires 0 · required by 1 · tested by `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`, `remote-desktop/bridge-os-core/bridge-data/tests/test-data.js` +1
-
-#### `remote-desktop/bridge-os-core/bridge-data/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-heartbeat/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-heartbeat/index.js` (303 lines) — bridge-heartbeat/index.js v2.0.0 Pulse. Every node proves it's alive by beating. Silence = dead.  
-  exports createHeartbeatManager, createPulseEmitter, createPulseListener, createBPMTracker, checkHealth, latencyGrade · requires 0 · required by 1 · emits heartbeat:pulse, node:dead, node:degraded · tested by `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`, `remote-desktop/bridge-os-core/bridge-heartbeat/tests/test-heartbeat.js` +1
-
-#### `remote-desktop/bridge-os-core/bridge-heartbeat/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-identity/`
-
-2 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-identity/identity.js` (212 lines) — bridge-identity/identity.js Ed25519 keypair generation, UUID derivation, signing.  
-  exports Identity, deriveUUID, verifyHandshake, makeHandshake · requires 0 · required by 1 · tested by `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity.js`, `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity-deep.js`
-- `remote-desktop/bridge-os-core/bridge-identity/index.js` (160 lines) — bridge-identity/index.js Public API: { Identity, KeyStore, loadOrInit, verifyHandshake }  
-  exports loadOrInit, resetIdentity, migrateIdentity, verifyHandshake, deriveUUID, Identity · requires 2 · required by 2 · tested by `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`, `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity.js` +1
-
-#### `remote-desktop/bridge-os-core/bridge-identity/keystore/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-identity/keystore/index.js` (218 lines) — bridge-identity/keystore/index.js KeyStore abstraction: selects best available backend.  
-  exports FileKeyStore, DPAPIKeyStore, TPMKeyStore, PassphraseKeyStore, selectKeyStore · requires 0 · required by 1 · tested by `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity.js`
-
-#### `remote-desktop/bridge-os-core/bridge-identity/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-node/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-node/boot.js` (108 lines) — bridge-node/boot.js — CORE build Everything MANIFEST.json marks "vital": true, and nothing else.  
-  exports boot · requires 8 · required by 1
-
-#### `remote-desktop/bridge-os-core/bridge-sngate/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-sngate/index.js` (369 lines) — bridge-sngate/index.js Programmable trust primitive. One engine, three adapters.  
-  exports SNGate, createSNGate · requires 0 · required by 1 · tested by `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`, `remote-desktop/bridge-os-core/bridge-data/tests/test-data.js` +2
-
-#### `remote-desktop/bridge-os-core/bridge-sngate/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/scripts/`
-
-2 other file(s).
-
-- other: `remote-desktop/scripts/start-signal-background.bat`, `remote-desktop/scripts/stop-signal-background.bat`
-
-#### `remote-desktop/tests/`
-
-5 test file(s).
-
-
 #### `scripts/`
 
 16 code · 1 other file(s).
@@ -2205,7 +3782,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   requires 1 · required by 0
 - `scripts/precommit-check.js` (425 lines) — mechanical enforcement of CLAUDE.md's rules. Install as a git hook: ln -sf ../../scripts/precommit-check.js .git/hooks/pre-commit  
   exports VERSION
-- `scripts/release-zip.js` (48 lines) — VR1: the release zip, named and stamped with the one version. James (2026-10-14): "i also want versions in idearium, github, and each zip, needs to match."  
+- `scripts/release-zip.js` (51 lines) — VR1: the release zip, named and stamped with the one version. James (2026-10-14): "i also want versions in idearium, github, and each zip, needs to match."  
   exports build · requires 1 · required by 0
 - `scripts/run-verification-manifest.cjs` (138 lines) — execute the real manifest §BUILT 2026-07-14 — the machine-readable half of VERIFICATION-LOG.md.  
   exports run · requires 1 · required by 0
@@ -2215,36 +3792,11 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `scripts/verify-wires.js` (224 lines) — Wire Integrity Checker §17.7-DRIVEN — the actual missing primitive behind five separate
 - other: `scripts/bump-version.py`
 
-#### `seams/`
-
-1 code file(s).
-
-- `seams/seam-contracts.js` (73 lines) — NEXUS Seam Contract Registry §SEAM: Growth happens at the seam. Every seam is declared here.  
-  exports GUARDIAN_WSS_CONTRACT, FORGE_CONTRACT, SPEC_SEAM_CONTRACT, CLI_UI_CONTRACT, BRIDGE_CONTRACT
-
-#### `security/`
-
-2 code file(s).
-
-- `security/e2e-channel.js` (280 lines)
-- `security/signaling-envelope.js` (164 lines) — signed envelope for the signaling channel (join/offer/answer/ice), closing remote-desktop.spec phase 6's
-
 #### `sentinel/`
 
 1 other file(s).
 
 - other: `sentinel/interaction-contract.json`
-
-#### `service/`
-
-3 code file(s).
-
-- `service/cortex-service.js` (104 lines) — // service/cortex-service.js — Cortex ICO Kernel Service // UUID: nexus-cortex-service-v1-0000-4000-0000-000000000001  
-  requires 4 · required by 0
-- `service/guardian-service.js` (199 lines) — // service/guardian-service.js — Guardian ICO Kernel Service // UUID: nexus-guardian-service-v1-0000-4000-0000-000000000001  
-  requires 4 · required by 0
-- `service/idearium-service.js` (104 lines) — // service/idearium-service.js — Idearium ICO Kernel Service // UUID: nexus-idearium-service-v1-0000-4000-0000-000000000001  
-  requires 4 · required by 0
 
 #### `siso/`
 
@@ -2300,12 +3852,6 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 - other: `skills/nexus-session-changelog/SKILL.md`
 
-#### `tablet/`
-
-2 other file(s).
-
-- other: `tablet/index.html`, `tablet/map3d.html`
-
 #### `tests/`
 
 33 test file(s).
@@ -2328,7 +3874,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `tests/modules/`
 
-717 test file(s).
+749 test file(s).
 
 
 #### `tests/modules/fixtures/`

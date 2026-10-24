@@ -1127,9 +1127,9 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
 | Claim | Evidence a stranger can check |
 |---|---|
 | The framework named the flaw before the code was read | `docs/innovation-toolkit.framework` ("intuition must be regulated and grounded"; "analytical must have strict weighting") vs. the boot log's `135 co-patterns, 10 lift-confirmed signal` |
-| The fix is real and gated upstream | `intelligence/index.js` `_coOccurrenceLift` / `_groundedCrystallise`; `CHANGELOG-0.60.231.md`; `intelligence/spec/intelligence.spec` ADDENDUM 2026-10-24 |
+| The fix is real and gated upstream | `intelligence/index.js` `_coOccurrenceLift` / `_groundedCrystallise`; `CHANGELOG-0.60.237.md`; `intelligence/spec/intelligence.spec` ADDENDUM 2026-10-24 |
 | It is proven, including the pure gate in isolation | `tests/modules/intelligence.test.js` **15/15** (D1/D2 hold a heartbeat pair as a hypothesis; F0–F5 prove the lift directly) |
-| A drift bug in the first cut was caught and fixed, not hidden | `CHANGELOG-0.60.231.md` "Drift found and fixed" (cumulative count ÷ windowed frequency → unbounded inflation; now a full-window ratio) |
+| A drift bug in the first cut was caught and fixed, not hidden | `CHANGELOG-0.60.237.md` "Drift found and fixed" (cumulative count ÷ windowed frequency → unbounded inflation; now a full-window ratio) |
 
 - **The skill this shows:** *using his own framework as a diagnostic instrument* — turning a philosophy of signal vs.
   noise into a base-rate test in code — and **hostile verification applied to the coder's own fix** (the first
@@ -1138,3 +1138,27 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
 - **His part / the coder's part:** the framework, the signal-to-noise thesis, the structure/intuition/analysis model, and
   the call to tighten the threshold are his. The base-rate derivation, the drift-bug catch, the tests, and the code are
   the coder's.
+
+### 2026-10-24 — 0.60.225, 0.60.226, 0.60.230–0.60.232: an autofill that asks once, and remembers per site
+- **His words:** 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for him. saves to
+  per site settings, and as a macro or automation and updates the autofill." · 2026-10-23: "make sure it works for these" (micro1,
+  Mercor, Turing, RemoExperts…) · "then the phases with the per site settings." · 2026-10-24: "ja3".
+- **Context:** The autofill matched fields by pattern only. A platform that labels a box oddly was missed on every visit, and
+  silently. His design closes that as a loop: when it misses, he points at the box once; the pick is saved for that site; the next
+  fill uses it. The coder built that design in three phases: the matcher reads the learned map (JA1), the pick is saved per site
+  (JA2), and the picker asks on a miss (JA3).
+- **What it shows:** human-in-the-loop design. A person is asked only where the machine is actually unsure. The answer is kept and
+  checked: a pick must name exactly one field on the page, or it is refused with the reason. A miss is reported, not hidden. One
+  instruction from him spans the matcher, the store, the picker and the agents' tools.
+- **Checkable:**
+  - `CHANGELOG-0.60.225.md`, `CHANGELOG-0.60.226.md`, `CHANGELOG-0.60.230.md`, `CHANGELOG-0.60.231.md`, `CHANGELOG-0.60.232.md`;
+  - `tests/modules/test-autofill-learned.test.js` (4), `test-autofill-learn-save.test.js` (3), `test-autofill-learn-pick.test.js` (5),
+    `test-autofill-learn-ui.test.js` (3, the screen driven in Clear Glass: Pick, the learned list, Forget),
+    `test-autofill-learn-macro.test.js` (5, the pick as a macro; one on a real page with the real dom mesh and selector-check);
+  - `docs/2026-10-19-gig-autofill-and-learn-phasemap.spec` JA1–JA5.
+  - His one sentence of 2026-10-19 named three homes for a pick: per-site settings, a macro or automation, and the autofill. All
+    three are built (JA2, JA5, JA1), each by reusing what Nexus had.
+
+  Every learned field can be seen and undone on screen (Forget), so a wrong pick costs one click.
+
+  Not yet shown: a fill on a live listing (his login).

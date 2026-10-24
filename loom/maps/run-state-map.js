@@ -99,6 +99,9 @@ const FILES = [
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
   ['lib/system-boundary.js', I('lib/system-boundary.js'), []],
+  // §0.60.234 RF0/RF1 — the refactor tool (James: "need to make the refactor tool from the phgases. so we can make each system sovereign…"):
+  // reads the 15 systems (nexus-self/systems.js) and every require that crosses a folder (system-boundary scan), proposes homes as a phasemap
+  ['lib/architecture-migrate.js', I('lib/architecture-migrate.js'), [I('lib/system-boundary.js'), I('lib/nexus-self/systems.js')]],
   ['lib/data-home.js', I('lib/data-home.js'), [I('lib/system-registry.js'), I('lib/data-clearup.js'), I('lib/test-sandbox.js'), I('lib/version.js')]],   // §0.60.207 DL2 one resolver; each system brings its own data home at boot
   ['lib/data-clearup.js', I('lib/data-clearup.js'), []],   // §0.60.177 DL0/DL1 census + clear-up tool; its rules are docs/data-layout.spec ownership: (read at run time, not a require)
   ['emerge/compiler/phase-specs.js', I('emerge/compiler/phase-specs.js'), [I('emerge/compiler/kg-builder.js'), I('lib/phase-dag.js'), I('lib/phase-graph.js'), I('lib/phase-map-auto.js'), I('lib/pipeline-nodes.js'), I('lib/phase-plan.js')]],   // §0.60.176 PS1 each phase specced again: .phase + .graph (dag slice) beside its owner
@@ -188,8 +191,8 @@ const CONSUMERS = [
   [I('lib/node-index-watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('lib/queue.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the input folder watcher'],
   [I('lib/ico.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
-  [I('auth/index.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 policy and client-key watchers'],
-  [I('architecture-spec/registry/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
+  [I('orchestrator/auth/index.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 policy and client-key watchers'],
+  [I('idearium/architecture-spec/registry/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('cos/foundation/file-browser.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('diagnostic/nexus-diagnostic.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the ledger folder watcher'],
   [I('emerge/emerge-kernel.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],

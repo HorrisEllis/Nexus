@@ -461,6 +461,11 @@ export const SPEC = [
       console.log(h.c.dim(`  matching genesis: ${(d.matches || []).join(', ') || '—'}`));
     } },
   // 0.60.133 IM1 — "need to get the systems soveriegn again": which systems are, and what stands in each one's way
+  // §0.60.234 RF0/RF1 — James, 2026-10-24: "15 systems. the rest of the folders need to migrate." The refactor tool's proposal: each top-level
+  // folder outside the 15 gets a home from its edges (lib/architecture-migrate.js), as a phasemap RF2 applies. Read only.
+  { key: 'system.migrate', repo: false, usage: 'system migrate [--write <file.spec>]', about: 'the refactor tool: every folder outside the 15 systems, who uses it, and the home its edges give it (one system → that system; lib/ or two systems → core; no evidence → to confirm); --write saves it as a phasemap',
+    local: async (a) => { const AM = require('../../lib/architecture-migrate.js'); const rows = AM.propose(AM.read({})); if (a.flags.write && a.flags.write !== true) require('fs').writeFileSync(String(a.flags.write), AM.phasemap(rows, { origin: 'system migrate' })); return { rows, written: a.flags.write && a.flags.write !== true ? String(a.flags.write) : null }; },
+    print: (d, a, h) => { for (const r of d.rows || []) console.log(`  ${r.dir.padEnd(18)} ${r.placed ? h.c.mint(`→ ${r.homeDir}`) : h.c.amber('→ ? (to confirm)')}  ${h.c.dim(`${r.rule} ${r.why}`)}`); if (d.written) console.log(h.c.mint(`  written: ${d.written}`)); } },
   { key: 'system.sovereign', repo: false, usage: 'system sovereign [<system>]', about: 'which systems are sovereign (nothing they require is in another system\'s folder; lib/ is the kernel) and, for each that is not, what is in the way: its data kept in cortex\'s store, a shared primitive in another system, or another system\'s capability required as a file',
     req: (a) => ({ method: 'GET', path: `/api/system/sovereign${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
     print: (d, a, h) => {
@@ -975,6 +980,28 @@ export const SPEC = [
       for (const f of ['autofill', 'macros', 'workflows', 'passwords', 'resume', 'driver', 'mesh', 'guardian']) for (const [k, v] of Object.entries(d[f] || {})) { const from = (d.from || {})[`${f}.${k}`]; console.log(`  ${`${f}.${k}`.padEnd(22)} ${JSON.stringify(v)}  ${from === 'site' ? h.c.mint('this site') : h.c.dim(from)}`); }
       console.log(`  ${'network.via'.padEnd(22)} ${(d.network || {}).via}  ${(d.network || {}).rule ? h.c.mint('this site') : h.c.dim('default')}`);
     } },
+  // §JA3 0.60.230 — James, 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for him.
+  // saves to per site settings ... and updates the autofill." The pick waits on the person in the application's tab.
+  { key: 'autofill.pick', repo: false, usage: 'autofill pick <fieldType> [--agent <tab>] [--profile <id>]', about: 'the element picker on a field the autofill missed: he clicks the box for <fieldType> in the application tab; it is checked, saved for that site, and the page is filled again',
+    need: (a) => (!a.args[0] ? '<fieldType> (e.g. github, linkedin)' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/pick', timeoutMs: 5 * 60000, body: { fieldType: a.args[0], agentId: a.flags.agent || 'default', ...(a.flags.profile ? { profileId: a.flags.profile } : {}) } }),
+    print: (d, a, h) => {
+      if (!d.ok) return console.log(h.c.amber(`  ${d.cancelled ? 'cancelled' : 'not saved'}: ${d.error}`));
+      console.log(h.c.mint(`  ${d.origin}: "${d.fieldKey}" → ${d.fieldType}`) + (d.warning ? h.c.amber(`  (${d.warning})`) : ''));
+      const f = d.fill || {}; if (f.filled) console.log(`  filled ${f.filled.length}${(f.needsPick?.unplaced || []).length ? ` · still unplaced: ${f.needsPick.unplaced.join(', ')}` : ''}`); else if (f.error) console.log(h.c.amber(`  refill: ${f.error}`));
+    } },
+  { key: 'autofill.learn', repo: false, usage: 'autofill learn <fieldKey> <fieldType> [--url <page>] [--agent <tab>]', about: 'teach the autofill a field by name: the field\'s label/name/id → what goes there, saved for that site',
+    need: (a) => (a.args.length < 2 ? '<fieldKey> <fieldType>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/learn', body: { fieldKey: a.args.slice(0, -1).join(' '), fieldType: a.args[a.args.length - 1], agentId: a.flags.agent || 'default', ...(a.flags.url ? { url: a.flags.url } : {}) } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.origin}: "${d.fieldKey}" → ${d.fieldType}`) : h.c.amber(`  ${d.error}`)) },
+  // §JA4 0.60.231 — what the autofill was taught, per site, and its undo (§0.3 reversible)
+  { key: 'autofill.learned', repo: false, usage: 'autofill learned [<url>]', about: 'the fields the autofill was taught, per site (by the picker or by name): field → what goes there',
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/cli/autofill/learned${a.args[0] ? `?url=${encodeURIComponent(/^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}/`)}` : ''}` }),
+    print: (d, a, h) => { const l = d.learned || []; if (!l.length) return console.log(h.c.dim('  nothing learned yet')); let o = null; for (const r of l) { if (r.origin !== o) { o = r.origin; console.log(h.c.bold(`  ${o}`)); } console.log(`    "${r.fieldKey}" → ${r.fieldType}`); } } },
+  { key: 'autofill.forget', repo: false, usage: 'autofill forget <url> <fieldKey>', about: 'forget one taught field on one site: the next fill asks again',
+    need: (a) => (a.args.length < 2 ? '<url> <fieldKey>' : null),
+    req: (a) => { const url = /^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}/`; return { system: 'clear-glass', method: 'POST', path: '/cli/autofill/forget', body: { url, fieldKey: a.args.slice(1).join(' ') } }; },
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.origin}: forgot "${d.fieldKey}"`) : h.c.amber(`  ${d.error}`)) },
   { key: 'glass.processes', repo: false, usage: 'glass processes', about: 'what is running in Clear Glass: each process with its tabs and background tabs, memory and CPU (ending one is his, in the Processes window)',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/processes' }),
     print: (d, a, h) => {

@@ -7,11 +7,11 @@ intent: null
 summary: CE8_the_cli_reads_the_surface (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677509
+exported_at: 1792822477793
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677509
-lastSeenAt: 1792787677509
+firstSeenAt: 1792822477793
+lastSeenAt: 1792822477793
 fingerprint: null
 payload:
   id: CE8_the_cli_reads_the_surface
@@ -28,4 +28,4 @@ payload:
     - CE5_events
   blocks: []
   spec: null
-  graph: 0aea42978ca6e896
+  graph: 250ecb5548f90036

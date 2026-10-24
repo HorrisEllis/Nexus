@@ -13,7 +13,7 @@ function test(id, desc, fn) {
   catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${e.message}`); failed++; }
 }
 const ROOT = path.join(__dirname, '../..');
-const HTML = fs.readFileSync(path.join(ROOT, 'tablet/homepage.html'), 'utf8');
+const HTML = fs.readFileSync(path.join(ROOT, 'cos', 'tablet', 'homepage.html'), 'utf8');
 const SERVER = fs.readFileSync(path.join(ROOT, 'copilot/server.js'), 'utf8');
 
 test('T-001', 'OB5: a box per system (all 7)', () => {

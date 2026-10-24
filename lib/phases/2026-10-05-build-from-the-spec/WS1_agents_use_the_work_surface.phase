@@ -9,11 +9,11 @@ intent: null
 summary: WS1_agents_use_the_work_surface (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676962
+exported_at: 1792822477180
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676962
-lastSeenAt: 1792787676962
+firstSeenAt: 1792822477180
+lastSeenAt: 1792822477180
 fingerprint: null
 payload:
   id: WS1_agents_use_the_work_surface
@@ -31,4 +31,4 @@ payload:
     - CH1_compartment_charter
   blocks: []
   spec: null
-  graph: 3a87213be2eb4b9d
+  graph: 6f18edbd651497c1

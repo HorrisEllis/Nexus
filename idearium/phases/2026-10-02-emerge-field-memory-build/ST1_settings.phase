@@ -7,11 +7,11 @@ intent: null
 summary: ST1_settings (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676688
+exported_at: 1792822476903
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676688
-lastSeenAt: 1792787676688
+firstSeenAt: 1792822476903
+lastSeenAt: 1792822476903
 fingerprint: null
 payload:
   id: ST1_settings
@@ -27,4 +27,4 @@ payload:
     - EV0_contracts_for_every_system
   blocks: []
   spec: null
-  graph: c4d6d286b5d353b4
+  graph: f936bfb1bd8f266d

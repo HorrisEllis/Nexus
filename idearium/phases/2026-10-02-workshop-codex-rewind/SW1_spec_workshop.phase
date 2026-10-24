@@ -7,11 +7,11 @@ intent: null
 summary: SW1_spec_workshop (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676760
+exported_at: 1792822476975
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676760
-lastSeenAt: 1792787676760
+firstSeenAt: 1792822476975
+lastSeenAt: 1792822476975
 fingerprint: null
 payload:
   id: SW1_spec_workshop
@@ -27,4 +27,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 143188e3446aa061
+  graph: 41757f4f776e1433

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV2_auth
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV2_auth
+context: pipeline phase MV2_auth of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV2_auth (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792820476252
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476252
+lastSeenAt: 1792820476252
+fingerprint: null
+payload:
+  id: MV2_auth
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - auth/
+    - orchestrator/auth/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cfc78b4516a1eb85

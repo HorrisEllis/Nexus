@@ -1,0 +1,208 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DH6_seen_and_used:0b12cd8a75535716
+type: graph
+id: phase:DH6_seen_and_used:0b12cd8a75535716
+context: dependency graph of phase DH6_seen_and_used
+intent: null
+summary: 22 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792820687081
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820687081
+lastSeenAt: 1792820687081
+fingerprint: null
+payload:
+  for: DH6_seen_and_used
+  kind: phase
+  repo: null
+  hash: 0b12cd8a75535716
+  nodes:
+    - path: diagnostic/server.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/desktop.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-shape.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-tunnel.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: diagnostic/server.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-shape.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-tunnel.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH5_diagnostic_heals
+    dependents: []
+    upstream:
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH0a_expectation_lives_in_the_spec
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH0b_libraries_are_expected_not_beating
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH0c_a_heal_is_proven_by_its_expectation
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH1_the_expected_behavior_schema
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH2_every_system_states_its_expectations
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH3_the_announce_carries_the_spec
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH4_diagnose_against_the_expectation
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH5_diagnostic_heals
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH5_diagnostic_heals
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by DH5_diagnostic_heals
+      - 'depends on (1): DH5_diagnostic_heals · all upstream 8'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH5_diagnostic_heals
+        kind: declared

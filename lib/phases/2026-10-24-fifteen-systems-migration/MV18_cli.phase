@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV18_cli
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV18_cli
+context: pipeline phase MV18_cli of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV18_cli (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792820476286
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476286
+lastSeenAt: 1792820476286
+fingerprint: null
+payload:
+  id: MV18_cli
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cli/
+    - lib/cli/
+  depends_on:
+    - MV21_nexus
+  blocks: []
+  spec: null
+  graph: 9acc4cce06b275dc

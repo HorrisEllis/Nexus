@@ -1,68 +1,60 @@
-# 0.60.231 — 2026-10-24
+# 0.60.231 — 2026-10-24 — JA4: the learn-loop on screen
 
-James: "b, tighten the crystallizer threshold."
+James, 2026-10-24: "continue". He said it after the JA3 report, which named JA4 next: "a "pick it" button per missed field in the
+Autofill panel, and the list of learned fields per site with a Forget button".
 
-Said after the analysis mapping RAID's signal-to-noise filter and intelligence/RFR2 against his INNOVATION TOOLKIT
-framework (`docs/innovation-toolkit.framework`). That analysis found the framework's own named weak pillar living in the
-code: the framework says **"intuition must be regulated and grounded"**, but the intelligence crystallizer did the
-opposite — it crystallised first and regulated later.
+Earlier, 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for him. saves to per
+site settings ... and updates the autofill."
 
-## The problem (grounded, from the code and the boot log)
+## What was missing
+JA3 (0.60.230) built the pick, but only an agent or a command could start it. No screen showed what a fill could not place, and
+nothing showed what had been learned. A taught field could not be undone except by editing site settings by hand.
 
-`intelligence/index.js` crystallised a co-occurrence pattern the moment its count crossed a floor (3 for a rare pair, 10
-for a common one) — at `confidence = count/20`, i.e. **15% confidence at count 3**. Once `crystallised: true` latched, it
-went out on the bus and `liminal-space` and others held a belief off it. The lift/noise brake (`_scanMetaPatterns`, §1.5)
-that could tell real signal from base-rate noise ran a `META_SCAN_MS` (3 minutes) **later**, over the table as a whole.
-The accelerator was upstream; the regulator was downstream. The boot log showed the cost: `135 co-patterns, 10
-lift-confirmed signal` — 125 of 135 crystallised patterns were noise the brake had to walk back after the fact.
+## On screen (Settings › Autofill)
+- **Fill a tab**: after a **Fill** or a **Preview**, each profile field the page did not place gets a **Pick <field>** button. It
+  opens the element picker in that tab. The dialog then says one of three things:
+  - what was learned, for which site, and how many fields were filled again;
+  - that the key looks generated and may be asked again;
+  - that a cancel or a refused pick saved nothing, and why.
 
-## The fix — the regulator moved upstream, to the gate
+  The button goes away once its field is placed.
+- **Fields it learned**, a new pane: every taught field, grouped by site (`"your code profile" is GitHub URL`). Each has a
+  **Forget**, after a confirm. The next fill on that site asks for it again (§0.3 reversible).
 
-`_coOccurrenceLift` (new, pure, exported) is an **event-level base-rate lift**: observed co-occurrences ÷ what pure
-chance would produce (`freqA · freqB · window/span`). A co-occurrence now crystallises only when it:
+## Built (backend → API route → command/agent → UI, his order 2026-10-07)
+- **`clear-glass/src/autofill/learn-pick.js`** — `listLearned(siteSettings, url?)` and `forgetLearned(siteSettings, url,
+  fieldKey)`, over the store's own `listOrigins` / `getAllForOrigin` / `deleteKey` (no new store, §8.6). Forget removes that one
+  entry and leaves the site's other settings alone.
+- **`matcher.js`** — `detectFields` reports `needsPick` too, so the preview can offer a Pick before anything is typed.
+- **`ipc/bridge.js`**:
+  - `GET /cli/autofill/learned[?url]` lists what was learned;
+  - `DELETE /cli/autofill/learned?url&fieldKey` and `POST /cli/autofill/forget` share one handler, and emit
+    `autofill.forgotten`;
+  - IPC `autofill:learned` and `autofill:forget`.
+- **`preload/index.js`** — `cg.autofill.pick / learned / forget`.
+- **`idearium/cli/route-commands.js`** — `autofill learned [<url>]`, `autofill forget <url> <fieldKey>`.
+- **Co-pilot** — `autofill.learned`, `autofill.forget`, so agents have what he has.
+- **Loom** — `economy-map.js` edges for the panel → preload → IPC path and the co-pilot → routes.
 
-1. clears the count floor — James's *"once twice three times it is a pattern"*, kept; **and**
-2. beats chance by `CRYSTALLIZE_LIFT_MIN` (1.5 — the same bar `_scanMetaPatterns` uses downstream); **and**
-3. is not a known structural noise type.
-
-Otherwise it is **held as `status: 'hypothesis'`** (`crystallised: false`): kept, written and counted (§0.3, lose
-nothing), promoted to crystallised only when it later earns it. This is the second, event-level lift that
-`_scanMetaPatterns`' own comment calls *"the honest one"* it could not compute downstream (it has only pattern-level
-participation). So it belongs at the gate.
-
-## Drift found and fixed on the way (§0.1, evidence over assumption)
-
-The first cut passed the **cumulative** count to the lift while the frequencies are **windowed** (≤500). That ratio
-drifts upward forever — over a long run it eventually crystallises *everything*, the exact inflation the gate exists to
-stop. A test run caught it: a `noise::noise` self-pair announced as crystallised. The lift now reads a **full-window**
-co-occurrence tally (`coOccurWindow`, no cursor gate) over full-window frequencies — a clean, drift-free, same-window
-ratio. The cumulative count drives only the floor and the latch.
-
-## Consumers
-
-`getContext` no longer feeds an ungrounded hypothesis as if settled: a `co_occurrence` with `status: 'hypothesis'` is
-excluded even when its count-derived confidence reads ≥0.6. Rows without a status (precursor, bottleneck, older rows) are
-unaffected.
-
-## Schema
-
-`intelligence/schemas/schema.bep_pattern` and `intelligence/schemas.js` gain `lift` (number) and `status`
-(`'crystallised' | 'hypothesis'`).
+## Found by the screen test (§0.1)
+The panel's `call()` turns any `{ ok:false }` into a toast. So a cancelled or refused pick left "In the tab: click the box…" on
+screen and showed only a toast. The Pick now reads its answer directly and says it in place. Only driving the real page showed
+this.
 
 ## Proof
+`tests/modules/test-autofill-learn-ui.test.js` — JA4 **3/3**. The screen is driven in Clear Glass (`clear-glass/src/driver/glass.js`)
+over the real `learn-pick.js` and a real per-origin store:
+- JA4-01: `listLearned` works across sites (only `autofill.field.*` keys). `forgetLearned` removes one entry, keeps the site's other
+  settings, and says when there is nothing to forget.
+- JA4-02: Fill leaves GitHub unplaced, and "Pick GitHub URL" appears. The Pick saves `https://micro1.ai` → "your code profile" =
+  github in the store, the dialog says so, the button goes, and the "Fields it learned" pane lists it.
+- JA4-03: Forget removes the entry from the store and from the list. A cancelled pick says "Cancelled — nothing saved for GitHub
+  URL", and the store stays empty. No page errors.
 
-| Suite | Result |
-| --- | --- |
-| intelligence.test.js | 15/15 |
+JA3 5/5, JA2 3/3 and JA1 4/4 still pass.
 
-- **D1/D2** now prove a heartbeat co-occurrence that cannot beat base rate is held as a hypothesis and **never announced**
-  (the old tests asserted the opposite — the un-regulated policy; inverted here to the correct one).
-- **F0–F5** prove the pure gate directly: a rare exclusive pair over a real time span beats base rate (would
-  crystallise); a loud chance-rate pair and a whole-stream burst do not; degenerate/missing inputs return 0 (held, never
-  a false positive); lift rises monotonically with observed co-occurrences.
+**Not proven here:** the pick's tab in the screen test is a fake. The picker in a live tab is his machine's, as in JA3.
 
-## Said, not hidden (§1.2)
-
-`tests/modules/test-intelligence-bridge.js` is red on main for an unrelated reason: it requires
-`cortex/core/raid/intelligence-bridge`, a module that does not exist in this checkout. Not caused by this change, and not
-touched here — flagged for a separate decision.
+## Open
+- The macro home of his "as a macro or automation". Still to confirm with him.
+- A real fill on a live listing (his login).

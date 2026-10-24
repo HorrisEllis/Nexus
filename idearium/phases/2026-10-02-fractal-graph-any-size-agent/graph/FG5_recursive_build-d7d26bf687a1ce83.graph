@@ -1,0 +1,96 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FG5_recursive_build:d7d26bf687a1ce83
+type: graph
+id: phase:FG5_recursive_build:d7d26bf687a1ce83
+context: dependency graph of phase FG5_recursive_build
+intent: null
+summary: 7 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822476953
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476953
+lastSeenAt: 1792822476953
+fingerprint: null
+payload:
+  for: FG5_recursive_build
+  kind: phase
+  repo: null
+  hash: d7d26bf687a1ce83
+  nodes:
+    - path: architecture-spec/registry/decompose.js
+      role: changes
+      exists: false
+      system: null
+    - path: idearium/spec-engine/chunk-dispatch.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/guardian-extract.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/warp-build-dispatch.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/chunk-dispatch.js
+      kind: requires
+    - from: idearium/spec-engine/guardian-extract.js
+      to: idearium/spec-engine/chunk-dispatch.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: idearium/spec-engine/chunk-dispatch.js
+      kind: requires
+  crossings:
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+    dependents: []
+    upstream:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG2_token_budget_chunking
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG3_summaries_up_the_tree
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+    downstream: []
+    blockedBy:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by FG4_context_for_any_agent
+      - 'depends on (1): FG4_context_for_any_agent · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+        kind: declared

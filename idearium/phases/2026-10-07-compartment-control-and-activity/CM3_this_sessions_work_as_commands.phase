@@ -9,11 +9,11 @@ intent: null
 summary: CM3_this_sessions_work_as_commands (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677072
+exported_at: 1792822477298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677072
-lastSeenAt: 1792787677072
+firstSeenAt: 1792822477298
+lastSeenAt: 1792822477298
 fingerprint: null
 payload:
   id: CM3_this_sessions_work_as_commands
@@ -31,4 +31,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 65881101a8767d62
+  graph: 833d2e75f114aa67

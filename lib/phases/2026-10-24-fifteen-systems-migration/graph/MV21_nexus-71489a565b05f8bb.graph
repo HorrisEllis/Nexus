@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV21_nexus:71489a565b05f8bb
+type: graph
+id: phase:MV21_nexus:71489a565b05f8bb
+context: dependency graph of phase MV21_nexus
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792821071294
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071294
+lastSeenAt: 1792821071294
+fingerprint: null
+payload:
+  for: MV21_nexus
+  kind: phase
+  repo: null
+  hash: 71489a565b05f8bb
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_cli
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV20_warp
+    dependents: []
+    upstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_sentinel
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV15_siso
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV18_emerge
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV20_warp
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_cli
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV3_cockpit
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_cli
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV20_warp
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by MV22_cli, MV20_warp
+      - 'depends on (2): MV22_cli, MV20_warp · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_cli
+        kind: declared
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV20_warp
+        kind: declared

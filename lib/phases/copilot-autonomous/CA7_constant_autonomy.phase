@@ -7,11 +7,11 @@ intent: null
 summary: CA7_constant_autonomy (?) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678146
+exported_at: 1792822478551
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678146
-lastSeenAt: 1792787678146
+firstSeenAt: 1792822478551
+lastSeenAt: 1792822478551
 fingerprint: null
 payload:
   id: CA7_constant_autonomy
@@ -21,9 +21,9 @@ payload:
   status: OPEN
   files:
     - lib/constant-autonomy.js
-    - auth/client.js
     - clear-glass/renderer/library/sections/macros.js
     - clear-glass/renderer/page-map-panel.js
+    - clear-glass/renderer/shell/menus.js
     - lib/case-library.js
     - lib/tool-index.js
     - lib/compartment-engine.js
@@ -37,4 +37,4 @@ payload:
     - CA6_self_building_commands
   blocks: []
   spec: null
-  graph: bcaaa823adb0c656
+  graph: fbcc8e9d8af7ed20

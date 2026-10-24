@@ -7,11 +7,11 @@ intent: null
 summary: PI1_the_importer (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677615
+exported_at: 1792820507704
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677615
-lastSeenAt: 1792787677615
+firstSeenAt: 1792820507704
+lastSeenAt: 1792820507704
 fingerprint: null
 payload:
   id: PI1_the_importer
@@ -27,4 +27,4 @@ payload:
     - PI0_where_it_is_read
   blocks: []
   spec: null
-  graph: 4811bb5810fcbe4d
+  graph: c54409bf4a46b62d
