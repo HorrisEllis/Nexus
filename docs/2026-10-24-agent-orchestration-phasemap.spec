@@ -148,15 +148,23 @@ phases:
     proof: "the registry lists workflows from each present source; running one records under the source; an absent source is named, not thrown"
 
   AU2_trial_automatic:
-    status: OPEN
+    status: DONE (harness) 0.60.247 — the deploy step built and proven; the live multi-provider run is his (needs Clear Glass agents up)
     layer: integration
-    depends_on: [AU1_automation_union]
-    files: [docs/framework-trial/trial.js]
+    depends_on: []   # the deploy step stands on trial.js + lib/agent-providers directly; AU1's registry is not required for it
+    files: [docs/framework-trial/trial.js, tests/modules/test-framework-trial-deploy.test.js]
     does: >-
-      The framework-trial (his "that was done by hand in clearglass" → "have that test done automatically") as one automation workflow:
-      deploy each (problem × arm × model) prompt to its agent through Guardian's mesh, collect the reply into answers/<model>/…, then blind
-      and score — no tab-by-tab pasting. The trial is merged into the repo at docs/framework-trial/ first.
-    proof: "the workflow runs the 36 one-each prompts through the mesh and writes the answers; blind + score produce results.md"
+      The framework-trial (his "that was done by hand in clearglass" → "have that test done automatically") collects itself: a new
+      `deploy` step sends each (problem × arm) prompt to each model via an injectable transport (ollama direct; the browser agents
+      ChatGPT/Gemini/Claude through Guardian's deploy door) and writes answers/<P>/<model>-<arm>-<run>.md — exactly what `blind` reads.
+      JUDGING STAYS BLIND/HUMAN (the trial's integrity): deploy only COLLECTS; then blind → sheet → a judge fills scores → score → results.md.
+      The transport is injectable (setSend) so the whole pipeline is proven offline with a deterministic, NON-faking mock; §1.2, a provider
+      whose service is not up (or an empty reply) is reported per cell, never a silent blank answer. Run: `node docs/framework-trial/trial.js
+      deploy [--model m|all] [--arm A|B|both] [--run n] [--mock]`.
+    proof: >-
+      tests/modules/test-framework-trial-deploy.test.js 4/4 (deploy sends every problem×arm to the transport and saves in the blind layout;
+      a throwing provider is reported not thrown; an empty reply is a failure, not a blank answer). A --mock run wrote 24 answers (6×2×2),
+      0 failed, in the right layout. OPEN: the live run across the three real providers (his, with Clear Glass agents up); AU1 the automation
+      registry to schedule it.
 
 order: >-
   CG1 (gate backend) first, then CG2 (on every dispatch), CG3 (route+command), CG4 (UI) — his delivery order. BX_orchestration builds the
