@@ -3060,7 +3060,7 @@ function handleExtendedRoutes(req, res, url, method) {
       }
 
       try {
-        const t2 = require('../emerge/compiler/t2-gate');
+        const t2 = require('../lib/emerge/compiler/t2-gate');
         const outDir = outputDir || require('path').join(require('path').dirname(require.main?.filename || __dirname), 'output', name || 'build-' + Date.now());
 
         // If specText provided, write to temp file

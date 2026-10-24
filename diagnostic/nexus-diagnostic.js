@@ -2569,7 +2569,7 @@ const _REGISTRY_PATHS = {
   cortex:       path.join(ROOT, 'cortex/registry-components.js'),
   guardian:     path.join(ROOT, 'guardian/registry-components.js'),
   architect:    path.join(ROOT, 'architect/registry-components.js'),
-  emerge:       path.join(ROOT, 'emerge/registry-components.js'),
+  emerge:       path.join(ROOT, 'lib', 'emerge', 'registry-components.js'),
   copilot:      path.join(ROOT, 'copilot/registry-components.js'),
   idearium:     path.join(ROOT, 'idearium/registry-components.js'),
   ollama:       path.join(ROOT, 'ollama/registry-components.js'),

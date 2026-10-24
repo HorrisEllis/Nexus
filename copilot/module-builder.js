@@ -693,7 +693,7 @@ Return the fixed spec only, starting with "spec:"`;
       );
     }
 
-    const { compile } = require('../emerge/compiler/pipeline');
+    const { compile } = require('../lib/emerge/compiler/pipeline');
     try {
       const result = await compile(specPath, buildDir, { verbose: false });
       buildResult = result.ok

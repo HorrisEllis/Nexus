@@ -25,7 +25,7 @@ spec:
   real_primitives:
     decomposition:
       what: "spec (of any size) -> KnowledgeGraph -> seam records, one per unit of work"
-      files: [emerge/compiler/pipeline.js, lib/seam/kg-seam-bridge.js]
+      files: [lib/emerge/compiler/pipeline.js, lib/seam/kg-seam-bridge.js]
       proof: "ran against runtime.spec itself — 61 real nodes, 52 module seam records, real computed generationReadiness/confidence/deps per node, not guessed"
 
     dispatch_pipeline:

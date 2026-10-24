@@ -18,8 +18,8 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
 const ROOT = path.join(__dirname, '../..');
-const { build } = require(path.join(ROOT, 'emerge/compiler/kg-builder.js'));
-const { check } = require(path.join(ROOT, 'emerge/compiler/invariants-engine.js'));
+const { build } = require(path.join(ROOT, 'lib', 'emerge', 'compiler', 'kg-builder.js'));
+const { check } = require(path.join(ROOT, 'lib', 'emerge', 'compiler', 'invariants-engine.js'));
 
 let passed = 0, failed = 0;
 function test(id, desc, fn) { try { fn(); console.log(`  ✓ ${id} ${desc}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${e.stack.split('\n').slice(0, 5).join('\n    ')}`); failed++; } }
@@ -28,7 +28,7 @@ const nodesOf = (g) => (g.nodes instanceof Map ? [...g.nodes.values()] : g.nodes
 const SPECS = [
   { spec: 'docs/substrate.spec', map: 'docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec' },
   { spec: 'docs/belief-loop.spec', map: 'docs/2026-10-20-belief-loop-phasemap.spec' },
-  { spec: 'emerge/SPEC_COMPILER.spec', map: null },
+  { spec: 'lib/emerge/SPEC_COMPILER.spec', map: null },
   { spec: 'docs/data-layout.spec', map: 'docs/2026-10-21-data-layout-phasemap.spec' },   // 2026-10-21
   { spec: 'docs/pipeline.spec', map: null },
   { spec: 'clear-glass/spec/snowflake.spec', map: 'docs/2026-10-21-snowflake-compartment-phasemap.spec' },   // 0.60.178

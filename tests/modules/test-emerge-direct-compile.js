@@ -50,7 +50,7 @@ async function run() {
   });
 
   test('EM-004', 'emerge/consumer.js is genuinely gone from its live location', () => {
-    assert.ok(!fs.existsSync(path.join(__dirname, '../../emerge/consumer.js')), 'consumer.js should be removed, not just unused');
+    assert.ok(!fs.existsSync(path.join(__dirname, '..', '..', 'lib', 'emerge', 'consumer.js')), 'consumer.js should be removed, not just unused');
   });
 
   test('EM-005', 'emerge/consumer.js is archived, not deleted without a trace — §0.3', () => {
@@ -58,7 +58,7 @@ async function run() {
   });
 
   test('EM-006', 'emerge/compiler/ itself is untouched — the real, load-bearing part James said to keep', () => {
-    assert.ok(fs.existsSync(path.join(__dirname, '../../emerge/compiler/pipeline.js')));
+    assert.ok(fs.existsSync(path.join(__dirname, '..', '..', 'lib', 'emerge', 'compiler', 'pipeline.js')));
   });
 
   test('EM-007', 'autopilot.js no longer spawns emerge/consumer.js as a kernel', () => {

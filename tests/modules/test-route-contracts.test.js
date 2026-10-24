@@ -44,7 +44,7 @@ test('RC-03', 'cos, emerge and warp: each contract matches its code', () => {
   }
   assert.strictEqual(R.checkSystem(ROOT, 'cos').served.length, 7);
   assert.strictEqual(R.checkSystem(ROOT, 'warp').served.length, 0, 'warp is a library');
-  const codegen = JSON.parse(fs.readFileSync(path.join(ROOT, 'emerge/interaction-contract.json'), 'utf8')).routes.find(r => r.path === '/api/codegen');
+  const codegen = JSON.parse(fs.readFileSync(path.join(ROOT, 'lib', 'emerge', 'interaction-contract.json'), 'utf8')).routes.find(r => r.path === '/api/codegen');
   assert.strictEqual(codegen.reachable, false, 'declared, and said to be unreachable');
 });
 

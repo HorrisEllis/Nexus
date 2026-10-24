@@ -97,7 +97,7 @@ test('NR-10 one writer per database (N8): a system with its own process owns its
   const out = await quiet(async () => SN.sync({ root: r2, agents: false }));
   assert.ok(out.systems.emerge.index && !out.systems.emerge.index.error, 'emerge (no process) is indexed by the sync');
   assert.strictEqual(out.systems.cortex.index, undefined, 'cortex (its own process) is not: its listener is the one writer');
-  assert.ok(fs.existsSync(path.join(r2, 'emerge/data/node-index')) && !fs.existsSync(path.join(r2, 'cortex/data/node-index')));
+  assert.ok(fs.existsSync(path.join(r2, 'lib/emerge/data/node-index')) && !fs.existsSync(path.join(r2, 'cortex/data/node-index')));
   fs.rmSync(r2, { recursive: true, force: true });
 });
 test('NR-11 startForSystem: skipped in a test process (the real tree is not touched) and says why; forced, it starts and listens', async () => {

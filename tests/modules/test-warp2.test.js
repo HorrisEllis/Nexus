@@ -18,7 +18,7 @@ const ROOT = path.join(__dirname, '../..');
 const W = require(path.join(ROOT, 'lib', 'warp'));
 const { attach } = require(path.join(ROOT, 'lib', 'warp', 'adapters', 'siso-gates.js'));
 const { admitFrom } = require(path.join(ROOT, 'lib', 'warp', 'adapters', 'emerge-field.js'));
-const E = require(path.join(ROOT, 'emerge/core'));
+const E = require(path.join(ROOT, 'lib', 'emerge', 'core'));
 
 let passed = 0, failed = 0;
 function test(id, desc, fn) {

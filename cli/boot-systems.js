@@ -173,7 +173,7 @@ async function _bootSystems(ledgerWrite, orchPort, connectBridgeSSE, _eventLedge
     },
     {
       systemId: 'emerge',    port: 4242, healthPath: '/status',
-      label: 'Emerge IDE',   cmd: path.join(ROOT, 'emerge', 'emerge-ide.js'),                  args: [],
+      label: 'Emerge IDE',   cmd: path.join(ROOT, 'lib', 'emerge', 'emerge-ide.js'),                  args: [],
     },
     {
       systemId: 'diagnostic', port: 7825, healthPath: '/status',

@@ -137,7 +137,7 @@ phases:
     layer: integration
     status: OPEN
     depends_on: [CS1_a_version_is_a_system_state, CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system]
-    files: [cos/spine/rebuild.js, cos/spine/version.js, cos/workspace/index.js, emerge/compiler/kg-builder.js, emerge/compiler/phase-specs.js]
+    files: [cos/spine/rebuild.js, cos/spine/version.js, cos/workspace/index.js, lib/emerge/compiler/kg-builder.js, lib/emerge/compiler/phase-specs.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-REBUILD]
     does: >-

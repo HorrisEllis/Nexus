@@ -225,7 +225,7 @@ spec:
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
       status: "DONE (1.7.15, 0.39.320) — (1) warp has no taxonomy: it emits no event of its own (its Streams carry their callers' events) and ET1 refuses an empty one; said in warp/interaction-contract.json. (2) cos, emerge and warp interaction-contract.json, projected from their servers (cos: vaultd only; warp: none). (3) lib/route-contract-check.js — served and declared must match — in `nexus contracts check` and loom. Found, not fixed: emerge-ide's POST /api/codegen is unreachable (the POST block answers first; `method` undefined), marked reachable:false. Emergence now in loom (70 components, 0 edges lost) and the atlas."
       depends_on: [EM0_ground]
-      files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, lib/warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
+      files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, lib/emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, lib/warp/interaction-contract.json, lib/emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
         E14–E16 made real before any phase uses them. (1) An event-taxonomy.js in the ET1 shape for each system that has
         none and that this map touches — written from the events each system ALREADY emits (read from its bus.emit /
@@ -267,7 +267,7 @@ spec:
       value: { score: 3, cost: L, for: [ownership, foundation], why: "his constraint field as code; the deterministic core every other phase leans on" }
       status: DONE (1.7.16, 0.39.321) — emerge/core/ (field, constraint, transition, observation, lens, gap, history, level, budget, seed, index) and emerge/spec/emerge-core.spec; tests/modules/test-emerge-core.test.js 6/6 is the proof. Ids are drawn from the seed and the history holds logical ticks only, so one seed replays byte-identical. Soft and probabilistic constraints permit a violation at its cost; every other type refuses.
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
-      files: [emerge/core/field.js, emerge/core/constraint.js, emerge/core/transition.js, emerge/core/observation.js, emerge/core/lens.js, emerge/core/gap.js, emerge/core/history.js, emerge/core/level.js, emerge/core/budget.js, emerge/core/seed.js, emerge/core/index.js, emerge/spec/emerge-core.spec]
+      files: [lib/emerge/core/field.js, lib/emerge/core/constraint.js, lib/emerge/core/transition.js, lib/emerge/core/observation.js, lib/emerge/core/lens.js, lib/emerge/core/gap.js, lib/emerge/core/history.js, lib/emerge/core/level.js, lib/emerge/core/budget.js, lib/emerge/core/seed.js, lib/emerge/core/index.js, lib/emerge/spec/emerge-core.spec]
       does: >-
         EMERGE's core: James's Rheon primitives as code — the constraint field the Architect spec calls layer 0, built
         at last. Field, Constraint, Transition, Observation (with confidence + source + cost), Lens (read-only by
@@ -350,7 +350,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [RF1_relational_field]
-      files: [lib/context-atlas.js, cortex/memory/jaa-db.js, emerge/core/transition.js, docs/nexstore-writers.yaml]
+      files: [lib/context-atlas.js, cortex/memory/jaa-db.js, lib/emerge/core/transition.js, docs/nexstore-writers.yaml]
       does: >-
         E5. Every memory write — chat logs, agent memory, hat memory, crystals, fix map, case library, vector memory —
         goes Observation → constraints → Transition → History. Starts as a dual write beside each existing writer
@@ -468,7 +468,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [MR7_recipes, EM2_warp_his_own]
-      files: [lib/warp/dispatch/population.js, emerge/core/constraint.js]
+      files: [lib/warp/dispatch/population.js, lib/emerge/core/constraint.js]
       does: >-
         The boundary moves up. WARP's promote-after-3 generalized: a synthesis, recipe or generated piece that converges
         N times independently (N stated, tunable, never a hidden constant) is promoted INTO the deterministic core — a
@@ -557,7 +557,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [EM2_warp_his_own, CF1_cfr_improved_with_rfr2]
-      files: [idearium/spec-engine/blocks.yaml, emerge/compiler/index.js, emerge/compiler/emit.js, intelligence/cfr/contract-verifier.js]
+      files: [idearium/spec-engine/blocks.yaml, lib/emerge/compiler/index.js, lib/emerge/compiler/emit.js, intelligence/cfr/contract-verifier.js]
       does: >-
         "what about using cfr instead of events?" The `events` block becomes CAUSAL: per event caused_by, must_cause
         <event> within <time>, on_fail, payload, axiom. emerge's T1 (no model) compiles it into WARP 2 links and
@@ -1000,7 +1000,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [PH1_phase_runs_end_in_proof, EV0_contracts_for_every_system]
-      files: [emerge/compiler/index.js, emerge/compiler/emit.js, idearium/repo/graph.js, idearium/lib/wiring-gen.js]
+      files: [lib/emerge/compiler/index.js, lib/emerge/compiler/emit.js, idearium/repo/graph.js, idearium/lib/wiring-gen.js]
       does: >-
         James: "I'm saying to generate code." What already runs with no LLM: emerge's T0 (structure) and T1 (typed
         interfaces, gate stubs, wiring, test skeletons) from a spec. Added: the WIRING of a phase generated from its wiring
