@@ -10694,7 +10694,7 @@ function _nexusSelfSync({ only = null, force = false, shouldPause = null } = {})
           // the commit fails (§0.3)
           const RIq = _require('../../lib/repo-inject.js');
           const changes = RIq.takeGateEntries(system);
-          const where = `${system === '(nexus)' ? 'nexus index' : 'lib/nexus/' + system} @ snapshot ${String(snapshot).slice(0, 12)}`;
+          const where = `${system === '(nexus)' ? 'nexus index' : 'nexus/' + system} @ snapshot ${String(snapshot).slice(0, 12)}`;
           const r = await commitRepoSnapshot({
             repo, repoDir: dir, message: changes.length ? `${changes[0].title}${changes.length > 1 ? ` (+${changes.length - 1} more)` : ''} · ${where}` : where,
             ...(changes.length ? { provenance: { by: [...new Set(changes.map(c => c.approvedBy).filter(Boolean))], refs: changes.map(c => `inject:${c.inject}`), files: changes.flatMap(c => c.files), labels: [], checkpoint: null, at: Date.now(), changelog: changes } } : {}),

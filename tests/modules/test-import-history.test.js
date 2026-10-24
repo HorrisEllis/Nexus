@@ -64,7 +64,7 @@ try {
   // ── scan ──
   const s = IH.scanZip(path.join(ZIPS, 'nexus-0.1.0.zip'));
   check('IH-01 scan: sha256, the nexus/ root, the version from lib/version.js, the date from the entries, no .git, files outside node_modules',
-    /^[0-9a-f]{64}$/.test(s.sha256) && s.root === 'lib/nexus/' && s.version === '0.1.0' && s.date === d1.toISOString() && s.hasGit === false && s.files === 4, JSON.stringify(s));
+    /^[0-9a-f]{64}$/.test(s.sha256) && s.root === 'nexus/' && s.version === '0.1.0' && s.date === d1.toISOString() && s.hasGit === false && s.files === 4, JSON.stringify(s));
   check('IH-02 scan: a .git in the zip is seen; a version only in package.json is read; a broken zip is an error, not a crash',
     IH.scanZip(path.join(ZIPS, 'nexus-0.2.0-with-git.zip')).hasGit === true && IH.scanZip(path.join(ZIPS, 'nexus-0.3.0.zip')).version === '0.3.0' && !!IH.scanZip(path.join(ZIPS, 'broken.zip')).error);
 

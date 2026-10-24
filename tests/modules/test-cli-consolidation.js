@@ -39,7 +39,7 @@ test('T-005', 'cli/nexus-cli.js is now a SLIM shim (duplicate runtime removed, Â
   const shim = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'nexus-cli.js'), 'utf8');
   const lines = shim.split('\n').length;
   assert.ok(lines < 100, `shim must be slim (was 478), got ${lines}`);
-  assert.ok(/require\('\.\.\/copilot\/cli'\)/.test(shim), 'shim must re-export the canonical CLI');
+  assert.ok(/require\('\.\.\/\.\.\/copilot\/cli'\)/.test(shim), 'shim must re-export the canonical CLI');
 });
 
 test('T-006', 'the shim preserves _copilotAsk (the one thing a test still imports â€” nothing broken)', () => {

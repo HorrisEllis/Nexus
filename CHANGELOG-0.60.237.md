@@ -28,6 +28,25 @@ Also updated:
 - The atlases were regenerated and their hand-written paths updated (refs 49/49).
 - The migration map's phases are marked DONE, kept as the record.
 
+## Found by the full suite after batch 2, each fixed at its cause
+6. **COS runs installed releases of any version.** An old release has `nexus/autopilot.js` and `cli/nexus.js`. A new one has
+   `lib/nexus/autopilot.js` and `lib/cli/nexus.js`. `cos/app/runtime.js` (`entryOf`) and `cos/app/shell.js` take the first of the
+   two that exists, so both still start.
+7. **Some code builds a folder from a system's name** (`<name>/spec/...`). `lib/nexus-self/systems.js` gains `dirOf(name)` and
+   `MOVED`. The callers use it: route-contract-check, vector-memory, precommit-check and the registration-shape test.
+8. **Loom ids follow paths, so `nexus.auth` is now `nexus.orchestrator.auth`.** `movedId(id)` maps an id saved before the move to
+   its id now. Architect's `lookup` follows it, so a stored `reuse` ref still finds its component (AR-02/03 prove it).
+9. **The mover misread a bare `dir/` string as a folder path.** Each case is restored:
+   - the git-branch prefix `nexus/` (cos/workspace, idearium/api);
+   - the history root label;
+   - `hooks/` in lib/repo-history.js. That one names *git* hooks, so it is a security skip; it now has a comment saying so.
+   The mover itself now never rewrites a bare `dir/` literal.
+10. **`lib/system-boundary.js` PRIMITIVES are regexes.** The mover does not rewrite regex source. Batch 2 had silently reclassified
+    nexus-bus, warp core, siso, warp index and hooks as capabilities. Each pattern now matches with or without `lib/` (SV-08).
+11. **Source-text tests** that read a require path were updated to the new paths. Tests whose fixtures had been rewritten were
+    restored. `require.resolve` and stub strings were caught by a repair pass: 10 fixed, 2 bad rewrites reverted.
+12. **`sentinel` is part of the kernel now**, not a system of its own. SV-08 names `components` as its sovereign example.
+
 ## Proof
 - **Audit over every move since `main`:** 424 files, 525 static paths, **0** pointing anywhere new.
 - Loom and registry tests match `main` (12 files). The refactor tool's tests pass AM 5/5.

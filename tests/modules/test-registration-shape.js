@@ -24,7 +24,7 @@ const SYSTEMS = ['architect', 'clear-glass', 'copilot', 'cortex', 'emerge', 'gua
 test('T-001', 'every system registry-components file normalizes to a non-empty component array', () => {
   for (const sys of SYSTEMS) {
     let rc;
-    try { rc = require(path.join(ROOT, sys, 'registry-components.js')); }
+    try { rc = require(path.join(ROOT, require('../../lib/nexus-self/systems.js').dirOf(sys), 'registry-components.js')); }
     catch (e) { assert.fail(`${sys}: load failed — ${e.message}`); }
     const comps = norm(rc);
     assert.ok(comps.length > 0, `${sys} must declare at least one component (got ${comps.length})`);
@@ -34,7 +34,7 @@ test('T-001', 'every system registry-components file normalizes to a non-empty c
 test('T-002', 'every declared component has the fields register() requires', () => {
   const REQUIRED = ['id', 'namespace', 'name', 'version', 'grammar', 'route', 'description'];
   for (const sys of SYSTEMS) {
-    const comps = norm(require(path.join(ROOT, sys, 'registry-components.js')));
+    const comps = norm(require(path.join(ROOT, require('../../lib/nexus-self/systems.js').dirOf(sys), 'registry-components.js')));
     for (const c of comps) {
       for (const f of REQUIRED) {
         assert.ok(c[f] !== undefined && c[f] !== null && c[f] !== '', `${sys}/${c.id || '?'} missing ${f}`);

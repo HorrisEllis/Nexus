@@ -45,7 +45,7 @@ async function run() {
   });
 
   test('EM-003', 'build() now requires and calls emerge/compiler/pipeline.js\'s compile() directly', () => {
-    assert.ok(/require\(['"]\.\.\/emerge\/compiler\/pipeline['"]\)/.test(src));
+    assert.ok(/require\(['"]\.\.\/lib\/emerge\/compiler\/pipeline['"]\)/.test(src));
     assert.ok(/await compile\(specPath, buildDir/.test(src));
   });
 

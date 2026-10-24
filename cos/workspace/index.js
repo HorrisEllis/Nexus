@@ -34,7 +34,7 @@ const { execFileSync, execFile } = require('child_process');
 
 const MODULE_ID = 'nexus.cos.workspace';
 const VERSION = '1.1.0';   // 0.39.293 DK1 — refuses an image without the desktop; overlays stamped with their base, stale ones archived
-const BRANCH_PREFIX = 'lib/nexus/';
+const BRANCH_PREFIX = 'nexus/';
 
 // §0.39.280 BS14 — James's log: "git worktree failed: warning: in the working copy of 'atlas.json', LF will be replaced by
 // CRLF …". On Windows every git call printed a CRLF warning per file, and the reason shown was the first 300 characters

@@ -29,7 +29,7 @@ function run() {
 
   test('SCE-002', 'it now points at the real, current, kept core — emerge/compiler/pipeline.js', () => {
     const src = fs.readFileSync(path.join(ROOT, 'lib/system-check.js'), 'utf8');
-    assert.ok(/emerge:\s*'emerge\/compiler\/pipeline\.js'/.test(src));
+    assert.ok(/emerge:\s*'lib\/emerge\/compiler\/pipeline\.js'/.test(src));
   });
 
   test('SCE-003', 'the real, current entry file genuinely exists on disk — the fix points at something real, not another guess', () => {

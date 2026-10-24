@@ -50,10 +50,10 @@ test('RC-03', 'cos, emerge and warp: each contract matches its code', () => {
 
 test('RC-04', 'wired: the CLI verb and loom', () => {
   const cli = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'nexus.js'), 'utf8');
-  assert.ok(cli.includes("require('../lib/route-contract-check.js')"), 'nexus contracts check runs it');
+  assert.ok(cli.includes("require('../route-contract-check.js')"), 'nexus contracts check runs it');
   const reg = JSON.parse(fs.readFileSync(path.join(ROOT, 'loom/data/registry.json'), 'utf8'));
   assert.ok(reg.component['nexus.lib.route-contract-check'], 'a loom component');
-  assert.ok(Object.values(reg.wire).some(w => w.from_hook_id === 'nexus.lib.route-contract-check.export' && w.to_hook_id === 'nexus.cli.nexus.import'), 'wired to the CLI');
+  assert.ok(Object.values(reg.wire).some(w => w.from_hook_id === 'nexus.lib.route-contract-check.export' && w.to_hook_id === 'nexus.lib.cli.nexus.import'), 'wired to the CLI');
 });
 
 console.log(`\n  ${passed} passed, ${failed} failed`);

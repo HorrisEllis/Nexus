@@ -17,7 +17,11 @@
 const fs = require('fs'), path = require('path'), net = require('net'), http = require('http'), { spawn, execFileSync } = require('child_process');
 
 const MODULE_ID = 'cos.app.runtime';
-const DEFAULTS = { entry: 'lib/nexus/autopilot.js', statusPort: 7799, ports: [7799, 7820, 4800, 9000], healthTimeoutMs: 60000, graceMs: 8000, keepLogs: 10 };
+// 0.60.237 RF2 — a release's supervisor lives at lib/nexus/autopilot.js from 0.60.237 on, at nexus/autopilot.js before: COS runs any
+// installed release, so it uses the one the release has (an explicit entry still wins)
+const ENTRIES = ['lib/nexus/autopilot.js', 'nexus/autopilot.js'];
+function entryOf(versionDir, entry) { if (entry) return entry; return ENTRIES.find(e => fs.existsSync(path.join(versionDir, e))) || ENTRIES[0]; }
+const DEFAULTS = { entry: null, statusPort: 7799, ports: [7799, 7820, 4800, 9000], healthTimeoutMs: 60000, graceMs: 8000, keepLogs: 10 };
 const paths = (root, project) => { const p = path.join(root, 'projects', project); return { project: p, logs: path.join(p, 'logs'), run: path.join(p, 'run.json') }; };
 const rmf = (f) => { try { fs.unlinkSync(f); } catch (_) {} };
 
@@ -28,6 +32,7 @@ function defaultModulesDir() { try { return path.dirname(path.dirname(require.re
 function preflight(versionDir, { entry = DEFAULTS.entry, modulesDir = defaultModulesDir() } = {}) {
   const problems = [], needs = [];
   if (!fs.existsSync(versionDir)) return { ok: false, problems: [`the version folder is missing: ${versionDir}`], needs };
+  entry = entryOf(versionDir, entry);
   if (!fs.existsSync(path.join(versionDir, entry))) problems.push(`this release has no ${entry}`);
   let pkg = null; try { pkg = JSON.parse(fs.readFileSync(path.join(versionDir, 'package.json'), 'utf8')); } catch (_) { problems.push('package.json is missing or unreadable'); }
   for (const dep of Object.keys((pkg && pkg.dependencies) || {})) {
@@ -60,6 +65,7 @@ async function start(root, project, version, opts = {}) {
   const o = { ...DEFAULTS, ...opts }; const P = paths(root, project); const dir = path.join(root, 'projects', project, 'versions', version);
   const cur = readRun(root, project); if (cur && alive(cur.pid)) return { ok: false, reason: 'already-running', error: `${project} ${cur.version} is already running (pid ${cur.pid}): stop it first` };
   rmf(P.run);
+  o.entry = entryOf(dir, o.entry);
   const pre = preflight(dir, { entry: o.entry, modulesDir: o.modulesDir === undefined ? defaultModulesDir() : o.modulesDir }); if (!pre.ok) return { ok: false, reason: 'preflight', error: pre.problems.join('; '), needs: pre.needs };
   const busy = await portsBusy(o.ports); if (busy.length) return { ok: false, reason: 'port-busy', error: `port${busy.length > 1 ? 's' : ''} ${busy.join(', ')} already in use by another program: ${project} cannot start until ${busy.length > 1 ? 'they are' : 'it is'} free (only one version runs at a time; is another copy still running?)`, busy };
   fs.mkdirSync(P.logs, { recursive: true }); pruneLogs(P.logs, o.keepLogs);
