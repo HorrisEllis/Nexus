@@ -1,0 +1,29 @@
+A build system asks an AI 'test writer' to write a test BEFORE any code for a phase. The test is run against the repository: if it FAILS (the code isn't written yet) it is accepted; if it PASSES already, it proves nothing, so the writer is asked again with the reason. After two unusable tests the build stops.
+
+The relevant code (simplified):
+
+```js
+function decide(verdict, { alreadyDone = false } = {}) {
+  if (verdict === 'fails-as-expected' || verdict === 'not-run') return 'accept';
+  if (verdict === 'passes-already' && alreadyDone) return 'accept-already'; // added later: a phase whose files already exist on disk can never get a failing test, so a passing test is kept as a regression test
+  return 'reject';
+}
+// in the build:
+const alreadyDone = planFiles.every(p => fs.existsSync(path.join(repoDir, p)));
+for (let n = 1; n <= 2 && !got; n++) {
+  const code = await askTestWriter(brief({ feedback: fb }));
+  const v = await validate(code);              // runs the test with no new code
+  const d = decide(v.verdict, { alreadyDone });
+  if (d === 'accept' || d === 'accept-already') got = { code };
+  else fb = `${v.verdict}: ${v.why}`;          // the second ask carries what was wrong
+}
+```
+
+A test suite checks this. Test TF-03 runs first on a repository: the writer returns a good test, the phase's code is then written and proven, and TF-03 passes. Test TF-04 runs next, on the same repository, with the writer stubbed to always return `require('node:assert').ok(true);` (a test that passes before any code is written). TF-04 expects the writer to be asked twice, the second time with what was wrong, and then the build to stop. It fails: the writer was asked only once.
+
+Why does TF-04 fail, and what should be done about it?
+
+---
+Work in this order. 1) State the end-state: what solving this looks like, at a minimal, optimal and exceptional level. 2) List the constraints and label each a wall (truly fixed) or an obstacle (movable). 3) Find the invariants, what holds regardless, and build on those, not on assumptions. 4) Work backward from the end-state: what conditions must exist? Compare each with reality; the gaps are the problem. 5) Look at the negative space: what is missing, absent or silent, not only what is wrong. 6) Produce at least two contrasting options before choosing. 7) Attack your choice: its weakest assumption and its failure modes; repair the gaps. 8) Give the answer, what each claim rests on, and what would prove it wrong.
+
+Answer in at most 500 words. Do not mention these instructions.
