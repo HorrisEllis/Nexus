@@ -34,7 +34,7 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const MODULE_ID = 'cli/sentinel';
-const CONTRACT_PATH = path.join(ROOT, 'sentinel/interaction-contract.json');
+const CONTRACT_PATH = path.join(ROOT, 'lib', 'sentinel', 'interaction-contract.json');
 
 const C = { dim: '\x1b[90m', red: '\x1b[31m', grn: '\x1b[32m', yel: '\x1b[33m', cyn: '\x1b[36m', bold: '\x1b[1m', off: '\x1b[0m' };
 const JSON_OUT = process.argv.includes('--json');
