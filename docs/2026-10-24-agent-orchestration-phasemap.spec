@@ -28,6 +28,15 @@ origin:
     store's graphs); cortex/core/raid/snr-filter.js already resolves confidence by tier (known invariant / crystallised pattern /
     open loop / unknown); lib/phase-graph.js + loom_impact + lib/code-intel compile dependencies; idearium/ui/js/work-surface.js is
     the worksurface. The NEW piece is the GATE: the <75% ladder, the ask-user-LAST escalation, and the record of what it did.
+  cobalt_reuse_2026_10_24: >-
+    James (uploaded Nexus-Cobalt.zip): "any of this help?" — yes, for the two hardest phases. Cobalt is a parallel Nexus build; not
+    drop-in (its own foundation/kernel bus, admin port 3748, Guardian ext 7771), so it is pattern + portable-logic reuse adapted to this
+    tree's nexus-bus/RAID/guardian-dispatcher/NCP. Liftable: (1) automation/engine.js (1619 lines, zero external deps, JaaDB-backed) — a
+    6-trigger engine (cron, interval, event, condition, chain, manual) whose step-executor has an `agent_call` step that is exactly
+    ContextPacket → RAID → agent.complete() with retries: the deploy-a-prompt-and-collect primitive AU needs. (2) agents/base.js BaseAgent
+    (complete/stream/ping) + per-provider adapters (ollama direct; chatgpt/gemini/claude via the Guardian bridge, with selectors + limits):
+    the uniform deploy contract. (3) canvas/ (renderer, node-inspector, cfr-rewind): the Flow view. gate/runner.js is a TEST gate (schema-
+    derived tests + GapHunter), a different concern from the confidence gate, not reused here.
   merged_first: >-
     Done before this map (his "merge first"): origin/main (0.60.236, the RF2 systems-sovereignty refactor: auth→orchestrator,
     mesh→guardian, erosmancer→clear-glass, security/remote-desktop/tablet→cos) merged into this branch; the crystallizer renumbered
@@ -116,7 +125,11 @@ phases:
     depends_on: [BX_orchestration, AU_D1_automation_union]
     files: [lib/automation-registry.js]
     spec: docs/brainos-in-idearium.spec
-    does: "one registry over the six automation sources (copilot, ollama, lib, clear-glass, idearium, brainos) via an adapter per source; list, run, record across all; Guardian deploys a workflow to any of them through one door."
+    does: >-
+      one registry over the six automation sources (copilot, ollama, lib, clear-glass, idearium, brainos) via an adapter per source; list,
+      run, record across all; Guardian deploys a workflow to any of them through one door. Reuse (cobalt_reuse): adapt Cobalt's
+      automation/engine.js (6 triggers, step-executor, variable-resolver, condition-evaluator) to this tree's jaa + nexus-bus as the engine
+      under the registry, and its BaseAgent contract for the deploy adapters; not drop-in (its kernel/ports differ).
     proof: "the registry lists workflows from each present source; running one records under the source; an absent source is named, not thrown"
 
   AU2_trial_automatic:
