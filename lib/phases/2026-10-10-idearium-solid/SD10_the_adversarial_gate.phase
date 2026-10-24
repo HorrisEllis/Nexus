@@ -7,11 +7,11 @@ intent: null
 summary: SD10_the_adversarial_gate (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999654
+exported_at: 1792830610984
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999654
-lastSeenAt: 1792829999654
+firstSeenAt: 1792830610984
+lastSeenAt: 1792830610984
 fingerprint: null
 payload:
   id: SD10_the_adversarial_gate
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 4123901bf6fe7a30
+  uuid: 4a4a6654-b726-50a9-ac24-94e87f0a9dea

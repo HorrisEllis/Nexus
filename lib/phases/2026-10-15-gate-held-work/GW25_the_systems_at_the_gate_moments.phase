@@ -9,11 +9,11 @@ intent: null
 summary: GW25_the_systems_at_the_gate_moments (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830006658
+exported_at: 1792830618181
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006658
-lastSeenAt: 1792830006658
+firstSeenAt: 1792830618181
+lastSeenAt: 1792830618181
 fingerprint: null
 payload:
   id: GW25_the_systems_at_the_gate_moments
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 1cbbebed615a505e
+  uuid: c0150185-1897-53f0-abcb-427cf23dc9a3

@@ -7,11 +7,11 @@ intent: null
 summary: AB4_surface (surface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830022585
+exported_at: 1792830634932
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022585
-lastSeenAt: 1792830022585
+firstSeenAt: 1792830634932
+lastSeenAt: 1792830634932
 fingerprint: null
 payload:
   id: AB4_surface
@@ -29,3 +29,10 @@ payload:
     - MOD-ABK-SURFACE
   spec: clear-glass/spec/adblock.spec
   graph: 3faa436c3064d0f8
+  uuid: d316ed98-7f9f-57ba-9981-e4d74ac8589b
+  specLink:
+    how: declared
+    spec: clear-glass/spec/adblock.spec
+    modules:
+      - id: MOD-ABK-SURFACE
+        uuid: nexus-cg-adblock-surface-v1-0000-2026-1021-001

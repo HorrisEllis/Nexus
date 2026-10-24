@@ -7,11 +7,11 @@ intent: null
 summary: RC1_the_repo_main_chat (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988461
+exported_at: 1792830599103
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988461
-lastSeenAt: 1792829988461
+firstSeenAt: 1792830599103
+lastSeenAt: 1792830599103
 fingerprint: null
 payload:
   id: RC1_the_repo_main_chat
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: f42bc647bfb8ea76
+  uuid: b0131f3e-8fe3-5b2a-9291-2d22e3b5a7c3

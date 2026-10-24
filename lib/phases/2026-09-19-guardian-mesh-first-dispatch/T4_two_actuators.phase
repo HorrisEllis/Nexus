@@ -7,11 +7,11 @@ intent: null
 summary: T4_two_actuators (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978960
+exported_at: 1792830589579
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978960
-lastSeenAt: 1792829978960
+firstSeenAt: 1792830589579
+lastSeenAt: 1792830589579
 fingerprint: null
 payload:
   id: T4_two_actuators
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 1e41d389b0d7fe92
+  uuid: a76138b5-b93a-5727-8162-753c1363248b

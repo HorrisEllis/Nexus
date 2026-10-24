@@ -7,11 +7,11 @@ intent: null
 summary: N29_full_run_only_failures (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985453
+exported_at: 1792830596187
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985453
-lastSeenAt: 1792829985453
+firstSeenAt: 1792830596187
+lastSeenAt: 1792830596187
 fingerprint: null
 payload:
   id: N29_full_run_only_failures
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 3ccc80b708b1184e
+  uuid: f71fc7a0-995e-532a-a240-6454446aef3c

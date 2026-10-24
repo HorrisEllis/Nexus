@@ -9,11 +9,11 @@ intent: null
 summary: RS11_workshop_and_phases_one_surface (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829993794
+exported_at: 1792830604662
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829993794
-lastSeenAt: 1792829993794
+firstSeenAt: 1792830604662
+lastSeenAt: 1792830604662
 fingerprint: null
 payload:
   id: RS11_workshop_and_phases_one_surface
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 0c60b2ce6d21565f
+  uuid: 6ad4247c-33af-5833-b182-9e0ed1fffde4

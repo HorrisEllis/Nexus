@@ -7,11 +7,11 @@ intent: null
 summary: CV0_versioning_scope (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005427
+exported_at: 1792830616867
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005427
-lastSeenAt: 1792830005427
+firstSeenAt: 1792830616867
+lastSeenAt: 1792830616867
 fingerprint: null
 payload:
   id: CV0_versioning_scope
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: da1842c6cd721832
+  uuid: f0ccf73c-888b-5c2f-8857-8f24d42d4c09

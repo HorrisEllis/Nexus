@@ -7,11 +7,11 @@ intent: null
 summary: BS16_import_fields (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023783
+exported_at: 1792830636219
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023783
-lastSeenAt: 1792830023783
+firstSeenAt: 1792830636219
+lastSeenAt: 1792830636219
 fingerprint: null
 payload:
   id: BS16_import_fields
@@ -30,3 +30,10 @@ payload:
     - MOD-BSH-PLUGIN-FIELDS
   spec: clear-glass/spec/browser-shell.spec
   graph: 598249e869f9e7b4
+  uuid: cb87f3cf-49c7-5f20-b3e8-39075420a629
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-PLUGIN-FIELDS
+        uuid: nexus-cg-bsh-plugin-fields-v1-0000-2026-1021-005

@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830022171
+exported_at: 1792830634520
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022171
-lastSeenAt: 1792830022171
+firstSeenAt: 1792830634520
+lastSeenAt: 1792830634520
 fingerprint: null
 payload:
   for: CH0_chunk_census_and_contract
@@ -59,3 +59,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4 · blocked by GR1_graph_primitive
       - 'depends on (1): GR1_graph_primitive · all upstream 6'
       - 'needed by (1): CH1_strategies_behind_the_contract · all downstream 9'
+  phaseUuid: 3df11b8e-230d-58b7-b999-0f7e4ef27898

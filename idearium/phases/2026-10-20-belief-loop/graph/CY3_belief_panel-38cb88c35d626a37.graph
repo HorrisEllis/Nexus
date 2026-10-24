@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830021770
+exported_at: 1792830634103
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021770
-lastSeenAt: 1792830021770
+firstSeenAt: 1792830634103
+lastSeenAt: 1792830634103
 fingerprint: null
 payload:
   for: CY3_belief_panel
@@ -262,3 +262,4 @@ payload:
         depends on (4): CY1_lifecycle_and_injection, CF1_confidence_from_evidence,
         RA1_root_cause_through_provenance, TB1_toolbox · all upstream 21
       - 'needed by (0): —'
+  phaseUuid: 0cc843f6-7d30-511a-a1cd-374d33ed5652

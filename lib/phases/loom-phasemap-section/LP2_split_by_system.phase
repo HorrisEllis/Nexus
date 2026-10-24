@@ -7,11 +7,11 @@ intent: null
 summary: LP2_split_by_system (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032132
+exported_at: 1792830644398
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032132
-lastSeenAt: 1792830032132
+firstSeenAt: 1792830644398
+lastSeenAt: 1792830644398
 fingerprint: null
 payload:
   id: LP2_split_by_system
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 0829f785bafd438e
+  uuid: 8e3f1da7-68c9-5eca-8e97-68258a676ae3

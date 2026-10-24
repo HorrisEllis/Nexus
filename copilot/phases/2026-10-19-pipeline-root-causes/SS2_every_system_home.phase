@@ -7,11 +7,11 @@ intent: null
 summary: SS2_every_system_home (library) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020474
+exported_at: 1792830632804
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020474
-lastSeenAt: 1792830020474
+firstSeenAt: 1792830632804
+lastSeenAt: 1792830632804
 fingerprint: null
 payload:
   id: SS2_every_system_home
@@ -34,3 +34,4 @@ payload:
   blocks: []
   spec: null
   graph: 8abdeb8d18ad7e5d
+  uuid: 14bf2057-bdc2-553a-8955-d94f74ff5617

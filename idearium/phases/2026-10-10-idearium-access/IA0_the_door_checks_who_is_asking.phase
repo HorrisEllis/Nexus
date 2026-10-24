@@ -7,11 +7,11 @@ intent: null
 summary: IA0_the_door_checks_who_is_asking (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999252
+exported_at: 1792830610573
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999252
-lastSeenAt: 1792829999252
+firstSeenAt: 1792830610573
+lastSeenAt: 1792830610573
 fingerprint: null
 payload:
   id: IA0_the_door_checks_who_is_asking
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: e61c74f72a1e0e07
+  uuid: 63fd0151-54f9-5d24-8516-dbbc0c078e01

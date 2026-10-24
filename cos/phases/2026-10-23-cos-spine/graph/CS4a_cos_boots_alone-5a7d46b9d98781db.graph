@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830026216
+exported_at: 1792830638673
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026216
-lastSeenAt: 1792830026216
+firstSeenAt: 1792830638673
+lastSeenAt: 1792830638673
 fingerprint: null
 payload:
   for: CS4a_cos_boots_alone
@@ -267,3 +267,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3 · blocked by CS_D7_sovereign_first
       - 'depends on (2): CS_D7_sovereign_first, COSA3_run_and_supervise · all upstream 4'
       - 'needed by (1): CS4_every_system_a_compartment · all downstream 8'
+  phaseUuid: ead2cc32-b252-5fe8-b9cd-f208597cbd4e

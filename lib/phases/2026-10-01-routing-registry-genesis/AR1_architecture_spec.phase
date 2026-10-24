@@ -7,11 +7,11 @@ intent: null
 summary: AR1_architecture_spec (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987570
+exported_at: 1792830598250
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987570
-lastSeenAt: 1792829987570
+firstSeenAt: 1792830598250
+lastSeenAt: 1792830598250
 fingerprint: null
 payload:
   id: AR1_architecture_spec
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 8cd719427be6e25f
+  uuid: cfd7a4e4-1670-56ca-a88c-87a0142a93f0

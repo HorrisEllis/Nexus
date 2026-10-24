@@ -7,11 +7,11 @@ intent: null
 summary: GW1_the_baton (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830006630
+exported_at: 1792830618153
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006630
-lastSeenAt: 1792830006630
+firstSeenAt: 1792830618153
+lastSeenAt: 1792830618153
 fingerprint: null
 payload:
   id: GW1_the_baton
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 2558d35dc4282735
+  uuid: e965ed1c-ea7e-5e4d-a057-8df0550e6078

@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829987099
+exported_at: 1792830597806
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987099
-lastSeenAt: 1792829987099
+firstSeenAt: 1792830597806
+lastSeenAt: 1792830597806
 fingerprint: null
 payload:
   for: UI10_debug_and_intelligence_one_tab
@@ -71,3 +71,4 @@ payload:
       - 'same files as UI8_code_tab_is_code with no order between them: idearium/ui/js/app.js'
       - 'same files as UI11_nav_and_look_restored with no order between them: idearium/ui/js/app.js'
       - … and 2 more phases sharing its files without an order
+  phaseUuid: 294e9610-6af6-5cc5-93a5-ff74479e925c

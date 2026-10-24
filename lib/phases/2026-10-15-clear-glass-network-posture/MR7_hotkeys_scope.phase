@@ -7,11 +7,11 @@ intent: null
 summary: MR7_hotkeys_scope (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004585
+exported_at: 1792830616014
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004585
-lastSeenAt: 1792830004585
+firstSeenAt: 1792830616014
+lastSeenAt: 1792830616014
 fingerprint: null
 payload:
   id: MR7_hotkeys_scope
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 9a5b46989ead4019
+  uuid: 09204888-52d0-51e8-8bf1-4fae3003deb9

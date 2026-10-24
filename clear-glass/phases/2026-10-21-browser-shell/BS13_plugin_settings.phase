@@ -7,11 +7,11 @@ intent: null
 summary: BS13_plugin_settings (integration) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023781
+exported_at: 1792830636217
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023781
-lastSeenAt: 1792830023781
+firstSeenAt: 1792830636217
+lastSeenAt: 1792830636217
 fingerprint: null
 payload:
   id: BS13_plugin_settings
@@ -32,3 +32,10 @@ payload:
     - MOD-BSH-PLUGIN-SETTINGS
   spec: clear-glass/spec/browser-shell.spec
   graph: 1e5c8fe7ff5bb197
+  uuid: 91f936ca-5de3-5740-9ae6-a89a75d96c6c
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-PLUGIN-SETTINGS
+        uuid: nexus-cg-bsh-plugin-settings-v1-0000-2026-1021-004

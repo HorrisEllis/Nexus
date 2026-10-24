@@ -7,11 +7,11 @@ intent: null
 summary: P4_copilot_awareness (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032951
+exported_at: 1792830645174
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032951
-lastSeenAt: 1792830032951
+firstSeenAt: 1792830645174
+lastSeenAt: 1792830645174
 fingerprint: null
 payload:
   id: P4_copilot_awareness
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: ccacba0791d50925
+  uuid: eb51d672-2357-5e49-b696-616dfe809b9b

@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 14 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830027827
+exported_at: 1792830640241
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027827
-lastSeenAt: 1792830027827
+firstSeenAt: 1792830640241
+lastSeenAt: 1792830640241
 fingerprint: null
 payload:
   for: AM10_thinking_partner_rename_and_ui_builder
@@ -319,3 +319,4 @@ payload:
         depends on (2): AM3_open_ended_grounded_conversation,
         AM7_agent_switch_continuity_and_chat_recall
       - 'needed by (0): —'
+  phaseUuid: f04ce667-6f7c-5355-9021-ff29a1d23fcf

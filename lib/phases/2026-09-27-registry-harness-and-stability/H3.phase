@@ -7,11 +7,11 @@ intent: null
 summary: H3 (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983716
+exported_at: 1792830594511
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983716
-lastSeenAt: 1792829983716
+firstSeenAt: 1792830594511
+lastSeenAt: 1792830594511
 fingerprint: null
 payload:
   id: H3
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 017eb2a36885874c
+  uuid: 0cfc5558-7f01-54f7-a0a5-e6196a488f4b

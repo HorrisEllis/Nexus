@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830025826
+exported_at: 1792830638286
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025826
-lastSeenAt: 1792830025826
+firstSeenAt: 1792830638286
+lastSeenAt: 1792830638286
 fingerprint: null
 payload:
   for: ND4_commands_and_capabilities_from_the_schemas
@@ -201,3 +201,4 @@ payload:
         depends on (2): ND3_each_server_serves_its_nodes, ND_D4_schema_driven_commands · all
         upstream 8
       - 'needed by (1): ND5_every_agent_reaches_every_system · all downstream 2'
+  phaseUuid: e03ed0dd-744a-5998-9c0d-7886e02e836b

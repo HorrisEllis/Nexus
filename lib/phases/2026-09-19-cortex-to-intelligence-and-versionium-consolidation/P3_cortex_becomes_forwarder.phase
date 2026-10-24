@@ -9,11 +9,11 @@ intent: null
 summary: P3_cortex_becomes_forwarder (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978563
+exported_at: 1792830589188
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978563
-lastSeenAt: 1792829978563
+firstSeenAt: 1792830589188
+lastSeenAt: 1792830589188
 fingerprint: null
 payload:
   id: P3_cortex_becomes_forwarder
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 76fa1bf1526a963a
+  uuid: 9e49c61e-6b2d-5430-9dec-6334e20c3470

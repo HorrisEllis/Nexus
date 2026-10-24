@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830019663
+exported_at: 1792830631961
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830019663
-lastSeenAt: 1792830019663
+firstSeenAt: 1792830631961
+lastSeenAt: 1792830631961
 fingerprint: null
 payload:
   for: CT0_code_tab_census
@@ -73,3 +73,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): CT1_fewer_wider_tabs'
+  phaseUuid: 6b64cdcf-9acb-514e-a6be-594cae7fc74d

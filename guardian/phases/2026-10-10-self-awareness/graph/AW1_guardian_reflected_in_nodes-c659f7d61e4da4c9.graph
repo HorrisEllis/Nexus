@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830000075
+exported_at: 1792830611426
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000075
-lastSeenAt: 1792830000075
+firstSeenAt: 1792830611426
+lastSeenAt: 1792830611426
 fingerprint: null
 payload:
   for: AW1_guardian_reflected_in_nodes
@@ -229,3 +229,4 @@ payload:
       - 'depends on (1): AW0_no_guessed_causes'
       - 'needed by (1): AW5_its_own_face'
       - 'same files as AW2_every_call_says_who_asked with no order between them: guardian/lib/jobs.js'
+  phaseUuid: be40de62-0c3d-5e89-a6de-a290c42c0a32

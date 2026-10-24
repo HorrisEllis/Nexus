@@ -7,11 +7,11 @@ intent: null
 summary: SD15_no_website_can_drive_nexus (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999659
+exported_at: 1792830610990
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999659
-lastSeenAt: 1792829999659
+firstSeenAt: 1792830610990
+lastSeenAt: 1792830610990
 fingerprint: null
 payload:
   id: SD15_no_website_can_drive_nexus
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: f098c0065c03478c
+  uuid: bbd079f7-0163-5ee2-8e2e-6b16b6efc784

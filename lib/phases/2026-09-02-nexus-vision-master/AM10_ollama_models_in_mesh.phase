@@ -7,11 +7,11 @@ intent: null
 summary: AM10_ollama_models_in_mesh (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974300
+exported_at: 1792830584884
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974300
-lastSeenAt: 1792829974300
+firstSeenAt: 1792830584884
+lastSeenAt: 1792830584884
 fingerprint: null
 payload:
   id: AM10_ollama_models_in_mesh
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: cb3cb4f7a252e3df
+  uuid: 279c5de7-d5ef-5cf9-b826-294d014e7603

@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 6 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829970794
+exported_at: 1792830581338
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829970794
-lastSeenAt: 1792829970794
+firstSeenAt: 1792830581338
+lastSeenAt: 1792830581338
 fingerprint: null
 payload:
   for: SF17_intelligence_system_all_4_phases
@@ -211,3 +211,4 @@ payload:
       - >-
         needed by (1): SF18_intelligence_becomes_a_real_system · all downstream 2 · finishing it
         unlocks SF18_intelligence_becomes_a_real_system
+  phaseUuid: 8a3bc74f-323a-55d4-8d95-59767cd94aab

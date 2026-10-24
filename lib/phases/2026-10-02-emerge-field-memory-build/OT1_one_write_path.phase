@@ -7,11 +7,11 @@ intent: null
 summary: OT1_one_write_path (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988424
+exported_at: 1792830599059
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988424
-lastSeenAt: 1792829988424
+firstSeenAt: 1792830599059
+lastSeenAt: 1792830599059
 fingerprint: null
 payload:
   id: OT1_one_write_path
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 7c9eae93ea3da6cd
+  uuid: 31499ec4-9465-5428-9211-b9becf90f9ad

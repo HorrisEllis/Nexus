@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829985878
+exported_at: 1792830596584
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985878
-lastSeenAt: 1792829985878
+firstSeenAt: 1792830596584
+lastSeenAt: 1792830596584
 fingerprint: null
 payload:
   for: EC7_router_in_builds
@@ -151,3 +151,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3
       - 'depends on (1): EC4_learning_router · all upstream 4'
       - 'needed by (1): EC11_release · finishing it unlocks EC11_release'
+  phaseUuid: fb182d12-0bd1-57d4-bd8e-ffef89d51f1b

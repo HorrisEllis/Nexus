@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829971726
+exported_at: 1792830582306
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971726
-lastSeenAt: 1792829971726
+firstSeenAt: 1792830582306
+lastSeenAt: 1792830582306
 fingerprint: null
 payload:
   for: BR1_callto_component_hotswap_catalog
@@ -40,3 +40,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by TX10_component_registry_discipline
       - 'depends on (1): TX10_component_registry_discipline'
       - 'needed by (0): —'
+  phaseUuid: 500f2367-cae6-51b6-a415-009152fc6c08

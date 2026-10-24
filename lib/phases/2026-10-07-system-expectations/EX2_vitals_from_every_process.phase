@@ -7,11 +7,11 @@ intent: null
 summary: EX2_vitals_from_every_process (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829996476
+exported_at: 1792830607594
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829996476
-lastSeenAt: 1792829996476
+firstSeenAt: 1792830607594
+lastSeenAt: 1792830607594
 fingerprint: null
 payload:
   id: EX2_vitals_from_every_process
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 8337bd39d03384c4
+  uuid: dbb4defa-5c94-5bbd-b513-588fff403f69

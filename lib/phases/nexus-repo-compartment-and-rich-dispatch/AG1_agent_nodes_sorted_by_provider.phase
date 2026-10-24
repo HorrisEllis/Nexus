@@ -9,11 +9,11 @@ intent: null
 summary: AG1_agent_nodes_sorted_by_provider (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830033724
+exported_at: 1792830645918
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830033724
-lastSeenAt: 1792830033724
+firstSeenAt: 1792830645918
+lastSeenAt: 1792830645918
 fingerprint: null
 payload:
   id: AG1_agent_nodes_sorted_by_provider
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 244704b3a3825cc8
+  uuid: 82682b4a-2c4f-5bd1-ad29-f711a2cc6960

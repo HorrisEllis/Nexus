@@ -9,11 +9,11 @@ intent: null
 summary: DT3_failure_modes_routes_and_preflight (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987054
+exported_at: 1792830597759
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987054
-lastSeenAt: 1792829987054
+firstSeenAt: 1792830597759
+lastSeenAt: 1792830597759
 fingerprint: null
 payload:
   id: DT3_failure_modes_routes_and_preflight
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 16167e797e66f7b5
+  uuid: 075c3a6e-39c7-5dfd-8785-71b6087a3432

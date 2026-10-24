@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829985878
+exported_at: 1792830596583
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985878
-lastSeenAt: 1792829985878
+firstSeenAt: 1792830596583
+lastSeenAt: 1792830596583
 fingerprint: null
 payload:
   for: EC6_guardian_enforcement
@@ -219,3 +219,4 @@ payload:
       - >-
         needed by (2): EC8_economy_console, EC11_release · finishing it unlocks EC8_economy_console,
         EC11_release
+  phaseUuid: 551f8a0b-bff3-57c8-8ab6-ca79a9fa0147

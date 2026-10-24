@@ -7,11 +7,11 @@ intent: null
 summary: 10 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830000460
+exported_at: 1792830611838
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000460
-lastSeenAt: 1792830000460
+firstSeenAt: 1792830611838
+lastSeenAt: 1792830611838
 fingerprint: null
 payload:
   for: OP1_every_system_declares_its_options
@@ -113,3 +113,4 @@ payload:
       - >-
         needed by (1): OP2_the_system_settings_in_its_repo · all downstream 3 · finishing it unlocks
         OP2_the_system_settings_in_its_repo
+  phaseUuid: f8252b7f-04d6-51b9-8cf3-a78850f52fcd

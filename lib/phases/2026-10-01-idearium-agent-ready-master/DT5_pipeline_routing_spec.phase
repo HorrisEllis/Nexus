@@ -9,11 +9,11 @@ intent: null
 summary: DT5_pipeline_routing_spec (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987057
+exported_at: 1792830597762
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987057
-lastSeenAt: 1792829987057
+firstSeenAt: 1792830597762
+lastSeenAt: 1792830597762
 fingerprint: null
 payload:
   id: DT5_pipeline_routing_spec
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 4d9d36b0f640099b
+  uuid: 69046a30-5194-5229-b975-99ce7646fea9

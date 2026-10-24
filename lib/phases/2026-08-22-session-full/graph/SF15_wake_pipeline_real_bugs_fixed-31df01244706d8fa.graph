@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829970792
+exported_at: 1792830581337
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829970792
-lastSeenAt: 1792829970792
+firstSeenAt: 1792830581337
+lastSeenAt: 1792830581337
 fingerprint: null
 payload:
   for: SF15_wake_pipeline_real_bugs_fixed
@@ -47,3 +47,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): SF14_wake_pipeline_real_architecture'
       - 'needed by (0): —'
+  phaseUuid: 94074cc6-51c4-5d9d-9015-25786c58c4db

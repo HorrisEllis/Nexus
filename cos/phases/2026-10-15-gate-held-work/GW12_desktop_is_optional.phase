@@ -7,11 +7,11 @@ intent: null
 summary: GW12_desktop_is_optional (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830006645
+exported_at: 1792830618169
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006645
-lastSeenAt: 1792830006645
+firstSeenAt: 1792830618169
+lastSeenAt: 1792830618169
 fingerprint: null
 payload:
   id: GW12_desktop_is_optional
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 382b3d3a9de3de0f
+  uuid: d9804d5e-ec7c-5ab7-9e30-cfd47f3dd020

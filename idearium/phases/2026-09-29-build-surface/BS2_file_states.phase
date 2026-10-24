@@ -7,11 +7,11 @@ intent: null
 summary: BS2_file_states (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985003
+exported_at: 1792830595757
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985003
-lastSeenAt: 1792829985003
+firstSeenAt: 1792830595757
+lastSeenAt: 1792830595757
 fingerprint: null
 payload:
   id: BS2_file_states
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: f0c78c53f55cc0ca
+  uuid: cb056120-a40a-54e7-9635-36660962baf2

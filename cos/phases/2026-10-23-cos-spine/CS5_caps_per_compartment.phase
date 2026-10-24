@@ -7,11 +7,11 @@ intent: null
 summary: CS5_caps_per_compartment (backend) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026216
+exported_at: 1792830638673
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026216
-lastSeenAt: 1792830026216
+firstSeenAt: 1792830638673
+lastSeenAt: 1792830638673
 fingerprint: null
 payload:
   id: CS5_caps_per_compartment
@@ -29,3 +29,10 @@ payload:
     - MOD-CS-CAPS
   spec: cos/spec/cos-spine.spec
   graph: 60ce4faf0b415181
+  uuid: c1301119-3e56-562e-971f-e8fde77561a0
+  specLink:
+    how: declared
+    spec: cos/spec/cos-spine.spec
+    modules:
+      - id: MOD-CS-CAPS
+        uuid: nexus-cos-spine-caps-v1-0000-2026-1023-001

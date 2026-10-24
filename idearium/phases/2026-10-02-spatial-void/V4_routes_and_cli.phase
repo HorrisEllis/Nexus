@@ -7,11 +7,11 @@ intent: null
 summary: V4_routes_and_cli (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829989368
+exported_at: 1792830599981
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829989368
-lastSeenAt: 1792829989368
+firstSeenAt: 1792830599981
+lastSeenAt: 1792830599981
 fingerprint: null
 payload:
   id: V4_routes_and_cli
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: a9f04ac36a0b6f1c
+  uuid: 899e4b27-cbe4-53e5-8e7c-2e9e8524ddf3

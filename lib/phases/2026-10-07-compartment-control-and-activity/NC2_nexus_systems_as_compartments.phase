@@ -9,11 +9,11 @@ intent: null
 summary: NC2_nexus_systems_as_compartments (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829994582
+exported_at: 1792830605485
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829994582
-lastSeenAt: 1792829994582
+firstSeenAt: 1792830605485
+lastSeenAt: 1792830605485
 fingerprint: null
 payload:
   id: NC2_nexus_systems_as_compartments
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: bd7a70b20d504253
+  uuid: 1f81b81f-3805-5e6f-a752-3cb73cd0e940

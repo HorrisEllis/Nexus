@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830000472
+exported_at: 1792830611850
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000472
-lastSeenAt: 1792830000472
+firstSeenAt: 1792830611850
+lastSeenAt: 1792830611850
 fingerprint: null
 payload:
   for: LR0_the_shared_primitives_are_the_glyph
@@ -135,3 +135,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): LR1_each_component_in_the_language_that_fits'
+  phaseUuid: 2f3ed3f6-1430-5a54-bbfc-2d9b5f527eb9

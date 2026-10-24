@@ -7,11 +7,11 @@ intent: null
 summary: COSA12_vmware_window (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005851
+exported_at: 1792830617315
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005851
-lastSeenAt: 1792830005851
+firstSeenAt: 1792830617315
+lastSeenAt: 1792830617315
 fingerprint: null
 payload:
   id: COSA12_vmware_window
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: c348ed645b8dabb1
+  uuid: 8d2305d6-c11c-5463-922a-0a0acdd8e95e

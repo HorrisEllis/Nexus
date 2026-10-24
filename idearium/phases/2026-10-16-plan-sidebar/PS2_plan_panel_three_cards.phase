@@ -7,11 +7,11 @@ intent: null
 summary: PS2_plan_panel_three_cards (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830013342
+exported_at: 1792830625156
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830013342
-lastSeenAt: 1792830013342
+firstSeenAt: 1792830625156
+lastSeenAt: 1792830625156
 fingerprint: null
 payload:
   id: PS2_plan_panel_three_cards
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 0c8cdf906f861391
+  uuid: 5535ebfc-608e-56cf-86df-34bed23d0348

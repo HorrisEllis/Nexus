@@ -7,11 +7,11 @@ intent: null
 summary: SF6_addenda_view (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830008636
+exported_at: 1792830620255
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830008636
-lastSeenAt: 1792830008636
+firstSeenAt: 1792830620255
+lastSeenAt: 1792830620255
 fingerprint: null
 payload:
   id: SF6_addenda_view
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: d7b4036d0d6df1de
+  uuid: d8584af3-a6e6-586f-9b20-5355b1b0f27a

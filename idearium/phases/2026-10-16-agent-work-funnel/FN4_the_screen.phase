@@ -7,11 +7,11 @@ intent: null
 summary: FN4_the_screen (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830009418
+exported_at: 1792830621079
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009418
-lastSeenAt: 1792830009418
+firstSeenAt: 1792830621079
+lastSeenAt: 1792830621079
 fingerprint: null
 payload:
   id: FN4_the_screen
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: ebe40a77dd865050
+  uuid: cbc0348c-50d0-5ece-bebf-719febe14ef0

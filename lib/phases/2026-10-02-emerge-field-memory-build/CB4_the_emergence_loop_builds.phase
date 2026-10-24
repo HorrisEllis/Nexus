@@ -9,11 +9,11 @@ intent: null
 summary: CB4_the_emergence_loop_builds (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988457
+exported_at: 1792830599097
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988457
-lastSeenAt: 1792829988457
+firstSeenAt: 1792830599097
+lastSeenAt: 1792830599097
 fingerprint: null
 payload:
   id: CB4_the_emergence_loop_builds
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: f55b34562227851d
+  uuid: 652116dc-d249-516e-8691-ef921b0a99f9

@@ -9,11 +9,11 @@ intent: null
 summary: P14_per_system_living_gap_index (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976508
+exported_at: 1792830587119
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976508
-lastSeenAt: 1792829976508
+firstSeenAt: 1792830587119
+lastSeenAt: 1792830587119
 fingerprint: null
 payload:
   id: P14_per_system_living_gap_index
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 9458a22e955dc98a
+  uuid: 8b5d86dd-94a1-56cc-9b41-7d8e33c16cee

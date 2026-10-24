@@ -9,11 +9,11 @@ intent: null
 summary: AM8_lifeline_as_general_channel_and_reasoning_upgrade (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830027825
+exported_at: 1792830640239
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027825
-lastSeenAt: 1792830027825
+firstSeenAt: 1792830640239
+lastSeenAt: 1792830640239
 fingerprint: null
 payload:
   id: AM8_lifeline_as_general_channel_and_reasoning_upgrade
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 6413a4c688ff13df
+  uuid: 450fe61f-93d8-5936-a241-50eb268dfb60

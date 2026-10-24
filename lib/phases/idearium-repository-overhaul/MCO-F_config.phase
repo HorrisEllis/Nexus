@@ -7,11 +7,11 @@ intent: null
 summary: MCO-F_config (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830031753
+exported_at: 1792830644021
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830031753
-lastSeenAt: 1792830031753
+firstSeenAt: 1792830644021
+lastSeenAt: 1792830644021
 fingerprint: null
 payload:
   id: MCO-F_config
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 7292893fe836f4d3
+  uuid: a64b5113-123b-59b6-9969-f1a537f002a0

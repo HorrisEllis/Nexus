@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829973388
+exported_at: 1792830584036
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973388
-lastSeenAt: 1792829973388
+firstSeenAt: 1792830584036
+lastSeenAt: 1792830584036
 fingerprint: null
 payload:
   for: LM7_agent_mesh_intent_programming
@@ -46,3 +46,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4 · blocked by LM6_who_creates_contracts
       - 'depends on (1): LM6_who_creates_contracts · all upstream 4'
       - 'needed by (1): LM8_full_pipeline_wiring · finishing it unlocks LM8_full_pipeline_wiring'
+  phaseUuid: 529d925a-1b86-50f7-9f8c-3d19623eddce

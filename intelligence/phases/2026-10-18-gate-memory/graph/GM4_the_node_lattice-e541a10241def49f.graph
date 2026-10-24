@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830018091
+exported_at: 1792830630225
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830018091
-lastSeenAt: 1792830018091
+firstSeenAt: 1792830630225
+lastSeenAt: 1792830630225
 fingerprint: null
 payload:
   for: GM4_the_node_lattice
@@ -174,3 +174,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 6fa08322-42eb-5fd0-bdbf-11675081c5d1

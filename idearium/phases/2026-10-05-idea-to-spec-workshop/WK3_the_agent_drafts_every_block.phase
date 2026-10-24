@@ -9,11 +9,11 @@ intent: null
 summary: WK3_the_agent_drafts_every_block (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829993406
+exported_at: 1792830604253
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829993406
-lastSeenAt: 1792829993406
+firstSeenAt: 1792830604253
+lastSeenAt: 1792830604253
 fingerprint: null
 payload:
   id: WK3_the_agent_drafts_every_block
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 06035725e06b5b37
+  uuid: 1fb92d71-eab6-513d-927c-cbb2afcaa141

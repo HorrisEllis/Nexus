@@ -7,11 +7,11 @@ intent: null
 summary: SH1_shadow_space (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988468
+exported_at: 1792830599109
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988468
-lastSeenAt: 1792829988468
+firstSeenAt: 1792830599109
+lastSeenAt: 1792830599109
 fingerprint: null
 payload:
   id: SH1_shadow_space
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: f4d22958311863ce
+  uuid: f1a41a86-d25d-5954-acd4-0b2b2579c6a4

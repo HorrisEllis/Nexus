@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829985007
+exported_at: 1792830595761
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985007
-lastSeenAt: 1792829985007
+firstSeenAt: 1792830595761
+lastSeenAt: 1792830595761
 fingerprint: null
 payload:
   for: BS7_api
@@ -265,3 +265,4 @@ payload:
         needed by (4): BS8_files_ui, BS9_spec_and_phase_build_ui, BS10_settings_and_environment_ui,
         BS11_plan_panel · all downstream 5 · finishing it unlocks BS8_files_ui,
         BS9_spec_and_phase_build_ui, BS10_settings_and_environment_ui, BS11_plan_panel
+  phaseUuid: 6808e6a6-dbb2-5494-93c2-507834e63382

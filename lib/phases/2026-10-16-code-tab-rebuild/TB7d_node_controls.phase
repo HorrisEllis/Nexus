@@ -7,11 +7,11 @@ intent: null
 summary: TB7d_node_controls (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830010175
+exported_at: 1792830621910
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010175
-lastSeenAt: 1792830010175
+firstSeenAt: 1792830621910
+lastSeenAt: 1792830621910
 fingerprint: null
 payload:
   id: TB7d_node_controls
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 4f2be3f82aed75ef
+  uuid: 0e29657f-b55e-577e-9378-d92137f4decf

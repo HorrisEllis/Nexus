@@ -7,11 +7,11 @@ intent: null
 summary: UM3_richer_capture (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830030574
+exported_at: 1792830642890
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830030574
-lastSeenAt: 1792830030574
+firstSeenAt: 1792830642890
+lastSeenAt: 1792830642890
 fingerprint: null
 payload:
   id: UM3_richer_capture
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 9ad12f13bf921264
+  uuid: ab4ba57a-0943-5099-b622-14f8d4c6f26e

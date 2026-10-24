@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830005432
+exported_at: 1792830616873
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005432
-lastSeenAt: 1792830005432
+firstSeenAt: 1792830616873
+lastSeenAt: 1792830616873
 fingerprint: null
 payload:
   for: CE5_events
@@ -180,3 +180,4 @@ payload:
         needed by (3): CE7_ai_assisted_editing, CE8_the_cli_reads_the_surface, CE9_the_panels · all
         downstream 7 · finishing it unlocks CE7_ai_assisted_editing, CE8_the_cli_reads_the_surface,
         CE9_the_panels
+  phaseUuid: 065a9e80-6075-5c97-b97e-41f0ab230ad2

@@ -7,11 +7,11 @@ intent: null
 summary: 40 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830005849
+exported_at: 1792830617313
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005849
-lastSeenAt: 1792830005849
+firstSeenAt: 1792830617313
+lastSeenAt: 1792830617313
 fingerprint: null
 payload:
   for: COSA9_idearium_sync
@@ -313,3 +313,4 @@ payload:
       - >-
         needed by (3): COSA10_compartment_window, COSA11_nested_tree, COSA14_versionium_record · all
         downstream 4
+  phaseUuid: 5cf8fc9e-f895-589a-a936-0535f3e850e0

@@ -9,11 +9,11 @@ intent: null
 summary: CE1a_cos_answers_on_a_route (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830017326
+exported_at: 1792830629343
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017326
-lastSeenAt: 1792830017326
+firstSeenAt: 1792830629343
+lastSeenAt: 1792830629343
 fingerprint: null
 payload:
   id: CE1a_cos_answers_on_a_route
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 92e80a70fed03073
+  uuid: 399b0a59-710a-57b9-a9b9-a5d3bb8e2dda

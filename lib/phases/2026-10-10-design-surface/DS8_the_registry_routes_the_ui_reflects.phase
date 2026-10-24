@@ -9,11 +9,11 @@ intent: null
 summary: DS8_the_registry_routes_the_ui_reflects (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829998872
+exported_at: 1792830610177
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998872
-lastSeenAt: 1792829998872
+firstSeenAt: 1792830610177
+lastSeenAt: 1792830610177
 fingerprint: null
 payload:
   id: DS8_the_registry_routes_the_ui_reflects
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 9db061f88abf55a1
+  uuid: cceef213-42d0-581c-9685-c8d61880dbfd

@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829978159
+exported_at: 1792830588790
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978159
-lastSeenAt: 1792829978159
+firstSeenAt: 1792830588790
+lastSeenAt: 1792830588790
 fingerprint: null
 payload:
   for: P2_decide_D1_D2_D3
@@ -48,3 +48,4 @@ payload:
         needed by (2): P3_architect_canvas_onto_loom_registry, P6_idearium_build_authority · all
         downstream 4 · finishing it unlocks P3_architect_canvas_onto_loom_registry,
         P6_idearium_build_authority
+  phaseUuid: 456bc58f-c56b-552e-8edf-44d9baa80c85

@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830009418
+exported_at: 1792830621079
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009418
-lastSeenAt: 1792830009418
+firstSeenAt: 1792830621079
+lastSeenAt: 1792830621079
 fingerprint: null
 payload:
   for: FN4_the_screen
@@ -49,3 +49,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by FN1_every_door_goes_through_it
       - 'depends on (1): FN1_every_door_goes_through_it · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: cbc0348c-50d0-5ece-bebf-719febe14ef0

@@ -7,11 +7,11 @@ intent: null
 summary: P5_guardian_transport (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978964
+exported_at: 1792830589582
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978964
-lastSeenAt: 1792829978964
+firstSeenAt: 1792830589582
+lastSeenAt: 1792830589582
 fingerprint: null
 payload:
   id: P5_guardian_transport
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: ff368c143d948ffb
+  uuid: a031413f-5811-5418-a555-5c41576fe29b

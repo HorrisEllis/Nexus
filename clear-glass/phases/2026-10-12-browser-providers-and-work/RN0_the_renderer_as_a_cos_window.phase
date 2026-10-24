@@ -9,11 +9,11 @@ intent: null
 summary: RN0_the_renderer_as_a_cos_window (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001289
+exported_at: 1792830612702
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001289
-lastSeenAt: 1792830001289
+firstSeenAt: 1792830612702
+lastSeenAt: 1792830612702
 fingerprint: null
 payload:
   id: RN0_the_renderer_as_a_cos_window
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 64dedfdf7311d8ab
+  uuid: a7de887b-8525-508e-a6e6-f212e9e78e7a

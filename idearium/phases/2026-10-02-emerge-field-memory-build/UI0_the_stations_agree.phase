@@ -7,11 +7,11 @@ intent: null
 summary: UI0_the_stations_agree (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988412
+exported_at: 1792830599043
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988412
-lastSeenAt: 1792829988412
+firstSeenAt: 1792830599043
+lastSeenAt: 1792830599043
 fingerprint: null
 payload:
   id: UI0_the_stations_agree
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 70ddba11613a1584
+  uuid: 372d8a75-b766-5a24-a703-e118c7123f09

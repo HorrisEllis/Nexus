@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829970791
+exported_at: 1792830581336
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829970791
-lastSeenAt: 1792829970791
+firstSeenAt: 1792830581336
+lastSeenAt: 1792830581336
 fingerprint: null
 payload:
   for: SF14_wake_pipeline_real_architecture
@@ -127,3 +127,4 @@ payload:
       - >-
         needed by (1): SF15_wake_pipeline_real_bugs_fixed · finishing it unlocks
         SF15_wake_pipeline_real_bugs_fixed
+  phaseUuid: d536b00e-d9d6-50f0-a45c-ac770821ec89

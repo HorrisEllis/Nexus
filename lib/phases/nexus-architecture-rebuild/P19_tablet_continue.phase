@@ -7,11 +7,11 @@ intent: null
 summary: P19_tablet_continue (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032528
+exported_at: 1792830644790
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032528
-lastSeenAt: 1792830032528
+firstSeenAt: 1792830644790
+lastSeenAt: 1792830644790
 fingerprint: null
 payload:
   id: P19_tablet_continue
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: d79f4c355f96ff81
+  uuid: a4fee80c-bb87-5a64-92b1-21e4f0acc7bc

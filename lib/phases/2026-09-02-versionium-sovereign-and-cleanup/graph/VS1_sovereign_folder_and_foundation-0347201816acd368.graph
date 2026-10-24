@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829974790
+exported_at: 1792830585378
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974790
-lastSeenAt: 1792829974790
+firstSeenAt: 1792830585378
+lastSeenAt: 1792830585378
 fingerprint: null
 payload:
   for: VS1_sovereign_folder_and_foundation
@@ -179,3 +179,4 @@ payload:
         needed by (3): VS2_ring_buffer_and_causal_field, VS3_agent_chat_log_query,
         VS4_active_drift_enforcement · finishing it unlocks VS2_ring_buffer_and_causal_field,
         VS3_agent_chat_log_query, VS4_active_drift_enforcement
+  phaseUuid: 16f7f48e-47fe-5f70-b987-2c3f097f83da

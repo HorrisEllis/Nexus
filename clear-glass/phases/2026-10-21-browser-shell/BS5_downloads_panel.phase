@@ -7,11 +7,11 @@ intent: null
 summary: BS5_downloads_panel (surface) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023777
+exported_at: 1792830636213
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023777
-lastSeenAt: 1792830023777
+firstSeenAt: 1792830636213
+lastSeenAt: 1792830636213
 fingerprint: null
 payload:
   id: BS5_downloads_panel
@@ -28,3 +28,10 @@ payload:
     - MOD-BSH-DOWNLOADS
   spec: clear-glass/spec/browser-shell.spec
   graph: f349b0efcf5ca190
+  uuid: 82a13baf-925d-59a7-8b7a-9f3cf76f5176
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-DOWNLOADS
+        uuid: nexus-cg-bsh-downloads-v1-0000-2026-1021-001

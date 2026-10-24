@@ -9,11 +9,11 @@ intent: null
 summary: TX9_build_contract_file_dir (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028214
+exported_at: 1792830640624
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028214
-lastSeenAt: 1792830028214
+firstSeenAt: 1792830640624
+lastSeenAt: 1792830640624
 fingerprint: null
 payload:
   id: TX9_build_contract_file_dir
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 11f20eb5730c0d6f
+  uuid: 799f1f43-ab89-5422-9aeb-23bd10a2cf98

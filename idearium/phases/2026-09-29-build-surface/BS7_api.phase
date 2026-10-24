@@ -7,11 +7,11 @@ intent: null
 summary: BS7_api (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985007
+exported_at: 1792830595761
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985007
-lastSeenAt: 1792829985007
+firstSeenAt: 1792830595761
+lastSeenAt: 1792830595761
 fingerprint: null
 payload:
   id: BS7_api
@@ -34,3 +34,4 @@ payload:
   blocks: []
   spec: null
   graph: 557eb6b884c71f12
+  uuid: 6808e6a6-dbb2-5494-93c2-507834e63382

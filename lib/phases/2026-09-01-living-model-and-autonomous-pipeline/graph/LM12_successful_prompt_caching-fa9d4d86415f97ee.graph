@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829973393
+exported_at: 1792830584041
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973393
-lastSeenAt: 1792829973393
+firstSeenAt: 1792830584041
+lastSeenAt: 1792830584041
 fingerprint: null
 payload:
   for: LM12_successful_prompt_caching
@@ -37,3 +37,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: ee818df2-94ee-5806-b18f-a9c748972e97

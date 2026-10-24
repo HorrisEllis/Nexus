@@ -7,11 +7,11 @@ intent: null
 summary: 45 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830027822
+exported_at: 1792830640236
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027822
-lastSeenAt: 1792830027822
+firstSeenAt: 1792830640236
+lastSeenAt: 1792830640236
 fingerprint: null
 payload:
   for: AM6_perplexity_confidence_loop
@@ -315,3 +315,4 @@ payload:
         AM5_ambiguity_triggered_pull
       - 'depends on (2): AM1_per_agent_learned_model, AM5_ambiguity_triggered_pull'
       - 'needed by (0): —'
+  phaseUuid: a89b9aad-2554-5c2a-9012-62ffff0dc09c

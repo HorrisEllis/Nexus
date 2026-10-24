@@ -9,11 +9,11 @@ intent: null
 summary: UV1_versioned_ui_compartments (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988950
+exported_at: 1792830599576
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988950
-lastSeenAt: 1792829988950
+firstSeenAt: 1792830599576
+lastSeenAt: 1792830599576
 fingerprint: null
 payload:
   id: UV1_versioned_ui_compartments
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 6876460bb288b810
+  uuid: 0fe9c1b4-434f-533b-9759-241f57997541

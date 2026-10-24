@@ -7,11 +7,11 @@ intent: null
 summary: PV4_cli_and_ui (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987107
+exported_at: 1792830597813
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987107
-lastSeenAt: 1792829987107
+firstSeenAt: 1792830597813
+lastSeenAt: 1792830597813
 fingerprint: null
 payload:
   id: PV4_cli_and_ui
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 5720214899fed175
+  uuid: 7cb97b50-2bd2-5dd4-b1ca-e022a12bfb95

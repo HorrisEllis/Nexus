@@ -7,11 +7,11 @@ intent: null
 summary: GM1_the_gate_record (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830018089
+exported_at: 1792830630223
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830018089
-lastSeenAt: 1792830018089
+firstSeenAt: 1792830630223
+lastSeenAt: 1792830630223
 fingerprint: null
 payload:
   id: GM1_the_gate_record
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 7b2f7b374309d9af
+  uuid: 7265c3e2-7204-5675-a0b6-aef6fdf471d3

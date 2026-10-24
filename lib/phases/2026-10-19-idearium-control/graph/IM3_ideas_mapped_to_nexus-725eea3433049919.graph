@@ -7,11 +7,11 @@ intent: null
 summary: 10 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830019669
+exported_at: 1792830631966
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830019669
-lastSeenAt: 1792830019669
+firstSeenAt: 1792830631966
+lastSeenAt: 1792830631966
 fingerprint: null
 payload:
   for: IM3_ideas_mapped_to_nexus
@@ -109,3 +109,4 @@ payload:
       - 'depends on (1): IM1_ideas_and_notes_as_one · all upstream 2'
       - 'needed by (0): —'
       - 'same files as IM2_promote_to_phase with no order between them: lib/work-funnel.js'
+  phaseUuid: 549bd1a3-d58f-51f3-87b4-efeeb6253c0b

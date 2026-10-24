@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830000869
+exported_at: 1792830612260
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000869
-lastSeenAt: 1792830000869
+firstSeenAt: 1792830612260
+lastSeenAt: 1792830612260
 fingerprint: null
 payload:
   for: SN3_measured_by_rfr2
@@ -119,3 +119,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3 · blocked by SN2_run_in_parallel
       - 'depends on (1): SN2_run_in_parallel · all upstream 3'
       - 'needed by (1): SN4_benchmarks_teach · finishing it unlocks SN4_benchmarks_teach'
+  phaseUuid: a3709a1f-a1ec-54a8-aa74-04681b6c6ba2

@@ -7,11 +7,11 @@ intent: null
 summary: RR6_cortex_fitness_and_fluid_configs (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830035268
+exported_at: 1792830647474
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830035268
-lastSeenAt: 1792830035268
+firstSeenAt: 1792830647474
+lastSeenAt: 1792830647474
 fingerprint: null
 payload:
   id: RR6_cortex_fitness_and_fluid_configs
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 6e58e5b8e1945e9b
+  uuid: 8b25b37f-3b38-5a01-84b4-983beca929b8

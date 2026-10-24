@@ -9,11 +9,11 @@ intent: null
 summary: P34_nodes_in_the_lattice (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976529
+exported_at: 1792830587139
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976529
-lastSeenAt: 1792829976529
+firstSeenAt: 1792830587139
+lastSeenAt: 1792830587139
 fingerprint: null
 payload:
   id: P34_nodes_in_the_lattice
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 2e02ff3713ff6e57
+  uuid: 04dce024-9753-5896-83a7-ba4851606d04

@@ -7,11 +7,11 @@ intent: null
 summary: DS3_components_are_mods (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829998867
+exported_at: 1792830610173
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998867
-lastSeenAt: 1792829998867
+firstSeenAt: 1792830610173
+lastSeenAt: 1792830610173
 fingerprint: null
 payload:
   id: DS3_components_are_mods
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: bb967cfd589a6163
+  uuid: 70da60bb-71cc-597e-8ba5-80da0ec8204f

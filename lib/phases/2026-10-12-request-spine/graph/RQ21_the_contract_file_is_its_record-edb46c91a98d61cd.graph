@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 7 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830001733
+exported_at: 1792830613165
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001733
-lastSeenAt: 1792830001733
+firstSeenAt: 1792830613165
+lastSeenAt: 1792830613165
 fingerprint: null
 payload:
   for: RQ21_the_contract_file_is_its_record
@@ -270,3 +270,4 @@ payload:
       - >-
         needed by (3): RQ24_the_gate_transaction, RQ25_progress_is_evidence_not_activity,
         RQ27_the_reasoning_half_gets_its_home
+  phaseUuid: 2e85eddd-9c85-55f7-b67a-5cf8f05e3fec

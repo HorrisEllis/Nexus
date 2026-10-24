@@ -7,11 +7,11 @@ intent: null
 summary: MR13_finance_field (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007074
+exported_at: 1792830618626
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007074
-lastSeenAt: 1792830007074
+firstSeenAt: 1792830618626
+lastSeenAt: 1792830618626
 fingerprint: null
 payload:
   id: MR13_finance_field
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 3f667bc66188d985
+  uuid: 3b379440-cdce-51ad-b50d-612118fec896

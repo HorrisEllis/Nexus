@@ -7,11 +7,11 @@ intent: null
 summary: TB0_decisions (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830010166
+exported_at: 1792830621901
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010166
-lastSeenAt: 1792830010166
+firstSeenAt: 1792830621901
+lastSeenAt: 1792830621901
 fingerprint: null
 payload:
   id: TB0_decisions
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 9af0f76e404926bf
+  uuid: 82986071-85db-5d96-af68-76108d4e2078

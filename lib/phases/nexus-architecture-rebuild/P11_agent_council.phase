@@ -7,11 +7,11 @@ intent: null
 summary: P11_agent_council (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032522
+exported_at: 1792830644782
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032522
-lastSeenAt: 1792830032522
+firstSeenAt: 1792830644782
+lastSeenAt: 1792830644782
 fingerprint: null
 payload:
   id: P11_agent_council
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 41d3af5daf481e40
+  uuid: 0ca396b4-4396-5cc1-8ee4-77316b5e45f5

@@ -7,11 +7,11 @@ intent: null
 summary: CE1_the_run_state (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005428
+exported_at: 1792830616868
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005428
-lastSeenAt: 1792830005428
+firstSeenAt: 1792830616868
+lastSeenAt: 1792830616868
 fingerprint: null
 payload:
   id: CE1_the_run_state
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 48bba9cee37fd0d2
+  uuid: b1b274ec-1a6f-5dd5-a4b8-423531289d3a

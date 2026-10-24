@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830020938
+exported_at: 1792830633241
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020938
-lastSeenAt: 1792830020938
+firstSeenAt: 1792830633241
+lastSeenAt: 1792830633241
 fingerprint: null
 payload:
   for: SET2_autobuild_settings_ui
@@ -56,3 +56,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 6 · blocked by SET1_autobuild_config_and_command
       - 'depends on (1): SET1_autobuild_config_and_command · all upstream 9'
       - 'needed by (0): —'
+  phaseUuid: 4d1ca78e-2cf5-5af4-a32c-311981903900

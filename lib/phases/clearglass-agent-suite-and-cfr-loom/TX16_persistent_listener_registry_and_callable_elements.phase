@@ -9,11 +9,11 @@ intent: null
 summary: TX16_persistent_listener_registry_and_callable_elements (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028220
+exported_at: 1792830640629
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028220
-lastSeenAt: 1792830028220
+firstSeenAt: 1792830640629
+lastSeenAt: 1792830640629
 fingerprint: null
 payload:
   id: TX16_persistent_listener_registry_and_callable_elements
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 22078f9597907db9
+  uuid: 9383c612-d944-5097-a8ea-6ed5a2d3a024

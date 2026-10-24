@@ -9,11 +9,11 @@ intent: null
 summary: CF1_cfr_improved_with_rfr2 (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988420
+exported_at: 1792830599052
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988420
-lastSeenAt: 1792829988420
+firstSeenAt: 1792830599052
+lastSeenAt: 1792830599052
 fingerprint: null
 payload:
   id: CF1_cfr_improved_with_rfr2
@@ -35,3 +35,4 @@ payload:
   blocks: []
   spec: null
   graph: f185d6cfdfa80ada
+  uuid: affcba9f-6eb9-5c56-854b-03caf1404e07

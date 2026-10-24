@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829973383
+exported_at: 1792830584030
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973383
-lastSeenAt: 1792829973383
+firstSeenAt: 1792830584030
+lastSeenAt: 1792830584030
 fingerprint: null
 payload:
   for: LM2_registry_as_hub_with_watchdog
@@ -65,3 +65,4 @@ payload:
         needed by (3): LM3_interaction_contract_wired_to_registry, LM14_components_store,
         LM25_atlas_living_update · all downstream 7 · finishing it unlocks
         LM3_interaction_contract_wired_to_registry
+  phaseUuid: ab6e6f74-1588-5ead-943d-6b254347ae3f

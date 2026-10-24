@@ -7,11 +7,11 @@ intent: null
 summary: SR6_per_output_build_surface (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974340
+exported_at: 1792830584932
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974340
-lastSeenAt: 1792829974340
+firstSeenAt: 1792830584932
+lastSeenAt: 1792830584932
 fingerprint: null
 payload:
   id: SR6_per_output_build_surface
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 67b0a4481b1bbd4f
+  uuid: 2280f876-5df1-5915-b8a1-4ad5cc453eb1

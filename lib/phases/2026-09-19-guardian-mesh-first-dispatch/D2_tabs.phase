@@ -7,11 +7,11 @@ intent: null
 summary: D2_tabs (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978966
+exported_at: 1792830589584
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978966
-lastSeenAt: 1792829978966
+firstSeenAt: 1792830589584
+lastSeenAt: 1792830589584
 fingerprint: null
 payload:
   id: D2_tabs
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 93378b0bd870d7d1
+  uuid: 1b3d3423-5ef6-5a73-b296-5b5cd422ed6c

@@ -7,11 +7,11 @@ intent: null
 summary: CA1_status_report (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028973
+exported_at: 1792830641379
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028973
-lastSeenAt: 1792830028973
+firstSeenAt: 1792830641379
+lastSeenAt: 1792830641379
 fingerprint: null
 payload:
   id: CA1_status_report
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 12cbbffc8d376eab
+  uuid: 14b4d635-bb0e-575c-8c26-da9fc83c003d

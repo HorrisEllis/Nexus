@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830021765
+exported_at: 1792830634099
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021765
-lastSeenAt: 1792830021765
+firstSeenAt: 1792830634099
+lastSeenAt: 1792830634099
 fingerprint: null
 payload:
   for: EW1_evidence_record_and_weights
@@ -74,3 +74,4 @@ payload:
         needed by (3): CF1_confidence_from_evidence, RA1_root_cause_through_provenance,
         XD1_cross_domain_verification · all downstream 9 · finishing it unlocks
         CF1_confidence_from_evidence
+  phaseUuid: bd5a46d4-1326-5a90-8a4a-a86e78fdf092

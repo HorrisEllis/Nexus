@@ -7,11 +7,11 @@ intent: null
 summary: W4_navigation (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829986651
+exported_at: 1792830597351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829986651
-lastSeenAt: 1792829986651
+firstSeenAt: 1792830597351
+lastSeenAt: 1792830597351
 fingerprint: null
 payload:
   id: W4_navigation
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 5dd9ebc74f199860
+  uuid: 68eca463-5136-5e79-8076-9eec6bd3c3b5

@@ -7,11 +7,11 @@ intent: null
 summary: P7_continuous_nerve_dom_to_ollama (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830029355
+exported_at: 1792830641756
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830029355
-lastSeenAt: 1792830029355
+firstSeenAt: 1792830641756
+lastSeenAt: 1792830641756
 fingerprint: null
 payload:
   id: P7_continuous_nerve_dom_to_ollama
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 40f6a3bac3b56676
+  uuid: 5f5b0f11-263a-5b6c-851b-dc3fb8d2f6bf

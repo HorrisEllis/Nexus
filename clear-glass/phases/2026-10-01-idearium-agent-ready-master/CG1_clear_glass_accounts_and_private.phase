@@ -9,11 +9,11 @@ intent: null
 summary: CG1_clear_glass_accounts_and_private (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987096
+exported_at: 1792830597803
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987096
-lastSeenAt: 1792829987096
+firstSeenAt: 1792830597803
+lastSeenAt: 1792830597803
 fingerprint: null
 payload:
   id: CG1_clear_glass_accounts_and_private
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: adf380e049b8562f
+  uuid: 0df8599d-efad-517e-a58e-6a784fdafd62

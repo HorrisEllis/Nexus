@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830021770
+exported_at: 1792830634102
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021770
-lastSeenAt: 1792830021770
+firstSeenAt: 1792830634102
+lastSeenAt: 1792830634102
 fingerprint: null
 payload:
   for: BW1_borrowing
@@ -72,3 +72,4 @@ payload:
         XD1_cross_domain_verification, CY2_invariants_are_crystals
       - 'depends on (2): XD1_cross_domain_verification, CY2_invariants_are_crystals · all upstream 25'
       - 'needed by (0): —'
+  phaseUuid: bb0caa6b-97d7-581a-80f6-a25ba9d705a2

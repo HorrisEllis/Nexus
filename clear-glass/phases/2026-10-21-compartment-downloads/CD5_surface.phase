@@ -7,11 +7,11 @@ intent: null
 summary: CD5_surface (surface) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830024196
+exported_at: 1792830636645
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830024196
-lastSeenAt: 1792830024196
+firstSeenAt: 1792830636645
+lastSeenAt: 1792830636645
 fingerprint: null
 payload:
   id: CD5_surface
@@ -31,3 +31,10 @@ payload:
     - MOD-CDL-SURFACE
   spec: clear-glass/spec/compartment-downloads.spec
   graph: 925d52606c535ce8
+  uuid: 7f1756b0-c242-5fec-9bf9-ee9000bcbdfc
+  specLink:
+    how: declared
+    spec: clear-glass/spec/compartment-downloads.spec
+    modules:
+      - id: MOD-CDL-SURFACE
+        uuid: nexus-cg-cdl-surface-v1-0000-2026-1021-001

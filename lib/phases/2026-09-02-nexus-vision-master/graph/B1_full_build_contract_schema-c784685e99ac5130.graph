@@ -7,11 +7,11 @@ intent: null
 summary: 32 node(s), 9 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829974282
+exported_at: 1792830584866
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974282
-lastSeenAt: 1792829974282
+firstSeenAt: 1792830584866
+lastSeenAt: 1792830584866
 fingerprint: null
 payload:
   for: B1_full_build_contract_schema
@@ -318,3 +318,4 @@ payload:
         SR8_deterministic_claude_replication, SR9_autonomous_self_build_end_state,
         SR10_iterative_prompt_optimization_loop
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+  phaseUuid: d35a6b45-ec2c-53b9-827f-21abaabaae81

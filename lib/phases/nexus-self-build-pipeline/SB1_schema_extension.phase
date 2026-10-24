@@ -7,11 +7,11 @@ intent: null
 summary: SB1_schema_extension (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034491
+exported_at: 1792830646696
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034491
-lastSeenAt: 1792830034491
+firstSeenAt: 1792830646696
+lastSeenAt: 1792830646696
 fingerprint: null
 payload:
   id: SB1_schema_extension
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 72f0c5f1efbfffb5
+  uuid: 01bc9998-430f-556b-9db4-85820dd562f0

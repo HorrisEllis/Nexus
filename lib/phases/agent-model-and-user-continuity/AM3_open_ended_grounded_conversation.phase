@@ -9,11 +9,11 @@ intent: null
 summary: AM3_open_ended_grounded_conversation (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830027818
+exported_at: 1792830640231
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027818
-lastSeenAt: 1792830027818
+firstSeenAt: 1792830640231
+lastSeenAt: 1792830640231
 fingerprint: null
 payload:
   id: AM3_open_ended_grounded_conversation
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 9e0ad2952393ae9c
+  uuid: 0e4758d2-65a5-53a6-9266-b864472dc638

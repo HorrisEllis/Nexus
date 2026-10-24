@@ -7,11 +7,11 @@ intent: null
 summary: SD11_the_desktop_inside_idearium (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999655
+exported_at: 1792830610985
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999655
-lastSeenAt: 1792829999655
+firstSeenAt: 1792830610985
+lastSeenAt: 1792830610985
 fingerprint: null
 payload:
   id: SD11_the_desktop_inside_idearium
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 355bfb9bb8b0c1e5
+  uuid: 0190f5e0-b4ec-501a-952a-45e0bef25b3f

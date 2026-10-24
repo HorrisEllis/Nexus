@@ -7,11 +7,11 @@ intent: null
 summary: P14_emergence_axioms_endstate (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032525
+exported_at: 1792830644786
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032525
-lastSeenAt: 1792830032525
+firstSeenAt: 1792830644786
+lastSeenAt: 1792830644786
 fingerprint: null
 payload:
   id: P14_emergence_axioms_endstate
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 89ce52316b56eaf6
+  uuid: c0bf947d-b616-55d8-b0f5-2bff7e640ec5

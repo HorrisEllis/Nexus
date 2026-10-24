@@ -7,11 +7,11 @@ intent: null
 summary: CB1_cfr_build_logic (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988451
+exported_at: 1792830599091
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988451
-lastSeenAt: 1792829988451
+firstSeenAt: 1792830599091
+lastSeenAt: 1792830599091
 fingerprint: null
 payload:
   id: CB1_cfr_build_logic
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 5bec749cb555f4e2
+  uuid: e9432be0-8c8e-53ef-a47f-ca573b3ef5b6

@@ -7,11 +7,11 @@ intent: null
 summary: EM2_warp_his_own (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988417
+exported_at: 1792830599049
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988417
-lastSeenAt: 1792829988417
+firstSeenAt: 1792830599049
+lastSeenAt: 1792830599049
 fingerprint: null
 payload:
   id: EM2_warp_his_own
@@ -34,3 +34,4 @@ payload:
   blocks: []
   spec: null
   graph: 43449bdeda43d0e1
+  uuid: a577c5e1-d886-535c-915c-e5ca99443cff

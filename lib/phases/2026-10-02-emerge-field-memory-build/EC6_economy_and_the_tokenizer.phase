@@ -9,11 +9,11 @@ intent: null
 summary: EC6_economy_and_the_tokenizer (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988465
+exported_at: 1792830599107
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988465
-lastSeenAt: 1792829988465
+firstSeenAt: 1792830599107
+lastSeenAt: 1792830599107
 fingerprint: null
 payload:
   id: EC6_economy_and_the_tokenizer
@@ -33,3 +33,4 @@ payload:
   blocks: []
   spec: null
   graph: 8672a4aa6309a394
+  uuid: 8e7f57d7-7d4a-5417-9b89-305b895a2117

@@ -9,11 +9,11 @@ intent: null
 summary: BR1_bricks_on_every_path (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007475
+exported_at: 1792830619045
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007475
-lastSeenAt: 1792830007475
+firstSeenAt: 1792830619045
+lastSeenAt: 1792830619045
 fingerprint: null
 payload:
   id: BR1_bricks_on_every_path
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 7f1e4cefe519e0ea
+  uuid: f8b3a51d-9ac8-5d10-a15b-522d64f07840

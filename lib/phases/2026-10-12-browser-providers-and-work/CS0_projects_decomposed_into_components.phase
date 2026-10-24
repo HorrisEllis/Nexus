@@ -9,11 +9,11 @@ intent: null
 summary: CS0_projects_decomposed_into_components (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001290
+exported_at: 1792830612704
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001290
-lastSeenAt: 1792830001290
+firstSeenAt: 1792830612704
+lastSeenAt: 1792830612704
 fingerprint: null
 payload:
   id: CS0_projects_decomposed_into_components
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: c626933217b39e72
+  uuid: e42432fc-1479-516a-b746-aaaed3866ef4

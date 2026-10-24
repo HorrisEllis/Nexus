@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 6 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829976959
+exported_at: 1792830587550
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976959
-lastSeenAt: 1792829976959
+firstSeenAt: 1792830587550
+lastSeenAt: 1792830587550
 fingerprint: null
 payload:
   for: MCO8_wire_the_honest_subset
@@ -268,3 +268,4 @@ payload:
       - >-
         needed by (1): MCO12_architect_remaining_routes · finishing it unlocks
         MCO12_architect_remaining_routes
+  phaseUuid: 4f74c75e-39fb-555d-a6f4-7094e12d50a1

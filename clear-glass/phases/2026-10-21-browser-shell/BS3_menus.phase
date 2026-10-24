@@ -7,11 +7,11 @@ intent: null
 summary: BS3_menus (surface) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023775
+exported_at: 1792830636212
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023775
-lastSeenAt: 1792830023775
+firstSeenAt: 1792830636212
+lastSeenAt: 1792830636212
 fingerprint: null
 payload:
   id: BS3_menus
@@ -28,3 +28,10 @@ payload:
     - MOD-BSH-MENUS
   spec: clear-glass/spec/browser-shell.spec
   graph: d4a6503f3fdadee9
+  uuid: 256cbd5c-337f-5e64-b82a-c954a86d654f
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-MENUS
+        uuid: nexus-cg-bsh-menus-v1-0000-2026-1021-001

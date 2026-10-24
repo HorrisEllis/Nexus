@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829978560
+exported_at: 1792830589184
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978560
-lastSeenAt: 1792829978560
+firstSeenAt: 1792830589184
+lastSeenAt: 1792830589184
 fingerprint: null
 payload:
   for: D4_names
@@ -43,3 +43,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): P2_intelligence_gains_routes · all downstream 5'
+  phaseUuid: 1ec965ad-b645-5a2f-9bef-a9553952a30d

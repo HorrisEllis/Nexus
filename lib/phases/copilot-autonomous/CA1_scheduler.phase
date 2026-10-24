@@ -7,11 +7,11 @@ intent: null
 summary: CA1_scheduler (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028599
+exported_at: 1792830640999
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028599
-lastSeenAt: 1792830028599
+firstSeenAt: 1792830640999
+lastSeenAt: 1792830640999
 fingerprint: null
 payload:
   id: CA1_scheduler
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: f646093248081abd
+  uuid: f8eb759b-becb-5f78-8a3b-6c1dc0d39cb6

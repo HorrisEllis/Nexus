@@ -7,11 +7,11 @@ intent: null
 summary: CON9_configure (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830010564
+exported_at: 1792830622323
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010564
-lastSeenAt: 1792830010564
+firstSeenAt: 1792830622323
+lastSeenAt: 1792830622323
 fingerprint: null
 payload:
   id: CON9_configure
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: f5b6397fdf950de4
+  uuid: 5bd2f53f-8c21-53e9-b00b-53ba7bd93774

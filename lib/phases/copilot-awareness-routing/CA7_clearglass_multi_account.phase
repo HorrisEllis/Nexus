@@ -7,11 +7,11 @@ intent: null
 summary: CA7_clearglass_multi_account (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028977
+exported_at: 1792830641383
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028977
-lastSeenAt: 1792830028977
+firstSeenAt: 1792830641383
+lastSeenAt: 1792830641383
 fingerprint: null
 payload:
   id: CA7_clearglass_multi_account
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: b0485977e40f8662
+  uuid: c69e624e-28cf-5814-96ba-acf2106c57c3

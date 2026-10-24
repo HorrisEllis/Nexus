@@ -7,11 +7,11 @@ intent: null
 summary: PF0_internal_vs_client_facing (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005030
+exported_at: 1792830616444
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005030
-lastSeenAt: 1792830005030
+firstSeenAt: 1792830616444
+lastSeenAt: 1792830616444
 fingerprint: null
 payload:
   id: PF0_internal_vs_client_facing
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: acf5a4c8bb5a8d1d
+  uuid: 71d075fd-53c1-5dbb-a7e4-182f3e2c6afc

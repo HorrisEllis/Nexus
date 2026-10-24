@@ -9,11 +9,11 @@ intent: null
 summary: NC2_nested_compartment_support (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830033723
+exported_at: 1792830645917
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830033723
-lastSeenAt: 1792830033723
+firstSeenAt: 1792830645917
+lastSeenAt: 1792830645917
 fingerprint: null
 payload:
   id: NC2_nested_compartment_support
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 0b4000d92371184e
+  uuid: 0fd99fef-405d-5b4a-a034-216302669424

@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829972957
+exported_at: 1792830583611
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972957
-lastSeenAt: 1792829972957
+firstSeenAt: 1792830583611
+lastSeenAt: 1792830583611
 fingerprint: null
 payload:
   for: IC3_intention_taxonomy_per_system
@@ -41,3 +41,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3 · ready
       - 'depends on (1): RR4_governed_handshake_on_handoff · all upstream 3'
       - 'needed by (0): —'
+  phaseUuid: 1c749578-d77f-5cc7-aaf9-86af51d91441

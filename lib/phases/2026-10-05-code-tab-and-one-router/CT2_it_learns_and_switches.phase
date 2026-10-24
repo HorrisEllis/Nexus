@@ -7,11 +7,11 @@ intent: null
 summary: CT2_it_learns_and_switches (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991868
+exported_at: 1792830602552
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991868
-lastSeenAt: 1792829991868
+firstSeenAt: 1792830602552
+lastSeenAt: 1792830602552
 fingerprint: null
 payload:
   id: CT2_it_learns_and_switches
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 5b7e5862f894dcd4
+  uuid: 959878f0-c06d-5f9e-b627-d77b0050ca3a

@@ -7,11 +7,11 @@ intent: null
 summary: BL27_agent_suite_consolidation (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971273
+exported_at: 1792830581841
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971273
-lastSeenAt: 1792829971273
+firstSeenAt: 1792830581841
+lastSeenAt: 1792830581841
 fingerprint: null
 payload:
   id: BL27_agent_suite_consolidation
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 5312857a8c56f41a
+  uuid: 4ebdf8f0-3283-5089-94d3-da89c1ea1f31

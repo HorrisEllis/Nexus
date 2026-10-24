@@ -9,11 +9,11 @@ intent: null
 summary: TP1_promote_to_spec_templates (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987118
+exported_at: 1792830597824
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987118
-lastSeenAt: 1792829987118
+firstSeenAt: 1792830597824
+lastSeenAt: 1792830597824
 fingerprint: null
 payload:
   id: TP1_promote_to_spec_templates
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 6373324428f83107
+  uuid: d9a62c28-cbe2-5618-8121-edbf8873ab15

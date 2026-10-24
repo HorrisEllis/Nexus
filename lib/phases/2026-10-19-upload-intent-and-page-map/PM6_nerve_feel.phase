@@ -7,11 +7,11 @@ intent: null
 summary: PM6_nerve_feel (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830021331
+exported_at: 1792830633686
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021331
-lastSeenAt: 1792830021331
+firstSeenAt: 1792830633686
+lastSeenAt: 1792830633686
 fingerprint: null
 payload:
   id: PM6_nerve_feel
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 539b63300c679ad5
+  uuid: c6a4b0d4-d02c-522b-b622-7132b218cee9

@@ -7,11 +7,11 @@ intent: null
 summary: P12_fault_logging_first_class (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032523
+exported_at: 1792830644784
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032523
-lastSeenAt: 1792830032523
+firstSeenAt: 1792830644784
+lastSeenAt: 1792830644784
 fingerprint: null
 payload:
   id: P12_fault_logging_first_class
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 294480e2df7ebd14
+  uuid: 121edcc2-4916-5070-92a0-04117e033172

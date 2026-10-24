@@ -7,11 +7,11 @@ intent: null
 summary: SS1_system_store_adoption (library) — 20 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020474
+exported_at: 1792830632803
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020474
-lastSeenAt: 1792830020474
+firstSeenAt: 1792830632803
+lastSeenAt: 1792830632803
 fingerprint: null
 payload:
   id: SS1_system_store_adoption
@@ -47,3 +47,4 @@ payload:
   blocks: []
   spec: null
   graph: d78715b3b21e685b
+  uuid: 998d9258-613e-569b-9801-4ee94e0eb33f

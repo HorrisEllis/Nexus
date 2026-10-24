@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829985446
+exported_at: 1792830596181
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985446
-lastSeenAt: 1792829985446
+firstSeenAt: 1792830596181
+lastSeenAt: 1792830596181
 fingerprint: null
 payload:
   for: N23_ollama_first_build_then_agent_review
@@ -252,3 +252,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 6
       - 'depends on (1): N21_no_empty_generation_event_gates · all upstream 8'
       - 'needed by (0): —'
+  phaseUuid: 1edbfe1d-ed20-5ad0-90da-fe8539f57150

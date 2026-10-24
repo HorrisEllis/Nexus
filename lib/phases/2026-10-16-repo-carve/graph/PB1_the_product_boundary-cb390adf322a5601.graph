@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830014480
+exported_at: 1792830626346
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830014480
-lastSeenAt: 1792830014480
+firstSeenAt: 1792830626346
+lastSeenAt: 1792830626346
 fingerprint: null
 payload:
   for: PB1_the_product_boundary
@@ -237,3 +237,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by CV2_untangle_with_rf0
       - 'depends on (1): CV2_untangle_with_rf0 · all upstream 2'
       - 'needed by (1): FR4_stands_alone'
+  phaseUuid: 6ffbf686-af6c-564e-9098-64d9e4944b87

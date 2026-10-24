@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829998867
+exported_at: 1792830610173
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998867
-lastSeenAt: 1792829998867
+firstSeenAt: 1792830610173
+lastSeenAt: 1792830610173
 fingerprint: null
 payload:
   for: DS3_components_are_mods
@@ -56,3 +56,4 @@ payload:
       - >-
         same files as DS7_tools_are_mods with no order between them:
         eravos/ui/runtime/mod-factory.js
+  phaseUuid: 70da60bb-71cc-597e-8ba5-80da0ec8204f

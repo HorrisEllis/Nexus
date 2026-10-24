@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830032952
+exported_at: 1792830645174
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032952
-lastSeenAt: 1792830032952
+firstSeenAt: 1792830645174
+lastSeenAt: 1792830645174
 fingerprint: null
 payload:
   for: P5_copilot_dynamic_and_user_aware
@@ -154,3 +154,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4
       - 'depends on (1): P4_copilot_awareness · all upstream 4'
       - 'needed by (0): —'
+  phaseUuid: 9dbc4fa1-4e21-54f5-aa1a-980e29085944

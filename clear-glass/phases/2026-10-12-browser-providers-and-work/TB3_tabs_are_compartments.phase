@@ -9,11 +9,11 @@ intent: null
 summary: TB3_tabs_are_compartments (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001258
+exported_at: 1792830612670
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001258
-lastSeenAt: 1792830001258
+firstSeenAt: 1792830612670
+lastSeenAt: 1792830612670
 fingerprint: null
 payload:
   id: TB3_tabs_are_compartments
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 91b6321036f635ee
+  uuid: b878505a-e989-5827-b52b-3df32fe85be9

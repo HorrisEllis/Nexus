@@ -7,11 +7,11 @@ intent: null
 summary: EC2_gate (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985875
+exported_at: 1792830596581
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985875
-lastSeenAt: 1792829985875
+firstSeenAt: 1792830596581
+lastSeenAt: 1792830596581
 fingerprint: null
 payload:
   id: EC2_gate
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 5b5011336adda021
+  uuid: 7fa01920-a65a-580e-87a6-7e58f03bd56d

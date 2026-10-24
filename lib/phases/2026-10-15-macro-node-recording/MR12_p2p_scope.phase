@@ -7,11 +7,11 @@ intent: null
 summary: MR12_p2p_scope (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007073
+exported_at: 1792830618626
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007073
-lastSeenAt: 1792830007073
+firstSeenAt: 1792830618626
+lastSeenAt: 1792830618626
 fingerprint: null
 payload:
   id: MR12_p2p_scope
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 29735e78e58d0dd7
+  uuid: 64b331ea-c976-57d2-9bd3-763d9f42dc52

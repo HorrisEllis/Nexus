@@ -9,11 +9,11 @@ intent: null
 summary: CX0_context_from_dependencies (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002961
+exported_at: 1792830614349
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002961
-lastSeenAt: 1792830002961
+firstSeenAt: 1792830614349
+lastSeenAt: 1792830614349
 fingerprint: null
 payload:
   id: CX0_context_from_dependencies
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: dbe7d50a20a425b3
+  uuid: 31bd2c05-ccc1-527b-9309-fb58d4a3c29c

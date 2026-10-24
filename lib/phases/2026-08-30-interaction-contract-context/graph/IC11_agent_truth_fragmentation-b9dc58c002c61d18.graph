@@ -7,11 +7,11 @@ intent: null
 summary: 32 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829972962
+exported_at: 1792830583616
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972962
-lastSeenAt: 1792829972962
+firstSeenAt: 1792830583616
+lastSeenAt: 1792830583616
 fingerprint: null
 payload:
   for: IC11_agent_truth_fragmentation
@@ -288,3 +288,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (1): IC13_agent_mesh_chat_index · finishing it unlocks IC13_agent_mesh_chat_index'
+  phaseUuid: c464b72d-fe32-50ce-9c57-534fdb162690

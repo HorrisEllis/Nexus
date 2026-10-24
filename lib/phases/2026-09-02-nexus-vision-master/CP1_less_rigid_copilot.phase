@@ -7,11 +7,11 @@ intent: null
 summary: CP1_less_rigid_copilot (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974328
+exported_at: 1792830584914
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974328
-lastSeenAt: 1792829974328
+firstSeenAt: 1792830584914
+lastSeenAt: 1792830584914
 fingerprint: null
 payload:
   id: CP1_less_rigid_copilot
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: ce68f1c10420ee04
+  uuid: d629551a-870b-5317-a0c0-eb869247cfd7

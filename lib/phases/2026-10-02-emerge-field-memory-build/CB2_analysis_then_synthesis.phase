@@ -9,11 +9,11 @@ intent: null
 summary: CB2_analysis_then_synthesis (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988453
+exported_at: 1792830599093
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988453
-lastSeenAt: 1792829988453
+firstSeenAt: 1792830599093
+lastSeenAt: 1792830599093
 fingerprint: null
 payload:
   id: CB2_analysis_then_synthesis
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 6526c6e29a6f1882
+  uuid: 400b7c70-50e8-5686-b912-31e6979503ca

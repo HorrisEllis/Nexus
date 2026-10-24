@@ -7,11 +7,11 @@ intent: null
 summary: N2_types_and_gates (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985421
+exported_at: 1792830596158
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985421
-lastSeenAt: 1792829985421
+firstSeenAt: 1792830596158
+lastSeenAt: 1792830596158
 fingerprint: null
 payload:
   id: N2_types_and_gates
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 5e4c8e5f9b3fa871
+  uuid: 9abef316-281a-5831-8983-3d7a970dae61

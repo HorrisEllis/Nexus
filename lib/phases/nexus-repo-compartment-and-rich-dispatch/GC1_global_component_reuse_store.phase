@@ -9,11 +9,11 @@ intent: null
 summary: GC1_global_component_reuse_store (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830033725
+exported_at: 1792830645919
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830033725
-lastSeenAt: 1792830033725
+firstSeenAt: 1792830645919
+lastSeenAt: 1792830645919
 fingerprint: null
 payload:
   id: GC1_global_component_reuse_store
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 7caeeeea63576bfe
+  uuid: 9fde6a10-1342-540b-ae73-a9f4a62c1804

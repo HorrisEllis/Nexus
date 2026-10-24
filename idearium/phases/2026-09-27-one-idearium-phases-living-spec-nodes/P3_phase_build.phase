@@ -9,11 +9,11 @@ intent: null
 summary: P3_phase_build (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983315
+exported_at: 1792830594108
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983315
-lastSeenAt: 1792829983315
+firstSeenAt: 1792830594108
+lastSeenAt: 1792830594108
 fingerprint: null
 payload:
   id: P3_phase_build
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: bb6a1484090698da
+  uuid: 626aeda1-1bfd-5526-bd00-ad734e4b494a

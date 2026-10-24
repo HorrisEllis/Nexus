@@ -9,11 +9,11 @@ intent: null
 summary: LM8_full_pipeline_wiring (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829973389
+exported_at: 1792830584037
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973389
-lastSeenAt: 1792829973389
+firstSeenAt: 1792830584037
+lastSeenAt: 1792830584037
 fingerprint: null
 payload:
   id: LM8_full_pipeline_wiring
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: b48e3d072c5de953
+  uuid: 80db6fc3-0784-52b6-ab5a-62800a6abd94

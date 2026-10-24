@@ -9,11 +9,11 @@ intent: null
 summary: P38_every_graph_has_its_route_command_and_node (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976533
+exported_at: 1792830587144
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976533
-lastSeenAt: 1792829976533
+firstSeenAt: 1792830587144
+lastSeenAt: 1792830587144
 fingerprint: null
 payload:
   id: P38_every_graph_has_its_route_command_and_node
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: ba638bb548c28c0d
+  uuid: 1e73773c-5bdd-5be6-a756-8a9b70fdb286

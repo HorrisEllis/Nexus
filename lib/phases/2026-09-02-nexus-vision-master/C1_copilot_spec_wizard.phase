@@ -7,11 +7,11 @@ intent: null
 summary: C1_copilot_spec_wizard (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974285
+exported_at: 1792830584870
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974285
-lastSeenAt: 1792829974285
+firstSeenAt: 1792830584870
+lastSeenAt: 1792830584870
 fingerprint: null
 payload:
   id: C1_copilot_spec_wizard
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: df6cd6e5900b6ad4
+  uuid: 46973e48-223e-544c-b457-3d1ae34278a9

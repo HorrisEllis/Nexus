@@ -9,11 +9,11 @@ intent: null
 summary: AM11_per_agent_tasks_automation (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974302
+exported_at: 1792830584885
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974302
-lastSeenAt: 1792829974302
+firstSeenAt: 1792830584885
+lastSeenAt: 1792830584885
 fingerprint: null
 payload:
   id: AM11_per_agent_tasks_automation
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 7883cb15f206e4d3
+  uuid: 1dbfce1a-db0a-5d67-b67b-af4f6e3b5558

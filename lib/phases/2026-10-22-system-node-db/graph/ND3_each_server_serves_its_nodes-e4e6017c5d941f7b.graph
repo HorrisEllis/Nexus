@@ -7,11 +7,11 @@ intent: null
 summary: 37 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830025826
+exported_at: 1792830638285
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025826
-lastSeenAt: 1792830025826
+firstSeenAt: 1792830638285
+lastSeenAt: 1792830638285
 fingerprint: null
 payload:
   for: ND3_each_server_serves_its_nodes
@@ -297,3 +297,4 @@ payload:
         ND_D2_the_owner_writes
       - 'depends on (2): ND2_one_node_route_for_every_system, ND_D2_the_owner_writes · all upstream 6'
       - 'needed by (1): ND4_commands_and_capabilities_from_the_schemas · all downstream 3'
+  phaseUuid: 63db8968-48e6-55d8-bd62-c7e3ec81de6f

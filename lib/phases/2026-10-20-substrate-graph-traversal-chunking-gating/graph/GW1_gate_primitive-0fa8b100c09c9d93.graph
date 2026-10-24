@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830022175
+exported_at: 1792830634524
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022175
-lastSeenAt: 1792830022175
+firstSeenAt: 1792830634524
+lastSeenAt: 1792830634524
 fingerprint: null
 payload:
   for: GW1_gate_primitive
@@ -75,3 +75,4 @@ payload:
       - >-
         needed by (3): EW1_evidence_record_and_weights, AV1_adversarial_review,
         GW2_gates_at_every_level · all downstream 12
+  phaseUuid: 6a1e2be4-e5d6-51a6-ab09-866d24973968

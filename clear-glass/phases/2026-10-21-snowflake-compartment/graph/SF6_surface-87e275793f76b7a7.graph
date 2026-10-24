@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830025403
+exported_at: 1792830637869
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025403
-lastSeenAt: 1792830025403
+firstSeenAt: 1792830637869
+lastSeenAt: 1792830637869
 fingerprint: null
 payload:
   for: SF6_surface
@@ -238,3 +238,4 @@ payload:
       - >-
         needed by (2): SF7_bridge_automatic, SF8_host_import · all downstream 3 · finishing it
         unlocks SF7_bridge_automatic, SF8_host_import
+  phaseUuid: baa65440-4344-5047-a5f8-379e7d0a4114

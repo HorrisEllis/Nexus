@@ -7,11 +7,11 @@ intent: null
 summary: CS7_spawn_despawn_and_balance (backend) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026218
+exported_at: 1792830638675
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026218
-lastSeenAt: 1792830026218
+firstSeenAt: 1792830638675
+lastSeenAt: 1792830638675
 fingerprint: null
 payload:
   id: CS7_spawn_despawn_and_balance
@@ -30,3 +30,10 @@ payload:
     - MOD-CS-SCALE
   spec: cos/spec/cos-spine.spec
   graph: 145fe81d23c58732
+  uuid: e5f91498-7ff0-53dc-8b7a-ac6286af0abf
+  specLink:
+    how: declared
+    spec: cos/spec/cos-spine.spec
+    modules:
+      - id: MOD-CS-SCALE
+        uuid: nexus-cos-spine-scale-v1-0000-2026-1023-001

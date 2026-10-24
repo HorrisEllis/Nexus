@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829975222
+exported_at: 1792830585847
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975222
-lastSeenAt: 1792829975222
+firstSeenAt: 1792830585847
+lastSeenAt: 1792830585847
 fingerprint: null
 payload:
   for: CP1_tool_index_hooked_to_living_model
@@ -45,3 +45,4 @@ payload:
         TC1_tools_get_real_contracts
       - 'depends on (2): EVT1_commands_and_tools_emit_events, TC1_tools_get_real_contracts'
       - 'needed by (0): —'
+  phaseUuid: 6647ae14-c4ef-55ad-945f-2f9a361aa9fa

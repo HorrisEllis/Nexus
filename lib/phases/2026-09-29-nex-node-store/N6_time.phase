@@ -7,11 +7,11 @@ intent: null
 summary: N6_time (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985426
+exported_at: 1792830596162
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985426
-lastSeenAt: 1792829985426
+firstSeenAt: 1792830596162
+lastSeenAt: 1792830596162
 fingerprint: null
 payload:
   id: N6_time
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 1d45bad2579387a6
+  uuid: 76452702-d502-5c8f-b855-74be2e6cf4ae

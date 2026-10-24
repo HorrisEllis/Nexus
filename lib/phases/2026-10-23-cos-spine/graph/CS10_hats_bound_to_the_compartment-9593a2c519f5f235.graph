@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830026219
+exported_at: 1792830638676
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026219
-lastSeenAt: 1792830026219
+firstSeenAt: 1792830638676
+lastSeenAt: 1792830638676
 fingerprint: null
 payload:
   for: CS10_hats_bound_to_the_compartment
@@ -262,3 +262,4 @@ payload:
         depends on (3): CS9_every_project_a_compartment, CS5_caps_per_compartment,
         CS3_the_registry_is_the_bridge · all upstream 25
       - 'needed by (0): —'
+  phaseUuid: 02c89b0c-3cdc-5626-8989-90907bca94a1

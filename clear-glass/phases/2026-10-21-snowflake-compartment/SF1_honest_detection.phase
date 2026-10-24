@@ -7,11 +7,11 @@ intent: null
 summary: SF1_honest_detection (library) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830025400
+exported_at: 1792830637867
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025400
-lastSeenAt: 1792830025400
+firstSeenAt: 1792830637867
+lastSeenAt: 1792830637867
 fingerprint: null
 payload:
   id: SF1_honest_detection
@@ -28,3 +28,10 @@ payload:
     - MOD-SF-DETECT
   spec: clear-glass/spec/snowflake.spec
   graph: bcc77d2324b63a88
+  uuid: b6e5ed1a-3219-5872-ba86-45886a6190c9
+  specLink:
+    how: declared
+    spec: clear-glass/spec/snowflake.spec
+    modules:
+      - id: MOD-SF-DETECT
+        uuid: nexus-cg-sf-detect-v1-0000-2026-1021-001

@@ -7,11 +7,11 @@ intent: null
 summary: GS6_update_notice (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830012972
+exported_at: 1792830624760
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830012972
-lastSeenAt: 1792830012972
+firstSeenAt: 1792830624760
+lastSeenAt: 1792830624760
 fingerprint: null
 payload:
   id: GS6_update_notice
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 1d54722ef89351a1
+  uuid: 8cce4bab-8718-5f0a-95c9-82f02f4a3504

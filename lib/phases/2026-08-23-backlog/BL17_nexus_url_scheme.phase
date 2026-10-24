@@ -7,11 +7,11 @@ intent: null
 summary: BL17_nexus_url_scheme (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971264
+exported_at: 1792830581832
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971264
-lastSeenAt: 1792829971264
+firstSeenAt: 1792830581832
+lastSeenAt: 1792830581832
 fingerprint: null
 payload:
   id: BL17_nexus_url_scheme
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 99bb8e363414a436
+  uuid: 8c937c61-555d-53c6-b2c2-1eca86dc6fda

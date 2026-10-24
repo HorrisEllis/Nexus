@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830006235
+exported_at: 1792830617747
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006235
-lastSeenAt: 1792830006235
+firstSeenAt: 1792830617747
+lastSeenAt: 1792830617747
 fingerprint: null
 payload:
   for: PF3_the_screen
@@ -42,3 +42,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3 · blocked by PF2_the_slots_into_a_gig
       - 'depends on (1): PF2_the_slots_into_a_gig · all upstream 3'
       - 'needed by (0): —'
+  phaseUuid: 788831a0-5938-5a31-82b7-caf3d7f88ee3

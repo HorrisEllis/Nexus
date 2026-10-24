@@ -9,11 +9,11 @@ intent: null
 summary: UI1_one_file_per_ui_area (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829979764
+exported_at: 1792830590456
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829979764
-lastSeenAt: 1792829979764
+firstSeenAt: 1792830590456
+lastSeenAt: 1792830590456
 fingerprint: null
 payload:
   id: UI1_one_file_per_ui_area
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 8e0014e69c3c248b
+  uuid: 9955cb5e-149c-5d6e-ace5-eea1696a336d

@@ -9,11 +9,11 @@ intent: null
 summary: DA1_domain_agnostic_end_states (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988500
+exported_at: 1792830599143
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988500
-lastSeenAt: 1792829988500
+firstSeenAt: 1792830599143
+lastSeenAt: 1792830599143
 fingerprint: null
 payload:
   id: DA1_domain_agnostic_end_states
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 6b50e373c633cffb
+  uuid: 8283ecda-b9fb-5f5f-bf93-ba23414b37ba

@@ -342,3 +342,11 @@ James, 2026-10-24: "spec per component/capability/etc its in the specs. deocmpos
   phase (11 in 3 maps). The first definition wins in lib/phase-dag.js and in derive(), as idearium/repo/roadmap.js already reads it (its
   duplicate_phase_id warning). Loom's parser still returns both (its consumers rely on the warning).
 - Kept, not deleted (§0.3): 2 .phase files left in an older owner's folder when their phase's files moved system (SL1, BX10).
+
+## ADDENDUM 2026-10-24 (0.60.228) — PS3: spec, phase and DAG bundled under one id
+James, 2026-10-24: "need to either update existing or create new ones. then we could have each .spec bundled with each .phase with each .dag.
+all with a id or uuid that matches them." · then: "only map if it's a good idea" (so no new map: this is PS1's work, recorded here).
+- emerge/compiler/phase-specs.js 1.2.0: bundleUuid, moduleIndex, specLinkOf; lib/pipeline-nodes.js phaseNode { uuid, specLink },
+  graphNode { phaseUuid }. The .phase is the bundle's head: its graph by hash, its spec and modules by their uuids (no third file per phase).
+- The link rule is decided by the axioms (TRUTH_OVER_COHERENCE; NC0's evidence rule): declared, or discovered by a file only one module
+  declares and at most 5 phases name; never a hub file. 157 phases linked; the coverage report has the rest.

@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830018865
+exported_at: 1792830631086
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830018865
-lastSeenAt: 1792830018865
+firstSeenAt: 1792830631086
+lastSeenAt: 1792830631086
 fingerprint: null
 payload:
   for: GQ5_command
@@ -185,3 +185,4 @@ payload:
         GQ4_phase_gate_keeps_the_test
       - 'depends on (2): GQ2_brick_gate_runs_the_test, GQ4_phase_gate_keeps_the_test · all upstream 4'
       - 'needed by (1): GQ6_ui · finishing it unlocks GQ6_ui'
+  phaseUuid: 08656a82-9068-5f44-a146-d0c6f892bd0f

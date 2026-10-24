@@ -9,11 +9,11 @@ intent: null
 summary: B2_jaadb_not_single_writer (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978552
+exported_at: 1792830589177
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978552
-lastSeenAt: 1792829978552
+firstSeenAt: 1792830589177
+lastSeenAt: 1792830589177
 fingerprint: null
 payload:
   id: B2_jaadb_not_single_writer
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: d497d683710ee21c
+  uuid: 80092e1f-8c88-5def-b158-d658ff0c88bb

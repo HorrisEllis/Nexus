@@ -9,11 +9,11 @@ intent: null
 summary: KT1_observations_on_a_semantic_tree (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830003811
+exported_at: 1792830615213
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003811
-lastSeenAt: 1792830003811
+firstSeenAt: 1792830615213
+lastSeenAt: 1792830615213
 fingerprint: null
 payload:
   id: KT1_observations_on_a_semantic_tree
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 3bef71197a9bf793
+  uuid: aa30fd0f-a5db-547e-af48-97bed822f690

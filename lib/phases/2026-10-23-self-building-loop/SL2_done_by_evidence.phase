@@ -7,11 +7,11 @@ intent: null
 summary: SL2_done_by_evidence (library) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026603
+exported_at: 1792830639075
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026603
-lastSeenAt: 1792830026603
+firstSeenAt: 1792830639075
+lastSeenAt: 1792830639075
 fingerprint: null
 payload:
   id: SL2_done_by_evidence
@@ -34,3 +34,10 @@ payload:
     - MOD-SL-EVIDENCE-CLOSE
   spec: docs/self-building-loop.spec
   graph: 7bb9c1e91cb43b0f
+  uuid: 2d628fb6-385f-5ce9-89ae-5ab1b841c234
+  specLink:
+    how: declared
+    spec: docs/self-building-loop.spec
+    modules:
+      - id: MOD-SL-EVIDENCE-CLOSE
+        uuid: nexus-sl-done-by-evidence-v1-0000-2026-1023-001

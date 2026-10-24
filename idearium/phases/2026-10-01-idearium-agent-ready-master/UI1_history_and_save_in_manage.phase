@@ -9,11 +9,11 @@ intent: null
 summary: UI1_history_and_save_in_manage (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987074
+exported_at: 1792830597778
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987074
-lastSeenAt: 1792829987074
+firstSeenAt: 1792830597778
+lastSeenAt: 1792830597778
 fingerprint: null
 payload:
   id: UI1_history_and_save_in_manage
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: a01c5d1997949e6a
+  uuid: 74eb9a85-acbb-5668-a79d-7cdcb84dd923

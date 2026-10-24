@@ -9,11 +9,11 @@ intent: null
 summary: SF4_compile_on_collect (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792830009026
+exported_at: 1792830620659
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009026
-lastSeenAt: 1792830009026
+firstSeenAt: 1792830620659
+lastSeenAt: 1792830620659
 fingerprint: null
 payload:
   id: SF4_compile_on_collect
@@ -35,3 +35,4 @@ payload:
   blocks: []
   spec: null
   graph: aadcbf4561eb1533
+  uuid: 196311c7-9302-57e0-84bc-0b36e9a3102b

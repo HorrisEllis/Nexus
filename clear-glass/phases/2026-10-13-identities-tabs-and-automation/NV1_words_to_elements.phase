@@ -9,11 +9,11 @@ intent: null
 summary: NV1_words_to_elements (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002549
+exported_at: 1792830613965
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002549
-lastSeenAt: 1792830002549
+firstSeenAt: 1792830613965
+lastSeenAt: 1792830613965
 fingerprint: null
 payload:
   id: NV1_words_to_elements
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: b3eedddb8bbbae8e
+  uuid: d924ef15-3f73-50b6-aeac-57c19be2db56

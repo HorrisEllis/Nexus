@@ -7,11 +7,11 @@ intent: null
 summary: R6_living_documentation (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830036415
+exported_at: 1792830648643
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830036415
-lastSeenAt: 1792830036415
+firstSeenAt: 1792830648643
+lastSeenAt: 1792830648643
 fingerprint: null
 payload:
   id: R6_living_documentation
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 52d5fcd6b04a85b2
+  uuid: 0ba81114-e6b5-5b57-85ac-6d6b28e388f0

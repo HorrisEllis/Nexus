@@ -9,11 +9,11 @@ intent: null
 summary: AM10_thinking_partner_rename_and_ui_builder (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830027827
+exported_at: 1792830640241
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027827
-lastSeenAt: 1792830027827
+firstSeenAt: 1792830640241
+lastSeenAt: 1792830640241
 fingerprint: null
 payload:
   id: AM10_thinking_partner_rename_and_ui_builder
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: c0328146fae33b3e
+  uuid: f04ce667-6f7c-5355-9021-ff29a1d23fcf

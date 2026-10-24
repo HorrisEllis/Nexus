@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830020478
+exported_at: 1792830632807
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020478
-lastSeenAt: 1792830020478
+firstSeenAt: 1792830632807
+lastSeenAt: 1792830632807
 fingerprint: null
 payload:
   for: CB1_coder_brief
@@ -58,3 +58,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): VF1_verify_first · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: b3de5efc-e0c5-5eed-8c92-3cde1a5f9578

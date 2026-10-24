@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829987051
+exported_at: 1792830597756
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987051
-lastSeenAt: 1792829987051
+firstSeenAt: 1792830597756
+lastSeenAt: 1792830597756
 fingerprint: null
 payload:
   for: DT1_persistence_census
@@ -162,3 +162,4 @@ payload:
         DI1_chunking_for_data_ingestion, UM1_nexus_understands_james · all downstream 19 · finishing
         it unlocks DT2_failure_mode_field, DT4_registry_block_to_nodes,
         DI1_chunking_for_data_ingestion
+  phaseUuid: 26a2c1bd-8387-5ac6-93c3-fe5577a76999

@@ -7,11 +7,11 @@ intent: null
 summary: L0_the_record_tells_the_truth (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830018476
+exported_at: 1792830630671
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830018476
-lastSeenAt: 1792830018476
+firstSeenAt: 1792830630671
+lastSeenAt: 1792830630671
 fingerprint: null
 payload:
   id: L0_the_record_tells_the_truth
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 7adb29f2991be2a8
+  uuid: da7d7217-24b8-5ae7-afbb-ddc409edb367

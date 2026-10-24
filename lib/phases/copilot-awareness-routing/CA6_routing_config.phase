@@ -7,11 +7,11 @@ intent: null
 summary: CA6_routing_config (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028976
+exported_at: 1792830641382
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028976
-lastSeenAt: 1792830028976
+firstSeenAt: 1792830641382
+lastSeenAt: 1792830641382
 fingerprint: null
 payload:
   id: CA6_routing_config
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: c8ec964b0b80f7cb
+  uuid: 737d5b49-5b84-5994-b02c-b1d9d8108fad

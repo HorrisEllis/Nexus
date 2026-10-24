@@ -9,11 +9,11 @@ intent: null
 summary: SB8_tool_agnosticism_and_new_tool_flow (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034497
+exported_at: 1792830646703
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034497
-lastSeenAt: 1792830034497
+firstSeenAt: 1792830646703
+lastSeenAt: 1792830646703
 fingerprint: null
 payload:
   id: SB8_tool_agnosticism_and_new_tool_flow
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 0dad83e5c39c6d0a
+  uuid: 7b8da886-4ec0-5d3a-bb43-fbc3c4840f8f

@@ -9,11 +9,11 @@ intent: null
 summary: CS2_uploaded_projects_managed (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001293
+exported_at: 1792830612706
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001293
-lastSeenAt: 1792830001293
+firstSeenAt: 1792830612706
+lastSeenAt: 1792830612706
 fingerprint: null
 payload:
   id: CS2_uploaded_projects_managed
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 494c0ceef6476375
+  uuid: 2a520cc8-bb02-5208-b05a-56c559456b6d

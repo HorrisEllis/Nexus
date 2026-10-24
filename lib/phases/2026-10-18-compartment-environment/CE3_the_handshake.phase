@@ -7,11 +7,11 @@ intent: null
 summary: CE3_the_handshake (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830017328
+exported_at: 1792830629345
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017328
-lastSeenAt: 1792830017328
+firstSeenAt: 1792830629345
+lastSeenAt: 1792830629345
 fingerprint: null
 payload:
   id: CE3_the_handshake
@@ -28,3 +28,15 @@ payload:
   blocks: []
   spec: null
   graph: aa79fe09a96f799d
+  uuid: 7aac077c-74c2-5649-aff2-a21e369af354
+  specLink:
+    how: discovered:path
+    spec: docs/lib.spec
+    specs:
+      - docs/lib.spec
+    covers: 1/3 files
+    modules:
+      - spec: docs/lib.spec
+        id: contract-handshake
+        uuid: null
+        file: lib/contract-handshake.js

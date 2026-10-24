@@ -12,6 +12,7 @@
  *   PS-04  the committed per-phase nodes of both 2026-10-20 maps exist for every phase (written, not only derivable)
  *   PS-05  0.60.227 a later key with a phase id already defined (a note) never replaces the phase
  *   PS-06  0.60.227 PS2 every phase of every map has its .phase, and its .graph carries its DAG slice
+ *   PS-07  0.60.228 PS3 the bundle: one uuid on the .phase and its .graph; the spec link (declared, or one module owning a non-hub file)
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -103,6 +104,23 @@ test('PS-06', "every phase of every map has its .phase, and its .graph carries i
   assert.ok(fs.existsSync(g), 'its graph, by its hash');
   const dag = NE.fromYaml(fs.readFileSync(g, 'utf8')).payload.dag;
   assert.ok(dag && dag.dagHash && Array.isArray(dag.downstream), 'the graph carries its DAG slice');
+});
+
+// PS-07 — 0.60.228 PS3. James, 2026-10-24: "then we could have each .spec bundled with each .phase with each .dag. all with a id or uuid
+// that matches them."
+test('PS-07', 'one uuid per phase, the same on its .phase and its .graph; a declared spec link carries its modules\' uuids; a hub file links nothing', () => {
+  const NE = require(path.join(ROOT, 'lib/node-export.js'));
+  assert.strictEqual(PS.bundleUuid('docs/a-phasemap.spec', 'X1'), PS.bundleUuid('docs/a-phasemap.spec', 'X1'), 'stable');
+  assert.notStrictEqual(PS.bundleUuid('docs/a-phasemap.spec', 'X1'), PS.bundleUuid('docs/b-phasemap.spec', 'X1'));
+  assert.match(PS.bundleUuid('m', 'p'), /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+  const dir = path.join(ROOT, 'idearium/phases/2026-10-23-self-building-loop');
+  const ph = NE.fromYaml(fs.readFileSync(path.join(dir, 'SL4_the_loop.phase'), 'utf8')).payload;
+  assert.strictEqual(ph.uuid, PS.bundleUuid('docs/2026-10-23-self-building-loop-phasemap.spec', 'SL4_the_loop'));
+  const gr = NE.fromYaml(fs.readFileSync(path.join(dir, 'graph', `SL4_the_loop-${ph.graph}.graph`), 'utf8')).payload;
+  assert.strictEqual(gr.phaseUuid, ph.uuid, 'the .graph names the same bundle');
+  assert.deepStrictEqual([ph.specLink.how, ph.specLink.spec, ph.specLink.modules[0].id, ph.specLink.modules[0].uuid], ['declared', 'docs/self-building-loop.spec', 'MOD-SL-LOOP', 'nexus-sl-autobuild-loop-v1-0000-2026-1023-001']);
+  const idx = PS.moduleIndex();
+  assert.strictEqual(PS.specLinkOf({ spec: null, blocks: [], files: ['idearium/api/index.js'], idx, uses: new Map([['idearium/api/index.js', 171]]) }), null, 'declared by 7 modules, named by 171 phases: identifies nothing');
 });
 
 console.log(`\n  ${passed} passed, ${failed} failed`);

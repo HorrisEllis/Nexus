@@ -9,11 +9,11 @@ intent: null
 summary: IC11_agent_truth_fragmentation (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972962
+exported_at: 1792830583616
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972962
-lastSeenAt: 1792829972962
+firstSeenAt: 1792830583616
+lastSeenAt: 1792830583616
 fingerprint: null
 payload:
   id: IC11_agent_truth_fragmentation
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: b9dc58c002c61d18
+  uuid: c464b72d-fe32-50ce-9c57-534fdb162690

@@ -7,11 +7,11 @@ intent: null
 summary: AB5_import (library) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792830022586
+exported_at: 1792830634933
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022586
-lastSeenAt: 1792830022586
+firstSeenAt: 1792830634933
+lastSeenAt: 1792830634933
 fingerprint: null
 payload:
   id: AB5_import
@@ -34,3 +34,10 @@ payload:
     - MOD-ABK-IMPORT
   spec: clear-glass/spec/adblock.spec
   graph: 8bd5bbcc7bc580a9
+  uuid: ab04593e-a172-5062-a400-baf21e45950d
+  specLink:
+    how: declared
+    spec: clear-glass/spec/adblock.spec
+    modules:
+      - id: MOD-ABK-IMPORT
+        uuid: nexus-cg-adblock-import-v1-0000-2026-1021-002

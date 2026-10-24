@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830024195
+exported_at: 1792830636643
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830024195
-lastSeenAt: 1792830024195
+firstSeenAt: 1792830636643
+lastSeenAt: 1792830636643
 fingerprint: null
 payload:
   for: CD3_verified_handoff
@@ -59,3 +59,4 @@ payload:
       - >-
         needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks
         CD4_kill_on_disconnect
+  phaseUuid: 56e58a91-4d2c-5298-bbba-17e2d86951a1

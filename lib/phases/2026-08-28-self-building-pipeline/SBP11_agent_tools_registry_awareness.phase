@@ -9,11 +9,11 @@ intent: null
 summary: SBP11_agent_tools_registry_awareness (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972554
+exported_at: 1792830583167
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972554
-lastSeenAt: 1792829972554
+firstSeenAt: 1792830583167
+lastSeenAt: 1792830583167
 fingerprint: null
 payload:
   id: SBP11_agent_tools_registry_awareness
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 10a463896c66d6e4
+  uuid: d86a9e58-8dcb-5be1-9c68-7403f06f7c3f

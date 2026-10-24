@@ -9,11 +9,11 @@ intent: null
 summary: DI1_chunking_for_data_ingestion (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987095
+exported_at: 1792830597802
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987095
-lastSeenAt: 1792829987095
+firstSeenAt: 1792830597802
+lastSeenAt: 1792830597802
 fingerprint: null
 payload:
   id: DI1_chunking_for_data_ingestion
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 91bad89cab545ae9
+  uuid: 729c49a3-a458-574e-82e8-b4898fd8f328

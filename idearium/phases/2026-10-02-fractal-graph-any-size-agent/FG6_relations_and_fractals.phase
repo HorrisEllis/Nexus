@@ -9,11 +9,11 @@ intent: null
 summary: FG6_relations_and_fractals (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988949
+exported_at: 1792830599575
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988949
-lastSeenAt: 1792829988949
+firstSeenAt: 1792830599575
+lastSeenAt: 1792830599575
 fingerprint: null
 payload:
   id: FG6_relations_and_fractals
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 8a43ab6d43bbcebd
+  uuid: c34afb07-82d6-58fd-8eb8-3e738db06b78

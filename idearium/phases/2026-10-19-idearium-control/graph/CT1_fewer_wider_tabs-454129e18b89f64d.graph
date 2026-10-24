@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830019664
+exported_at: 1792830631962
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830019664
-lastSeenAt: 1792830019664
+firstSeenAt: 1792830631962
+lastSeenAt: 1792830631962
 fingerprint: null
 payload:
   for: CT1_fewer_wider_tabs
@@ -64,3 +64,4 @@ payload:
       - 'depends on (2): CT0_code_tab_census, FM1_file_manager · all upstream 3'
       - 'needed by (0): —'
       - 'same files as IM1_ideas_and_notes_as_one with no order between them: idearium/ui/index.html'
+  phaseUuid: ff661ece-d771-5bac-8638-347890ea3588

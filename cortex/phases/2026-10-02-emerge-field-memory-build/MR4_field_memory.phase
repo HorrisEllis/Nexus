@@ -7,11 +7,11 @@ intent: null
 summary: MR4_field_memory (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988432
+exported_at: 1792830599074
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988432
-lastSeenAt: 1792829988432
+firstSeenAt: 1792830599074
+lastSeenAt: 1792830599074
 fingerprint: null
 payload:
   id: MR4_field_memory
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 3f0c971304297739
+  uuid: 0fcceb37-faa6-59bf-95d9-be9018b88c9e

@@ -7,11 +7,11 @@ intent: null
 summary: P7_stream_to_all_systems (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830030157
+exported_at: 1792830642516
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830030157
-lastSeenAt: 1792830030157
+firstSeenAt: 1792830642516
+lastSeenAt: 1792830642516
 fingerprint: null
 payload:
   id: P7_stream_to_all_systems
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 765df9d3dc2003cb
+  uuid: a57a93a7-f908-5132-83d1-183fc3721d9f

@@ -7,11 +7,11 @@ intent: null
 summary: PW1_service (library) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830025019
+exported_at: 1792830637480
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025019
-lastSeenAt: 1792830025019
+firstSeenAt: 1792830637480
+lastSeenAt: 1792830637480
 fingerprint: null
 payload:
   id: PW1_service
@@ -28,3 +28,10 @@ payload:
     - MOD-PW-SERVICE
   spec: clear-glass/spec/passwords.spec
   graph: 1adb1f53787dac35
+  uuid: 58e3d7a3-fa56-5321-9759-0c7e0bf0b808
+  specLink:
+    how: declared
+    spec: clear-glass/spec/passwords.spec
+    modules:
+      - id: MOD-PW-SERVICE
+        uuid: nexus-cg-pw-service-v1-0000-2026-1021-001

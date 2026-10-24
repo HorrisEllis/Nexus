@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829998098
+exported_at: 1792830609307
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998098
-lastSeenAt: 1792829998098
+firstSeenAt: 1792830609307
+lastSeenAt: 1792830609307
 fingerprint: null
 payload:
   for: OR3_his_decisions_applied
@@ -46,3 +46,4 @@ payload:
       - 'depends on (0): —'
       - 'needed by (1): OR7_the_shelf_combed · finishing it unlocks OR7_the_shelf_combed'
       - 'DANGLING depends_on: OR2'
+  phaseUuid: 059e4d0a-9f7a-5d71-969c-2733d83e9d2f

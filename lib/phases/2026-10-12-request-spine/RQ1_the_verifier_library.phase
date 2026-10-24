@@ -7,11 +7,11 @@ intent: null
 summary: RQ1_the_verifier_library (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001704
+exported_at: 1792830613134
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001704
-lastSeenAt: 1792830001704
+firstSeenAt: 1792830613134
+lastSeenAt: 1792830613134
 fingerprint: null
 payload:
   id: RQ1_the_verifier_library
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: ce3d943947d62331
+  uuid: 5b645074-59d1-5b8d-b71d-91cee6a56fb5

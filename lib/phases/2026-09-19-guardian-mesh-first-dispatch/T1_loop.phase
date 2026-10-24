@@ -7,11 +7,11 @@ intent: null
 summary: T1_loop (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978958
+exported_at: 1792830589578
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978958
-lastSeenAt: 1792829978958
+firstSeenAt: 1792830589578
+lastSeenAt: 1792830589578
 fingerprint: null
 payload:
   id: T1_loop
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 528376a1fb70a883
+  uuid: 80df766b-5bb7-5ccd-8947-2b538e9ac156

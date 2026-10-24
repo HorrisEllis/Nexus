@@ -7,11 +7,11 @@ intent: null
 summary: AD2_javascript_adapter (library) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020057
+exported_at: 1792830632377
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020057
-lastSeenAt: 1792830020057
+firstSeenAt: 1792830632377
+lastSeenAt: 1792830632377
 fingerprint: null
 payload:
   id: AD2_javascript_adapter
@@ -30,3 +30,15 @@ payload:
   blocks: []
   spec: null
   graph: 1421bce99f6b0fd1
+  uuid: 804988fd-4f9c-5c61-8701-534799123269
+  specLink:
+    how: discovered:path
+    spec: docs/pipeline.spec
+    specs:
+      - docs/pipeline.spec
+    covers: 1/5 files
+    modules:
+      - spec: docs/pipeline.spec
+        id: MOD-CODER-BRIEF
+        uuid: nexus-pipeline-coder-brief-v1-0000-2026-1020-001
+        file: lib/coder-brief.js

@@ -7,11 +7,11 @@ intent: null
 summary: N1_record_and_log (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985419
+exported_at: 1792830596157
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985419
-lastSeenAt: 1792829985419
+firstSeenAt: 1792830596157
+lastSeenAt: 1792830596157
 fingerprint: null
 payload:
   id: N1_record_and_log
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 6d4e3abb4292bf6a
+  uuid: a50ad5ca-f86d-5263-96f8-8a790a786603

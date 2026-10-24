@@ -9,11 +9,11 @@ intent: null
 summary: LM22_atlas_structure_ledger (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829973407
+exported_at: 1792830584052
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973407
-lastSeenAt: 1792829973407
+firstSeenAt: 1792830584052
+lastSeenAt: 1792830584052
 fingerprint: null
 payload:
   id: LM22_atlas_structure_ledger
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 508f340855c7ea37
+  uuid: 72a1d59c-57d0-5376-94e3-475954591bbf

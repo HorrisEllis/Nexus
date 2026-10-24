@@ -9,11 +9,11 @@ intent: null
 summary: SB48_proof_in_cos_closes_the_phase (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991014
+exported_at: 1792830601676
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991014
-lastSeenAt: 1792829991014
+firstSeenAt: 1792830601676
+lastSeenAt: 1792830601676
 fingerprint: null
 payload:
   id: SB48_proof_in_cos_closes_the_phase
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 054d76a838a4463d
+  uuid: f58f282a-2150-5b4b-9311-2e428b2a66cd

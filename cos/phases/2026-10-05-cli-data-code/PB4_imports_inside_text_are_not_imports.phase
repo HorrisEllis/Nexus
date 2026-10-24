@@ -9,11 +9,11 @@ intent: null
 summary: PB4_imports_inside_text_are_not_imports (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991468
+exported_at: 1792830602144
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991468
-lastSeenAt: 1792829991468
+firstSeenAt: 1792830602144
+lastSeenAt: 1792830602144
 fingerprint: null
 payload:
   id: PB4_imports_inside_text_are_not_imports
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: d0e4233a40cc3822
+  uuid: d4d4ec3a-ba88-5020-8255-cf0e713ca7b4

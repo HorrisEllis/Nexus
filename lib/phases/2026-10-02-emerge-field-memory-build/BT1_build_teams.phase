@@ -7,11 +7,11 @@ intent: null
 summary: BT1_build_teams (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988472
+exported_at: 1792830599113
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988472
-lastSeenAt: 1792829988472
+firstSeenAt: 1792830599113
+lastSeenAt: 1792830599113
 fingerprint: null
 payload:
   id: BT1_build_teams
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: f20168a39b99e978
+  uuid: 5a2eece7-177e-593a-bc70-e476a9952141

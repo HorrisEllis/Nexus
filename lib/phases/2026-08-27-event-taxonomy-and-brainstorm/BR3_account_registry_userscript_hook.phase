@@ -9,11 +9,11 @@ intent: null
 summary: BR3_account_registry_userscript_hook (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971727
+exported_at: 1792830582308
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971727
-lastSeenAt: 1792829971727
+firstSeenAt: 1792830582308
+lastSeenAt: 1792830582308
 fingerprint: null
 payload:
   id: BR3_account_registry_userscript_hook
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 8be6d498ddcef7ec
+  uuid: a548bfc1-29ab-5c52-8b4a-65ed93f2d1e7

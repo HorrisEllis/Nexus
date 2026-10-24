@@ -7,11 +7,11 @@ intent: null
 summary: PW2_page (integration) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830025020
+exported_at: 1792830637480
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025020
-lastSeenAt: 1792830025020
+firstSeenAt: 1792830637480
+lastSeenAt: 1792830637480
 fingerprint: null
 payload:
   id: PW2_page
@@ -27,3 +27,10 @@ payload:
     - MOD-PW-PAGE
   spec: clear-glass/spec/passwords.spec
   graph: a3c8be28c7f429ea
+  uuid: 3d5e6c5e-78f9-534b-9baa-bc0222e169c5
+  specLink:
+    how: declared
+    spec: clear-glass/spec/passwords.spec
+    modules:
+      - id: MOD-PW-PAGE
+        uuid: nexus-cg-pw-page-v1-0000-2026-1021-001

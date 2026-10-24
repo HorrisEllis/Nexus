@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830005433
+exported_at: 1792830616875
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005433
-lastSeenAt: 1792830005433
+firstSeenAt: 1792830616875
+lastSeenAt: 1792830616875
 fingerprint: null
 payload:
   for: CE7_ai_assisted_editing
@@ -242,3 +242,4 @@ payload:
       - >-
         needed by (1): CV2_a_version_per_diff · all downstream 4 · finishing it unlocks
         CV2_a_version_per_diff
+  phaseUuid: 10af389c-4255-57e0-a7da-83f6affbecd1

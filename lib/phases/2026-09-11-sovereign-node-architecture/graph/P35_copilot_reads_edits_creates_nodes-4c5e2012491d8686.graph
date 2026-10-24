@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829976530
+exported_at: 1792830587140
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976530
-lastSeenAt: 1792829976530
+firstSeenAt: 1792830587140
+lastSeenAt: 1792830587140
 fingerprint: null
 payload:
   for: P35_copilot_reads_edits_creates_nodes
@@ -45,3 +45,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by P33_every_system_runs_its_node_registry
       - 'depends on (1): P33_every_system_runs_its_node_registry · all upstream 3'
       - 'needed by (1): ND5_every_agent_reaches_every_system · all downstream 2'
+  phaseUuid: 8cd0c04f-1428-5872-ac03-f4fa89913998

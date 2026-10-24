@@ -9,11 +9,11 @@ intent: null
 summary: D2_idearium_compartment_structure (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974292
+exported_at: 1792830584876
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974292
-lastSeenAt: 1792829974292
+firstSeenAt: 1792830584876
+lastSeenAt: 1792830584876
 fingerprint: null
 payload:
   id: D2_idearium_compartment_structure
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 80dbc60fc6451eb9
+  uuid: 1c87f372-b986-5d33-bc46-66d31b3d5a15

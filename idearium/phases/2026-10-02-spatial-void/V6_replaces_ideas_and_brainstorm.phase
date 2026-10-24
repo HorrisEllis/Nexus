@@ -7,11 +7,11 @@ intent: null
 summary: V6_replaces_ideas_and_brainstorm (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829989369
+exported_at: 1792830599982
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829989369
-lastSeenAt: 1792829989369
+firstSeenAt: 1792830599982
+lastSeenAt: 1792830599982
 fingerprint: null
 payload:
   id: V6_replaces_ideas_and_brainstorm
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: c80f4e0208c7a97c
+  uuid: b606a054-d4cb-57bd-992e-84f45d9de842

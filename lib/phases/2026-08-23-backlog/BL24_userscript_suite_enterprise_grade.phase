@@ -7,11 +7,11 @@ intent: null
 summary: BL24_userscript_suite_enterprise_grade (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971269
+exported_at: 1792830581838
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971269
-lastSeenAt: 1792829971269
+firstSeenAt: 1792830581838
+lastSeenAt: 1792830581838
 fingerprint: null
 payload:
   id: BL24_userscript_suite_enterprise_grade
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: edba621e935840c5
+  uuid: 63e6d209-e534-5b2d-b81a-e02566abe0e4

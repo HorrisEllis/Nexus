@@ -9,11 +9,11 @@ intent: null
 summary: CLI1_headless_dispatch_via_mesh (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829979760
+exported_at: 1792830590452
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829979760
-lastSeenAt: 1792829979760
+firstSeenAt: 1792830590452
+lastSeenAt: 1792830590452
 fingerprint: null
 payload:
   id: CLI1_headless_dispatch_via_mesh
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 361e4ee667b1a789
+  uuid: a9da5b3a-faf2-55ac-919a-211b483c0385

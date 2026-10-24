@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830034494
+exported_at: 1792830646700
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034494
-lastSeenAt: 1792830034494
+firstSeenAt: 1792830646700
+lastSeenAt: 1792830646700
 fingerprint: null
 payload:
   for: SB5_self_modification_from_inside
@@ -98,3 +98,4 @@ payload:
         SB4_decision_lattice_wiring
       - 'depends on (2): SB3_guided_build_loop, SB4_decision_lattice_wiring · all upstream 4'
       - 'needed by (0): —'
+  phaseUuid: cf2ba88f-2a60-5528-b1c3-14bb1c0585f8

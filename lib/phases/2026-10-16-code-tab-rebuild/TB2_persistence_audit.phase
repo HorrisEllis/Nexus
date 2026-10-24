@@ -7,11 +7,11 @@ intent: null
 summary: TB2_persistence_audit (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830010167
+exported_at: 1792830621902
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010167
-lastSeenAt: 1792830010167
+firstSeenAt: 1792830621902
+lastSeenAt: 1792830621902
 fingerprint: null
 payload:
   id: TB2_persistence_audit
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: dc51aa7374ac0e10
+  uuid: e29bc0b6-97f5-5cef-9fda-bb51b7634f2f

@@ -7,11 +7,11 @@ intent: null
 summary: OP2_the_system_settings_in_its_repo (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830000462
+exported_at: 1792830611839
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000462
-lastSeenAt: 1792830000462
+firstSeenAt: 1792830611839
+lastSeenAt: 1792830611839
 fingerprint: null
 payload:
   id: OP2_the_system_settings_in_its_repo
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: a31db0f4424409aa
+  uuid: 946beb26-616d-5922-9200-6f65b769a97a

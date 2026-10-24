@@ -7,11 +7,11 @@ intent: null
 summary: SL3_the_backlog_groomed (library) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026603
+exported_at: 1792830639075
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026603
-lastSeenAt: 1792830026603
+firstSeenAt: 1792830639075
+lastSeenAt: 1792830639075
 fingerprint: null
 payload:
   id: SL3_the_backlog_groomed
@@ -29,3 +29,10 @@ payload:
     - MOD-SL-GROOM
   spec: docs/self-building-loop.spec
   graph: 9fd399bb539845a2
+  uuid: cb62474f-ffe0-5b5e-b8c1-170895fddb87
+  specLink:
+    how: declared
+    spec: docs/self-building-loop.spec
+    modules:
+      - id: MOD-SL-GROOM
+        uuid: nexus-sl-phase-groom-v1-0000-2026-1023-001

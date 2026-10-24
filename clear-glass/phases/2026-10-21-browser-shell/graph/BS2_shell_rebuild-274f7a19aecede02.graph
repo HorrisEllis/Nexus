@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830023774
+exported_at: 1792830636211
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023774
-lastSeenAt: 1792830023774
+firstSeenAt: 1792830636211
+lastSeenAt: 1792830636211
 fingerprint: null
 payload:
   for: BS2_shell_rebuild
@@ -86,3 +86,4 @@ payload:
         BS8_design_system, BS14_zoom_core, BS20_bookmark_site_accounts · all downstream 23 ·
         finishing it unlocks BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,
         BS8_design_system, BS14_zoom_core, BS20_bookmark_site_accounts
+  phaseUuid: ab4c283d-b525-52ba-8b6e-7da23e034489

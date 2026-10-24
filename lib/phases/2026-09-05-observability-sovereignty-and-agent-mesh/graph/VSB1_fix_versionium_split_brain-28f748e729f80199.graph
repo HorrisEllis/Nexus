@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829975211
+exported_at: 1792830585836
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975211
-lastSeenAt: 1792829975211
+firstSeenAt: 1792830585836
+lastSeenAt: 1792830585836
 fingerprint: null
 payload:
   for: VSB1_fix_versionium_split_brain
@@ -85,3 +85,4 @@ payload:
         DF2_cortex_and_versionium_off_root_data, CP2_copilot_versionium_awareness · all downstream 5
         · finishing it unlocks ID2_verify_idearium_reconciliation_reads_right_store,
         DF2_cortex_and_versionium_off_root_data, CP2_copilot_versionium_awareness
+  phaseUuid: c7316747-abe3-5368-88d8-8d6dc755aaee

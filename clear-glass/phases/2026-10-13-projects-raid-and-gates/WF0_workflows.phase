@@ -7,11 +7,11 @@ intent: null
 summary: WF0_workflows (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830003413
+exported_at: 1792830614763
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003413
-lastSeenAt: 1792830003413
+firstSeenAt: 1792830614763
+lastSeenAt: 1792830614763
 fingerprint: null
 payload:
   id: WF0_workflows
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 974d9c5ead887971
+  uuid: 6ec6c262-67bb-5e0b-a46d-fa7a75bc5ac2

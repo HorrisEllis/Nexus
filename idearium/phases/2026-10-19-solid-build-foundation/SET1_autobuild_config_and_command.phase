@@ -9,11 +9,11 @@ intent: null
 summary: SET1_autobuild_config_and_command (cli) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020937
+exported_at: 1792830633241
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020937
-lastSeenAt: 1792830020937
+firstSeenAt: 1792830633241
+lastSeenAt: 1792830633241
 fingerprint: null
 payload:
   id: SET1_autobuild_config_and_command
@@ -30,3 +30,4 @@ payload:
     - '"autobuild_config"'
   spec: null
   graph: 8ba4dcf5e6c54fd0
+  uuid: fb5b50df-b1f3-5de0-8f81-f493c9c710d6

@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991870
+exported_at: 1792830602554
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991870
-lastSeenAt: 1792829991870
+firstSeenAt: 1792830602554
+lastSeenAt: 1792830602554
 fingerprint: null
 payload:
   for: CT5_hooked_into_the_plan
@@ -179,3 +179,4 @@ payload:
       - >-
         needed by (2): CT7_the_plan_shows_current_work, CT8_live_agent_activity · all downstream 3 ·
         finishing it unlocks CT7_the_plan_shows_current_work, CT8_live_agent_activity
+  phaseUuid: 507457c4-833f-5738-8b19-bca196ad94ea

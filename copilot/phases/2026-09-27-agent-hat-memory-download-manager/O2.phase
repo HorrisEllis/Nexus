@@ -7,11 +7,11 @@ intent: null
 summary: O2 (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829981303
+exported_at: 1792830592098
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829981303
-lastSeenAt: 1792829981303
+firstSeenAt: 1792830592098
+lastSeenAt: 1792830592098
 fingerprint: null
 payload:
   id: O2
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 5dc25ce343cba266
+  uuid: a0638446-afde-5ccc-b41e-79f81b4a4d90

@@ -9,11 +9,11 @@ intent: null
 summary: SB22_every_component_capability_command_events_as_nodes (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990968
+exported_at: 1792830601629
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990968
-lastSeenAt: 1792829990968
+firstSeenAt: 1792830601629
+lastSeenAt: 1792830601629
 fingerprint: null
 payload:
   id: SB22_every_component_capability_command_events_as_nodes
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 0dc30ff0fe394f6b
+  uuid: 5a0f9818-9df2-5294-bd0b-390b3ea978ce

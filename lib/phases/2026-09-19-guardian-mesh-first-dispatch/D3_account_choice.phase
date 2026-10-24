@@ -7,11 +7,11 @@ intent: null
 summary: D3_account_choice (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978966
+exported_at: 1792830589584
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978966
-lastSeenAt: 1792829978966
+firstSeenAt: 1792830589584
+lastSeenAt: 1792830589584
 fingerprint: null
 payload:
   id: D3_account_choice
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 5afebf8da117ef71
+  uuid: 991f93f5-0a9e-507c-a09c-6566aad6dd2c

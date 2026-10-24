@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829983324
+exported_at: 1792830594116
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983324
-lastSeenAt: 1792829983324
+firstSeenAt: 1792830594116
+lastSeenAt: 1792830594116
 fingerprint: null
 payload:
   for: X4_command_index_spec
@@ -47,3 +47,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): X1_system_nodes · all upstream 2'
       - 'needed by (1): Z1_release · finishing it unlocks Z1_release'
+  phaseUuid: fb62f1e6-6ee3-517f-95c8-e197640709d7

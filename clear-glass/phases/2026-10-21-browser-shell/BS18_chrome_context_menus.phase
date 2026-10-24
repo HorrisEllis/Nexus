@@ -7,11 +7,11 @@ intent: null
 summary: BS18_chrome_context_menus (surface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023784
+exported_at: 1792830636220
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023784
-lastSeenAt: 1792830023784
+firstSeenAt: 1792830636220
+lastSeenAt: 1792830636220
 fingerprint: null
 payload:
   id: BS18_chrome_context_menus
@@ -31,3 +31,10 @@ payload:
     - MOD-BSH-CHROME-CTX
   spec: clear-glass/spec/browser-shell.spec
   graph: 9123369f3fa7ce07
+  uuid: 2fa48971-9824-5467-8736-f27bc2e747ee
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-CHROME-CTX
+        uuid: nexus-cg-bsh-chrome-ctx-v1-0000-2026-1021-006

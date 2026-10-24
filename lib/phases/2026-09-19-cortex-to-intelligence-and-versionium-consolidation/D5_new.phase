@@ -9,11 +9,11 @@ intent: null
 summary: D5_new (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978567
+exported_at: 1792830589193
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978567
-lastSeenAt: 1792829978567
+firstSeenAt: 1792830589193
+lastSeenAt: 1792830589193
 fingerprint: null
 payload:
   id: D5_new
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: e4bcb9965a4d634f
+  uuid: 9a379faf-1418-543c-b723-d66efea4ba12

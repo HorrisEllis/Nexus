@@ -7,11 +7,11 @@ intent: null
 summary: P1_schema_table_in_cortex (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830030568
+exported_at: 1792830642887
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830030568
-lastSeenAt: 1792830030568
+firstSeenAt: 1792830642887
+lastSeenAt: 1792830642887
 fingerprint: null
 payload:
   id: P1_schema_table_in_cortex
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 8a7709b7b3706ea7
+  uuid: b64ff0b1-101a-5068-b80d-70a58fddcecd

@@ -7,11 +7,11 @@ intent: null
 summary: PW3_wiring (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830025020
+exported_at: 1792830637481
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025020
-lastSeenAt: 1792830025020
+firstSeenAt: 1792830637481
+lastSeenAt: 1792830637481
 fingerprint: null
 payload:
   id: PW3_wiring
@@ -30,3 +30,10 @@ payload:
     - MOD-PW-MAIN
   spec: clear-glass/spec/passwords.spec
   graph: a624445100ffd099
+  uuid: fb6e1d63-b327-5f60-8427-ebc90fb13134
+  specLink:
+    how: declared
+    spec: clear-glass/spec/passwords.spec
+    modules:
+      - id: MOD-PW-MAIN
+        uuid: nexus-cg-pw-main-v1-0000-2026-1021-001

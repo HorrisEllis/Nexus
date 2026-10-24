@@ -7,11 +7,11 @@ intent: null
 summary: RC6_unowned_ollama_load (foundation) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020480
+exported_at: 1792830632811
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020480
-lastSeenAt: 1792830020480
+firstSeenAt: 1792830632811
+lastSeenAt: 1792830632811
 fingerprint: null
 payload:
   id: RC6_unowned_ollama_load
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 67b8e7d0ffd6cf9d
+  uuid: 966a1e66-66c8-5e1e-8b76-4a58b8a285b6

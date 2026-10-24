@@ -7,11 +7,11 @@ intent: null
 summary: BS15_code_repo_delete (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985013
+exported_at: 1792830595766
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985013
-lastSeenAt: 1792829985013
+firstSeenAt: 1792830595766
+lastSeenAt: 1792830595766
 fingerprint: null
 payload:
   id: BS15_code_repo_delete
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: adf5a2f3bb4f53af
+  uuid: f430472e-0587-5818-9536-d637d9695667

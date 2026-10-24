@@ -7,11 +7,11 @@ intent: null
 summary: SP2_complete_the_blanks (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829995353
+exported_at: 1792830606332
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829995353
-lastSeenAt: 1792829995353
+firstSeenAt: 1792830606332
+lastSeenAt: 1792830606332
 fingerprint: null
 payload:
   id: SP2_complete_the_blanks
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 77fd5cd417d72e25
+  uuid: 81feedc2-a4ea-51aa-be59-d20607c20fad

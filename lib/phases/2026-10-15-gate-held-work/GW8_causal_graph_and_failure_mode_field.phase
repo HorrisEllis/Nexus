@@ -9,11 +9,11 @@ intent: null
 summary: GW8_causal_graph_and_failure_mode_field (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830006641
+exported_at: 1792830618164
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006641
-lastSeenAt: 1792830006641
+firstSeenAt: 1792830618164
+lastSeenAt: 1792830618164
 fingerprint: null
 payload:
   id: GW8_causal_graph_and_failure_mode_field
@@ -33,3 +33,4 @@ payload:
   blocks: []
   spec: null
   graph: 663a3a1b6c41b6e9
+  uuid: 2b8e6f73-2b8c-5bb2-b2a9-db2c127cf048

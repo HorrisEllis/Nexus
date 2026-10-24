@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830028601
+exported_at: 1792830641001
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028601
-lastSeenAt: 1792830028601
+firstSeenAt: 1792830641001
+lastSeenAt: 1792830641001
 fingerprint: null
 payload:
   for: CA3_pipeline_chains
@@ -255,3 +255,4 @@ payload:
       - >-
         needed by (1): CA6_self_building_commands · all downstream 2 · finishing it unlocks
         CA6_self_building_commands
+  phaseUuid: 1af12af2-ed6c-5dd6-b49a-127805a6b671

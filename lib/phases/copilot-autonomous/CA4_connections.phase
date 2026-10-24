@@ -7,11 +7,11 @@ intent: null
 summary: CA4_connections (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028601
+exported_at: 1792830641001
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028601
-lastSeenAt: 1792830028601
+firstSeenAt: 1792830641001
+lastSeenAt: 1792830641001
 fingerprint: null
 payload:
   id: CA4_connections
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: fd002fc2bc10c045
+  uuid: e8b2e33d-3460-53a5-8d42-82d6250915bd

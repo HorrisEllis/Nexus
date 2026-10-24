@@ -9,11 +9,11 @@ intent: null
 summary: BK2_phase_build_writes_code (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987084
+exported_at: 1792830597791
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987084
-lastSeenAt: 1792829987084
+firstSeenAt: 1792830597791
+lastSeenAt: 1792830597791
 fingerprint: null
 payload:
   id: BK2_phase_build_writes_code
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 44c59481c9cd44ba
+  uuid: 9b59a80d-e237-5fd0-807c-56f5d60a6155

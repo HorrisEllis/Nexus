@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830028208
+exported_at: 1792830640618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028208
-lastSeenAt: 1792830028208
+firstSeenAt: 1792830640618
+lastSeenAt: 1792830640618
 fingerprint: null
 payload:
   for: TX3_talk_to_agent_launcher
@@ -114,3 +114,4 @@ payload:
       - >-
         needed by (1): TX4_provider_tab_tool_loop · all downstream 2 · finishing it unlocks
         TX4_provider_tab_tool_loop
+  phaseUuid: f5ec05f3-fa4d-5e76-922b-687edd6449a9

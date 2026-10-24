@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830023353
+exported_at: 1792830635764
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023353
-lastSeenAt: 1792830023353
+firstSeenAt: 1792830635764
+lastSeenAt: 1792830635764
 fingerprint: null
 payload:
   for: BX0a_where_it_lands
@@ -49,3 +49,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (1): BX1_census · all downstream 10 · finishing it unlocks BX1_census'
+  phaseUuid: 1003c9b2-1e7c-5324-ba62-42532a2d95b7

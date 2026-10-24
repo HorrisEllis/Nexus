@@ -7,11 +7,11 @@ intent: null
 summary: SD14_chunks_cut_at_primitives (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999658
+exported_at: 1792830610988
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999658
-lastSeenAt: 1792829999658
+firstSeenAt: 1792830610988
+lastSeenAt: 1792830610988
 fingerprint: null
 payload:
   id: SD14_chunks_cut_at_primitives
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 9c0e825565000d6e
+  uuid: 35b38c0a-21a2-54c4-b07a-4f3d4ef1c1fd

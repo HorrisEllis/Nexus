@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988491
+exported_at: 1792830599134
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988491
-lastSeenAt: 1792829988491
+firstSeenAt: 1792830599134
+lastSeenAt: 1792830599134
 fingerprint: null
 payload:
   for: LB1_the_end_state_lab
@@ -210,3 +210,4 @@ payload:
       - >-
         same files as CL1_the_component_lab with no order between them: cos/playground/sandbox.js,
         idearium/repo/proof-run.js
+  phaseUuid: ee7a4c96-f061-5d2b-a963-270b50019daa

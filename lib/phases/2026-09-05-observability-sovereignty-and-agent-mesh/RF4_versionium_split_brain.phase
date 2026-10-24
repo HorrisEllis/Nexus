@@ -9,11 +9,11 @@ intent: null
 summary: RF4_versionium_split_brain (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975183
+exported_at: 1792830585803
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975183
-lastSeenAt: 1792829975183
+firstSeenAt: 1792830585803
+lastSeenAt: 1792830585803
 fingerprint: null
 payload:
   id: RF4_versionium_split_brain
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: b8dd3e8f9603deed
+  uuid: 1d63dccf-7e6b-50c9-a69f-a2a6b18a5348

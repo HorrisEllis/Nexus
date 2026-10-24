@@ -9,11 +9,11 @@ intent: null
 summary: UM1_nexus_understands_james (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987108
+exported_at: 1792830597815
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987108
-lastSeenAt: 1792829987108
+firstSeenAt: 1792830597815
+lastSeenAt: 1792830597815
 fingerprint: null
 payload:
   id: UM1_nexus_understands_james
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 941120d6e488072b
+  uuid: 5089cd4b-17cb-584e-9239-71c3f1ed49d2

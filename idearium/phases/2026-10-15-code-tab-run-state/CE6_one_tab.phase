@@ -7,11 +7,11 @@ intent: null
 summary: CE6_one_tab (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005432
+exported_at: 1792830616874
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005432
-lastSeenAt: 1792830005432
+firstSeenAt: 1792830616874
+lastSeenAt: 1792830616874
 fingerprint: null
 payload:
   id: CE6_one_tab
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: cd0e8325ed28c665
+  uuid: 8a4ac9f3-6c21-52ca-b081-51a691cecfb4

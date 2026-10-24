@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829972553
+exported_at: 1792830583166
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972553
-lastSeenAt: 1792829972553
+firstSeenAt: 1792830583166
+lastSeenAt: 1792830583166
 fingerprint: null
 payload:
   for: SBP10_per_hat_model_assignment
@@ -188,3 +188,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (2): SBP9_hat_forge_real_hats, SBP3_wire_contract_intake_through_routing_ir'
       - 'needed by (0): —'
+  phaseUuid: f0e842dd-62ba-5c0a-9b05-fe35ad1ffa11

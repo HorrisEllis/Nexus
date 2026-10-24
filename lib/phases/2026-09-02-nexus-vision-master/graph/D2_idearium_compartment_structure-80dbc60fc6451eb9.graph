@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829974292
+exported_at: 1792830584876
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974292
-lastSeenAt: 1792829974292
+firstSeenAt: 1792830584876
+lastSeenAt: 1792830584876
 fingerprint: null
 payload:
   for: D2_idearium_compartment_structure
@@ -40,3 +40,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by D1_bridgeos_readme_template
       - 'depends on (1): D1_bridgeos_readme_template'
       - 'needed by (0): —'
+  phaseUuid: 1c87f372-b986-5d33-bc46-66d31b3d5a15

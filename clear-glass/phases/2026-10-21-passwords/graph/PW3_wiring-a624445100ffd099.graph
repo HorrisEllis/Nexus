@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830025020
+exported_at: 1792830637480
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025020
-lastSeenAt: 1792830025020
+firstSeenAt: 1792830637480
+lastSeenAt: 1792830637480
 fingerprint: null
 payload:
   for: PW3_wiring
@@ -186,3 +186,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3
       - 'depends on (1): PW2_page · all upstream 3'
       - 'needed by (1): PW4_surface · finishing it unlocks PW4_surface'
+  phaseUuid: fb6e1d63-b327-5f60-8427-ebc90fb13134

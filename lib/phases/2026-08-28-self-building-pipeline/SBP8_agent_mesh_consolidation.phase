@@ -9,11 +9,11 @@ intent: null
 summary: SBP8_agent_mesh_consolidation (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972551
+exported_at: 1792830583165
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972551
-lastSeenAt: 1792829972551
+firstSeenAt: 1792830583165
+lastSeenAt: 1792830583165
 fingerprint: null
 payload:
   id: SBP8_agent_mesh_consolidation
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 5a5600d90602c11e
+  uuid: 865cba19-cd3f-55f4-aeaa-fe19dd0e7504

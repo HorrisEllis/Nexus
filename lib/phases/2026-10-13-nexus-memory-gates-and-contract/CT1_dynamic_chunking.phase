@@ -9,11 +9,11 @@ intent: null
 summary: CT1_dynamic_chunking (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002958
+exported_at: 1792830614346
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002958
-lastSeenAt: 1792830002958
+firstSeenAt: 1792830614346
+lastSeenAt: 1792830614346
 fingerprint: null
 payload:
   id: CT1_dynamic_chunking
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: f7d073f269227f58
+  uuid: b9aed820-bfe6-51c0-b2c0-aeff81c066f8

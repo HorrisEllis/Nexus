@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829994205
+exported_at: 1792830605067
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829994205
-lastSeenAt: 1792829994205
+firstSeenAt: 1792830605067
+lastSeenAt: 1792830605067
 fingerprint: null
 payload:
   for: VP6_debug_and_intelligence_in_the_desktop
@@ -235,3 +235,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by VP1_confidence_from_evidence
       - 'depends on (1): VP1_confidence_from_evidence · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: 400af5d9-ef88-53d1-b97b-82f2a4bec588

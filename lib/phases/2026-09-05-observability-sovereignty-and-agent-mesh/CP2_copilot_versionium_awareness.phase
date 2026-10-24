@@ -9,11 +9,11 @@ intent: null
 summary: CP2_copilot_versionium_awareness (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975223
+exported_at: 1792830585848
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975223
-lastSeenAt: 1792829975223
+firstSeenAt: 1792830585848
+lastSeenAt: 1792830585848
 fingerprint: null
 payload:
   id: CP2_copilot_versionium_awareness
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: dc90fa1d06d6df9e
+  uuid: 8f0c1683-fb35-5506-9b6c-8904db728393

@@ -7,11 +7,11 @@ intent: null
 summary: TN3 (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829998481
+exported_at: 1792830609744
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998481
-lastSeenAt: 1792829998481
+firstSeenAt: 1792830609744
+lastSeenAt: 1792830609744
 fingerprint: null
 payload:
   id: TN3
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 90649f8ae12ad4de
+  uuid: 2299deb4-ba60-5258-9dc1-19d0e930af2b

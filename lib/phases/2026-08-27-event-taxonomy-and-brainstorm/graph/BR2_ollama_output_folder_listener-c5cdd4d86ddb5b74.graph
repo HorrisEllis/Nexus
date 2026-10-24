@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829971726
+exported_at: 1792830582307
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971726
-lastSeenAt: 1792829971726
+firstSeenAt: 1792830582307
+lastSeenAt: 1792830582307
 fingerprint: null
 payload:
   for: BR2_ollama_output_folder_listener
@@ -55,3 +55,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 00970a80-81a5-5873-92d1-fb8846800c9e

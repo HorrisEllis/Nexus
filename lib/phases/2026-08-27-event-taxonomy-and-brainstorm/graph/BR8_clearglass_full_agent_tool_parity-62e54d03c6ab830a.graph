@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829971732
+exported_at: 1792830582312
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971732
-lastSeenAt: 1792829971732
+firstSeenAt: 1792830582312
+lastSeenAt: 1792830582312
 fingerprint: null
 payload:
   for: BR8_clearglass_full_agent_tool_parity
@@ -47,3 +47,4 @@ payload:
         TX16_persistent_listener_registry_and_callable_elements
       - 'depends on (1): TX16_persistent_listener_registry_and_callable_elements · all upstream 6'
       - 'needed by (0): —'
+  phaseUuid: 3eefb19b-4f13-58b6-a1a5-8e0d2e6b864b

@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829993407
+exported_at: 1792830604255
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829993407
-lastSeenAt: 1792829993407
+firstSeenAt: 1792830604255
+lastSeenAt: 1792830604255
 fingerprint: null
 payload:
   for: WK6_enterprise_grade
@@ -48,3 +48,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · ready
       - 'depends on (1): WK3_the_agent_drafts_every_block · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: a086fd18-c498-5e0e-806f-0960052d20fc

@@ -7,11 +7,11 @@ intent: null
 summary: CL2_the_agent_tab_is_the_endpoint (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991448
+exported_at: 1792830602122
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991448
-lastSeenAt: 1792829991448
+firstSeenAt: 1792830602122
+lastSeenAt: 1792830602122
 fingerprint: null
 payload:
   id: CL2_the_agent_tab_is_the_endpoint
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: cd07a65975c0f372
+  uuid: 0c0b0634-eace-5632-b660-a2f7b1b73f94

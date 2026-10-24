@@ -7,11 +7,11 @@ intent: null
 summary: OR2_the_proposal (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829998097
+exported_at: 1792830609306
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998097
-lastSeenAt: 1792829998097
+firstSeenAt: 1792830609306
+lastSeenAt: 1792830609306
 fingerprint: null
 payload:
   id: OR2_the_proposal
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 87394dbbf51c92a7
+  uuid: bd2537fa-81a8-57ec-a52d-95a55ab73840

@@ -9,11 +9,11 @@ intent: null
 summary: LM3_interaction_contract_wired_to_registry (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829973384
+exported_at: 1792830584031
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973384
-lastSeenAt: 1792829973384
+firstSeenAt: 1792830584031
+lastSeenAt: 1792830584031
 fingerprint: null
 payload:
   id: LM3_interaction_contract_wired_to_registry
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 449bc0047be37e21
+  uuid: 56bc5c06-69dc-5696-a96e-82b8a571b9b4

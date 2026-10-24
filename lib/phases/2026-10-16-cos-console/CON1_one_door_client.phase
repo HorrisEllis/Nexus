@@ -7,11 +7,11 @@ intent: null
 summary: CON1_one_door_client (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830010559
+exported_at: 1792830622316
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010559
-lastSeenAt: 1792830010559
+firstSeenAt: 1792830622316
+lastSeenAt: 1792830622316
 fingerprint: null
 payload:
   id: CON1_one_door_client
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: fef4cbb47a868a7e
+  uuid: eb924da5-f5b1-5901-9ebd-05809f4aca5c

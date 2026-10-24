@@ -7,11 +7,11 @@ intent: null
 summary: AP4_intelligence_optimizes (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830027402
+exported_at: 1792830639840
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027402
-lastSeenAt: 1792830027402
+firstSeenAt: 1792830639840
+lastSeenAt: 1792830639840
 fingerprint: null
 payload:
   id: AP4_intelligence_optimizes
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 8f53bceb7cf58c12
+  uuid: 8c680874-4ef5-5caa-955c-4aee38f736c0

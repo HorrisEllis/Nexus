@@ -7,11 +7,11 @@ intent: null
 summary: WS7_the_full_workshop (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990146
+exported_at: 1792830600801
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990146
-lastSeenAt: 1792829990146
+firstSeenAt: 1792830600801
+lastSeenAt: 1792830600801
 fingerprint: null
 payload:
   id: WS7_the_full_workshop
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: 7115b04f434c37ca
+  uuid: 8a8bc84e-55ac-51c4-bc30-d0ca30971861

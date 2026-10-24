@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830022176
+exported_at: 1792830634525
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022176
-lastSeenAt: 1792830022176
+firstSeenAt: 1792830634525
+lastSeenAt: 1792830634525
 fingerprint: null
 payload:
   for: GW3_gate_panel
@@ -257,3 +257,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 8 · blocked by GW2_gates_at_every_level, TB1_toolbox
       - 'depends on (2): GW2_gates_at_every_level, TB1_toolbox · all upstream 24'
       - 'needed by (0): —'
+  phaseUuid: 2eb70032-405f-59e0-96aa-412202406462

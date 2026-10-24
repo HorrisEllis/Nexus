@@ -9,11 +9,11 @@ intent: null
 summary: GA3_guardian_userscript_capability_wiring (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830029752
+exported_at: 1792830642127
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830029752
-lastSeenAt: 1792830029752
+firstSeenAt: 1792830642127
+lastSeenAt: 1792830642127
 fingerprint: null
 payload:
   id: GA3_guardian_userscript_capability_wiring
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 378f86881837b81c
+  uuid: 31a27685-4211-546d-949a-93151eff309a

@@ -9,11 +9,11 @@ intent: null
 summary: UI5_work_surface_from_contracts (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987079
+exported_at: 1792830597785
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987079
-lastSeenAt: 1792829987079
+firstSeenAt: 1792830597785
+lastSeenAt: 1792830597785
 fingerprint: null
 payload:
   id: UI5_work_surface_from_contracts
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: c718624c129a0cae
+  uuid: e82e9aee-44da-53a5-9c8b-3e474b750cc7

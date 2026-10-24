@@ -7,11 +7,11 @@ intent: null
 summary: CV1_one_menu (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005438
+exported_at: 1792830616880
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005438
-lastSeenAt: 1792830005438
+firstSeenAt: 1792830616880
+lastSeenAt: 1792830616880
 fingerprint: null
 payload:
   id: CV1_one_menu
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: ee95a78a4705be68
+  uuid: d0e19c29-d89b-5c83-9424-f5c3dacd438e

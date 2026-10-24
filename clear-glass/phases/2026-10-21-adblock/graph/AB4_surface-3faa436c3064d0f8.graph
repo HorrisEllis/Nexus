@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830022585
+exported_at: 1792830634932
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022585
-lastSeenAt: 1792830022585
+firstSeenAt: 1792830634932
+lastSeenAt: 1792830634932
 fingerprint: null
 payload:
   for: AB4_surface
@@ -228,3 +228,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4
       - 'depends on (1): AB3_wiring · all upstream 7'
       - 'needed by (1): AB5_import · finishing it unlocks AB5_import'
+  phaseUuid: d316ed98-7f9f-57ba-9981-e4d74ac8589b

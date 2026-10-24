@@ -7,11 +7,11 @@ intent: null
 summary: NM1_one_name_per_file (foundation) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830019661
+exported_at: 1792830631956
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830019661
-lastSeenAt: 1792830019661
+firstSeenAt: 1792830631956
+lastSeenAt: 1792830631956
 fingerprint: null
 payload:
   id: NM1_one_name_per_file
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 4139029cd3912f57
+  uuid: 29f4f00e-036c-5ab2-b322-56ee04c82159

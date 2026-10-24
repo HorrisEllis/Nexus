@@ -9,11 +9,11 @@ intent: null
 summary: ET2_guardian_event_taxonomy (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971721
+exported_at: 1792830582302
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971721
-lastSeenAt: 1792829971721
+firstSeenAt: 1792830582302
+lastSeenAt: 1792830582302
 fingerprint: null
 payload:
   id: ET2_guardian_event_taxonomy
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 3864f053a89e1c31
+  uuid: 4f5557b3-3fab-5a49-ad5f-2f23ec0105fa

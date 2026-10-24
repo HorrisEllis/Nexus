@@ -9,11 +9,11 @@ intent: null
 summary: MCO12_architect_remaining_routes (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976960
+exported_at: 1792830587551
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976960
-lastSeenAt: 1792829976960
+firstSeenAt: 1792830587551
+lastSeenAt: 1792830587551
 fingerprint: null
 payload:
   id: MCO12_architect_remaining_routes
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 3f4e0875f3387d46
+  uuid: 9bd77931-ccdf-5054-871c-04ec07cb516e

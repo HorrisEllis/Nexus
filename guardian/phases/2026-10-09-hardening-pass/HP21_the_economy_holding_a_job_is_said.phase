@@ -9,11 +9,11 @@ intent: null
 summary: HP21_the_economy_holding_a_job_is_said (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829997253
+exported_at: 1792830608412
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997253
-lastSeenAt: 1792829997253
+firstSeenAt: 1792830608412
+lastSeenAt: 1792830608412
 fingerprint: null
 payload:
   id: HP21_the_economy_holding_a_job_is_said
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 987bfbb18c496d42
+  uuid: 2cada06a-343c-5d74-b146-5953e34d6fbd

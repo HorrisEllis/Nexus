@@ -7,11 +7,11 @@ intent: null
 summary: PE9_infrastructure_failures (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830013725
+exported_at: 1792830625549
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830013725
-lastSeenAt: 1792830013725
+firstSeenAt: 1792830625549
+lastSeenAt: 1792830625549
 fingerprint: null
 payload:
   id: PE9_infrastructure_failures
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 09874db1c36c931a
+  uuid: 76d4c44a-b9bb-564c-a4cd-da4cb85ba4a6

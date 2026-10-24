@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830031750
+exported_at: 1792830644017
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830031750
-lastSeenAt: 1792830031750
+firstSeenAt: 1792830644017
+lastSeenAt: 1792830644017
 fingerprint: null
 payload:
   for: MCO2_verification_deepening
@@ -205,3 +205,4 @@ payload:
       - >-
         needed by (1): MCO3_snapshot_compliance · all downstream 2 · finishing it unlocks
         MCO3_snapshot_compliance
+  phaseUuid: f9bef09f-844e-5244-997e-0e13e873caa9

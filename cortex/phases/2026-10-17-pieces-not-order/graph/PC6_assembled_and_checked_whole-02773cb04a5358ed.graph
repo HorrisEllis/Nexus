@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830016439
+exported_at: 1792830628486
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016439
-lastSeenAt: 1792830016439
+firstSeenAt: 1792830628486
+lastSeenAt: 1792830628486
 fingerprint: null
 payload:
   for: PC6_assembled_and_checked_whole
@@ -106,3 +106,4 @@ payload:
         PC3_verified_alone_resumed_by_recheck
       - 'depends on (2): PC2_any_order, PC3_verified_alone_resumed_by_recheck · all upstream 6'
       - 'needed by (0): —'
+  phaseUuid: a3763722-528c-57f5-be6c-feef12cf7bbd

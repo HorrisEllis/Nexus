@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829976050
+exported_at: 1792830586662
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976050
-lastSeenAt: 1792829976050
+firstSeenAt: 1792830586662
+lastSeenAt: 1792830586662
 fingerprint: null
 payload:
   for: T4_cos_role_confirmed
@@ -64,3 +64,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · ready
       - 'depends on (1): T1_extend_system_scaffold'
       - 'needed by (0): —'
+  phaseUuid: a06de8e5-4968-5c34-9010-367f1c58b91d

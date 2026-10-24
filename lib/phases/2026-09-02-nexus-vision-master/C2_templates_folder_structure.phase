@@ -7,11 +7,11 @@ intent: null
 summary: C2_templates_folder_structure (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974287
+exported_at: 1792830584871
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974287
-lastSeenAt: 1792829974287
+firstSeenAt: 1792830584871
+lastSeenAt: 1792830584871
 fingerprint: null
 payload:
   id: C2_templates_folder_structure
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 4b30f66e40536e56
+  uuid: d9d1790c-9f0d-5569-ae5e-61b384c33bfe

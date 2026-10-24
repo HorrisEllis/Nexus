@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830022170
+exported_at: 1792830634519
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022170
-lastSeenAt: 1792830022170
+firstSeenAt: 1792830634519
+lastSeenAt: 1792830634519
 fingerprint: null
 payload:
   for: TV2_invariant_guided_traversal
@@ -65,3 +65,4 @@ payload:
         depends on (3): TV1_traversal_primitive, IV2_invariant_miner, TV3_traversal_as_context · all
         upstream 14
       - 'needed by (0): —'
+  phaseUuid: 28060297-e5e0-5cdd-a8b5-234ebc722b44

@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830003811
+exported_at: 1792830615213
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003811
-lastSeenAt: 1792830003811
+firstSeenAt: 1792830615213
+lastSeenAt: 1792830615213
 fingerprint: null
 payload:
   for: KT1_observations_on_a_semantic_tree
@@ -191,3 +191,4 @@ payload:
         needed by (1): CX1_context_from_the_dependencies · all downstream 3 · finishing it unlocks
         CX1_context_from_the_dependencies
       - 'same files as CS1_every_brick_a_component with no order between them: lib/component-store.js'
+  phaseUuid: aa30fd0f-a5db-547e-af48-97bed822f690

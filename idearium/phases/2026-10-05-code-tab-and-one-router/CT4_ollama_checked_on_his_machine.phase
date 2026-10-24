@@ -9,11 +9,11 @@ intent: null
 summary: CT4_ollama_checked_on_his_machine (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991869
+exported_at: 1792830602553
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991869
-lastSeenAt: 1792829991869
+firstSeenAt: 1792830602553
+lastSeenAt: 1792830602553
 fingerprint: null
 payload:
   id: CT4_ollama_checked_on_his_machine
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 1d3a38b45bcc1514
+  uuid: 08703a2e-8811-5309-888a-49ceab87f376

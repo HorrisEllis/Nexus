@@ -7,11 +7,11 @@ intent: null
 summary: MR1_live_node (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007068
+exported_at: 1792830618613
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007068
-lastSeenAt: 1792830007068
+firstSeenAt: 1792830618613
+lastSeenAt: 1792830618613
 fingerprint: null
 payload:
   id: MR1_live_node
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: d02eb93be714620a
+  uuid: c545981b-82d3-5aaa-b58e-a748a2d32d27

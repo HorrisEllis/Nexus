@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829987570
+exported_at: 1792830598250
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987570
-lastSeenAt: 1792829987570
+firstSeenAt: 1792830598250
+lastSeenAt: 1792830598250
 fingerprint: null
 payload:
   for: AR1_architecture_spec
@@ -49,3 +49,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4
       - 'depends on (1): GN1_genesis · all upstream 4'
       - 'needed by (1): RG9_release · finishing it unlocks RG9_release'
+  phaseUuid: cfd7a4e4-1670-56ca-a88c-87a0142a93f0

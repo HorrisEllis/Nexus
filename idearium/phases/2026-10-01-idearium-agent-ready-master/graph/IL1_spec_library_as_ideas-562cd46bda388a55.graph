@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829987111
+exported_at: 1792830597816
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987111
-lastSeenAt: 1792829987111
+firstSeenAt: 1792830597816
+lastSeenAt: 1792830597816
 fingerprint: null
 payload:
   for: IL1_spec_library_as_ideas
@@ -251,3 +251,4 @@ payload:
       - >-
         needed by (2): IL2_library_spec_into_the_pipeline, SW1_spec_workshop · all downstream 3 ·
         finishing it unlocks IL2_library_spec_into_the_pipeline
+  phaseUuid: 0c11044d-637e-5a94-a800-aba191a07844

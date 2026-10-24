@@ -7,11 +7,11 @@ intent: null
 summary: NT0_notes (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830003396
+exported_at: 1792830614743
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003396
-lastSeenAt: 1792830003396
+firstSeenAt: 1792830614743
+lastSeenAt: 1792830614743
 fingerprint: null
 payload:
   id: NT0_notes
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 6b7863af6bf2d475
+  uuid: a49f0543-3c8e-512b-b840-f54ef5f6605a

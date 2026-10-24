@@ -7,11 +7,11 @@ intent: null
 summary: 34 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991001
+exported_at: 1792830601663
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991001
-lastSeenAt: 1792829991001
+firstSeenAt: 1792830601663
+lastSeenAt: 1792830601663
 fingerprint: null
 payload:
   for: SB39_the_checklist_builds_the_working_set
@@ -268,3 +268,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 10
       - 'depends on (1): SB38_prerequisites_the_questions_first · all upstream 10'
       - 'needed by (0): —'
+  phaseUuid: b6e631de-f306-54ed-a332-7c88f0a2fcb2

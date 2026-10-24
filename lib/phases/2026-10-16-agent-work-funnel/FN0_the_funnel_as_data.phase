@@ -7,11 +7,11 @@ intent: null
 summary: FN0_the_funnel_as_data (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830009415
+exported_at: 1792830621076
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009415
-lastSeenAt: 1792830009415
+firstSeenAt: 1792830621076
+lastSeenAt: 1792830621076
 fingerprint: null
 payload:
   id: FN0_the_funnel_as_data
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 36bff935bc611507
+  uuid: d32157cd-83c8-51f2-8a70-f828334367aa

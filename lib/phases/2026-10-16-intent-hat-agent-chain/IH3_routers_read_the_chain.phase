@@ -7,11 +7,11 @@ intent: null
 summary: IH3_routers_read_the_chain (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830012139
+exported_at: 1792830623953
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830012139
-lastSeenAt: 1792830012139
+firstSeenAt: 1792830623953
+lastSeenAt: 1792830623953
 fingerprint: null
 payload:
   id: IH3_routers_read_the_chain
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 7b604cd3c79ab423
+  uuid: 0a170992-3a71-5ecb-b6df-5cd5a4251fa4

@@ -7,11 +7,11 @@ intent: null
 summary: RC2_linear_node_scan (foundation) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020467
+exported_at: 1792830632798
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020467
-lastSeenAt: 1792830020467
+firstSeenAt: 1792830632798
+lastSeenAt: 1792830632798
 fingerprint: null
 payload:
   id: RC2_linear_node_scan
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 77759fcaf402a194
+  uuid: fb40a44c-4778-5492-8ad4-1ceef74ac31a

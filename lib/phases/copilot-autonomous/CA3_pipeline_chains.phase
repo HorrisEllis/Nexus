@@ -7,11 +7,11 @@ intent: null
 summary: CA3_pipeline_chains (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028601
+exported_at: 1792830641001
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028601
-lastSeenAt: 1792830028601
+firstSeenAt: 1792830641001
+lastSeenAt: 1792830641001
 fingerprint: null
 payload:
   id: CA3_pipeline_chains
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: c33bc76e820f40fa
+  uuid: 1af12af2-ed6c-5dd6-b49a-127805a6b671

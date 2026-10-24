@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830026602
+exported_at: 1792830639074
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026602
-lastSeenAt: 1792830026602
+firstSeenAt: 1792830639074
+lastSeenAt: 1792830639074
 fingerprint: null
 payload:
   for: SL1_a_proven_phase_closes_itself
@@ -254,3 +254,4 @@ payload:
       - >-
         needed by (2): SL4_the_loop, SL5_when_a_proven_change_lands_alone · finishing it unlocks
         SL5_when_a_proven_change_lands_alone
+  phaseUuid: 0953f868-511e-56f6-bf70-6908d2dce432

@@ -7,11 +7,11 @@ intent: null
 summary: P16_architect_node_canvas_in_loom (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032527
+exported_at: 1792830644787
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032527
-lastSeenAt: 1792830032527
+firstSeenAt: 1792830644787
+lastSeenAt: 1792830644787
 fingerprint: null
 payload:
   id: P16_architect_node_canvas_in_loom
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: e1fe4417843573a5
+  uuid: ae0582f7-1dfe-57a4-8cf8-95ef69604328

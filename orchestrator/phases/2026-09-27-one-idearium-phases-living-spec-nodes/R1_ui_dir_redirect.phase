@@ -9,11 +9,11 @@ intent: null
 summary: R1_ui_dir_redirect (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983310
+exported_at: 1792830594103
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983310
-lastSeenAt: 1792829983310
+firstSeenAt: 1792830594103
+lastSeenAt: 1792830594103
 fingerprint: null
 payload:
   id: R1_ui_dir_redirect
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 2635438fe347f665
+  uuid: f65c8fc2-4d4d-544d-8d68-2afa4f4a7fc9

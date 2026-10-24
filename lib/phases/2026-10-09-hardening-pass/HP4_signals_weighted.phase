@@ -7,11 +7,11 @@ intent: null
 summary: HP4_signals_weighted (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829997240
+exported_at: 1792830608399
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997240
-lastSeenAt: 1792829997240
+firstSeenAt: 1792830608399
+lastSeenAt: 1792830608399
 fingerprint: null
 payload:
   id: HP4_signals_weighted
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 036df943c960cf97
+  uuid: 23462371-5959-5244-9a58-4ff1674c13fa

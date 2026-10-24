@@ -9,11 +9,11 @@ intent: null
 summary: IN5_architect_mirrors_the_registry (interface) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020053
+exported_at: 1792830632373
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020053
-lastSeenAt: 1792830020053
+firstSeenAt: 1792830632373
+lastSeenAt: 1792830632373
 fingerprint: null
 payload:
   id: IN5_architect_mirrors_the_registry
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 20117e52fe90f953
+  uuid: 9d2f0882-55cb-5f51-a689-32d08ba165c3

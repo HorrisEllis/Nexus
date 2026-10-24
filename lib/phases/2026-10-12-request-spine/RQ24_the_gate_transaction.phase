@@ -7,11 +7,11 @@ intent: null
 summary: RQ24_the_gate_transaction (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001737
+exported_at: 1792830613169
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001737
-lastSeenAt: 1792830001737
+firstSeenAt: 1792830613169
+lastSeenAt: 1792830613169
 fingerprint: null
 payload:
   id: RQ24_the_gate_transaction
@@ -36,3 +36,4 @@ payload:
   blocks: []
   spec: null
   graph: ad6d4d6afc88c72b
+  uuid: e91091b9-3b4e-54ea-8080-7058cc31dadd

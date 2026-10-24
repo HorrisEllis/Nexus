@@ -7,11 +7,11 @@ intent: null
 summary: AD1_adapter_contract (foundation) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020056
+exported_at: 1792830632376
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020056
-lastSeenAt: 1792830020056
+firstSeenAt: 1792830632376
+lastSeenAt: 1792830632376
 fingerprint: null
 payload:
   id: AD1_adapter_contract
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: e91a444c6f2283f5
+  uuid: 7cb09eef-c977-5891-a4e2-64595a685a52

@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830004605
+exported_at: 1792830616035
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004605
-lastSeenAt: 1792830004605
+firstSeenAt: 1792830616035
+lastSeenAt: 1792830616035
 fingerprint: null
 payload:
   for: NP17_hold_primitive
@@ -45,3 +45,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by NP15_kill_switch
       - 'depends on (1): NP15_kill_switch · all upstream 4'
       - 'needed by (1): NP18_freeze_plugin'
+  phaseUuid: a2ec81ce-f395-5601-8a43-712695295457

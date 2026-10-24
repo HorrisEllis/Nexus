@@ -7,11 +7,11 @@ intent: null
 summary: HT1_hat_manager (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829979377
+exported_at: 1792830590019
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829979377
-lastSeenAt: 1792829979377
+firstSeenAt: 1792830590019
+lastSeenAt: 1792830590019
 fingerprint: null
 payload:
   id: HT1_hat_manager
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: c65f629e4c701947
+  uuid: 113cf398-3b66-512f-96a9-4875e0e4e4f6

@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829985016
+exported_at: 1792830595769
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985016
-lastSeenAt: 1792829985016
+firstSeenAt: 1792830595769
+lastSeenAt: 1792830595769
 fingerprint: null
 payload:
   for: BS19_copilot_atlas_guide
@@ -57,3 +57,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): BS17_copilot_browser_verbs'
       - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
+  phaseUuid: b1e7f895-fd34-5294-9203-ee1428d51e1c

@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988494
+exported_at: 1792830599136
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988494
-lastSeenAt: 1792829988494
+firstSeenAt: 1792830599136
+lastSeenAt: 1792830599136
 fingerprint: null
 payload:
   for: FM1_mining_failure_modes
@@ -200,3 +200,4 @@ payload:
         same files as DA1_domain_agnostic_end_states with no order between them:
         idearium/repo/proof-run.js
       - … and 1 more phases sharing its files without an order
+  phaseUuid: 87353fb8-32c6-56a1-8775-d273b89c416b

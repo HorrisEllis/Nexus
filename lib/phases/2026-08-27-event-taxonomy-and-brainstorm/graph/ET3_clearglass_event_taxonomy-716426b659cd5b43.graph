@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829971722
+exported_at: 1792830582303
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971722
-lastSeenAt: 1792829971722
+firstSeenAt: 1792830582303
+lastSeenAt: 1792830582303
 fingerprint: null
 payload:
   for: ET3_clearglass_event_taxonomy
@@ -66,3 +66,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by ET1_event_taxonomy_pattern
       - 'depends on (1): ET1_event_taxonomy_pattern'
       - 'needed by (1): ET5_loom_event_taxonomy_map · all downstream 3'
+  phaseUuid: c69977a1-67b3-5622-933e-3e7f66d8a08b

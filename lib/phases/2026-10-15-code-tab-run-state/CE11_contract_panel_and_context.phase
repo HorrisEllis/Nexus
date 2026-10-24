@@ -7,11 +7,11 @@ intent: null
 summary: CE11_contract_panel_and_context (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005437
+exported_at: 1792830616879
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005437
-lastSeenAt: 1792830005437
+firstSeenAt: 1792830616879
+lastSeenAt: 1792830616879
 fingerprint: null
 payload:
   id: CE11_contract_panel_and_context
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 1c20d408c33edd4a
+  uuid: d8a1031d-7a99-5366-be47-60d47e54ec17

@@ -9,11 +9,11 @@ intent: null
 summary: SB10_reuse_first_keyed_on_the_contract (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990936
+exported_at: 1792830601597
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990936
-lastSeenAt: 1792829990936
+firstSeenAt: 1792830601597
+lastSeenAt: 1792830601597
 fingerprint: null
 payload:
   id: SB10_reuse_first_keyed_on_the_contract
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 9422db472ab6bb14
+  uuid: 96f6ee02-455a-57e1-b600-a8348700fda4

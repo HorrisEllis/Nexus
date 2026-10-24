@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830029763
+exported_at: 1792830642131
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830029763
-lastSeenAt: 1792830029763
+firstSeenAt: 1792830642131
+lastSeenAt: 1792830642131
 fingerprint: null
 payload:
   for: GA9_cos_expansion_via_copilot
@@ -209,3 +209,4 @@ payload:
       - 'depends on (1): GA6_spec_builder_depth'
       - 'needed by (1): GA6_spec_builder_depth · finishing it unlocks GA6_spec_builder_depth'
       - 'CYCLE: GA6_spec_builder_depth → GA9_cos_expansion_via_copilot'
+  phaseUuid: e5e3edf7-a9f0-5130-a366-066a3c8beec4

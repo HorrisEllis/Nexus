@@ -7,11 +7,11 @@ intent: null
 summary: IA2_the_command (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999253
+exported_at: 1792830610575
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999253
-lastSeenAt: 1792829999253
+firstSeenAt: 1792830610575
+lastSeenAt: 1792830610575
 fingerprint: null
 payload:
   id: IA2_the_command
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 447eafe8b6ed97e1
+  uuid: e223d037-59f8-50f8-8ebb-b83c66642f2d

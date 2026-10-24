@@ -7,11 +7,11 @@ intent: null
 summary: CA3_tool_first (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028975
+exported_at: 1792830641381
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028975
-lastSeenAt: 1792830028975
+firstSeenAt: 1792830641381
+lastSeenAt: 1792830641381
 fingerprint: null
 payload:
   id: CA3_tool_first
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 913f66ec208c6737
+  uuid: 959c8968-049c-5994-ab04-fe8b17599938

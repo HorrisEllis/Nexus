@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988483
+exported_at: 1792830599123
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988483
-lastSeenAt: 1792829988483
+firstSeenAt: 1792830599123
+lastSeenAt: 1792830599123
 fingerprint: null
 payload:
   for: IN2_claude_code_inside_nexus
@@ -214,3 +214,4 @@ payload:
         depends on (3): GA1_guardian_source_of_truth, AC1_accounts_into_agents, SH1_shadow_space ·
         all upstream 8
       - 'needed by (0): —'
+  phaseUuid: eb1920ff-cce3-5aa3-a7ee-d6fa9cf4f834

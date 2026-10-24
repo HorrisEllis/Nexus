@@ -7,11 +7,11 @@ intent: null
 summary: EC10_eros_workbench (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985881
+exported_at: 1792830596586
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985881
-lastSeenAt: 1792829985881
+firstSeenAt: 1792830596586
+lastSeenAt: 1792830596586
 fingerprint: null
 payload:
   id: EC10_eros_workbench
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 27a839ee0a545a60
+  uuid: 1ada843e-d050-5132-a819-74882de1a78f

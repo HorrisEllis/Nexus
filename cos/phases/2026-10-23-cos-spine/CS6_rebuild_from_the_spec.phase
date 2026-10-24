@@ -7,11 +7,11 @@ intent: null
 summary: CS6_rebuild_from_the_spec (integration) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026217
+exported_at: 1792830638674
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026217
-lastSeenAt: 1792830026217
+firstSeenAt: 1792830638674
+lastSeenAt: 1792830638674
 fingerprint: null
 payload:
   id: CS6_rebuild_from_the_spec
@@ -33,3 +33,10 @@ payload:
     - MOD-CS-REBUILD
   spec: cos/spec/cos-spine.spec
   graph: 2027a2ea6546f0e2
+  uuid: 84589aac-5588-5658-ba03-bd5760b5ff0b
+  specLink:
+    how: declared
+    spec: cos/spec/cos-spine.spec
+    modules:
+      - id: MOD-CS-REBUILD
+        uuid: nexus-cos-spine-rebuild-v1-0000-2026-1023-001

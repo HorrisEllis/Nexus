@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988496
+exported_at: 1792830599139
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988496
-lastSeenAt: 1792829988496
+firstSeenAt: 1792830599139
+lastSeenAt: 1792830599139
 fingerprint: null
 payload:
   for: MS1_mental_simulation
@@ -60,3 +60,4 @@ payload:
       - 'depends on (2): FM1_mining_failure_modes, LB1_the_end_state_lab · all upstream 11'
       - 'needed by (0): —'
       - 'same files as MR2_vector_space_for_the_field with no order between them: intelligence/cfr/'
+  phaseUuid: c7adeb42-d45d-5cb4-b274-fbd0d605ed48

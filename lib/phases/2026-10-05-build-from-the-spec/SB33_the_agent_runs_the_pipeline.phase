@@ -9,11 +9,11 @@ intent: null
 summary: SB33_the_agent_runs_the_pipeline (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990990
+exported_at: 1792830601650
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990990
-lastSeenAt: 1792829990990
+firstSeenAt: 1792830601650
+lastSeenAt: 1792830601650
 fingerprint: null
 payload:
   id: SB33_the_agent_runs_the_pipeline
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 4535cb3c5069ae44
+  uuid: 7927fd02-ccc1-5520-9607-5a8900fb144c

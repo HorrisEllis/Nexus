@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829987073
+exported_at: 1792830597777
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987073
-lastSeenAt: 1792829987073
+firstSeenAt: 1792830597777
+lastSeenAt: 1792830597777
 fingerprint: null
 payload:
   for: CP1_copilot_drives_idearium_and_talks_to_its_agents
@@ -269,3 +269,4 @@ payload:
       - 'needed by (0): —'
       - 'same files as HC1_hat_agent_to_cos_build with no order between them: idearium/api/index.js'
       - 'same files as BK2_phase_build_writes_code with no order between them: idearium/api/index.js'
+  phaseUuid: a20e7b10-94c2-59cb-8514-b5a6d571b2e6

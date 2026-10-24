@@ -7,11 +7,11 @@ intent: null
 summary: L3_needs_GM0a (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830018478
+exported_at: 1792830630674
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830018478
-lastSeenAt: 1792830018478
+firstSeenAt: 1792830630674
+lastSeenAt: 1792830630674
 fingerprint: null
 payload:
   id: L3_needs_GM0a
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 479b1bdf2c376727
+  uuid: 1cb21ec2-bd05-5695-9474-ecad1795bbdc

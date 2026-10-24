@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829974325
+exported_at: 1792830584908
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974325
-lastSeenAt: 1792829974325
+firstSeenAt: 1792830584908
+lastSeenAt: 1792830584908
 fingerprint: null
 payload:
   for: LM4_hotswap_ui_contracts
@@ -37,3 +37,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: fdc3b48e-4b8d-541d-9e53-646a62446a05

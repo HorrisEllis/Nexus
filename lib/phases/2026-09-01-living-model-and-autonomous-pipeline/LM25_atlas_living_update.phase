@@ -9,11 +9,11 @@ intent: null
 summary: LM25_atlas_living_update (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829973410
+exported_at: 1792830584055
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973410
-lastSeenAt: 1792829973410
+firstSeenAt: 1792830584055
+lastSeenAt: 1792830584055
 fingerprint: null
 payload:
   id: LM25_atlas_living_update
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: fffff5497b586859
+  uuid: 49867b25-4dbe-5bfa-8c1c-2860b8748ff6

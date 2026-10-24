@@ -7,11 +7,11 @@ intent: null
 summary: CE0_one_tab_or_two (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005426
+exported_at: 1792830616866
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005426
-lastSeenAt: 1792830005426
+firstSeenAt: 1792830616866
+lastSeenAt: 1792830616866
 fingerprint: null
 payload:
   id: CE0_one_tab_or_two
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 27e84a65935a0318
+  uuid: 745f2b4a-5e02-5fef-bc7d-ff514d1de8d0

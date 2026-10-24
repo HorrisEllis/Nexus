@@ -7,11 +7,11 @@ intent: null
 summary: T2_duplicate_prompt (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978959
+exported_at: 1792830589578
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978959
-lastSeenAt: 1792829978959
+firstSeenAt: 1792830589578
+lastSeenAt: 1792830589578
 fingerprint: null
 payload:
   id: T2_duplicate_prompt
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: fd69a7a86a7aeec7
+  uuid: ca11b484-8fbd-5867-be09-a05d2e58b716

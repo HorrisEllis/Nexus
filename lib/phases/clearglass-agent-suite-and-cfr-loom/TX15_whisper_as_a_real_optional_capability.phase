@@ -9,11 +9,11 @@ intent: null
 summary: TX15_whisper_as_a_real_optional_capability (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028219
+exported_at: 1792830640629
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028219
-lastSeenAt: 1792830028219
+firstSeenAt: 1792830640629
+lastSeenAt: 1792830640629
 fingerprint: null
 payload:
   id: TX15_whisper_as_a_real_optional_capability
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 9064ceff1c0912a4
+  uuid: e5e37c7b-5cb1-5224-be94-1bc512cc05ed

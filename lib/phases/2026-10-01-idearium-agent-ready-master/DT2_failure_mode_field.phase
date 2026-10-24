@@ -7,11 +7,11 @@ intent: null
 summary: DT2_failure_mode_field (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987053
+exported_at: 1792830597757
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987053
-lastSeenAt: 1792829987053
+firstSeenAt: 1792830597757
+lastSeenAt: 1792830597757
 fingerprint: null
 payload:
   id: DT2_failure_mode_field
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 6c0d9717247bc31e
+  uuid: 048521e4-6327-55e3-ad2e-18e755760a9b

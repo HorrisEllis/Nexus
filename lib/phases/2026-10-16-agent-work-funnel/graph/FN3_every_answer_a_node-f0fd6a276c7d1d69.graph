@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830009417
+exported_at: 1792830621079
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009417
-lastSeenAt: 1792830009417
+firstSeenAt: 1792830621079
+lastSeenAt: 1792830621079
 fingerprint: null
 payload:
   for: FN3_every_answer_a_node
@@ -165,3 +165,4 @@ payload:
       - >-
         same files as FN2_what_is_missing_is_made_first with no order between them:
         lib/work-funnel.js
+  phaseUuid: b699862c-0a21-5803-9605-391f4bfbfb3a

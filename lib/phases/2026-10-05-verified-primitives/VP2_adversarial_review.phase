@@ -7,11 +7,11 @@ intent: null
 summary: VP2_adversarial_review (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829994200
+exported_at: 1792830605062
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829994200
-lastSeenAt: 1792829994200
+firstSeenAt: 1792830605062
+lastSeenAt: 1792830605062
 fingerprint: null
 payload:
   id: VP2_adversarial_review
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 861894593ce759d9
+  uuid: db6506cd-e8b3-5aa7-9cce-8e98cd8b6561

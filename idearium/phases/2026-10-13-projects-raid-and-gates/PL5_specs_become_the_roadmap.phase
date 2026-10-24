@@ -9,11 +9,11 @@ intent: null
 summary: PL5_specs_become_the_roadmap (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830003405
+exported_at: 1792830614754
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003405
-lastSeenAt: 1792830003405
+firstSeenAt: 1792830614754
+lastSeenAt: 1792830614754
 fingerprint: null
 payload:
   id: PL5_specs_become_the_roadmap
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 494bc4384547022a
+  uuid: c6dd3300-df83-50ee-8179-37e7c931caf7

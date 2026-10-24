@@ -9,11 +9,11 @@ intent: null
 summary: CL1_commands_declared_by_their_system (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991447
+exported_at: 1792830602121
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991447
-lastSeenAt: 1792829991447
+firstSeenAt: 1792830602121
+lastSeenAt: 1792830602121
 fingerprint: null
 payload:
   id: CL1_commands_declared_by_their_system
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: 17ce5c8f22a70bb7
+  uuid: 012dbb65-8674-5362-a0b6-258dc3317b1d

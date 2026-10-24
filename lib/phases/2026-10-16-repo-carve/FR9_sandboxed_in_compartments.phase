@@ -7,11 +7,11 @@ intent: null
 summary: FR9_sandboxed_in_compartments (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830014488
+exported_at: 1792830626356
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830014488
-lastSeenAt: 1792830014488
+firstSeenAt: 1792830626356
+lastSeenAt: 1792830626356
 fingerprint: null
 payload:
   id: FR9_sandboxed_in_compartments
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: b650b1973c9adbba
+  uuid: b7ffa1b6-036a-5a0d-a642-d4b6b9e3faa0

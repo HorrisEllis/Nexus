@@ -7,11 +7,11 @@ intent: null
 summary: DL5_memory_in_cortex (integration) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830024631
+exported_at: 1792830637072
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830024631
-lastSeenAt: 1792830024631
+firstSeenAt: 1792830637072
+lastSeenAt: 1792830637072
 fingerprint: null
 payload:
   id: DL5_memory_in_cortex
@@ -31,3 +31,10 @@ payload:
     - MOD-MEMORY-IN-CORTEX
   spec: docs/data-layout.spec
   graph: 59082cf7b07d2717
+  uuid: bfa57e92-1cf2-5b5a-a8a5-6582e4f27778
+  specLink:
+    how: declared
+    spec: docs/data-layout.spec
+    modules:
+      - id: MOD-MEMORY-IN-CORTEX
+        uuid: nexus-data-memory-in-cortex-v1-0000-2026-1021-001

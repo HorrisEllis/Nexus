@@ -7,11 +7,11 @@ intent: null
 summary: EC9_input_path_in_editors (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985880
+exported_at: 1792830596585
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985880
-lastSeenAt: 1792829985880
+firstSeenAt: 1792830596585
+lastSeenAt: 1792830596585
 fingerprint: null
 payload:
   id: EC9_input_path_in_editors
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 2b376534e7e951b9
+  uuid: d5f2ad6e-0471-51fb-836a-b0e343a77227

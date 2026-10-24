@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829999647
+exported_at: 1792830610977
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999647
-lastSeenAt: 1792829999647
+firstSeenAt: 1792830610977
+lastSeenAt: 1792830610977
 fingerprint: null
 payload:
   for: SD4_agents_live_in_guardian
@@ -111,3 +111,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): SD5_account_fallback · finishing it unlocks SD5_account_fallback'
+  phaseUuid: 3e3569f2-8c3c-554c-9926-2018e5e34c1b

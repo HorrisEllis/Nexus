@@ -9,11 +9,11 @@ intent: null
 summary: P23_guardian_job_durability (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976516
+exported_at: 1792830587126
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976516
-lastSeenAt: 1792829976516
+firstSeenAt: 1792830587126
+lastSeenAt: 1792830587126
 fingerprint: null
 payload:
   id: P23_guardian_job_durability
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 27a5e87ffd5ddbc2
+  uuid: 07cfc4fb-7c96-553d-8e31-0baeae2f0106

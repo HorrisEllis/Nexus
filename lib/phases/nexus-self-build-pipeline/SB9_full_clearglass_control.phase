@@ -7,11 +7,11 @@ intent: null
 summary: SB9_full_clearglass_control (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034498
+exported_at: 1792830646704
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034498
-lastSeenAt: 1792830034498
+firstSeenAt: 1792830646704
+lastSeenAt: 1792830646704
 fingerprint: null
 payload:
   id: SB9_full_clearglass_control
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 77c994bfadf395ac
+  uuid: 6aa1b4e8-aa7b-5438-911c-93a7e2977727

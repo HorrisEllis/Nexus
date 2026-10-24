@@ -7,11 +7,11 @@ intent: null
 summary: MR8_crystallization (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988442
+exported_at: 1792830599083
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988442
-lastSeenAt: 1792829988442
+firstSeenAt: 1792830599083
+lastSeenAt: 1792830599083
 fingerprint: null
 payload:
   id: MR8_crystallization
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: b7db5295beb68216
+  uuid: 9f0bf26a-e28f-52b2-9102-8a53dda0cee0

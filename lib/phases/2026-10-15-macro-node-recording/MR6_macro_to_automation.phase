@@ -7,11 +7,11 @@ intent: null
 summary: MR6_macro_to_automation (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007072
+exported_at: 1792830618625
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007072
-lastSeenAt: 1792830007072
+firstSeenAt: 1792830618625
+lastSeenAt: 1792830618625
 fingerprint: null
 payload:
   id: MR6_macro_to_automation
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 806c89ac1dcff4f2
+  uuid: fdff5083-0776-55a2-9cc7-6a2f6f5f150b

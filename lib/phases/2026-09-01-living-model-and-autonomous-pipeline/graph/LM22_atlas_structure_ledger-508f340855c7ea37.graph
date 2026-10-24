@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829973407
+exported_at: 1792830584052
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973407
-lastSeenAt: 1792829973407
+firstSeenAt: 1792830584052
+lastSeenAt: 1792830584052
 fingerprint: null
 payload:
   for: LM22_atlas_structure_ledger
@@ -75,3 +75,4 @@ payload:
       - >-
         needed by (3): LM23_atlas_history_versions_calendar, LM24_atlas_prose_layer,
         LM26_atlas_completeness_and_release_gate · all downstream 4
+  phaseUuid: 72a1d59c-57d0-5376-94e3-475954591bbf

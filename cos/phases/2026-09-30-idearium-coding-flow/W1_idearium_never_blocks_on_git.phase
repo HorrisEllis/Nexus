@@ -9,11 +9,11 @@ intent: null
 summary: W1_idearium_never_blocks_on_git (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829986649
+exported_at: 1792830597349
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829986649
-lastSeenAt: 1792829986649
+firstSeenAt: 1792830597349
+lastSeenAt: 1792830597349
 fingerprint: null
 payload:
   id: W1_idearium_never_blocks_on_git
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 0c2b3bd63ecb5cb9
+  uuid: 602b8b80-a368-580f-9100-813fb60d1b67

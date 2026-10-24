@@ -9,11 +9,11 @@ intent: null
 summary: UI1_the_screens_for_cm3 (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792829994586
+exported_at: 1792830605490
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829994586
-lastSeenAt: 1792829994586
+firstSeenAt: 1792830605490
+lastSeenAt: 1792830605490
 fingerprint: null
 payload:
   id: UI1_the_screens_for_cm3
@@ -34,3 +34,4 @@ payload:
   blocks: []
   spec: null
   graph: 4bf0673a02bae005
+  uuid: de880506-ddb4-5efa-ac19-b9649e2887d1

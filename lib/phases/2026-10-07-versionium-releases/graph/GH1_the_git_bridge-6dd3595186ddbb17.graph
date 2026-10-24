@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829996860
+exported_at: 1792830607999
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829996860
-lastSeenAt: 1792829996860
+firstSeenAt: 1792830607999
+lastSeenAt: 1792830607999
 fingerprint: null
 payload:
   for: GH1_the_git_bridge
@@ -130,3 +130,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by VR2_history_and_diff
       - 'depends on (1): VR2_history_and_diff · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: cad10b0d-6216-5441-bd66-03e0658fa077

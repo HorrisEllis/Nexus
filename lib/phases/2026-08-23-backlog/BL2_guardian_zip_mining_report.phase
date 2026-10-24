@@ -7,11 +7,11 @@ intent: null
 summary: BL2_guardian_zip_mining_report (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971240
+exported_at: 1792830581813
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971240
-lastSeenAt: 1792829971240
+firstSeenAt: 1792830581813
+lastSeenAt: 1792830581813
 fingerprint: null
 payload:
   id: BL2_guardian_zip_mining_report
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 064061cd3e8c7740
+  uuid: 4d3640e4-3c4d-5e76-a84b-b7cce29eb174

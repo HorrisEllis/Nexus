@@ -7,11 +7,11 @@ intent: null
 summary: CT6_the_escalation_ladder (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991871
+exported_at: 1792830602555
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991871
-lastSeenAt: 1792829991871
+firstSeenAt: 1792830602555
+lastSeenAt: 1792830602555
 fingerprint: null
 payload:
   id: CT6_the_escalation_ladder
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: efb8afe9cf9edd48
+  uuid: a9dea990-ef3b-522e-a953-e1bad2effc4a

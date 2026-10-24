@@ -9,11 +9,11 @@ intent: null
 summary: JB2_the_copilot_hat_agent_and_account (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001276
+exported_at: 1792830612688
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001276
-lastSeenAt: 1792830001276
+firstSeenAt: 1792830612688
+lastSeenAt: 1792830612688
 fingerprint: null
 payload:
   id: JB2_the_copilot_hat_agent_and_account
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 62b2420dcfc3416c
+  uuid: 71fa77c6-0f3a-5ebb-810f-32f40e32bd15

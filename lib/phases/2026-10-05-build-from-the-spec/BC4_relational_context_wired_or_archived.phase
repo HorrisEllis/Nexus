@@ -9,11 +9,11 @@ intent: null
 summary: BC4_relational_context_wired_or_archived (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990952
+exported_at: 1792830601612
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990952
-lastSeenAt: 1792829990952
+firstSeenAt: 1792830601612
+lastSeenAt: 1792830601612
 fingerprint: null
 payload:
   id: BC4_relational_context_wired_or_archived
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 13b633faec59fe77
+  uuid: b989280f-31ed-59e3-88f9-7a6b1375c978

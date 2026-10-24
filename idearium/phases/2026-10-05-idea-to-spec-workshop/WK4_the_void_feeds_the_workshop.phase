@@ -9,11 +9,11 @@ intent: null
 summary: WK4_the_void_feeds_the_workshop (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829993406
+exported_at: 1792830604254
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829993406
-lastSeenAt: 1792829993406
+firstSeenAt: 1792830604254
+lastSeenAt: 1792830604254
 fingerprint: null
 payload:
   id: WK4_the_void_feeds_the_workshop
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 239d2f058e122ae9
+  uuid: e82fce2f-42f7-570a-a9c6-c74180199788

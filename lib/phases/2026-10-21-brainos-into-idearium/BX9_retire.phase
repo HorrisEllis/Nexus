@@ -7,11 +7,11 @@ intent: null
 summary: BX9_retire (surface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023364
+exported_at: 1792830635773
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023364
-lastSeenAt: 1792830023364
+firstSeenAt: 1792830635773
+lastSeenAt: 1792830635773
 fingerprint: null
 payload:
   id: BX9_retire
@@ -33,3 +33,10 @@ payload:
     - MOD-BX-RETIRE
   spec: docs/brainos-in-idearium.spec
   graph: 0c410c080c84da17
+  uuid: 3d0b44dd-3de6-5cb1-b832-9724c4cff711
+  specLink:
+    how: declared
+    spec: docs/brainos-in-idearium.spec
+    modules:
+      - id: MOD-BX-RETIRE
+        uuid: nexus-bx-retire-v1-0000-2026-1021-001

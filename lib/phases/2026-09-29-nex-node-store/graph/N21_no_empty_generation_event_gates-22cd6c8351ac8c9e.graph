@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829985442
+exported_at: 1792830596178
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985442
-lastSeenAt: 1792829985442
+firstSeenAt: 1792830596178
+lastSeenAt: 1792830596178
 fingerprint: null
 payload:
   for: N21_no_empty_generation_event_gates
@@ -262,3 +262,4 @@ payload:
         needed by (2): N22_shadow_and_negative_space_reasoning,
         N23_ollama_first_build_then_agent_review · finishing it unlocks
         N23_ollama_first_build_then_agent_review
+  phaseUuid: 807c62cf-e84b-5d27-85d0-b6dfd901b984

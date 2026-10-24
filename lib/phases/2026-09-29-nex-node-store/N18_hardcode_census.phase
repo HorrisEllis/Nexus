@@ -7,11 +7,11 @@ intent: null
 summary: N18_hardcode_census (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985439
+exported_at: 1792830596175
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985439
-lastSeenAt: 1792829985439
+firstSeenAt: 1792830596175
+lastSeenAt: 1792830596175
 fingerprint: null
 payload:
   id: N18_hardcode_census
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 5c8fe27e11df3386
+  uuid: 4daa3186-a68e-5339-9bd9-371f63449946

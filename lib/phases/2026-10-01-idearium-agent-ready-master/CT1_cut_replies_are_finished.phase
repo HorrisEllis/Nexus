@@ -9,11 +9,11 @@ intent: null
 summary: CT1_cut_replies_are_finished (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987082
+exported_at: 1792830597788
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987082
-lastSeenAt: 1792829987082
+firstSeenAt: 1792830597788
+lastSeenAt: 1792830597788
 fingerprint: null
 payload:
   id: CT1_cut_replies_are_finished
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: a589d68a25c89c99
+  uuid: c880f527-540e-50ce-96c4-cf6b7f55b2bd

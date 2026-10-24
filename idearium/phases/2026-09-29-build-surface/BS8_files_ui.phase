@@ -7,11 +7,11 @@ intent: null
 summary: BS8_files_ui (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985008
+exported_at: 1792830595762
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985008
-lastSeenAt: 1792829985008
+firstSeenAt: 1792830595762
+lastSeenAt: 1792830595762
 fingerprint: null
 payload:
   id: BS8_files_ui
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: c46c3ff81f3ff946
+  uuid: 68679f8a-77fe-555d-b9b4-488b7586a0a7

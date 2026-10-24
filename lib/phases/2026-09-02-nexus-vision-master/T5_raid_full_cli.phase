@@ -7,11 +7,11 @@ intent: null
 summary: T5_raid_full_cli (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974279
+exported_at: 1792830584865
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974279
-lastSeenAt: 1792829974279
+firstSeenAt: 1792830584865
+lastSeenAt: 1792830584865
 fingerprint: null
 payload:
   id: T5_raid_full_cli
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 0ea6cdd19666fd57
+  uuid: 65f657bf-f01a-5ccb-a6f2-43b24657e08e

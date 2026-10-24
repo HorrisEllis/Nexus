@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830001726
+exported_at: 1792830613157
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001726
-lastSeenAt: 1792830001726
+firstSeenAt: 1792830613157
+lastSeenAt: 1792830613157
 fingerprint: null
 payload:
   for: RQ16_hypotheses_in_parallel
@@ -108,3 +108,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 8 · blocked by RQ15_cells_in_parallel, RQ17_observe_by_request
       - 'depends on (2): RQ15_cells_in_parallel, RQ17_observe_by_request · all upstream 17'
       - 'needed by (0): —'
+  phaseUuid: f9d44eb3-1279-58cd-90f9-b2867991c68f

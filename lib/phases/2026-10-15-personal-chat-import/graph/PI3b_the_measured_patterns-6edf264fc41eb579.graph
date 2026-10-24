@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830007882
+exported_at: 1792830619451
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007882
-lastSeenAt: 1792830007882
+firstSeenAt: 1792830619451
+lastSeenAt: 1792830619451
 fingerprint: null
 payload:
   for: PI3b_the_measured_patterns
@@ -193,3 +193,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3 · blocked by PI3_the_intelligence_pass
       - 'depends on (1): PI3_the_intelligence_pass · all upstream 4'
       - 'needed by (1): PI7_the_links'
+  phaseUuid: 2e6b3309-ab90-571d-91cb-71631d1b9493

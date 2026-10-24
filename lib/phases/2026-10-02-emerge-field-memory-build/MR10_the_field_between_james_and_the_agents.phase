@@ -9,11 +9,11 @@ intent: null
 summary: MR10_the_field_between_james_and_the_agents (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988447
+exported_at: 1792830599087
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988447
-lastSeenAt: 1792829988447
+firstSeenAt: 1792830599087
+lastSeenAt: 1792830599087
 fingerprint: null
 payload:
   id: MR10_the_field_between_james_and_the_agents
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 26426e0877de2189
+  uuid: 5fb2cc48-1395-518d-bde1-5fbdf6c9580d

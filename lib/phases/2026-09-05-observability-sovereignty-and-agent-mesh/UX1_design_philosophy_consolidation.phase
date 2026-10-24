@@ -9,11 +9,11 @@ intent: null
 summary: UX1_design_philosophy_consolidation (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975230
+exported_at: 1792830585855
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975230
-lastSeenAt: 1792829975230
+firstSeenAt: 1792830585855
+lastSeenAt: 1792830585855
 fingerprint: null
 payload:
   id: UX1_design_philosophy_consolidation
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 8518048c60a27800
+  uuid: fe3d6913-f04f-575c-89dc-bcc9dadee377

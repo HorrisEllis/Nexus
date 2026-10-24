@@ -7,11 +7,11 @@ intent: null
 summary: PC0b_first_kinds (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016434
+exported_at: 1792830628480
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016434
-lastSeenAt: 1792830016434
+firstSeenAt: 1792830628480
+lastSeenAt: 1792830628480
 fingerprint: null
 payload:
   id: PC0b_first_kinds
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: e526cfe32978bf86
+  uuid: 3bc65c7a-7961-5aec-9657-7fcd919675cd

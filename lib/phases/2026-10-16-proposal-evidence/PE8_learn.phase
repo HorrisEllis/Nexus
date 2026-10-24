@@ -7,11 +7,11 @@ intent: null
 summary: PE8_learn (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830013724
+exported_at: 1792830625549
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830013724
-lastSeenAt: 1792830013724
+firstSeenAt: 1792830625549
+lastSeenAt: 1792830625549
 fingerprint: null
 payload:
   id: PE8_learn
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 46caf2fc3643edf1
+  uuid: 041d2ab5-1757-5b73-aeb3-e21b58758cfd

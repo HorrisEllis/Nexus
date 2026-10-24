@@ -9,11 +9,11 @@ intent: null
 summary: CP1_copilot_drives_idearium_and_talks_to_its_agents (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987073
+exported_at: 1792830597777
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987073
-lastSeenAt: 1792829987073
+firstSeenAt: 1792830597777
+lastSeenAt: 1792830597777
 fingerprint: null
 payload:
   id: CP1_copilot_drives_idearium_and_talks_to_its_agents
@@ -36,3 +36,4 @@ payload:
   blocks: []
   spec: null
   graph: 9573fd740fb5af49
+  uuid: a20e7b10-94c2-59cb-8514-b5a6d571b2e6

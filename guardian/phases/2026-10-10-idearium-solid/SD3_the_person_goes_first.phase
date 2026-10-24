@@ -7,11 +7,11 @@ intent: null
 summary: SD3_the_person_goes_first (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999646
+exported_at: 1792830610976
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999646
-lastSeenAt: 1792829999646
+firstSeenAt: 1792830610976
+lastSeenAt: 1792830610976
 fingerprint: null
 payload:
   id: SD3_the_person_goes_first
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 244b6541848ccd0b
+  uuid: 8635b430-da75-5106-8031-6b21cccddba6

@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991472
+exported_at: 1792830602149
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991472
-lastSeenAt: 1792829991472
+firstSeenAt: 1792830602149
+lastSeenAt: 1792830602149
 fingerprint: null
 payload:
   for: LS3_one_feed_for_every_agent
@@ -229,3 +229,4 @@ payload:
       - >-
         needed by (1): LS4_live_in_the_code_tab_and_the_work_surface · finishing it unlocks
         LS4_live_in_the_code_tab_and_the_work_surface
+  phaseUuid: 008f70bd-63f7-57ef-bebf-e1f6fa7318ce

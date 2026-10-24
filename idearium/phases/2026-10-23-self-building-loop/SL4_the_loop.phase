@@ -7,11 +7,11 @@ intent: null
 summary: SL4_the_loop (integration) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026604
+exported_at: 1792830639076
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026604
-lastSeenAt: 1792830026604
+firstSeenAt: 1792830639076
+lastSeenAt: 1792830639076
 fingerprint: null
 payload:
   id: SL4_the_loop
@@ -37,3 +37,10 @@ payload:
     - MOD-SL-LOOP
   spec: docs/self-building-loop.spec
   graph: 58cb1a8a3ad63afb
+  uuid: 0bffd5f5-2c7c-53dc-8a6a-313ed42f92fc
+  specLink:
+    how: declared
+    spec: docs/self-building-loop.spec
+    modules:
+      - id: MOD-SL-LOOP
+        uuid: nexus-sl-autobuild-loop-v1-0000-2026-1023-001

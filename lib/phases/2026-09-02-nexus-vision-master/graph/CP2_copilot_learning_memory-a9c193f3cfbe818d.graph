@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829974330
+exported_at: 1792830584916
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974330
-lastSeenAt: 1792829974330
+firstSeenAt: 1792830584916
+lastSeenAt: 1792830584916
 fingerprint: null
 payload:
   for: CP2_copilot_learning_memory
@@ -153,3 +153,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: e56d2601-fdab-50fb-a8f7-f333c8b75626

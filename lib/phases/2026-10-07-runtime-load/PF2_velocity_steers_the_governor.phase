@@ -7,11 +7,11 @@ intent: null
 summary: PF2_velocity_steers_the_governor (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829996102
+exported_at: 1792830607194
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829996102
-lastSeenAt: 1792829996102
+firstSeenAt: 1792830607194
+lastSeenAt: 1792830607194
 fingerprint: null
 payload:
   id: PF2_velocity_steers_the_governor
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 5c6b870477e755ff
+  uuid: e01bcd7e-7135-520a-bee1-934b07fae9e2

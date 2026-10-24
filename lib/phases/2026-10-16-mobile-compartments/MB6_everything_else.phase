@@ -7,11 +7,11 @@ intent: null
 summary: MB6_everything_else (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830012564
+exported_at: 1792830624351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830012564
-lastSeenAt: 1792830012564
+firstSeenAt: 1792830624351
+lastSeenAt: 1792830624351
 fingerprint: null
 payload:
   id: MB6_everything_else
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 50374ed305625db3
+  uuid: 38a7217a-3d39-5684-a70d-81f93276113a

@@ -7,11 +7,11 @@ intent: null
 summary: GA0a_no_gig_yet (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830019244
+exported_at: 1792830631527
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830019244
-lastSeenAt: 1792830019244
+firstSeenAt: 1792830631527
+lastSeenAt: 1792830631527
 fingerprint: null
 payload:
   id: GA0a_no_gig_yet
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 1f984d645c393eed
+  uuid: 2f880c14-0f4e-5c5e-8102-33b0e354d454

@@ -7,11 +7,11 @@ intent: null
 summary: SB51_a_phase_built_in_chunks (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991021
+exported_at: 1792830601682
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991021
-lastSeenAt: 1792829991021
+firstSeenAt: 1792830601682
+lastSeenAt: 1792830601682
 fingerprint: null
 payload:
   id: SB51_a_phase_built_in_chunks
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 1df6ced2f343c096
+  uuid: a58c342a-8ff5-5373-8e03-3430a3e91de1

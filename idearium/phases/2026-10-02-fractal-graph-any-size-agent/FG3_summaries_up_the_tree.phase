@@ -9,11 +9,11 @@ intent: null
 summary: FG3_summaries_up_the_tree (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988947
+exported_at: 1792830599574
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988947
-lastSeenAt: 1792829988947
+firstSeenAt: 1792830599574
+lastSeenAt: 1792830599574
 fingerprint: null
 payload:
   id: FG3_summaries_up_the_tree
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: b2a59b562ac95c2c
+  uuid: c35fa2d3-d3ef-5375-9431-dc76f8079ae6

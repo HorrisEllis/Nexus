@@ -7,11 +7,11 @@ intent: null
 summary: OS6_proved_on_the_real_page (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829995352
+exported_at: 1792830606331
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829995352
-lastSeenAt: 1792829995352
+firstSeenAt: 1792830606331
+lastSeenAt: 1792830606331
 fingerprint: null
 payload:
   id: OS6_proved_on_the_real_page
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 6e7f9d7881770520
+  uuid: 150937ad-dab4-560b-bf7b-8ba1828e80ab

@@ -7,11 +7,11 @@ intent: null
 summary: CE0b_batching (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005426
+exported_at: 1792830616866
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005426
-lastSeenAt: 1792830005426
+firstSeenAt: 1792830616866
+lastSeenAt: 1792830616866
 fingerprint: null
 payload:
   id: CE0b_batching
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 150f35ad64154baa
+  uuid: dad0258a-d2ad-5023-87d7-72d5fed04c45

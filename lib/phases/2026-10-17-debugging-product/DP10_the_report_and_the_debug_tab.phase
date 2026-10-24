@@ -9,11 +9,11 @@ intent: null
 summary: DP10_the_report_and_the_debug_tab (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830015262
+exported_at: 1792830627251
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830015262
-lastSeenAt: 1792830015262
+firstSeenAt: 1792830627251
+lastSeenAt: 1792830627251
 fingerprint: null
 payload:
   id: DP10_the_report_and_the_debug_tab
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 7b6dac6f7055e661
+  uuid: 79b498b8-25e6-5b80-ac3c-861c4de6151a

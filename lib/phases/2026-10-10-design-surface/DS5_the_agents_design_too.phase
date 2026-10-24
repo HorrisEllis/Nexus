@@ -7,11 +7,11 @@ intent: null
 summary: DS5_the_agents_design_too (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829998869
+exported_at: 1792830610175
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998869
-lastSeenAt: 1792829998869
+firstSeenAt: 1792830610175
+lastSeenAt: 1792830610175
 fingerprint: null
 payload:
   id: DS5_the_agents_design_too
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 1fd7bef8de2d374a
+  uuid: add48abf-e632-5714-b437-f3a06d25e156

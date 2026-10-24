@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830026605
+exported_at: 1792830639077
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026605
-lastSeenAt: 1792830026605
+firstSeenAt: 1792830639077
+lastSeenAt: 1792830639077
 fingerprint: null
 payload:
   for: SL5_when_a_proven_change_lands_alone
@@ -215,3 +215,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): SL1_a_proven_phase_closes_itself · all upstream 2'
       - 'needed by (1): SL4_the_loop'
+  phaseUuid: de04cd09-44ac-5c7a-a036-bc8176abb062

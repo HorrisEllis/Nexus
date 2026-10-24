@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991869
+exported_at: 1792830602553
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991869
-lastSeenAt: 1792829991869
+firstSeenAt: 1792830602553
+lastSeenAt: 1792830602553
 fingerprint: null
 payload:
   for: CT4_ollama_checked_on_his_machine
@@ -227,3 +227,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): CT1_one_door_for_models'
       - 'needed by (0): —'
+  phaseUuid: 08703a2e-8811-5309-888a-49ceab87f376

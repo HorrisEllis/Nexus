@@ -7,11 +7,11 @@ intent: null
 summary: UI4_w7_open_items (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987078
+exported_at: 1792830597784
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987078
-lastSeenAt: 1792829987078
+firstSeenAt: 1792830597784
+lastSeenAt: 1792830597784
 fingerprint: null
 payload:
   id: UI4_w7_open_items
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 18e3783da1c40086
+  uuid: 86ac5dc8-1025-5038-ba39-5312947243d1

@@ -9,11 +9,11 @@ intent: null
 summary: SD19_a_refusal_goes_back_to_its_agent (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999666
+exported_at: 1792830610996
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999666
-lastSeenAt: 1792829999666
+firstSeenAt: 1792830610996
+lastSeenAt: 1792830610996
 fingerprint: null
 payload:
   id: SD19_a_refusal_goes_back_to_its_agent
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 5ef0ac81785ee32f
+  uuid: 774b0fc5-0d7a-5839-8708-89f8569ac8d1

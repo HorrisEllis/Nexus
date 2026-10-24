@@ -9,11 +9,11 @@ intent: null
 summary: SB17_the_system_template_is_complete (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990959
+exported_at: 1792830601618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990959
-lastSeenAt: 1792829990959
+firstSeenAt: 1792830601618
+lastSeenAt: 1792830601618
 fingerprint: null
 payload:
   id: SB17_the_system_template_is_complete
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 3da27595c5dc5343
+  uuid: e8004471-9c97-59a6-a148-2929d73d5ee6

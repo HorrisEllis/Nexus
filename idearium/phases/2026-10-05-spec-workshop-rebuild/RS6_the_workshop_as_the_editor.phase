@@ -9,11 +9,11 @@ intent: null
 summary: RS6_the_workshop_as_the_editor (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829993790
+exported_at: 1792830604656
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829993790
-lastSeenAt: 1792829993790
+firstSeenAt: 1792830604656
+lastSeenAt: 1792830604656
 fingerprint: null
 payload:
   id: RS6_the_workshop_as_the_editor
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 65ed3468201e5940
+  uuid: a7a9844a-9db5-5b52-96f3-00a11c9e6e0b

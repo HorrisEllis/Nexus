@@ -9,11 +9,11 @@ intent: null
 summary: NV0_scripts_injected_once (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002548
+exported_at: 1792830613964
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002548
-lastSeenAt: 1792830002548
+firstSeenAt: 1792830613964
+lastSeenAt: 1792830613964
 fingerprint: null
 payload:
   id: NV0_scripts_injected_once
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 10ac55e1555a339a
+  uuid: 21acc290-a393-5d49-8704-ec0d680ee0a7

@@ -7,11 +7,11 @@ intent: null
 summary: ND2_one_node_route_for_every_system (backend) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830025825
+exported_at: 1792830638284
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025825
-lastSeenAt: 1792830025825
+firstSeenAt: 1792830638284
+lastSeenAt: 1792830638284
 fingerprint: null
 payload:
   id: ND2_one_node_route_for_every_system
@@ -30,3 +30,10 @@ payload:
     - MOD-ND-ROUTES
   spec: docs/system-node-db.spec
   graph: 15ec1ac071c27e69
+  uuid: d39c0ab1-885b-57df-8f42-22005bb59f38
+  specLink:
+    how: declared
+    spec: docs/system-node-db.spec
+    modules:
+      - id: MOD-ND-ROUTES
+        uuid: nexus-system-node-db-routes-v1-0000-2026-1022-001

@@ -9,11 +9,11 @@ intent: null
 summary: S1_living_spec (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983317
+exported_at: 1792830594110
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983317
-lastSeenAt: 1792829983317
+firstSeenAt: 1792830594110
+lastSeenAt: 1792830594110
 fingerprint: null
 payload:
   id: S1_living_spec
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 54457ecfb317ec4d
+  uuid: 19a26d0b-27fc-5244-841b-a8ef7d25d93e

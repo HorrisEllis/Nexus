@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830010561
+exported_at: 1792830622320
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010561
-lastSeenAt: 1792830010561
+firstSeenAt: 1792830622320
+lastSeenAt: 1792830622320
 fingerprint: null
 payload:
   for: CON4_safety_gate
@@ -42,3 +42,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by CON1_one_door_client
       - 'depends on (1): CON1_one_door_client'
       - 'needed by (1): CON9_configure'
+  phaseUuid: 2bedadd8-14b0-5ec5-bc63-da0b3dcc9532

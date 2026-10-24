@@ -9,11 +9,11 @@ intent: null
 summary: X4_command_index_spec (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983324
+exported_at: 1792830594116
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983324
-lastSeenAt: 1792829983324
+firstSeenAt: 1792830594116
+lastSeenAt: 1792830594116
 fingerprint: null
 payload:
   id: X4_command_index_spec
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: f0c28b0337bbaf38
+  uuid: fb62f1e6-6ee3-517f-95c8-e197640709d7

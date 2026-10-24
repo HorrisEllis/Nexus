@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830003403
+exported_at: 1792830614751
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003403
-lastSeenAt: 1792830003403
+firstSeenAt: 1792830614751
+lastSeenAt: 1792830614751
 fingerprint: null
 payload:
   for: RF1_migration_proposed_as_phases
@@ -101,3 +101,4 @@ payload:
       - >-
         needed by (2): RF2_applied_one_phase_at_a_time, PL5_specs_become_the_roadmap · finishing it
         unlocks RF2_applied_one_phase_at_a_time, PL5_specs_become_the_roadmap
+  phaseUuid: 8be56e79-86f5-5648-ac85-2db0d17fc8aa

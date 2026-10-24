@@ -7,11 +7,11 @@ intent: null
 summary: JB4_resume_import (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001278
+exported_at: 1792830612692
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001278
-lastSeenAt: 1792830001278
+firstSeenAt: 1792830612692
+lastSeenAt: 1792830612692
 fingerprint: null
 payload:
   id: JB4_resume_import
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 5f5bfc35c620b31f
+  uuid: 61831817-71b4-535d-8327-94b659c749df

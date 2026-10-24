@@ -9,11 +9,11 @@ intent: null
 summary: SD16_a_plan_step_never_proposes_code (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999662
+exported_at: 1792830610991
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999662
-lastSeenAt: 1792829999662
+firstSeenAt: 1792830610991
+lastSeenAt: 1792830610991
 fingerprint: null
 payload:
   id: SD16_a_plan_step_never_proposes_code
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 15a5817d56c7df8e
+  uuid: 724664e4-9106-559f-b228-00698c4cc77d

@@ -7,11 +7,11 @@ intent: null
 summary: SF5_circuit_check (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830025402
+exported_at: 1792830637869
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025402
-lastSeenAt: 1792830025402
+firstSeenAt: 1792830637869
+lastSeenAt: 1792830637869
 fingerprint: null
 payload:
   id: SF5_circuit_check
@@ -28,3 +28,10 @@ payload:
     - MOD-SF-CIRCUIT-CHECK
   spec: clear-glass/spec/snowflake.spec
   graph: 1d7cfbc07fe905be
+  uuid: 39853fa1-41fb-5c35-a44d-71a46754ecf5
+  specLink:
+    how: declared
+    spec: clear-glass/spec/snowflake.spec
+    modules:
+      - id: MOD-SF-CIRCUIT-CHECK
+        uuid: nexus-cg-sf-circuit-check-v1-0000-2026-1021-001

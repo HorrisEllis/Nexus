@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988949
+exported_at: 1792830599576
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988949
-lastSeenAt: 1792829988949
+firstSeenAt: 1792830599576
+lastSeenAt: 1792830599576
 fingerprint: null
 payload:
   for: WS5_the_whole_workshop
@@ -65,3 +65,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3 · blocked by FG4_context_for_any_agent
       - 'depends on (1): FG4_context_for_any_agent · all upstream 4'
       - 'needed by (0): —'
+  phaseUuid: e877c20c-c678-5ea3-8162-2d8e7b48ca91

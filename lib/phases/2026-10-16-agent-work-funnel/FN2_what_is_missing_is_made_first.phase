@@ -9,11 +9,11 @@ intent: null
 summary: FN2_what_is_missing_is_made_first (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830009416
+exported_at: 1792830621078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009416
-lastSeenAt: 1792830009416
+firstSeenAt: 1792830621078
+lastSeenAt: 1792830621078
 fingerprint: null
 payload:
   id: FN2_what_is_missing_is_made_first
@@ -31,3 +31,15 @@ payload:
   blocks: []
   spec: null
   graph: 94e1791ebf408132
+  uuid: 32ca047f-c2cd-564f-a741-cdc645782cf5
+  specLink:
+    how: discovered:path
+    spec: docs/pipeline.spec
+    specs:
+      - docs/pipeline.spec
+    covers: 1/4 files
+    modules:
+      - spec: docs/pipeline.spec
+        id: MOD-FUNNEL
+        uuid: nexus-pipeline-funnel-v1-0000-2026-1020-001
+        file: lib/work-funnel.js

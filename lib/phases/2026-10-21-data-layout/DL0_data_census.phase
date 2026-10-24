@@ -7,11 +7,11 @@ intent: null
 summary: DL0_data_census (foundation) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830024627
+exported_at: 1792830637068
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830024627
-lastSeenAt: 1792830024627
+firstSeenAt: 1792830637068
+lastSeenAt: 1792830637068
 fingerprint: null
 payload:
   id: DL0_data_census
@@ -27,3 +27,10 @@ payload:
     - MOD-DATA-CENSUS
   spec: docs/data-layout.spec
   graph: f0135ef7c3aeb4f1
+  uuid: 29e8087b-e292-5554-845f-1c51f67fb3f2
+  specLink:
+    how: declared
+    spec: docs/data-layout.spec
+    modules:
+      - id: MOD-DATA-CENSUS
+        uuid: nexus-data-census-v1-0000-2026-1021-001

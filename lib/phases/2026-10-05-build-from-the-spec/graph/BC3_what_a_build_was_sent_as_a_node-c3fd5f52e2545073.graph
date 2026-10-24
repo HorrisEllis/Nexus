@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990950
+exported_at: 1792830601610
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990950
-lastSeenAt: 1792829990950
+firstSeenAt: 1792830601610
+lastSeenAt: 1792830601610
 fingerprint: null
 payload:
   for: BC3_what_a_build_was_sent_as_a_node
@@ -260,3 +260,4 @@ payload:
         same files as SB29_the_build_flow_in_his_order with no order between them:
         idearium/api/index.js
       - … and 3 more phases sharing its files without an order
+  phaseUuid: 1ca0ed7e-6aa4-51c7-9083-74483e969972

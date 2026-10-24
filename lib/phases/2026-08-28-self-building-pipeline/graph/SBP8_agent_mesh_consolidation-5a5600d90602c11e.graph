@@ -7,11 +7,11 @@ intent: null
 summary: 10 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829972551
+exported_at: 1792830583165
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972551
-lastSeenAt: 1792829972551
+firstSeenAt: 1792830583165
+lastSeenAt: 1792830583165
 fingerprint: null
 payload:
   for: SBP8_agent_mesh_consolidation
@@ -104,3 +104,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 865cba19-cd3f-55f4-aeaa-fe19dd0e7504

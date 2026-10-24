@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829987059
+exported_at: 1792830597764
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987059
-lastSeenAt: 1792829987059
+firstSeenAt: 1792830597764
+lastSeenAt: 1792830597764
 fingerprint: null
 payload:
   for: CI1_compounding_iterate
@@ -269,3 +269,4 @@ payload:
       - 'same files as HC1_hat_agent_to_cos_build with no order between them: idearium/api/index.js'
       - 'same files as DI1_chunking_for_data_ingestion with no order between them: lib/node-schemas/'
       - 'same files as UM1_nexus_understands_james with no order between them: lib/node-schemas/'
+  phaseUuid: 685e68d1-32bf-5837-86ca-b5517faa4c37

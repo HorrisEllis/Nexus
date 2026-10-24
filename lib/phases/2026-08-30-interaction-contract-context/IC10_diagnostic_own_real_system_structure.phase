@@ -9,11 +9,11 @@ intent: null
 summary: IC10_diagnostic_own_real_system_structure (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972961
+exported_at: 1792830583615
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972961
-lastSeenAt: 1792829972961
+firstSeenAt: 1792830583615
+lastSeenAt: 1792830583615
 fingerprint: null
 payload:
   id: IC10_diagnostic_own_real_system_structure
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 37d61971e616a68c
+  uuid: 591ce665-0f0e-5c11-a6d9-28931ace45a4

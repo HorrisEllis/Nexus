@@ -9,11 +9,11 @@ intent: null
 summary: UI2_downloads_manager_chat_view (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829979765
+exported_at: 1792830590457
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829979765
-lastSeenAt: 1792829979765
+firstSeenAt: 1792830590457
+lastSeenAt: 1792830590457
 fingerprint: null
 payload:
   id: UI2_downloads_manager_chat_view
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: a1b9b83ad247406b
+  uuid: 49e9689c-f1fc-552a-aecf-8820f5de4a98

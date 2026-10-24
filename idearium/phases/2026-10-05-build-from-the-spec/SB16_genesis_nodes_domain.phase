@@ -7,11 +7,11 @@ intent: null
 summary: SB16_genesis_nodes_domain (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990957
+exported_at: 1792830601616
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990957
-lastSeenAt: 1792829990957
+firstSeenAt: 1792830601616
+lastSeenAt: 1792830601616
 fingerprint: null
 payload:
   id: SB16_genesis_nodes_domain
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: c9ee88ad2a876a14
+  uuid: 2acfdae1-8f1f-5e59-8bc4-84e2b776f4f6

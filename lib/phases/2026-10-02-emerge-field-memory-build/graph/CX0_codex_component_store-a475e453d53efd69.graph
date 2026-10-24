@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988512
+exported_at: 1792830599154
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988512
-lastSeenAt: 1792829988512
+firstSeenAt: 1792830599154
+lastSeenAt: 1792830599154
 fingerprint: null
 payload:
   for: CX0_codex_component_store
@@ -129,3 +129,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · ready
       - 'depends on (1): EM0_ground'
       - 'needed by (1): CL1_the_component_lab'
+  phaseUuid: b139eda0-394f-5f99-94a8-f61911d6cf6f

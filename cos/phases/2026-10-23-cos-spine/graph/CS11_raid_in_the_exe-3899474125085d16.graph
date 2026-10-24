@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830026219
+exported_at: 1792830638676
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026219
-lastSeenAt: 1792830026219
+firstSeenAt: 1792830638676
+lastSeenAt: 1792830638676
 fingerprint: null
 payload:
   for: CS11_raid_in_the_exe
@@ -231,3 +231,4 @@ payload:
         depends on (4): CS4_every_system_a_compartment, DB6_move_the_crossings,
         IM6_cortex_unclumped, CS_D8_raid_home · all upstream 21
       - 'needed by (1): CS7_spawn_despawn_and_balance · all downstream 2'
+  phaseUuid: 9564a58c-c58b-5fdc-9245-6ccf5a344915

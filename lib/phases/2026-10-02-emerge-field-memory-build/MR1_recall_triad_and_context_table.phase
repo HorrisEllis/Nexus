@@ -9,11 +9,11 @@ intent: null
 summary: MR1_recall_triad_and_context_table (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988426
+exported_at: 1792830599062
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988426
-lastSeenAt: 1792829988426
+firstSeenAt: 1792830599062
+lastSeenAt: 1792830599062
 fingerprint: null
 payload:
   id: MR1_recall_triad_and_context_table
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: 8d98f6c45ce31135
+  uuid: 30f91298-3d04-5185-9d80-052ed6a15280

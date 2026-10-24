@@ -9,11 +9,11 @@ intent: null
 summary: GW6_the_intelligence_system_on_every_gate (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830006638
+exported_at: 1792830618161
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006638
-lastSeenAt: 1792830006638
+firstSeenAt: 1792830618161
+lastSeenAt: 1792830618161
 fingerprint: null
 payload:
   id: GW6_the_intelligence_system_on_every_gate
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: 88688bb77b7d9ade
+  uuid: cd87fa58-c727-502b-8c3c-7801fecf09ec

@@ -9,11 +9,11 @@ intent: null
 summary: P24_response_queue_and_delivery_ack (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976517
+exported_at: 1792830587127
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976517
-lastSeenAt: 1792829976517
+firstSeenAt: 1792830587127
+lastSeenAt: 1792830587127
 fingerprint: null
 payload:
   id: P24_response_queue_and_delivery_ack
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: df6fe63556075f03
+  uuid: 54e5e2c5-6a58-5faa-b209-f1ccab68e1d6

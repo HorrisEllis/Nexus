@@ -7,11 +7,11 @@ intent: null
 summary: EP2_cos_is_the_empirical_layer (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830000470
+exported_at: 1792830611848
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000470
-lastSeenAt: 1792830000470
+firstSeenAt: 1792830611848
+lastSeenAt: 1792830611848
 fingerprint: null
 payload:
   id: EP2_cos_is_the_empirical_layer
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: abb7cdf7233d1a4c
+  uuid: af076bb2-c8b0-5451-8782-1fcc9e5bb075

@@ -7,11 +7,11 @@ intent: null
 summary: N9_cli (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985429
+exported_at: 1792830596165
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985429
-lastSeenAt: 1792829985429
+firstSeenAt: 1792830596165
+lastSeenAt: 1792830596165
 fingerprint: null
 payload:
   id: N9_cli
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 2bd8335f5d98134a
+  uuid: f619f8d9-fe84-5a8f-b57b-8fac5e765180

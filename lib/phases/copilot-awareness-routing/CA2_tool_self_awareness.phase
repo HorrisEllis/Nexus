@@ -7,11 +7,11 @@ intent: null
 summary: CA2_tool_self_awareness (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028974
+exported_at: 1792830641380
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028974
-lastSeenAt: 1792830028974
+firstSeenAt: 1792830641380
+lastSeenAt: 1792830641380
 fingerprint: null
 payload:
   id: CA2_tool_self_awareness
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 27716cb40c8eca89
+  uuid: a34a54bb-2db2-5d41-b414-454a4b8f9809

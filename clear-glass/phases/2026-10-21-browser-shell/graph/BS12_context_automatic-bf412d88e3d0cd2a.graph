@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830023781
+exported_at: 1792830636216
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023781
-lastSeenAt: 1792830023781
+firstSeenAt: 1792830636216
+lastSeenAt: 1792830636216
 fingerprint: null
 payload:
   for: BS12_context_automatic
@@ -184,3 +184,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3
       - 'depends on (1): BS11_copilot_pane · all upstream 3'
       - 'needed by (0): —'
+  phaseUuid: 3434eb6e-5a93-569c-9724-d773228556cf

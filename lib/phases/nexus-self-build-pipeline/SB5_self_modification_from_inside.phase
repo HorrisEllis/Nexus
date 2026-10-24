@@ -7,11 +7,11 @@ intent: null
 summary: SB5_self_modification_from_inside (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034494
+exported_at: 1792830646700
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034494
-lastSeenAt: 1792830034494
+firstSeenAt: 1792830646700
+lastSeenAt: 1792830646700
 fingerprint: null
 payload:
   id: SB5_self_modification_from_inside
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: cdb424f27e387b64
+  uuid: cf2ba88f-2a60-5528-b1c3-14bb1c0585f8

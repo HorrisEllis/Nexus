@@ -9,11 +9,11 @@ intent: null
 summary: IR0_intent_routing_for_reasoning (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002548
+exported_at: 1792830613963
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002548
-lastSeenAt: 1792830002548
+firstSeenAt: 1792830613963
+lastSeenAt: 1792830613963
 fingerprint: null
 payload:
   id: IR0_intent_routing_for_reasoning
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: d117c137eb21d499
+  uuid: d69c631b-8af4-5186-8a74-ed884772b45b

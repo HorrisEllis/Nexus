@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830022169
+exported_at: 1792830634518
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022169
-lastSeenAt: 1792830022169
+firstSeenAt: 1792830634518
+lastSeenAt: 1792830634518
 fingerprint: null
 payload:
   for: GR3_graph_query_surface
@@ -253,3 +253,4 @@ payload:
         TB1_toolbox
       - 'depends on (3): GR2_graph_views, TV1_traversal_primitive, TB1_toolbox · all upstream 12'
       - 'needed by (1): CH3_chunk_inspector · all downstream 3'
+  phaseUuid: 76f8263d-8f34-50c2-bfe3-a77fae3c514e

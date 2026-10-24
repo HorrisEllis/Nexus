@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988947
+exported_at: 1792830599573
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988947
-lastSeenAt: 1792829988947
+firstSeenAt: 1792830599573
+lastSeenAt: 1792830599573
 fingerprint: null
 payload:
   for: FG2_token_budget_chunking
@@ -127,3 +127,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by FG1_containment_tree
       - 'depends on (1): FG1_containment_tree'
       - 'needed by (1): FG4_context_for_any_agent · all downstream 3'
+  phaseUuid: 170c6b03-9ca7-5b7a-867d-96e87b0736ec

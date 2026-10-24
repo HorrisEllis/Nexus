@@ -7,11 +7,11 @@ intent: null
 summary: COSA0_shell (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005840
+exported_at: 1792830617301
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005840
-lastSeenAt: 1792830005840
+firstSeenAt: 1792830617301
+lastSeenAt: 1792830617301
 fingerprint: null
 payload:
   id: COSA0_shell
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 33e1eb76b7741b17
+  uuid: 3f9d43cb-aff1-580d-94f5-ed5be08dffc2

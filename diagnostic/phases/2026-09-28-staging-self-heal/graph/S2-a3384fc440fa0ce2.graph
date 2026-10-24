@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829984584
+exported_at: 1792830595323
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829984584
-lastSeenAt: 1792829984584
+firstSeenAt: 1792830595323
+lastSeenAt: 1792830595323
 fingerprint: null
 payload:
   for: S2
@@ -54,3 +54,4 @@ payload:
       - 'depends on (1): S1 · all upstream 2'
       - 'needed by (3): L1, A1, X1'
       - 'same files as S5 with no order between them: diagnostic/nexus-heal-loop.js'
+  phaseUuid: 2cbb6e40-3e44-5e8a-9204-1abbffbc4c6e

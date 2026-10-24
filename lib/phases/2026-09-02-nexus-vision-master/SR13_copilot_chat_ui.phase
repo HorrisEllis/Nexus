@@ -7,11 +7,11 @@ intent: null
 summary: SR13_copilot_chat_ui (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974352
+exported_at: 1792830584943
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974352
-lastSeenAt: 1792829974352
+firstSeenAt: 1792830584943
+lastSeenAt: 1792830584943
 fingerprint: null
 payload:
   id: SR13_copilot_chat_ui
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: e499bedb9ffdcc47
+  uuid: de406676-351f-5050-8172-15befdd17083

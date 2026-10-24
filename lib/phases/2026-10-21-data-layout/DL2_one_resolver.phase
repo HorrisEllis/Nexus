@@ -7,11 +7,11 @@ intent: null
 summary: DL2_one_resolver (library) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830024628
+exported_at: 1792830637069
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830024628
-lastSeenAt: 1792830024628
+firstSeenAt: 1792830637069
+lastSeenAt: 1792830637069
 fingerprint: null
 payload:
   id: DL2_one_resolver
@@ -28,3 +28,10 @@ payload:
     - MOD-DATA-HOME
   spec: docs/data-layout.spec
   graph: c98c0dd03a13e5a3
+  uuid: e356470b-b7a6-580a-8904-cb80ef089428
+  specLink:
+    how: declared
+    spec: docs/data-layout.spec
+    modules:
+      - id: MOD-DATA-HOME
+        uuid: nexus-data-home-v1-0000-2026-1021-001

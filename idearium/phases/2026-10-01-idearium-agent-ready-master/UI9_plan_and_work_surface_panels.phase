@@ -9,11 +9,11 @@ intent: null
 summary: UI9_plan_and_work_surface_panels (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987092
+exported_at: 1792830597799
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987092
-lastSeenAt: 1792829987092
+firstSeenAt: 1792830597799
+lastSeenAt: 1792830597799
 fingerprint: null
 payload:
   id: UI9_plan_and_work_surface_panels
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 6013a07a8ca625f2
+  uuid: ec7e2794-8369-5544-8fe9-d03b0206c537

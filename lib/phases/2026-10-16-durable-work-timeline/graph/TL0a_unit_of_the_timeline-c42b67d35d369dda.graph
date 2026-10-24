@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830010934
+exported_at: 1792830622731
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010934
-lastSeenAt: 1792830010934
+firstSeenAt: 1792830622731
+lastSeenAt: 1792830622731
 fingerprint: null
 payload:
   for: TL0a_unit_of_the_timeline
@@ -41,3 +41,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 4f6bde25-dbdd-5e85-9d68-9f225fd396da

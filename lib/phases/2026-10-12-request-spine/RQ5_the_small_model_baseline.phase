@@ -7,11 +7,11 @@ intent: null
 summary: RQ5_the_small_model_baseline (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001709
+exported_at: 1792830613140
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001709
-lastSeenAt: 1792830001709
+firstSeenAt: 1792830613140
+lastSeenAt: 1792830613140
 fingerprint: null
 payload:
   id: RQ5_the_small_model_baseline
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 4c70d01e0d9a89a3
+  uuid: c64f3adf-2ada-5b15-834a-07e31624fa83

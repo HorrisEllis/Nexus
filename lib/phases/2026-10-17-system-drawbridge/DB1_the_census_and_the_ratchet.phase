@@ -7,11 +7,11 @@ intent: null
 summary: DB1_the_census_and_the_ratchet (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016871
+exported_at: 1792830628899
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016871
-lastSeenAt: 1792830016871
+firstSeenAt: 1792830628899
+lastSeenAt: 1792830628899
 fingerprint: null
 payload:
   id: DB1_the_census_and_the_ratchet
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 6340dcbb5d3bae34
+  uuid: 35fe2b90-dd0d-5c02-9a79-bb365630e9c2

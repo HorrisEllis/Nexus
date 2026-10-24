@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991872
+exported_at: 1792830602556
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991872
-lastSeenAt: 1792829991872
+firstSeenAt: 1792830602556
+lastSeenAt: 1792830602556
 fingerprint: null
 payload:
   for: CT7_the_plan_shows_current_work
@@ -49,3 +49,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4
       - 'depends on (1): CT5_hooked_into_the_plan · all upstream 4'
       - 'needed by (1): CT9_the_plan_pull_tab · finishing it unlocks CT9_the_plan_pull_tab'
+  phaseUuid: 31ef3faa-a692-5071-a0c5-01c56fbb23d1

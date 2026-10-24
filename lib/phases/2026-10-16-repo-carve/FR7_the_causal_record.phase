@@ -7,11 +7,11 @@ intent: null
 summary: FR7_the_causal_record (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830014487
+exported_at: 1792830626354
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830014487
-lastSeenAt: 1792830014487
+firstSeenAt: 1792830626354
+lastSeenAt: 1792830626354
 fingerprint: null
 payload:
   id: FR7_the_causal_record
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 8bee8dc012336255
+  uuid: e00d5ef4-2849-5e5a-8bb0-318a6b04d230

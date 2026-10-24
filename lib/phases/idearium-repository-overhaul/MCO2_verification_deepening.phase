@@ -7,11 +7,11 @@ intent: null
 summary: MCO2_verification_deepening (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830031750
+exported_at: 1792830644017
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830031750
-lastSeenAt: 1792830031750
+firstSeenAt: 1792830644017
+lastSeenAt: 1792830644017
 fingerprint: null
 payload:
   id: MCO2_verification_deepening
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 6b47c1fa993010fe
+  uuid: f9bef09f-844e-5244-997e-0e13e873caa9

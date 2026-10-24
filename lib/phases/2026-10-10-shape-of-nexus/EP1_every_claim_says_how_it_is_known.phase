@@ -9,11 +9,11 @@ intent: null
 summary: EP1_every_claim_says_how_it_is_known (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830000469
+exported_at: 1792830611847
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000469
-lastSeenAt: 1792830000469
+firstSeenAt: 1792830611847
+lastSeenAt: 1792830611847
 fingerprint: null
 payload:
   id: EP1_every_claim_says_how_it_is_known
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 518303ecd7d85d85
+  uuid: c7af1408-2a9e-5276-a55e-27181435e8e3

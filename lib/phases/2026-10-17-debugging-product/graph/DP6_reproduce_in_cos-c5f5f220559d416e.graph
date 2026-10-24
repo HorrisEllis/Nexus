@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830015258
+exported_at: 1792830627247
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830015258
-lastSeenAt: 1792830015258
+firstSeenAt: 1792830627247
+lastSeenAt: 1792830627247
 fingerprint: null
 payload:
   for: DP6_reproduce_in_cos
@@ -48,3 +48,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by DP4_every_ledger_into_rfr2, DP5_the_case
       - 'depends on (2): DP4_every_ledger_into_rfr2, DP5_the_case · all upstream 3'
       - 'needed by (1): DP8_a_proven_fix · all downstream 2 · finishing it unlocks DP8_a_proven_fix'
+  phaseUuid: 038ce1a5-d29c-5032-947f-1affb6110c1c

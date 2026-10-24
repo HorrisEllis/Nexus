@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830010167
+exported_at: 1792830621902
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010167
-lastSeenAt: 1792830010167
+firstSeenAt: 1792830621902
+lastSeenAt: 1792830621902
 fingerprint: null
 payload:
   for: TB2_persistence_audit
@@ -64,3 +64,4 @@ payload:
         TB3a_tool_calls_saved · all downstream 11 · finishing it unlocks
         TB3_close_the_persistence_gaps, TB7a_edges_recorded, TB7b_keep_every_step,
         TB3a_tool_calls_saved
+  phaseUuid: e29bc0b6-97f5-5cef-9fda-bb51b7634f2f

@@ -7,11 +7,11 @@ intent: null
 summary: L1_primitives_no_decision (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830018477
+exported_at: 1792830630672
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830018477
-lastSeenAt: 1792830018477
+firstSeenAt: 1792830630672
+lastSeenAt: 1792830630672
 fingerprint: null
 payload:
   id: L1_primitives_no_decision
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 0a03918617e67a44
+  uuid: 4c613b4e-4f88-504d-8c98-cf8409ed344d

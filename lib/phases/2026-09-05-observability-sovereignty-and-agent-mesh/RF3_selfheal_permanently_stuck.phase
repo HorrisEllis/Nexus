@@ -9,11 +9,11 @@ intent: null
 summary: RF3_selfheal_permanently_stuck (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975181
+exported_at: 1792830585800
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975181
-lastSeenAt: 1792829975181
+firstSeenAt: 1792830585800
+lastSeenAt: 1792830585800
 fingerprint: null
 payload:
   id: RF3_selfheal_permanently_stuck
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: c22104b06eed53d9
+  uuid: 206b5640-712e-5df8-9826-dd400a2c2837

@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830005428
+exported_at: 1792830616868
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005428
-lastSeenAt: 1792830005428
+firstSeenAt: 1792830616868
+lastSeenAt: 1792830616868
 fingerprint: null
 payload:
   for: CE1_the_run_state
@@ -291,3 +291,4 @@ payload:
         · finishing it unlocks CE2_the_task_header, CE3_reply_on_task_gate, CE4_reply_kind_and_tags,
         CE5_events, CE7_ai_assisted_editing, CE10_lost_jobs_fall_back,
         CE11_contract_panel_and_context, CE12_proof_and_wiring, CV3_file_rewind
+  phaseUuid: b1b274ec-1a6f-5dd5-a4b8-423531289d3a

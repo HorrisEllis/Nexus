@@ -7,11 +7,11 @@ intent: null
 summary: IH2_agents_bound (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830012139
+exported_at: 1792830623953
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830012139
-lastSeenAt: 1792830012139
+firstSeenAt: 1792830623953
+lastSeenAt: 1792830623953
 fingerprint: null
 payload:
   id: IH2_agents_bound
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: c734fd5092d03e43
+  uuid: bae4c015-2264-528f-83a9-96a4ee223a4e

@@ -7,11 +7,11 @@ intent: null
 summary: P2_never_say_no_completion (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830029351
+exported_at: 1792830641752
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830029351
-lastSeenAt: 1792830029351
+firstSeenAt: 1792830641752
+lastSeenAt: 1792830641752
 fingerprint: null
 payload:
   id: P2_never_say_no_completion
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: b53237e38ad335da
+  uuid: 78259956-f2f1-5841-a179-3000a19ab167

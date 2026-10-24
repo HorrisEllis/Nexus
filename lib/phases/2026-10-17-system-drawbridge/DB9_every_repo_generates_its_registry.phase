@@ -9,11 +9,11 @@ intent: null
 summary: DB9_every_repo_generates_its_registry (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016885
+exported_at: 1792830628908
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016885
-lastSeenAt: 1792830016885
+firstSeenAt: 1792830628908
+lastSeenAt: 1792830628908
 fingerprint: null
 payload:
   id: DB9_every_repo_generates_its_registry
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: f1e7007976d6f084
+  uuid: 74cffed1-c77c-5580-9dae-1acd77d0af41

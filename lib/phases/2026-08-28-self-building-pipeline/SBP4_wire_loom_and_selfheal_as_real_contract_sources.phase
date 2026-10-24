@@ -9,11 +9,11 @@ intent: null
 summary: SBP4_wire_loom_and_selfheal_as_real_contract_sources (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972556
+exported_at: 1792830583170
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972556
-lastSeenAt: 1792829972556
+firstSeenAt: 1792830583170
+lastSeenAt: 1792830583170
 fingerprint: null
 payload:
   id: SBP4_wire_loom_and_selfheal_as_real_contract_sources
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 8d7fc37478dacfed
+  uuid: 9e16ee53-f740-5045-b3e7-a8f105eba2e0

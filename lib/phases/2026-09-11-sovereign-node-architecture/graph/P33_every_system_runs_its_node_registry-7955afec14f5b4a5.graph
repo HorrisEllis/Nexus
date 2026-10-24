@@ -7,11 +7,11 @@ intent: null
 summary: 32 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829976528
+exported_at: 1792830587138
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976528
-lastSeenAt: 1792829976528
+firstSeenAt: 1792830587138
+lastSeenAt: 1792830587138
 fingerprint: null
 payload:
   for: P33_every_system_runs_its_node_registry
@@ -257,3 +257,4 @@ payload:
       - >-
         needed by (2): P34_nodes_in_the_lattice, P35_copilot_reads_edits_creates_nodes · all
         downstream 4 · finishing it unlocks P35_copilot_reads_edits_creates_nodes
+  phaseUuid: 2fa6199e-42c7-5d4d-a43b-f24432b60b17

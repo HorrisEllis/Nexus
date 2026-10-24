@@ -7,11 +7,11 @@ intent: null
 summary: COSA7_clear_glass_delivers (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005847
+exported_at: 1792830617310
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005847
-lastSeenAt: 1792830005847
+firstSeenAt: 1792830617310
+lastSeenAt: 1792830617310
 fingerprint: null
 payload:
   id: COSA7_clear_glass_delivers
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 07b5a7f81ad0d2e7
+  uuid: 731f2d14-2332-5755-9ff3-f054a5209a47

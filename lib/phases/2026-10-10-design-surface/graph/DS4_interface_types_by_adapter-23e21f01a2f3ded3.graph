@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829998868
+exported_at: 1792830610174
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998868
-lastSeenAt: 1792829998868
+firstSeenAt: 1792830610174
+lastSeenAt: 1792830610174
 fingerprint: null
 payload:
   for: DS4_interface_types_by_adapter
@@ -42,3 +42,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3 · blocked by DS2_pick_and_edit_any_page
       - 'depends on (1): DS2_pick_and_edit_any_page · all upstream 3'
       - 'needed by (0): —'
+  phaseUuid: e46a5a5b-9f6e-59f0-9c8d-74d07f4095be

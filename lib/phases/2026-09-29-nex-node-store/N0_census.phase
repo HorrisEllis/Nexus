@@ -7,11 +7,11 @@ intent: null
 summary: N0_census (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985418
+exported_at: 1792830596156
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985418
-lastSeenAt: 1792829985418
+firstSeenAt: 1792830596156
+lastSeenAt: 1792830596156
 fingerprint: null
 payload:
   id: N0_census
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 9b89ddab0ca4dd15
+  uuid: f0bec3f8-6b7d-5106-9901-7e376df83e4c

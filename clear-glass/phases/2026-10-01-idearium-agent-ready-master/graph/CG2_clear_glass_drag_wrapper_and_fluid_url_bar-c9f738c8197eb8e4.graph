@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829987098
+exported_at: 1792830597805
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987098
-lastSeenAt: 1792829987098
+firstSeenAt: 1792830597805
+lastSeenAt: 1792830597805
 fingerprint: null
 payload:
   for: CG2_clear_glass_drag_wrapper_and_fluid_url_bar
@@ -38,3 +38,4 @@ payload:
       - 'depends on (0): —'
       - 'needed by (0): —'
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+  phaseUuid: 5a6bbde3-9261-5ed7-ae75-ad710f06522a

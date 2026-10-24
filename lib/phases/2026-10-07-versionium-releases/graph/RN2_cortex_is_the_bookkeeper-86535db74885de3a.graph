@@ -7,11 +7,11 @@ intent: null
 summary: 10 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829996859
+exported_at: 1792830607998
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829996859
-lastSeenAt: 1792829996859
+firstSeenAt: 1792830607998
+lastSeenAt: 1792830607998
 fingerprint: null
 payload:
   for: RN2_cortex_is_the_bookkeeper
@@ -115,3 +115,4 @@ payload:
         LT1_provenance_lattice
       - 'depends on (2): RN1_release_is_a_node_and_a_tag, LT1_provenance_lattice · all upstream 3'
       - 'needed by (1): RN3_releases_section'
+  phaseUuid: 205287fb-dc91-5bd8-ab73-2a3ac32c7f59

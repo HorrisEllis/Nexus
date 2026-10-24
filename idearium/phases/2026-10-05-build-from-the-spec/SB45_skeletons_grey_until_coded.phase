@@ -9,11 +9,11 @@ intent: null
 summary: SB45_skeletons_grey_until_coded (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991009
+exported_at: 1792830601671
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991009
-lastSeenAt: 1792829991009
+firstSeenAt: 1792830601671
+lastSeenAt: 1792830601671
 fingerprint: null
 payload:
   id: SB45_skeletons_grey_until_coded
@@ -33,3 +33,4 @@ payload:
   blocks: []
   spec: null
   graph: a6b4f44b25b6f1db
+  uuid: 82a563e2-2448-5498-b8d0-f3ed4b6abc72

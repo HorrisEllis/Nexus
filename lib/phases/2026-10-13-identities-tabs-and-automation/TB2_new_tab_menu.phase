@@ -7,11 +7,11 @@ intent: null
 summary: TB2_new_tab_menu (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002542
+exported_at: 1792830613960
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002542
-lastSeenAt: 1792830002542
+firstSeenAt: 1792830613960
+lastSeenAt: 1792830613960
 fingerprint: null
 payload:
   id: TB2_new_tab_menu
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 12881bf49a145127
+  uuid: f3e727e6-a521-5bd8-a1df-c04a589dac15

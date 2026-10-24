@@ -7,11 +7,11 @@ intent: null
 summary: AM7_agent_suite_welcome_ui (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974295
+exported_at: 1792830584880
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974295
-lastSeenAt: 1792829974295
+firstSeenAt: 1792830584880
+lastSeenAt: 1792830584880
 fingerprint: null
 payload:
   id: AM7_agent_suite_welcome_ui
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 59238d82bfcf4964
+  uuid: 99a66ffb-c154-5e9c-b816-d6e8ad7acad2

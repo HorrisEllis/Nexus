@@ -7,11 +7,11 @@ intent: null
 summary: ER2_unwire_the_platform (?) — 22 file(s)
 system: idearium
 tags: []
-exported_at: 1792830011315
+exported_at: 1792830623137
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830011315
-lastSeenAt: 1792830011315
+firstSeenAt: 1792830623137
+lastSeenAt: 1792830623137
 fingerprint: null
 payload:
   id: ER2_unwire_the_platform
@@ -46,3 +46,4 @@ payload:
   blocks: []
   spec: null
   graph: eccf746a91d275e5
+  uuid: cddca6d2-3b92-5888-aabe-d2ffbcb03d0f

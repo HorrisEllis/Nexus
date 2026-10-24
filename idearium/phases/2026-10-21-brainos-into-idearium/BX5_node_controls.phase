@@ -7,11 +7,11 @@ intent: null
 summary: BX5_node_controls (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023360
+exported_at: 1792830635771
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023360
-lastSeenAt: 1792830023360
+firstSeenAt: 1792830635771
+lastSeenAt: 1792830635771
 fingerprint: null
 payload:
   id: BX5_node_controls
@@ -30,3 +30,10 @@ payload:
     - MOD-BX-CONTROLS
   spec: docs/brainos-in-idearium.spec
   graph: 18d39953f30981ae
+  uuid: ec9e497a-62ac-5177-a964-753201111837
+  specLink:
+    how: declared
+    spec: docs/brainos-in-idearium.spec
+    modules:
+      - id: MOD-BX-CONTROLS
+        uuid: nexus-bx-controls-v1-0000-2026-1021-001

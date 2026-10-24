@@ -7,11 +7,11 @@ intent: null
 summary: PV3_input_nodes (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001269
+exported_at: 1792830612680
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001269
-lastSeenAt: 1792830001269
+firstSeenAt: 1792830612680
+lastSeenAt: 1792830612680
 fingerprint: null
 payload:
   id: PV3_input_nodes
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: 73528fe4f1a5e74b
+  uuid: 226f4427-056c-5014-b9b2-4a455dfa8b01

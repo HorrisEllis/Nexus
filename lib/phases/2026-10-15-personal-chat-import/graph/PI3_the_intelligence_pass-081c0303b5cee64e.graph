@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830007880
+exported_at: 1792830619449
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007880
-lastSeenAt: 1792830007880
+firstSeenAt: 1792830619449
+lastSeenAt: 1792830619449
 fingerprint: null
 payload:
   for: PI3_the_intelligence_pass
@@ -190,3 +190,4 @@ payload:
       - >-
         needed by (2): PI4_the_review_screen, PI3b_the_measured_patterns · all downstream 3 ·
         finishing it unlocks PI4_the_review_screen, PI3b_the_measured_patterns
+  phaseUuid: 76f1b694-8309-5f02-b8bf-8f61f4e3d74c

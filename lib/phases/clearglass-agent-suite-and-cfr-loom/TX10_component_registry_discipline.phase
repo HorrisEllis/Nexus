@@ -9,11 +9,11 @@ intent: null
 summary: TX10_component_registry_discipline (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028215
+exported_at: 1792830640625
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028215
-lastSeenAt: 1792830028215
+firstSeenAt: 1792830640625
+lastSeenAt: 1792830640625
 fingerprint: null
 payload:
   id: TX10_component_registry_discipline
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 9cd49d46ce7b61e8
+  uuid: cb38f45d-c87d-5fe3-a732-c0bf6e0a8d2e

@@ -7,11 +7,11 @@ intent: null
 summary: CA5_system_control_and_clearglass (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028602
+exported_at: 1792830641002
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028602
-lastSeenAt: 1792830028602
+firstSeenAt: 1792830641002
+lastSeenAt: 1792830641002
 fingerprint: null
 payload:
   id: CA5_system_control_and_clearglass
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 292f947e788fddeb
+  uuid: 38ed26e8-e8e8-5038-bf50-c85a1be37f77

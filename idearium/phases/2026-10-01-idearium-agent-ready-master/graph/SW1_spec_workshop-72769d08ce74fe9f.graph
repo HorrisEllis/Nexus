@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829987115
+exported_at: 1792830597819
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987115
-lastSeenAt: 1792829987115
+firstSeenAt: 1792830597819
+lastSeenAt: 1792830597819
 fingerprint: null
 payload:
   for: SW1_spec_workshop
@@ -105,3 +105,4 @@ payload:
         depends on (3): IL1_spec_library_as_ideas, CX1_context_cascade, UM1_nexus_understands_james
         · all upstream 10
       - 'needed by (0): —'
+  phaseUuid: 4d476184-0d32-5a0f-bb5f-b2d1adc1d910

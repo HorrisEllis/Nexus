@@ -7,11 +7,11 @@ intent: null
 summary: DT6_node_store (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987058
+exported_at: 1792830597763
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987058
-lastSeenAt: 1792829987058
+firstSeenAt: 1792830597763
+lastSeenAt: 1792830597763
 fingerprint: null
 payload:
   id: DT6_node_store
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 587b34312496b309
+  uuid: d947951a-49cb-5fef-8492-acc1e434a272

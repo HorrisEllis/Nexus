@@ -7,11 +7,11 @@ intent: null
 summary: RQ15_cells_in_parallel (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001725
+exported_at: 1792830613156
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001725
-lastSeenAt: 1792830001725
+firstSeenAt: 1792830613156
+lastSeenAt: 1792830613156
 fingerprint: null
 payload:
   id: RQ15_cells_in_parallel
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 9586f7906829df41
+  uuid: 509cf3bb-b85a-5edc-8238-a0e1948d00cd

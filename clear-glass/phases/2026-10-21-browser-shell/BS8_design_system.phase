@@ -7,11 +7,11 @@ intent: null
 summary: BS8_design_system (surface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023779
+exported_at: 1792830636215
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023779
-lastSeenAt: 1792830023779
+firstSeenAt: 1792830636215
+lastSeenAt: 1792830636215
 fingerprint: null
 payload:
   id: BS8_design_system
@@ -29,3 +29,10 @@ payload:
     - MOD-BSH-DESIGN
   spec: clear-glass/spec/browser-shell.spec
   graph: 45800c467fe1ee6c
+  uuid: 3ed07b90-cb65-5d72-b724-b4836e7e0c31
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-DESIGN
+        uuid: nexus-cg-bsh-design-v1-0000-2026-1021-002

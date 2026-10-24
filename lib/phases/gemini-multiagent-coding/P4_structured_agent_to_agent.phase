@@ -7,11 +7,11 @@ intent: null
 summary: P4_structured_agent_to_agent (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830030957
+exported_at: 1792830643263
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830030957
-lastSeenAt: 1792830030957
+firstSeenAt: 1792830643263
+lastSeenAt: 1792830643263
 fingerprint: null
 payload:
   id: P4_structured_agent_to_agent
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 8f27af99fec90581
+  uuid: 1822aca7-d36f-5959-9609-b986dd99180c

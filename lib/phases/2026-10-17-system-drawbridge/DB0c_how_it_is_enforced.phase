@@ -7,11 +7,11 @@ intent: null
 summary: DB0c_how_it_is_enforced (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016870
+exported_at: 1792830628897
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016870
-lastSeenAt: 1792830016870
+firstSeenAt: 1792830628897
+lastSeenAt: 1792830628897
 fingerprint: null
 payload:
   id: DB0c_how_it_is_enforced
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: a3bf674905f4dd0c
+  uuid: 34d8f228-a397-5e9f-9be4-ae84f5c6c452

@@ -7,11 +7,11 @@ intent: null
 summary: CS1_a_version_is_a_system_state (foundation) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026212
+exported_at: 1792830638670
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026212
-lastSeenAt: 1792830026212
+firstSeenAt: 1792830638670
+lastSeenAt: 1792830638670
 fingerprint: null
 payload:
   id: CS1_a_version_is_a_system_state
@@ -31,3 +31,10 @@ payload:
     - MOD-CS-VERSION
   spec: cos/spec/cos-spine.spec
   graph: 523fbc38e04e24be
+  uuid: c3099547-4cd8-5812-a58d-1a081dae7976
+  specLink:
+    how: declared
+    spec: cos/spec/cos-spine.spec
+    modules:
+      - id: MOD-CS-VERSION
+        uuid: nexus-cos-spine-version-v1-0000-2026-1023-001

@@ -7,11 +7,11 @@ intent: null
 summary: NP1_compartment (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004589
+exported_at: 1792830616019
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004589
-lastSeenAt: 1792830004589
+firstSeenAt: 1792830616019
+lastSeenAt: 1792830616019
 fingerprint: null
 payload:
   id: NP1_compartment
@@ -25,3 +25,15 @@ payload:
   blocks: []
   spec: null
   graph: 321ebbf32cbd2cef
+  uuid: 5eaaec8e-c239-519e-979d-33276228afdb
+  specLink:
+    how: discovered:path
+    spec: clear-glass/spec/snowflake.spec
+    specs:
+      - clear-glass/spec/snowflake.spec
+    covers: 1/1 files
+    modules:
+      - spec: clear-glass/spec/snowflake.spec
+        id: MOD-SF-DETECT
+        uuid: nexus-cg-sf-detect-v1-0000-2026-1021-001
+        file: clear-glass/src/net/transport-host.js

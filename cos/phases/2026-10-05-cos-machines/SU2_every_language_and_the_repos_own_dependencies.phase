@@ -9,11 +9,11 @@ intent: null
 summary: SU2_every_language_and_the_repos_own_dependencies (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829992264
+exported_at: 1792830602963
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829992264
-lastSeenAt: 1792829992264
+firstSeenAt: 1792830602963
+lastSeenAt: 1792830602963
 fingerprint: null
 payload:
   id: SU2_every_language_and_the_repos_own_dependencies
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 0d04ebd8abe18320
+  uuid: 2cff601b-5dd7-5813-b6c9-1d3cc0567341

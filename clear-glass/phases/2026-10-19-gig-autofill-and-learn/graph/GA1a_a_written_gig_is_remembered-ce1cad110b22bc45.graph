@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830019246
+exported_at: 1792830631532
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830019246
-lastSeenAt: 1792830019246
+firstSeenAt: 1792830631532
+lastSeenAt: 1792830631532
 fingerprint: null
 payload:
   for: GA1a_a_written_gig_is_remembered
@@ -189,3 +189,4 @@ payload:
       - >-
         same files as GA3_the_pick_is_saved_three_ways with no order between them:
         clear-glass/src/ipc/bridge.js
+  phaseUuid: 358e52ca-e851-5ba6-88b8-c90d04ea7ffb

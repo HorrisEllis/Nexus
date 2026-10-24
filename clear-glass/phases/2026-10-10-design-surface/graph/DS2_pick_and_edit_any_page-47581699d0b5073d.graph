@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829998866
+exported_at: 1792830610172
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998866
-lastSeenAt: 1792829998866
+firstSeenAt: 1792830610172
+lastSeenAt: 1792830610172
 fingerprint: null
 payload:
   for: DS2_pick_and_edit_any_page
@@ -141,3 +141,4 @@ payload:
       - >-
         needed by (2): DS4_interface_types_by_adapter, DS5_the_agents_design_too · finishing it
         unlocks DS4_interface_types_by_adapter, DS5_the_agents_design_too
+  phaseUuid: 2d765ec8-25ee-5c1f-8baf-1ddf21d81f16

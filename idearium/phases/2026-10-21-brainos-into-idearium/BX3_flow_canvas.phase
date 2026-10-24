@@ -7,11 +7,11 @@ intent: null
 summary: BX3_flow_canvas (surface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023359
+exported_at: 1792830635770
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023359
-lastSeenAt: 1792830023359
+firstSeenAt: 1792830635770
+lastSeenAt: 1792830635770
 fingerprint: null
 payload:
   id: BX3_flow_canvas
@@ -30,3 +30,10 @@ payload:
     - MOD-BX-CANVAS
   spec: docs/brainos-in-idearium.spec
   graph: 0cfcc543816b7eee
+  uuid: 837b25bb-aae1-5fc0-8d1f-c4ea882d7efb
+  specLink:
+    how: declared
+    spec: docs/brainos-in-idearium.spec
+    modules:
+      - id: MOD-BX-CANVAS
+        uuid: nexus-bx-canvas-v1-0000-2026-1021-001

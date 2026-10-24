@@ -9,11 +9,11 @@ intent: null
 summary: EX3_the_diagnostic_reads_expectations (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829996477
+exported_at: 1792830607595
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829996477
-lastSeenAt: 1792829996477
+firstSeenAt: 1792830607595
+lastSeenAt: 1792830607595
 fingerprint: null
 payload:
   id: EX3_the_diagnostic_reads_expectations
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 2bec3e78837d68f5
+  uuid: 898b0fa6-aee1-5936-b6d4-5c203fc593e1

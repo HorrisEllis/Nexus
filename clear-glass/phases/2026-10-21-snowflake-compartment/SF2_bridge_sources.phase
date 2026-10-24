@@ -7,11 +7,11 @@ intent: null
 summary: SF2_bridge_sources (library) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830025400
+exported_at: 1792830637866
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025400
-lastSeenAt: 1792830025400
+firstSeenAt: 1792830637866
+lastSeenAt: 1792830637866
 fingerprint: null
 payload:
   id: SF2_bridge_sources
@@ -26,3 +26,10 @@ payload:
     - MOD-SF-BRIDGE-SOURCES
   spec: clear-glass/spec/snowflake.spec
   graph: ea5b5eea6b68382f
+  uuid: 159a1e83-001c-53b6-995f-1bba3956e3b7
+  specLink:
+    how: declared
+    spec: clear-glass/spec/snowflake.spec
+    modules:
+      - id: MOD-SF-BRIDGE-SOURCES
+        uuid: nexus-cg-sf-bridge-sources-v1-0000-2026-1021-001

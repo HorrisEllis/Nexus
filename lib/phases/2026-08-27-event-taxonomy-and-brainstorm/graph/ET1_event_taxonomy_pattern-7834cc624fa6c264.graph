@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829971720
+exported_at: 1792830582300
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971720
-lastSeenAt: 1792829971720
+firstSeenAt: 1792830582300
+lastSeenAt: 1792830582300
 fingerprint: null
 payload:
   for: ET1_event_taxonomy_pattern
@@ -181,3 +181,4 @@ payload:
         ET4_orchestrator_autopilot_event_taxonomy · all downstream 6 · finishing it unlocks
         ET2_guardian_event_taxonomy, ET3_clearglass_event_taxonomy,
         ET4_orchestrator_autopilot_event_taxonomy
+  phaseUuid: fb9f99a1-de14-55ab-a815-5edc592065b0

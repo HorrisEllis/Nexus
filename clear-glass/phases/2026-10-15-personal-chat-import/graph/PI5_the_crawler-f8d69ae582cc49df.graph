@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830007883
+exported_at: 1792830619452
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007883
-lastSeenAt: 1792830007883
+firstSeenAt: 1792830619452
+lastSeenAt: 1792830619452
 fingerprint: null
 payload:
   for: PI5_the_crawler
@@ -79,3 +79,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by PI1_the_importer
       - 'depends on (1): PI1_the_importer · all upstream 2'
       - 'needed by (1): PI7_the_links'
+  phaseUuid: 8df24d21-7247-54a3-b1de-e36b29f09919

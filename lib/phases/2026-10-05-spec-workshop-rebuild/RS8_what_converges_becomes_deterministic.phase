@@ -9,11 +9,11 @@ intent: null
 summary: RS8_what_converges_becomes_deterministic (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829993791
+exported_at: 1792830604658
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829993791
-lastSeenAt: 1792829993791
+firstSeenAt: 1792830604658
+lastSeenAt: 1792830604658
 fingerprint: null
 payload:
   id: RS8_what_converges_becomes_deterministic
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 14a9d76c2db6ad37
+  uuid: 275ba9e9-23cb-5e2e-b3a3-a68fe7b3b742

@@ -7,11 +7,11 @@ intent: null
 summary: N25_manage_button_enterprise (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985448
+exported_at: 1792830596183
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985448
-lastSeenAt: 1792829985448
+firstSeenAt: 1792830596183
+lastSeenAt: 1792830596183
 fingerprint: null
 payload:
   id: N25_manage_button_enterprise
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 76b8735454ef17a9
+  uuid: 65bb7f08-8096-5a37-b9e5-95e7cae9c1c2

@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830022173
+exported_at: 1792830634522
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022173
-lastSeenAt: 1792830022173
+firstSeenAt: 1792830634522
+lastSeenAt: 1792830634522
 fingerprint: null
 payload:
   for: CH3_chunk_inspector
@@ -257,3 +257,4 @@ payload:
         depends on (3): CH1_strategies_behind_the_contract, TB1_toolbox, GR3_graph_query_surface ·
         all upstream 15
       - 'needed by (1): GW2_gates_at_every_level · all downstream 2'
+  phaseUuid: 7790edfb-7327-56f7-a32d-666a41525974

@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830021762
+exported_at: 1792830634096
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021762
-lastSeenAt: 1792830021762
+firstSeenAt: 1792830634096
+lastSeenAt: 1792830634096
 fingerprint: null
 payload:
   for: CY2_invariants_are_crystals
@@ -98,3 +98,4 @@ payload:
         depends on (3): CY0_one_crystal_schema, IV2_invariant_miner, CY1_lifecycle_and_injection ·
         all upstream 19
       - 'needed by (1): BW1_borrowing'
+  phaseUuid: aebc3fa0-b10b-5355-ad99-a982b753c1cc

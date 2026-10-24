@@ -7,11 +7,11 @@ intent: null
 summary: CD1_magnet_parse (foundation) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830024194
+exported_at: 1792830636642
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830024194
-lastSeenAt: 1792830024194
+firstSeenAt: 1792830636642
+lastSeenAt: 1792830636642
 fingerprint: null
 payload:
   id: CD1_magnet_parse
@@ -26,3 +26,10 @@ payload:
     - MOD-CDL-MAGNET
   spec: clear-glass/spec/compartment-downloads.spec
   graph: e3defc132656fe7c
+  uuid: fda78ae5-479b-5817-b2ef-0013d39d4c29
+  specLink:
+    how: declared
+    spec: clear-glass/spec/compartment-downloads.spec
+    modules:
+      - id: MOD-CDL-MAGNET
+        uuid: nexus-cg-cdl-magnet-v1-0000-2026-1021-001

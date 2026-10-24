@@ -9,11 +9,11 @@ intent: null
 summary: HC1_hat_agent_to_cos_build (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987062
+exported_at: 1792830597768
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987062
-lastSeenAt: 1792829987062
+firstSeenAt: 1792830597768
+lastSeenAt: 1792830597768
 fingerprint: null
 payload:
   id: HC1_hat_agent_to_cos_build
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 27c92f78114946f9
+  uuid: 981cccba-9cfd-5141-9875-04d2e5c07f56

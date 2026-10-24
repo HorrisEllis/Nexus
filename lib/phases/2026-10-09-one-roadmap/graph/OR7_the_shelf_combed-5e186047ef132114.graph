@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829998101
+exported_at: 1792830609309
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998101
-lastSeenAt: 1792829998101
+firstSeenAt: 1792830609309
+lastSeenAt: 1792830609309
 fingerprint: null
 payload:
   for: OR7_the_shelf_combed
@@ -43,3 +43,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): OR3_his_decisions_applied'
       - 'needed by (0): —'
+  phaseUuid: 0cf5b39a-ab67-5703-ac92-ae3933b2ff11

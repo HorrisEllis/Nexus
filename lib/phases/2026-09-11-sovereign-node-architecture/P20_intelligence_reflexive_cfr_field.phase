@@ -9,11 +9,11 @@ intent: null
 summary: P20_intelligence_reflexive_cfr_field (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976511
+exported_at: 1792830587122
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976511
-lastSeenAt: 1792829976511
+firstSeenAt: 1792830587122
+lastSeenAt: 1792830587122
 fingerprint: null
 payload:
   id: P20_intelligence_reflexive_cfr_field
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 9c9558f07253d4ee
+  uuid: edbfb0ac-8827-5dfc-b7b0-7ebad5db9d86

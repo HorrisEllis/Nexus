@@ -9,11 +9,11 @@ intent: null
 summary: R8_ui_diagnostic_surfaces_wired_together (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830036417
+exported_at: 1792830648645
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830036417
-lastSeenAt: 1792830036417
+firstSeenAt: 1792830648645
+lastSeenAt: 1792830648645
 fingerprint: null
 payload:
   id: R8_ui_diagnostic_surfaces_wired_together
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 89ea8783a73fb339
+  uuid: 922fbed1-d065-55b6-b190-ee73f1448178

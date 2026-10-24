@@ -7,11 +7,11 @@ intent: null
 summary: BS17_menu_consolidated (surface) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023783
+exported_at: 1792830636219
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023783
-lastSeenAt: 1792830023783
+firstSeenAt: 1792830636219
+lastSeenAt: 1792830636219
 fingerprint: null
 payload:
   id: BS17_menu_consolidated
@@ -28,3 +28,10 @@ payload:
     - MOD-BSH-APPMENU
   spec: clear-glass/spec/browser-shell.spec
   graph: f5d69e62d20f3d9c
+  uuid: 81dc3bc1-609a-5615-a799-fad1b0c4967b
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-APPMENU
+        uuid: nexus-cg-bsh-appmenu-v1-0000-2026-1021-006

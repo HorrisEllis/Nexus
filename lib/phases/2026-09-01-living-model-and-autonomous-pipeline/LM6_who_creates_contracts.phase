@@ -9,11 +9,11 @@ intent: null
 summary: LM6_who_creates_contracts (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829973387
+exported_at: 1792830584035
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973387
-lastSeenAt: 1792829973387
+firstSeenAt: 1792830584035
+lastSeenAt: 1792830584035
 fingerprint: null
 payload:
   id: LM6_who_creates_contracts
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 916424c3f4eeec02
+  uuid: a0ad1daa-4c0f-56d7-922b-ed021b1a21eb

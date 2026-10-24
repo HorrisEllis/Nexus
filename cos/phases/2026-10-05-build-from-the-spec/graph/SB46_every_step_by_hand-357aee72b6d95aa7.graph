@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991011
+exported_at: 1792830601672
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991011
-lastSeenAt: 1792829991011
+firstSeenAt: 1792830601672
+lastSeenAt: 1792830601672
 fingerprint: null
 payload:
   for: SB46_every_step_by_hand
@@ -81,3 +81,4 @@ payload:
       - >-
         needed by (2): SB47_built_and_run_in_cos, SB49_an_idea_runs_through_by_itself · all
         downstream 3
+  phaseUuid: a0a0181e-0d02-5546-96f9-b3b5d09b4ca6

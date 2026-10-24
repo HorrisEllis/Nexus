@@ -7,11 +7,11 @@ intent: null
 summary: UI12_workshop_surface (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990145
+exported_at: 1792830600800
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990145
-lastSeenAt: 1792829990145
+firstSeenAt: 1792830600800
+lastSeenAt: 1792830600800
 fingerprint: null
 payload:
   id: UI12_workshop_surface
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 005dd01e2ba96ba8
+  uuid: 41273904-fcf7-5589-8c45-64f8b2b45a85

@@ -7,11 +7,11 @@ intent: null
 summary: SV0 (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829984148
+exported_at: 1792830594904
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829984148
-lastSeenAt: 1792829984148
+firstSeenAt: 1792830594904
+lastSeenAt: 1792830594904
 fingerprint: null
 payload:
   id: SV0
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 52bc14057534aec7
+  uuid: b67e9a46-40e9-5a4d-91de-5b6c5deced96

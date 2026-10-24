@@ -7,11 +7,11 @@ intent: null
 summary: EC4_learning_router (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985876
+exported_at: 1792830596582
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985876
-lastSeenAt: 1792829985876
+firstSeenAt: 1792830596582
+lastSeenAt: 1792830596582
 fingerprint: null
 payload:
   id: EC4_learning_router
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 5ea981995e6aa2aa
+  uuid: 3ef5b9b1-9e9a-552f-b71e-a5fa40928912

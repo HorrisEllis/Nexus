@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829997243
+exported_at: 1792830608402
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997243
-lastSeenAt: 1792829997243
+firstSeenAt: 1792830608402
+lastSeenAt: 1792830608402
 fingerprint: null
 payload:
   for: HP8_the_ladder_says_why_ollama_is_missing
@@ -221,3 +221,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 3f16cb32-ab74-5792-9a07-b89b8e1bb8dc

@@ -7,11 +7,11 @@ intent: null
 summary: SB24_loom_builds_a_new_system (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990972
+exported_at: 1792830601633
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990972
-lastSeenAt: 1792829990972
+firstSeenAt: 1792830601633
+lastSeenAt: 1792830601633
 fingerprint: null
 payload:
   id: SB24_loom_builds_a_new_system
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: bdd03972022356be
+  uuid: ad37e283-f6c6-5546-aecf-404594118f35

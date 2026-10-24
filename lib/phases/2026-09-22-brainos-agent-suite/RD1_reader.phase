@@ -7,11 +7,11 @@ intent: null
 summary: RD1_reader (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829979379
+exported_at: 1792830590023
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829979379
-lastSeenAt: 1792829979379
+firstSeenAt: 1792830590023
+lastSeenAt: 1792830590023
 fingerprint: null
 payload:
   id: RD1_reader
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: ffe56609c225d915
+  uuid: a348f263-4ebc-5fa4-b445-1f6354821800

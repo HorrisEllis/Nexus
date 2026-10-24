@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830017719
+exported_at: 1792830629755
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017719
-lastSeenAt: 1792830017719
+firstSeenAt: 1792830629755
+lastSeenAt: 1792830629755
 fingerprint: null
 payload:
   for: DBG8_in_the_product
@@ -92,3 +92,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3 · blocked by DBG2_the_case, DBG0c_which_product
       - 'depends on (2): DBG2_the_case, DBG0c_which_product · all upstream 4'
       - 'needed by (0): —'
+  phaseUuid: ea241f0c-fc08-5809-bc51-495c4bfaff26

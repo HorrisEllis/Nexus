@@ -7,11 +7,11 @@ intent: null
 summary: BX7_automation (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023361
+exported_at: 1792830635772
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023361
-lastSeenAt: 1792830023361
+firstSeenAt: 1792830635772
+lastSeenAt: 1792830635772
 fingerprint: null
 payload:
   id: BX7_automation
@@ -30,3 +30,10 @@ payload:
     - MOD-BX-AUTOMATION
   spec: docs/brainos-in-idearium.spec
   graph: 24e84523600c401f
+  uuid: 9ab4aa79-52ab-5ec2-957f-2e470160be60
+  specLink:
+    how: declared
+    spec: docs/brainos-in-idearium.spec
+    modules:
+      - id: MOD-BX-AUTOMATION
+        uuid: nexus-bx-automation-v1-0000-2026-1021-001

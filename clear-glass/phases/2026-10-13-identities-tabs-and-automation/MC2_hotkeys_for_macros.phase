@@ -9,11 +9,11 @@ intent: null
 summary: MC2_hotkeys_for_macros (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002552
+exported_at: 1792830613967
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002552
-lastSeenAt: 1792830002552
+firstSeenAt: 1792830613967
+lastSeenAt: 1792830613967
 fingerprint: null
 payload:
   id: MC2_hotkeys_for_macros
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: a0d99d8f06fb8ca4
+  uuid: 101f4249-c99b-5677-bc08-5ffc378f708d

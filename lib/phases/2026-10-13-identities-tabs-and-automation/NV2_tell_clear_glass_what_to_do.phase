@@ -9,11 +9,11 @@ intent: null
 summary: NV2_tell_clear_glass_what_to_do (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002550
+exported_at: 1792830613966
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002550
-lastSeenAt: 1792830002550
+firstSeenAt: 1792830613966
+lastSeenAt: 1792830613966
 fingerprint: null
 payload:
   id: NV2_tell_clear_glass_what_to_do
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: c31060359b5f7fc4
+  uuid: fe7e3c6a-c36b-5089-9a6f-7d80c4dc1604

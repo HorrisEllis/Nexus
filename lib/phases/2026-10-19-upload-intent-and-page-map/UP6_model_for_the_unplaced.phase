@@ -9,11 +9,11 @@ intent: null
 summary: UP6_model_for_the_unplaced (integration) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830021327
+exported_at: 1792830633681
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021327
-lastSeenAt: 1792830021327
+firstSeenAt: 1792830633681
+lastSeenAt: 1792830633681
 fingerprint: null
 payload:
   id: UP6_model_for_the_unplaced
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 76cb86273b1fc6d5
+  uuid: 8d9866c8-30c6-5a71-9e64-1474af46e080

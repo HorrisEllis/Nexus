@@ -7,11 +7,11 @@ intent: null
 summary: COSA6_the_exe (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005846
+exported_at: 1792830617309
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005846
-lastSeenAt: 1792830005846
+firstSeenAt: 1792830617309
+lastSeenAt: 1792830617309
 fingerprint: null
 payload:
   id: COSA6_the_exe
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 6de6d4ad67498fc0
+  uuid: 952baa04-1493-5b4d-bc31-e8d09842ad4e

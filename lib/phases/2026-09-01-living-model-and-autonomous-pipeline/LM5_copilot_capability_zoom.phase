@@ -9,11 +9,11 @@ intent: null
 summary: LM5_copilot_capability_zoom (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829973385
+exported_at: 1792830584032
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973385
-lastSeenAt: 1792829973385
+firstSeenAt: 1792830584032
+lastSeenAt: 1792830584032
 fingerprint: null
 payload:
   id: LM5_copilot_capability_zoom
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 9f3676d4351df0b6
+  uuid: 174f2751-5ae1-54cc-955f-b565edbacbc4

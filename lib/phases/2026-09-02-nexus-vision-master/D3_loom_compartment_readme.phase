@@ -7,11 +7,11 @@ intent: null
 summary: D3_loom_compartment_readme (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974293
+exported_at: 1792830584877
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974293
-lastSeenAt: 1792829974293
+firstSeenAt: 1792830584877
+lastSeenAt: 1792830584877
 fingerprint: null
 payload:
   id: D3_loom_compartment_readme
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 8e08088d72c8d83a
+  uuid: 496aae0b-8816-5f2e-bc4a-feac064feac2

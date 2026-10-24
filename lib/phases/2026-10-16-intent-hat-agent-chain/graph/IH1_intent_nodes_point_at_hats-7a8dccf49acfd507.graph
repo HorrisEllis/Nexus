@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830012138
+exported_at: 1792830623952
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830012138
-lastSeenAt: 1792830012138
+firstSeenAt: 1792830623952
+lastSeenAt: 1792830623952
 fingerprint: null
 payload:
   for: IH1_intent_nodes_point_at_hats
@@ -142,3 +142,4 @@ payload:
         needed by (4): IH2_agents_bound, IH3_routers_read_the_chain, IH4_api_command_ui,
         IH5_proof_and_wiring · finishing it unlocks IH2_agents_bound, IH3_routers_read_the_chain,
         IH4_api_command_ui, IH5_proof_and_wiring
+  phaseUuid: 760121c9-6519-5081-8354-0d8b3ffec402

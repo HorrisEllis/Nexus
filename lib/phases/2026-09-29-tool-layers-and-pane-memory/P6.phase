@@ -7,11 +7,11 @@ intent: null
 summary: P6 (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829986269
+exported_at: 1792830596968
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829986269
-lastSeenAt: 1792829986269
+firstSeenAt: 1792830596968
+lastSeenAt: 1792830596968
 fingerprint: null
 payload:
   id: P6
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 5880174cc33d421b
+  uuid: 5856b126-72bd-5ec1-83ed-6af94b7a2668

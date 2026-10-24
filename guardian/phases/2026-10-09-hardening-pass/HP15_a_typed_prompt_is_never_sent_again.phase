@@ -9,11 +9,11 @@ intent: null
 summary: HP15_a_typed_prompt_is_never_sent_again (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829997248
+exported_at: 1792830608407
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997248
-lastSeenAt: 1792829997248
+firstSeenAt: 1792830608407
+lastSeenAt: 1792830608407
 fingerprint: null
 payload:
   id: HP15_a_typed_prompt_is_never_sent_again
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 5c7b24fc42656fde
+  uuid: fc8efd24-d6ad-5ca5-b0ad-41dd84214b0d

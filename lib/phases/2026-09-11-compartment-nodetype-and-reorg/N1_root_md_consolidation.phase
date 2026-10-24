@@ -9,11 +9,11 @@ intent: null
 summary: N1_root_md_consolidation (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976058
+exported_at: 1792830586671
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976058
-lastSeenAt: 1792829976058
+firstSeenAt: 1792830586671
+lastSeenAt: 1792830586671
 fingerprint: null
 payload:
   id: N1_root_md_consolidation
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: d7ece054f8e1b547
+  uuid: 9701c9c0-3734-5d8d-9995-f616c8fca255

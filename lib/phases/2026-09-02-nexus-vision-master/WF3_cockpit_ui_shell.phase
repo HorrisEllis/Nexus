@@ -7,11 +7,11 @@ intent: null
 summary: WF3_cockpit_ui_shell (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974306
+exported_at: 1792830584889
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974306
-lastSeenAt: 1792829974306
+firstSeenAt: 1792830584889
+lastSeenAt: 1792830584889
 fingerprint: null
 payload:
   id: WF3_cockpit_ui_shell
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: e038ecb5ad9f4172
+  uuid: 9d52b0ee-f718-5939-ab2f-f25c2a1bcc49

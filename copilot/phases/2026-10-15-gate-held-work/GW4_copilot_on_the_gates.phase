@@ -7,11 +7,11 @@ intent: null
 summary: GW4_copilot_on_the_gates (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830006634
+exported_at: 1792830618157
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006634
-lastSeenAt: 1792830006634
+firstSeenAt: 1792830618157
+lastSeenAt: 1792830618157
 fingerprint: null
 payload:
   id: GW4_copilot_on_the_gates
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 716480a2afed4f07
+  uuid: 2da1556c-bdcb-5263-9420-25077eecad8a

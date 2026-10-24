@@ -7,11 +7,11 @@ intent: null
 summary: TN4 (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829998482
+exported_at: 1792830609744
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998482
-lastSeenAt: 1792829998482
+firstSeenAt: 1792830609744
+lastSeenAt: 1792830609744
 fingerprint: null
 payload:
   id: TN4
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 2d3835e2abf0d30c
+  uuid: e4d65387-8d16-5349-8d29-b68f8a6f9fb0

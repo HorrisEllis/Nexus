@@ -7,11 +7,11 @@ intent: null
 summary: COSA3_run_and_supervise (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005844
+exported_at: 1792830617306
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005844
-lastSeenAt: 1792830005844
+firstSeenAt: 1792830617306
+lastSeenAt: 1792830617306
 fingerprint: null
 payload:
   id: COSA3_run_and_supervise
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: d173bfd7f8056f35
+  uuid: 9ffcf80b-ffd5-5371-baaa-250eba56ffc3

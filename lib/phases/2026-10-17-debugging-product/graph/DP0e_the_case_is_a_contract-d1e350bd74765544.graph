@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830015253
+exported_at: 1792830627242
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830015253
-lastSeenAt: 1792830015253
+firstSeenAt: 1792830627242
+lastSeenAt: 1792830627242
 fingerprint: null
 payload:
   for: DP0e_the_case_is_a_contract
@@ -37,3 +37,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 06bd1785-0722-5cce-b2a0-47ee2af44532

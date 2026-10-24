@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 10 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829972551
+exported_at: 1792830583164
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972551
-lastSeenAt: 1792829972551
+firstSeenAt: 1792830583164
+lastSeenAt: 1792830583164
 fingerprint: null
 payload:
   for: SBP7_DESIGN_PRINCIPLE_automation_over_code
@@ -277,3 +277,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 6a85e667-c132-569f-98e3-aa5915b31ab7

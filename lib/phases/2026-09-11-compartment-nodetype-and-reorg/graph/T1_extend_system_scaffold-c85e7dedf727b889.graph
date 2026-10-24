@@ -7,11 +7,11 @@ intent: null
 summary: 38 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829976046
+exported_at: 1792830586658
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976046
-lastSeenAt: 1792829976046
+firstSeenAt: 1792830586658
+lastSeenAt: 1792830586658
 fingerprint: null
 payload:
   for: T1_extend_system_scaffold
@@ -299,3 +299,4 @@ payload:
         needed by (3): T4_cos_role_confirmed, D1_diagnostic_real_folder, X1_node_decomposition_tool
         · all downstream 5 · finishing it unlocks T4_cos_role_confirmed, D1_diagnostic_real_folder,
         X1_node_decomposition_tool
+  phaseUuid: 025b02c1-f8a2-5cdc-8159-48b97565bcf3

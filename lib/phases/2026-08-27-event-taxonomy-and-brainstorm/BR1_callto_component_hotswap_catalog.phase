@@ -9,11 +9,11 @@ intent: null
 summary: BR1_callto_component_hotswap_catalog (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971726
+exported_at: 1792830582306
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971726
-lastSeenAt: 1792829971726
+firstSeenAt: 1792830582306
+lastSeenAt: 1792830582306
 fingerprint: null
 payload:
   id: BR1_callto_component_hotswap_catalog
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: e6e82690ee483733
+  uuid: 500f2367-cae6-51b6-a415-009152fc6c08

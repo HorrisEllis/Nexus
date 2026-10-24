@@ -7,11 +7,11 @@ intent: null
 summary: PI6_the_firefox_script (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007881
+exported_at: 1792830619450
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007881
-lastSeenAt: 1792830007881
+firstSeenAt: 1792830619450
+lastSeenAt: 1792830619450
 fingerprint: null
 payload:
   id: PI6_the_firefox_script
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: bf5f6880f62879e2
+  uuid: 9484ab4f-f168-5660-8596-14ac0653a3bc

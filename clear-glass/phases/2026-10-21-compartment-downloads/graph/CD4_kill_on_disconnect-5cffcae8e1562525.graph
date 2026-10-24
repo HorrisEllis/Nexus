@@ -7,11 +7,11 @@ intent: null
 summary: 10 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830024195
+exported_at: 1792830636644
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830024195
-lastSeenAt: 1792830024195
+firstSeenAt: 1792830636644
+lastSeenAt: 1792830636644
 fingerprint: null
 payload:
   for: CD4_kill_on_disconnect
@@ -115,3 +115,4 @@ payload:
         depends on (3): CD0_kill_default, CD2_quarantine_downloads, CD3_verified_handoff · all
         upstream 5
       - 'needed by (1): CD5_surface · all downstream 2 · finishing it unlocks CD5_surface'
+  phaseUuid: 485e9ce8-2ee0-56e0-86c6-796c532ffd3e

@@ -9,11 +9,11 @@ intent: null
 summary: WB1_warp_at_the_rung (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792830009021
+exported_at: 1792830620654
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009021
-lastSeenAt: 1792830009021
+firstSeenAt: 1792830620654
+lastSeenAt: 1792830620654
 fingerprint: null
 payload:
   id: WB1_warp_at_the_rung
@@ -34,3 +34,4 @@ payload:
   blocks: []
   spec: null
   graph: 60eb99e47c8e797a
+  uuid: 4dfde77f-52b0-5a67-ae56-21778a5292d2

@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830006656
+exported_at: 1792830618180
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006656
-lastSeenAt: 1792830006656
+firstSeenAt: 1792830618180
+lastSeenAt: 1792830618180
 fingerprint: null
 payload:
   for: GW24_the_gate_holds_the_agent_gets_a_projection
@@ -278,3 +278,4 @@ payload:
         cortex/core/raid/contract-gates.js
       - 'same files as GW15_every_file_tested with no order between them: idearium/api/index.js'
       - … and 1 more phases sharing its files without an order
+  phaseUuid: 0853f79e-9fed-5c37-8158-955cedbc053d

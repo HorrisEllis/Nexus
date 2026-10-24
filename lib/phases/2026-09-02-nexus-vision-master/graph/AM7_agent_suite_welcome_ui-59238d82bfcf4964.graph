@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829974295
+exported_at: 1792830584880
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974295
-lastSeenAt: 1792829974295
+firstSeenAt: 1792830584880
+lastSeenAt: 1792830584880
 fingerprint: null
 payload:
   for: AM7_agent_suite_welcome_ui
@@ -238,3 +238,4 @@ payload:
       - >-
         needed by (2): AM11_per_agent_tasks_automation, WF3_cockpit_ui_shell · all downstream 3 ·
         finishing it unlocks AM11_per_agent_tasks_automation, WF3_cockpit_ui_shell
+  phaseUuid: 99a66ffb-c154-5e9c-b816-d6e8ad7acad2

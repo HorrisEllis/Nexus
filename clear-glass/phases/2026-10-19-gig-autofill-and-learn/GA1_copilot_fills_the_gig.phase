@@ -7,11 +7,11 @@ intent: null
 summary: GA1_copilot_fills_the_gig (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830019246
+exported_at: 1792830631531
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830019246
-lastSeenAt: 1792830019246
+firstSeenAt: 1792830631531
+lastSeenAt: 1792830631531
 fingerprint: null
 payload:
   id: GA1_copilot_fills_the_gig
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 6d8a7e5ce0db2455
+  uuid: f0b7b028-0918-5023-8bb4-e737add4d3e4

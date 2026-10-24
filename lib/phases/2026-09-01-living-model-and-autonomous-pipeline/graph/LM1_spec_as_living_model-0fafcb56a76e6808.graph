@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829973381
+exported_at: 1792830584029
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973381
-lastSeenAt: 1792829973381
+firstSeenAt: 1792830584029
+lastSeenAt: 1792830584029
 fingerprint: null
 payload:
   for: LM1_spec_as_living_model
@@ -204,3 +204,4 @@ payload:
         LM13_guardian_agents_folder_refactor, LM19_atlas_spec_coverage_prerequisite · all downstream
         16 · finishing it unlocks LM2_registry_as_hub_with_watchdog, LM4_per_system_tool_index,
         LM13_guardian_agents_folder_refactor
+  phaseUuid: fe934a3f-8fcc-58e7-a21d-e3678f59b665

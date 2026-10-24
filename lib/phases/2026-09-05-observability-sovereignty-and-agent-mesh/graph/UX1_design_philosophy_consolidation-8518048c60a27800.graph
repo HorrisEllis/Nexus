@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829975230
+exported_at: 1792830585855
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975230
-lastSeenAt: 1792829975230
+firstSeenAt: 1792830585855
+lastSeenAt: 1792830585855
 fingerprint: null
 payload:
   for: UX1_design_philosophy_consolidation
@@ -41,3 +41,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: fe3d6913-f04f-575c-89dc-bcc9dadee377

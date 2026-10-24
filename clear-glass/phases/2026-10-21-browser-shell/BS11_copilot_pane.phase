@@ -7,11 +7,11 @@ intent: null
 summary: BS11_copilot_pane (surface) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023780
+exported_at: 1792830636216
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023780
-lastSeenAt: 1792830023780
+firstSeenAt: 1792830636216
+lastSeenAt: 1792830636216
 fingerprint: null
 payload:
   id: BS11_copilot_pane
@@ -27,3 +27,10 @@ payload:
     - MOD-BSH-COPILOT-SKIN
   spec: clear-glass/spec/browser-shell.spec
   graph: caad6884da55762a
+  uuid: eedc0341-31bd-5cdc-bbf9-c92b11ee7c1a
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-COPILOT-SKIN
+        uuid: nexus-cg-bsh-copilot-skin-v1-0000-2026-1021-002

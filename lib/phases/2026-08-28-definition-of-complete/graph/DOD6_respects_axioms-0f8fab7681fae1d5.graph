@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829972149
+exported_at: 1792830582739
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972149
-lastSeenAt: 1792829972149
+firstSeenAt: 1792830582739
+lastSeenAt: 1792830582739
 fingerprint: null
 payload:
   for: DOD6_respects_axioms
@@ -92,3 +92,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 149c1c4d-cf56-56c8-aedc-b4800ef436b8

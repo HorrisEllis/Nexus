@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829972960
+exported_at: 1792830583614
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972960
-lastSeenAt: 1792829972960
+firstSeenAt: 1792830583614
+lastSeenAt: 1792830583614
 fingerprint: null
 payload:
   for: IC9_diagnostic_stall_detection_and_autofix
@@ -43,3 +43,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4 · blocked by IC5_full_input_queue_output_qc_lifecycle
       - 'depends on (1): IC5_full_input_queue_output_qc_lifecycle · all upstream 4'
       - 'needed by (0): —'
+  phaseUuid: 37d0007a-af63-5188-b04d-cd963c04c7ec

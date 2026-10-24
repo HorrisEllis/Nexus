@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830021763
+exported_at: 1792830634097
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021763
-lastSeenAt: 1792830021763
+firstSeenAt: 1792830634097
+lastSeenAt: 1792830634097
 fingerprint: null
 payload:
   for: IV1_invariant_kinds
@@ -57,3 +57,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4 · blocked by IV0_belief_census, GR1_graph_primitive
       - 'depends on (2): IV0_belief_census, GR1_graph_primitive · all upstream 7'
       - 'needed by (1): IV2_invariant_miner · all downstream 4'
+  phaseUuid: 9dbb3a87-35ea-5a94-a9a6-2c188f056385

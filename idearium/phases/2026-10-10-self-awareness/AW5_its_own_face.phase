@@ -7,11 +7,11 @@ intent: null
 summary: AW5_its_own_face (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830000078
+exported_at: 1792830611430
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000078
-lastSeenAt: 1792830000078
+firstSeenAt: 1792830611430
+lastSeenAt: 1792830611430
 fingerprint: null
 payload:
   id: AW5_its_own_face
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: e328b4fcf66e26af
+  uuid: 9f99c07b-2125-58c6-b091-3680d452f8fe

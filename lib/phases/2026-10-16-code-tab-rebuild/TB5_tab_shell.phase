@@ -7,11 +7,11 @@ intent: null
 summary: TB5_tab_shell (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830010170
+exported_at: 1792830621904
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010170
-lastSeenAt: 1792830010170
+firstSeenAt: 1792830621904
+lastSeenAt: 1792830621904
 fingerprint: null
 payload:
   id: TB5_tab_shell
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 45459c6b9780f0d9
+  uuid: 59eeee76-d637-5309-a7ea-9bcaa6a0aac7

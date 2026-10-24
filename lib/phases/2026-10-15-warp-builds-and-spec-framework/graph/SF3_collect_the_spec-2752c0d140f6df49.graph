@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830009025
+exported_at: 1792830620658
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009025
-lastSeenAt: 1792830009025
+firstSeenAt: 1792830620658
+lastSeenAt: 1792830620658
 fingerprint: null
 payload:
   for: SF3_collect_the_spec
@@ -253,3 +253,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): SF2_spec_framework_block · all upstream 2'
       - 'needed by (1): SF4_compile_on_collect · finishing it unlocks SF4_compile_on_collect'
+  phaseUuid: 1cd43912-2b9b-584e-a9ac-fd2f38e52bc5

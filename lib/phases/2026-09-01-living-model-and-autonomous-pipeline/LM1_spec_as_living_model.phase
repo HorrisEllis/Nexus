@@ -9,11 +9,11 @@ intent: null
 summary: LM1_spec_as_living_model (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829973381
+exported_at: 1792830584029
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973381
-lastSeenAt: 1792829973381
+firstSeenAt: 1792830584029
+lastSeenAt: 1792830584029
 fingerprint: null
 payload:
   id: LM1_spec_as_living_model
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 0fafcb56a76e6808
+  uuid: fe934a3f-8fcc-58e7-a21d-e3678f59b665

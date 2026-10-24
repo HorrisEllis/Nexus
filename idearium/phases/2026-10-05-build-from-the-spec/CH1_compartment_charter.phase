@@ -7,11 +7,11 @@ intent: null
 summary: CH1_compartment_charter (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991025
+exported_at: 1792830601686
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991025
-lastSeenAt: 1792829991025
+firstSeenAt: 1792830601686
+lastSeenAt: 1792830601686
 fingerprint: null
 payload:
   id: CH1_compartment_charter
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 3faf15b7b007ec19
+  uuid: 71ef688f-e30d-525d-bc50-6a98c1539817

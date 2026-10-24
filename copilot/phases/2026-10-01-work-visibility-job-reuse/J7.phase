@@ -7,11 +7,11 @@ intent: null
 summary: J7 (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988003
+exported_at: 1792830598646
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988003
-lastSeenAt: 1792829988003
+firstSeenAt: 1792830598646
+lastSeenAt: 1792830598646
 fingerprint: null
 payload:
   id: J7
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 58dc5b6c1cc9744f
+  uuid: 27c02e61-4b6c-5831-9353-78262295ea95

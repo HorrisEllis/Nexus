@@ -7,11 +7,11 @@ intent: null
 summary: RG0_map (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987565
+exported_at: 1792830598245
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987565
-lastSeenAt: 1792829987565
+firstSeenAt: 1792830598245
+lastSeenAt: 1792830598245
 fingerprint: null
 payload:
   id: RG0_map
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 2dbe0930b534d57a
+  uuid: eb387b23-db03-520c-9cf2-769d21578661

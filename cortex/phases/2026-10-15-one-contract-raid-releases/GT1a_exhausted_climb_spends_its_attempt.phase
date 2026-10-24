@@ -9,11 +9,11 @@ intent: null
 summary: GT1a_exhausted_climb_spends_its_attempt (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007472
+exported_at: 1792830619042
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007472
-lastSeenAt: 1792830007472
+firstSeenAt: 1792830619042
+lastSeenAt: 1792830619042
 fingerprint: null
 payload:
   id: GT1a_exhausted_climb_spends_its_attempt
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 6108f2a7ab7f09d8
+  uuid: 7bf68117-36fe-58d8-ae41-842206e4ab9b

@@ -9,11 +9,11 @@ intent: null
 summary: RF1_ncp_liveness_is_console_only (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975178
+exported_at: 1792830585795
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975178
-lastSeenAt: 1792829975178
+firstSeenAt: 1792830585795
+lastSeenAt: 1792830585795
 fingerprint: null
 payload:
   id: RF1_ncp_liveness_is_console_only
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 830474f81fff192c
+  uuid: 9e943668-134f-5bdb-9e3f-e7a9adaa835b

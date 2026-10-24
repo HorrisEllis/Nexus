@@ -7,11 +7,11 @@ intent: null
 summary: S2_spec_tab (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983318
+exported_at: 1792830594110
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983318
-lastSeenAt: 1792829983318
+firstSeenAt: 1792830594110
+lastSeenAt: 1792830594110
 fingerprint: null
 payload:
   id: S2_spec_tab
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 13a6b256674ca997
+  uuid: 50c017af-2478-5adf-a5d3-5933c0017692

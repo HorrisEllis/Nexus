@@ -7,11 +7,11 @@ intent: null
 summary: DOD1_fully_autonomous (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972146
+exported_at: 1792830582734
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972146
-lastSeenAt: 1792829972146
+firstSeenAt: 1792830582734
+lastSeenAt: 1792830582734
 fingerprint: null
 payload:
   id: DOD1_fully_autonomous
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: e5fd79a1162932ba
+  uuid: cc07968f-6dbf-5a4f-b064-ac5bf041f25e

@@ -7,11 +7,11 @@ intent: null
 summary: BS1_firefox_import (library) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023774
+exported_at: 1792830636211
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023774
-lastSeenAt: 1792830023774
+firstSeenAt: 1792830636211
+lastSeenAt: 1792830636211
 fingerprint: null
 payload:
   id: BS1_firefox_import
@@ -27,3 +27,10 @@ payload:
     - MOD-BSH-FIREFOX
   spec: clear-glass/spec/browser-shell.spec
   graph: d3c52db1223874d1
+  uuid: bfc52444-6043-5877-b747-6f0f7b3bf4b1
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-FIREFOX
+        uuid: nexus-cg-bsh-firefox-v1-0000-2026-1021-001

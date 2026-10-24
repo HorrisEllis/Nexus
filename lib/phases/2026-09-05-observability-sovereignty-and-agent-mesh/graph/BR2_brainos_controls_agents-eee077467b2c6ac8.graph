@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829975204
+exported_at: 1792830585829
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975204
-lastSeenAt: 1792829975204
+firstSeenAt: 1792830585829
+lastSeenAt: 1792830585829
 fingerprint: null
 payload:
   for: BR2_brainos_controls_agents
@@ -219,3 +219,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by TC1_tools_get_real_contracts
       - 'depends on (2): DA1_fix_stale_guardian_coverage_gate, TC1_tools_get_real_contracts'
       - 'needed by (0): —'
+  phaseUuid: a3de0296-74c3-5d0d-99eb-4432a965f462

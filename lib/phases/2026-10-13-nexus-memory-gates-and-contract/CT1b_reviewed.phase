@@ -7,11 +7,11 @@ intent: null
 summary: CT1b_reviewed (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002965
+exported_at: 1792830614351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002965
-lastSeenAt: 1792830002965
+firstSeenAt: 1792830614351
+lastSeenAt: 1792830614351
 fingerprint: null
 payload:
   id: CT1b_reviewed
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 3178ffe24c2f885c
+  uuid: 1219ba74-cdc7-5614-8c75-9322359888f1

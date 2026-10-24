@@ -7,11 +7,11 @@ intent: null
 summary: BX0c_float (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023354
+exported_at: 1792830635765
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023354
-lastSeenAt: 1792830023354
+firstSeenAt: 1792830635765
+lastSeenAt: 1792830635765
 fingerprint: null
 payload:
   id: BX0c_float
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 46828bfaac71f296
+  uuid: a45805da-5f97-5524-b6db-79a312666d4f

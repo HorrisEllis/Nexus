@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830023779
+exported_at: 1792830636215
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023779
-lastSeenAt: 1792830023779
+firstSeenAt: 1792830636215
+lastSeenAt: 1792830636215
 fingerprint: null
 payload:
   for: BS8_design_system
@@ -66,3 +66,4 @@ payload:
       - >-
         needed by (3): BS9_agents_hub, BS11_copilot_pane, BS15_context_menu · all downstream 7 ·
         finishing it unlocks BS9_agents_hub, BS11_copilot_pane, BS15_context_menu
+  phaseUuid: 3ed07b90-cb65-5d72-b724-b4836e7e0c31

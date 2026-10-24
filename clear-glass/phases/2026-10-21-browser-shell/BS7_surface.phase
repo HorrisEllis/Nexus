@@ -7,11 +7,11 @@ intent: null
 summary: BS7_surface (surface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023778
+exported_at: 1792830636214
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023778
-lastSeenAt: 1792830023778
+firstSeenAt: 1792830636214
+lastSeenAt: 1792830636214
 fingerprint: null
 payload:
   id: BS7_surface
@@ -31,3 +31,10 @@ payload:
     - MOD-BSH-SURFACE
   spec: clear-glass/spec/browser-shell.spec
   graph: 650e56a6af5ece66
+  uuid: 3493a338-2ebe-5517-bf45-b34a7a4269b3
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-SURFACE
+        uuid: nexus-cg-bsh-surface-v1-0000-2026-1021-001

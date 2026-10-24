@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830010179
+exported_at: 1792830621914
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010179
-lastSeenAt: 1792830010179
+firstSeenAt: 1792830621914
+lastSeenAt: 1792830621914
 fingerprint: null
 payload:
   for: DK1_procedures_backend
@@ -247,3 +247,4 @@ payload:
       - 'depends on (0): —'
       - 'needed by (1): DK2_the_dock · finishing it unlocks DK2_the_dock'
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+  phaseUuid: ea1d5e5d-1639-5e76-8d70-b0e563f9c28b

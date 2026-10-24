@@ -7,11 +7,11 @@ intent: null
 summary: TB7c_graph_and_zoom (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830010174
+exported_at: 1792830621909
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010174
-lastSeenAt: 1792830010174
+firstSeenAt: 1792830621909
+lastSeenAt: 1792830621909
 fingerprint: null
 payload:
   id: TB7c_graph_and_zoom
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 78e30e5a8955bb39
+  uuid: 9f9ff94e-d256-5e23-978d-ed908df7dba2

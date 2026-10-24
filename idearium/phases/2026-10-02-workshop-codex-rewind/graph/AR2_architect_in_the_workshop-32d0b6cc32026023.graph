@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990139
+exported_at: 1792830600795
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990139
-lastSeenAt: 1792829990139
+firstSeenAt: 1792830600795
+lastSeenAt: 1792830600795
 fingerprint: null
 payload:
   for: AR2_architect_in_the_workshop
@@ -262,3 +262,4 @@ payload:
       - >-
         needed by (3): AR3_one_architect_canvas, PL1_one_entry_point, UI12_workshop_surface · all
         downstream 6 · finishing it unlocks AR3_one_architect_canvas
+  phaseUuid: b7bd3dba-7eb7-59ba-b31f-1a1a684dd702

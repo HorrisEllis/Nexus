@@ -9,11 +9,11 @@ intent: null
 summary: CM1_every_capability_a_command (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829994584
+exported_at: 1792830605487
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829994584
-lastSeenAt: 1792829994584
+firstSeenAt: 1792830605487
+lastSeenAt: 1792830605487
 fingerprint: null
 payload:
   id: CM1_every_capability_a_command
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 7b012b7934a26bf1
+  uuid: 9de5ea6f-388d-588a-a5a1-360de814737c

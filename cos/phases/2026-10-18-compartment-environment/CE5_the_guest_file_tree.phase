@@ -7,11 +7,11 @@ intent: null
 summary: CE5_the_guest_file_tree (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830017330
+exported_at: 1792830629347
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017330
-lastSeenAt: 1792830017330
+firstSeenAt: 1792830629347
+lastSeenAt: 1792830629347
 fingerprint: null
 payload:
   id: CE5_the_guest_file_tree
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 828a2472ed4dff16
+  uuid: 25426abd-2dc0-57f3-a5de-1170be69bc4a

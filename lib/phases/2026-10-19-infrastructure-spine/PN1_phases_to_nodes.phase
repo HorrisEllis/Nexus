@@ -7,11 +7,11 @@ intent: null
 summary: PN1_phases_to_nodes (foundation) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020060
+exported_at: 1792830632381
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020060
-lastSeenAt: 1792830020060
+firstSeenAt: 1792830632381
+lastSeenAt: 1792830632381
 fingerprint: null
 payload:
   id: PN1_phases_to_nodes
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: d373bee50a742ff2
+  uuid: 1a29cabb-f498-5851-b721-1ab88b3659e3

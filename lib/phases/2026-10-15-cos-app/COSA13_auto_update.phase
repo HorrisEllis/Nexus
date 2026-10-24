@@ -7,11 +7,11 @@ intent: null
 summary: COSA13_auto_update (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005852
+exported_at: 1792830617316
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005852
-lastSeenAt: 1792830005852
+firstSeenAt: 1792830617316
+lastSeenAt: 1792830617316
 fingerprint: null
 payload:
   id: COSA13_auto_update
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 5d782bdcac57ed2b
+  uuid: f87cf8fe-3b4c-5b3b-9afb-21d61f2711d7

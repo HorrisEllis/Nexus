@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829999662
+exported_at: 1792830610991
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999662
-lastSeenAt: 1792829999662
+firstSeenAt: 1792830610991
+lastSeenAt: 1792830610991
 fingerprint: null
 payload:
   for: SD16_a_plan_step_never_proposes_code
@@ -186,3 +186,4 @@ payload:
       - 'depends on (0): —'
       - 'needed by (0): —'
       - 'same files as SD9_claude_code_inside_idearium with no order between them: lib/repo-agent.js'
+  phaseUuid: 724664e4-9106-559f-b228-00698c4cc77d

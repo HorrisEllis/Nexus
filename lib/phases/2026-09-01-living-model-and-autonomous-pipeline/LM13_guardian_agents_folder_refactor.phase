@@ -9,11 +9,11 @@ intent: null
 summary: LM13_guardian_agents_folder_refactor (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829973394
+exported_at: 1792830584042
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973394
-lastSeenAt: 1792829973394
+firstSeenAt: 1792830584042
+lastSeenAt: 1792830584042
 fingerprint: null
 payload:
   id: LM13_guardian_agents_folder_refactor
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 6ec05f2ae6a14f52
+  uuid: b8a07847-d190-5f55-be07-5f977399d057

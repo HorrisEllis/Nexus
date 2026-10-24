@@ -7,11 +7,11 @@ intent: null
 summary: AM2_incident_debrief (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830027817
+exported_at: 1792830640230
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027817
-lastSeenAt: 1792830027817
+firstSeenAt: 1792830640230
+lastSeenAt: 1792830640230
 fingerprint: null
 payload:
   id: AM2_incident_debrief
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 04a4544016b9bb00
+  uuid: 14f8b111-e069-5932-bf4e-57efb718695c

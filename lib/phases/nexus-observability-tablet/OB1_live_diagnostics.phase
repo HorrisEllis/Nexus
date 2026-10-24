@@ -7,11 +7,11 @@ intent: null
 summary: OB1_live_diagnostics (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830033332
+exported_at: 1792830645542
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830033332
-lastSeenAt: 1792830033332
+firstSeenAt: 1792830645542
+lastSeenAt: 1792830645542
 fingerprint: null
 payload:
   id: OB1_live_diagnostics
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: b96f43f0be72f7ee
+  uuid: 5f7cc27e-0a56-52dd-8dca-e02a11a3e667

@@ -9,11 +9,11 @@ intent: null
 summary: AM9_get_to_know_you_and_idea_capture (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830027826
+exported_at: 1792830640240
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027826
-lastSeenAt: 1792830027826
+firstSeenAt: 1792830640240
+lastSeenAt: 1792830640240
 fingerprint: null
 payload:
   id: AM9_get_to_know_you_and_idea_capture
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 32fca166c640cfd4
+  uuid: b35aaec3-e905-5d00-b22b-bf4b820b0ec5

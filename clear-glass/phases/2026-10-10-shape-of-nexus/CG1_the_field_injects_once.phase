@@ -7,11 +7,11 @@ intent: null
 summary: CG1_the_field_injects_once (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830000465
+exported_at: 1792830611842
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000465
-lastSeenAt: 1792830000465
+firstSeenAt: 1792830611842
+lastSeenAt: 1792830611842
 fingerprint: null
 payload:
   id: CG1_the_field_injects_once
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 2d920b1ab36a26e4
+  uuid: 688f3cff-60f7-5bde-932a-8a60819b742c

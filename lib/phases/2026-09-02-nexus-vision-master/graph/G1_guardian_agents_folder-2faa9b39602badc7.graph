@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829974307
+exported_at: 1792830584890
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974307
-lastSeenAt: 1792829974307
+firstSeenAt: 1792830584890
+lastSeenAt: 1792830584890
 fingerprint: null
 payload:
   for: G1_guardian_agents_folder
@@ -142,3 +142,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 1d6a6de1-d995-5c5e-bc42-122a9e0fd924

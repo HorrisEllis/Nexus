@@ -7,11 +7,11 @@ intent: null
 summary: BS17_copilot_browser_verbs (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985015
+exported_at: 1792830595768
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985015
-lastSeenAt: 1792829985015
+firstSeenAt: 1792830595768
+lastSeenAt: 1792830595768
 fingerprint: null
 payload:
   id: BS17_copilot_browser_verbs
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 612a170a43473d39
+  uuid: 5c807537-64dc-5dec-8daa-3b79463f093c

@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830012136
+exported_at: 1792830623951
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830012136
-lastSeenAt: 1792830012136
+firstSeenAt: 1792830623951
+lastSeenAt: 1792830623951
 fingerprint: null
 payload:
   for: IH0a_one_vocabulary
@@ -46,3 +46,4 @@ payload:
       - >-
         needed by (1): IH1_intent_nodes_point_at_hats · all downstream 5 · finishing it unlocks
         IH1_intent_nodes_point_at_hats
+  phaseUuid: 4530cd85-d3e8-5a9d-b954-71a0d3db91ec

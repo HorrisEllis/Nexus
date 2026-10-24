@@ -7,11 +7,11 @@ intent: null
 summary: DB8_agents_have_it (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016881
+exported_at: 1792830628904
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016881
-lastSeenAt: 1792830016881
+firstSeenAt: 1792830628904
+lastSeenAt: 1792830628904
 fingerprint: null
 payload:
   id: DB8_agents_have_it
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 1436fb94e6e0ff14
+  uuid: 07e76c8f-8bc6-5d23-9890-698e4216ff21

@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829986650
+exported_at: 1792830597351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829986650
-lastSeenAt: 1792829986650
+firstSeenAt: 1792830597351
+lastSeenAt: 1792830597351
 fingerprint: null
 payload:
   for: W3_work_surface
@@ -255,3 +255,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3
       - 'depends on (1): W2_plan_always_lands · all upstream 3'
       - 'needed by (1): W4_navigation · all downstream 4 · finishing it unlocks W4_navigation'
+  phaseUuid: 4c88cdee-d355-5c60-a7de-bf886fab7f49

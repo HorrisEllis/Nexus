@@ -9,11 +9,11 @@ intent: null
 summary: P29_clearglass_brainos_canvas (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976525
+exported_at: 1792830587135
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976525
-lastSeenAt: 1792829976525
+firstSeenAt: 1792830587135
+lastSeenAt: 1792830587135
 fingerprint: null
 payload:
   id: P29_clearglass_brainos_canvas
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: bb6cf64c44552e5c
+  uuid: 6b45be08-79a3-530c-8ad3-0500ac6fdb19

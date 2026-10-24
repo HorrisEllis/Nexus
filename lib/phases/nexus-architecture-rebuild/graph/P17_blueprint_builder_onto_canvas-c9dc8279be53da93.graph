@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830032527
+exported_at: 1792830644788
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032527
-lastSeenAt: 1792830032527
+firstSeenAt: 1792830644788
+lastSeenAt: 1792830644788
 fingerprint: null
 payload:
   for: P17_blueprint_builder_onto_canvas
@@ -40,3 +40,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by P16_architect_node_canvas_in_loom
       - 'depends on (1): P16_architect_node_canvas_in_loom'
       - 'needed by (0): —'
+  phaseUuid: 594aaa1d-24d4-56b3-a3b2-2d5a3b15c3b2

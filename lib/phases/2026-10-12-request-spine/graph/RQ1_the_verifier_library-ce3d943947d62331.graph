@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830001704
+exported_at: 1792830613134
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001704
-lastSeenAt: 1792830001704
+firstSeenAt: 1792830613134
+lastSeenAt: 1792830613134
 fingerprint: null
 payload:
   for: RQ1_the_verifier_library
@@ -219,3 +219,4 @@ payload:
         RQ22_the_dependency_boundary_with_invariants_that_run,
         RQ23_acceptance_conditions_that_cannot_be_moved · all downstream 23 · finishing it unlocks
         RQ2_the_generation_failure_vocabulary_and_index
+  phaseUuid: 5b645074-59d1-5b8d-b71d-91cee6a56fb5

@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829970782
+exported_at: 1792830581327
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829970782
-lastSeenAt: 1792829970782
+firstSeenAt: 1792830581327
+lastSeenAt: 1792830581327
 fingerprint: null
 payload:
   for: SF6_wiring_gaps_applied
@@ -155,3 +155,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): SF5_wiring_gap_bridge'
       - 'needed by (0): —'
+  phaseUuid: 4efd2f9a-d3aa-5cb1-8dc1-7e5a75174df6

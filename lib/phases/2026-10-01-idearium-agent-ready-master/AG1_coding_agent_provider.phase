@@ -9,11 +9,11 @@ intent: null
 summary: AG1_coding_agent_provider (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987064
+exported_at: 1792830597769
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987064
-lastSeenAt: 1792829987064
+firstSeenAt: 1792830597769
+lastSeenAt: 1792830597769
 fingerprint: null
 payload:
   id: AG1_coding_agent_provider
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 7098e6ab122046fe
+  uuid: dc85c623-e998-5f76-a2b4-4c2121538b74

@@ -7,11 +7,11 @@ intent: null
 summary: DT1_persistence_census (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987051
+exported_at: 1792830597756
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987051
-lastSeenAt: 1792829987051
+firstSeenAt: 1792830597756
+lastSeenAt: 1792830597756
 fingerprint: null
 payload:
   id: DT1_persistence_census
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: a397051c2ba83059
+  uuid: 26a2c1bd-8387-5ac6-93c3-fe5577a76999

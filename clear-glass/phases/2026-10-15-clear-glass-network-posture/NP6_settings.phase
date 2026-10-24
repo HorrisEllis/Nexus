@@ -7,11 +7,11 @@ intent: null
 summary: NP6_settings (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004594
+exported_at: 1792830616025
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004594
-lastSeenAt: 1792830004594
+firstSeenAt: 1792830616025
+lastSeenAt: 1792830616025
 fingerprint: null
 payload:
   id: NP6_settings
@@ -25,3 +25,15 @@ payload:
   blocks: []
   spec: null
   graph: 01027becd9b14386
+  uuid: d6c80ecc-4c94-5203-98da-06419ce3e329
+  specLink:
+    how: discovered:path
+    spec: clear-glass/spec/snowflake.spec
+    specs:
+      - clear-glass/spec/snowflake.spec
+    covers: 1/1 files
+    modules:
+      - spec: clear-glass/spec/snowflake.spec
+        id: MOD-SF-SURFACE
+        uuid: nexus-cg-sf-surface-v1-0000-2026-1021-001
+        file: clear-glass/renderer/settings/sections/network.js

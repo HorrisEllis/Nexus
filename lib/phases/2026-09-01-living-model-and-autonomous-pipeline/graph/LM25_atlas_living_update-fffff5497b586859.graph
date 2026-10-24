@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829973410
+exported_at: 1792830584055
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973410
-lastSeenAt: 1792829973410
+firstSeenAt: 1792830584055
+lastSeenAt: 1792830584055
 fingerprint: null
 payload:
   for: LM25_atlas_living_update
@@ -95,3 +95,4 @@ payload:
         depends on (4): LM2_registry_as_hub_with_watchdog, LM21_atlas_fact_extractors,
         LM23_atlas_history_versions_calendar, LM24_atlas_prose_layer · all upstream 9
       - 'needed by (1): LM26_atlas_completeness_and_release_gate'
+  phaseUuid: 49867b25-4dbe-5bfa-8c1c-2860b8748ff6

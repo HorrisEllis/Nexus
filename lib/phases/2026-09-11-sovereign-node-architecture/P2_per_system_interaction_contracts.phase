@@ -9,11 +9,11 @@ intent: null
 summary: P2_per_system_interaction_contracts (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976492
+exported_at: 1792830587104
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976492
-lastSeenAt: 1792829976492
+firstSeenAt: 1792830587104
+lastSeenAt: 1792830587104
 fingerprint: null
 payload:
   id: P2_per_system_interaction_contracts
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 1cb7c61b5c6e9d93
+  uuid: c5af0057-13ad-5087-96c8-95100773fe0f

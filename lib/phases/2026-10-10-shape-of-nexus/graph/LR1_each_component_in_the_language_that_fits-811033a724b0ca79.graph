@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830000473
+exported_at: 1792830611851
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000473
-lastSeenAt: 1792830000473
+firstSeenAt: 1792830611851
+lastSeenAt: 1792830611851
 fingerprint: null
 payload:
   for: LR1_each_component_in_the_language_that_fits
@@ -141,3 +141,4 @@ payload:
         LR0_the_shared_primitives_are_the_glyph
       - 'depends on (2): P8_per_system_component_registry, LR0_the_shared_primitives_are_the_glyph'
       - 'needed by (0): —'
+  phaseUuid: 172cb9ec-48ad-5e99-bc4a-8e38b78739ef

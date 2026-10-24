@@ -9,11 +9,11 @@ intent: null
 summary: AM7_agent_switch_continuity_and_chat_recall (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830027823
+exported_at: 1792830640237
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027823
-lastSeenAt: 1792830027823
+firstSeenAt: 1792830640237
+lastSeenAt: 1792830640237
 fingerprint: null
 payload:
   id: AM7_agent_switch_continuity_and_chat_recall
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 486a7e3b9817e3a8
+  uuid: 4c382741-65cb-5dbc-8de2-7f981f9a9204

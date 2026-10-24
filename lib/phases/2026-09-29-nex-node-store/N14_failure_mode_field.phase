@@ -7,11 +7,11 @@ intent: null
 summary: N14_failure_mode_field (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985435
+exported_at: 1792830596171
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985435
-lastSeenAt: 1792829985435
+firstSeenAt: 1792830596171
+lastSeenAt: 1792830596171
 fingerprint: null
 payload:
   id: N14_failure_mode_field
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: b296d7b4bd69362b
+  uuid: b10ea3ec-0bd4-58ef-9774-fe6708f03fea

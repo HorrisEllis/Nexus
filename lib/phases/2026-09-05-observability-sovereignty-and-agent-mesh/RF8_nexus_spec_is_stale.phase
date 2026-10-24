@@ -9,11 +9,11 @@ intent: null
 summary: RF8_nexus_spec_is_stale (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975190
+exported_at: 1792830585815
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975190
-lastSeenAt: 1792829975190
+firstSeenAt: 1792830585815
+lastSeenAt: 1792830585815
 fingerprint: null
 payload:
   id: RF8_nexus_spec_is_stale
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: d9074fc27532498a
+  uuid: 4c193661-d2ec-576e-a160-ad5983fd42c8

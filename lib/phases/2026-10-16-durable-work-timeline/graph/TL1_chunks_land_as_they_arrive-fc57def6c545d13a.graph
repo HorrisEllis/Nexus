@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830010936
+exported_at: 1792830622735
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010936
-lastSeenAt: 1792830010936
+firstSeenAt: 1792830622735
+lastSeenAt: 1792830622735
 fingerprint: null
 payload:
   for: TL1_chunks_land_as_they_arrive
@@ -249,3 +249,4 @@ payload:
       - >-
         needed by (3): TL2_resume_at_boot, TL3_the_timeline, TL6_proof_and_wiring · all downstream 6
         · finishing it unlocks TL2_resume_at_boot, TL3_the_timeline, TL6_proof_and_wiring
+  phaseUuid: 4a735e38-2737-5607-83c4-92ee406c8d06

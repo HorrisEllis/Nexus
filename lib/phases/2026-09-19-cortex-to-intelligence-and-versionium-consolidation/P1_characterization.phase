@@ -9,11 +9,11 @@ intent: null
 summary: P1_characterization (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978561
+exported_at: 1792830589186
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978561
-lastSeenAt: 1792829978561
+firstSeenAt: 1792830589186
+lastSeenAt: 1792830589186
 fingerprint: null
 payload:
   id: P1_characterization
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 47dc454012e2d666
+  uuid: 564125e9-8cb0-5f2b-8eba-7f13c6dd09e9

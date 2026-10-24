@@ -9,11 +9,11 @@ intent: null
 summary: BC2_the_build_agent_gets_all_of_the_hat_and_repo_context (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990948
+exported_at: 1792830601608
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990948
-lastSeenAt: 1792829990948
+firstSeenAt: 1792830601608
+lastSeenAt: 1792830601608
 fingerprint: null
 payload:
   id: BC2_the_build_agent_gets_all_of_the_hat_and_repo_context
@@ -35,3 +35,4 @@ payload:
   blocks: []
   spec: null
   graph: 32034bedc3229b78
+  uuid: 467c24c4-1ecd-54de-ad53-9c52f410eaa2

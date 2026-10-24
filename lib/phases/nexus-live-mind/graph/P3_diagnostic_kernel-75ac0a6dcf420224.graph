@@ -7,11 +7,11 @@ intent: null
 summary: 35 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830032950
+exported_at: 1792830645173
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032950
-lastSeenAt: 1792830032950
+firstSeenAt: 1792830645173
+lastSeenAt: 1792830645173
 fingerprint: null
 payload:
   for: P3_diagnostic_kernel
@@ -284,3 +284,4 @@ payload:
       - >-
         needed by (1): P4_copilot_awareness · all downstream 3 · finishing it unlocks
         P4_copilot_awareness
+  phaseUuid: f9fae7da-eccc-5afc-b708-eca9b9f026d7

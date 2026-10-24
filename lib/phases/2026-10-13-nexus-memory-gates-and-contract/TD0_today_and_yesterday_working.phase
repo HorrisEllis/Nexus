@@ -9,11 +9,11 @@ intent: null
 summary: TD0_today_and_yesterday_working (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002962
+exported_at: 1792830614350
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002962
-lastSeenAt: 1792830002962
+firstSeenAt: 1792830614350
+lastSeenAt: 1792830614350
 fingerprint: null
 payload:
   id: TD0_today_and_yesterday_working
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 91e91c8146a1148c
+  uuid: a6bc5885-0f99-57b8-8000-acc65091dae0

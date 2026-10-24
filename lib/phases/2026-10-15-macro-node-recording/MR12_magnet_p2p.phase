@@ -7,11 +7,11 @@ intent: null
 summary: MR12_magnet_p2p (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007077
+exported_at: 1792830618630
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007077
-lastSeenAt: 1792830007077
+firstSeenAt: 1792830618630
+lastSeenAt: 1792830618630
 fingerprint: null
 payload:
   id: MR12_magnet_p2p
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 2f67b50f8b6c45db
+  uuid: 9e17d857-eb43-58a0-bd70-491930eec3ad

@@ -9,11 +9,11 @@ intent: null
 summary: AR2_architect_in_the_workshop (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990139
+exported_at: 1792830600795
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990139
-lastSeenAt: 1792829990139
+firstSeenAt: 1792830600795
+lastSeenAt: 1792830600795
 fingerprint: null
 payload:
   id: AR2_architect_in_the_workshop
@@ -35,3 +35,4 @@ payload:
   blocks: []
   spec: null
   graph: 32d0b6cc32026023
+  uuid: b7bd3dba-7eb7-59ba-b31f-1a1a684dd702

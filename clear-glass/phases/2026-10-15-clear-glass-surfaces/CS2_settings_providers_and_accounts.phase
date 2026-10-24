@@ -9,11 +9,11 @@ intent: null
 summary: CS2_settings_providers_and_accounts (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005035
+exported_at: 1792830616448
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005035
-lastSeenAt: 1792830005035
+firstSeenAt: 1792830616448
+lastSeenAt: 1792830616448
 fingerprint: null
 payload:
   id: CS2_settings_providers_and_accounts
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 377b41fc576de436
+  uuid: 862d3b10-723e-52a9-8375-1849e22f641d

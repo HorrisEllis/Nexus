@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829973394
+exported_at: 1792830584042
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973394
-lastSeenAt: 1792829973394
+firstSeenAt: 1792830584042
+lastSeenAt: 1792830584042
 fingerprint: null
 payload:
   for: LM13_guardian_agents_folder_refactor
@@ -40,3 +40,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by LM1_spec_as_living_model
       - 'depends on (1): LM1_spec_as_living_model'
       - 'needed by (0): —'
+  phaseUuid: b8a07847-d190-5f55-be07-5f977399d057

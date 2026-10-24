@@ -7,11 +7,11 @@ intent: null
 summary: HP10_the_work_surface_in_view (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829997244
+exported_at: 1792830608403
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997244
-lastSeenAt: 1792829997244
+firstSeenAt: 1792830608403
+lastSeenAt: 1792830608403
 fingerprint: null
 payload:
   id: HP10_the_work_surface_in_view
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: f1241943f37108b2
+  uuid: d45a6b09-b5b6-5a73-aacf-3f55aa2c9926

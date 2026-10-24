@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830028206
+exported_at: 1792830640616
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028206
-lastSeenAt: 1792830028206
+firstSeenAt: 1792830640616
+lastSeenAt: 1792830640616
 fingerprint: null
 payload:
   for: TX1_clearglass_agent_suite_composition
@@ -186,3 +186,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 1e065c93-2e70-5017-8ff6-5b4eb0c6c62c

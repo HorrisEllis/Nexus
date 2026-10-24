@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830016434
+exported_at: 1792830628480
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016434
-lastSeenAt: 1792830016434
+firstSeenAt: 1792830628480
+lastSeenAt: 1792830628480
 fingerprint: null
 payload:
   for: PC0b_first_kinds
@@ -48,3 +48,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (1): PC1_the_point_first · all downstream 6'
+  phaseUuid: 3bc65c7a-7961-5aec-9657-7fcd919675cd

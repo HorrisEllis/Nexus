@@ -7,11 +7,11 @@ intent: null
 summary: CY1_lifecycle_and_injection (library) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830021761
+exported_at: 1792830634095
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021761
-lastSeenAt: 1792830021761
+firstSeenAt: 1792830634095
+lastSeenAt: 1792830634095
 fingerprint: null
 payload:
   id: CY1_lifecycle_and_injection
@@ -30,3 +30,10 @@ payload:
     - MOD-CRYSTAL-LIFECYCLE
   spec: docs/belief-loop.spec
   graph: f9114a7b5b7207b8
+  uuid: 24f6bfcc-22f0-53d9-bc1a-d6176e99316b
+  specLink:
+    how: declared
+    spec: docs/belief-loop.spec
+    modules:
+      - id: MOD-CRYSTAL-LIFECYCLE
+        uuid: nexus-belief-crystal-lifecycle-v1-0000-2026-1020-001

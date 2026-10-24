@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829970796
+exported_at: 1792830581339
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829970796
-lastSeenAt: 1792829970796
+firstSeenAt: 1792830581339
+lastSeenAt: 1792830581339
 fingerprint: null
 payload:
   for: SF18_intelligence_becomes_a_real_system
@@ -182,3 +182,4 @@ payload:
       - >-
         needed by (1): SF19_loom_registry_never_auto_synced · finishing it unlocks
         SF19_loom_registry_never_auto_synced
+  phaseUuid: fbe43855-dd86-500f-96a2-ba4a6569eec8

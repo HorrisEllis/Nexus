@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990970
+exported_at: 1792830601631
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990970
-lastSeenAt: 1792829990970
+firstSeenAt: 1792830601631
+lastSeenAt: 1792830601631
 fingerprint: null
 payload:
   for: SB23_a_new_system_slots_in
@@ -277,3 +277,4 @@ payload:
         SB21_deterministic_parts_grow_with_the_system · all upstream 7
       - 'needed by (1): SB24_loom_builds_a_new_system'
       - 'same files as SB4_template_fidelity with no order between them: lib/nexus-self/systems.js'
+  phaseUuid: 224bc6e7-bb56-5200-80b0-d42f563d9896

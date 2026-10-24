@@ -7,11 +7,11 @@ intent: null
 summary: AT3_agent_queryable_atlas (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830036802
+exported_at: 1792830649053
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830036802
-lastSeenAt: 1792830036802
+firstSeenAt: 1792830649053
+lastSeenAt: 1792830649053
 fingerprint: null
 payload:
   id: AT3_agent_queryable_atlas
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 528df862578c4752
+  uuid: 40a8abfc-8415-5b56-aafd-7344b453dbe3

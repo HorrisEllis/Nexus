@@ -9,11 +9,11 @@ intent: null
 summary: PV5_conversation_carries_across_providers (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001272
+exported_at: 1792830612683
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001272
-lastSeenAt: 1792830001272
+firstSeenAt: 1792830612683
+lastSeenAt: 1792830612683
 fingerprint: null
 payload:
   id: PV5_conversation_carries_across_providers
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 221b5ffcc46bedbf
+  uuid: 829e079c-e733-5872-8ad9-0dab1bf67749

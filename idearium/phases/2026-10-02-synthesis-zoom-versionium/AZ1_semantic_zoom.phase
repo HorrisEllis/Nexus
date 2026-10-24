@@ -7,11 +7,11 @@ intent: null
 summary: AZ1_semantic_zoom (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829989747
+exported_at: 1792830600399
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829989747
-lastSeenAt: 1792829989747
+firstSeenAt: 1792830600399
+lastSeenAt: 1792830600399
 fingerprint: null
 payload:
   id: AZ1_semantic_zoom
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 4803c502f673ce60
+  uuid: e3812278-ec62-56ee-98ea-ce1f63544184

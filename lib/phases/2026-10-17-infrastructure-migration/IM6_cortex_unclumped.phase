@@ -7,11 +7,11 @@ intent: null
 summary: IM6_cortex_unclumped (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016035
+exported_at: 1792830628075
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016035
-lastSeenAt: 1792830016035
+firstSeenAt: 1792830628075
+lastSeenAt: 1792830628075
 fingerprint: null
 payload:
   id: IM6_cortex_unclumped
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: fd9d4833cc2172df
+  uuid: 33f629b7-11f5-5194-97b5-5cbc1a0c24ba

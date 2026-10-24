@@ -7,11 +7,11 @@ intent: null
 summary: SB7_domain_file_tree_templates (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990931
+exported_at: 1792830601589
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990931
-lastSeenAt: 1792829990931
+firstSeenAt: 1792830601589
+lastSeenAt: 1792830601589
 fingerprint: null
 payload:
   id: SB7_domain_file_tree_templates
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 51af06abc8952960
+  uuid: 2c818fb9-a622-54a8-a748-911fb2310e40

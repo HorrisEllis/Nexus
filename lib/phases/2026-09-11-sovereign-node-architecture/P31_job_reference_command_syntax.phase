@@ -9,11 +9,11 @@ intent: null
 summary: P31_job_reference_command_syntax (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976522
+exported_at: 1792830587131
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976522
-lastSeenAt: 1792829976522
+firstSeenAt: 1792830587131
+lastSeenAt: 1792830587131
 fingerprint: null
 payload:
   id: P31_job_reference_command_syntax
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 05330631270dac6a
+  uuid: 57ff7e96-2807-58c7-ab0b-c94edb2c879d

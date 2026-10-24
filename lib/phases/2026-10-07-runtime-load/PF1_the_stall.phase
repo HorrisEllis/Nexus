@@ -7,11 +7,11 @@ intent: null
 summary: PF1_the_stall (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829996101
+exported_at: 1792830607194
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829996101
-lastSeenAt: 1792829996101
+firstSeenAt: 1792830607194
+lastSeenAt: 1792830607194
 fingerprint: null
 payload:
   id: PF1_the_stall
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 7057301b9979c4f4
+  uuid: 26c74446-f429-54bb-acce-96b4f29d2cda

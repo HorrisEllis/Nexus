@@ -7,11 +7,11 @@ intent: null
 summary: M3 (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829981317
+exported_at: 1792830592110
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829981317
-lastSeenAt: 1792829981317
+firstSeenAt: 1792830592110
+lastSeenAt: 1792830592110
 fingerprint: null
 payload:
   id: M3
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 9ca7b4fc793e42a3
+  uuid: ea634529-9816-530b-ba02-c693d7ebee4b

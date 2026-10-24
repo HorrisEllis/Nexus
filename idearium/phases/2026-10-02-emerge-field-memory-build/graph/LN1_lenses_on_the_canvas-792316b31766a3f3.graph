@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988463
+exported_at: 1792830599104
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988463
-lastSeenAt: 1792829988463
+firstSeenAt: 1792830599104
+lastSeenAt: 1792830599104
 fingerprint: null
 payload:
   for: LN1_lenses_on_the_canvas
@@ -63,3 +63,4 @@ payload:
       - 'depends on (2): RF1_relational_field, MR5_fractal_levels_with_the_field · all upstream 8'
       - 'needed by (0): —'
       - 'same files as UI0_the_stations_agree with no order between them: idearium/ui/architect.html'
+  phaseUuid: 2b0fb395-d837-59ac-bf4d-4407109e323c

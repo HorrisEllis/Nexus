@@ -9,11 +9,11 @@ intent: null
 summary: TB5_site_and_account_nodes (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001260
+exported_at: 1792830612673
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001260
-lastSeenAt: 1792830001260
+firstSeenAt: 1792830612673
+lastSeenAt: 1792830612673
 fingerprint: null
 payload:
   id: TB5_site_and_account_nodes
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 43acd84436dcbc96
+  uuid: 584836a8-7eba-538a-9556-2e280de3d016

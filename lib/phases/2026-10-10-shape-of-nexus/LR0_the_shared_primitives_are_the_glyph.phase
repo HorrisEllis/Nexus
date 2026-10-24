@@ -9,11 +9,11 @@ intent: null
 summary: LR0_the_shared_primitives_are_the_glyph (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830000472
+exported_at: 1792830611850
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000472
-lastSeenAt: 1792830000472
+firstSeenAt: 1792830611850
+lastSeenAt: 1792830611850
 fingerprint: null
 payload:
   id: LR0_the_shared_primitives_are_the_glyph
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 6952439b2f80c99c
+  uuid: 2f3ed3f6-1430-5a54-bbfc-2d9b5f527eb9

@@ -7,11 +7,11 @@ intent: null
 summary: NP0b_default_posture (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004588
+exported_at: 1792830616018
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004588
-lastSeenAt: 1792830004588
+firstSeenAt: 1792830616018
+lastSeenAt: 1792830616018
 fingerprint: null
 payload:
   id: NP0b_default_posture
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: d5fb7b0917037e83
+  uuid: 6787ecf6-f374-5463-9169-1ad8caa168a3

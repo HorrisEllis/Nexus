@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830009416
+exported_at: 1792830621078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009416
-lastSeenAt: 1792830009416
+firstSeenAt: 1792830621078
+lastSeenAt: 1792830621078
 fingerprint: null
 payload:
   for: FN2_what_is_missing_is_made_first
@@ -219,3 +219,4 @@ payload:
       - 'depends on (1): FN1_every_door_goes_through_it · all upstream 2'
       - 'needed by (0): —'
       - 'same files as FN3_every_answer_a_node with no order between them: lib/work-funnel.js'
+  phaseUuid: 32ca047f-c2cd-564f-a741-cdc645782cf5

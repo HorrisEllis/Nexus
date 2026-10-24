@@ -7,11 +7,11 @@ intent: null
 summary: SP6_the_processes_screen (ui) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026983
+exported_at: 1792830639455
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026983
-lastSeenAt: 1792830026983
+firstSeenAt: 1792830639455
+lastSeenAt: 1792830639455
 fingerprint: null
 payload:
   id: SP6_the_processes_screen
@@ -38,3 +38,10 @@ payload:
     - MOD-SP-PROCESSES-UI
   spec: clear-glass/spec/site-profile.spec
   graph: ba0b54480cfed70e
+  uuid: 650ced49-6baf-537b-bac0-a9b386cf83d7
+  specLink:
+    how: declared
+    spec: clear-glass/spec/site-profile.spec
+    modules:
+      - id: MOD-SP-PROCESSES-UI
+        uuid: nexus-cg-processes-ui-v1-0000-2026-1023-001

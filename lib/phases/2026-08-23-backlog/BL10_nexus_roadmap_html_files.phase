@@ -7,11 +7,11 @@ intent: null
 summary: BL10_nexus_roadmap_html_files (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971252
+exported_at: 1792830581822
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971252
-lastSeenAt: 1792829971252
+firstSeenAt: 1792830581822
+lastSeenAt: 1792830581822
 fingerprint: null
 payload:
   id: BL10_nexus_roadmap_html_files
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 80b8c025c01b3474
+  uuid: 3f9befdf-6d62-56f2-a909-a21bb21029f0

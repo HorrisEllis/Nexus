@@ -9,11 +9,11 @@ intent: null
 summary: P2_intelligence_gains_routes (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978562
+exported_at: 1792830589187
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978562
-lastSeenAt: 1792829978562
+firstSeenAt: 1792830589187
+lastSeenAt: 1792830589187
 fingerprint: null
 payload:
   id: P2_intelligence_gains_routes
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 2f2eff88a31edf66
+  uuid: 38179ed3-acb5-51f2-90af-1fad90f650c5

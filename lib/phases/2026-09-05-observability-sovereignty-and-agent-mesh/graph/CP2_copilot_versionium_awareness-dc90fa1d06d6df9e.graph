@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829975223
+exported_at: 1792830585848
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975223
-lastSeenAt: 1792829975223
+firstSeenAt: 1792830585848
+lastSeenAt: 1792830585848
 fingerprint: null
 payload:
   for: CP2_copilot_versionium_awareness
@@ -39,3 +39,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · ready
       - 'depends on (1): VSB1_fix_versionium_split_brain'
       - 'needed by (0): —'
+  phaseUuid: 8f0c1683-fb35-5506-9b6c-8904db728393

@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830000462
+exported_at: 1792830611839
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000462
-lastSeenAt: 1792830000462
+firstSeenAt: 1792830611839
+lastSeenAt: 1792830611839
 fingerprint: null
 payload:
   for: OP3_copilot_reads_and_sets_options
@@ -176,3 +176,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3
       - 'depends on (1): OP2_the_system_settings_in_its_repo · all upstream 3'
       - 'needed by (0): —'
+  phaseUuid: e771048f-4b8e-5768-bdab-9df7d39b2cd9

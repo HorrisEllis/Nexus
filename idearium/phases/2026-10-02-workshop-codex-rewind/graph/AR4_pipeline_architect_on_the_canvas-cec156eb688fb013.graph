@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990141
+exported_at: 1792830600796
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990141
-lastSeenAt: 1792829990141
+firstSeenAt: 1792830600796
+lastSeenAt: 1792830600796
 fingerprint: null
 payload:
   for: AR4_pipeline_architect_on_the_canvas
@@ -61,3 +61,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3
       - 'depends on (1): AR3_one_architect_canvas · all upstream 4'
       - 'needed by (0): —'
+  phaseUuid: 9c87773e-5d3f-5d0c-812a-bc300507a33d

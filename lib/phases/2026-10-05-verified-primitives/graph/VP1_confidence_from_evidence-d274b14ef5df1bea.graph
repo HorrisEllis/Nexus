@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829994199
+exported_at: 1792830605061
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829994199
-lastSeenAt: 1792829994199
+firstSeenAt: 1792830605061
+lastSeenAt: 1792830605061
 fingerprint: null
 payload:
   for: VP1_confidence_from_evidence
@@ -55,3 +55,4 @@ payload:
         needed by (3): VP2_adversarial_review, VP4_the_primitive_field,
         VP6_debug_and_intelligence_in_the_desktop · all downstream 4 · finishing it unlocks
         VP2_adversarial_review, VP6_debug_and_intelligence_in_the_desktop
+  phaseUuid: 916a8c82-bc1b-53c2-905d-9f6d0f4d8cec

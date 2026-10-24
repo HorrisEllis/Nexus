@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830001712
+exported_at: 1792830613143
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001712
-lastSeenAt: 1792830001712
+firstSeenAt: 1792830613143
+lastSeenAt: 1792830613143
 fingerprint: null
 payload:
   for: RQ7_the_context_obligations
@@ -278,3 +278,4 @@ payload:
         needed by (4): RQ8_the_gap_is_a_question, RQ9_the_chunked_contract,
         RQ22_the_dependency_boundary_with_invariants_that_run, RQ27_the_reasoning_half_gets_its_home
         · all downstream 18 · finishing it unlocks RQ8_the_gap_is_a_question
+  phaseUuid: 9632ee30-4a17-53a9-94f0-e9b0665ded56

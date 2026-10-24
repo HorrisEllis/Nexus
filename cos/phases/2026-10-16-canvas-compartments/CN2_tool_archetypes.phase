@@ -7,11 +7,11 @@ intent: null
 summary: CN2_tool_archetypes (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830009789
+exported_at: 1792830621506
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009789
-lastSeenAt: 1792830009789
+firstSeenAt: 1792830621506
+lastSeenAt: 1792830621506
 fingerprint: null
 payload:
   id: CN2_tool_archetypes
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 0044406d31eff090
+  uuid: 90f22958-fea8-5012-ab92-d37705176692

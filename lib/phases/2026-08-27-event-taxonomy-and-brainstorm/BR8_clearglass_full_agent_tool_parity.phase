@@ -9,11 +9,11 @@ intent: null
 summary: BR8_clearglass_full_agent_tool_parity (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971732
+exported_at: 1792830582312
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971732
-lastSeenAt: 1792829971732
+firstSeenAt: 1792830582312
+lastSeenAt: 1792830582312
 fingerprint: null
 payload:
   id: BR8_clearglass_full_agent_tool_parity
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 62e54d03c6ab830a
+  uuid: 3eefb19b-4f13-58b6-a1a5-8e0d2e6b864b

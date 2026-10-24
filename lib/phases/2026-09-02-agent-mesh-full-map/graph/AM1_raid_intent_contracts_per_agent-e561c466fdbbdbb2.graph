@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829973860
+exported_at: 1792830584462
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973860
-lastSeenAt: 1792829973860
+firstSeenAt: 1792830584462
+lastSeenAt: 1792830584462
 fingerprint: null
 payload:
   for: AM1_raid_intent_contracts_per_agent
@@ -254,3 +254,4 @@ payload:
         needed by (2): AM2_first_principles_hat_or_modifier, AM6_raid_contract_gate_before_dispatch
         · finishing it unlocks AM2_first_principles_hat_or_modifier,
         AM6_raid_contract_gate_before_dispatch
+  phaseUuid: 1eef5950-e9c2-5b9c-8beb-c49edf6a1cae

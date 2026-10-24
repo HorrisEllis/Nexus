@@ -7,11 +7,11 @@ intent: null
 summary: BX10_float (surface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023364
+exported_at: 1792830635773
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023364
-lastSeenAt: 1792830023364
+firstSeenAt: 1792830635773
+lastSeenAt: 1792830635773
 fingerprint: null
 payload:
   id: BX10_float
@@ -30,3 +30,10 @@ payload:
     - MOD-BX-FLOAT
   spec: docs/brainos-in-idearium.spec
   graph: 718eb952045d7b89
+  uuid: 974fb62a-0aa1-5a5e-9c61-3f93220379b8
+  specLink:
+    how: declared
+    spec: docs/brainos-in-idearium.spec
+    modules:
+      - id: MOD-BX-FLOAT
+        uuid: nexus-bx-float-v1-0000-2026-1021-001

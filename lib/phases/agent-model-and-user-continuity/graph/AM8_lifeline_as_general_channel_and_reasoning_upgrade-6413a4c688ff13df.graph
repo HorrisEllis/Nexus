@@ -7,11 +7,11 @@ intent: null
 summary: 35 node(s), 6 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830027824
+exported_at: 1792830640239
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027824
-lastSeenAt: 1792830027824
+firstSeenAt: 1792830640239
+lastSeenAt: 1792830640239
 fingerprint: null
 payload:
   for: AM8_lifeline_as_general_channel_and_reasoning_upgrade
@@ -293,3 +293,4 @@ payload:
         AM7_agent_switch_continuity_and_chat_recall
       - 'depends on (2): AM1_per_agent_learned_model, AM7_agent_switch_continuity_and_chat_recall'
       - 'needed by (0): —'
+  phaseUuid: 450fe61f-93d8-5936-a241-50eb268dfb60

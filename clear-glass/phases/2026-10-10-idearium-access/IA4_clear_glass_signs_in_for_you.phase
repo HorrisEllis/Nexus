@@ -7,11 +7,11 @@ intent: null
 summary: IA4_clear_glass_signs_in_for_you (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999255
+exported_at: 1792830610576
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999255
-lastSeenAt: 1792829999255
+firstSeenAt: 1792830610576
+lastSeenAt: 1792830610576
 fingerprint: null
 payload:
   id: IA4_clear_glass_signs_in_for_you
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 5aa67551e81230b4
+  uuid: ba422688-1c40-5095-a57c-621c73f05606

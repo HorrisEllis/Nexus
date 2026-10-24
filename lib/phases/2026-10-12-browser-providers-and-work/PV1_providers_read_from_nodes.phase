@@ -9,11 +9,11 @@ intent: null
 summary: PV1_providers_read_from_nodes (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001267
+exported_at: 1792830612678
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001267
-lastSeenAt: 1792830001267
+firstSeenAt: 1792830612678
+lastSeenAt: 1792830612678
 fingerprint: null
 payload:
   id: PV1_providers_read_from_nodes
@@ -34,3 +34,4 @@ payload:
   blocks: []
   spec: null
   graph: 60e39b040177f068
+  uuid: 8987bd07-19e5-581c-968a-05e4bfb96f46

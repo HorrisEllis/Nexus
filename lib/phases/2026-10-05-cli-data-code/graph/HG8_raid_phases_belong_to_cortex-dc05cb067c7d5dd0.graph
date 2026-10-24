@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991461
+exported_at: 1792830602136
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991461
-lastSeenAt: 1792829991461
+firstSeenAt: 1792830602136
+lastSeenAt: 1792830602136
 fingerprint: null
 payload:
   for: HG8_raid_phases_belong_to_cortex
@@ -125,3 +125,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 66575a90-aaf6-54b3-a35d-8d18b6c85ffa

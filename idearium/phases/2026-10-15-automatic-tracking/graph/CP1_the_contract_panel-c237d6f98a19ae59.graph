@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830003812
+exported_at: 1792830615215
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003812
-lastSeenAt: 1792830003812
+firstSeenAt: 1792830615215
+lastSeenAt: 1792830615215
 fingerprint: null
 payload:
   for: CP1_the_contract_panel
@@ -234,3 +234,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3 · blocked by CX1_context_from_the_dependencies
       - 'depends on (1): CX1_context_from_the_dependencies · all upstream 3'
       - 'needed by (0): —'
+  phaseUuid: 60e7a326-6506-5da9-8ce3-81903715797d

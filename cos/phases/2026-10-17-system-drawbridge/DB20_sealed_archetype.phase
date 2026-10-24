@@ -7,11 +7,11 @@ intent: null
 summary: DB20_sealed_archetype (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016898
+exported_at: 1792830628924
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016898
-lastSeenAt: 1792830016898
+firstSeenAt: 1792830628924
+lastSeenAt: 1792830628924
 fingerprint: null
 payload:
   id: DB20_sealed_archetype
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 605ac3bd31181a00
+  uuid: 3e37394c-c5f0-563a-bec7-3c1d49eb6cf8

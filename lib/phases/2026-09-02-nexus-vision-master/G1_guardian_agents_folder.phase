@@ -7,11 +7,11 @@ intent: null
 summary: G1_guardian_agents_folder (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974307
+exported_at: 1792830584890
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974307
-lastSeenAt: 1792829974307
+firstSeenAt: 1792830584890
+lastSeenAt: 1792830584890
 fingerprint: null
 payload:
   id: G1_guardian_agents_folder
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 2faa9b39602badc7
+  uuid: 1d6a6de1-d995-5c5e-bc42-122a9e0fd924

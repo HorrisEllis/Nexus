@@ -7,11 +7,11 @@ intent: null
 summary: NP17_hold_primitive (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004606
+exported_at: 1792830616035
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004606
-lastSeenAt: 1792830004606
+firstSeenAt: 1792830616035
+lastSeenAt: 1792830616035
 fingerprint: null
 payload:
   id: NP17_hold_primitive
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 114f488ecf1e98c4
+  uuid: a2ec81ce-f395-5601-8a43-712695295457

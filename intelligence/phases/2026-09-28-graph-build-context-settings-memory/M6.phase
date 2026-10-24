@@ -7,11 +7,11 @@ intent: null
 summary: M6 (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829984166
+exported_at: 1792830594921
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829984166
-lastSeenAt: 1792829984166
+firstSeenAt: 1792830594921
+lastSeenAt: 1792830594921
 fingerprint: null
 payload:
   id: M6
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 11c7f177b88ab4a1
+  uuid: c9c63efa-fc6f-563a-84cf-6a44bcd4218b

@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830020482
+exported_at: 1792830632812
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020482
-lastSeenAt: 1792830020482
+firstSeenAt: 1792830632812
+lastSeenAt: 1792830632812
 fingerprint: null
 payload:
   for: MEM1_cortex_keeps_the_books
@@ -72,3 +72,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · ready
       - 'depends on (1): SS1_system_store_adoption · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: 43e0a74a-1c02-5021-9406-6fca83ee7f85

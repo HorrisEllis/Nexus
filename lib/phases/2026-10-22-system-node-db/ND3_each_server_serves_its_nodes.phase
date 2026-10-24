@@ -7,11 +7,11 @@ intent: null
 summary: ND3_each_server_serves_its_nodes (integration) — 13 file(s)
 system: idearium
 tags: []
-exported_at: 1792830025826
+exported_at: 1792830638285
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025826
-lastSeenAt: 1792830025826
+firstSeenAt: 1792830638285
+lastSeenAt: 1792830638285
 fingerprint: null
 payload:
   id: ND3_each_server_serves_its_nodes
@@ -41,3 +41,12 @@ payload:
     - MOD-ND-PROXY
   spec: docs/system-node-db.spec
   graph: e4e6017c5d941f7b
+  uuid: 63db8968-48e6-55d8-bd62-c7e3ec81de6f
+  specLink:
+    how: declared
+    spec: docs/system-node-db.spec
+    modules:
+      - id: MOD-ND-MOUNT
+        uuid: nexus-system-node-db-mount-v1-0000-2026-1022-001
+      - id: MOD-ND-PROXY
+        uuid: nexus-system-node-db-proxy-v1-0000-2026-1022-001

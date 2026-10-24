@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830028219
+exported_at: 1792830640629
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028219
-lastSeenAt: 1792830028219
+firstSeenAt: 1792830640629
+lastSeenAt: 1792830640629
 fingerprint: null
 payload:
   for: TX15_whisper_as_a_real_optional_capability
@@ -41,3 +41,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by TX14_plugin_system_v1_build
       - 'depends on (1): TX14_plugin_system_v1_build · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: e5e37c7b-5cb1-5224-be94-1bc512cc05ed

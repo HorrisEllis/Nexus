@@ -9,11 +9,11 @@ intent: null
 summary: DBG3_deviation_and_friction_per_run (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830017714
+exported_at: 1792830629750
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017714
-lastSeenAt: 1792830017714
+firstSeenAt: 1792830629750
+lastSeenAt: 1792830629750
 fingerprint: null
 payload:
   id: DBG3_deviation_and_friction_per_run
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: 3cdc3022f02a4874
+  uuid: 074c80b8-707d-534d-bca8-af57bc354b37

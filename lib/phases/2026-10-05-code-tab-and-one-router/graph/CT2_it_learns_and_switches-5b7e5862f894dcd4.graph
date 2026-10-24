@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991868
+exported_at: 1792830602551
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991868
-lastSeenAt: 1792829991868
+firstSeenAt: 1792830602551
+lastSeenAt: 1792830602551
 fingerprint: null
 payload:
   for: CT2_it_learns_and_switches
@@ -244,3 +244,4 @@ payload:
         needed by (2): CT3_the_code_tab_is_the_work_surface, CT6_the_escalation_ladder · all
         downstream 6 · finishing it unlocks CT3_the_code_tab_is_the_work_surface,
         CT6_the_escalation_ladder
+  phaseUuid: 959878f0-c06d-5f9e-b627-d77b0050ca3a

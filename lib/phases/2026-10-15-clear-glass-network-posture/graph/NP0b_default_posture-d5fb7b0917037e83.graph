@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830004588
+exported_at: 1792830616018
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004588
-lastSeenAt: 1792830004588
+firstSeenAt: 1792830616018
+lastSeenAt: 1792830616018
 fingerprint: null
 payload:
   for: NP0b_default_posture
@@ -37,3 +37,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 6787ecf6-f374-5463-9169-1ad8caa168a3

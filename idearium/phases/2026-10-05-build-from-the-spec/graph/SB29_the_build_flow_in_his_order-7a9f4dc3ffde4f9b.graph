@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990981
+exported_at: 1792830601642
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990981
-lastSeenAt: 1792829990981
+firstSeenAt: 1792830601642
+lastSeenAt: 1792830601642
 fingerprint: null
 payload:
   for: SB29_the_build_flow_in_his_order
@@ -277,3 +277,4 @@ payload:
       - >-
         same files as SB27_expanding_a_repo_keeps_its_spec_and_phases_current with no order between
         them: idearium/api/index.js
+  phaseUuid: 65d566b0-21d4-567e-a3e9-043796200210

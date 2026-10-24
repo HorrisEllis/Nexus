@@ -7,11 +7,11 @@ intent: null
 summary: CS2_test_every_version (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026213
+exported_at: 1792830638671
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026213
-lastSeenAt: 1792830026213
+firstSeenAt: 1792830638671
+lastSeenAt: 1792830638671
 fingerprint: null
 payload:
   id: CS2_test_every_version
@@ -30,3 +30,10 @@ payload:
     - MOD-CS-TEST
   spec: cos/spec/cos-spine.spec
   graph: b2df3232bd29e9b2
+  uuid: 6b5c1835-b8e9-5f39-839f-9760170ae7ca
+  specLink:
+    how: declared
+    spec: cos/spec/cos-spine.spec
+    modules:
+      - id: MOD-CS-TEST
+        uuid: nexus-cos-spine-test-v1-0000-2026-1023-001

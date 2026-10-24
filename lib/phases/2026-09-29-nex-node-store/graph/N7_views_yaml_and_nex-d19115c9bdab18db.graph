@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829985427
+exported_at: 1792830596163
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985427
-lastSeenAt: 1792829985427
+firstSeenAt: 1792830596163
+lastSeenAt: 1792830596163
 fingerprint: null
 payload:
   for: N7_views_yaml_and_nex
@@ -73,3 +73,4 @@ payload:
       - >-
         needed by (2): N8_service, N24_no_json_yaml_node_types_only · all downstream 10 · finishing
         it unlocks N8_service
+  phaseUuid: ce685bc9-91d2-53cb-8e59-75429f814ec5

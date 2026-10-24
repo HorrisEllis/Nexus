@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830006642
+exported_at: 1792830618165
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006642
-lastSeenAt: 1792830006642
+firstSeenAt: 1792830618165
+lastSeenAt: 1792830618165
 fingerprint: null
 payload:
   for: GW9_the_contract_panel
@@ -61,3 +61,4 @@ payload:
         GW7_failure_macro_and_rewind
       - 'depends on (2): GW3_a_contract_is_traced, GW7_failure_macro_and_rewind · all upstream 6'
       - 'needed by (0): —'
+  phaseUuid: a7b84ed0-7c98-5239-b6fa-2eecf397e404

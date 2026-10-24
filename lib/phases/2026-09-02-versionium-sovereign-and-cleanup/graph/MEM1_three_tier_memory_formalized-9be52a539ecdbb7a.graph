@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 6 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829974795
+exported_at: 1792830585383
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974795
-lastSeenAt: 1792829974795
+firstSeenAt: 1792830585383
+lastSeenAt: 1792830585383
 fingerprint: null
 payload:
   for: MEM1_three_tier_memory_formalized
@@ -193,3 +193,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: cc991629-1c53-5bfd-a498-48849c520769

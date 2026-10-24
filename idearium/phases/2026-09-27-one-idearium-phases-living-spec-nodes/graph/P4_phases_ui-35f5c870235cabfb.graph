@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829983316
+exported_at: 1792830594109
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983316
-lastSeenAt: 1792829983316
+firstSeenAt: 1792830594109
+lastSeenAt: 1792830594109
 fingerprint: null
 payload:
   for: P4_phases_ui
@@ -53,3 +53,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3
       - 'depends on (2): P2_phases_model, P3_phase_build · all upstream 3'
       - 'needed by (1): Z1_release · finishing it unlocks Z1_release'
+  phaseUuid: 99b8944b-4e53-5b00-ae2b-0dab2053dc91

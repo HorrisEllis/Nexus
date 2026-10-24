@@ -9,11 +9,11 @@ intent: null
 summary: LM0_loom_wires_have_stable_ids (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830003414
+exported_at: 1792830614764
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003414
-lastSeenAt: 1792830003414
+firstSeenAt: 1792830614764
+lastSeenAt: 1792830614764
 fingerprint: null
 payload:
   id: LM0_loom_wires_have_stable_ids
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 64d53d8e7a486546
+  uuid: 9bff48eb-0619-5d70-a069-76725508ba58

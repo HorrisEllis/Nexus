@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830016879
+exported_at: 1792830628902
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016879
-lastSeenAt: 1792830016879
+firstSeenAt: 1792830628902
+lastSeenAt: 1792830628902
 fingerprint: null
 payload:
   for: DB5_the_handshake_for_every_system
@@ -65,3 +65,4 @@ payload:
       - 'depends on (0): —'
       - 'needed by (1): CS4_every_system_a_compartment · all downstream 8'
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+  phaseUuid: bedcc812-d231-502b-bd26-52e8991a902b

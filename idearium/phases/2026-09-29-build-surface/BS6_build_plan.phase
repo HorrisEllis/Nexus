@@ -7,11 +7,11 @@ intent: null
 summary: BS6_build_plan (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985006
+exported_at: 1792830595760
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985006
-lastSeenAt: 1792829985006
+firstSeenAt: 1792830595760
+lastSeenAt: 1792830595760
 fingerprint: null
 payload:
   id: BS6_build_plan
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: d849379e83770f3b
+  uuid: 9e14a8e3-42ea-5365-90ed-dd4e9f63653e

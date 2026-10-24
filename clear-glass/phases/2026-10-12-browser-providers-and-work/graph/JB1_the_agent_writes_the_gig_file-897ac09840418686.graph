@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830001275
+exported_at: 1792830612686
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001275
-lastSeenAt: 1792830001275
+firstSeenAt: 1792830612686
+lastSeenAt: 1792830612686
 fingerprint: null
 payload:
   for: JB1_the_agent_writes_the_gig_file
@@ -88,3 +88,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4 · blocked by JB2_the_copilot_hat_agent_and_account
       - 'depends on (2): JB0_gig_files, JB2_the_copilot_hat_agent_and_account · all upstream 5'
       - 'needed by (0): —'
+  phaseUuid: d46fe77f-0852-56b1-aa4e-286e5d21edde

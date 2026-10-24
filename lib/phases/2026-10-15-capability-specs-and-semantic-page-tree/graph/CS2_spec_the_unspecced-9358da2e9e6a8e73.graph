@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830004196
+exported_at: 1792830615628
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004196
-lastSeenAt: 1792830004196
+firstSeenAt: 1792830615628
+lastSeenAt: 1792830615628
 fingerprint: null
 payload:
   for: CS2_spec_the_unspecced
@@ -90,3 +90,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · ready
       - 'depends on (1): CS1_capability_spec_and_surface_check'
       - 'needed by (0): —'
+  phaseUuid: cfa578bf-41ff-5d7b-990c-dec2c698b233

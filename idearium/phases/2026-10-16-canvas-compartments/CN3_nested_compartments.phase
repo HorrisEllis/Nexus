@@ -7,11 +7,11 @@ intent: null
 summary: CN3_nested_compartments (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830009790
+exported_at: 1792830621507
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009790
-lastSeenAt: 1792830009790
+firstSeenAt: 1792830621507
+lastSeenAt: 1792830621507
 fingerprint: null
 payload:
   id: CN3_nested_compartments
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 567d60a0f20626fb
+  uuid: 878273af-2076-5717-ad2b-106bfd58ceac

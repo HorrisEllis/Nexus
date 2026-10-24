@@ -9,11 +9,11 @@ intent: null
 summary: CG8_devtools_screenshot_dom_archaeology (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974313
+exported_at: 1792830584896
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974313
-lastSeenAt: 1792829974313
+firstSeenAt: 1792830584896
+lastSeenAt: 1792830584896
 fingerprint: null
 payload:
   id: CG8_devtools_screenshot_dom_archaeology
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 08ddcfae15dfe9b5
+  uuid: 808ec48e-c5ee-5b09-96cb-378c2fadacf5

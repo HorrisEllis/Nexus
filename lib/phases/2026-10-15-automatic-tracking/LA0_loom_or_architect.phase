@@ -7,11 +7,11 @@ intent: null
 summary: LA0_loom_or_architect (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830003808
+exported_at: 1792830615210
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003808
-lastSeenAt: 1792830003808
+firstSeenAt: 1792830615210
+lastSeenAt: 1792830615210
 fingerprint: null
 payload:
   id: LA0_loom_or_architect
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: fe68e1311d0c19f9
+  uuid: 37046369-df96-5c2b-bfb2-33e62023365f

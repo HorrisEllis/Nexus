@@ -7,11 +7,11 @@ intent: null
 summary: P1_driver (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978961
+exported_at: 1792830589580
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978961
-lastSeenAt: 1792829978961
+firstSeenAt: 1792830589580
+lastSeenAt: 1792830589580
 fingerprint: null
 payload:
   id: P1_driver
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: ca4c42738e1cad5b
+  uuid: 0c98bae5-061c-5731-a589-2312c9120411

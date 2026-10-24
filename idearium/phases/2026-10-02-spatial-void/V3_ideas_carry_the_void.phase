@@ -7,11 +7,11 @@ intent: null
 summary: V3_ideas_carry_the_void (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829989367
+exported_at: 1792830599981
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829989367
-lastSeenAt: 1792829989367
+firstSeenAt: 1792830599981
+lastSeenAt: 1792830599981
 fingerprint: null
 payload:
   id: V3_ideas_carry_the_void
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: d03b7633ea5d2bc2
+  uuid: 2235428e-a7c2-58d7-94c9-f3c1abeacd3e

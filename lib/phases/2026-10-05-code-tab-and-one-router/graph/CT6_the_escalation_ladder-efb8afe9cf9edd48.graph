@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991871
+exported_at: 1792830602555
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991871
-lastSeenAt: 1792829991871
+firstSeenAt: 1792830602555
+lastSeenAt: 1792830602555
 fingerprint: null
 payload:
   for: CT6_the_escalation_ladder
@@ -254,3 +254,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): CT2_it_learns_and_switches · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: a9dea990-ef3b-522e-a953-e1bad2effc4a

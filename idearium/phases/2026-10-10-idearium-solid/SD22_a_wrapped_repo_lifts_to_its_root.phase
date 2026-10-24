@@ -9,11 +9,11 @@ intent: null
 summary: SD22_a_wrapped_repo_lifts_to_its_root (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999669
+exported_at: 1792830611000
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999669
-lastSeenAt: 1792829999669
+firstSeenAt: 1792830611000
+lastSeenAt: 1792830611000
 fingerprint: null
 payload:
   id: SD22_a_wrapped_repo_lifts_to_its_root
@@ -34,3 +34,4 @@ payload:
   blocks: []
   spec: null
   graph: 790d3ecb08212ea7
+  uuid: 6349eb15-8eec-5cf7-858e-0c052ddabb0f

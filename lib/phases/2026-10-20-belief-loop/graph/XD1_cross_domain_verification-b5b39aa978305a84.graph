@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830021769
+exported_at: 1792830634102
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021769
-lastSeenAt: 1792830021769
+firstSeenAt: 1792830634102
+lastSeenAt: 1792830634102
 fingerprint: null
 payload:
   for: XD1_cross_domain_verification
@@ -71,3 +71,4 @@ payload:
         depends on (4): EW1_evidence_record_and_weights, GR2_graph_views, AD2_javascript_adapter,
         PRC1_phase_reality_check · all upstream 16
       - 'needed by (1): BW1_borrowing'
+  phaseUuid: 46765820-5f24-599b-866a-f23535dcf272

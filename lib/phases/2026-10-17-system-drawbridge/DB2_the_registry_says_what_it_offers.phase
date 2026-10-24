@@ -9,11 +9,11 @@ intent: null
 summary: DB2_the_registry_says_what_it_offers (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016872
+exported_at: 1792830628899
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016872
-lastSeenAt: 1792830016872
+firstSeenAt: 1792830628899
+lastSeenAt: 1792830628899
 fingerprint: null
 payload:
   id: DB2_the_registry_says_what_it_offers
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 4121727170f95b81
+  uuid: d6ef1e1e-ea9e-53da-915e-40343cf01777

@@ -7,11 +7,11 @@ intent: null
 summary: 34 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830036413
+exported_at: 1792830648641
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830036413
-lastSeenAt: 1792830036413
+firstSeenAt: 1792830648641
+lastSeenAt: 1792830648641
 fingerprint: null
 payload:
   for: R3_autonomous_repair_trigger
@@ -263,3 +263,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by R2
       - 'depends on (2): R1_repair_contract_schema, R2 · all upstream 3'
       - 'needed by (0): —'
+  phaseUuid: ac825707-7cf0-50b3-8eac-344434851fd0

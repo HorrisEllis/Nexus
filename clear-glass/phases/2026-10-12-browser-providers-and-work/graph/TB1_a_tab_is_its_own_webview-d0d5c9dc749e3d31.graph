@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830001255
+exported_at: 1792830612667
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001255
-lastSeenAt: 1792830001255
+firstSeenAt: 1792830612667
+lastSeenAt: 1792830612667
 fingerprint: null
 payload:
   for: TB1_a_tab_is_its_own_webview
@@ -63,3 +63,4 @@ payload:
       - >-
         needed by (2): TB2_a_tab_runs_as_an_account, TB3_tabs_are_compartments · all downstream 9 ·
         finishing it unlocks TB2_a_tab_runs_as_an_account, TB3_tabs_are_compartments
+  phaseUuid: c6e03106-f057-593a-ae2c-83d0a3058126

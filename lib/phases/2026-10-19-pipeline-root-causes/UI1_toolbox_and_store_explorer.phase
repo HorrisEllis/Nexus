@@ -9,11 +9,11 @@ intent: null
 summary: UI1_toolbox_and_store_explorer (interface) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020476
+exported_at: 1792830632806
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020476
-lastSeenAt: 1792830020476
+firstSeenAt: 1792830632806
+lastSeenAt: 1792830632806
 fingerprint: null
 payload:
   id: UI1_toolbox_and_store_explorer
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 18a4d19d0f927715
+  uuid: d1711716-d1f9-54a1-96ea-25faadb180e6

@@ -9,11 +9,11 @@ intent: null
 summary: AR5_repo_architect_on_the_canvas (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990142
+exported_at: 1792830600797
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990142
-lastSeenAt: 1792829990142
+firstSeenAt: 1792830600797
+lastSeenAt: 1792830600797
 fingerprint: null
 payload:
   id: AR5_repo_architect_on_the_canvas
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: c7fee44243c248cf
+  uuid: e851de22-8fd2-5d12-9ed9-169fddac8520

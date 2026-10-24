@@ -7,11 +7,11 @@ intent: null
 summary: CS1_every_brick_a_component (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830003814
+exported_at: 1792830615216
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003814
-lastSeenAt: 1792830003814
+firstSeenAt: 1792830615216
+lastSeenAt: 1792830615216
 fingerprint: null
 payload:
   id: CS1_every_brick_a_component
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 7d658969a189e1e4
+  uuid: 27becaf0-8ea3-51d5-b11f-77a9815e65dd

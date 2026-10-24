@@ -7,11 +7,11 @@ intent: null
 summary: N11_adopters (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985431
+exported_at: 1792830596167
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985431
-lastSeenAt: 1792829985431
+firstSeenAt: 1792830596167
+lastSeenAt: 1792830596167
 fingerprint: null
 payload:
   id: N11_adopters
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: f7c6777d110dfd74
+  uuid: e5b18b46-e696-55da-b833-d189712a2c2a

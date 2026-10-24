@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990147
+exported_at: 1792830600802
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990147
-lastSeenAt: 1792829990147
+firstSeenAt: 1792830600802
+lastSeenAt: 1792830600802
 fingerprint: null
 payload:
   for: NX1_nexus_in_a_vm
@@ -61,3 +61,4 @@ payload:
       - 'depends on (0): —'
       - 'needed by (0): —'
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+  phaseUuid: f6d54116-04b9-5e10-9cd2-4e8d3a13a288

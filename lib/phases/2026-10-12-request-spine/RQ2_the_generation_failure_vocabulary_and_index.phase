@@ -9,11 +9,11 @@ intent: null
 summary: RQ2_the_generation_failure_vocabulary_and_index (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001705
+exported_at: 1792830613135
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001705
-lastSeenAt: 1792830001705
+firstSeenAt: 1792830613135
+lastSeenAt: 1792830613135
 fingerprint: null
 payload:
   id: RQ2_the_generation_failure_vocabulary_and_index
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: 5df3e6faedddd92c
+  uuid: ee881576-8024-5478-a910-1756d56579be

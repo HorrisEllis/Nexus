@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829974296
+exported_at: 1792830584881
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974296
-lastSeenAt: 1792829974296
+firstSeenAt: 1792830584881
+lastSeenAt: 1792830584881
 fingerprint: null
 payload:
   for: AM8_element_picker_agent_wiring
@@ -37,3 +37,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: c642a3cd-5b5b-50f2-a0f6-c00506b9a1cd

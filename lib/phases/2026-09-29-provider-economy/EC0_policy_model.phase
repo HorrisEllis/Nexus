@@ -7,11 +7,11 @@ intent: null
 summary: EC0_policy_model (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985874
+exported_at: 1792830596580
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985874
-lastSeenAt: 1792829985874
+firstSeenAt: 1792830596580
+lastSeenAt: 1792830596580
 fingerprint: null
 payload:
   id: EC0_policy_model
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: f08917980459b73a
+  uuid: c3b7add1-f990-5a71-9890-03078a23036e

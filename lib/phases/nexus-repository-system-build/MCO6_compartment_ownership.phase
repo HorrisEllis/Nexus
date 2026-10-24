@@ -7,11 +7,11 @@ intent: null
 summary: MCO6_compartment_ownership (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034112
+exported_at: 1792830646307
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034112
-lastSeenAt: 1792830034112
+firstSeenAt: 1792830646307
+lastSeenAt: 1792830646307
 fingerprint: null
 payload:
   id: MCO6_compartment_ownership
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: cc8efc7174f10e2c
+  uuid: 6700d563-07e5-52c2-8002-ffcee51995a8

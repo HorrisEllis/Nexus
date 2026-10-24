@@ -9,11 +9,11 @@ intent: null
 summary: LM10_per_agent_wake_words (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829973391
+exported_at: 1792830584039
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973391
-lastSeenAt: 1792829973391
+firstSeenAt: 1792830584039
+lastSeenAt: 1792830584039
 fingerprint: null
 payload:
   id: LM10_per_agent_wake_words
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 181848264f44d530
+  uuid: 6ae74a0c-5f29-51c5-a360-ca7e13faeee1

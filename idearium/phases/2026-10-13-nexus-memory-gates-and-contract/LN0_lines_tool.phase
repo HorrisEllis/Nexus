@@ -7,11 +7,11 @@ intent: null
 summary: LN0_lines_tool (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002954
+exported_at: 1792830614344
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002954
-lastSeenAt: 1792830002954
+firstSeenAt: 1792830614344
+lastSeenAt: 1792830614344
 fingerprint: null
 payload:
   id: LN0_lines_tool
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 88358d2f2c9e4f7e
+  uuid: 0effaf1a-6440-56e9-b49c-df0760363879

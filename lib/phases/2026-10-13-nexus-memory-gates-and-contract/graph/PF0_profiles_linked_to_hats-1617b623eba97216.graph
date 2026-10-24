@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830002963
+exported_at: 1792830614350
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002963
-lastSeenAt: 1792830002963
+firstSeenAt: 1792830614350
+lastSeenAt: 1792830614350
 fingerprint: null
 payload:
   for: PF0_profiles_linked_to_hats
@@ -42,3 +42,4 @@ payload:
       - 'depends on (0): —'
       - 'needed by (0): —'
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+  phaseUuid: bf515fd6-6c29-532c-bf0a-d494a1c2caba

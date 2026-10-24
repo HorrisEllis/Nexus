@@ -9,11 +9,11 @@ intent: null
 summary: SP4_cleardriver_mesh_guardian_settings (backend) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026982
+exported_at: 1792830639454
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026982
-lastSeenAt: 1792830026982
+firstSeenAt: 1792830639454
+lastSeenAt: 1792830639454
 fingerprint: null
 payload:
   id: SP4_cleardriver_mesh_guardian_settings
@@ -38,3 +38,10 @@ payload:
     - MOD-SP-GLOBAL
   spec: clear-glass/spec/site-profile.spec
   graph: fb57cef4503dcfda
+  uuid: 9125ed5c-6f90-545f-8a88-73a17744c37f
+  specLink:
+    how: declared
+    spec: clear-glass/spec/site-profile.spec
+    modules:
+      - id: MOD-SP-GLOBAL
+        uuid: nexus-cg-global-sections-v1-0000-2026-1023-001

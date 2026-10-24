@@ -7,11 +7,11 @@ intent: null
 summary: BL12_nexus_heal_loop_to_diagnostic (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971255
+exported_at: 1792830581824
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971255
-lastSeenAt: 1792829971255
+firstSeenAt: 1792830581824
+lastSeenAt: 1792830581824
 fingerprint: null
 payload:
   id: BL12_nexus_heal_loop_to_diagnostic
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: d1656ecf87ae74b7
+  uuid: 4ce2971d-d8da-58aa-91c7-3e450392e654

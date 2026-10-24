@@ -9,11 +9,11 @@ intent: null
 summary: X5_core_scripts (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983324
+exported_at: 1792830594117
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983324
-lastSeenAt: 1792829983324
+firstSeenAt: 1792830594117
+lastSeenAt: 1792830594117
 fingerprint: null
 payload:
   id: X5_core_scripts
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: e3fbf30d96972a02
+  uuid: ee0db95c-b877-5a63-800a-f598bf676feb

@@ -9,11 +9,11 @@ intent: null
 summary: GR2_graph_views (library) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830022168
+exported_at: 1792830634517
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022168
-lastSeenAt: 1792830022168
+firstSeenAt: 1792830634517
+lastSeenAt: 1792830634517
 fingerprint: null
 payload:
   id: GR2_graph_views
@@ -35,3 +35,10 @@ payload:
     - MOD-GRAPH-VIEWS
   spec: docs/substrate.spec
   graph: 371086c0f14c49a2
+  uuid: 29fb5d92-f39c-57d9-a93e-3fb2fb8c239d
+  specLink:
+    how: declared
+    spec: docs/substrate.spec
+    modules:
+      - id: MOD-GRAPH-VIEWS
+        uuid: nexus-substrate-graph-views-v1-0000-2026-1020-001

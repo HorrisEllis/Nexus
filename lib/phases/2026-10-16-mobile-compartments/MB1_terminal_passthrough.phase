@@ -7,11 +7,11 @@ intent: null
 summary: MB1_terminal_passthrough (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830012562
+exported_at: 1792830624348
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830012562
-lastSeenAt: 1792830012562
+firstSeenAt: 1792830624348
+lastSeenAt: 1792830624348
 fingerprint: null
 payload:
   id: MB1_terminal_passthrough
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: eff48fb25b66e772
+  uuid: 4a5422ca-ef7f-5356-9630-4d2d4d2b341c

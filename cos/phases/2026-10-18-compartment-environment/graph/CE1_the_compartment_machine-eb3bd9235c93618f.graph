@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830017327
+exported_at: 1792830629343
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017327
-lastSeenAt: 1792830017327
+firstSeenAt: 1792830629343
+lastSeenAt: 1792830629343
 fingerprint: null
 payload:
   for: CE1_the_compartment_machine
@@ -287,3 +287,4 @@ payload:
       - >-
         needed by (1): CE2_the_shell_is_declared · all downstream 15 · finishing it unlocks
         CE2_the_shell_is_declared
+  phaseUuid: af4b45be-2419-54f4-9af0-b881f11e11eb

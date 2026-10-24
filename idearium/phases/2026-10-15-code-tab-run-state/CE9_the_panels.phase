@@ -7,11 +7,11 @@ intent: null
 summary: CE9_the_panels (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005435
+exported_at: 1792830616877
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005435
-lastSeenAt: 1792830005435
+firstSeenAt: 1792830616877
+lastSeenAt: 1792830616877
 fingerprint: null
 payload:
   id: CE9_the_panels
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: e21c35e06e99c19e
+  uuid: ffffff62-a7ff-5e4c-ac4f-787408767f4c

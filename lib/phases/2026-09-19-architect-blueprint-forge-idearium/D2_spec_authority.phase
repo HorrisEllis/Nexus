@@ -9,11 +9,11 @@ intent: null
 summary: D2_spec_authority (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978156
+exported_at: 1792830588787
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978156
-lastSeenAt: 1792829978156
+firstSeenAt: 1792830588787
+lastSeenAt: 1792830588787
 fingerprint: null
 payload:
   id: D2_spec_authority
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: a899578f6b1ddf15
+  uuid: b6a18326-b1e5-50ac-9ab2-25b0a9af396b

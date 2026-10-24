@@ -7,11 +7,11 @@ intent: null
 summary: OB6_continuous_ollama_injection (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830033335
+exported_at: 1792830645544
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830033335
-lastSeenAt: 1792830033335
+firstSeenAt: 1792830645544
+lastSeenAt: 1792830645544
 fingerprint: null
 payload:
   id: OB6_continuous_ollama_injection
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 48971e046feff0e8
+  uuid: 39f42bec-0694-51a1-9d1e-ac872279e764

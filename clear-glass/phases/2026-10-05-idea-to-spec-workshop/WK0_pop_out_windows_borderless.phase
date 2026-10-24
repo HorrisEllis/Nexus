@@ -9,11 +9,11 @@ intent: null
 summary: WK0_pop_out_windows_borderless (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829993403
+exported_at: 1792830604251
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829993403
-lastSeenAt: 1792829993403
+firstSeenAt: 1792830604251
+lastSeenAt: 1792830604251
 fingerprint: null
 payload:
   id: WK0_pop_out_windows_borderless
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 460dfe0e0222e3da
+  uuid: 19ec0c4e-9791-5ec9-a9f1-6e6111be6926

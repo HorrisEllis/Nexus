@@ -9,11 +9,11 @@ intent: null
 summary: UI1_progress_2026_09_23 (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829979764
+exported_at: 1792830590456
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829979764
-lastSeenAt: 1792829979764
+firstSeenAt: 1792830590456
+lastSeenAt: 1792830590456
 fingerprint: null
 payload:
   id: UI1_progress_2026_09_23
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 040c4016ec196fff
+  uuid: e99c83ba-9bd3-5861-aa30-2d5092c07b12

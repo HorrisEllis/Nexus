@@ -7,11 +7,11 @@ intent: null
 summary: HG3_bv09_the_detector_and_files (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991456
+exported_at: 1792830602130
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991456
-lastSeenAt: 1792829991456
+firstSeenAt: 1792830602130
+lastSeenAt: 1792830602130
 fingerprint: null
 payload:
   id: HG3_bv09_the_detector_and_files
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 8f5946737fc02601
+  uuid: cf35dd43-e3a8-5458-a955-879092ae7fd1

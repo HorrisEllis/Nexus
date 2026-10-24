@@ -7,11 +7,11 @@ intent: null
 summary: P18_tv_ui_triage (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032528
+exported_at: 1792830644788
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032528
-lastSeenAt: 1792830032528
+firstSeenAt: 1792830644788
+lastSeenAt: 1792830644788
 fingerprint: null
 payload:
   id: P18_tv_ui_triage
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: f01cd98115ddf748
+  uuid: 1d703e7e-857e-5be5-be4b-4b012b7a584f

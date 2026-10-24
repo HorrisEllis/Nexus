@@ -7,11 +7,11 @@ intent: null
 summary: R4_loom_ledger_awareness (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830036413
+exported_at: 1792830648642
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830036413
-lastSeenAt: 1792830036413
+firstSeenAt: 1792830648642
+lastSeenAt: 1792830648642
 fingerprint: null
 payload:
   id: R4_loom_ledger_awareness
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: ac8920781ee27229
+  uuid: 7b2a4e68-00fd-5e93-ac6b-131872c809d6

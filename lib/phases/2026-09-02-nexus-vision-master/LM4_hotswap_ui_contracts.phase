@@ -7,11 +7,11 @@ intent: null
 summary: LM4_hotswap_ui_contracts (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974325
+exported_at: 1792830584908
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974325
-lastSeenAt: 1792829974325
+firstSeenAt: 1792830584908
+lastSeenAt: 1792830584908
 fingerprint: null
 payload:
   id: LM4_hotswap_ui_contracts
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 3793f13db0642bcf
+  uuid: fdc3b48e-4b8d-541d-9e53-646a62446a05

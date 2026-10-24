@@ -7,11 +7,11 @@ intent: null
 summary: BX8_dock_panels (surface) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023363
+exported_at: 1792830635772
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023363
-lastSeenAt: 1792830023363
+firstSeenAt: 1792830635772
+lastSeenAt: 1792830635772
 fingerprint: null
 payload:
   id: BX8_dock_panels
@@ -27,3 +27,10 @@ payload:
     - MOD-BX-DOCK
   spec: docs/brainos-in-idearium.spec
   graph: 13df1648e45b6aa2
+  uuid: a2062e56-2d10-5a87-9ec4-514390d34318
+  specLink:
+    how: declared
+    spec: docs/brainos-in-idearium.spec
+    modules:
+      - id: MOD-BX-DOCK
+        uuid: nexus-bx-dock-v1-0000-2026-1021-001

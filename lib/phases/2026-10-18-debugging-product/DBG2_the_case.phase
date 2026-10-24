@@ -7,11 +7,11 @@ intent: null
 summary: DBG2_the_case (?) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1792830017714
+exported_at: 1792830629749
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017714
-lastSeenAt: 1792830017714
+firstSeenAt: 1792830629749
+lastSeenAt: 1792830629749
 fingerprint: null
 payload:
   id: DBG2_the_case
@@ -35,3 +35,4 @@ payload:
   blocks: []
   spec: null
   graph: 1fa8c76c4772fdd9
+  uuid: 704836dd-85ba-5c67-a33d-d150bb53bfd1

@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830010560
+exported_at: 1792830622317
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010560
-lastSeenAt: 1792830010560
+firstSeenAt: 1792830622317
+lastSeenAt: 1792830622317
 fingerprint: null
 payload:
   for: CON2_grammar_and_completion
@@ -178,3 +178,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by CON1_one_door_client
       - 'depends on (1): CON1_one_door_client'
       - 'needed by (1): CON5_pane · finishing it unlocks CON5_pane'
+  phaseUuid: ba8be548-b4c0-5856-814c-4b1ce4f30fd6

@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990140
+exported_at: 1792830600795
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990140
-lastSeenAt: 1792829990140
+firstSeenAt: 1792830600795
+lastSeenAt: 1792830600795
 fingerprint: null
 payload:
   for: AR3_one_architect_canvas
@@ -61,3 +61,4 @@ payload:
         needed by (3): AZ1_semantic_zoom, AR4_pipeline_architect_on_the_canvas,
         AR5_repo_architect_on_the_canvas · finishing it unlocks AZ1_semantic_zoom,
         AR4_pipeline_architect_on_the_canvas, AR5_repo_architect_on_the_canvas
+  phaseUuid: 9f7753cf-8240-5b6c-b79c-dfabc071b70c

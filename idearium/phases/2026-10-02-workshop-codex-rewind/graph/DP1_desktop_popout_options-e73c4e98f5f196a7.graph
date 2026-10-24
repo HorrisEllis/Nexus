@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990144
+exported_at: 1792830600800
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990144
-lastSeenAt: 1792829990144
+firstSeenAt: 1792830600800
+lastSeenAt: 1792830600800
 fingerprint: null
 payload:
   for: DP1_desktop_popout_options
@@ -240,3 +240,4 @@ payload:
       - 'needed by (0): —'
       - 'same files as PL1_one_entry_point with no order between them: idearium/api/index.js'
       - 'same files as UI12_workshop_surface with no order between them: idearium/ui/js/app.js'
+  phaseUuid: 1f4a0e0a-2c6c-5234-a11f-7472876ebb69

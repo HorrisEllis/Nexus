@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 9 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830009023
+exported_at: 1792830620655
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009023
-lastSeenAt: 1792830009023
+firstSeenAt: 1792830620655
+lastSeenAt: 1792830620655
 fingerprint: null
 payload:
   for: WB2_raid_bricks_and_officiator_through_warp
@@ -286,3 +286,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): WB1_warp_at_the_rung · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: 8dd6d684-132f-5426-8165-8c55f342824d

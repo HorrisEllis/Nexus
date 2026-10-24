@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829985429
+exported_at: 1792830596165
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985429
-lastSeenAt: 1792829985429
+firstSeenAt: 1792830596165
+lastSeenAt: 1792830596165
 fingerprint: null
 payload:
   for: N9_cli
@@ -56,3 +56,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 6 · blocked by N8_service
       - 'depends on (1): N8_service · all upstream 9'
       - 'needed by (1): N12_ui · all downstream 2 · finishing it unlocks N12_ui'
+  phaseUuid: f619f8d9-fe84-5a8f-b57b-8fac5e765180

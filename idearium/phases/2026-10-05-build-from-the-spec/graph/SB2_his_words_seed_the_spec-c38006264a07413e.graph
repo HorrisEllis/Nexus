@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990920
+exported_at: 1792830601579
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990920
-lastSeenAt: 1792829990920
+firstSeenAt: 1792830601579
+lastSeenAt: 1792830601579
 fingerprint: null
 payload:
   for: SB2_his_words_seed_the_spec
@@ -240,3 +240,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): SB1_templates_are_the_default_frame · all upstream 2'
       - 'needed by (1): SB8_promote_with_full_block_options'
+  phaseUuid: e289dcdf-2435-5fc0-b5b2-6fdb68b6bdd4

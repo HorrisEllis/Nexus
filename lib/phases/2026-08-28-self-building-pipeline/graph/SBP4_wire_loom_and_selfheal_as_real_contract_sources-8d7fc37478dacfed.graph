@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 9 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829972556
+exported_at: 1792830583170
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972556
-lastSeenAt: 1792829972556
+firstSeenAt: 1792830583170
+lastSeenAt: 1792830583170
 fingerprint: null
 payload:
   for: SBP4_wire_loom_and_selfheal_as_real_contract_sources
@@ -263,3 +263,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 9e16ee53-f740-5045-b3e7-a8f105eba2e0

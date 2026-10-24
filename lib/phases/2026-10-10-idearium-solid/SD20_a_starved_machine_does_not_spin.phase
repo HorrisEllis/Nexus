@@ -9,11 +9,11 @@ intent: null
 summary: SD20_a_starved_machine_does_not_spin (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999667
+exported_at: 1792830610997
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999667
-lastSeenAt: 1792829999667
+firstSeenAt: 1792830610997
+lastSeenAt: 1792830610997
 fingerprint: null
 payload:
   id: SD20_a_starved_machine_does_not_spin
@@ -34,3 +34,4 @@ payload:
   blocks: []
   spec: null
   graph: 76dc07b8a12db6ca
+  uuid: f50af6e6-ca8e-5d9a-b2b6-529f3d3e5819

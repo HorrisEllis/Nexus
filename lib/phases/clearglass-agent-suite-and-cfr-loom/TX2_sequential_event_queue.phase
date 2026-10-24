@@ -9,11 +9,11 @@ intent: null
 summary: TX2_sequential_event_queue (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028207
+exported_at: 1792830640617
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028207
-lastSeenAt: 1792830028207
+firstSeenAt: 1792830640617
+lastSeenAt: 1792830640617
 fingerprint: null
 payload:
   id: TX2_sequential_event_queue
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: b723e425972e1faa
+  uuid: 40b3c066-3d04-58a5-9093-d35a478a8e2f

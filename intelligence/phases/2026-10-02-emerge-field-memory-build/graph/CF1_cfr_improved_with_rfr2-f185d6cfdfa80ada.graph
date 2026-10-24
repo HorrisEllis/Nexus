@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988420
+exported_at: 1792830599052
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988420
-lastSeenAt: 1792829988420
+firstSeenAt: 1792830599052
+lastSeenAt: 1792830599052
 fingerprint: null
 payload:
   for: CF1_cfr_improved_with_rfr2
@@ -233,3 +233,4 @@ payload:
         MR7_recipes, MR9_liminal_on_the_agents, MR11_rewind_the_mind, CB1_cfr_build_logic,
         CB3_the_causal_spec_block, FM1_mining_failure_modes · all downstream 25 · finishing it
         unlocks RF1_relational_field, MR9_liminal_on_the_agents, FM1_mining_failure_modes
+  phaseUuid: affcba9f-6eb9-5c56-854b-03caf1404e07

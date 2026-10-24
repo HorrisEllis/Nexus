@@ -9,11 +9,11 @@ intent: null
 summary: SN1_open_a_snapshot_as_a_compartment (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830000868
+exported_at: 1792830612259
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000868
-lastSeenAt: 1792830000868
+firstSeenAt: 1792830612259
+lastSeenAt: 1792830612259
 fingerprint: null
 payload:
   id: SN1_open_a_snapshot_as_a_compartment
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 436e57c6d013f324
+  uuid: 90e161d5-11c4-5261-ad24-36ed60916bbc

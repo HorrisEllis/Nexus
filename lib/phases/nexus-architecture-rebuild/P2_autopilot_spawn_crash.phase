@@ -7,11 +7,11 @@ intent: null
 summary: P2_autopilot_spawn_crash (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032514
+exported_at: 1792830644774
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032514
-lastSeenAt: 1792830032514
+firstSeenAt: 1792830644774
+lastSeenAt: 1792830644774
 fingerprint: null
 payload:
   id: P2_autopilot_spawn_crash
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 7b3595f0354c6063
+  uuid: bed7f7e7-9638-5af4-b66a-de18aaa3964b

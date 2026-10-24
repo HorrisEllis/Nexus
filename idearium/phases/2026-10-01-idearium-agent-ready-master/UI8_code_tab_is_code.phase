@@ -7,11 +7,11 @@ intent: null
 summary: UI8_code_tab_is_code (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987090
+exported_at: 1792830597796
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987090
-lastSeenAt: 1792829987090
+firstSeenAt: 1792830597796
+lastSeenAt: 1792830597796
 fingerprint: null
 payload:
   id: UI8_code_tab_is_code
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: cfa6aff53868c372
+  uuid: 0ae79c07-1f8b-5ce2-9592-311afa1a89ea

@@ -7,11 +7,11 @@ intent: null
 summary: S1 (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983713
+exported_at: 1792830594506
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983713
-lastSeenAt: 1792829983713
+firstSeenAt: 1792830594506
+lastSeenAt: 1792830594506
 fingerprint: null
 payload:
   id: S1
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: e58044a67741c0ac
+  uuid: 2fdfc702-ef09-5a04-968c-c1256ececee5

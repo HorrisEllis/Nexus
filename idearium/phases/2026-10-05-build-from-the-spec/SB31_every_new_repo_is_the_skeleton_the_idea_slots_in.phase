@@ -9,11 +9,11 @@ intent: null
 summary: SB31_every_new_repo_is_the_skeleton_the_idea_slots_in (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990984
+exported_at: 1792830601646
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990984
-lastSeenAt: 1792829990984
+firstSeenAt: 1792830601646
+lastSeenAt: 1792830601646
 fingerprint: null
 payload:
   id: SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: a632e63c0a0c153d
+  uuid: f57ab26e-f171-552d-b307-0a337c8feeec

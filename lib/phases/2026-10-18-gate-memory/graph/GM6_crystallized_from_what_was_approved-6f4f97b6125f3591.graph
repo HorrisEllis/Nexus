@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830018093
+exported_at: 1792830630226
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830018093
-lastSeenAt: 1792830018093
+firstSeenAt: 1792830630226
+lastSeenAt: 1792830630226
 fingerprint: null
 payload:
   for: GM6_crystallized_from_what_was_approved
@@ -125,3 +125,4 @@ payload:
       - 'depends on (2): GM3_the_fulfilled_contract_index, FMR10_it_compounds · all upstream 13'
       - 'needed by (0): —'
       - 'DANGLING depends_on: (failure-mode-report:, crystals, only, on, a, causal, path)'
+  phaseUuid: ded5a4ca-bffa-56a4-9bde-54c18943b45a

@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830002551
+exported_at: 1792830613967
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002551
-lastSeenAt: 1792830002551
+firstSeenAt: 1792830613967
+lastSeenAt: 1792830613967
 fingerprint: null
 payload:
   for: MC1_steps_as_events_and_snapshots
@@ -40,3 +40,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by NV1_words_to_elements
       - 'depends on (1): NV1_words_to_elements'
       - 'needed by (0): —'
+  phaseUuid: 4759243a-5f11-52f5-a63f-39fdfef16c97

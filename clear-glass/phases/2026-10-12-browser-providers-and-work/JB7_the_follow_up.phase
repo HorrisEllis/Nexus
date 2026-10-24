@@ -7,11 +7,11 @@ intent: null
 summary: JB7_the_follow_up (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001282
+exported_at: 1792830612695
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001282
-lastSeenAt: 1792830001282
+firstSeenAt: 1792830612695
+lastSeenAt: 1792830612695
 fingerprint: null
 payload:
   id: JB7_the_follow_up
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: ba331fb30a195c2d
+  uuid: 83c990e3-9361-5421-8e3c-45a7c34cadba

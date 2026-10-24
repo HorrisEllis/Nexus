@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830003402
+exported_at: 1792830614750
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003402
-lastSeenAt: 1792830003402
+firstSeenAt: 1792830614750
+lastSeenAt: 1792830614750
 fingerprint: null
 payload:
   for: RF0_architecture_read
@@ -206,3 +206,4 @@ payload:
         finishing it unlocks RF1_migration_proposed_as_phases, PL6_global_links_seen
       - 'CYCLE: PL6_global_links_seen → RF0_architecture_read'
       - 'same files as PL1_many_projects_at_once with no order between them: lib/project-decompose.js'
+  phaseUuid: 65666fe4-0412-5d2f-a047-cfd76a2eede0

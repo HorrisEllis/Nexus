@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830036414
+exported_at: 1792830648642
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830036414
-lastSeenAt: 1792830036414
+firstSeenAt: 1792830648642
+lastSeenAt: 1792830648642
 fingerprint: null
 payload:
   for: R5_loom_visual_map
@@ -186,3 +186,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): R4_loom_ledger_awareness'
       - 'needed by (1): R6_living_documentation · finishing it unlocks R6_living_documentation'
+  phaseUuid: d918700f-1d84-55c0-b4bf-752b5ae34ccd

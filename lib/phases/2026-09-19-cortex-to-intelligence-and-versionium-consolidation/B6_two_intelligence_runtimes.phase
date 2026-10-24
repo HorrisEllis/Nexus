@@ -9,11 +9,11 @@ intent: null
 summary: B6_two_intelligence_runtimes (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978557
+exported_at: 1792830589181
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978557
-lastSeenAt: 1792829978557
+firstSeenAt: 1792830589181
+lastSeenAt: 1792830589181
 fingerprint: null
 payload:
   id: B6_two_intelligence_runtimes
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 0258dad07ec7a2de
+  uuid: 397219cf-7a68-5c7a-a219-942b153f74df

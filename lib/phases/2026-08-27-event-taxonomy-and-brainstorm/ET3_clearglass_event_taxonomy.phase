@@ -9,11 +9,11 @@ intent: null
 summary: ET3_clearglass_event_taxonomy (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971722
+exported_at: 1792830582303
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971722
-lastSeenAt: 1792829971722
+firstSeenAt: 1792830582303
+lastSeenAt: 1792830582303
 fingerprint: null
 payload:
   id: ET3_clearglass_event_taxonomy
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 716426b659cd5b43
+  uuid: c69977a1-67b3-5622-933e-3e7f66d8a08b

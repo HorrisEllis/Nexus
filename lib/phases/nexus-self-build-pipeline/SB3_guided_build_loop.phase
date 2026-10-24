@@ -7,11 +7,11 @@ intent: null
 summary: SB3_guided_build_loop (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034493
+exported_at: 1792830646699
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034493
-lastSeenAt: 1792830034493
+firstSeenAt: 1792830646699
+lastSeenAt: 1792830646699
 fingerprint: null
 payload:
   id: SB3_guided_build_loop
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 43e53ddad29a7b4a
+  uuid: 87123aa5-f93c-5e37-9cd6-527bbdaa6bd9

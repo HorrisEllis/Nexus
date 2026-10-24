@@ -7,11 +7,11 @@ intent: null
 summary: AU1_addenda_written_for_you (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830003813
+exported_at: 1792830615215
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003813
-lastSeenAt: 1792830003813
+firstSeenAt: 1792830615215
+lastSeenAt: 1792830615215
 fingerprint: null
 payload:
   id: AU1_addenda_written_for_you
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: a1c1fe9139548e36
+  uuid: 73d7e938-cfa6-553a-821e-9a5354f87cd9

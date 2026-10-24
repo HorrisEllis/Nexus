@@ -7,11 +7,11 @@ intent: null
 summary: EC1_usage_ledger (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985875
+exported_at: 1792830596580
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985875
-lastSeenAt: 1792829985875
+firstSeenAt: 1792830596580
+lastSeenAt: 1792830596580
 fingerprint: null
 payload:
   id: EC1_usage_ledger
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 3bb692c134237f3f
+  uuid: f56d8b89-d988-57b4-b5a1-d0a704979922

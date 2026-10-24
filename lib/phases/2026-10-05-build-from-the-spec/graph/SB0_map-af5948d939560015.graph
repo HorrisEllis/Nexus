@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990916
+exported_at: 1792830601575
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990916
-lastSeenAt: 1792829990916
+firstSeenAt: 1792830601575
+lastSeenAt: 1792830601575
 fingerprint: null
 payload:
   for: SB0_map
@@ -99,3 +99,4 @@ payload:
         needed by (2): SB1_templates_are_the_default_frame, SB16_genesis_nodes_domain · all
         downstream 47 · finishing it unlocks SB1_templates_are_the_default_frame,
         SB16_genesis_nodes_domain
+  phaseUuid: e72e02ba-54a4-584d-bcf5-d29f3984a295

@@ -7,11 +7,11 @@ intent: null
 summary: CD0_kill_default (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830024192
+exported_at: 1792830636640
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830024192
-lastSeenAt: 1792830024192
+firstSeenAt: 1792830636640
+lastSeenAt: 1792830636640
 fingerprint: null
 payload:
   id: CD0_kill_default
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 11d4f021a24dcb20
+  uuid: 634b74c9-9fd0-5868-9f6c-b9c986a9a521

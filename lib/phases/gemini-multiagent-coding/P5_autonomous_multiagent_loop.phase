@@ -7,11 +7,11 @@ intent: null
 summary: P5_autonomous_multiagent_loop (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830030958
+exported_at: 1792830643264
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830030958
-lastSeenAt: 1792830030958
+firstSeenAt: 1792830643264
+lastSeenAt: 1792830643264
 fingerprint: null
 payload:
   id: P5_autonomous_multiagent_loop
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 7a74916704cceb5b
+  uuid: 58da7946-f5d3-5474-a7e9-4db894e495d9

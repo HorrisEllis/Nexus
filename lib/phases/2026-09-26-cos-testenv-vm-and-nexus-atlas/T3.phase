@@ -7,11 +7,11 @@ intent: null
 summary: T3 (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792829980534
+exported_at: 1792830591241
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829980534
-lastSeenAt: 1792829980534
+firstSeenAt: 1792830591241
+lastSeenAt: 1792830591241
 fingerprint: null
 payload:
   id: T3
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 255b5681dc7d3f96
+  uuid: 3a28117a-37d0-55cd-bb45-37a0ee4979bf

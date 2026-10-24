@@ -9,11 +9,11 @@ intent: null
 summary: LS1_the_bridge_job_holds_what_is_written_so_far (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991470
+exported_at: 1792830602146
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991470
-lastSeenAt: 1792829991470
+firstSeenAt: 1792830602146
+lastSeenAt: 1792830602146
 fingerprint: null
 payload:
   id: LS1_the_bridge_job_holds_what_is_written_so_far
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 22224f60f8a23d5a
+  uuid: 6e53425a-da24-5f11-b8ad-fd7b06c91f10

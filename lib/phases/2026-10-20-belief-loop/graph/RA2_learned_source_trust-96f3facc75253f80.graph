@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830021768
+exported_at: 1792830634101
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021768
-lastSeenAt: 1792830021768
+firstSeenAt: 1792830634101
+lastSeenAt: 1792830634101
 fingerprint: null
 payload:
   for: RA2_learned_source_trust
@@ -58,3 +58,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 7 · blocked by RA1_root_cause_through_provenance
       - 'depends on (1): RA1_root_cause_through_provenance · all upstream 15'
       - 'needed by (0): —'
+  phaseUuid: 61b684ed-0922-5355-8579-b9bbbdcd4eae

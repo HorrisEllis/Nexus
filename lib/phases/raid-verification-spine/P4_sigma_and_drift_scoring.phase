@@ -7,11 +7,11 @@ intent: null
 summary: P4_sigma_and_drift_scoring (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830035644
+exported_at: 1792830647854
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830035644
-lastSeenAt: 1792830035644
+firstSeenAt: 1792830647854
+lastSeenAt: 1792830647854
 fingerprint: null
 payload:
   id: P4_sigma_and_drift_scoring
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 0bc9660bb9269c47
+  uuid: 491ea314-cba7-508b-8dfd-9b0bfa84165e

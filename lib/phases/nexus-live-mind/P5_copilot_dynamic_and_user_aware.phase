@@ -7,11 +7,11 @@ intent: null
 summary: P5_copilot_dynamic_and_user_aware (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032952
+exported_at: 1792830645174
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032952
-lastSeenAt: 1792830032952
+firstSeenAt: 1792830645174
+lastSeenAt: 1792830645174
 fingerprint: null
 payload:
   id: P5_copilot_dynamic_and_user_aware
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: c4de9a7b4031461d
+  uuid: 9dbc4fa1-4e21-54f5-aa1a-980e29085944

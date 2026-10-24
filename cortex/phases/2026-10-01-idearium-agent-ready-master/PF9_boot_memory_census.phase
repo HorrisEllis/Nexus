@@ -7,11 +7,11 @@ intent: null
 summary: PF9_boot_memory_census (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987048
+exported_at: 1792830597753
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987048
-lastSeenAt: 1792829987048
+firstSeenAt: 1792830597753
+lastSeenAt: 1792830597753
 fingerprint: null
 payload:
   id: PF9_boot_memory_census
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: c2a0c372cf2327b6
+  uuid: e941b3ac-6811-57f9-8730-640e0aacb64f

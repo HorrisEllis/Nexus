@@ -9,11 +9,11 @@ intent: null
 summary: V2_nexus_versionium_view (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983312
+exported_at: 1792830594105
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983312
-lastSeenAt: 1792829983312
+firstSeenAt: 1792830594105
+lastSeenAt: 1792830594105
 fingerprint: null
 payload:
   id: V2_nexus_versionium_view
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 68284806b8692565
+  uuid: 1acc9735-ea1e-5d83-b1b4-d4a5713fb244

@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829974792
+exported_at: 1792830585380
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974792
-lastSeenAt: 1792829974792
+firstSeenAt: 1792830585380
+lastSeenAt: 1792830585380
 fingerprint: null
 payload:
   for: VS4_active_drift_enforcement
@@ -196,3 +196,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by VS1_sovereign_folder_and_foundation
       - 'depends on (1): VS1_sovereign_folder_and_foundation'
       - 'needed by (0): —'
+  phaseUuid: 065f4b75-b1ef-5208-8a97-214e3f7bc3fd

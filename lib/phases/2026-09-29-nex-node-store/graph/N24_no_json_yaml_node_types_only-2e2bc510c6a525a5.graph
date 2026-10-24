@@ -7,11 +7,11 @@ intent: null
 summary: 10 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829985447
+exported_at: 1792830596182
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985447
-lastSeenAt: 1792829985447
+firstSeenAt: 1792830596182
+lastSeenAt: 1792830596182
 fingerprint: null
 payload:
   for: N24_no_json_yaml_node_types_only
@@ -120,3 +120,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 5 · blocked by N2, N7_views_yaml_and_nex, N18_hardcode_census
       - 'depends on (3): N2, N7_views_yaml_and_nex, N18_hardcode_census · all upstream 10'
       - 'needed by (0): —'
+  phaseUuid: 993e9685-2455-5ab2-b2ec-dc00d4564523

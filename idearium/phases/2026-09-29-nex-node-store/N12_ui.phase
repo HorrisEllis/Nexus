@@ -7,11 +7,11 @@ intent: null
 summary: N12_ui (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985432
+exported_at: 1792830596168
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985432
-lastSeenAt: 1792829985432
+firstSeenAt: 1792830596168
+lastSeenAt: 1792830596168
 fingerprint: null
 payload:
   id: N12_ui
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 278ef4d8f071d90f
+  uuid: c689f384-6a86-5bfd-bc5f-6a1aba9dab82

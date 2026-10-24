@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829993038
+exported_at: 1792830603819
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829993038
-lastSeenAt: 1792829993038
+firstSeenAt: 1792830603819
+lastSeenAt: 1792830603819
 fingerprint: null
 payload:
   for: FR1_the_guide
@@ -157,3 +157,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): FR2_show_me_on_the_page · finishing it unlocks FR2_show_me_on_the_page'
+  phaseUuid: 022ae0ab-44e2-5b63-a984-56360809e013

@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829987569
+exported_at: 1792830598249
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987569
-lastSeenAt: 1792829987569
+firstSeenAt: 1792830598249
+lastSeenAt: 1792830598249
 fingerprint: null
 payload:
   for: RC2_registry_as_nodes
@@ -237,3 +237,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): RC1_registry_block · all upstream 2'
       - 'needed by (1): GN1_genesis · all downstream 3 · finishing it unlocks GN1_genesis'
+  phaseUuid: add2dce6-43d2-5400-abf6-8a43067b717b

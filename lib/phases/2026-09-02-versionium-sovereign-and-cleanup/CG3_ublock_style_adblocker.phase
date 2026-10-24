@@ -9,11 +9,11 @@ intent: null
 summary: CG3_ublock_style_adblocker (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974794
+exported_at: 1792830585382
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974794
-lastSeenAt: 1792829974794
+firstSeenAt: 1792830585382
+lastSeenAt: 1792830585382
 fingerprint: null
 payload:
   id: CG3_ublock_style_adblocker
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 303ef29f7a7e41db
+  uuid: d2b7ac95-8d0c-5a21-a194-9391aa10f2d9

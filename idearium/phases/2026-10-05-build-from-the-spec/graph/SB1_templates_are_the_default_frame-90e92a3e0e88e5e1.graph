@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990918
+exported_at: 1792830601577
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990918
-lastSeenAt: 1792829990918
+firstSeenAt: 1792830601577
+lastSeenAt: 1792830601577
 fingerprint: null
 payload:
   for: SB1_templates_are_the_default_frame
@@ -276,3 +276,4 @@ payload:
         SB2_his_words_seed_the_spec, SB3_the_section_prompt_is_domain_agnostic,
         SB7_domain_file_tree_templates, SB9_the_spec_is_a_spec_file,
         SB18_the_system_template_is_used
+  phaseUuid: 62e5c7c9-f35f-59e9-89f1-37b25bbc4bd8

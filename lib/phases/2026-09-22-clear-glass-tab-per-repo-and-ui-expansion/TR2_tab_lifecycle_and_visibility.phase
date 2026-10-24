@@ -9,11 +9,11 @@ intent: null
 summary: TR2_tab_lifecycle_and_visibility (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829979763
+exported_at: 1792830590455
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829979763
-lastSeenAt: 1792829979763
+firstSeenAt: 1792830590455
+lastSeenAt: 1792830590455
 fingerprint: null
 payload:
   id: TR2_tab_lifecycle_and_visibility
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: f48c6d68235b7c84
+  uuid: d347ff34-a51c-59b9-84ec-b5b7c71f9a7d

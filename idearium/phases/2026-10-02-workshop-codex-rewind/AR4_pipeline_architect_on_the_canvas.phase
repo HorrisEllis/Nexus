@@ -9,11 +9,11 @@ intent: null
 summary: AR4_pipeline_architect_on_the_canvas (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990141
+exported_at: 1792830600796
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990141
-lastSeenAt: 1792829990141
+firstSeenAt: 1792830600796
+lastSeenAt: 1792830600796
 fingerprint: null
 payload:
   id: AR4_pipeline_architect_on_the_canvas
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: cec156eb688fb013
+  uuid: 9c87773e-5d3f-5d0c-812a-bc300507a33d

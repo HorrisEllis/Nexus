@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829993793
+exported_at: 1792830604662
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829993793
-lastSeenAt: 1792829993793
+firstSeenAt: 1792830604662
+lastSeenAt: 1792830604662
 fingerprint: null
 payload:
   for: RS11_workshop_and_phases_one_surface
@@ -60,3 +60,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4 · blocked by RS6_the_workshop_as_the_editor
       - 'depends on (2): RS6_the_workshop_as_the_editor, RS10_the_phases_tab_rebuilt · all upstream 8'
       - 'needed by (0): —'
+  phaseUuid: 6ad4247c-33af-5833-b182-9e0ed1fffde4

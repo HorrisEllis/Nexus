@@ -9,11 +9,11 @@ intent: null
 summary: V2_snapshot_ownership_decision (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976052
+exported_at: 1792830586663
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976052
-lastSeenAt: 1792829976052
+firstSeenAt: 1792830586663
+lastSeenAt: 1792830586663
 fingerprint: null
 payload:
   id: V2_snapshot_ownership_decision
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 812e620fe68626d8
+  uuid: e6b45e2b-12bb-5c7e-9e18-a580877d2260

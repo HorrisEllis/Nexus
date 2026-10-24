@@ -7,11 +7,11 @@ intent: null
 summary: SD21_what_his_run_log_showed (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999668
+exported_at: 1792830610999
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999668
-lastSeenAt: 1792829999668
+firstSeenAt: 1792830610999
+lastSeenAt: 1792830610999
 fingerprint: null
 payload:
   id: SD21_what_his_run_log_showed
@@ -33,3 +33,4 @@ payload:
   blocks: []
   spec: null
   graph: b16c046b8f39cc7d
+  uuid: ab6ade03-bc62-56ac-acbf-5cb3a3f585e6

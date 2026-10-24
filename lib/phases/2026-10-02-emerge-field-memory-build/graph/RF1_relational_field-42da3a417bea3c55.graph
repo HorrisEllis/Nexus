@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988422
+exported_at: 1792830599055
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988422
-lastSeenAt: 1792829988422
+firstSeenAt: 1792830599055
+lastSeenAt: 1792830599055
 fingerprint: null
 payload:
   for: RF1_relational_field
@@ -179,3 +179,4 @@ payload:
         MR6_contradictions_held, LN1_lenses_on_the_canvas, GL1_the_graphs_as_a_model · all
         downstream 11 · finishing it unlocks OT1_one_write_path, MR5_fractal_levels_with_the_field
       - 'same files as GG1_graphs_generate_code with no order between them: idearium/repo/graph.js'
+  phaseUuid: b8b50ed7-072b-5b3e-a7ae-c51f187da5ec

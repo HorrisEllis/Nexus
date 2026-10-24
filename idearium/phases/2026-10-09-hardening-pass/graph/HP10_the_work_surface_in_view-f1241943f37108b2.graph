@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829997244
+exported_at: 1792830608403
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997244
-lastSeenAt: 1792829997244
+firstSeenAt: 1792830608403
+lastSeenAt: 1792830608403
 fingerprint: null
 payload:
   for: HP10_the_work_surface_in_view
@@ -43,3 +43,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): HP9_the_plan_is_current_work'
       - 'needed by (0): —'
+  phaseUuid: d45a6b09-b5b6-5a73-aacf-3f55aa2c9926

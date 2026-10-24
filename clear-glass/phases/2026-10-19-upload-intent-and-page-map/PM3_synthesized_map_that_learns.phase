@@ -9,11 +9,11 @@ intent: null
 summary: PM3_synthesized_map_that_learns (library) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830021329
+exported_at: 1792830633685
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021329
-lastSeenAt: 1792830021329
+firstSeenAt: 1792830633685
+lastSeenAt: 1792830633685
 fingerprint: null
 payload:
   id: PM3_synthesized_map_that_learns
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 96e7aa80c587e8fa
+  uuid: 44180973-188b-59e6-994b-a4b2160fdc07

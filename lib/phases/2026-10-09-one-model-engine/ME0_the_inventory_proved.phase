@@ -7,11 +7,11 @@ intent: null
 summary: ME0_the_inventory_proved (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829997683
+exported_at: 1792830608813
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997683
-lastSeenAt: 1792829997683
+firstSeenAt: 1792830608813
+lastSeenAt: 1792830608813
 fingerprint: null
 payload:
   id: ME0_the_inventory_proved
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 9d64861419da9a7a
+  uuid: c7d32e4c-2346-53b0-a65f-138c153c1be2

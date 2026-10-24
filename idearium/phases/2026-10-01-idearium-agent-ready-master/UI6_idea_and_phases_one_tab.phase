@@ -9,11 +9,11 @@ intent: null
 summary: UI6_idea_and_phases_one_tab (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987086
+exported_at: 1792830597792
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987086
-lastSeenAt: 1792829987086
+firstSeenAt: 1792830597792
+lastSeenAt: 1792830597792
 fingerprint: null
 payload:
   id: UI6_idea_and_phases_one_tab
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 3d173a75197812ed
+  uuid: b2c84160-30c5-5b37-ae90-0c5cb7489402

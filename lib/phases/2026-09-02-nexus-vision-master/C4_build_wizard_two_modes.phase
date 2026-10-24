@@ -7,11 +7,11 @@ intent: null
 summary: C4_build_wizard_two_modes (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974289
+exported_at: 1792830584874
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974289
-lastSeenAt: 1792829974289
+firstSeenAt: 1792830584874
+lastSeenAt: 1792830584874
 fingerprint: null
 payload:
   id: C4_build_wizard_two_modes
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 9a05d43747e1ddbd
+  uuid: 8f2d08ee-3f00-52a1-a076-ca64b964c62b

@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829980534
+exported_at: 1792830591242
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829980534
-lastSeenAt: 1792829980534
+firstSeenAt: 1792830591242
+lastSeenAt: 1792830591242
 fingerprint: null
 payload:
   for: T4
@@ -149,3 +149,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (3): T1, T2, T3'
       - 'needed by (2): T6, T7 · all downstream 3 · finishing it unlocks T6, T7'
+  phaseUuid: bb2e4b52-ea11-5aac-bb8f-54bd0a1734f3

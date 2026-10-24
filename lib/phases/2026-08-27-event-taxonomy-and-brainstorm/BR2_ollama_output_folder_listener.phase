@@ -9,11 +9,11 @@ intent: null
 summary: BR2_ollama_output_folder_listener (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971726
+exported_at: 1792830582307
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971726
-lastSeenAt: 1792829971726
+firstSeenAt: 1792830582307
+lastSeenAt: 1792830582307
 fingerprint: null
 payload:
   id: BR2_ollama_output_folder_listener
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: c5cdd4d86ddb5b74
+  uuid: 00970a80-81a5-5873-92d1-fb8846800c9e

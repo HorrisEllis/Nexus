@@ -7,11 +7,11 @@ intent: null
 summary: MR2_richer_events (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007069
+exported_at: 1792830618614
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007069
-lastSeenAt: 1792830007069
+firstSeenAt: 1792830618614
+lastSeenAt: 1792830618614
 fingerprint: null
 payload:
   id: MR2_richer_events
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 210b0c392ca052ce
+  uuid: 10efc9a4-f916-57a5-9567-7c9458096961

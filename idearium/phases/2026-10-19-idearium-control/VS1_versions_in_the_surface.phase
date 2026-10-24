@@ -7,11 +7,11 @@ intent: null
 summary: VS1_versions_in_the_surface (interface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830019665
+exported_at: 1792830631963
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830019665
-lastSeenAt: 1792830019665
+firstSeenAt: 1792830631963
+lastSeenAt: 1792830631963
 fingerprint: null
 payload:
   id: VS1_versions_in_the_surface
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 2f948ae931b8b5ff
+  uuid: 7aa664b9-dc52-54f7-a3a4-d4ac76d7cb28

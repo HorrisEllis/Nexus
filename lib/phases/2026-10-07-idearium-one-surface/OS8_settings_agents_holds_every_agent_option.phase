@@ -9,11 +9,11 @@ intent: null
 summary: OS8_settings_agents_holds_every_agent_option (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829995354
+exported_at: 1792830606333
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829995354
-lastSeenAt: 1792829995354
+firstSeenAt: 1792830606333
+lastSeenAt: 1792830606333
 fingerprint: null
 payload:
   id: OS8_settings_agents_holds_every_agent_option
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: b98ee2ed7bced97d
+  uuid: 0b27793a-1d58-57ac-b5e8-34ad95dd8653

@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830021761
+exported_at: 1792830634095
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021761
-lastSeenAt: 1792830021761
+firstSeenAt: 1792830634095
+lastSeenAt: 1792830634095
 fingerprint: null
 payload:
   for: CY0_one_crystal_schema
@@ -162,3 +162,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (2): CY1_lifecycle_and_injection, CY2_invariants_are_crystals · all downstream 4'
+  phaseUuid: 2dd12049-9c7c-5308-9665-1e7a193b4fda

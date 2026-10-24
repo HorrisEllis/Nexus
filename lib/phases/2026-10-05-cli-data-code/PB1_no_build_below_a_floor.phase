@@ -7,11 +7,11 @@ intent: null
 summary: PB1_no_build_below_a_floor (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991465
+exported_at: 1792830602141
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991465
-lastSeenAt: 1792829991465
+firstSeenAt: 1792830602141
+lastSeenAt: 1792830602141
 fingerprint: null
 payload:
   id: PB1_no_build_below_a_floor
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: aa5354fee35ba1e8
+  uuid: 17ff4004-9496-54c1-b70f-ea85a77a8aa3

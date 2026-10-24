@@ -7,11 +7,11 @@ intent: null
 summary: CV5_universal_versioning (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005443
+exported_at: 1792830616884
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005443
-lastSeenAt: 1792830005443
+firstSeenAt: 1792830616884
+lastSeenAt: 1792830616884
 fingerprint: null
 payload:
   id: CV5_universal_versioning
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: caf16dc4d08f56cc
+  uuid: b7b2ab96-ebf5-5782-86f4-b4d49c8a5658

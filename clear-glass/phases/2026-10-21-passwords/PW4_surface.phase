@@ -7,11 +7,11 @@ intent: null
 summary: PW4_surface (surface) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830025021
+exported_at: 1792830637481
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025021
-lastSeenAt: 1792830025021
+firstSeenAt: 1792830637481
+lastSeenAt: 1792830637481
 fingerprint: null
 payload:
   id: PW4_surface
@@ -32,3 +32,10 @@ payload:
     - MOD-PW-SHELL
   spec: clear-glass/spec/passwords.spec
   graph: 3c20d9cd7701c3e2
+  uuid: d5f7fab3-caf4-5e38-8998-ee6a239bcb45
+  specLink:
+    how: declared
+    spec: clear-glass/spec/passwords.spec
+    modules:
+      - id: MOD-PW-SHELL
+        uuid: nexus-cg-pw-shell-v1-0000-2026-1021-001

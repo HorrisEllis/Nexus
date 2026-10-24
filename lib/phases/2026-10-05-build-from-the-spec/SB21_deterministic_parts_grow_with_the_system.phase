@@ -9,11 +9,11 @@ intent: null
 summary: SB21_deterministic_parts_grow_with_the_system (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990966
+exported_at: 1792830601627
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990966
-lastSeenAt: 1792829990966
+firstSeenAt: 1792830601627
+lastSeenAt: 1792830601627
 fingerprint: null
 payload:
   id: SB21_deterministic_parts_grow_with_the_system
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: f055f4bb449380e9
+  uuid: 4cd83764-406b-57a3-963d-bfdc33fef4b2

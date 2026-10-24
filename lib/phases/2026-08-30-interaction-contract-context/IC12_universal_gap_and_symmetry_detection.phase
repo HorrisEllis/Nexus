@@ -9,11 +9,11 @@ intent: null
 summary: IC12_universal_gap_and_symmetry_detection (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972963
+exported_at: 1792830583617
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972963
-lastSeenAt: 1792829972963
+firstSeenAt: 1792830583617
+lastSeenAt: 1792830583617
 fingerprint: null
 payload:
   id: IC12_universal_gap_and_symmetry_detection
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 4c68e3f3c0900e7c
+  uuid: 96eb9863-8d27-5178-8c66-0904693ef31b

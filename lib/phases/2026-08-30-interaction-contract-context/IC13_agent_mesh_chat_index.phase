@@ -9,11 +9,11 @@ intent: null
 summary: IC13_agent_mesh_chat_index (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972964
+exported_at: 1792830583618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972964
-lastSeenAt: 1792829972964
+firstSeenAt: 1792830583618
+lastSeenAt: 1792830583618
 fingerprint: null
 payload:
   id: IC13_agent_mesh_chat_index
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: acae83a88cfed8cd
+  uuid: 65e1290f-7943-5c57-8ae6-4bc820dab371

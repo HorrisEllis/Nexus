@@ -7,11 +7,11 @@ intent: null
 summary: N8_service (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985428
+exported_at: 1792830596164
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985428
-lastSeenAt: 1792829985428
+firstSeenAt: 1792830596164
+lastSeenAt: 1792830596164
 fingerprint: null
 payload:
   id: N8_service
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: a93084e10fd5c6be
+  uuid: a88c7914-17b6-529d-9227-88668cd71f4b

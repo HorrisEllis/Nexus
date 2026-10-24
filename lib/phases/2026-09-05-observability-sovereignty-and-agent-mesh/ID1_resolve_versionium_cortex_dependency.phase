@@ -9,11 +9,11 @@ intent: null
 summary: ID1_resolve_versionium_cortex_dependency (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975209
+exported_at: 1792830585834
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975209
-lastSeenAt: 1792829975209
+firstSeenAt: 1792830585834
+lastSeenAt: 1792830585834
 fingerprint: null
 payload:
   id: ID1_resolve_versionium_cortex_dependency
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 4782d4c5e56ab572
+  uuid: c47ea365-d1cd-553c-94d1-4b5e7a2b73f6

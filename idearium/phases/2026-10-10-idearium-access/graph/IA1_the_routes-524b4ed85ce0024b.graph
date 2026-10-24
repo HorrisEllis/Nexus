@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829999253
+exported_at: 1792830610574
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999253
-lastSeenAt: 1792829999253
+firstSeenAt: 1792830610574
+lastSeenAt: 1792830610574
 fingerprint: null
 payload:
   for: IA1_the_routes
@@ -238,3 +238,4 @@ payload:
       - >-
         needed by (3): IA2_the_command, IA3_the_screens, IA4_clear_glass_signs_in_for_you ·
         finishing it unlocks IA2_the_command, IA3_the_screens, IA4_clear_glass_signs_in_for_you
+  phaseUuid: e011a10c-e21d-586a-82ba-59d6b634cba2

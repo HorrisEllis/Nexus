@@ -9,11 +9,11 @@ intent: null
 summary: P37_the_ui_floats_on_the_registry (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976532
+exported_at: 1792830587143
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976532
-lastSeenAt: 1792829976532
+firstSeenAt: 1792830587143
+lastSeenAt: 1792830587143
 fingerprint: null
 payload:
   id: P37_the_ui_floats_on_the_registry
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: c73e397fa682657f
+  uuid: 51086e49-f7cd-5fc0-ab9f-3d64b1263f9a

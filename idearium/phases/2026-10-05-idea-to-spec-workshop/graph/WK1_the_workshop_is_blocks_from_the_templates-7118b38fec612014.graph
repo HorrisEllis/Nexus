@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829993404
+exported_at: 1792830604252
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829993404
-lastSeenAt: 1792829993404
+firstSeenAt: 1792830604252
+lastSeenAt: 1792830604252
 fingerprint: null
 payload:
   for: WK1_the_workshop_is_blocks_from_the_templates
@@ -252,3 +252,4 @@ payload:
         WK4_the_void_feeds_the_workshop, WK5_lanes_feed_gaps_and_phases · all downstream 5 ·
         finishing it unlocks WK2_templates_edited_saved_removed, WK3_the_agent_drafts_every_block,
         WK4_the_void_feeds_the_workshop, WK5_lanes_feed_gaps_and_phases
+  phaseUuid: f2fbb34c-8a17-56ba-a7bd-9d0526a3e918

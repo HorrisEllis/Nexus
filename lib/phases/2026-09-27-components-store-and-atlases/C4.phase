@@ -7,11 +7,11 @@ intent: null
 summary: C4 (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829982127
+exported_at: 1792830592886
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829982127
-lastSeenAt: 1792829982127
+firstSeenAt: 1792830592886
+lastSeenAt: 1792830592886
 fingerprint: null
 payload:
   id: C4
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 1e1f2af6d71358cb
+  uuid: 7d1cfa71-e693-54b8-aa80-07de8b2dc4fc

@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830004197
+exported_at: 1792830615629
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004197
-lastSeenAt: 1792830004197
+firstSeenAt: 1792830615629
+lastSeenAt: 1792830615629
 fingerprint: null
 payload:
   for: CS3_feature_starts_as_a_spec
@@ -39,3 +39,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · ready
       - 'depends on (1): CS1_capability_spec_and_surface_check'
       - 'needed by (0): —'
+  phaseUuid: 4f3caac9-bfd4-59f6-9bee-a8ff3a0276f6

@@ -7,11 +7,11 @@ intent: null
 summary: BS15_context_menu (surface) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023783
+exported_at: 1792830636218
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023783
-lastSeenAt: 1792830023783
+firstSeenAt: 1792830636218
+lastSeenAt: 1792830636218
 fingerprint: null
 payload:
   id: BS15_context_menu
@@ -32,3 +32,10 @@ payload:
     - MOD-BSH-CTXMENU
   spec: clear-glass/spec/browser-shell.spec
   graph: afd2ae50d818a04b
+  uuid: 8d305bc8-2501-5abd-82d1-b4966f3f5104
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-CTXMENU
+        uuid: nexus-cg-bsh-ctxmenu-v1-0000-2026-1021-004

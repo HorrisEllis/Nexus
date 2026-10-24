@@ -7,11 +7,11 @@ intent: null
 summary: SY2_cos_its_own_system (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991464
+exported_at: 1792830602140
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991464
-lastSeenAt: 1792829991464
+firstSeenAt: 1792830602140
+lastSeenAt: 1792830602140
 fingerprint: null
 payload:
   id: SY2_cos_its_own_system
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 5140e15f0bab147d
+  uuid: 4d47a3ee-b6bb-5fe3-82de-b408fdbdcccb

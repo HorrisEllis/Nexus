@@ -7,11 +7,11 @@ intent: null
 summary: SS1_drift_triggered_snapshot (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830037536
+exported_at: 1792830649845
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830037536
-lastSeenAt: 1792830037536
+firstSeenAt: 1792830649845
+lastSeenAt: 1792830649845
 fingerprint: null
 payload:
   id: SS1_drift_triggered_snapshot
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: a29e09c529c8d673
+  uuid: 9e578a00-b9fb-5cba-8bc8-23d4731af4d3

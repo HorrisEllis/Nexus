@@ -7,11 +7,11 @@ intent: null
 summary: NP7_p2p (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004594
+exported_at: 1792830616025
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004594
-lastSeenAt: 1792830004594
+firstSeenAt: 1792830616025
+lastSeenAt: 1792830616025
 fingerprint: null
 payload:
   id: NP7_p2p
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: b46600783db8bec5
+  uuid: 2a4b69c1-92de-5f16-9282-06bcb05f2329

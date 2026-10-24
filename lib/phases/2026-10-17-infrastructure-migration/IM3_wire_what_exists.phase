@@ -7,11 +7,11 @@ intent: null
 summary: IM3_wire_what_exists (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016033
+exported_at: 1792830628073
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016033
-lastSeenAt: 1792830016033
+firstSeenAt: 1792830628073
+lastSeenAt: 1792830628073
 fingerprint: null
 payload:
   id: IM3_wire_what_exists
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 44f254336361884c
+  uuid: 75456ae3-168f-521d-ba07-6a7357114c19

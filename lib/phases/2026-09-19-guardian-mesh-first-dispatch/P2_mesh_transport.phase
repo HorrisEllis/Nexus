@@ -7,11 +7,11 @@ intent: null
 summary: P2_mesh_transport (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978961
+exported_at: 1792830589581
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978961
-lastSeenAt: 1792829978961
+firstSeenAt: 1792830589581
+lastSeenAt: 1792830589581
 fingerprint: null
 payload:
   id: P2_mesh_transport
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: fb229d927ed658aa
+  uuid: d04ff6db-7e6c-5139-9e25-07aca2fb4fca

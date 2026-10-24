@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830000468
+exported_at: 1792830611846
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000468
-lastSeenAt: 1792830000468
+firstSeenAt: 1792830611846
+lastSeenAt: 1792830611846
 fingerprint: null
 payload:
   for: CG3_the_fiverr_tutorial_in_the_browser
@@ -84,3 +84,4 @@ payload:
         depends on (2): CG2_one_source_of_truth_for_the_browser, TU1_the_nexus_tutorial · all
         upstream 3
       - 'needed by (0): —'
+  phaseUuid: 38db3157-e97b-540b-915d-f9560f8d49d5

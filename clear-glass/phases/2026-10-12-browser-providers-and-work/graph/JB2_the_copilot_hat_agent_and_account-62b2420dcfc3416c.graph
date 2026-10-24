@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830001276
+exported_at: 1792830612688
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001276
-lastSeenAt: 1792830001276
+firstSeenAt: 1792830612688
+lastSeenAt: 1792830612688
 fingerprint: null
 payload:
   for: JB2_the_copilot_hat_agent_and_account
@@ -171,3 +171,4 @@ payload:
       - >-
         needed by (1): JB1_the_agent_writes_the_gig_file · finishing it unlocks
         JB1_the_agent_writes_the_gig_file
+  phaseUuid: 71fa77c6-0f3a-5ebb-810f-32f40e32bd15

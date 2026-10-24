@@ -7,11 +7,11 @@ intent: null
 summary: SB20_each_system_owns_its_own (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990964
+exported_at: 1792830601625
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990964
-lastSeenAt: 1792829990964
+firstSeenAt: 1792830601625
+lastSeenAt: 1792830601625
 fingerprint: null
 payload:
   id: SB20_each_system_owns_its_own
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 4b6d2494146e3c0b
+  uuid: 953e0913-c24f-504a-b793-089a5d5e1d66

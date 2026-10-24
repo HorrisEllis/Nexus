@@ -7,11 +7,11 @@ intent: null
 summary: N7_views_yaml_and_nex (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985427
+exported_at: 1792830596163
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985427
-lastSeenAt: 1792829985427
+firstSeenAt: 1792830596163
+lastSeenAt: 1792830596163
 fingerprint: null
 payload:
   id: N7_views_yaml_and_nex
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: d19115c9bdab18db
+  uuid: ce685bc9-91d2-53cb-8e59-75429f814ec5

@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830018093
+exported_at: 1792830630227
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830018093
-lastSeenAt: 1792830018093
+firstSeenAt: 1792830630227
+lastSeenAt: 1792830630227
 fingerprint: null
 payload:
   for: GM7_the_context_panel_per_gate
@@ -242,3 +242,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by GM1_the_gate_record
       - 'depends on (2): GM1_the_gate_record, GM5_the_context_ladder · all upstream 3'
       - 'needed by (1): GM8_agents_have_it · finishing it unlocks GM8_agents_have_it'
+  phaseUuid: 4fcefcfd-220d-5033-8c64-99359163d4d6

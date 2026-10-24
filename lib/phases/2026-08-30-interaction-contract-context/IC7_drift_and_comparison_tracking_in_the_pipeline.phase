@@ -9,11 +9,11 @@ intent: null
 summary: IC7_drift_and_comparison_tracking_in_the_pipeline (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972966
+exported_at: 1792830583620
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972966
-lastSeenAt: 1792829972966
+firstSeenAt: 1792830583620
+lastSeenAt: 1792830583620
 fingerprint: null
 payload:
   id: IC7_drift_and_comparison_tracking_in_the_pipeline
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 57b2a934eab904b3
+  uuid: 7b296e80-f3d1-5ef9-adfc-5df653fda369

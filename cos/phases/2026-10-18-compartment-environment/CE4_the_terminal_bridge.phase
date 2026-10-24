@@ -7,11 +7,11 @@ intent: null
 summary: CE4_the_terminal_bridge (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830017329
+exported_at: 1792830629346
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017329
-lastSeenAt: 1792830017329
+firstSeenAt: 1792830629346
+lastSeenAt: 1792830629346
 fingerprint: null
 payload:
   id: CE4_the_terminal_bridge
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 008607ecef551be9
+  uuid: 13746110-a50c-523c-af9e-5e19d9728090

@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990134
+exported_at: 1792830600791
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990134
-lastSeenAt: 1792829990134
+firstSeenAt: 1792830600791
+lastSeenAt: 1792830600791
 fingerprint: null
 payload:
   for: CX0_codex_component_store
@@ -144,3 +144,4 @@ payload:
         needed by (2): BP1_destroy_and_rebuild_blueprint, AR2_architect_in_the_workshop · all
         downstream 8 · finishing it unlocks BP1_destroy_and_rebuild_blueprint,
         AR2_architect_in_the_workshop
+  phaseUuid: 036118db-0436-55a7-b581-8e3374f79082

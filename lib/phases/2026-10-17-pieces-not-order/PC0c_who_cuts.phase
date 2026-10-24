@@ -7,11 +7,11 @@ intent: null
 summary: PC0c_who_cuts (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016435
+exported_at: 1792830628480
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016435
-lastSeenAt: 1792830016435
+firstSeenAt: 1792830628480
+lastSeenAt: 1792830628480
 fingerprint: null
 payload:
   id: PC0c_who_cuts
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: ac450cd362cd9414
+  uuid: 0e46dd11-73ba-55fd-b830-c9af2e6be907

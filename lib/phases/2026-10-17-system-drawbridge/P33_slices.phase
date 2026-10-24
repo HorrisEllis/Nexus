@@ -7,11 +7,11 @@ intent: null
 summary: P33_slices (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016894
+exported_at: 1792830628918
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016894
-lastSeenAt: 1792830016894
+firstSeenAt: 1792830628918
+lastSeenAt: 1792830628918
 fingerprint: null
 payload:
   id: P33_slices
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 175c69cb48638ad2
+  uuid: 33acd1f7-5c8f-54c1-95f6-735c378ab85e

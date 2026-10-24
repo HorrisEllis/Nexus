@@ -9,11 +9,11 @@ intent: null
 summary: DF2_cortex_and_versionium_off_root_data (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975214
+exported_at: 1792830585840
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975214
-lastSeenAt: 1792829975214
+firstSeenAt: 1792830585840
+lastSeenAt: 1792830585840
 fingerprint: null
 payload:
   id: DF2_cortex_and_versionium_off_root_data
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 878b01658023f007
+  uuid: 9d482e1b-10f1-57b9-8ffa-cbab44d478de

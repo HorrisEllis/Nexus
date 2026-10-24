@@ -9,11 +9,11 @@ intent: null
 summary: GT1_gates_route_diagnose_retry (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830002149
+exported_at: 1792830613581
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830002149
-lastSeenAt: 1792830002149
+firstSeenAt: 1792830613581
+lastSeenAt: 1792830613581
 fingerprint: null
 payload:
   id: GT1_gates_route_diagnose_retry
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 8014549b43dcfa51
+  uuid: 486b0c6c-0c05-5e83-b02a-c964fd427cab

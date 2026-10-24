@@ -7,11 +7,11 @@ intent: null
 summary: AR3_one_architect_canvas (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990140
+exported_at: 1792830600795
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990140
-lastSeenAt: 1792829990140
+firstSeenAt: 1792830600795
+lastSeenAt: 1792830600795
 fingerprint: null
 payload:
   id: AR3_one_architect_canvas
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 78c9c0ecdde06280
+  uuid: 9f7753cf-8240-5b6c-b79c-dfabc071b70c

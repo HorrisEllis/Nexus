@@ -9,11 +9,11 @@ intent: null
 summary: CG3_relay_into_cortex_sse (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975197
+exported_at: 1792830585822
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975197
-lastSeenAt: 1792829975197
+firstSeenAt: 1792830585822
+lastSeenAt: 1792830585822
 fingerprint: null
 payload:
   id: CG3_relay_into_cortex_sse
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 83654c3184e70ae5
+  uuid: 70e56bf1-4421-5485-8248-208474c83134

@@ -7,11 +7,11 @@ intent: null
 summary: LA1_one_self_model (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830003816
+exported_at: 1792830615219
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003816
-lastSeenAt: 1792830003816
+firstSeenAt: 1792830615219
+lastSeenAt: 1792830615219
 fingerprint: null
 payload:
   id: LA1_one_self_model
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 4858b88ba5d9b524
+  uuid: 2e8d421a-74c4-5dcc-b83e-32ece1b48fe5

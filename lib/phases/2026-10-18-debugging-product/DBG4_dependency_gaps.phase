@@ -7,11 +7,11 @@ intent: null
 summary: DBG4_dependency_gaps (?) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1792830017715
+exported_at: 1792830629752
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017715
-lastSeenAt: 1792830017715
+firstSeenAt: 1792830629752
+lastSeenAt: 1792830629752
 fingerprint: null
 payload:
   id: DBG4_dependency_gaps
@@ -36,3 +36,19 @@ payload:
   blocks: []
   spec: null
   graph: 82f756fa15212e56
+  uuid: 52bce1c2-6cbb-50ad-b917-e7ec9900ddc2
+  specLink:
+    how: discovered:path
+    spec: docs/pipeline.spec
+    specs:
+      - docs/pipeline.spec
+    covers: 2/11 files
+    modules:
+      - spec: docs/pipeline.spec
+        id: MOD-TEST-FIRST
+        uuid: nexus-pipeline-test-first-v1-0000-2026-1020-001
+        file: lib/test-first.js
+      - spec: docs/pipeline.spec
+        id: MOD-PHASE-DEPS-GATE
+        uuid: nexus-pipeline-phase-deps-gate-v1-0000-2026-1020-001
+        file: lib/phase-deps-gate.js

@@ -7,11 +7,11 @@ intent: null
 summary: COSA11_nested_tree (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005850
+exported_at: 1792830617314
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005850
-lastSeenAt: 1792830005850
+firstSeenAt: 1792830617314
+lastSeenAt: 1792830617314
 fingerprint: null
 payload:
   id: COSA11_nested_tree
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 38fee2523eb2eed8
+  uuid: 6450ea15-82ff-5028-a526-7882996bf2de

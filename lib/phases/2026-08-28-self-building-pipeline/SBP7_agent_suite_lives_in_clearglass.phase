@@ -9,11 +9,11 @@ intent: null
 summary: SBP7_agent_suite_lives_in_clearglass (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972550
+exported_at: 1792830583163
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972550
-lastSeenAt: 1792829972550
+firstSeenAt: 1792830583163
+lastSeenAt: 1792830583163
 fingerprint: null
 payload:
   id: SBP7_agent_suite_lives_in_clearglass
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 48087c2a9f893bf5
+  uuid: f6c0a330-ec85-5ea1-81de-06e51b728fef

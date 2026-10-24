@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829976961
+exported_at: 1792830587552
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976961
-lastSeenAt: 1792829976961
+firstSeenAt: 1792830587552
+lastSeenAt: 1792830587552
 fingerprint: null
 payload:
   for: MCO12_guardian_list_was_unreliable
@@ -168,3 +168,4 @@ payload:
       - >-
         needed by (1): MCO12_guardian_audit_complete · finishing it unlocks
         MCO12_guardian_audit_complete
+  phaseUuid: aa26618e-f10f-5749-bd1a-218b053a06e1

@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830017325
+exported_at: 1792830629341
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017325
-lastSeenAt: 1792830017325
+firstSeenAt: 1792830629341
+lastSeenAt: 1792830629341
 fingerprint: null
 payload:
   for: CE0e_cos_answers_on_a_route
@@ -240,3 +240,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 53566192-bc88-55f6-934d-88dde37730df

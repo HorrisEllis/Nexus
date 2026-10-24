@@ -7,11 +7,11 @@ intent: null
 summary: SB4_decision_lattice_wiring (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034494
+exported_at: 1792830646700
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034494
-lastSeenAt: 1792830034494
+firstSeenAt: 1792830646700
+lastSeenAt: 1792830646700
 fingerprint: null
 payload:
   id: SB4_decision_lattice_wiring
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 8250b009e094ad56
+  uuid: d4bcbbeb-e8e4-5363-89c8-7e2e4e3c9664

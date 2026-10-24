@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830026601
+exported_at: 1792830639073
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026601
-lastSeenAt: 1792830026601
+firstSeenAt: 1792830639073
+lastSeenAt: 1792830639073
 fingerprint: null
 payload:
   for: SL0_what_can_be_built_now
@@ -256,3 +256,4 @@ payload:
         SL3_the_backlog_groomed, SL4_the_loop, SL6_the_loop_counts_itself · all downstream 6 ·
         finishing it unlocks SL1_a_proven_phase_closes_itself, SL2_done_by_evidence,
         SL3_the_backlog_groomed, SL6_the_loop_counts_itself
+  phaseUuid: 6866461d-b586-5c5f-9579-1bc037a723d1

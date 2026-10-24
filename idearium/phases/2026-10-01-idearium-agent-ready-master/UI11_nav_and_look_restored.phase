@@ -9,11 +9,11 @@ intent: null
 summary: UI11_nav_and_look_restored (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987091
+exported_at: 1792830597797
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987091
-lastSeenAt: 1792829987091
+firstSeenAt: 1792830597797
+lastSeenAt: 1792830597797
 fingerprint: null
 payload:
   id: UI11_nav_and_look_restored
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: bf1ee50b5fb1fd60
+  uuid: 0ea13bbe-fe7e-5a27-918c-a38de9c64f82

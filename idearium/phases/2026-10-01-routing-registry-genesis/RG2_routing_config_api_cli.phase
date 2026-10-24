@@ -9,11 +9,11 @@ intent: null
 summary: RG2_routing_config_api_cli (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987566
+exported_at: 1792830598246
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987566
-lastSeenAt: 1792829987566
+firstSeenAt: 1792830598246
+lastSeenAt: 1792830598246
 fingerprint: null
 payload:
   id: RG2_routing_config_api_cli
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 8fdd3d0d4da406d6
+  uuid: 6e226f7e-3e13-5dda-b0f3-fe35600788cb

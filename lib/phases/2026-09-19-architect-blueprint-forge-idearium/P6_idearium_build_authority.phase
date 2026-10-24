@@ -9,11 +9,11 @@ intent: null
 summary: P6_idearium_build_authority (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978161
+exported_at: 1792830588792
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978161
-lastSeenAt: 1792829978161
+firstSeenAt: 1792830588792
+lastSeenAt: 1792830588792
 fingerprint: null
 payload:
   id: P6_idearium_build_authority
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 6a967cacc9231f14
+  uuid: 50970ca8-5279-50ec-b0c8-b9efab0fb288

@@ -7,11 +7,11 @@ intent: null
 summary: EC6_guardian_enforcement (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985878
+exported_at: 1792830596583
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985878
-lastSeenAt: 1792829985878
+firstSeenAt: 1792830596583
+lastSeenAt: 1792830596583
 fingerprint: null
 payload:
   id: EC6_guardian_enforcement
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: f302afba554cf0ff
+  uuid: 551f8a0b-bff3-57c8-8ab6-ca79a9fa0147

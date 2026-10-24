@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830006643
+exported_at: 1792830618166
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006643
-lastSeenAt: 1792830006643
+firstSeenAt: 1792830618166
+lastSeenAt: 1792830618166
 fingerprint: null
 payload:
   for: GW10_the_listener_knows_what_to_hear
@@ -156,3 +156,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by GW0d_listener_question
       - 'depends on (1): GW0d_listener_question'
       - 'needed by (0): —'
+  phaseUuid: ab20a84d-f553-53f8-af63-09aa8503dfb3

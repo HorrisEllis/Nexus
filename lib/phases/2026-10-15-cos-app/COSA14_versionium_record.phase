@@ -7,11 +7,11 @@ intent: null
 summary: COSA14_versionium_record (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005853
+exported_at: 1792830617317
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005853
-lastSeenAt: 1792830005853
+firstSeenAt: 1792830617317
+lastSeenAt: 1792830617317
 fingerprint: null
 payload:
   id: COSA14_versionium_record
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 19b95401bebec01f
+  uuid: e60ed6e6-d172-50d5-9795-54d148c00c18

@@ -7,11 +7,11 @@ intent: null
 summary: P5_clear_glass_url_tools (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830029354
+exported_at: 1792830641754
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830029354
-lastSeenAt: 1792830029354
+firstSeenAt: 1792830641754
+lastSeenAt: 1792830641754
 fingerprint: null
 payload:
   id: P5_clear_glass_url_tools
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: f149cbe6b2883fce
+  uuid: 2fd8a943-f494-5708-9cf0-5f0dfe28a60b

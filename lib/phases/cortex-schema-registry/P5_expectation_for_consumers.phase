@@ -7,11 +7,11 @@ intent: null
 summary: P5_expectation_for_consumers (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830030571
+exported_at: 1792830642889
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830030571
-lastSeenAt: 1792830030571
+firstSeenAt: 1792830642889
+lastSeenAt: 1792830642889
 fingerprint: null
 payload:
   id: P5_expectation_for_consumers
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 043a32269f8b909f
+  uuid: e9d5489b-be9c-5f9e-a8d2-2b870d03e94f

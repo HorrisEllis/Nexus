@@ -9,11 +9,11 @@ intent: null
 summary: SB5_nexus_rebuilds_a_system_from_its_spec (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990925
+exported_at: 1792830601585
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990925
-lastSeenAt: 1792829990925
+firstSeenAt: 1792830601585
+lastSeenAt: 1792830601585
 fingerprint: null
 payload:
   id: SB5_nexus_rebuilds_a_system_from_its_spec
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 17dc36ec94b3a10e
+  uuid: ecd74254-e3d6-5d8b-961e-1f9b3f59e61f

@@ -7,11 +7,11 @@ intent: null
 summary: G2 (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829984143
+exported_at: 1792830594899
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829984143
-lastSeenAt: 1792829984143
+firstSeenAt: 1792830594899
+lastSeenAt: 1792830594899
 fingerprint: null
 payload:
   id: G2
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 0901ec7498435dd0
+  uuid: 411a6d31-f5e9-5ba8-b52d-02730097f995

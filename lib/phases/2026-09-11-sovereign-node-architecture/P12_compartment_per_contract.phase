@@ -9,11 +9,11 @@ intent: null
 summary: P12_compartment_per_contract (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976506
+exported_at: 1792830587117
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976506
-lastSeenAt: 1792829976506
+firstSeenAt: 1792830587117
+lastSeenAt: 1792830587117
 fingerprint: null
 payload:
   id: P12_compartment_per_contract
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 8cfd3609296f0e65
+  uuid: 04ab4c49-ba41-5ede-b126-c77067d415dc

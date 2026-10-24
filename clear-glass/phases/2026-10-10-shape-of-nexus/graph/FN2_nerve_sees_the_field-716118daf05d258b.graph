@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830000466
+exported_at: 1792830611844
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000466
-lastSeenAt: 1792830000466
+firstSeenAt: 1792830611844
+lastSeenAt: 1792830611844
 fingerprint: null
 payload:
   for: FN2_nerve_sees_the_field
@@ -185,3 +185,4 @@ payload:
       - >-
         needed by (1): FN3_the_nerve_shows_it_and_the_field_sees_the_nerve · finishing it unlocks
         FN3_the_nerve_shows_it_and_the_field_sees_the_nerve
+  phaseUuid: 33cc5757-f510-53e9-8341-3db1bbd27e9b

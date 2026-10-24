@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829997700
+exported_at: 1792830608827
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997700
-lastSeenAt: 1792829997700
+firstSeenAt: 1792830608827
+lastSeenAt: 1792830608827
 fingerprint: null
 payload:
   for: ME15_the_docs_tell_the_truth
@@ -98,3 +98,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by ME0_the_inventory_proved
       - 'depends on (1): ME0_the_inventory_proved'
       - 'needed by (0): —'
+  phaseUuid: 3194d7b6-431e-50e3-a02b-7be4e5e3a8c2

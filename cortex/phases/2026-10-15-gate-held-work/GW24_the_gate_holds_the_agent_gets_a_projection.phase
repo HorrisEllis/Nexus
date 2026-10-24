@@ -9,11 +9,11 @@ intent: null
 summary: GW24_the_gate_holds_the_agent_gets_a_projection (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830006656
+exported_at: 1792830618180
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006656
-lastSeenAt: 1792830006656
+firstSeenAt: 1792830618180
+lastSeenAt: 1792830618180
 fingerprint: null
 payload:
   id: GW24_the_gate_holds_the_agent_gets_a_projection
@@ -34,3 +34,4 @@ payload:
   blocks: []
   spec: null
   graph: 80b3bd80f12d4cc4
+  uuid: 0853f79e-9fed-5c37-8158-955cedbc053d

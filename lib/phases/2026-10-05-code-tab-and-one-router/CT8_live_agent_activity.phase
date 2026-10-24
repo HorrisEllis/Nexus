@@ -7,11 +7,11 @@ intent: null
 summary: CT8_live_agent_activity (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991873
+exported_at: 1792830602556
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991873
-lastSeenAt: 1792829991873
+firstSeenAt: 1792830602556
+lastSeenAt: 1792830602556
 fingerprint: null
 payload:
   id: CT8_live_agent_activity
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: d4a3a275c6d63391
+  uuid: 829c4162-6c77-5122-9bb1-da7cd0be7f28

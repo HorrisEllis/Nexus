@@ -7,11 +7,11 @@ intent: null
 summary: TB8_proof_and_wiring (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830010172
+exported_at: 1792830621907
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010172
-lastSeenAt: 1792830010172
+firstSeenAt: 1792830621907
+lastSeenAt: 1792830621907
 fingerprint: null
 payload:
   id: TB8_proof_and_wiring
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 6a6396bbf3153173
+  uuid: 573d1200-3c61-5418-a7e7-e2913daa08d5

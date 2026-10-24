@@ -7,11 +7,11 @@ intent: null
 summary: CA4_capability_extend (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830028975
+exported_at: 1792830641381
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028975
-lastSeenAt: 1792830028975
+firstSeenAt: 1792830641381
+lastSeenAt: 1792830641381
 fingerprint: null
 payload:
   id: CA4_capability_extend
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 7ebf1286b0abb9d9
+  uuid: dfe589f2-89fc-5dbc-b2c0-3043517f6a4b

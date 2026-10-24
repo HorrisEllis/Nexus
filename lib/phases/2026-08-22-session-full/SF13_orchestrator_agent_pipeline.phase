@@ -7,11 +7,11 @@ intent: null
 summary: SF13_orchestrator_agent_pipeline (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829970790
+exported_at: 1792830581335
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829970790
-lastSeenAt: 1792829970790
+firstSeenAt: 1792830581335
+lastSeenAt: 1792830581335
 fingerprint: null
 payload:
   id: SF13_orchestrator_agent_pipeline
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: de5ad9a019286d15
+  uuid: a0548c60-1a3b-56bc-8b33-a8da6a0d871f

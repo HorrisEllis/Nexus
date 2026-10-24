@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830014488
+exported_at: 1792830626356
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830014488
-lastSeenAt: 1792830014488
+firstSeenAt: 1792830626356
+lastSeenAt: 1792830626356
 fingerprint: null
 payload:
   for: FR10_stop_the_ladder
@@ -46,3 +46,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · ready
       - 'depends on (1): FR6_flight_data'
       - 'needed by (1): SL4_the_loop · finishing it unlocks SL4_the_loop'
+  phaseUuid: f9e6e06a-69b4-56f1-97a8-435d7a5561b6

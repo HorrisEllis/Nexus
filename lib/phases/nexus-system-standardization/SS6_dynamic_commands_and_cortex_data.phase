@@ -9,11 +9,11 @@ intent: null
 summary: SS6_dynamic_commands_and_cortex_data (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034890
+exported_at: 1792830647086
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034890
-lastSeenAt: 1792830034890
+firstSeenAt: 1792830647086
+lastSeenAt: 1792830647086
 fingerprint: null
 payload:
   id: SS6_dynamic_commands_and_cortex_data
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 2d38a1102ce3d793
+  uuid: d5ff1e12-42ae-5c78-b080-088858d92699

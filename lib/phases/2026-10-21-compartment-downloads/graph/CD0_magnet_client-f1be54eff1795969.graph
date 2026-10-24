@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830024192
+exported_at: 1792830636640
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830024192
-lastSeenAt: 1792830024192
+firstSeenAt: 1792830636640
+lastSeenAt: 1792830636640
 fingerprint: null
 payload:
   for: CD0_magnet_client
@@ -45,3 +45,4 @@ payload:
       - >-
         needed by (1): CD3_verified_handoff · all downstream 4 · finishing it unlocks
         CD3_verified_handoff
+  phaseUuid: 22b3cb0b-5c4a-5f7b-a892-085e39de3689

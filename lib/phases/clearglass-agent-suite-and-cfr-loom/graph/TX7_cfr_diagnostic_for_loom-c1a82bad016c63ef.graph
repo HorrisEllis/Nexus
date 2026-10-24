@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 7 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830028212
+exported_at: 1792830640622
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830028212
-lastSeenAt: 1792830028212
+firstSeenAt: 1792830640622
+lastSeenAt: 1792830640622
 fingerprint: null
 payload:
   for: TX7_cfr_diagnostic_for_loom
@@ -270,3 +270,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): TX8_3d_cfr_visual_for_loom · finishing it unlocks TX8_3d_cfr_visual_for_loom'
+  phaseUuid: 717ae402-9ca3-5c93-b2ee-88d41ac4490c

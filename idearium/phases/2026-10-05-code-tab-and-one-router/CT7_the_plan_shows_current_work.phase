@@ -9,11 +9,11 @@ intent: null
 summary: CT7_the_plan_shows_current_work (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829991872
+exported_at: 1792830602556
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991872
-lastSeenAt: 1792829991872
+firstSeenAt: 1792830602556
+lastSeenAt: 1792830602556
 fingerprint: null
 payload:
   id: CT7_the_plan_shows_current_work
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: a52abee8ded7dd97
+  uuid: 31ef3faa-a692-5071-a0c5-01c56fbb23d1

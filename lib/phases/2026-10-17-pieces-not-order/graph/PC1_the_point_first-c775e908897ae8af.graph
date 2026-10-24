@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830016435
+exported_at: 1792830628481
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016435
-lastSeenAt: 1792830016435
+firstSeenAt: 1792830628481
+lastSeenAt: 1792830628481
 fingerprint: null
 payload:
   for: PC1_the_point_first
@@ -143,3 +143,4 @@ payload:
         PC4_a_procedure_per_kind, PC5_control_when_he_chooses · all downstream 5 · finishing it
         unlocks PC2_any_order, PC3_verified_alone_resumed_by_recheck, PC4_a_procedure_per_kind,
         PC5_control_when_he_chooses
+  phaseUuid: a3bdd5e6-816c-5cdb-8722-9a1740f07dc8

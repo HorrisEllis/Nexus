@@ -9,11 +9,11 @@ intent: null
 summary: T1_suite_process (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983318
+exported_at: 1792830594111
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983318
-lastSeenAt: 1792829983318
+firstSeenAt: 1792830594111
+lastSeenAt: 1792830594111
 fingerprint: null
 payload:
   id: T1_suite_process
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: f9f50c78f096c750
+  uuid: 04f83d45-6025-5ed5-8396-d5846cbda44c

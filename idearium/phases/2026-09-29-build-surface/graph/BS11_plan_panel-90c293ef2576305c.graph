@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829985010
+exported_at: 1792830595764
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985010
-lastSeenAt: 1792829985010
+firstSeenAt: 1792830595764
+lastSeenAt: 1792830595764
 fingerprint: null
 payload:
   for: BS11_plan_panel
@@ -61,3 +61,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4
       - 'depends on (2): BS7_api, BS9_spec_and_phase_build_ui · all upstream 7'
       - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
+  phaseUuid: 78173ef1-302d-5c27-82a1-f86f5afb75eb

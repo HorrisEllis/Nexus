@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829997683
+exported_at: 1792830608813
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997683
-lastSeenAt: 1792829997683
+firstSeenAt: 1792830608813
+lastSeenAt: 1792830608813
 fingerprint: null
 payload:
   for: ME0_the_inventory_proved
@@ -68,3 +68,4 @@ payload:
         needed by (3): ME1_one_failure_list, ME8_the_drainers_run_the_engine,
         ME15_the_docs_tell_the_truth · all downstream 15 · finishing it unlocks
         ME1_one_failure_list, ME15_the_docs_tell_the_truth
+  phaseUuid: c7d32e4c-2346-53b0-a65f-138c153c1be2

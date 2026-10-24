@@ -9,11 +9,11 @@ intent: null
 summary: C1_copilot_contract (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983321
+exported_at: 1792830594113
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983321
-lastSeenAt: 1792829983321
+firstSeenAt: 1792830594113
+lastSeenAt: 1792830594113
 fingerprint: null
 payload:
   id: C1_copilot_contract
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: c7e07067de82c969
+  uuid: 3b02c609-7992-51e9-a6f7-787fbc79b9d5

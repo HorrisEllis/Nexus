@@ -7,11 +7,11 @@ intent: null
 summary: GS0_authority (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830012969
+exported_at: 1792830624756
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830012969
-lastSeenAt: 1792830012969
+firstSeenAt: 1792830624756
+lastSeenAt: 1792830624756
 fingerprint: null
 payload:
   id: GS0_authority
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 18765b8e6473113c
+  uuid: 2cda2692-2b75-578e-9892-6b40b0b54860

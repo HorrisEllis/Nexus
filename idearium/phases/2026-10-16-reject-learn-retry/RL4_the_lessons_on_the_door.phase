@@ -7,11 +7,11 @@ intent: null
 summary: RL4_the_lessons_on_the_door (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830014101
+exported_at: 1792830625942
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830014101
-lastSeenAt: 1792830014101
+firstSeenAt: 1792830625942
+lastSeenAt: 1792830625942
 fingerprint: null
 payload:
   id: RL4_the_lessons_on_the_door
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: bbafadd375cd2657
+  uuid: 4d1514ef-5dd9-5069-8498-dfac234053b4

@@ -7,11 +7,11 @@ intent: null
 summary: PI3b_the_measured_patterns (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007882
+exported_at: 1792830619451
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007882
-lastSeenAt: 1792830007882
+firstSeenAt: 1792830619451
+lastSeenAt: 1792830619451
 fingerprint: null
 payload:
   id: PI3b_the_measured_patterns
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 6edf264fc41eb579
+  uuid: 2e6b3309-ab90-571d-91cb-71631d1b9493

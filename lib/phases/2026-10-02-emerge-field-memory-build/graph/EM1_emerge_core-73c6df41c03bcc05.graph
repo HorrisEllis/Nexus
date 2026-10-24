@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988415
+exported_at: 1792830599045
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988415
-lastSeenAt: 1792829988415
+firstSeenAt: 1792830599045
+lastSeenAt: 1792830599045
 fingerprint: null
 payload:
   for: EM1_emerge_core
@@ -169,3 +169,4 @@ payload:
         needed by (5): EM2_warp_his_own, CF1_cfr_improved_with_rfr2, RF1_relational_field,
         EC6_economy_and_the_tokenizer, ST1_settings · all downstream 31 · finishing it unlocks
         EC6_economy_and_the_tokenizer, ST1_settings
+  phaseUuid: 8a4e1412-1fa7-5a66-abf1-bcd80095eae1

@@ -7,11 +7,11 @@ intent: null
 summary: RQ13_the_work_surface_and_provenance (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001723
+exported_at: 1792830613154
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001723
-lastSeenAt: 1792830001723
+firstSeenAt: 1792830613154
+lastSeenAt: 1792830613154
 fingerprint: null
 payload:
   id: RQ13_the_work_surface_and_provenance
@@ -33,3 +33,4 @@ payload:
   blocks: []
   spec: null
   graph: 26d29fe3a64d548b
+  uuid: 4d025e98-b220-5da9-bd22-62b4565e6f83

@@ -7,11 +7,11 @@ intent: null
 summary: SF4_https_only (library) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830025401
+exported_at: 1792830637867
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025401
-lastSeenAt: 1792830025401
+firstSeenAt: 1792830637867
+lastSeenAt: 1792830637867
 fingerprint: null
 payload:
   id: SF4_https_only
@@ -27,3 +27,10 @@ payload:
     - MOD-SF-HTTPS-ONLY
   spec: clear-glass/spec/snowflake.spec
   graph: 502b5c00f2ac8030
+  uuid: 49fb381b-bd6a-5e25-b96c-ac2fc215988b
+  specLink:
+    how: declared
+    spec: clear-glass/spec/snowflake.spec
+    modules:
+      - id: MOD-SF-HTTPS-ONLY
+        uuid: nexus-cg-sf-https-only-v1-0000-2026-1021-001

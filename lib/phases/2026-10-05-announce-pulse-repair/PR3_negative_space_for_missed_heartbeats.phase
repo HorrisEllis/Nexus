@@ -9,11 +9,11 @@ intent: null
 summary: PR3_negative_space_for_missed_heartbeats (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990531
+exported_at: 1792830601186
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990531
-lastSeenAt: 1792829990531
+firstSeenAt: 1792830601186
+lastSeenAt: 1792830601186
 fingerprint: null
 payload:
   id: PR3_negative_space_for_missed_heartbeats
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 36f6155753d9c5cc
+  uuid: 7c30c53c-d518-5290-a303-4422ce6b873d

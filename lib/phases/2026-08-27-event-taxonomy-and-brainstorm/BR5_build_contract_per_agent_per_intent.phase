@@ -9,11 +9,11 @@ intent: null
 summary: BR5_build_contract_per_agent_per_intent (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971729
+exported_at: 1792830582310
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971729
-lastSeenAt: 1792829971729
+firstSeenAt: 1792830582310
+lastSeenAt: 1792830582310
 fingerprint: null
 payload:
   id: BR5_build_contract_per_agent_per_intent
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 36bf07b27fc48bd7
+  uuid: 179d2677-2bf6-5bf3-bcef-92e35a20ceac

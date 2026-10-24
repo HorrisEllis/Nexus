@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830023779
+exported_at: 1792830636215
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023779
-lastSeenAt: 1792830023779
+firstSeenAt: 1792830636215
+lastSeenAt: 1792830636215
 fingerprint: null
 payload:
   for: BS9_agents_hub
@@ -51,3 +51,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): BS8_design_system · all upstream 2'
       - 'needed by (1): BS10_new_tab · finishing it unlocks BS10_new_tab'
+  phaseUuid: 9cad736a-a438-5564-bd0f-e40d54d3cfb6

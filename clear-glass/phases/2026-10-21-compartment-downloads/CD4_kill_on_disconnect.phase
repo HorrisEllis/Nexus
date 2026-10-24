@@ -7,11 +7,11 @@ intent: null
 summary: CD4_kill_on_disconnect (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830024195
+exported_at: 1792830636644
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830024195
-lastSeenAt: 1792830024195
+firstSeenAt: 1792830636644
+lastSeenAt: 1792830636644
 fingerprint: null
 payload:
   id: CD4_kill_on_disconnect
@@ -30,3 +30,10 @@ payload:
     - MOD-CDL-KILL
   spec: clear-glass/spec/compartment-downloads.spec
   graph: 5cffcae8e1562525
+  uuid: 485e9ce8-2ee0-56e0-86c6-796c532ffd3e
+  specLink:
+    how: declared
+    spec: clear-glass/spec/compartment-downloads.spec
+    modules:
+      - id: MOD-CDL-KILL
+        uuid: nexus-cg-cdl-kill-v1-0000-2026-1021-001

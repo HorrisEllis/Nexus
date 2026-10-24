@@ -7,11 +7,11 @@ intent: null
 summary: BL14_seam_to_lib_seam (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829971258
+exported_at: 1792830581827
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829971258
-lastSeenAt: 1792829971258
+firstSeenAt: 1792830581827
+lastSeenAt: 1792830581827
 fingerprint: null
 payload:
   id: BL14_seam_to_lib_seam
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: a139a48406c5ffd1
+  uuid: 85dbad74-d3af-5090-80b4-45ca08831658

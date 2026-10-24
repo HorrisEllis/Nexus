@@ -7,11 +7,11 @@ intent: null
 summary: RF0_architecture_read (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830003402
+exported_at: 1792830614750
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003402
-lastSeenAt: 1792830003402
+firstSeenAt: 1792830614750
+lastSeenAt: 1792830614750
 fingerprint: null
 payload:
   id: RF0_architecture_read
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: c117168ac25aa9f0
+  uuid: 65666fe4-0412-5d2f-a047-cfd76a2eede0

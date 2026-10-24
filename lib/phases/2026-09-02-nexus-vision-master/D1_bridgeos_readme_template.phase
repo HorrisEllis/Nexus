@@ -7,11 +7,11 @@ intent: null
 summary: D1_bridgeos_readme_template (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974290
+exported_at: 1792830584875
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974290
-lastSeenAt: 1792829974290
+firstSeenAt: 1792830584875
+lastSeenAt: 1792830584875
 fingerprint: null
 payload:
   id: D1_bridgeos_readme_template
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 4fb8fecea9b65f50
+  uuid: c1e56ef6-b52e-5efa-a46c-352af1a6f028

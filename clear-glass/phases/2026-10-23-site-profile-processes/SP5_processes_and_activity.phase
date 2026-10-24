@@ -7,11 +7,11 @@ intent: null
 summary: SP5_processes_and_activity (backend) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026982
+exported_at: 1792830639454
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026982
-lastSeenAt: 1792830026982
+firstSeenAt: 1792830639454
+lastSeenAt: 1792830639454
 fingerprint: null
 payload:
   id: SP5_processes_and_activity
@@ -35,3 +35,10 @@ payload:
     - MOD-SP-PROCESSES
   spec: clear-glass/spec/site-profile.spec
   graph: d43cecd51dde3c80
+  uuid: 9d7ffcbe-8abe-5b18-8dae-f5ab4c3b4179
+  specLink:
+    how: declared
+    spec: clear-glass/spec/site-profile.spec
+    modules:
+      - id: MOD-SP-PROCESSES
+        uuid: nexus-cg-processes-v1-0000-2026-1023-001

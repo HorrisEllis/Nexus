@@ -9,11 +9,11 @@ intent: null
 summary: P4_blueprint_as_canvas_mode (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978160
+exported_at: 1792830588791
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978160
-lastSeenAt: 1792829978160
+firstSeenAt: 1792830588791
+lastSeenAt: 1792830588791
 fingerprint: null
 payload:
   id: P4_blueprint_as_canvas_mode
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 03cf72ff64e11941
+  uuid: d7736a4d-aed6-5147-ae16-49a88a3b702d

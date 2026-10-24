@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829975215
+exported_at: 1792830585842
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975215
-lastSeenAt: 1792829975215
+firstSeenAt: 1792830585842
+lastSeenAt: 1792830585842
 fingerprint: null
 payload:
   for: EVT1_commands_and_tools_emit_events
@@ -223,3 +223,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): CP1_tool_index_hooked_to_living_model'
+  phaseUuid: fc6ac6c8-d953-57c4-945b-61d9ae170775

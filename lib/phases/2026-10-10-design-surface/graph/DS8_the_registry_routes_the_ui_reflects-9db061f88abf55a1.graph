@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 12 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829998872
+exported_at: 1792830610177
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829998872
-lastSeenAt: 1792829998872
+firstSeenAt: 1792830610177
+lastSeenAt: 1792830610177
 fingerprint: null
 payload:
   for: DS8_the_registry_routes_the_ui_reflects
@@ -213,3 +213,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by DS7_tools_are_mods
       - 'depends on (1): DS7_tools_are_mods · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: cceef213-42d0-581c-9685-c8d61880dbfd

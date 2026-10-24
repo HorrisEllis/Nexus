@@ -7,11 +7,11 @@ intent: null
 summary: GD1_guardian_supervises_cos (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990143
+exported_at: 1792830600799
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990143
-lastSeenAt: 1792829990143
+firstSeenAt: 1792830600799
+lastSeenAt: 1792830600799
 fingerprint: null
 payload:
   id: GD1_guardian_supervises_cos
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 1d0485d9b5519bbc
+  uuid: d8e6bf0e-79d3-5780-a1f8-616bb8206eac

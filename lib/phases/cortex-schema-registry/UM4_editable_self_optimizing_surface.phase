@@ -7,11 +7,11 @@ intent: null
 summary: UM4_editable_self_optimizing_surface (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830030574
+exported_at: 1792830642891
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830030574
-lastSeenAt: 1792830030574
+firstSeenAt: 1792830642891
+lastSeenAt: 1792830642891
 fingerprint: null
 payload:
   id: UM4_editable_self_optimizing_surface
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: db2ee4e276c4bd18
+  uuid: c8434622-7b07-561f-9718-6ed023510584

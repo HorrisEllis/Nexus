@@ -7,11 +7,11 @@ intent: null
 summary: CX0_codex_component_store (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990134
+exported_at: 1792830600791
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990134
-lastSeenAt: 1792829990134
+firstSeenAt: 1792830600791
+lastSeenAt: 1792830600791
 fingerprint: null
 payload:
   id: CX0_codex_component_store
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: a6c33671bbad00ca
+  uuid: 036118db-0436-55a7-b581-8e3374f79082

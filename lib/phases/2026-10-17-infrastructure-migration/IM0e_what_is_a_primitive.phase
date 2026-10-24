@@ -7,11 +7,11 @@ intent: null
 summary: IM0e_what_is_a_primitive (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016036
+exported_at: 1792830628077
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016036
-lastSeenAt: 1792830016036
+firstSeenAt: 1792830628077
+lastSeenAt: 1792830628077
 fingerprint: null
 payload:
   id: IM0e_what_is_a_primitive
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 57280fac29160939
+  uuid: fa46154c-3ec1-5a74-99d4-d5e3e90b058f

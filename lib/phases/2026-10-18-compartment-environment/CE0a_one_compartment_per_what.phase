@@ -9,11 +9,11 @@ intent: null
 summary: CE0a_one_compartment_per_what (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830017323
+exported_at: 1792830629339
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017323
-lastSeenAt: 1792830017323
+firstSeenAt: 1792830629339
+lastSeenAt: 1792830629339
 fingerprint: null
 payload:
   id: CE0a_one_compartment_per_what
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 8cd55916eb32ec0e
+  uuid: 1b06460e-e83e-5f15-b7d8-c36856f51a95

@@ -7,11 +7,11 @@ intent: null
 summary: HP6_the_build_surface_opens (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829997241
+exported_at: 1792830608400
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997241
-lastSeenAt: 1792829997241
+firstSeenAt: 1792830608400
+lastSeenAt: 1792830608400
 fingerprint: null
 payload:
   id: HP6_the_build_surface_opens
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: ed70fce51132cf3d
+  uuid: 7cb54432-b115-511e-9659-e6567b0ba67e

@@ -7,11 +7,11 @@ intent: null
 summary: TB4c_measure (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830010178
+exported_at: 1792830621913
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010178
-lastSeenAt: 1792830010178
+firstSeenAt: 1792830621913
+lastSeenAt: 1792830621913
 fingerprint: null
 payload:
   id: TB4c_measure
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: a6559845267cef0c
+  uuid: b89ca27e-bbcf-52e4-94ff-231b3bac621d

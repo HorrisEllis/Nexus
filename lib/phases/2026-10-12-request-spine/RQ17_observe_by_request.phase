@@ -7,11 +7,11 @@ intent: null
 summary: RQ17_observe_by_request (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001728
+exported_at: 1792830613159
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001728
-lastSeenAt: 1792830001728
+firstSeenAt: 1792830613159
+lastSeenAt: 1792830613159
 fingerprint: null
 payload:
   id: RQ17_observe_by_request
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 33924dbf8607becb
+  uuid: cfa90f5d-a5e5-5477-bea9-c0a660728565

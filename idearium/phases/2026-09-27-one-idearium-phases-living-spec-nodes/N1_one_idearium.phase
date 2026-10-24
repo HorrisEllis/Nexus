@@ -9,11 +9,11 @@ intent: null
 summary: N1_one_idearium (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829983313
+exported_at: 1792830594106
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829983313
-lastSeenAt: 1792829983313
+firstSeenAt: 1792830594106
+lastSeenAt: 1792830594106
 fingerprint: null
 payload:
   id: N1_one_idearium
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 5fda47e81740f919
+  uuid: c3f74b22-f6e5-5756-ad94-f0cf1fe0c1a5

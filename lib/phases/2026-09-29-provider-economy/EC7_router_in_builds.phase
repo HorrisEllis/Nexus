@@ -7,11 +7,11 @@ intent: null
 summary: EC7_router_in_builds (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985878
+exported_at: 1792830596584
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985878
-lastSeenAt: 1792829985878
+firstSeenAt: 1792830596584
+lastSeenAt: 1792830596584
 fingerprint: null
 payload:
   id: EC7_router_in_builds
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: e6f92fef8dfca5e3
+  uuid: fb182d12-0bd1-57d4-bd8e-ffef89d51f1b

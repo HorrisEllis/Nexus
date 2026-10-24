@@ -9,11 +9,11 @@ intent: null
 summary: CS2_spec_the_unspecced (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004196
+exported_at: 1792830615628
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004196
-lastSeenAt: 1792830004196
+firstSeenAt: 1792830615628
+lastSeenAt: 1792830615628
 fingerprint: null
 payload:
   id: CS2_spec_the_unspecced
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 9358da2e9e6a8e73
+  uuid: cfa578bf-41ff-5d7b-990c-dec2c698b233

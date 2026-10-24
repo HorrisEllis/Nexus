@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829974304
+exported_at: 1792830584888
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974304
-lastSeenAt: 1792829974304
+firstSeenAt: 1792830584888
+lastSeenAt: 1792830584888
 fingerprint: null
 payload:
   for: WF2_canvas_visual_pipeline
@@ -37,3 +37,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: b58eedfb-9edf-5c39-bdcb-8e350e20941f

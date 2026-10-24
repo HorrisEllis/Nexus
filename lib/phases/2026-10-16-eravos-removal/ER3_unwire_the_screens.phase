@@ -7,11 +7,11 @@ intent: null
 summary: ER3_unwire_the_screens (?) — 19 file(s)
 system: idearium
 tags: []
-exported_at: 1792830011316
+exported_at: 1792830623138
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830011316
-lastSeenAt: 1792830011316
+firstSeenAt: 1792830623138
+lastSeenAt: 1792830623138
 fingerprint: null
 payload:
   id: ER3_unwire_the_screens
@@ -43,3 +43,4 @@ payload:
   blocks: []
   spec: null
   graph: 39401869987f58e9
+  uuid: 8e8039a2-49e4-57c9-9e92-0c51b5bf93b3

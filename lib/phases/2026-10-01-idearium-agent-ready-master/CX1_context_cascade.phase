@@ -7,11 +7,11 @@ intent: null
 summary: CX1_context_cascade (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987094
+exported_at: 1792830597800
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987094
-lastSeenAt: 1792829987094
+firstSeenAt: 1792830597800
+lastSeenAt: 1792830597800
 fingerprint: null
 payload:
   id: CX1_context_cascade
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: ca712cb3559b1665
+  uuid: 8ea0a0c1-c0cc-5465-9f77-f9d7851ebbb1

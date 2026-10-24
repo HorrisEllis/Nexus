@@ -7,11 +7,11 @@ intent: null
 summary: MEM1_cortex_keeps_the_books (foundation) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020482
+exported_at: 1792830632812
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020482
-lastSeenAt: 1792830020482
+firstSeenAt: 1792830632812
+lastSeenAt: 1792830632812
 fingerprint: null
 payload:
   id: MEM1_cortex_keeps_the_books
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 5dc59a5287acfba0
+  uuid: 43e0a74a-1c02-5021-9406-6fca83ee7f85

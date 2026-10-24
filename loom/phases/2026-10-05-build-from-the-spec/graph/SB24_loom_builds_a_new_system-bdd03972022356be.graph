@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990972
+exported_at: 1792830601633
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990972
-lastSeenAt: 1792829990972
+firstSeenAt: 1792830601633
+lastSeenAt: 1792830601633
 fingerprint: null
 payload:
   for: SB24_loom_builds_a_new_system
@@ -174,3 +174,4 @@ payload:
       - >-
         same files as SB49_an_idea_runs_through_by_itself with no order between them:
         idearium/ui/js/app.js
+  phaseUuid: ad37e283-f6c6-5546-aecf-404594118f35

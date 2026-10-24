@@ -9,11 +9,11 @@ intent: null
 summary: SB6_contract_type_schemas_and_toolbox_directory (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034495
+exported_at: 1792830646701
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034495
-lastSeenAt: 1792830034495
+firstSeenAt: 1792830646701
+lastSeenAt: 1792830646701
 fingerprint: null
 payload:
   id: SB6_contract_type_schemas_and_toolbox_directory
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: c5ebdf092da9729b
+  uuid: 39cecaf6-383f-57c1-91b9-86c5d23c6d85

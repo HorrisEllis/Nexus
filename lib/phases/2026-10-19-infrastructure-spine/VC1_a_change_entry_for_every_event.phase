@@ -9,11 +9,11 @@ intent: null
 summary: VC1_a_change_entry_for_every_event (library) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020063
+exported_at: 1792830632383
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020063
-lastSeenAt: 1792830020063
+firstSeenAt: 1792830632383
+lastSeenAt: 1792830632383
 fingerprint: null
 payload:
   id: VC1_a_change_entry_for_every_event
@@ -31,3 +31,15 @@ payload:
   blocks: []
   spec: null
   graph: 2d6d84c716d3eda0
+  uuid: 8b96b88c-fba7-5da1-a5c1-a2f45fb6c975
+  specLink:
+    how: discovered:path
+    spec: docs/approval-chain.spec
+    specs:
+      - docs/approval-chain.spec
+    covers: 1/5 files
+    modules:
+      - spec: docs/approval-chain.spec
+        id: MOD-APV-ENTRY
+        uuid: nexus-apv-change-entry-v1-0000-2026-1021-001
+        file: lib/change-entry.js

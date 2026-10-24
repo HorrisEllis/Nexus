@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829997246
+exported_at: 1792830608404
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997246
-lastSeenAt: 1792829997246
+firstSeenAt: 1792830608404
+lastSeenAt: 1792830608404
 fingerprint: null
 payload:
   for: HP12_a_failure_names_the_agent
@@ -173,3 +173,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 787c48c0-5486-529e-9f64-1d3582e06c47

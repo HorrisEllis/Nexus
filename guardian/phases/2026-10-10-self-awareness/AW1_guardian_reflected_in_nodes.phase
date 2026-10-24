@@ -7,11 +7,11 @@ intent: null
 summary: AW1_guardian_reflected_in_nodes (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830000075
+exported_at: 1792830611426
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000075
-lastSeenAt: 1792830000075
+firstSeenAt: 1792830611426
+lastSeenAt: 1792830611426
 fingerprint: null
 payload:
   id: AW1_guardian_reflected_in_nodes
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: c659f7d61e4da4c9
+  uuid: be40de62-0c3d-5e89-a6de-a290c42c0a32

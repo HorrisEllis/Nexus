@@ -7,11 +7,11 @@ intent: null
 summary: GW11_a_snapshot_per_gate (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830006644
+exported_at: 1792830618167
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006644
-lastSeenAt: 1792830006644
+firstSeenAt: 1792830618167
+lastSeenAt: 1792830618167
 fingerprint: null
 payload:
   id: GW11_a_snapshot_per_gate
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: c999f94ef6a49515
+  uuid: cde7eeec-08bc-57cc-a32e-2c5db19e77dd

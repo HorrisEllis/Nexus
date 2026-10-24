@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830006628
+exported_at: 1792830618151
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006628
-lastSeenAt: 1792830006628
+firstSeenAt: 1792830618151
+lastSeenAt: 1792830618151
 fingerprint: null
 payload:
   for: GW0d_listener_question
@@ -178,3 +178,4 @@ payload:
         needed by (1): GW10_the_listener_knows_what_to_hear · finishing it unlocks
         GW10_the_listener_knows_what_to_hear
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+  phaseUuid: eb0a6078-f28d-5316-9917-2ac9ddbb94ab

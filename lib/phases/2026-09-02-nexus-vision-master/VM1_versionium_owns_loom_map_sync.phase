@@ -9,11 +9,11 @@ intent: null
 summary: VM1_versionium_owns_loom_map_sync (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974320
+exported_at: 1792830584904
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974320
-lastSeenAt: 1792829974320
+firstSeenAt: 1792830584904
+lastSeenAt: 1792830584904
 fingerprint: null
 payload:
   id: VM1_versionium_owns_loom_map_sync
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 645d8fc81f9cd1b8
+  uuid: c4b85bed-f3df-5432-8507-7cbb129e4c9a

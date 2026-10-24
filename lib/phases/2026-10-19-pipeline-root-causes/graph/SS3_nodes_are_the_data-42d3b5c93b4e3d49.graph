@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830020475
+exported_at: 1792830632805
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020475
-lastSeenAt: 1792830020475
+firstSeenAt: 1792830632805
+lastSeenAt: 1792830632805
 fingerprint: null
 payload:
   for: SS3_nodes_are_the_data
@@ -179,3 +179,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3 · blocked by SS2_every_system_home
       - 'depends on (1): SS2_every_system_home · all upstream 3'
       - 'needed by (1): SS4_seal_into_compartments · finishing it unlocks SS4_seal_into_compartments'
+  phaseUuid: 0facb329-7021-58cd-adc2-452156a85716

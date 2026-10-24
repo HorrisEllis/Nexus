@@ -9,11 +9,11 @@ intent: null
 summary: AR2_decentralize_interaction_contracts (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976064
+exported_at: 1792830586677
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976064
-lastSeenAt: 1792829976064
+firstSeenAt: 1792830586677
+lastSeenAt: 1792830586677
 fingerprint: null
 payload:
   id: AR2_decentralize_interaction_contracts
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 004da81f2aa79f85
+  uuid: 239b3a5f-b0e2-5076-b963-f5a5875e1c19

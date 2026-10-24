@@ -9,11 +9,11 @@ intent: null
 summary: P22_ledger_data_integrity_checker (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976514
+exported_at: 1792830587124
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976514
-lastSeenAt: 1792829976514
+firstSeenAt: 1792830587124
+lastSeenAt: 1792830587124
 fingerprint: null
 payload:
   id: P22_ledger_data_integrity_checker
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 80f256cd544672ab
+  uuid: 799f909c-1266-54c1-84f1-fa05e962751f

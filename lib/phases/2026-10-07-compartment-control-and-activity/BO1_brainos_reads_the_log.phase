@@ -9,11 +9,11 @@ intent: null
 summary: BO1_brainos_reads_the_log (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829994583
+exported_at: 1792830605486
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829994583
-lastSeenAt: 1792829994583
+firstSeenAt: 1792830605486
+lastSeenAt: 1792830605486
 fingerprint: null
 payload:
   id: BO1_brainos_reads_the_log
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 8567a373d208f9e7
+  uuid: c8f47734-0f7c-554c-9356-39c59d6f501f

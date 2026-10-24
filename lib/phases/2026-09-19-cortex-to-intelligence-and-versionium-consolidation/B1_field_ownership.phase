@@ -9,11 +9,11 @@ intent: null
 summary: B1_field_ownership (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978551
+exported_at: 1792830589176
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978551
-lastSeenAt: 1792829978551
+firstSeenAt: 1792830589176
+lastSeenAt: 1792830589176
 fingerprint: null
 payload:
   id: B1_field_ownership
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: b57173bf62bbbbb6
+  uuid: 5b4cb080-f426-5455-bf02-7918a2eea798

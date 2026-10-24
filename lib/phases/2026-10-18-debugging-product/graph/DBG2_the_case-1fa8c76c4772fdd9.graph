@@ -7,11 +7,11 @@ intent: null
 summary: 34 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830017714
+exported_at: 1792830629749
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017714
-lastSeenAt: 1792830017714
+firstSeenAt: 1792830629749
+lastSeenAt: 1792830629749
 fingerprint: null
 payload:
   for: DBG2_the_case
@@ -292,3 +292,4 @@ payload:
         DBG6_cases_crystallize, DBG7_route_command_ui, DBG8_in_the_product · finishing it unlocks
         DBG3_deviation_and_friction_per_run, DBG7_route_command_ui
       - 'same files as DBG4_dependency_gaps with no order between them: lib/gap-field.js'
+  phaseUuid: 704836dd-85ba-5c67-a33d-d150bb53bfd1

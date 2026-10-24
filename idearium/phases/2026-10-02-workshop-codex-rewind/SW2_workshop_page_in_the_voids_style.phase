@@ -9,11 +9,11 @@ intent: null
 summary: SW2_workshop_page_in_the_voids_style (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990138
+exported_at: 1792830600794
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990138
-lastSeenAt: 1792829990138
+firstSeenAt: 1792830600794
+lastSeenAt: 1792830600794
 fingerprint: null
 payload:
   id: SW2_workshop_page_in_the_voids_style
@@ -33,3 +33,4 @@ payload:
   blocks: []
   spec: null
   graph: acac3b974a3233a1
+  uuid: e42c4e3b-2607-5c09-8f4e-73bb8fae71b9

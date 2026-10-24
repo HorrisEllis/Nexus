@@ -7,11 +7,11 @@ intent: null
 summary: HP9_the_plan_is_current_work (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829997244
+exported_at: 1792830608402
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997244
-lastSeenAt: 1792829997244
+firstSeenAt: 1792830608402
+lastSeenAt: 1792830608402
 fingerprint: null
 payload:
   id: HP9_the_plan_is_current_work
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: f627db089c793902
+  uuid: 28907d45-41bb-565b-9ff4-960015c7e39b

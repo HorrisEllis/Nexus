@@ -7,11 +7,11 @@ intent: null
 summary: SN3_measured_by_rfr2 (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830000869
+exported_at: 1792830612260
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000869
-lastSeenAt: 1792830000869
+firstSeenAt: 1792830612260
+lastSeenAt: 1792830612260
 fingerprint: null
 payload:
   id: SN3_measured_by_rfr2
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 0cf6510fcc61eccc
+  uuid: a3709a1f-a1ec-54a8-aa74-04681b6c6ba2

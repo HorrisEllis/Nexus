@@ -7,11 +7,11 @@ intent: null
 summary: CS4_every_system_a_compartment (backend) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026215
+exported_at: 1792830638672
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026215
-lastSeenAt: 1792830026215
+firstSeenAt: 1792830638672
+lastSeenAt: 1792830638672
 fingerprint: null
 payload:
   id: CS4_every_system_a_compartment
@@ -37,3 +37,10 @@ payload:
     - MOD-CS-SUPERVISE
   spec: cos/spec/cos-spine.spec
   graph: 8dfe260df6e33a3d
+  uuid: b3282892-dc12-5306-bef6-2d3bc381fea0
+  specLink:
+    how: declared
+    spec: cos/spec/cos-spine.spec
+    modules:
+      - id: MOD-CS-SUPERVISE
+        uuid: nexus-cos-spine-supervise-v1-0000-2026-1023-001

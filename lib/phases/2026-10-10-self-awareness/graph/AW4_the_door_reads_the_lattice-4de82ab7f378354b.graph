@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830000078
+exported_at: 1792830611429
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000078
-lastSeenAt: 1792830000078
+firstSeenAt: 1792830611429
+lastSeenAt: 1792830611429
 fingerprint: null
 payload:
   for: AW4_the_door_reads_the_lattice
@@ -212,3 +212,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by AW3_the_field_hears_the_lifecycle
       - 'depends on (1): AW3_the_field_hears_the_lifecycle · all upstream 2'
       - 'needed by (1): AW5_its_own_face'
+  phaseUuid: 2e01479c-cc49-55d7-9756-a4b8b35a3216

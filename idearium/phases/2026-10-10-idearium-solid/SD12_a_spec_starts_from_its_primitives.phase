@@ -9,11 +9,11 @@ intent: null
 summary: SD12_a_spec_starts_from_its_primitives (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999656
+exported_at: 1792830610986
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999656
-lastSeenAt: 1792829999656
+firstSeenAt: 1792830610986
+lastSeenAt: 1792830610986
 fingerprint: null
 payload:
   id: SD12_a_spec_starts_from_its_primitives
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 5f1332ad4be21d47
+  uuid: 4109f7a1-4584-535f-8156-93f25080e779

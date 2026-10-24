@@ -7,11 +7,11 @@ intent: null
 summary: P4_editable_surface (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830030570
+exported_at: 1792830642888
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830030570
-lastSeenAt: 1792830030570
+firstSeenAt: 1792830642888
+lastSeenAt: 1792830642888
 fingerprint: null
 payload:
   id: P4_editable_surface
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 9c61c4aa8a24d3ff
+  uuid: 0f71938c-81c7-5e53-a412-93e97e730a63

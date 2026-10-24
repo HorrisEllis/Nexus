@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830017331
+exported_at: 1792830629348
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830017331
-lastSeenAt: 1792830017331
+firstSeenAt: 1792830629348
+lastSeenAt: 1792830629348
 fingerprint: null
 payload:
   for: CE7_agents_and_commands
@@ -193,3 +193,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 5 · blocked by CE4_the_terminal_bridge, CE5_the_guest_file_tree
       - 'depends on (2): CE4_the_terminal_bridge, CE5_the_guest_file_tree · all upstream 6'
       - 'needed by (0): —'
+  phaseUuid: e4b6818e-969b-5162-978d-31ee6c68e8d5

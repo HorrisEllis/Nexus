@@ -7,11 +7,11 @@ intent: null
 summary: PN2_dual_read (library) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830020061
+exported_at: 1792830632381
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020061
-lastSeenAt: 1792830020061
+firstSeenAt: 1792830632381
+lastSeenAt: 1792830632381
 fingerprint: null
 payload:
   id: PN2_dual_read
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 513d83c925413e21
+  uuid: 724a4f40-dfb6-582c-b20f-0bb0932ca661

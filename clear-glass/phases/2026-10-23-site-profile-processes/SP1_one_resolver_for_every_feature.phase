@@ -9,11 +9,11 @@ intent: null
 summary: SP1_one_resolver_for_every_feature (foundation) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026980
+exported_at: 1792830639452
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026980
-lastSeenAt: 1792830026980
+firstSeenAt: 1792830639452
+lastSeenAt: 1792830639452
 fingerprint: null
 payload:
   id: SP1_one_resolver_for_every_feature
@@ -38,3 +38,12 @@ payload:
     - MOD-SP-RESOLVER
   spec: clear-glass/spec/site-profile.spec
   graph: 603b7985ce8f9b73
+  uuid: 9c4316b9-14b9-5a34-b1ec-475e5a2da0e1
+  specLink:
+    how: declared
+    spec: clear-glass/spec/site-profile.spec
+    modules:
+      - id: MOD-SP-KEYS
+        uuid: nexus-cg-site-keys-v1-0000-2026-1023-001
+      - id: MOD-SP-RESOLVER
+        uuid: nexus-cg-site-profile-v1-0000-2026-1023-001

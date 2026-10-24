@@ -9,11 +9,11 @@ intent: null
 summary: SL1_a_proven_phase_closes_itself (integration) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026602
+exported_at: 1792830639074
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026602
-lastSeenAt: 1792830026602
+firstSeenAt: 1792830639074
+lastSeenAt: 1792830639074
 fingerprint: null
 payload:
   id: SL1_a_proven_phase_closes_itself
@@ -35,3 +35,10 @@ payload:
     - MOD-SL-CLOSE
   spec: docs/self-building-loop.spec
   graph: c3e5309c4ae10c83
+  uuid: 0953f868-511e-56f6-bf70-6908d2dce432
+  specLink:
+    how: declared
+    spec: docs/self-building-loop.spec
+    modules:
+      - id: MOD-SL-CLOSE
+        uuid: nexus-sl-phase-close-v1-0000-2026-1023-001

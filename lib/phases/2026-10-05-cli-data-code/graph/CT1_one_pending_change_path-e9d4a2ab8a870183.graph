@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991452
+exported_at: 1792830602126
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991452
-lastSeenAt: 1792829991452
+firstSeenAt: 1792830602126
+lastSeenAt: 1792830602126
 fingerprint: null
 payload:
   for: CT1_one_pending_change_path
@@ -242,3 +242,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0 · ready
       - 'depends on (0): —'
       - 'needed by (1): CT2_the_code_tab · finishing it unlocks CT2_the_code_tab'
+  phaseUuid: 24c1c4cc-838b-5378-9722-906fc80f639f

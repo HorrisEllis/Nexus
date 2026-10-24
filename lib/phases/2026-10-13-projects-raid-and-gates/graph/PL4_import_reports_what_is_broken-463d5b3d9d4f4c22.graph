@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830003400
+exported_at: 1792830614748
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830003400
-lastSeenAt: 1792830003400
+firstSeenAt: 1792830614748
+lastSeenAt: 1792830614748
 fingerprint: null
 payload:
   for: PL4_import_reports_what_is_broken
@@ -107,3 +107,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by CK1_the_catalogue_runs
       - 'depends on (1): CK1_the_catalogue_runs · all upstream 2'
       - 'needed by (1): RF0_architecture_read · all downstream 5'
+  phaseUuid: ef4e2f93-93bd-560c-8c3d-f15c74e3f2ea

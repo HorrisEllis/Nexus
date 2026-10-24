@@ -9,11 +9,11 @@ intent: null
 summary: IC4_idearium_system_template_update (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829972958
+exported_at: 1792830583612
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829972958
-lastSeenAt: 1792829972958
+firstSeenAt: 1792830583612
+lastSeenAt: 1792830583612
 fingerprint: null
 payload:
   id: IC4_idearium_system_template_update
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 9f874130772add91
+  uuid: 995631a7-4f8f-5864-a3dc-31a23c87ac72

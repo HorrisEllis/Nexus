@@ -7,11 +7,11 @@ intent: null
 summary: P3_cos_isolate_and_verify (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830036018
+exported_at: 1792830648232
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830036018
-lastSeenAt: 1792830036018
+firstSeenAt: 1792830648232
+lastSeenAt: 1792830648232
 fingerprint: null
 payload:
   id: P3_cos_isolate_and_verify
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 3c5807492e4c58ca
+  uuid: 1b331aa9-9cc2-513f-b17a-588bb4803178

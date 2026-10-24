@@ -9,11 +9,11 @@ intent: null
 summary: SF12_end_state_vision_and_full_phase_map_docs (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829970789
+exported_at: 1792830581334
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829970789
-lastSeenAt: 1792829970789
+firstSeenAt: 1792830581334
+lastSeenAt: 1792830581334
 fingerprint: null
 payload:
   id: SF12_end_state_vision_and_full_phase_map_docs
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: e20580490f498608
+  uuid: f9cd8393-6bf9-52c4-a098-977f071c5782

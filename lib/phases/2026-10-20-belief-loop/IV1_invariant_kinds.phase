@@ -7,11 +7,11 @@ intent: null
 summary: IV1_invariant_kinds (foundation) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830021764
+exported_at: 1792830634097
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021764
-lastSeenAt: 1792830021764
+firstSeenAt: 1792830634097
+lastSeenAt: 1792830634097
 fingerprint: null
 payload:
   id: IV1_invariant_kinds
@@ -29,3 +29,10 @@ payload:
     - MOD-INVARIANT
   spec: docs/belief-loop.spec
   graph: 99ee52c0b443d589
+  uuid: 9dbb3a87-35ea-5a94-a9a6-2c188f056385
+  specLink:
+    how: declared
+    spec: docs/belief-loop.spec
+    modules:
+      - id: MOD-INVARIANT
+        uuid: nexus-belief-invariant-v1-0000-2026-1020-001

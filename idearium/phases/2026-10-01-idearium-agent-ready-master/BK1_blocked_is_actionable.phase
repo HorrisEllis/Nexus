@@ -9,11 +9,11 @@ intent: null
 summary: BK1_blocked_is_actionable (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829987083
+exported_at: 1792830597789
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829987083
-lastSeenAt: 1792829987083
+firstSeenAt: 1792830597789
+lastSeenAt: 1792830597789
 fingerprint: null
 payload:
   id: BK1_blocked_is_actionable
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: 01332261b8dcdc42
+  uuid: edeb5360-8940-50a0-af11-8b45d0cdc175

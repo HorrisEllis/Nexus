@@ -7,11 +7,11 @@ intent: null
 summary: NP18_freeze_plugin (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004607
+exported_at: 1792830616036
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004607
-lastSeenAt: 1792830004607
+firstSeenAt: 1792830616036
+lastSeenAt: 1792830616036
 fingerprint: null
 payload:
   id: NP18_freeze_plugin
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 53c52b561aea759a
+  uuid: e517e90b-133c-58e6-8d9a-7abd6bcbec54

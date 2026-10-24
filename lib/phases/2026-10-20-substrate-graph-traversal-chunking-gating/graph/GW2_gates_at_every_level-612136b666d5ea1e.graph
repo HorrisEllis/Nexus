@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830022176
+exported_at: 1792830634525
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022176
-lastSeenAt: 1792830022176
+firstSeenAt: 1792830634525
+lastSeenAt: 1792830634525
 fingerprint: null
 payload:
   for: GW2_gates_at_every_level
@@ -278,3 +278,4 @@ payload:
         depends on (4): GW1_gate_primitive, CH1_strategies_behind_the_contract,
         DK1_dynamic_chunking, CH3_chunk_inspector · all upstream 23
       - 'needed by (1): GW3_gate_panel'
+  phaseUuid: e1e4ee80-eb29-5c9c-8122-42ad9f412f85

@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990959
+exported_at: 1792830601618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990959
-lastSeenAt: 1792829990959
+firstSeenAt: 1792830601618
+lastSeenAt: 1792830601618
 fingerprint: null
 payload:
   for: SB17_the_system_template_is_complete
@@ -102,3 +102,4 @@ payload:
         SB18_the_system_template_is_used, SB19_atlases_per_component, SB20_each_system_owns_its_own,
         SB25_atlas_template_in_his_structure, SB26_an_imported_project_shows_its_progress,
         SB28_genesis_in_the_shape_nexus_systems_have, SB30_the_template_is_a_skeleton
+  phaseUuid: e8004471-9c97-59a6-a148-2929d73d5ee6

@@ -7,11 +7,11 @@ intent: null
 summary: T6 (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829980536
+exported_at: 1792830591243
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829980536
-lastSeenAt: 1792829980536
+firstSeenAt: 1792830591243
+lastSeenAt: 1792830591243
 fingerprint: null
 payload:
   id: T6
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 3810abea7c97f392
+  uuid: acfa691c-17ec-51d5-b266-891855d9b64b

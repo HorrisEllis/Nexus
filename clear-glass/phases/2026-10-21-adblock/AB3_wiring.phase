@@ -7,11 +7,11 @@ intent: null
 summary: AB3_wiring (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830022584
+exported_at: 1792830634932
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022584
-lastSeenAt: 1792830022584
+firstSeenAt: 1792830634932
+lastSeenAt: 1792830634932
 fingerprint: null
 payload:
   id: AB3_wiring
@@ -31,3 +31,10 @@ payload:
     - MOD-ABK-WIRING
   spec: clear-glass/spec/adblock.spec
   graph: 0f2843b6cd64ba0b
+  uuid: db077973-7a2f-5ceb-ae65-0df2b35bb922
+  specLink:
+    how: declared
+    spec: clear-glass/spec/adblock.spec
+    modules:
+      - id: MOD-ABK-WIRING
+        uuid: nexus-cg-adblock-wiring-v1-0000-2026-1021-001

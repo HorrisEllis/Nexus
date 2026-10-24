@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 9 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830001715
+exported_at: 1792830613148
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001715
-lastSeenAt: 1792830001715
+firstSeenAt: 1792830613148
+lastSeenAt: 1792830613148
 fingerprint: null
 payload:
   for: RQ9_the_chunked_contract
@@ -317,3 +317,4 @@ payload:
         RQ23_acceptance_conditions_that_cannot_be_moved, RQ27_the_reasoning_half_gets_its_home · all
         downstream 16 · finishing it unlocks RQ10_anchors_and_the_diff_reconciled,
         RQ11_spec_and_registry_reconciled, RQ12_the_phase_dag
+  phaseUuid: 441db8c3-1189-5897-8ef6-b5375ceadf71

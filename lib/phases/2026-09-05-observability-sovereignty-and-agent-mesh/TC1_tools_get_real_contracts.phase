@@ -9,11 +9,11 @@ intent: null
 summary: TC1_tools_get_real_contracts (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975206
+exported_at: 1792830585831
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975206
-lastSeenAt: 1792829975206
+firstSeenAt: 1792830585831
+lastSeenAt: 1792830585831
 fingerprint: null
 payload:
   id: TC1_tools_get_real_contracts
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: eba5000b75c458f8
+  uuid: e8d5d258-49fd-5143-a3ca-01b4425776e5

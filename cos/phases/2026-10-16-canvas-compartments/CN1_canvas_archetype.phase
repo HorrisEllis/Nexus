@@ -7,11 +7,11 @@ intent: null
 summary: CN1_canvas_archetype (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830009789
+exported_at: 1792830621505
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009789
-lastSeenAt: 1792830009789
+firstSeenAt: 1792830621505
+lastSeenAt: 1792830621505
 fingerprint: null
 payload:
   id: CN1_canvas_archetype
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 80bf09efae3df71b
+  uuid: 0a5a645d-abcd-5ff1-9a4c-7993962b8e09

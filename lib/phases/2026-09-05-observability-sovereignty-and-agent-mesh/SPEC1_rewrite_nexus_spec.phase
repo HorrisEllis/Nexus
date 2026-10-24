@@ -9,11 +9,11 @@ intent: null
 summary: SPEC1_rewrite_nexus_spec (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975219
+exported_at: 1792830585845
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975219
-lastSeenAt: 1792829975219
+firstSeenAt: 1792830585845
+lastSeenAt: 1792830585845
 fingerprint: null
 payload:
   id: SPEC1_rewrite_nexus_spec
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 8486df46c0ff1a3d
+  uuid: 2432bda2-fea5-531a-b232-8939b6e23895

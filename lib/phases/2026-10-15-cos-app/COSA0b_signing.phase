@@ -7,11 +7,11 @@ intent: null
 summary: COSA0b_signing (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005841
+exported_at: 1792830617302
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005841
-lastSeenAt: 1792830005841
+firstSeenAt: 1792830617302
+lastSeenAt: 1792830617302
 fingerprint: null
 payload:
   id: COSA0b_signing
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 9df6163a6b8d73c2
+  uuid: 2d135308-394d-5918-b068-6019514a813e

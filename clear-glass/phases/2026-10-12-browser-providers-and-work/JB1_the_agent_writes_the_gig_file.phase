@@ -9,11 +9,11 @@ intent: null
 summary: JB1_the_agent_writes_the_gig_file (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001275
+exported_at: 1792830612686
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001275
-lastSeenAt: 1792830001275
+firstSeenAt: 1792830612686
+lastSeenAt: 1792830612686
 fingerprint: null
 payload:
   id: JB1_the_agent_writes_the_gig_file
@@ -31,3 +31,4 @@ payload:
   blocks: []
   spec: null
   graph: 897ac09840418686
+  uuid: d46fe77f-0852-56b1-aa4e-286e5d21edde

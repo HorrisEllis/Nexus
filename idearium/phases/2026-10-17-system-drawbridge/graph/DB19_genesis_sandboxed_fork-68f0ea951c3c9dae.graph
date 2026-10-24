@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830016897
+exported_at: 1792830628923
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016897
-lastSeenAt: 1792830016897
+firstSeenAt: 1792830628923
+lastSeenAt: 1792830628923
 fingerprint: null
 payload:
   for: DB19_genesis_sandboxed_fork
@@ -71,3 +71,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · ready
       - 'depends on (1): DB13_the_tunnel'
       - 'needed by (1): DB20_sealed_archetype · finishing it unlocks DB20_sealed_archetype'
+  phaseUuid: 53792b2a-b12b-54a6-8fb2-0043f93eb102

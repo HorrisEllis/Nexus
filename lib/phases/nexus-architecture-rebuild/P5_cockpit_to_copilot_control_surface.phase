@@ -9,11 +9,11 @@ intent: null
 summary: P5_cockpit_to_copilot_control_surface (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032516
+exported_at: 1792830644777
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032516
-lastSeenAt: 1792830032516
+firstSeenAt: 1792830644777
+lastSeenAt: 1792830644777
 fingerprint: null
 payload:
   id: P5_cockpit_to_copilot_control_surface
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: fcb861ad77e320a9
+  uuid: 6a446bc1-60f0-587d-81c2-68cd5f91aace

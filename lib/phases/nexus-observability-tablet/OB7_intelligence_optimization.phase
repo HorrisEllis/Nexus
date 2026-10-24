@@ -7,11 +7,11 @@ intent: null
 summary: OB7_intelligence_optimization (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830033336
+exported_at: 1792830645545
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830033336
-lastSeenAt: 1792830033336
+firstSeenAt: 1792830645545
+lastSeenAt: 1792830645545
 fingerprint: null
 payload:
   id: OB7_intelligence_optimization
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 7e1433b5ec9d5df9
+  uuid: 124fe2b0-4da2-55fd-91c7-ad7489033dbd

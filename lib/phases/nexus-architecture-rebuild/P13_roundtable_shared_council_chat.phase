@@ -7,11 +7,11 @@ intent: null
 summary: P13_roundtable_shared_council_chat (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032524
+exported_at: 1792830644784
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032524
-lastSeenAt: 1792830032524
+firstSeenAt: 1792830644784
+lastSeenAt: 1792830644784
 fingerprint: null
 payload:
   id: P13_roundtable_shared_council_chat
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: b26d7de07d99ed15
+  uuid: 22820b6d-dfe5-5de2-8119-d6fac0ece1e3

@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830020480
+exported_at: 1792830632811
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020480
-lastSeenAt: 1792830020480
+firstSeenAt: 1792830632811
+lastSeenAt: 1792830632811
 fingerprint: null
 payload:
   for: RC6_unowned_ollama_load
@@ -45,3 +45,4 @@ payload:
       - >-
         needed by (1): RC7_every_run_names_its_starter · all downstream 4 · finishing it unlocks
         RC7_every_run_names_its_starter
+  phaseUuid: 966a1e66-66c8-5e1e-8b76-4a58b8a285b6

@@ -7,11 +7,11 @@ intent: null
 summary: NP10_browser_surface (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004598
+exported_at: 1792830616029
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004598
-lastSeenAt: 1792830004598
+firstSeenAt: 1792830616029
+lastSeenAt: 1792830616029
 fingerprint: null
 payload:
   id: NP10_browser_surface
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 09f4a73e43ffab7d
+  uuid: 324e4546-bbab-504f-881a-3c36a9658d6f

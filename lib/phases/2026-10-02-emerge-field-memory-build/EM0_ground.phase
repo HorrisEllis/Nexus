@@ -7,11 +7,11 @@ intent: null
 summary: EM0_ground (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829988407
+exported_at: 1792830599038
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988407
-lastSeenAt: 1792829988407
+firstSeenAt: 1792830599038
+lastSeenAt: 1792830599038
 fingerprint: null
 payload:
   id: EM0_ground
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 5e6f8714cf4c18ab
+  uuid: b95475d7-3011-58fa-82c0-a90bc8ea0a26

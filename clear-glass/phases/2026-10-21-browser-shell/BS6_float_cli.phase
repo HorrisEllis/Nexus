@@ -7,11 +7,11 @@ intent: null
 summary: BS6_float_cli (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023778
+exported_at: 1792830636213
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023778
-lastSeenAt: 1792830023778
+firstSeenAt: 1792830636213
+lastSeenAt: 1792830636213
 fingerprint: null
 payload:
   id: BS6_float_cli
@@ -31,3 +31,10 @@ payload:
     - MOD-BSH-FLOAT-CLI
   spec: clear-glass/spec/browser-shell.spec
   graph: 1600a40993ac1a76
+  uuid: 72a4ef4f-ce9a-57b4-bf6d-998ac45e8b2c
+  specLink:
+    how: declared
+    spec: clear-glass/spec/browser-shell.spec
+    modules:
+      - id: MOD-BSH-FLOAT-CLI
+        uuid: nexus-cg-bsh-float-cli-v1-0000-2026-1021-001

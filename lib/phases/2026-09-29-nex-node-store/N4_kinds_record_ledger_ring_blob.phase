@@ -7,11 +7,11 @@ intent: null
 summary: N4_kinds_record_ledger_ring_blob (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985424
+exported_at: 1792830596160
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985424
-lastSeenAt: 1792829985424
+firstSeenAt: 1792830596160
+lastSeenAt: 1792830596160
 fingerprint: null
 payload:
   id: N4_kinds_record_ledger_ring_blob
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 0808a2146da71927
+  uuid: 4567774a-b6a0-5609-90ab-adc4094c1249

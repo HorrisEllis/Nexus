@@ -9,11 +9,11 @@ intent: null
 summary: P19_dynamic_nodes_via_causal_graph (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976510
+exported_at: 1792830587121
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976510
-lastSeenAt: 1792829976510
+firstSeenAt: 1792830587121
+lastSeenAt: 1792830587121
 fingerprint: null
 payload:
   id: P19_dynamic_nodes_via_causal_graph
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: f5a629931620fb96
+  uuid: d8c80326-f8e9-5695-8056-3470aa36c15a

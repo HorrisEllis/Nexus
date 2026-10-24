@@ -7,11 +7,11 @@ intent: null
 summary: MR3_dialog (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830007069
+exported_at: 1792830618615
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007069
-lastSeenAt: 1792830007069
+firstSeenAt: 1792830618615
+lastSeenAt: 1792830618615
 fingerprint: null
 payload:
   id: MR3_dialog
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: d48a589841854876
+  uuid: 23486c40-1a30-53a3-9de7-f79dc4bd22ae

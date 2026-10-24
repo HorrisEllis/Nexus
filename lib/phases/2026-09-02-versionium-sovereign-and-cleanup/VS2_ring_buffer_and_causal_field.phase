@@ -9,11 +9,11 @@ intent: null
 summary: VS2_ring_buffer_and_causal_field (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974791
+exported_at: 1792830585379
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974791
-lastSeenAt: 1792829974791
+firstSeenAt: 1792830585379
+lastSeenAt: 1792830585379
 fingerprint: null
 payload:
   id: VS2_ring_buffer_and_causal_field
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: a136f794f2a44987
+  uuid: 05e70433-3b02-56d2-88e5-5e8b3415ff50

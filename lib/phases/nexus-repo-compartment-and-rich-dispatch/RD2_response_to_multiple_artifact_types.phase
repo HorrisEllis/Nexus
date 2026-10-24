@@ -9,11 +9,11 @@ intent: null
 summary: RD2_response_to_multiple_artifact_types (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830033722
+exported_at: 1792830645916
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830033722
-lastSeenAt: 1792830033722
+firstSeenAt: 1792830645916
+lastSeenAt: 1792830645916
 fingerprint: null
 payload:
   id: RD2_response_to_multiple_artifact_types
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: b35f25d3c582de18
+  uuid: b1a5257a-f535-5d08-a571-d42b08c76ed9

@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792829988503
+exported_at: 1792830599145
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988503
-lastSeenAt: 1792829988503
+firstSeenAt: 1792830599145
+lastSeenAt: 1792830599145
 fingerprint: null
 payload:
   for: GL1_the_graphs_as_a_model
@@ -59,3 +59,4 @@ payload:
         depends on (3): RF1_relational_field, MR7_recipes, FM1_mining_failure_modes · all upstream
         12
       - 'needed by (0): —'
+  phaseUuid: 7952ded5-05f7-5cd1-b7f0-88fb676fa192

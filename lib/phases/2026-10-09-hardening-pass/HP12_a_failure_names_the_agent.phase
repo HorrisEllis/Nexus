@@ -7,11 +7,11 @@ intent: null
 summary: HP12_a_failure_names_the_agent (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792829997246
+exported_at: 1792830608405
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997246
-lastSeenAt: 1792829997246
+firstSeenAt: 1792830608405
+lastSeenAt: 1792830608405
 fingerprint: null
 payload:
   id: HP12_a_failure_names_the_agent
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: bec3f59ad333b46f
+  uuid: 787c48c0-5486-529e-9f64-1d3582e06c47

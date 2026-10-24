@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991460
+exported_at: 1792830602135
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991460
-lastSeenAt: 1792829991460
+firstSeenAt: 1792830602135
+lastSeenAt: 1792830602135
 fingerprint: null
 payload:
   for: HG7_the_law_and_clear_glass
@@ -41,3 +41,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
+  phaseUuid: 1d2ed0e9-c36a-5211-953f-37d77206dd97

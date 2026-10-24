@@ -7,11 +7,11 @@ intent: null
 summary: SF6_wiring_gaps_applied (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829970782
+exported_at: 1792830581327
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829970782
-lastSeenAt: 1792829970782
+firstSeenAt: 1792830581327
+lastSeenAt: 1792830581327
 fingerprint: null
 payload:
   id: SF6_wiring_gaps_applied
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 2514d77da46a8488
+  uuid: 4efd2f9a-d3aa-5cb1-8dc1-7e5a75174df6

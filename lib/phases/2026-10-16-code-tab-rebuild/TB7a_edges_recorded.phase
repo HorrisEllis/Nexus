@@ -7,11 +7,11 @@ intent: null
 summary: TB7a_edges_recorded (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830010173
+exported_at: 1792830621907
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830010173
-lastSeenAt: 1792830010173
+firstSeenAt: 1792830621907
+lastSeenAt: 1792830621907
 fingerprint: null
 payload:
   id: TB7a_edges_recorded
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 69330154410e55a9
+  uuid: 64efe19c-02f1-56e9-afac-afcb71a64646

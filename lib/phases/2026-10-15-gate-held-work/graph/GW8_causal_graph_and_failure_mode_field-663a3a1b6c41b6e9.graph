@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830006641
+exported_at: 1792830618164
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830006641
-lastSeenAt: 1792830006641
+firstSeenAt: 1792830618164
+lastSeenAt: 1792830618164
 fingerprint: null
 payload:
   for: GW8_causal_graph_and_failure_mode_field
@@ -222,3 +222,4 @@ payload:
       - >-
         same files as GW17_friction_and_tension_per_file with no order between them:
         lib/fault-log.js
+  phaseUuid: 2b8e6f73-2b8c-5bb2-b2a9-db2c127cf048

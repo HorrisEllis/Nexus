@@ -7,11 +7,11 @@ intent: null
 summary: GS3_pull_is_a_switch (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830012971
+exported_at: 1792830624759
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830012971
-lastSeenAt: 1792830012971
+firstSeenAt: 1792830624759
+lastSeenAt: 1792830624759
 fingerprint: null
 payload:
   id: GS3_pull_is_a_switch
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 39af288a02e05a34
+  uuid: b1fab132-751d-59be-8918-a3f05da91aac

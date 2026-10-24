@@ -7,11 +7,11 @@ intent: null
 summary: SF19_loom_registry_never_auto_synced (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829970797
+exported_at: 1792830581340
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829970797
-lastSeenAt: 1792829970797
+firstSeenAt: 1792830581340
+lastSeenAt: 1792830581340
 fingerprint: null
 payload:
   id: SF19_loom_registry_never_auto_synced
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 73c7fd75c8376239
+  uuid: 21691160-b0fe-5374-af3f-32d40e748749

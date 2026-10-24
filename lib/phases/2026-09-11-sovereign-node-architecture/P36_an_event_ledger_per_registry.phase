@@ -9,11 +9,11 @@ intent: null
 summary: P36_an_event_ledger_per_registry (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829976531
+exported_at: 1792830587142
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976531
-lastSeenAt: 1792829976531
+firstSeenAt: 1792830587142
+lastSeenAt: 1792830587142
 fingerprint: null
 payload:
   id: P36_an_event_ledger_per_registry
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: fbd0abb2a175f847
+  uuid: 4035825a-9614-5685-92d1-a00bd948e3c8

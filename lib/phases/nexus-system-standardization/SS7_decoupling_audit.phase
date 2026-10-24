@@ -7,11 +7,11 @@ intent: null
 summary: SS7_decoupling_audit (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034890
+exported_at: 1792830647086
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034890
-lastSeenAt: 1792830034890
+firstSeenAt: 1792830647086
+lastSeenAt: 1792830647086
 fingerprint: null
 payload:
   id: SS7_decoupling_audit
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 3a4d6d0780b5923e
+  uuid: 5848a798-ed94-5365-b4fa-e5f78f5ffecb

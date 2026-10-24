@@ -9,11 +9,11 @@ intent: null
 summary: D3_snapshot (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978568
+exported_at: 1792830589194
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978568
-lastSeenAt: 1792829978568
+firstSeenAt: 1792830589194
+lastSeenAt: 1792830589194
 fingerprint: null
 payload:
   id: D3_snapshot
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 5312cdaf836f02fd
+  uuid: ee34b7b3-441e-5493-a98c-588daf4f7c31

@@ -7,11 +7,11 @@ intent: null
 summary: GH1_the_git_bridge (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829996860
+exported_at: 1792830607999
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829996860
-lastSeenAt: 1792829996860
+firstSeenAt: 1792830607999
+lastSeenAt: 1792830607999
 fingerprint: null
 payload:
   id: GH1_the_git_bridge
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 6dd3595186ddbb17
+  uuid: cad10b0d-6216-5441-bd66-03e0658fa077

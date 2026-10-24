@@ -7,11 +7,11 @@ intent: null
 summary: B2_chunk_contract_chaining (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974284
+exported_at: 1792830584868
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974284
-lastSeenAt: 1792829974284
+firstSeenAt: 1792830584868
+lastSeenAt: 1792830584868
 fingerprint: null
 payload:
   id: B2_chunk_contract_chaining
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: 4b6fdc464e5dc7fe
+  uuid: 562fbdb7-9314-5958-bf80-dc6f1c8ce809

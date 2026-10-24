@@ -9,11 +9,11 @@ intent: null
 summary: SP1_semantic_page_tree (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004198
+exported_at: 1792830615630
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004198
-lastSeenAt: 1792830004198
+firstSeenAt: 1792830615630
+lastSeenAt: 1792830615630
 fingerprint: null
 payload:
   id: SP1_semantic_page_tree
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: 8a8b6900ce74fa3b
+  uuid: 45f9f3e8-d2db-5af3-9bdb-b17c3117224f

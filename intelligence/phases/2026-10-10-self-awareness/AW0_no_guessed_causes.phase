@@ -7,11 +7,11 @@ intent: null
 summary: AW0_no_guessed_causes (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830000073
+exported_at: 1792830611425
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830000073
-lastSeenAt: 1792830000073
+firstSeenAt: 1792830611425
+lastSeenAt: 1792830611425
 fingerprint: null
 payload:
   id: AW0_no_guessed_causes
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: d522d06f2ddb0050
+  uuid: 3dc61232-2951-5d53-ae8a-6dbffdb2426d

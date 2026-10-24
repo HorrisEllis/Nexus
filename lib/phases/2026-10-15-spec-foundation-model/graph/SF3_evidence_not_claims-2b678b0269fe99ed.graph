@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830008635
+exported_at: 1792830620253
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830008635
-lastSeenAt: 1792830008635
+firstSeenAt: 1792830620253
+lastSeenAt: 1792830620253
 fingerprint: null
 payload:
   for: SF3_evidence_not_claims
@@ -41,3 +41,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by SF2_state_and_gate
       - 'depends on (1): SF2_state_and_gate · all upstream 2'
       - 'needed by (0): —'
+  phaseUuid: 6778f23d-a04b-5f57-83ec-4aecf17c643e

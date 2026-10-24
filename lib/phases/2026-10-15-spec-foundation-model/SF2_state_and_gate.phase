@@ -7,11 +7,11 @@ intent: null
 summary: SF2_state_and_gate (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830008635
+exported_at: 1792830620252
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830008635
-lastSeenAt: 1792830008635
+firstSeenAt: 1792830620252
+lastSeenAt: 1792830620252
 fingerprint: null
 payload:
   id: SF2_state_and_gate
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: adb0d3d7e575647a
+  uuid: a02c9a19-7488-5961-b778-b00801af733f

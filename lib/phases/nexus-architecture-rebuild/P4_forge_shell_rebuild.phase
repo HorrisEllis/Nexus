@@ -7,11 +7,11 @@ intent: null
 summary: P4_forge_shell_rebuild (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032515
+exported_at: 1792830644776
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032515
-lastSeenAt: 1792830032515
+firstSeenAt: 1792830644776
+lastSeenAt: 1792830644776
 fingerprint: null
 payload:
   id: P4_forge_shell_rebuild
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 40a2f883e2298610
+  uuid: 2e1243f4-f6c7-5196-a550-eae4389e06c6

@@ -9,11 +9,11 @@ intent: null
 summary: BP1_destroy_and_rebuild_blueprint (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990135
+exported_at: 1792830600792
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990135
-lastSeenAt: 1792829990135
+firstSeenAt: 1792830600792
+lastSeenAt: 1792830600792
 fingerprint: null
 payload:
   id: BP1_destroy_and_rebuild_blueprint
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 62cf850a997b6f1b
+  uuid: 235bbea2-9c06-5c7c-8869-5e11a0f4d5aa

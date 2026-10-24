@@ -9,11 +9,11 @@ intent: null
 summary: JB6_the_application_ledger (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830001280
+exported_at: 1792830612694
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830001280
-lastSeenAt: 1792830001280
+firstSeenAt: 1792830612694
+lastSeenAt: 1792830612694
 fingerprint: null
 payload:
   id: JB6_the_application_ledger
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: 46f6fdd5ad1b1534
+  uuid: 26462346-e1bc-58f4-b107-065d746dc38f

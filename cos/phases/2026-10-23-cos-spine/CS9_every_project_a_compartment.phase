@@ -7,11 +7,11 @@ intent: null
 summary: CS9_every_project_a_compartment (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830026218
+exported_at: 1792830638675
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830026218
-lastSeenAt: 1792830026218
+firstSeenAt: 1792830638675
+lastSeenAt: 1792830638675
 fingerprint: null
 payload:
   id: CS9_every_project_a_compartment
@@ -31,3 +31,10 @@ payload:
     - MOD-CS-PROJECTS
   spec: cos/spec/cos-spine.spec
   graph: 4ceb779c4ef8413d
+  uuid: 9b17eab7-601e-5f30-b751-d78038252415
+  specLink:
+    how: declared
+    spec: cos/spec/cos-spine.spec
+    modules:
+      - id: MOD-CS-PROJECTS
+        uuid: nexus-cos-spine-projects-v1-0000-2026-1023-001

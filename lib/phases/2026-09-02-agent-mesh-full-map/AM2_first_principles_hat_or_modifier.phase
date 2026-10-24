@@ -9,11 +9,11 @@ intent: null
 summary: AM2_first_principles_hat_or_modifier (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829973861
+exported_at: 1792830584463
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973861
-lastSeenAt: 1792829973861
+firstSeenAt: 1792830584463
+lastSeenAt: 1792830584463
 fingerprint: null
 payload:
   id: AM2_first_principles_hat_or_modifier
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 0e345d95c9a3188b
+  uuid: 88563deb-7978-574b-815b-4c3425e06ca9

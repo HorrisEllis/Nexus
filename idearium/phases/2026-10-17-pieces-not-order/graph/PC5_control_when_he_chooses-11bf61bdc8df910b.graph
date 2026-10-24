@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830016438
+exported_at: 1792830628485
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016438
-lastSeenAt: 1792830016438
+firstSeenAt: 1792830628485
+lastSeenAt: 1792830628485
 fingerprint: null
 payload:
   for: PC5_control_when_he_chooses
@@ -246,3 +246,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · blocked by PC1_the_point_first
       - 'depends on (1): PC1_the_point_first · all upstream 3'
       - 'needed by (0): —'
+  phaseUuid: c20ad68d-c5cc-55f4-a20a-b111d35362c7

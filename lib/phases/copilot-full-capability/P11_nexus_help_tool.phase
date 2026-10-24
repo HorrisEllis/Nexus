@@ -7,11 +7,11 @@ intent: null
 summary: P11_nexus_help_tool (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830029359
+exported_at: 1792830641758
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830029359
-lastSeenAt: 1792830029359
+firstSeenAt: 1792830641758
+lastSeenAt: 1792830641758
 fingerprint: null
 payload:
   id: P11_nexus_help_tool
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 64e850e27dd6620b
+  uuid: dc331def-af8a-5b2e-b7e0-6f2102b3ed18

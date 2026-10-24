@@ -9,11 +9,11 @@ intent: null
 summary: GA1_guardian_nexus_reconciliation (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830029749
+exported_at: 1792830642126
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830029749
-lastSeenAt: 1792830029749
+firstSeenAt: 1792830642126
+lastSeenAt: 1792830642126
 fingerprint: null
 payload:
   id: GA1_guardian_nexus_reconciliation
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 7d4f25c26f8d558f
+  uuid: 52835da7-136d-5b0f-aac1-ded229823f31

@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 11 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829984162
+exported_at: 1792830594918
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829984162
-lastSeenAt: 1792829984162
+firstSeenAt: 1792830594918
+lastSeenAt: 1792830594918
 fingerprint: null
 payload:
   for: M2
@@ -243,3 +243,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4 · blocked by G3, M1
       - 'depends on (2): G3, M1 · all upstream 6'
       - 'needed by (1): M3 · finishing it unlocks M3'
+  phaseUuid: 47df94c2-d600-501c-a15b-775742a95d23

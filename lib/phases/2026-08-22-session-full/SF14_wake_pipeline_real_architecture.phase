@@ -7,11 +7,11 @@ intent: null
 summary: SF14_wake_pipeline_real_architecture (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829970791
+exported_at: 1792830581336
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829970791
-lastSeenAt: 1792829970791
+firstSeenAt: 1792830581336
+lastSeenAt: 1792830581336
 fingerprint: null
 payload:
   id: SF14_wake_pipeline_real_architecture
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 197e4087240a93cd
+  uuid: d536b00e-d9d6-50f0-a45c-ac770821ec89

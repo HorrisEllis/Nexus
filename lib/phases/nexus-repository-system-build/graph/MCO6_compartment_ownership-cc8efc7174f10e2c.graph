@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792830034112
+exported_at: 1792830646307
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034112
-lastSeenAt: 1792830034112
+firstSeenAt: 1792830646307
+lastSeenAt: 1792830646307
 fingerprint: null
 payload:
   for: MCO6_compartment_ownership
@@ -44,3 +44,4 @@ payload:
       - >-
         needed by (1): MCO7_nexus_systems_as_repo_compartments · finishing it unlocks
         MCO7_nexus_systems_as_repo_compartments
+  phaseUuid: 6700d563-07e5-52c2-8002-ffcee51995a8

@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830020471
+exported_at: 1792830632800
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830020471
-lastSeenAt: 1792830020471
+firstSeenAt: 1792830632800
+lastSeenAt: 1792830632800
 fingerprint: null
 payload:
   for: VF1_verify_first
@@ -264,3 +264,4 @@ payload:
         UI3_ideas_and_notes_as_one, CB1_coder_brief, ID1_ideas_wired_through · all downstream 7 ·
         finishing it unlocks VF2_one_response_bundle, VF3_mutation_check, VF5_verdict_cache,
         UI3_ideas_and_notes_as_one, CB1_coder_brief, ID1_ideas_wired_through
+  phaseUuid: a5297b0e-2dc6-5af7-a6ad-d9b6a33f10dd

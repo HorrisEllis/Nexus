@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829973409
+exported_at: 1792830584054
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829973409
-lastSeenAt: 1792829973409
+firstSeenAt: 1792830584054
+lastSeenAt: 1792830584054
 fingerprint: null
 payload:
   for: LM24_atlas_prose_layer
@@ -158,3 +158,4 @@ payload:
         depends on (3): LM20_atlas_schema_and_deterministic_seed, LM21_atlas_fact_extractors,
         LM22_atlas_structure_ledger · all upstream 6
       - 'needed by (2): LM25_atlas_living_update, LM26_atlas_completeness_and_release_gate'
+  phaseUuid: 7a2f3467-93c0-55ac-a3f2-92255370bb37

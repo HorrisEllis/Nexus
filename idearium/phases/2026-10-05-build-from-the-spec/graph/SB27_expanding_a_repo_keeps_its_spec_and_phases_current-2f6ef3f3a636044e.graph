@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990977
+exported_at: 1792830601638
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990977
-lastSeenAt: 1792829990977
+firstSeenAt: 1792830601638
+lastSeenAt: 1792830601638
 fingerprint: null
 payload:
   for: SB27_expanding_a_repo_keeps_its_spec_and_phases_current
@@ -289,3 +289,4 @@ payload:
         idearium/api/index.js
       - 'same files as SB47_built_and_run_in_cos with no order between them: idearium/api/index.js'
       - … and 2 more phases sharing its files without an order
+  phaseUuid: ff9b43f3-406f-5732-ae50-ba56281efe28

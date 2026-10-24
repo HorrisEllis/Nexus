@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830018092
+exported_at: 1792830630225
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830018092
-lastSeenAt: 1792830018092
+firstSeenAt: 1792830630225
+lastSeenAt: 1792830630225
 fingerprint: null
 payload:
   for: GM5_the_context_ladder
@@ -229,3 +229,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (2): GM7_the_context_panel_per_gate, GM8_agents_have_it'
+  phaseUuid: fb785cf0-4cb4-5de1-9767-7cd8609e8921

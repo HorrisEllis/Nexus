@@ -7,11 +7,11 @@ intent: null
 summary: P15_forge_shell_into_loom (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032526
+exported_at: 1792830644786
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032526
-lastSeenAt: 1792830032526
+firstSeenAt: 1792830644786
+lastSeenAt: 1792830644786
 fingerprint: null
 payload:
   id: P15_forge_shell_into_loom
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 1a4643a7c98e4523
+  uuid: 7082584b-236c-5faa-b852-7e3fac192bf6

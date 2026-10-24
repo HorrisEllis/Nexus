@@ -7,11 +7,11 @@ intent: null
 summary: GS6_proxy (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830011718
+exported_at: 1792830623542
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830011718
-lastSeenAt: 1792830011718
+firstSeenAt: 1792830623542
+lastSeenAt: 1792830623542
 fingerprint: null
 payload:
   id: GS6_proxy
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: aea64bd8ae7f3973
+  uuid: 3c1c32ef-df0d-5bb3-ba00-33e9917f6ae1

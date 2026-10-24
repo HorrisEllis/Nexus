@@ -9,11 +9,11 @@ intent: null
 summary: SB35_the_index_is_there_when_the_agent_asks (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990994
+exported_at: 1792830601653
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990994
-lastSeenAt: 1792829990994
+firstSeenAt: 1792830601653
+lastSeenAt: 1792830601653
 fingerprint: null
 payload:
   id: SB35_the_index_is_there_when_the_agent_asks
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: c03d44f4b918532e
+  uuid: 60aed47b-6cc1-53b9-93ae-b8190f64fe43

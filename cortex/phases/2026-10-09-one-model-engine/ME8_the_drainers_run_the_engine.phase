@@ -7,11 +7,11 @@ intent: null
 summary: ME8_the_drainers_run_the_engine (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792829997694
+exported_at: 1792830608821
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829997694
-lastSeenAt: 1792829997694
+firstSeenAt: 1792830608821
+lastSeenAt: 1792830608821
 fingerprint: null
 payload:
   id: ME8_the_drainers_run_the_engine
@@ -32,3 +32,4 @@ payload:
   blocks: []
   spec: null
   graph: a10cd5fa948ace2c
+  uuid: 6b15a488-d550-518f-9091-215c64964b87

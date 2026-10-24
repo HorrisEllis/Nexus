@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830007480
+exported_at: 1792830619050
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830007480
-lastSeenAt: 1792830007480
+firstSeenAt: 1792830619050
+lastSeenAt: 1792830619050
 fingerprint: null
 payload:
   for: FR1_failure_reports
@@ -203,3 +203,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 2 · ready
       - 'depends on (1): RD0_raid_runs_the_contract · all upstream 2'
       - 'needed by (1): ST1_stability_checks · finishing it unlocks ST1_stability_checks'
+  phaseUuid: 17f1ea07-3441-524f-a242-865de076728d

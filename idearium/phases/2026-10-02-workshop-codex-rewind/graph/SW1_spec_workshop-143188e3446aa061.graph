@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990136
+exported_at: 1792830600793
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990136
-lastSeenAt: 1792829990136
+firstSeenAt: 1792830600793
+lastSeenAt: 1792830600793
 fingerprint: null
 payload:
   for: SW1_spec_workshop
@@ -252,3 +252,4 @@ payload:
         needed by (5): SW2_workshop_page_in_the_voids_style, AR2_architect_in_the_workshop,
         PL1_one_entry_point, UI12_workshop_surface, WS7_the_full_workshop · all downstream 9 ·
         finishing it unlocks SW2_workshop_page_in_the_voids_style, WS7_the_full_workshop
+  phaseUuid: a17efb66-7362-584b-8c11-55600b08a07a

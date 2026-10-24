@@ -7,11 +7,11 @@ intent: null
 summary: IM0d_lib_is_the_kernel (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830016031
+exported_at: 1792830628071
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830016031
-lastSeenAt: 1792830016031
+firstSeenAt: 1792830628071
+lastSeenAt: 1792830628071
 fingerprint: null
 payload:
   id: IM0d_lib_is_the_kernel
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: f850ba80a6e249d8
+  uuid: 344e7a7b-723f-57a0-b073-78bdc6ea6d4d

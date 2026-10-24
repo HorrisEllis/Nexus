@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830025827
+exported_at: 1792830638286
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830025827
-lastSeenAt: 1792830025827
+firstSeenAt: 1792830638286
+lastSeenAt: 1792830638286
 fingerprint: null
 payload:
   for: ND5_every_agent_reaches_every_system
@@ -259,3 +259,4 @@ payload:
         depends on (2): ND4_commands_and_capabilities_from_the_schemas,
         P35_copilot_reads_edits_creates_nodes · all upstream 13
       - 'needed by (1): ND6_the_nodes_screen · finishing it unlocks ND6_the_nodes_screen'
+  phaseUuid: 47c7d417-1d2c-5325-9114-23d7ee90f8c5

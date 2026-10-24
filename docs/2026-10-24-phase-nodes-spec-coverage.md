@@ -160,3 +160,14 @@ Written by `node emerge/compiler/phase-specs.js --all`: every phase of the 166 m
 | idearium-repository-overhaul | 13 | 1 |
 | repair-contract-and-loom-hub | 11 | 1 |
 | rich-atlas | 3 | 1 |
+
+## ADDENDUM 2026-10-24 (0.60.228) — the bundle: one uuid, and the spec link
+James, 2026-10-24: "need to either update existing or create new ones. then we could have each .spec bundled with each .phase with each .dag.
+all with a id or uuid that matches them."
+- Every `.phase` now carries `uuid` (one stable id per phase, from its map and id), and its `.graph` (the DAG) carries the same id as
+  `phaseUuid`. Where a spec owns the phase, `specLink` names the spec and each module with the module's own `uuid`.
+- "Update existing", measured: the existing specs declare 334 modules over 167 file paths; 70 of the 241 .spec files are not YAML and could
+  not be read for links. A file identifies a phase's spec only when ONE module declares it and at most 5 phases name it (by the axioms:
+  idearium/api/index.js is declared by 7 modules and named by 171 phases, so it identifies nothing). Result: **157 phases have a real spec
+  link** (133 declared by the map, 24 discovered by a file one module owns). The other 1889 carry their uuid and DAG and have no spec to
+  point at: those specs are to be written ("create new ones").

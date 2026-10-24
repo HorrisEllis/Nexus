@@ -9,11 +9,11 @@ intent: null
 summary: EX4_intelligence_learns_the_normal (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829996477
+exported_at: 1792830607596
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829996477
-lastSeenAt: 1792829996477
+firstSeenAt: 1792830607596
+lastSeenAt: 1792830607596
 fingerprint: null
 payload:
   id: EX4_intelligence_learns_the_normal
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 5991de2b3e18f190
+  uuid: f91dd667-9e61-51e0-8ef9-8e4a8b8c108a

@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829991027
+exported_at: 1792830601689
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829991027
-lastSeenAt: 1792829991027
+firstSeenAt: 1792830601689
+lastSeenAt: 1792830601689
 fingerprint: null
 payload:
   for: WS1_agents_use_the_work_surface
@@ -241,3 +241,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 3
       - 'depends on (1): CH1_compartment_charter · all upstream 3'
       - 'needed by (0): —'
+  phaseUuid: 40306b0a-7544-545a-8dc5-423f8af5842d

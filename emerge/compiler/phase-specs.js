@@ -27,7 +27,7 @@ const fs = require('fs');
 const path = require('path');
 
 const MODULE_ID = 'nexus.emerge.phase-specs';
-const VERSION = '1.1.0';   // 1.1.0 PS2 --all
+const VERSION = '1.2.0';   // 1.1.0 PS2 --all · 1.2.0 PS3 bundles (one uuid; spec module link)
 const ROOT = path.resolve(__dirname, '../..');
 
 const _field = (body, k) => { const m = String(body || '').match(new RegExp(`^\\s{4}${k}:\\s*(.+)$`, 'm')); return m ? m[1].trim() : null; };
@@ -45,6 +45,52 @@ function specIds(specPath) {
   const nodes = r.graph.nodes instanceof Map ? [...r.graph.nodes.values()] : (r.graph.nodes || []);
   for (const n of nodes) if (!n.isBlack) { ids.add(n.id); if (n.name) ids.add(n.name); }
   return ids;
+}
+
+/**
+ * PS3 0.60.228 — James, 2026-10-24: "need to either update existing or create new ones. then we could have each .spec bundled with each
+ * .phase with each .dag. all with a id or uuid that matches them."
+ * bundleUuid(map, id): one stable id per phase (a name-based uuid from the map and the phase id: the same phase, the same id, every run).
+ * moduleIndex(root): every module every spec in the tree declares, by its path: { path → [{ spec, id, uuid }] }; a spec that does not
+ * parse is counted, said, never guessed.
+ */
+function bundleUuid(map, id) {
+  const h = require('crypto').createHash('sha1').update(`nexus.phase:${map}::${id}`).digest('hex');
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-5${h.slice(13, 16)}-${((parseInt(h[16], 16) & 3) | 8).toString(16)}${h.slice(17, 20)}-${h.slice(20, 32)}`;
+}
+let _modIdx = null;
+function moduleIndex(root = ROOT) {
+  if (_modIdx && _modIdx.root === root) return _modIdx;
+  const yaml = require('js-yaml');
+  const files = require('child_process').execSync('git ls-files "*.spec"', { cwd: root }).toString().trim().split('\n').filter(f => f && !/phasemap|\/phases\//.test(f));
+  const byPath = new Map(), byId = new Map(); const unparsable = [];
+  for (const f of files) {
+    let raw; try { raw = yaml.load(fs.readFileSync(path.join(root, f), 'utf8')); } catch (_) { unparsable.push(f); continue; }
+    const sp = raw && raw.spec ? raw.spec : raw;
+    for (const m of (sp && Array.isArray(sp.modules) ? sp.modules : [])) {
+      if (!m || !m.id) continue;
+      const e = { spec: f, id: m.id, uuid: m.uuid || null, path: m.path ? String(m.path).replace(/^\.\//, '') : null };
+      byId.set(`${f}#${m.id}`, e);
+      if (e.path) { if (!byPath.has(e.path)) byPath.set(e.path, []); byPath.get(e.path).push(e); }
+    }
+  }
+  _modIdx = { root, byPath, byId, specs: files.length, unparsable };
+  return _modIdx;
+}
+// a file identifies a phase's spec module only when ONE module declares it and few phases name it (TRUTH_OVER_COHERENCE, as SL2's
+// evidence rule): idearium/api/index.js is declared by 7 modules and named by 171 phases — linking them all to it says nothing
+const HUB_PHASES = 5;
+function specLinkOf({ spec, blocks, files, idx, uses = null }) {
+  if (spec && blocks.length) {
+    const modules = blocks.map(b => idx.byId.get(`${spec}#${b}`) || { spec, id: b, uuid: null }).map(m => ({ id: m.id, uuid: m.uuid }));
+    return { how: 'declared', spec, modules };
+  }
+  const hits = [];
+  for (const f of files) { const ms = idx.byPath.get(f) || []; if (ms.length !== 1) continue; if (uses && (uses.get(f) || 0) > HUB_PHASES) continue; hits.push({ ...ms[0], file: f }); }
+  if (!hits.length) return null;
+  const specs = [...new Set(hits.map(h => h.spec))];
+  return { how: 'discovered:path', spec: specs.length === 1 ? specs[0] : null, specs, covers: `${new Set(hits.map(h => h.file)).size}/${files.length} files`,
+    modules: hits.map(h => ({ spec: h.spec, id: h.id, uuid: h.uuid, file: h.file })) };
 }
 
 function _ownerDir(owner, SYS) {
@@ -68,6 +114,7 @@ function derive({ root = ROOT, map, mapsDir = path.join(root, 'docs') } = {}) {
   const systemOf = PG.boundarySystemOf(root);
   let baseline = null; try { baseline = PG.baselineEdges(root); } catch (_) { baseline = null; }
   const specCache = new Map();
+  const fileUses = new Map(); for (const n of Object.values(dag.nodes)) if (!n.decision) for (const f of new Set(n.files || [])) fileUses.set(f, (fileUses.get(f) || 0) + 1);
   const out = [];
   const seenIds = new Set();
   for (const ph of PF.phasesOf(mapText, mapRel)) {
@@ -91,10 +138,12 @@ function derive({ root = ROOT, map, mapsDir = path.join(root, 'docs') } = {}) {
     const files = node ? node.files : [];
     const owner = PP.targetSystem({ files, tags: [], ownerOf: SYS.ownerOf, tagSystem: SYS.systemForLoomTag }).system || 'core';
     const dir = path.join(_ownerDir(owner, SYS), 'phases', _mapId(mapRel));
-    const graphEnv = PN.graphNode({ ...graph, for: ph.id }, { kind: 'phase' });
+    const uuid = bundleUuid(mapRel, ph.id);
+    const specLink = specLinkOf({ spec, blocks, files, idx: moduleIndex(root), uses: fileUses });
+    const graphEnv = PN.graphNode({ ...graph, for: ph.id, phaseUuid: uuid }, { kind: 'phase' });
     const phaseEnv = PN.phaseNode({ id: ph.id, map: mapRel, layer: _field(ph.body, 'layer'), status: _field(ph.body, 'status') || 'OPEN',
-      files, depends_on: node ? node.deps.map(d => d.split('::').pop()) : _list(_field(ph.body, 'depends_on')), blocks, spec, graph: graph.hash });
-    out.push({ phase: ph.id, owner, dir, ready: graph.ready, graphHash: graph.hash, graphEnv, phaseEnv,
+      files, depends_on: node ? node.deps.map(d => d.split('::').pop()) : _list(_field(ph.body, 'depends_on')), blocks, spec, graph: graph.hash, uuid, specLink });
+    out.push({ phase: ph.id, owner, dir, ready: graph.ready, graphHash: graph.hash, graphEnv, phaseEnv, uuid, specLink,
       blocks: { resolved, missing, ...(specError ? { specError } : {}) } });
   }
   return out;
@@ -109,7 +158,7 @@ function write(opts = {}) {
     const put = (env, file) => { NE.validate(env); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, NE.toYaml(env), 'utf8'); return file; };
     const graphFile = put(d.graphEnv, path.join(abs, 'graph', `${d.phase}-${d.graphHash}.graph`));
     const phaseFile = put(d.phaseEnv, path.join(abs, `${d.phase}.phase`));
-    return { phase: d.phase, owner: d.owner, ready: d.ready, graphHash: d.graphHash, blocks: d.blocks,
+    return { phase: d.phase, owner: d.owner, ready: d.ready, graphHash: d.graphHash, blocks: d.blocks, uuid: d.uuid, specLink: d.specLink,
       phaseFile: path.relative(out, phaseFile).split(path.sep).join('/'), graphFile: path.relative(out, graphFile).split(path.sep).join('/') };
   });
 }
@@ -151,6 +200,8 @@ function writeAll({ root = ROOT, check: dry = false } = {}) {
       sum.phases++; if (!dry) sum.written++; if (r.ready) sum.ready++; if (r.blocks.missing.length) sum.blocksMissing++;
       const o = (sum.byOwner[r.owner] = sum.byOwner[r.owner] || { phases: 0, withSpec: 0 }); o.phases++;
       if (spec) { sum.withSpec++; o.withSpec++; } else sum.noSpec.push({ map, phase: r.phase, owner: r.owner });
+      const link = r.specLink !== undefined ? r.specLink : (() => { try { return require('../../lib/node-export.js').fromYaml(fs.readFileSync(path.join(root, r.phaseFile), 'utf8')).payload.specLink || null; } catch (_) { return null; } })();
+      if (link && link.how === 'discovered:path') { sum.discovered = (sum.discovered || 0) + 1; o.discovered = (o.discovered || 0) + 1; }
     }
   }
   return sum;
@@ -159,8 +210,9 @@ function writeAll({ root = ROOT, check: dry = false } = {}) {
 if (require.main === module && process.argv.includes('--all')) {
   const quiet = console.log; console.log = () => {};
   let r; try { r = writeAll({ check: process.argv.includes('--dry') }); } finally { console.log = quiet; }
-  console.log(`${r.maps} maps · ${r.phases} phases · ${r.written} .phase + .graph written · ${r.withSpec} name their spec · ${r.ready} ready · ${r.blocksMissing} name blocks their spec lacks`);
-  for (const [o, x] of Object.entries(r.byOwner).sort((a, b) => b[1].phases - a[1].phases)) console.log(`  ${o.padEnd(16)} ${String(x.phases).padStart(5)} phases · ${String(x.withSpec).padStart(4)} with a spec`);
+  console.log(`${r.maps} maps · ${r.phases} phases · ${r.written} .phase + .graph written · ${r.withSpec} name their spec · ${r.discovered || 0} more linked to a spec module by a file it declares · ${r.ready} ready · ${r.blocksMissing} name blocks their spec lacks`);
+  const mi = moduleIndex(); console.log(`  specs: ${mi.specs} · ${mi.byId.size} modules · ${mi.byPath.size} module paths · ${mi.unparsable.length} specs not YAML (not read for links)`);
+  for (const [o, x] of Object.entries(r.byOwner).sort((a, b) => b[1].phases - a[1].phases)) console.log(`  ${o.padEnd(16)} ${String(x.phases).padStart(5)} phases · ${String(x.withSpec).padStart(4)} with a spec · ${String(x.discovered || 0).padStart(4)} linked by path`);
   for (const f of r.failed) console.log(`  ✗ ${f.map}: ${f.error}`);
   if (process.argv.includes('--json')) require('fs').writeFileSync(process.argv[process.argv.indexOf('--json') + 1], JSON.stringify(r, null, 1));
   process.exit(r.failed.length ? 1 : 0);
@@ -176,4 +228,4 @@ if (require.main === module && !process.argv.includes('--all')) {
   process.exit(rows.some(r => (r.drift && r.drift.length) || (r.blocks && r.blocks.missing.length)) ? 1 : 0);
 }
 
-module.exports = { writeAll, MODULE_ID, VERSION, specIds, derive, write, check };
+module.exports = { writeAll, bundleUuid, moduleIndex, specLinkOf, MODULE_ID, VERSION, specIds, derive, write, check };

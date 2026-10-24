@@ -7,11 +7,11 @@ intent: null
 summary: BS0_cookie_target (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830023771
+exported_at: 1792830636208
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023771
-lastSeenAt: 1792830023771
+firstSeenAt: 1792830636208
+lastSeenAt: 1792830636208
 fingerprint: null
 payload:
   id: BS0_cookie_target
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 4849b9f58d06e1fb
+  uuid: f1d6f6f9-3eaa-5fd9-9570-806d5b167eb3

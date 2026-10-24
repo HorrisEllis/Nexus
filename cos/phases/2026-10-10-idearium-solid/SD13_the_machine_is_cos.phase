@@ -7,11 +7,11 @@ intent: null
 summary: SD13_the_machine_is_cos (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792829999657
+exported_at: 1792830610987
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829999657
-lastSeenAt: 1792829999657
+firstSeenAt: 1792830610987
+lastSeenAt: 1792830610987
 fingerprint: null
 payload:
   id: SD13_the_machine_is_cos
@@ -30,3 +30,4 @@ payload:
   blocks: []
   spec: null
   graph: a7f1272bf6f97c42
+  uuid: 53ea98b1-8033-5981-9488-19c9cdc88dba

@@ -7,11 +7,11 @@ intent: null
 summary: COSA5_data_root (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005845
+exported_at: 1792830617308
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005845
-lastSeenAt: 1792830005845
+firstSeenAt: 1792830617308
+lastSeenAt: 1792830617308
 fingerprint: null
 payload:
   id: COSA5_data_root
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 8c58d98a92114457
+  uuid: 7f1ae4c9-eea6-5097-a1ce-36ebbd999504

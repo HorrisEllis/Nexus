@@ -7,11 +7,11 @@ intent: null
 summary: GS0c_his_copy (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830012970
+exported_at: 1792830624758
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830012970
-lastSeenAt: 1792830012970
+firstSeenAt: 1792830624758
+lastSeenAt: 1792830624758
 fingerprint: null
 payload:
   id: GS0c_his_copy
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: b248aa3dbb1c9cee
+  uuid: 767b1658-af4c-53e0-834e-a89694da2dc7

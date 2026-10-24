@@ -7,11 +7,11 @@ intent: null
 summary: P6_every_system_reachable (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830030157
+exported_at: 1792830642516
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830030157
-lastSeenAt: 1792830030157
+firstSeenAt: 1792830642516
+lastSeenAt: 1792830642516
 fingerprint: null
 payload:
   id: P6_every_system_reachable
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 7d719f5d40d918b1
+  uuid: e79600f5-ce38-5382-bf5f-b163da6ad010

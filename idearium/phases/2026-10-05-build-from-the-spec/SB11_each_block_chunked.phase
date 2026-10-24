@@ -7,11 +7,11 @@ intent: null
 summary: SB11_each_block_chunked (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792829990938
+exported_at: 1792830601599
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990938
-lastSeenAt: 1792829990938
+firstSeenAt: 1792830601599
+lastSeenAt: 1792830601599
 fingerprint: null
 payload:
   id: SB11_each_block_chunked
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: c80702c27e56d8d4
+  uuid: be67065d-6fe3-5202-a8f8-afb97097526e

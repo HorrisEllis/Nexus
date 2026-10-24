@@ -7,11 +7,11 @@ intent: null
 summary: P3_diagnostic_kernel (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830032950
+exported_at: 1792830645173
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830032950
-lastSeenAt: 1792830032950
+firstSeenAt: 1792830645173
+lastSeenAt: 1792830645173
 fingerprint: null
 payload:
   id: P3_diagnostic_kernel
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 75ac0a6dcf420224
+  uuid: f9fae7da-eccc-5afc-b708-eca9b9f026d7

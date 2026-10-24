@@ -7,11 +7,11 @@ intent: null
 summary: AL1_activity_log (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792829994579
+exported_at: 1792830605482
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829994579
-lastSeenAt: 1792829994579
+firstSeenAt: 1792830605482
+lastSeenAt: 1792830605482
 fingerprint: null
 payload:
   id: AL1_activity_log
@@ -29,3 +29,4 @@ payload:
   blocks: []
   spec: null
   graph: f60e21ab10d46017
+  uuid: 4baa5b3e-d0e9-513d-9698-1100a972a14e

@@ -9,11 +9,11 @@ intent: null
 summary: D1_canvas_authority (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829978155
+exported_at: 1792830588786
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829978155
-lastSeenAt: 1792829978155
+firstSeenAt: 1792830588786
+lastSeenAt: 1792830588786
 fingerprint: null
 payload:
   id: D1_canvas_authority
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: d0dc896558286d1e
+  uuid: a3425f44-028f-503c-b40f-f4ef4b70407b

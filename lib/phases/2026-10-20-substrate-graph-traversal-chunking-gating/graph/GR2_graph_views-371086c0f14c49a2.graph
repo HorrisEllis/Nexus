@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830022168
+exported_at: 1792830634517
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830022168
-lastSeenAt: 1792830022168
+firstSeenAt: 1792830634517
+lastSeenAt: 1792830634517
 fingerprint: null
 payload:
   for: GR2_graph_views
@@ -72,3 +72,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4 · blocked by GR1_graph_primitive, AD1_adapter_contract
       - 'depends on (2): GR1_graph_primitive, AD1_adapter_contract · all upstream 7'
       - 'needed by (2): XD1_cross_domain_verification, GR3_graph_query_surface · all downstream 6'
+  phaseUuid: 29fb5d92-f39c-57d9-a93e-3fb2fb8c239d

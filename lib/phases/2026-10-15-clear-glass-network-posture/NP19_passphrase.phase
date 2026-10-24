@@ -7,11 +7,11 @@ intent: null
 summary: NP19_passphrase (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830004608
+exported_at: 1792830616037
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830004608
-lastSeenAt: 1792830004608
+firstSeenAt: 1792830616037
+lastSeenAt: 1792830616037
 fingerprint: null
 payload:
   id: NP19_passphrase
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 0c66e78b2ee051b4
+  uuid: 066ee1c8-7df7-525b-b3b4-896af09a2eb9

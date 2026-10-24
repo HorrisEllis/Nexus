@@ -7,11 +7,11 @@ intent: null
 summary: AM1_per_agent_learned_model (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830027816
+exported_at: 1792830640229
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830027816
-lastSeenAt: 1792830027816
+firstSeenAt: 1792830640229
+lastSeenAt: 1792830640229
 fingerprint: null
 payload:
   id: AM1_per_agent_learned_model
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 9f79131e9be93d52
+  uuid: c46b2c82-de82-5b5d-b6bd-8c73d347dd7c

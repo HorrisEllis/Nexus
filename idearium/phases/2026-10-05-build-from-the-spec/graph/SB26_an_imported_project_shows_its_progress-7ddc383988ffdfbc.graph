@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829990975
+exported_at: 1792830601636
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829990975
-lastSeenAt: 1792829990975
+firstSeenAt: 1792830601636
+lastSeenAt: 1792830601636
 fingerprint: null
 payload:
   for: SB26_an_imported_project_shows_its_progress
@@ -269,3 +269,4 @@ payload:
         same files as SB5_nexus_rebuilds_a_system_from_its_spec with no order between them:
         idearium/repo/proof-run.js
       - 'same files as SB14_reuse_compounds with no order between them: idearium/repo/proof-run.js'
+  phaseUuid: e62dc062-72f0-50e9-8901-5511d5ce11a2

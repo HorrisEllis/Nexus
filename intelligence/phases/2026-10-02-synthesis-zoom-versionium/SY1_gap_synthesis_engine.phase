@@ -7,11 +7,11 @@ intent: null
 summary: SY1_gap_synthesis_engine (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829989747
+exported_at: 1792830600399
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829989747
-lastSeenAt: 1792829989747
+firstSeenAt: 1792830600399
+lastSeenAt: 1792830600399
 fingerprint: null
 payload:
   id: SY1_gap_synthesis_engine
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 042dc79969e20121
+  uuid: dc4fa3ba-c5e8-5aed-a2c1-08214ad7af56

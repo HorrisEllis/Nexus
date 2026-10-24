@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830009021
+exported_at: 1792830620654
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009021
-lastSeenAt: 1792830009021
+firstSeenAt: 1792830620654
+lastSeenAt: 1792830620654
 fingerprint: null
 payload:
   for: WB1_warp_at_the_rung
@@ -252,3 +252,4 @@ payload:
       - >-
         needed by (1): WB2_raid_bricks_and_officiator_through_warp · finishing it unlocks
         WB2_raid_bricks_and_officiator_through_warp
+  phaseUuid: 4dfde77f-52b0-5a67-ae56-21778a5292d2

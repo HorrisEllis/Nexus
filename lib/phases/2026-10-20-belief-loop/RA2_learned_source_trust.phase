@@ -7,11 +7,11 @@ intent: null
 summary: RA2_learned_source_trust (library) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830021768
+exported_at: 1792830634101
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830021768
-lastSeenAt: 1792830021768
+firstSeenAt: 1792830634101
+lastSeenAt: 1792830634101
 fingerprint: null
 payload:
   id: RA2_learned_source_trust
@@ -27,3 +27,10 @@ payload:
     - MOD-SOURCE-TRUST
   spec: docs/belief-loop.spec
   graph: 96f3facc75253f80
+  uuid: 61b684ed-0922-5355-8579-b9bbbdcd4eae
+  specLink:
+    how: declared
+    spec: docs/belief-loop.spec
+    modules:
+      - id: MOD-SOURCE-TRUST
+        uuid: nexus-belief-source-trust-v1-0000-2026-1020-001

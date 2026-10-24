@@ -9,11 +9,11 @@ intent: null
 summary: MEM1_three_tier_memory_formalized (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829974795
+exported_at: 1792830585383
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829974795
-lastSeenAt: 1792829974795
+firstSeenAt: 1792830585383
+lastSeenAt: 1792830585383
 fingerprint: null
 payload:
   id: MEM1_three_tier_memory_formalized
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: 9be52a539ecdbb7a
+  uuid: cc991629-1c53-5bfd-a498-48849c520769

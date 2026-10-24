@@ -7,11 +7,11 @@ intent: null
 summary: N20_desktop_login (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792829985441
+exported_at: 1792830596177
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829985441
-lastSeenAt: 1792829985441
+firstSeenAt: 1792830596177
+lastSeenAt: 1792830596177
 fingerprint: null
 payload:
   id: N20_desktop_login
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: 4254a95488f078bd
+  uuid: eae94a5c-1fad-50ed-8cb7-2a37631a3cc3

@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792830023360
+exported_at: 1792830635771
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830023360
-lastSeenAt: 1792830023360
+firstSeenAt: 1792830635771
+lastSeenAt: 1792830635771
 fingerprint: null
 payload:
   for: BX5_node_controls
@@ -243,3 +243,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 4 · blocked by BX3_flow_canvas
       - 'depends on (1): BX3_flow_canvas · all upstream 4'
       - 'needed by (1): BX7_automation · all downstream 2 · finishing it unlocks BX7_automation'
+  phaseUuid: ec9e497a-62ac-5177-a964-753201111837

@@ -7,11 +7,11 @@ intent: null
 summary: OS2_the_plan_panel_holds_it (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829995350
+exported_at: 1792830606328
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829995350
-lastSeenAt: 1792829995350
+firstSeenAt: 1792830606328
+lastSeenAt: 1792830606328
 fingerprint: null
 payload:
   id: OS2_the_plan_panel_holds_it
@@ -24,3 +24,4 @@ payload:
   blocks: []
   spec: null
   graph: 7c79a17a177f132e
+  uuid: c45b0d44-2504-50aa-83f0-6c08025cafab

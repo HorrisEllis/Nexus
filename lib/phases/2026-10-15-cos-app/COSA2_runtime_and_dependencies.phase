@@ -7,11 +7,11 @@ intent: null
 summary: COSA2_runtime_and_dependencies (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830005843
+exported_at: 1792830617305
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830005843
-lastSeenAt: 1792830005843
+firstSeenAt: 1792830617305
+lastSeenAt: 1792830617305
 fingerprint: null
 payload:
   id: COSA2_runtime_and_dependencies
@@ -25,3 +25,4 @@ payload:
   blocks: []
   spec: null
   graph: df3ed9356c77d331
+  uuid: 1b78e6b6-465d-57d6-a0de-1b98d50a8f32

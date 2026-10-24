@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829988459
+exported_at: 1792830599099
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829988459
-lastSeenAt: 1792829988459
+firstSeenAt: 1792830599099
+lastSeenAt: 1792830599099
 fingerprint: null
 payload:
   for: WS6_workshop_parts_and_modes
@@ -76,3 +76,4 @@ payload:
       - 'depends on (1): CB3_the_causal_spec_block · all upstream 7'
       - 'needed by (0): —'
       - 'same files as UI0_the_stations_agree with no order between them: idearium/ui/workshop.html'
+  phaseUuid: 5f05691c-7789-5067-b481-def06f7ca7d7

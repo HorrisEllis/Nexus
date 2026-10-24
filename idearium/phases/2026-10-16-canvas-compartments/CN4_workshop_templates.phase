@@ -7,11 +7,11 @@ intent: null
 summary: CN4_workshop_templates (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830009791
+exported_at: 1792830621507
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830009791
-lastSeenAt: 1792830009791
+firstSeenAt: 1792830621507
+lastSeenAt: 1792830621507
 fingerprint: null
 payload:
   id: CN4_workshop_templates
@@ -27,3 +27,4 @@ payload:
   blocks: []
   spec: null
   graph: ca880b9d3e8fd1e4
+  uuid: eee27263-1133-5821-aa2e-7a49797ff334

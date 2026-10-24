@@ -9,11 +9,11 @@ intent: null
 summary: RF5_agent_registry_is_hardcoded (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792829975185
+exported_at: 1792830585806
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829975185
-lastSeenAt: 1792829975185
+firstSeenAt: 1792830585806
+lastSeenAt: 1792830585806
 fingerprint: null
 payload:
   id: RF5_agent_registry_is_hardcoded
@@ -26,3 +26,4 @@ payload:
   blocks: []
   spec: null
   graph: d23893d9ba8765fc
+  uuid: e21dfead-0fde-51fc-b593-d602db219f26

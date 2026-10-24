@@ -9,11 +9,11 @@ intent: null
 summary: MCO7_nexus_systems_as_repo_compartments (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792830034113
+exported_at: 1792830646308
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830034113
-lastSeenAt: 1792830034113
+firstSeenAt: 1792830646308
+lastSeenAt: 1792830646308
 fingerprint: null
 payload:
   id: MCO7_nexus_systems_as_repo_compartments
@@ -28,3 +28,4 @@ payload:
   blocks: []
   spec: null
   graph: b9b0a420afcc0424
+  uuid: c691c6c4-37a0-5a41-82d6-005e7853d334

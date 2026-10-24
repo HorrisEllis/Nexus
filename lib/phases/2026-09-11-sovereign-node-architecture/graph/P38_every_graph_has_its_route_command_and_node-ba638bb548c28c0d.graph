@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792829976533
+exported_at: 1792830587144
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792829976533
-lastSeenAt: 1792829976533
+firstSeenAt: 1792830587144
+lastSeenAt: 1792830587144
 fingerprint: null
 payload:
   for: P38_every_graph_has_its_route_command_and_node
@@ -48,3 +48,4 @@ payload:
       - DAG 2f8ddd0afd383c4f · layer 1 · blocked by P2_per_system_interaction_contracts
       - 'depends on (1): P2_per_system_interaction_contracts'
       - 'needed by (0): —'
+  phaseUuid: 1e73773c-5bdd-5be6-a756-8a9b70fdb286
