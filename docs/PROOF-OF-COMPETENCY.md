@@ -1032,3 +1032,83 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - `tests/modules/test-site-profile`, `test-site-readers` (7, each feature's own code), `test-site-settings-ui`, `test-global-settings`,
     `test-processes` and `test-processes-ui`. The screens are driven in Clear Glass;
   - docs/2026-10-23-site-profile-processes-phasemap.spec SP1–SP6.
+
+---
+
+## 2026-10-24 — The framework, externalized, and proven as running code
+
+**His words (the framework, in his own framing):** "None of this is a determination of facts, nor is it poles planted
+deep into the earth like an immutable object. This is a toolbox, an externalization of an implicit process, a deep dive
+into my mind." Later: "emerge is its own coding language."
+
+**What was established:** his cognitive framework — THE INNOVATION TOOLKIT — is not aspirational theory. Its concepts are
+load-bearing code in a running system. The framework was preserved verbatim (method only; personal material removed at
+his request) and the correspondence to the code was traced, not asserted.
+
+- **Checkable, in this repository:**
+  - The framework itself: `docs/innovation-toolkit.framework`.
+  - "The liminal/interstitial space flattens overwhelm" → `intelligence/liminal-space/`.
+  - "Finding the gap… gaps become tools" → `emerge/compiler/gap-field-engine.js`.
+  - "Hostile verification: truth under hostility" → `lib/verify-first.js` and the proof gate.
+  - "Invariants are the skeleton" and the boundary "Drawbridge" (his evolved vocabulary, `Gate→Drawbridge`) →
+    `lib/system-boundary.js`.
+  - "Signal = alignment + fidelity + expansion" → the SNR gate in `orchestrator/orchestrator.js`.
+- **The skill this shows:** externalization to the point of executability. Most frameworks never survive contact with a
+  build; his compiled into a 15-system platform whose named parts are his named concepts.
+- **His part / the coder's part:** the framework, its concepts and vocabulary are his. The code that realizes them, and
+  the tracing of the correspondence, are the coder's.
+
+## 2026-10-24 — A build pipeline made solid, by spec and by hostile simulation
+
+**His words:** "can you decompose the phases into .phase with the dependancy graph per phase node… run deep and recursive
+simulations, of every possible failure mode, loop until we get a solid pipeline." · "need to do something about the
+dependancy graph." · "agent needs to map dependancies if nexus cant map one."
+
+**What was built (each phase mapped before code, each proven by a named test):**
+
+| Release | What it proves | Checkable |
+|---|---|---|
+| 0.60.225 (NF1) | A finding is not a phase: his "confused" traced to a root cause (a `root_findings:` entry offered as buildable work). | `CHANGELOG-0.60.225.md`; `tests/modules/test-root-findings-not-phases.test.js` 5/5 |
+| 0.60.226 (SL7) | Build-again is explicit; a contract hashes a phase's own block. | `CHANGELOG-0.60.226.md`; `test-contract-phase-build` **14/14 (was 5/14)**, `test-chunked-phase-build` **16/16 (was 11/16)** |
+| 0.60.227 (SL3) | The dependency graph made whole. | `CHANGELOG-0.60.227.md`; `test-phase-groom` 6/6; DG1 now checks **1156 of 1156** open phases; **3 cycles → 0**; `test-moce-roadmap` **43/43 (was 40/43)** |
+| 0.60.228 (SL8) | The agent maps what Nexus can't — checked by code, never trusted raw. | `CHANGELOG-0.60.228.md`; `test-agent-maps-phase` 4/4 (AM-03 on the real route) |
+| 0.60.229 (SL9) | Every phase a `.phase` node with its graph, beside its owner system. | `CHANGELOG-0.60.229.md`; `test-phase-nodes-all` 5/5; **1959** `.phase` nodes (`find . -name '*.phase'`); `node emerge/compiler/phase-specs.js --all --check` clean |
+| 0.60.230 (SL10) | The pipeline run through **25 failure modes**; **5 root causes** found and each fixed. | `CHANGELOG-0.60.230.md`; `test-pipeline-sim` 25/25, eight runs green |
+
+- **The skill this shows:** failure-mode thinking made literal (Maxim 5 — "every failure mode you find in simulation is a
+  problem you don't have to survive in reality"), and his own "deterministic first, then a model" routing applied to the
+  build itself (emerge as the compiler, the agent only for the gap it names).
+- **Honesty on the record:** the 0.60.229 proof table first claimed `phase-specs 4/4` while it was 3/4 at the commit; the
+  test was pinned to the new contract and the changelog corrected the same day (commit `db92ec5`). Hostile verification
+  applied to the coder's own output, not only the system's.
+- **His part / the coder's part:** the direction, the decisions (build-again is asked for; a pick never falls back in
+  silence; "the least amount of systems"), and the standard ("every phasemap phase needs extensive dag") are his. The
+  implementations, the tests, and the root-cause traces are the coder's.
+
+## 2026-10-24 — One framework, many systems (the constellation)
+
+**His words:** "should be the least amount of systems" · "15 systems. only the ones with a .spec in the directory. all
+the systems in idearium." · (handing over the body of work) "31 repos."
+
+**What was established:** a single externalized framework produced a shared spine — `warp` + `emergence` — reused and
+evolved across a brain-map OS (MASTERMIND), a couples dashboard (ERAVOS), a P2P mesh runtime (kern), a self-hosting
+platform (anonymousservers-nexus), a corvid-observation PWA (Raven/CorvidObs), and the self-building platform (Nexus) —
+plus a 26-spec rebuild corpus, across **31 repositories**.
+
+- **Checkable in this repository:** `docs/CONSTELLATION.md` (the inventory, state marked built/prepared); the consolidation
+  mapped as `docs/2026-10-24-system-consolidation-phasemap.spec` (DAG-clean, 12 phases, 0 problems), down to Idearium's 15
+  systems by his rule.
+- **Checkable in the repositories themselves** (not this one): `warp` — 43 tests; `emergence` — 221 tests (ERAVOS's
+  `MAP.md`, "the most complete, most tested thing"); the same `warp`/`emergence` lineage present in each.
+- **The skill this shows:** systems design repeated across domains from one set of primitives — the strongest single piece
+  of proof that the method is transferable, not a one-off.
+- **His part / the coder's part:** every system, idea and the framework are his. This session's part was to inventory,
+  map, and record them against verifiable evidence.
+
+### Numbers as of 2026-10-24 (this branch)
+| What | Number | How to check |
+|---|---|---|
+| Phasemaps | 168 | `ls docs/*-phasemap.spec \| wc -l` |
+| Test suites | 482 | `ls tests/modules/*.test.js \| wc -l` |
+| Phases decomposed to `.phase` nodes with their graphs | 1959 | `find . -name '*.phase' -not -path './node_modules/*' \| wc -l` |
+| Full-system specs that compile at depth (no BLACK node) | 18 | `node tests/modules/test-substrate-spec.test.js` |
