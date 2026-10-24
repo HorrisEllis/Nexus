@@ -1,0 +1,251 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS13_autopilot_to_orchestrator:efd724a89f881ae3
+type: graph
+id: phase:CS13_autopilot_to_orchestrator:efd724a89f881ae3
+context: dependency graph of phase CS13_autopilot_to_orchestrator
+intent: null
+summary: 29 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877682544
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682544
+lastSeenAt: 1792877682544
+fingerprint: null
+payload:
+  for: CS13_autopilot_to_orchestrator
+  kind: phase
+  repo: null
+  hash: efd724a89f881ae3
+  nodes:
+    - path: cos/app/runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/autopilot.js
+      role: changes
+      exists: false
+      system: orchestrator
+    - path: package.json
+      role: changes
+      exists: true
+      system: null
+    - path: cos/app/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/switch.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-alk-lattice-live.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autopilot-boot-gates.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autopilot-idle.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-boot-phases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-spawn-guard.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-container-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-graph-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-ledger-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/autopilot-intelligence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/bus-subscriptions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/error-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-sse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Event.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Stream.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/StreamLog.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus/autopilot.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/ledger-fanin/boot.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/ledger-sse.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/error-log.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/autopilot-intelligence.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/warp/core/Stream.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/warp/core/StreamLog.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/warp/core/Axiom.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/warp/core/Event.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/bus-subscriptions.js
+      kind: requires
+    - from: tests/modules/test-alk-lattice-live.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-autopilot-boot-gates.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-autopilot-idle.test.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-boot-phases.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-spawn-guard.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-container-api.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-graph-api.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-ledger-api.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: cos/app/cli.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/shell.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/switch.js
+      to: cos/app/runtime.js
+      kind: requires
+  crossings:
+    - from: lib/nexus/autopilot.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D14_autopilot_to_orchestrator
+    dependents: []
+    upstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D14_autopilot_to_orchestrator
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D14_autopilot_to_orchestrator
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-24-sovereign-systems-phasemap.spec::CS14_cli_inside_nexus
+        files:
+          - package.json
+      - with: docs/2026-10-24-sovereign-systems-phasemap.spec::CS19_warp_the_system
+        files:
+          - lib/nexus-self/systems.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by CS12_the_mover_is_proven, CS_D14_autopilot_to_orchestrator
+      - 'depends on (2): CS12_the_mover_is_proven, CS_D14_autopilot_to_orchestrator'
+      - 'needed by (0): —'
+      - 'same files as CS14_cli_inside_nexus with no order between them: package.json'
+      - 'same files as CS19_warp_the_system with no order between them: lib/nexus-self/systems.js'
+    edges:
+      - from: docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D14_autopilot_to_orchestrator
+        kind: declared

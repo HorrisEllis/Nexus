@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877324526
+exported_at: 1792877682047
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877324526
-lastSeenAt: 1792877324526
+firstSeenAt: 1792877682047
+lastSeenAt: 1792877682047
 fingerprint: null
 payload:
   for: DB16_a_registry_for_each_system
@@ -222,6 +222,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
@@ -234,7 +235,7 @@ payload:
       - 'depends on (2): DB0c_reading, DB13_the_tunnel · all upstream 9'
       - >-
         needed by (4): DB21_one_registry_schema_every_level, CS3_the_registry_is_the_bridge,
-        CS4_every_system_a_compartment, DB18_nodes_in_relation_to_their_system · all downstream 24 ·
+        CS4_every_system_a_compartment, DB18_nodes_in_relation_to_their_system · all downstream 25 ·
         finishing it unlocks DB18_nodes_in_relation_to_their_system
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges:

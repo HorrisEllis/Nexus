@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877324556
+exported_at: 1792877682078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877324556
-lastSeenAt: 1792877324556
+firstSeenAt: 1792877682078
+lastSeenAt: 1792877682078
 fingerprint: null
 payload:
   for: CE1_the_compartment_machine
@@ -275,6 +275,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy:
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
@@ -286,7 +287,7 @@ payload:
       - layer 2 · blocked by CE1a_cos_answers_on_a_route
       - 'depends on (1): CE1a_cos_answers_on_a_route · all upstream 2'
       - >-
-        needed by (1): CE2_the_shell_is_declared · all downstream 16 · finishing it unlocks
+        needed by (1): CE2_the_shell_is_declared · all downstream 17 · finishing it unlocks
         CE2_the_shell_is_declared
     edges:
       - from: docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route

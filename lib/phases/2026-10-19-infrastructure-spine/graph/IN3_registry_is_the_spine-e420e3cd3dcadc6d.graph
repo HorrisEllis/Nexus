@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877324636
+exported_at: 1792877682160
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877324636
-lastSeenAt: 1792877324636
+firstSeenAt: 1792877682160
+lastSeenAt: 1792877682160
 fingerprint: null
 payload:
   for: IN3_registry_is_the_spine
@@ -274,6 +274,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy:
       - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
@@ -296,7 +297,7 @@ payload:
       - >-
         needed by (5): IN4_retire_hand_maps, IN5_architect_mirrors_the_registry,
         IN7_every_phase_and_spec_on_the_spine, NC1_neutral_core_boundary,
-        CS3_the_registry_is_the_bridge · all downstream 50 · finishing it unlocks
+        CS3_the_registry_is_the_bridge · all downstream 51 · finishing it unlocks
         IN4_retire_hand_maps, IN5_architect_mirrors_the_registry,
         IN7_every_phase_and_spec_on_the_spine, NC1_neutral_core_boundary
       - 'same files as IN8_any_size with no order between them: loom/bootstrap.js'

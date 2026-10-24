@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+context: pipeline phase SV3_components_and_architect of docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: SV3_components_and_architect (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682575
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682575
+lastSeenAt: 1792877682575
+fingerprint: null
+payload:
+  id: SV3_components_and_architect
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - components/compartment.json
+    - architect/compartment.json
+    - architect/service.js
+  depends_on:
+    - SV1_every_table_has_one_owner
+  blocks: []
+  spec: null
+  graph: 02775e6b3d80d203

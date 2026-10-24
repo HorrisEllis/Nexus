@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+context: pipeline phase SV0_the_census_tells_the_truth of docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: SV0_the_census_tells_the_truth (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682572
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682572
+lastSeenAt: 1792877682572
+fingerprint: null
+payload:
+  id: SV0_the_census_tells_the_truth
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "DONE 0.60.244 — comments skipped; sovereign both ways (inFrom, registry, compartment, step);
+    the Sovereignty card; the ratchet green (3 crossings designed out: lib/phasemap-parse.js, COS's
+    runTarget handed over). Only components is sovereign both ways."
+  files:
+    - lib/system-boundary.js
+    - tests/modules/test-system-boundary.test.js
+    - tests/modules/test-sovereign-systems.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a39b69a31419defb

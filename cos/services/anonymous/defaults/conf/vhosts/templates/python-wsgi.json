@@ -1,0 +1,17 @@
+{
+  "$template": "python-wsgi",
+  "label": "Python WSGI application",
+  "description": "A WSGI app behind the platform's proxy. Uses waitress on Windows, gunicorn on Linux.",
+  "stack": "python",
+  "php": false,
+  "proxyPort": null,
+  "portStrategy": "auto",
+  "process": {
+    "install": "pip install -r requirements.txt",
+    "startWindows": "waitress-serve --port={port} {module}",
+    "startLinux": "gunicorn -b 127.0.0.1:{port} {module}",
+    "restartOnCrash": true,
+    "logTo": "logs/webserver-{hostname}.log"
+  },
+  "provisions": ["documentRoot", "processEntry", "portAssignment", "tlsCertificate", "proxyRoute", "dnsRecord"]
+}

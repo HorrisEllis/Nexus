@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+context: pipeline phase SV7_intelligence_cos_cortex of docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: SV7_intelligence_cos_cortex (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682582
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682582
+lastSeenAt: 1792877682582
+fingerprint: null
+payload:
+  id: SV7_intelligence_cos_cortex
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence
+    - cos
+    - cortex
+  depends_on:
+    - SV6_loom_idearium_copilot
+  blocks: []
+  spec: null
+  graph: 0957783b63d9ff86

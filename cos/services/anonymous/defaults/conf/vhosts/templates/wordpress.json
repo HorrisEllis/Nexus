@@ -1,0 +1,14 @@
+{
+  "$template": "wordpress",
+  "label": "WordPress",
+  "description": "Full WordPress install via the catalog engine, with its own isolated database.",
+  "stack": "wordpress",
+  "php": true,
+  "index": ["index.php"],
+  "listing": false,
+  "htaccess": true,
+  "catalogApp": "wordpress",
+  "database": { "isolated": true, "engine": "sqlite", "upgradeTo": "mysql" },
+  "requires": { "binary": "php-cgi", "ifMissing": "WordPress cannot run without PHP installed." },
+  "provisions": ["documentRoot", "database", "catalogInstall", "tlsCertificate", "proxyRoute", "dnsRecord"]
+}

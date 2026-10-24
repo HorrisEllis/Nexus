@@ -1,0 +1,16 @@
+<div class="card">
+  <div class="frow" style="margin-bottom:0">
+    <label for="apps-search">Search the catalog</label>
+    <input id="apps-search" placeholder="wordpress, nextcloud, gitea…" oninput="panel.filterApps(this.value)">
+  </div>
+</div>
+<div class="gridAuto" id="apps-grid"></div>
+<div class="card">
+  <div class="card-title">Installed</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>App</th><th>Domain</th><th>Status</th><th>Installed</th></tr></thead>
+      <tbody id="installs-table"></tbody>
+    </table>
+  </div>
+</div>

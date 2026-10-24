@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repository-system-build-phasemap.spec::MCO3_snapshot_compliance
+type: phase
+id: docs_nexus-repository-system-build-phasemap.spec::MCO3_snapshot_compliance
+context: pipeline phase MCO3_snapshot_compliance of docs/nexus-repository-system-build-phasemap.spec
+intent: null
+summary: MCO3_snapshot_compliance (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682910
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682910
+lastSeenAt: 1792877682910
+fingerprint: null
+payload:
+  id: MCO3_snapshot_compliance
+  map: docs/nexus-repository-system-build-phasemap.spec
+  repo: null
+  layer: null
+  status: '>'
+  files:
+    - idearium/repo/snapshot.js
+    - idearium/spec/idearium.repo-snapshot.spec
+    - tests/modules/test-mco3-repo-snapshot.js
+    - cos/services/anonymous/engines/monitor.js
+    - intelligence/bda/kernel.js
+    - lib/nexus/nexus-cfr-influence.js
+    - clear-glass/renderer/selector-assign/selector-assign.js
+    - clear-glass/renderer/site-profile-groups.js
+    - guardian/lib/wake-hint.js
+  depends_on:
+    - MCO1_graph_layer
+    - MCO2_verification_deepening
+  blocks: []
+  spec: null
+  graph: a726b263f9146e99

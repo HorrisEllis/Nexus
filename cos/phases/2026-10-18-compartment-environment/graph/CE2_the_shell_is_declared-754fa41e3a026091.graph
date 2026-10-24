@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877324557
+exported_at: 1792877682079
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877324557
-lastSeenAt: 1792877324557
+firstSeenAt: 1792877682079
+lastSeenAt: 1792877682079
 fingerprint: null
 payload:
   for: CE2_the_shell_is_declared
@@ -146,6 +146,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy:
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
@@ -157,7 +158,7 @@ payload:
       - layer 3 · blocked by CE1_the_compartment_machine
       - 'depends on (1): CE1_the_compartment_machine · all upstream 3'
       - >-
-        needed by (1): CE3_the_handshake · all downstream 15 · finishing it unlocks
+        needed by (1): CE3_the_handshake · all downstream 16 · finishing it unlocks
         CE3_the_handshake
     edges:
       - from: docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine

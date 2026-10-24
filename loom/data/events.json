@@ -1,5 +1,5 @@
 {
- "generatedAt": 1792877048629,
+ "generatedAt": 1792877587326,
  "byFile": {
   "nexus.architect.src.spec.Blueprint": {
    "emits": [
@@ -1008,6 +1008,277 @@
     "input:injected",
     "input:rate_limited",
     "input:rejected"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.auth": {
+   "emits": [],
+   "listens": [
+    "auth:apikey:verify",
+    "auth:user:create",
+    "auth:verify",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.autodns": {
+   "emits": [],
+   "listens": [
+    "ip:changed",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.billing": {
+   "emits": [],
+   "listens": [
+    "bandwidth:report",
+    "quota:check",
+    "quota:record",
+    "secret:get",
+    "status:ping",
+    "tenant:create",
+    "tenant:get"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.builder": {
+   "emits": [],
+   "listens": [
+    "builder:analyse",
+    "builder:build",
+    "builder:cancel",
+    "builder:list",
+    "builder:status",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.cache": {
+   "emits": [],
+   "listens": [
+    "cache:get",
+    "cache:purge:pattern",
+    "cache:purge:tag",
+    "cache:set",
+    "cache:stats",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.catalog": {
+   "emits": [],
+   "listens": [
+    "catalog:install",
+    "catalog:list",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.ddns": {
+   "emits": [],
+   "listens": [
+    "ddns:check",
+    "ip:changed",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.dns": {
+   "emits": [],
+   "listens": [
+    "status:ping",
+    "zone:delete",
+    "zone:get",
+    "zone:update"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.firewall": {
+   "emits": [],
+   "listens": [
+    "firewall:ban",
+    "firewall:check",
+    "firewall:knock",
+    "firewall:report",
+    "firewall:status",
+    "firewall:unban",
+    "firewall:whitelist:add",
+    "signal:badactors",
+    "status:ping",
+    "sysfw:apply",
+    "sysfw:detect",
+    "sysfw:list",
+    "sysfw:remove",
+    "upnp:close",
+    "upnp:open",
+    "upnp:status"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.ftp": {
+   "emits": [],
+   "listens": [
+    "ftp:info",
+    "ftp:users:create",
+    "ftp:users:delete",
+    "ftp:users:list",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.glue": {
+   "emits": [],
+   "listens": [
+    "ip:changed",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.monitor": {
+   "emits": [],
+   "listens": [
+    "monitor:add",
+    "monitor:status",
+    "status:pong"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.optimizer": {
+   "emits": [],
+   "listens": [
+    "cache:stats",
+    "optimizer:compress",
+    "optimizer:record",
+    "optimizer:report",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.peer": {
+   "emits": [],
+   "listens": [
+    "ip:changed",
+    "peer:announce",
+    "peer:find",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.provisioner": {
+   "emits": [],
+   "listens": [
+    "provision:user",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.proxy": {
+   "emits": [],
+   "listens": [
+    "ip:changed",
+    "port:registered",
+    "proxy:reload",
+    "proxy:routes",
+    "status:ping",
+    "vhost:add",
+    "vhost:remove"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.queue": {
+   "emits": [],
+   "listens": [
+    "catalog:error",
+    "catalog:installed",
+    "queue:push",
+    "queue:register",
+    "queue:status",
+    "smtp:error",
+    "smtp:sent",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.registrar": {
+   "emits": [],
+   "listens": [
+    "registrar:add",
+    "registrar:check",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.relay": {
+   "emits": [],
+   "listens": [
+    "relay:sethost",
+    "relay:status",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.signal": {
+   "emits": [],
+   "listens": [
+    "signal:check",
+    "signal:filter",
+    "signal:honeypot",
+    "signal:score",
+    "signal:status",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.smtp": {
+   "emits": [],
+   "listens": [
+    "smtp:disposable:create",
+    "smtp:mailbox:list",
+    "smtp:send",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.ssh": {
+   "emits": [],
+   "listens": [
+    "ssh:addkey",
+    "ssh:install",
+    "ssh:start",
+    "ssh:status",
+    "ssh:stop",
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.storage": {
+   "emits": [],
+   "listens": [
+    "status:ping",
+    "storage:sign",
+    "storage:usage"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.tls": {
+   "emits": [],
+   "listens": [
+    "catalog:domain",
+    "status:ping",
+    "tls:issue",
+    "tls:renew",
+    "tls:status"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.tunnel": {
+   "emits": [],
+   "listens": [
+    "ip:changed",
+    "status:ping",
+    "tunnel:get"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.ui.lib.ipc-request": {
+   "emits": [],
+   "listens": [
+    "route:error",
+    "route:unhandled"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.ui": {
+   "emits": [],
+   "listens": [
+    "status:ping"
+   ]
+  },
+  "nexus.cos.services.anonymous.engines.webserver": {
+   "emits": [],
+   "listens": [
+    "status:ping",
+    "webserver:accesslog",
+    "webserver:php:check",
+    "webserver:status",
+    "webserver:vhost:add",
+    "webserver:vhost:list",
+    "webserver:vhost:remove",
+    "webserver:vhost:update"
    ]
   },
   "nexus.cos.test.test": {
@@ -5043,6 +5314,637 @@
     "nexus.cos.remote-desktop.session-token"
    ],
    "listeners": []
+  },
+  "auth:apikey:verify": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.auth"
+   ]
+  },
+  "auth:user:create": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.auth"
+   ]
+  },
+  "auth:verify": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.auth"
+   ]
+  },
+  "status:ping": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.auth",
+    "nexus.cos.services.anonymous.engines.autodns",
+    "nexus.cos.services.anonymous.engines.billing",
+    "nexus.cos.services.anonymous.engines.builder",
+    "nexus.cos.services.anonymous.engines.cache",
+    "nexus.cos.services.anonymous.engines.catalog",
+    "nexus.cos.services.anonymous.engines.ddns",
+    "nexus.cos.services.anonymous.engines.dns",
+    "nexus.cos.services.anonymous.engines.firewall",
+    "nexus.cos.services.anonymous.engines.ftp",
+    "nexus.cos.services.anonymous.engines.glue",
+    "nexus.cos.services.anonymous.engines.optimizer",
+    "nexus.cos.services.anonymous.engines.peer",
+    "nexus.cos.services.anonymous.engines.provisioner",
+    "nexus.cos.services.anonymous.engines.proxy",
+    "nexus.cos.services.anonymous.engines.queue",
+    "nexus.cos.services.anonymous.engines.registrar",
+    "nexus.cos.services.anonymous.engines.relay",
+    "nexus.cos.services.anonymous.engines.signal",
+    "nexus.cos.services.anonymous.engines.smtp",
+    "nexus.cos.services.anonymous.engines.ssh",
+    "nexus.cos.services.anonymous.engines.storage",
+    "nexus.cos.services.anonymous.engines.tls",
+    "nexus.cos.services.anonymous.engines.tunnel",
+    "nexus.cos.services.anonymous.engines.ui",
+    "nexus.cos.services.anonymous.engines.webserver"
+   ]
+  },
+  "ip:changed": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.autodns",
+    "nexus.cos.services.anonymous.engines.ddns",
+    "nexus.cos.services.anonymous.engines.glue",
+    "nexus.cos.services.anonymous.engines.peer",
+    "nexus.cos.services.anonymous.engines.proxy",
+    "nexus.cos.services.anonymous.engines.tunnel"
+   ]
+  },
+  "bandwidth:report": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.billing"
+   ]
+  },
+  "quota:check": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.billing"
+   ]
+  },
+  "quota:record": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.billing"
+   ]
+  },
+  "secret:get": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.billing"
+   ]
+  },
+  "tenant:create": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.billing"
+   ]
+  },
+  "tenant:get": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.billing"
+   ]
+  },
+  "builder:analyse": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.builder"
+   ]
+  },
+  "builder:build": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.builder"
+   ]
+  },
+  "builder:cancel": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.builder"
+   ]
+  },
+  "builder:list": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.builder"
+   ]
+  },
+  "builder:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.builder"
+   ]
+  },
+  "cache:get": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.cache"
+   ]
+  },
+  "cache:purge:pattern": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.cache"
+   ]
+  },
+  "cache:purge:tag": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.cache"
+   ]
+  },
+  "cache:set": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.cache"
+   ]
+  },
+  "cache:stats": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.cache",
+    "nexus.cos.services.anonymous.engines.optimizer"
+   ]
+  },
+  "catalog:install": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.catalog"
+   ]
+  },
+  "catalog:list": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.catalog"
+   ]
+  },
+  "ddns:check": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ddns"
+   ]
+  },
+  "zone:delete": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.dns"
+   ]
+  },
+  "zone:get": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.dns"
+   ]
+  },
+  "zone:update": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.dns"
+   ]
+  },
+  "firewall:ban": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "firewall:check": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "firewall:knock": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "firewall:report": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "firewall:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "firewall:unban": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "firewall:whitelist:add": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "signal:badactors": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "sysfw:apply": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "sysfw:detect": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "sysfw:list": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "sysfw:remove": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "upnp:close": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "upnp:open": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "upnp:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.firewall"
+   ]
+  },
+  "ftp:info": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ftp"
+   ]
+  },
+  "ftp:users:create": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ftp"
+   ]
+  },
+  "ftp:users:delete": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ftp"
+   ]
+  },
+  "ftp:users:list": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ftp"
+   ]
+  },
+  "monitor:add": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.monitor"
+   ]
+  },
+  "monitor:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.monitor"
+   ]
+  },
+  "status:pong": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.monitor"
+   ]
+  },
+  "optimizer:compress": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.optimizer"
+   ]
+  },
+  "optimizer:record": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.optimizer"
+   ]
+  },
+  "optimizer:report": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.optimizer"
+   ]
+  },
+  "peer:announce": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.peer"
+   ]
+  },
+  "peer:find": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.peer"
+   ]
+  },
+  "provision:user": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.provisioner"
+   ]
+  },
+  "port:registered": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.proxy"
+   ]
+  },
+  "proxy:reload": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.proxy"
+   ]
+  },
+  "proxy:routes": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.proxy"
+   ]
+  },
+  "vhost:add": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.proxy"
+   ]
+  },
+  "vhost:remove": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.proxy"
+   ]
+  },
+  "catalog:error": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.queue"
+   ]
+  },
+  "catalog:installed": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.queue"
+   ]
+  },
+  "queue:push": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.queue"
+   ]
+  },
+  "queue:register": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.queue"
+   ]
+  },
+  "queue:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.queue"
+   ]
+  },
+  "smtp:error": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.queue"
+   ]
+  },
+  "smtp:sent": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.queue"
+   ]
+  },
+  "registrar:add": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.registrar"
+   ]
+  },
+  "registrar:check": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.registrar"
+   ]
+  },
+  "relay:sethost": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.relay"
+   ]
+  },
+  "relay:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.relay"
+   ]
+  },
+  "signal:check": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.signal"
+   ]
+  },
+  "signal:filter": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.signal"
+   ]
+  },
+  "signal:honeypot": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.signal"
+   ]
+  },
+  "signal:score": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.signal"
+   ]
+  },
+  "signal:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.signal"
+   ]
+  },
+  "smtp:disposable:create": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.smtp"
+   ]
+  },
+  "smtp:mailbox:list": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.smtp"
+   ]
+  },
+  "smtp:send": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.smtp"
+   ]
+  },
+  "ssh:addkey": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ssh"
+   ]
+  },
+  "ssh:install": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ssh"
+   ]
+  },
+  "ssh:start": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ssh"
+   ]
+  },
+  "ssh:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ssh"
+   ]
+  },
+  "ssh:stop": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ssh"
+   ]
+  },
+  "storage:sign": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.storage"
+   ]
+  },
+  "storage:usage": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.storage"
+   ]
+  },
+  "catalog:domain": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.tls"
+   ]
+  },
+  "tls:issue": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.tls"
+   ]
+  },
+  "tls:renew": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.tls"
+   ]
+  },
+  "tls:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.tls"
+   ]
+  },
+  "tunnel:get": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.tunnel"
+   ]
+  },
+  "route:error": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ui.lib.ipc-request"
+   ]
+  },
+  "route:unhandled": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.ui.lib.ipc-request"
+   ]
+  },
+  "webserver:accesslog": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.webserver"
+   ]
+  },
+  "webserver:php:check": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.webserver"
+   ]
+  },
+  "webserver:status": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.webserver"
+   ]
+  },
+  "webserver:vhost:add": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.webserver"
+   ]
+  },
+  "webserver:vhost:list": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.webserver"
+   ]
+  },
+  "webserver:vhost:remove": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.webserver"
+   ]
+  },
+  "webserver:vhost:update": {
+   "emitters": [],
+   "listeners": [
+    "nexus.cos.services.anonymous.engines.webserver"
+   ]
   },
   "comp:spawn:failed": {
    "emitters": [

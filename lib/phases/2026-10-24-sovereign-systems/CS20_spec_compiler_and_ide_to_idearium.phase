@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::CS20_spec_compiler_and_ide_to_idearium
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::CS20_spec_compiler_and_ide_to_idearium
+context: >-
+  pipeline phase CS20_spec_compiler_and_ide_to_idearium of
+  docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: CS20_spec_compiler_and_ide_to_idearium (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682570
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682570
+lastSeenAt: 1792877682570
+fingerprint: null
+payload:
+  id: CS20_spec_compiler_and_ide_to_idearium
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/emerge/emerge-ide.js
+    - copilot/module-builder.js
+    - guardian/server.js
+    - lib/cli/boot-systems.js
+  depends_on:
+    - CS19_warp_the_system
+    - CS_D12_spec_compiler_and_ide_to_idearium
+  blocks: []
+  spec: null
+  graph: d0c96e6b1cde80a9

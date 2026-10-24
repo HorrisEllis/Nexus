@@ -1,0 +1,17 @@
+<div class="card">
+  <div class="card-title">Create an API key</div>
+  <div class="frow c2">
+    <div><label for="key-label">Label</label><input id="key-label" placeholder="deploy-script"></div>
+    <div><label for="key-scopes">Scopes</label>
+      <select id="key-scopes" multiple size="5">
+        <option value="dns">dns</option><option value="sites">sites</option>
+        <option value="storage">storage</option><option value="mail">mail</option>
+        <option value="admin">admin</option>
+      </select></div>
+  </div>
+  <div class="actions"><button onclick="panel.createApiKey()">Create key</button></div>
+  <div id="key-note" style="display:none;margin-top:14px">
+    <div class="hint" style="margin-bottom:6px">Copy this now — it is not shown again.</div>
+    <pre id="key-result"></pre>
+  </div>
+</div>

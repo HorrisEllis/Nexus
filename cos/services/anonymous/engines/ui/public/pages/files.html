@@ -1,0 +1,14 @@
+<div class="card">
+  <div class="card-title">Browse <span class="mono" id="fm-path-display" style="color:var(--dim);font-weight:400"></span></div>
+  <div class="frow c2">
+    <div><label for="fm-path">Path</label><input id="fm-path" value="sites"></div>
+    <div style="display:flex;align-items:flex-end"><button class="sec" onclick="panel.fmBrowse()">Open</button></div>
+  </div>
+  <div id="fm-content"></div>
+</div>
+<div class="card">
+  <div class="card-title">Edit or create a file</div>
+  <div class="frow"><label for="fm-newname">Path</label><input id="fm-newname" placeholder="sites/root/public/index.html"></div>
+  <div class="frow"><label for="fm-newcontent">Contents</label><textarea id="fm-newcontent" rows="12"></textarea></div>
+  <div class="actions"><button onclick="panel.fmSave()">Save file</button></div>
+</div>

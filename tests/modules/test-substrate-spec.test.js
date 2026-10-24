@@ -43,6 +43,7 @@ const SPECS = [
   { spec: 'docs/self-building-loop.spec', map: 'docs/2026-10-23-self-building-loop-phasemap.spec' },   // 2026-10-23 SL — his "so it can start building itself"   // 2026-10-23 CS — COS is the spine: versions are system states
   { spec: 'clear-glass/spec/copilot-any-agent.spec', map: 'docs/2026-10-24-copilot-any-agent-phasemap.spec' },   // 2026-10-24 CL — his "get the cli working for guardian, use any agent as the copilot"
   { spec: 'clear-glass/spec/site-profile.spec', map: 'docs/2026-10-23-site-profile-processes-phasemap.spec' },   // 2026-10-23 SP — per-site settings, Processes   // 2026-10-22 ND — his "each database for each system"   // 0.60.179   // 2026-10-20 — compile only: its new modules' phases (AQ1/AQ2) are not in a map yet
+  { spec: 'cos/spec/cos-services.spec', map: 'docs/2026-10-24-cos-services-phasemap.spec' },   // 2026-10-24 BCR1 (from brave-cori) — his "this is all the networking backend for anything needed netwroking wise"
 ];
 
 console.log('\ntest-substrate-spec — full specs compile at full depth and stay tied to their phases');

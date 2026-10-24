@@ -7,11 +7,11 @@ intent: null
 summary: P12_fault_logging_first_class (?) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1792841756438
+exported_at: 1792877682853
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841756438
-lastSeenAt: 1792841756438
+firstSeenAt: 1792877682853
+lastSeenAt: 1792877682853
 fingerprint: null
 payload:
   id: P12_fault_logging_first_class
@@ -25,12 +25,12 @@ payload:
     - lib/fault-log.js
     - lib/agent-tools/index.js
     - copilot/lib/self-model.js
+    - cos/services/anonymous/engines/monitor.js
     - intelligence/bda/kernel.js
     - lib/nexus/nexus-cfr-influence.js
-    - lib/reflection.js
     - lib/config-governance.js
     - lib/agent-tools/tools/query/fault-log.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 0f23845dc5fc1c10
+  graph: b61218e264498764

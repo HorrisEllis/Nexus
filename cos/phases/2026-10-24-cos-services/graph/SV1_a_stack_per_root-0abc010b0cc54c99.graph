@@ -1,0 +1,67 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV1_a_stack_per_root:0abc010b0cc54c99
+type: graph
+id: phase:SV1_a_stack_per_root:0abc010b0cc54c99
+context: dependency graph of phase SV1_a_stack_per_root
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877682466
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682466
+lastSeenAt: 1792877682466
+fingerprint: null
+payload:
+  for: SV1_a_stack_per_root
+  kind: phase
+  repo: null
+  hash: 0abc010b0cc54c99
+  nodes:
+    - path: cos/services/stack.js
+      role: changes
+      exists: false
+      system: cos
+    - path: tests/modules/test-cos-services.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-cos-services.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
+    dependents:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
+      - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+      - docs/2026-10-24-cos-services-phasemap.spec::SV4_the_doors
+    upstream:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
+    downstream:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
+      - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+      - docs/2026-10-24-cos-services-phasemap.spec::SV4_the_doors
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): SV0_the_engines_in_cos'
+      - >-
+        needed by (3): SV2_into_a_compartment, SV3_on_the_cos_bus, SV4_the_doors · finishing it
+        unlocks SV2_into_a_compartment
+    edges:
+      - from: docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
+        kind: declared

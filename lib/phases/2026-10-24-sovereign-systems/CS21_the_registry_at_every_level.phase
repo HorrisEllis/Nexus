@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::CS21_the_registry_at_every_level
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::CS21_the_registry_at_every_level
+context: pipeline phase CS21_the_registry_at_every_level of docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: CS21_the_registry_at_every_level (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792877682571
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877682571
+lastSeenAt: 1792877682571
+fingerprint: null
+payload:
+  id: CS21_the_registry_at_every_level
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/registry-level.js
+    - registry-components.js
+  depends_on:
+    - CS19_warp_the_system
+  blocks: []
+  spec: null
+  graph: 800502ac90ae0294

@@ -67,7 +67,7 @@ phases:
     proof: "BC_D1 (emerge a system, warp folded) · BC_D2 (adopt COS + kernel-port, layered on RF2) · BC_D3 (port phase-by-phase) all DECIDED 2026-10-24 with his words"
 
   BCR1_cos_services:
-    status: OPEN
+    status: "DONE 0.60.245 — ported verbatim (126 files, the spec, the phasemap, the test); test-cos-services 4/4, the spec at full depth, no new crossing, no secret; loom has the engines"
     layer: integration
     depends_on: [BCR0_the_decisions, BC_D2_cos_compartments]
     files: [cos/services, cos/spec/cos-services.spec]
