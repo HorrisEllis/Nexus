@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH6_seen_and_used
+type: phase
+id: docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH6_seen_and_used
+context: >-
+  pipeline phase DH6_seen_and_used of
+  docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+intent: null
+summary: DH6_seen_and_used (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792820687081
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820687081
+lastSeenAt: 1792820687081
+fingerprint: null
+payload:
+  id: DH6_seen_and_used
+  map: docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/server.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/desktop.html
+  depends_on:
+    - DH5_diagnostic_heals
+  blocks: []
+  spec: null
+  graph: 0b12cd8a75535716

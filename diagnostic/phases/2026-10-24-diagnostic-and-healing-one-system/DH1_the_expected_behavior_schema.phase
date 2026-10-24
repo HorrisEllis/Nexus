@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH1_the_expected_behavior_schema
+type: phase
+id: docs_2026-10-24-diagnostic-and-healing-one-system-phasemap.spec::DH1_the_expected_behavior_schema
+context: >-
+  pipeline phase DH1_the_expected_behavior_schema of
+  docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+intent: null
+summary: DH1_the_expected_behavior_schema (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792820687060
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820687060
+lastSeenAt: 1792820687060
+fingerprint: null
+payload:
+  id: DH1_the_expected_behavior_schema
+  map: docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/lib/expectations.js
+  depends_on:
+    - DH0a_expectation_lives_in_the_spec
+  blocks: []
+  spec: null
+  graph: ee27b8b90e4ffc97
