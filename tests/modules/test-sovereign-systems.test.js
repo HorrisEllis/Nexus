@@ -96,7 +96,7 @@ test('SV-08 the census: which systems are sovereign, and each blocker named (dat
   assert.strictEqual(SPEC.find(x => x.key === 'system.sovereign').req({ args: ['cos'], flags: {} }).path, '/api/system/sovereign?system=cos');
 });
 
-// 0.60.242 SV0 — James: "i want to get each system soveriegn and inside a cos compartment". Sovereign is his CS_D7 both ways, and a
+// 0.60.244 SV0 — James: "i want to get each system soveriegn and inside a cos compartment". Sovereign is his CS_D7 both ways, and a
 // require written in a comment is no crossing (intelligence/alk/index.js:122 had counted as one).
 test('SV-09 the census tells the truth: a commented require is no crossing; sovereign means both ways; the step on his road', () => {
   const SB = require('../../lib/system-boundary.js');

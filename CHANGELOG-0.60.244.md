@@ -1,4 +1,4 @@
-# 0.60.242 — SV0: the census tells the truth (sovereign both ways), and the ratchet is green
+# 0.60.244 — SV0: the census tells the truth (sovereign both ways), and the ratchet is green
 
 James, 2026-10-24: "then focus on the ones that get each system sovereign, bugs ad / anything not related to sovereignty, do last unless
 necassarry" · "i want to get each system soveriegn and inside a cos compartment"

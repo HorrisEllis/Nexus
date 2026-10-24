@@ -26,7 +26,7 @@ test('CT-02 the same compartments nexus-self makes (nexus-self-<system> under ne
   const m = T.compartmentFor('cortex');
   assert.deepStrictEqual([m.cos.name, m.cos.parent], ['nexus-self-cortex', 'nexus-self']);
 });
-// 0.60.242: sentinel/ moved into core (lib/sentinel, RF2), so it is no system; components is the one sovereign both ways (SV0's census)
+// 0.60.244: sentinel/ moved into core (lib/sentinel, RF2), so it is no system; components is the one sovereign both ways (SV0's census)
 test('CT-03 COS verifies the end state for real: components (sovereign) meets it, cortex (not yet) does not', () => {
   const ok = I.verify(T.compartmentFor('components').cos.intent, REPO);
   assert.deepStrictEqual([ok.endState.met, ok.endState.total], [1, 1], JSON.stringify(ok.endState.results));

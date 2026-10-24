@@ -45,7 +45,7 @@ function repo({ code = TITLE_OK, test = TEST } = {}) {
 
 (async () => {
   const VF0 = require(path.join(ROOT, 'lib/verify-first.js'));
-  // 0.60.242 SV0: the caller hands verify-first COS's runner (idearium does the same); verify-first no longer reaches into COS
+  // 0.60.244 SV0: the caller hands verify-first COS's runner (idearium does the same); verify-first no longer reaches into COS
   const RUN = require(path.join(ROOT, 'cos/testenv/index.js')).runTarget;
   const VF = { ...VF0, check: (o) => VF0.check({ runTarget: RUN, ...o }) };
   const CB = require(path.join(ROOT, 'lib/coder-brief.js'));

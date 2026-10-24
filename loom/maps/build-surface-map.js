@@ -232,7 +232,7 @@ const FILES = [
   ['clear-glass/src/accounts/idearium-login.js', I('clear-glass/src/accounts/idearium-login.js'), [I('clear-glass/src/passwords/vault.js'), I('idearium/api/index.js')]],   // vault.get(origin); HTTP POST access/login
   ['idearium/ui/js/code-surface.js', I('idearium/ui/js/code-surface.js'), [I('idearium/api/index.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/plan-panel.js')]],   // §CT5 openPlanPanel, _gateBar
   ['idearium/ui/js/code-tab-panels.js', I('idearium/ui/js/code-tab-panels.js'), [I('idearium/api/index.js'), I('idearium/ui/js/code-surface.js'), I('idearium/ui/js/file-manage.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/repo-drawer-views.js')]],   // §0.60.82 CE6 · CE7 · CE9: …/file, …/code/assist, …/runs, …/agent/history; openManagePanel; rtView mounted in the Code tab
-  // 0.60.242 SV0 — the phasemap parser is core's: moved verbatim out of loom's scanner (2 crossings designed out, none baselined)
+  // 0.60.244 SV0 — the phasemap parser is core's: moved verbatim out of loom's scanner (2 crossings designed out, none baselined)
   ['lib/phasemap-parse.js', I('lib/phasemap-parse.js'), [I('lib/nexus-self/systems.js')]],   // require — NS: the 15 and their terms
 ];
 
@@ -400,11 +400,11 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/phase-deps-gate.js'), '0.60.125 DG1 _phaseBuild: openDeps → 409 DEPS_OPEN unless anyway'],
   [I('idearium/ui/js/phases.js'), I('idearium/ui/js/plan-panel.js'), '0.60.125 DG1 phaseBuildPost — the one door for every ▶ build'],
   [I('guardian/server.js'), I('guardian/lib/provider-login.js'), '0.60.124 SW2 flushQueuedJobs asks holdsJobs(provider); a reported sign-in flushes'],
-  [I('lib/phase-dag.js'), I('lib/phasemap-parse.js'), '0.60.242 SV0 _parse and parsePhasemap: the parser is core\'s (was loom/scanners/phasemap-map.js, an upward crossing)'],
-  [I('idearium/repo/roadmap-import.js'), I('lib/phasemap-parse.js'), '0.60.242 SV0 an imported roadmap parsed by core\'s parser (was loom\'s, a crossing into loom)'],
-  [I('loom/scanners/phasemap-map.js'), I('lib/phasemap-parse.js'), '0.60.242 SV0 loom re-exports parsePhasemapText, isPhasemapFile, NS, SYSTEMS from core'],
-  [I('idearium/api/index.js'), I('cos/testenv/index.js'), '0.60.242 SV0 runTarget handed to verify-first (VF.check runTarget:) through the door idearium already crosses'],
-  [I('cos/testenv/index.js'), I('cos/testenv/run-target.js'), '0.60.242 SV0 the runTarget getter (lazy: run-target.js requires index.js)'],
+  [I('lib/phase-dag.js'), I('lib/phasemap-parse.js'), '0.60.244 SV0 _parse and parsePhasemap: the parser is core\'s (was loom/scanners/phasemap-map.js, an upward crossing)'],
+  [I('idearium/repo/roadmap-import.js'), I('lib/phasemap-parse.js'), '0.60.244 SV0 an imported roadmap parsed by core\'s parser (was loom\'s, a crossing into loom)'],
+  [I('loom/scanners/phasemap-map.js'), I('lib/phasemap-parse.js'), '0.60.244 SV0 loom re-exports parsePhasemapText, isPhasemapFile, NS, SYSTEMS from core'],
+  [I('idearium/api/index.js'), I('cos/testenv/index.js'), '0.60.244 SV0 runTarget handed to verify-first (VF.check runTarget:) through the door idearium already crosses'],
+  [I('cos/testenv/index.js'), I('cos/testenv/run-target.js'), '0.60.244 SV0 the runTarget getter (lazy: run-target.js requires index.js)'],
 ];
 
 function mapBuildSurface(driver) {

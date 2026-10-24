@@ -440,7 +440,7 @@ phases_b:
 # (DB16, DB4, DB5) → its compartment (DB11) → opened on demand (CS4). "Sovereign" here = out 0 and in 0 and up 0 in the census.
 phases_c:
   SV0_the_census_tells_the_truth:
-    status: "DONE 0.60.242 — comments skipped; sovereign both ways (inFrom, registry, compartment, step); the Sovereignty card; the ratchet green (3 crossings designed out: lib/phasemap-parse.js, COS's runTarget handed over). Only components is sovereign both ways."
+    status: "DONE 0.60.244 — comments skipped; sovereign both ways (inFrom, registry, compartment, step); the Sovereignty card; the ratchet green (3 crossings designed out: lib/phasemap-parse.js, COS's runTarget handed over). Only components is sovereign both ways."
     depends_on: []
     files: [lib/system-boundary.js, tests/modules/test-system-boundary.test.js, tests/modules/test-sovereign-systems.test.js]
     does: >-

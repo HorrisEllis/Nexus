@@ -28,7 +28,7 @@ const ROOT = path.resolve(__dirname, '../..');
 // no real caller is affected.
 const DOCS = process.env.NEXUS_PHASEMAP_DIR || path.join(ROOT, 'docs');
 
-// 0.60.242 SV0 — the parser (and the system terms it tags with) is core's now: lib/phasemap-parse.js. Moved verbatim; re-exported below.
+// 0.60.244 SV0 — the parser (and the system terms it tags with) is core's now: lib/phasemap-parse.js. Moved verbatim; re-exported below.
 const { parsePhasemapText, isPhasemapFile, NS, SYSTEMS, _tagSystem } = require('../../lib/phasemap-parse.js');
 // §BUGFIX 2026-08-08 — same investigation as the _tagSystem fix above. The
 // prior regex (`[A-Za-z0-9_]*` — zero-or-more, no underscore required)
