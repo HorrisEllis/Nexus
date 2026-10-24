@@ -12,6 +12,8 @@
  *   RD-03  no draft is in force: no system without a registry gained a registry-components.js; loom's loadAll reads no draft
  *   RD-05  0.60.230 his "Aren't systems": auth, erosmancer, jaa, mesh, remote-desktop, security, sentinel, siso folded or parked; the
  *          parts (contracts, hooks, ui …) not listed; no draft for any of them
+ *   RD-06  0.60.231 his "15 systems … all the systems in idearium": only lib/nexus-self/systems.js's list is a system; every other
+ *          folder is unhomed, with who uses it
  *   RD-04  the real API: the list lowest friction first; one draft says written / not accepted; the command rows reach both
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -49,9 +51,9 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
 
   await test('RD-02', 'missing(): every system with no registry, none of the shared folders; each draft written, as the tree gives it now', () => {
     const m = RD.missing({ root: ROOT });
-    assert.ok(m.includes('cos') && m.includes('orchestrator') && m.includes('warp'));
+    assert.deepStrictEqual(m.sort(), ['components', 'cos', 'orchestrator'], 'of Idearium\'s systems, these have no registry');
     for (const s of ['idearium', 'cortex', 'versionium']) assert.ok(!m.includes(s), `${s} has a registry`);
-    for (const s of RD.NOT_SYSTEMS) assert.ok(!m.includes(s), `${s} is read as part of another system`);
+    for (const s of RD.NOT_SYSTEMS) assert.ok(!m.includes(s), `${s} is not a system`);
     for (const s of m) {
       const f = path.join(ROOT, s, 'registry-components.draft.json');
       assert.ok(fs.existsSync(f), `${s} has its draft`);
@@ -100,6 +102,22 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
     assert.ok(!sov.systems.some(r => SB.PARTS.includes(r.system) || SB.FOLDED[r.system]), 'the sovereignty list holds systems only');
     for (const f of Object.keys(SB.FOLDED)) assert.ok(!fs.existsSync(path.join(ROOT, f, 'registry-components.draft.json')), `${f}: its draft was withdrawn`);
     assert.ok(!RD.missing({ root: ROOT }).some(m => SB.FOLDED[m] || SB.PARTS.includes(m)));
+  });
+
+  await test('RD-06', 'his 2026-10-24 "15 systems … all the systems in idearium": only Idearium\'s list is a system; every other folder is unhomed, with its users', () => {
+    const SB = require(path.join(ROOT, 'lib/system-boundary.js'));
+    const S = require(path.join(ROOT, 'lib/nexus-self/systems.js'));
+    const real = SB.realSystems();
+    assert.strictEqual(real.length, S.SYSTEMS.length); assert.strictEqual(real.length, 15);
+    assert.deepStrictEqual(real.find(x => x.id === 'core').folder, 'lib', 'core is the kernel');
+    const sov = SB.sovereignty({ root: ROOT });
+    const folders = new Set(real.map(x => x.folder));
+    assert.ok(sov.systems.every(r => folders.has(r.system)), 'only Idearium\'s systems are listed');
+    assert.strictEqual(sov.systems.length, 14, 'the 14 with a folder (core is the kernel)');
+    const unhomed = sov.notSystems.unhomed.map(u => u.folder);
+    for (const f of ['warp', 'nexus', 'meta', 'cli', 'cockpit', 'emerge', 'emergence']) assert.ok(unhomed.includes(f), `${f} is not a system: unhomed`);
+    assert.ok(sov.notSystems.unhomed.find(u => u.folder === 'warp').usedBy.cos > 0, 'with who uses it');
+    for (const f of ['cli', 'cockpit', 'emergence', 'meta', 'nexus', 'warp']) assert.ok(!fs.existsSync(path.join(ROOT, f, 'registry-components.draft.json')), `${f}: its draft was withdrawn`);
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`);

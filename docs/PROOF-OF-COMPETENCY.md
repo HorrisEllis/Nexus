@@ -100,6 +100,14 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-24: "Aren't systems. They should have been dealt with already" · "15 systems. only the ones with a .spec in the directory. all
+  the systems in idearium"** (0.60.230, 0.60.231)
+  - **Context:** the coder's census counted 20, then 28, "systems", including folders that are libraries, schemas and parked code. Its
+    list of the "closest to sovereign" was folders that aren't systems at all.
+  - **What it shows:** he holds the architecture's definitions. In two lines he caught a wrong self-model and gave the exact rule (his
+    own list, with a spec for each), a rule his axiom §5.9 already implied. The census now matches the system's own registry of itself.
+  - **Evidence:** `CHANGELOG-0.60.230.md`, `CHANGELOG-0.60.231.md`; `tests/modules/test-registry-draft.test.js` RD-05, RD-06.
+
 - **2026-10-24: "then we need to resume the component registery for each system, get the mall sovereign, then cos phases to migrate."**
   (0.60.229)
   - **Context:** three steps in his order, registries, then sovereignty, then COS. He picked registries first over writing specs with

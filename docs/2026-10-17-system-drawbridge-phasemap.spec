@@ -248,7 +248,7 @@ spec:
         A system declares in its registry which of its events a person should see (toasts: [{ event, level, text }]). The UI
         toasts what the registry says instead of a list in app.js, so the UI holds no knowledge of its own (disposable).
     DB16_a_registry_for_each_system:
-      status: "PARTLY BUILT 0.60.229 — drafted for the 8 systems with none (0.60.230: cli, cockpit, cos, emergence, meta, nexus, orchestrator, warp; lib/registry-draft.js; <system>/registry-components.draft.json); OPEN: his acceptance, system by system"
+      status: "PARTLY BUILT 0.60.229 — drafted for the systems with none (0.60.231, Idearium's 15 only: orchestrator, cos, components; lib/registry-draft.js; <system>/registry-components.draft.json); OPEN: his acceptance, system by system"
       does: >-
         A registry drafted for every system that has none (cos, nexus, warp, orchestrator, meta, siso, cli, cockpit,
         diagnostic, auth, mesh; then remote-desktop, emergence, jaa, erosmancer, sentinel, security) from its source: the
@@ -458,3 +458,19 @@ system" (0.60.229's report, which counted them as the systems closest to soverei
 - **Found and fixed on the way:** 0.60.229 put the drafts' route case between `case 'system.registry':` and `case 'system.registry.one':`,
   so GET /api/system/registry answered with the drafts instead of the dependency graph (test-drawbridge-registry SR-07). Moved; guarded.
 - **Measured now:** 20 systems; none sovereign. Fewest ways out: cockpit 1 (data), warp 1, emerge 4, cos 4 (1 data, 3 primitive into warp/core).
+
+## ADDENDUM 2026-10-24 (0.60.231) — the systems are Idearium's 15
+James, 2026-10-24, after 0.60.230 counted 20 systems: "15 systems. only the ones with a .spec in the directory. all the systems in idearium"
+- **His decision:** the systems are exactly Idearium's list, lib/nexus-self/systems.js SYSTEMS: orchestrator, cortex, guardian, idearium,
+  architect, diagnostic, intelligence, ollama-bridge (ollama/), versionium, copilot, loom, clear-glass, components, cos, core (the kernel,
+  lib/). It supersedes 0.60.230's count of 20, and the coder's reading that put components among the parts (both kept here, §0.3).
+- **What it changed:** lib/system-boundary.js realSystems() reads that list; the sovereignty census lists only those 14 folders (core is the
+  kernel) and names every other folder with code as unhomed, with who uses it: warp, nexus, meta, emerge, hooks, cockpit, cli,
+  architecture-spec, contracts, emergence, seams, service, tablet, ui. The scan itself is unchanged (a require into warp/ is still a real edge,
+  and the ratchet's baseline still holds it). lib/registry-draft.js drafts only for those 15: orchestrator, cos, components; the six drafts
+  for cli, cockpit, emergence, meta, nexus, warp withdrawn (generated, regenerable).
+- **His ".spec in the directory", checked:** 13 of the 15 have one in their folder (<system>/spec/*.spec). components has none; core has no
+  folder of its own (lib/; docs/lib.spec exists). Said, not decided: components is on his list without a spec.
+- **What is left for the unhomed:** each needs a home (moved into the system that uses it, DB17) or to be archived; the census lists their
+  users, so the home is read from the evidence, as 0.60.230 did for the eight. warp is used by ten folders (it is the primitive the
+  census's PRIMITIVES already names), nexus by eleven.
