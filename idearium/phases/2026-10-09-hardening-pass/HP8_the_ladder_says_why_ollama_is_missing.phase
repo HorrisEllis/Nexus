@@ -9,11 +9,11 @@ intent: null
 summary: HP8_the_ladder_says_why_ollama_is_missing (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677136
+exported_at: 1792822477352
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677136
-lastSeenAt: 1792787677136
+firstSeenAt: 1792822477352
+lastSeenAt: 1792822477352
 fingerprint: null
 payload:
   id: HP8_the_ladder_says_why_ollama_is_missing
@@ -26,4 +26,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 57815805593abe9b
+  graph: 759c9c7ee4f76954

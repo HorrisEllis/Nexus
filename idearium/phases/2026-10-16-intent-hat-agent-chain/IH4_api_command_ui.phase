@@ -7,11 +7,11 @@ intent: null
 summary: IH4_api_command_ui (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677715
+exported_at: 1792822478031
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677715
-lastSeenAt: 1792787677715
+firstSeenAt: 1792822478031
+lastSeenAt: 1792822478031
 fingerprint: null
 payload:
   id: IH4_api_command_ui
@@ -27,4 +27,4 @@ payload:
     - IH1_intent_nodes_point_at_hats
   blocks: []
   spec: null
-  graph: 491e5bd186c25940
+  graph: 39e633419acbf0d0

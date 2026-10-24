@@ -7,11 +7,11 @@ intent: null
 summary: FG5_recursive_build (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676739
+exported_at: 1792822476953
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676739
-lastSeenAt: 1792787676739
+firstSeenAt: 1792822476953
+lastSeenAt: 1792822476953
 fingerprint: null
 payload:
   id: FG5_recursive_build
@@ -26,4 +26,4 @@ payload:
     - FG4_context_for_any_agent
   blocks: []
   spec: null
-  graph: b8e78a1fd1f50e1a
+  graph: d7d26bf687a1ce83

@@ -13,8 +13,8 @@
     },
     "security": {
       "home": "cos",
-      "why": "the coder's reading, to confirm: the encrypted WebRTC channel and kill switch of the remote session (his 2026-09-16 \"an encrypted wrapper over webrtc. a kill switch if the connection drops\") — it goes with remote-desktop",
-      "by": "decided by his axioms (code belongs to the system it serves) after his remote-desktop call — to confirm"
+      "why": "his decision: it goes with remote-desktop (the encrypted WebRTC channel and kill switch of the remote session)",
+      "by": "James, 2026-10-24: \"yes start rf2, security goes with remote desktop\""
     },
     "jaa": {
       "retire": true,
@@ -27,10 +27,25 @@
       "by": "decided by his axioms (§0.3; evidence: no require and no path load) — he can overturn"
     },
     "service": {
+      "split": {
+        "service/guardian-service.js": "guardian/guardian-service.js",
+        "service/cortex-service.js": "cortex/cortex-service.js",
+        "service/idearium-service.js": "idearium/idearium-service.js"
+      },
+      "why": "not dead: each file is a hand-run launcher for one system (node service/<system>-service.js start|status|stop; guardian's updated 2026-10-22 for its data home), named for that system — each goes into its system",
+      "by": "decided by his axioms (code belongs to the system it serves; §0.3 — retiring would lose a working launcher), found before applying RF2; supersedes the coder's earlier 'retire' (kept under superseded)"
+    }
+  },
+  "superseded": {
+    "security@2026-10-24a": {
+      "home": "cos",
+      "why": "the coder's reading, to confirm: the encrypted WebRTC channel and kill switch of the remote session (his 2026-09-16 \"an encrypted wrapper over webrtc. a kill switch if the connection drops\") — it goes with remote-desktop",
+      "by": "decided by his axioms (code belongs to the system it serves) after his remote-desktop call — to confirm"
+    },
+    "service@2026-10-24a": {
       "retire": true,
       "why": "OS-service wrappers for cortex, guardian and idearium that nothing starts (no script, no require, no path load); COS runs the systems now — archived, recoverable",
       "by": "decided by his axioms (§0.3; evidence: nothing starts them) — he can overturn"
     }
-  },
-  "superseded": {}
+  }
 }

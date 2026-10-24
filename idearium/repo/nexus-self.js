@@ -778,7 +778,7 @@ export function nexusAtlas(rl) {
     };
   });
   let aggregate = null;
-  try { aggregate = require('../../architecture-spec/registry/nexus-atlas-aggregate.js').aggregate(perAtlas); } catch (_) {}
+  try { aggregate = require('../architecture-spec/registry/nexus-atlas-aggregate.js').aggregate(perAtlas); } catch (_) {}
   const otherAtlases = idx ? [...idx.byPath.keys()].filter(p => p.startsWith(ATLAS_DIR + '/') && p.endsWith('-atlas.md') && p !== NEXUS_ATLAS && !list.some(x => x.atlasDoc === p)) : [];
   return {
     snapshot: snap ? snap.hash : null, doc: doc.error ? null : { path: doc.path, content: doc.content }, docError: doc.error || null,

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
+context: pipeline phase MV7_siso of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV7_siso (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478481
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478481
+lastSeenAt: 1792822478481
+fingerprint: null
+payload:
+  id: MV7_siso
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - siso/
+    - lib/siso/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a6919f351a48b791

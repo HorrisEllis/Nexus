@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-08-23-backlog-phasemap.spec::BL11_orchestrator_folder_consolidation
 context: pipeline phase BL11_orchestrator_folder_consolidation of docs/2026-08-23-backlog-phasemap.spec
 intent: null
-summary: BL11_orchestrator_folder_consolidation (?) — 21 file(s)
+summary: BL11_orchestrator_folder_consolidation (?) — 20 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675415
+exported_at: 1792822701748
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675415
-lastSeenAt: 1792787675415
+firstSeenAt: 1792822701748
+lastSeenAt: 1792822701748
 fingerprint: null
 payload:
   id: BL11_orchestrator_folder_consolidation
@@ -23,7 +23,6 @@ payload:
     - cli/diagnose.js
     - scripts/verify-boot.js
     - scripts/verify-wires.js
-    - service/nexus-diagnostic.js
     - lib/system-check.js
     - lib/file-integrity.js
     - lib/uid/component-map.js
@@ -44,4 +43,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: d04b773d3d681ed0
+  graph: e8629d7afc8fe155

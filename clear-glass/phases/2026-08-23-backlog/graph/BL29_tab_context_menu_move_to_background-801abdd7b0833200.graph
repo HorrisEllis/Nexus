@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787675442
+exported_at: 1792822475806
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675442
-lastSeenAt: 1792787675442
+firstSeenAt: 1792822475806
+lastSeenAt: 1792822475806
 fingerprint: null
 payload:
   for: BL29_tab_context_menu_move_to_background
@@ -27,11 +27,13 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 1
+    layer: 3
     deps:
       - docs/2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
     dependents: []
     upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+      - docs/2026-08-23-backlog-phasemap.spec::BL1_macro_erosmancer_integration
       - docs/2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
     downstream: []
     blockedBy:
@@ -40,8 +42,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 1 · blocked by BL23_ncp_providers_start_verification
-      - 'depends on (1): BL23_ncp_providers_start_verification'
+      - layer 3 · blocked by BL23_ncp_providers_start_verification
+      - 'depends on (1): BL23_ncp_providers_start_verification · all upstream 3'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification

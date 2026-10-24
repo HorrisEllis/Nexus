@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV2_contracts
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV2_contracts
+context: pipeline phase MV2_contracts of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV2_contracts (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478477
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478477
+lastSeenAt: 1792822478477
+fingerprint: null
+payload:
+  id: MV2_contracts
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - contracts/
+    - lib/contracts/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: dd7116708426fe8f

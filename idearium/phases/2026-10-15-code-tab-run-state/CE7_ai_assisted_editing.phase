@@ -7,11 +7,11 @@ intent: null
 summary: CE7_ai_assisted_editing (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677507
+exported_at: 1792822477792
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677507
-lastSeenAt: 1792787677507
+firstSeenAt: 1792822477792
+lastSeenAt: 1792822477792
 fingerprint: null
 payload:
   id: CE7_ai_assisted_editing
@@ -28,4 +28,4 @@ payload:
     - CE5_events
   blocks: []
   spec: null
-  graph: 78ed53aff1a36f1d
+  graph: ca5bbe38ad2f3395

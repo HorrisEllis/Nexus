@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-08-23-backlog-phasemap.spec::BL12_nexus_heal_loop_to_diagnostic
 context: pipeline phase BL12_nexus_heal_loop_to_diagnostic of docs/2026-08-23-backlog-phasemap.spec
 intent: null
-summary: BL12_nexus_heal_loop_to_diagnostic (?) — 4 file(s)
+summary: BL12_nexus_heal_loop_to_diagnostic (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675417
+exported_at: 1792822701751
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675417
-lastSeenAt: 1792787675417
+firstSeenAt: 1792822701751
+lastSeenAt: 1792822701751
 fingerprint: null
 payload:
   id: BL12_nexus_heal_loop_to_diagnostic
@@ -21,10 +21,9 @@ payload:
   status: OPEN
   files:
     - docs/diagnostic-phase-map.spec
-    - service/nexus-diagnostic.js
     - diagnostic/nexus-diagnostic.js
     - lib/nexus-config.js
   depends_on: []
   blocks: []
   spec: null
-  graph: aedd1b0928da63f4
+  graph: 4f389d7509036062

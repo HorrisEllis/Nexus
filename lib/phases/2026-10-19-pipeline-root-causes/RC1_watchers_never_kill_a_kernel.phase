@@ -9,11 +9,11 @@ intent: null
 summary: RC1_watchers_never_kill_a_kernel (foundation) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677921
+exported_at: 1792822478258
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677921
-lastSeenAt: 1792787677921
+firstSeenAt: 1792822478258
+lastSeenAt: 1792822478258
 fingerprint: null
 payload:
   id: RC1_watchers_never_kill_a_kernel
@@ -29,4 +29,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 5363c8138bf6ff4a
+  graph: 40611d935182d4d5

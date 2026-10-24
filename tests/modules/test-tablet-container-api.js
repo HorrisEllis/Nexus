@@ -167,7 +167,7 @@ const REQ = (method, p) => new Promise((resolve) => {
     });
 
     await test('T2-012', 'UI LAWS hold after the container view was added: one endpoint, no state, one write verb, real runner, honest empty/down states', async () => {
-      const html = fs.readFileSync(path.join(ROOT, 'tablet/index.html'), 'utf8');
+      const html = fs.readFileSync(path.join(ROOT, 'cos', 'tablet', 'index.html'), 'utf8');
       assert.ok(!/374[89]|3750|9000|7705|7820|4800/.test(html), 'zero per-system ports — the connection law');
       assert.ok(!/(localStorage|sessionStorage)\s*[.\[]/.test(html), 'owns no persistent state (§5.12)');
       assert.strictEqual((html.match(/method:\s*'POST'/g) || []).length, 1, 'exactly one write verb: the tests POST');
@@ -178,7 +178,7 @@ const REQ = (method, p) => new Promise((resolve) => {
     });
 
     await test('T2-013', 'the inline UI script actually parses — a broken page is not a passing feature', async () => {
-      const html = fs.readFileSync(path.join(ROOT, 'tablet/index.html'), 'utf8');
+      const html = fs.readFileSync(path.join(ROOT, 'cos', 'tablet', 'index.html'), 'utf8');
       const js = html.match(/<script>([\s\S]*)<\/script>/);
       assert.ok(js, 'inline script must be present');
       new Function(js[1]); // throws on syntax error

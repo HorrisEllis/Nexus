@@ -7,11 +7,11 @@ intent: null
 summary: W3_work_surface (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676332
+exported_at: 1792822476628
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676332
-lastSeenAt: 1792787676332
+firstSeenAt: 1792822476628
+lastSeenAt: 1792822476628
 fingerprint: null
 payload:
   id: W3_work_surface
@@ -31,4 +31,4 @@ payload:
     - W2_plan_always_lands
   blocks: []
   spec: null
-  graph: d22aa3fd5498f953
+  graph: 6cad9557f773c08a

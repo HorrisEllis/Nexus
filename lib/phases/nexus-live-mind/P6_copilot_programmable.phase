@@ -4,14 +4,14 @@ type: phase
 id: docs_nexus-live-mind-phasemap.spec::P6_copilot_programmable
 context: pipeline phase P6_copilot_programmable of docs/nexus-live-mind-phasemap.spec
 intent: null
-summary: P6_copilot_programmable (?) — 13 file(s)
+summary: P6_copilot_programmable (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678263
+exported_at: 1792822704900
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678263
-lastSeenAt: 1792787678263
+firstSeenAt: 1792822704900
+lastSeenAt: 1792822704900
 fingerprint: null
 payload:
   id: P6_copilot_programmable
@@ -24,7 +24,6 @@ payload:
     - lib/ledger-fanin/boot.js
     - lib/snapshot-trigger.js
     - docs/snapshot-trigger-phasemap.spec
-    - service/nexus-diagnostic.js
     - cortex/self-heal/failure-intake.js
     - cos/archetype/eravos-domains/music/core/music-theory.js
     - cos/archetype/genesis-catalog.js
@@ -38,4 +37,4 @@ payload:
     - P5
   blocks: []
   spec: null
-  graph: 52e733c13ed35b06
+  graph: aa8ea0b8ea0f0c37

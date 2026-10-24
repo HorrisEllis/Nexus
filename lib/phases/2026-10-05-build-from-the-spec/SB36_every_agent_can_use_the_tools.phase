@@ -9,11 +9,11 @@ intent: null
 summary: SB36_every_agent_can_use_the_tools (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676916
+exported_at: 1792822477127
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676916
-lastSeenAt: 1792787676916
+firstSeenAt: 1792822477127
+lastSeenAt: 1792822477127
 fingerprint: null
 payload:
   id: SB36_every_agent_can_use_the_tools
@@ -29,4 +29,4 @@ payload:
     - SB35_the_index_is_there_when_the_agent_asks
   blocks: []
   spec: null
-  graph: dccbe766f7ed1fa8
+  graph: a54d788bce06dcbb

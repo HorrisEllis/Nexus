@@ -7,11 +7,11 @@ intent: null
 summary: SB47_built_and_run_in_cos (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676942
+exported_at: 1792822477154
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676942
-lastSeenAt: 1792787676942
+firstSeenAt: 1792822477154
+lastSeenAt: 1792822477154
 fingerprint: null
 payload:
   id: SB47_built_and_run_in_cos
@@ -28,4 +28,4 @@ payload:
     - SB46_every_step_by_hand
   blocks: []
   spec: null
-  graph: 00c4a05731de14a2
+  graph: d4816c5dcd2d4ec2

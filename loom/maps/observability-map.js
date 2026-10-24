@@ -41,7 +41,7 @@ const FILES = [
     ['nexus.cortex.jaa-db']],
   ['tablet/homepage.html',         'nexus.tablet.homepage',
     ['nexus.copilot.diagnostics']],   // fetches copilot /api/prompt (diagnostics) + autopilot :7799
-  ['tablet/map3d.html',            'nexus.tablet.map3d',
+  ['cos/tablet/map3d.html',            'nexus.tablet.map3d',
     ['nexus.copilot.diagnostics']],   // renders report.movement + report.bottlenecks
   ['intelligence/relational-field.js', 'nexus.intelligence.relational-field',
     ['nexus.lib.rfr2-bridge', 'nexus.intelligence.mastermind']],  // RFR2 wired into intelligence (causality + sigma) — §2026-08-22 moved from cortex/intelligence/ per intelligence.spec

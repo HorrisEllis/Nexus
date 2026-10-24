@@ -6,14 +6,14 @@ context: >-
   pipeline phase LM18_atlas_map_each_system_first of
   docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
 intent: null
-summary: LM18_atlas_map_each_system_first (?) — 5 file(s)
+summary: LM18_atlas_map_each_system_first (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675556
+exported_at: 1792822701917
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675556
-lastSeenAt: 1792787675556
+firstSeenAt: 1792822701917
+lastSeenAt: 1792822701917
 fingerprint: null
 payload:
   id: LM18_atlas_map_each_system_first
@@ -24,10 +24,9 @@ payload:
   files:
     - copilot/diagnostics.js
     - docs/2026-08-28-definition-of-complete-phasemap.spec
-    - service/nexus-diagnostic.js
     - diagnostic/nexus-diagnostic.js
     - copilot/diagnostic-sweep.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 3e1939e10f908db4
+  graph: ef380e7fa3b116f6

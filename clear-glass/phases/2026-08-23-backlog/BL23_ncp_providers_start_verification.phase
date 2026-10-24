@@ -7,11 +7,11 @@ intent: null
 summary: BL23_ncp_providers_start_verification (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675434
+exported_at: 1792822475793
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675434
-lastSeenAt: 1792787675434
+firstSeenAt: 1792822475793
+lastSeenAt: 1792822475793
 fingerprint: null
 payload:
   id: BL23_ncp_providers_start_verification
@@ -22,10 +22,10 @@ payload:
   files:
     - clear-glass/renderer/browser.js
     - clear-glass/src/bookmarks/browser.js
-    - architecture-spec/registry/watcher.js
     - clear-glass/src/adblock/lists.js
     - clear-glass/src/page/nexus-chat.js
+    - clear-glass/wire/nexus-wire.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 68e2b72f9c16e13c
+  graph: d624fa96e2f3d2bc

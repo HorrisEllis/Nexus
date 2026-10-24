@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC3_intention_taxonomy_per_system
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC3_intention_taxonomy_per_system
+context: >-
+  pipeline phase IC3_intention_taxonomy_per_system of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC3_intention_taxonomy_per_system (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792822701867
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822701867
+lastSeenAt: 1792822701867
+fingerprint: null
+payload:
+  id: IC3_intention_taxonomy_per_system
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - RR4_governed_handshake_on_handoff
+  blocks: []
+  spec: null
+  graph: 4e285ed5aef34d74

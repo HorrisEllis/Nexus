@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_rich-atlas-phasemap.spec::AT3_agent_queryable_atlas
+type: phase
+id: docs_rich-atlas-phasemap.spec::AT3_agent_queryable_atlas
+context: pipeline phase AT3_agent_queryable_atlas of docs/rich-atlas-phasemap.spec
+intent: null
+summary: AT3_agent_queryable_atlas (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478775
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478775
+lastSeenAt: 1792822478775
+fingerprint: null
+payload:
+  id: AT3_agent_queryable_atlas
+  map: docs/rich-atlas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 528df862578c4752

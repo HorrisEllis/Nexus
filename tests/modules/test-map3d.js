@@ -15,7 +15,7 @@ async function test(id, desc, fn) {
   catch (e) { _log(`  ✗ ${id} ${desc}\n    ${e.message}`); failed++; }
 }
 const ROOT = path.join(__dirname, '../..');
-const HTML = fs.readFileSync(path.join(ROOT, 'tablet/map3d.html'), 'utf8');
+const HTML = fs.readFileSync(path.join(ROOT, 'cos', 'tablet', 'map3d.html'), 'utf8');
 
 (async () => {
   await test('T-001', 'OB9: it is a real 3D render (three.js WebGL)', () => {

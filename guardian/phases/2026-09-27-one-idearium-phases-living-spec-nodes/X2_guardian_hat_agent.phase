@@ -9,11 +9,11 @@ intent: null
 summary: X2_guardian_hat_agent (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676064
+exported_at: 1792822476438
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676064
-lastSeenAt: 1792787676064
+firstSeenAt: 1792822476438
+lastSeenAt: 1792822476438
 fingerprint: null
 payload:
   id: X2_guardian_hat_agent
@@ -28,4 +28,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 03ec77b2152e6de4
+  graph: 34e8d01457f2b433

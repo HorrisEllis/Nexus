@@ -24,28 +24,31 @@ nexus/
   nexus/              autopilot, the event bus, query and connect layers
   warp/               the five-primitive event spine
   siso/               single input, single output — Event, Gate, Stream, StreamLog
-  jaa/                the JAA table schema
+  (retired) jaa           retired 2026-10-24 — the JAA table schema
   contracts/          the NEXUS interaction contract and contract node types
   hooks/              per-system hook declarations
-  seams/              seam contracts and the port table
-  auth/               sovereign authentication
-  security/           the signed signaling envelope
+  (retired) seams  retired 2026-10-24 — seam contracts and the port table
+  orchestrator/auth/  orchestrator — sovereign authentication
+  cos/security/       cos — the encrypted remote-session channel and kill switch
   meta/               domain-agnostic measurement
-  mesh/               networking daemons ported from BrainOS
-  remote-desktop/     remote desktop host, viewer and bridge-os-core
+  guardian/mesh/      guardian — networking daemons ported from BrainOS
+  cos/remote-desktop/  cos — remote desktop host, viewer and bridge-os-core (COS front end)
   emerge/             the .eg DSL runtime and the spec compiler
-  erosmancer/         ErosmancerOS — CDP browser automation
+  clear-glass/erosmancer/  clear-glass — ErosmancerOS, CDP browser automation
   cockpit/            the forge IDE spec and core
-  architecture-spec/  the scaffold every new system is built on
-  service/            ICO kernel service wrappers
+  idearium/architecture-spec/  idearium — the scaffold every new system is built on
+  (service split)     split 2026-10-24 — guardian/guardian-service.js, cortex/cortex-service.js, idearium/idearium-service.js
   sentinel/           the sentinel's interaction contract
   scripts/            verification and release scripts
   skills/             session skills
-  tablet/             the tablet homepage and 3D map
+  cos/tablet/         cos — the tablet homepage and 3D map (COS front end)
   ui/                 the UI shells
   docs/               the written record
   tests/              the proof
 ```
+
+> **2026-10-24 (0.60.236, RF2).** James: "need the systems soveriegn" · "remote desktop, tablet was meant to tbe the front end for cos" · "security goes with remote desktop". The folders that were not one of the 15 systems moved into the system that uses them (lib/architecture-apply.js; git kept each file's history): auth → orchestrator, mesh → guardian, idearium/architecture-spec → idearium, erosmancer → clear-glass, remote-desktop, security and tablet → cos, service/ split into guardian, cortex and idearium; jaa and seams retired to _archive/2026-10-24-retired-systems/. The rest (cockpit, contracts, hooks, meta, sentinel, siso, ui, emerge, emergence, warp, nexus, cli) are next, into lib/.
+
 
 ---
 
@@ -99,19 +102,19 @@ Since 0.39.341 (SY2 — James: "cos needs to be a nested compartment", then "Its
 
 `nexus/autopilot.js` starts every kernel in dependency phases and supervises them, restarting with backoff. `nexus/nexus-bus.js` is the common event fabric, `nexus/nexus-query.js` one query interface over every system, and `nexus/nexus-connect.js` the cross-system call, with a UUID on every call and every failure loud.
 
-`siso/` is the pattern: one input, one output, state in the data structure, transformation as events (`siso/Gate.js`, `siso/Stream.js`, `siso/StreamLog.js`, spec `siso/spec/siso.spec`), credited to Jonathan Bailey. `warp/` is the standalone devkit that hardens it: five primitives in `warp/core/` (Event, Gate, Stream, StreamLog, Axiom), and dispatch with canonical digests, a delta cache, cascades and pre-generation in `warp/dispatch/`. Its spec, `warp/spec/warp.spec`, keeps the dependency one way: NEXUS imports WARP, never the reverse. `jaa/schema.sql` and `jaa/schema-full.sql` define the JAA tables every row of state lives in.
+`siso/` is the pattern: one input, one output, state in the data structure, transformation as events (`siso/Gate.js`, `siso/Stream.js`, `siso/StreamLog.js`, spec `siso/spec/siso.spec`), credited to Jonathan Bailey. `warp/` is the standalone devkit that hardens it: five primitives in `warp/core/` (Event, Gate, Stream, StreamLog, Axiom), and dispatch with canonical digests, a delta cache, cascades and pre-generation in `warp/dispatch/`. Its spec, `warp/spec/warp.spec`, keeps the dependency one way: NEXUS imports WARP, never the reverse. the JAA table schema (jaa/, retired 2026-10-24, kept in the archive) and the JAA table schema (jaa/, retired 2026-10-24, kept in the archive) define the JAA tables every row of state lives in.
 
 ---
 
 ## Declared connections: contracts/, hooks/, seams/
 
-`contracts/nexus-interaction-contract.js` is the one table of every endpoint, port, SSE event and command, and `contracts/nodes/` holds the contract node types: axioms, bottlenecks, causal physics, deltas, edges, events, faults, gaps, ledgers, self-awareness, systems and verification contracts. `hooks/index.js` is the living hook registry, read before any system boots, with one declaration file per system (`hooks/cortex.hooks.js`, `hooks/guardian.hooks.js`, `hooks/idearium.hooks.js` and the rest) and `hooks/side-effect-parser.js` to find side effects a hook did not declare. `seams/seam-contracts.js` declares every seam and holds the port table.
+`contracts/nexus-interaction-contract.js` is the one table of every endpoint, port, SSE event and command, and `contracts/nodes/` holds the contract node types: axioms, bottlenecks, causal physics, deltas, edges, events, faults, gaps, ledgers, self-awareness, systems and verification contracts. `hooks/index.js` is the living hook registry, read before any system boots, with one declaration file per system (`hooks/cortex.hooks.js`, `hooks/guardian.hooks.js`, `hooks/idearium.hooks.js` and the rest) and `hooks/side-effect-parser.js` to find side effects a hook did not declare. the seam contracts (seams/, retired 2026-10-24, kept in the archive) declares every seam and holds the port table.
 
 ---
 
-## Trust: auth/, security/
+## Trust: auth/, cos/security/
 
-`auth/index.js` is the sovereign authentication layer: each client has an RSA keypair and signs its requests, and `auth/policy.json` says who may do what; `auth/client.js` is the caller's side. `security/signaling-envelope.js` signs the remote-desktop signaling channel so a replayed or hijacked session is refused, closing two items in `remote-desktop/remote-desktop.spec`.
+`orchestrator/auth/index.js` is the sovereign authentication layer: each client has an RSA keypair and signs its requests, and `orchestrator/auth/policy.json` says who may do what; `orchestrator/auth/client.js` is the caller's side. `cos/security/signaling-envelope.js` signs the remote-desktop signaling channel so a replayed or hijacked session is refused, closing two items in `cos/remote-desktop/remote-desktop.spec`.
 
 ---
 
@@ -123,23 +126,23 @@ Since 0.39.341 (SY2 — James: "cos needs to be a nested compartment", then "Its
 
 ## Adjacent systems
 
-`mesh/` holds networking daemons ported from BrainOS and kept optional: DNS, dynamic DNS, a reverse proxy and a firewall (`mesh/lib/dns-server.js`, `mesh/lib/ddns.js`, `mesh/lib/reverse-proxy.js`, `mesh/lib/firewall.js`), started by `mesh/daemons.js`.
+`guardian/mesh/` holds networking daemons ported from BrainOS and kept optional: DNS, dynamic DNS, a reverse proxy and a firewall (`guardian/mesh/lib/dns-server.js`, `guardian/mesh/lib/ddns.js`, `guardian/mesh/lib/reverse-proxy.js`, `guardian/mesh/lib/firewall.js`), started by `guardian/mesh/daemons.js`.
 
-`remote-desktop/` controls another machine: a host page (`remote-desktop/host.html`), a viewer (`remote-desktop/viewer.html`), input authorization and injection (`remote-desktop/input-auth.js`, `remote-desktop/input-injector.js`), signaling (`remote-desktop/signal.js`), an Electron bridge (`remote-desktop/bridge-electron/main.js`) and the vendored `remote-desktop/bridge-os-core/` for identity and keys. `remote-desktop/remote-desktop.spec` orders its build as a bottom-up phasemap.
+`cos/remote-desktop/` controls another machine: a host page (`cos/remote-desktop/host.html`), a viewer (`cos/remote-desktop/viewer.html`), input authorization and injection (`cos/remote-desktop/input-auth.js`, `cos/remote-desktop/input-injector.js`), signaling (`cos/remote-desktop/signal.js`), an Electron bridge (`cos/remote-desktop/bridge-electron/main.js`) and the vendored `cos/remote-desktop/bridge-os-core/` for identity and keys. `cos/remote-desktop/remote-desktop.spec` orders its build as a bottom-up phasemap.
 
 `emerge/` reads .eg files, a declarative language: tokenizer, a parser gated on signal-to-noise, kernel and emitter (`emerge/emerge-kernel.js`), code generation through Ollama for the gaps (`emerge/emerge-codegen-v2.js`), and the spec compiler in `emerge/compiler/` whose T0 to T3 pipeline queries cortex first (`emerge/cortex-query/`). Its specs are `emerge/spec/emerge.spec` and `emerge/SPEC_COMPILER.spec`.
 
-`erosmancer/erosmancer-os/` is ErosmancerOS, a TypeScript engine that drives a browser over the Chrome DevTools Protocol: behavior profiles for human-like input, routing, hostile-page detection, replay and adaptive memory, served on port 7432 by `erosmancer/erosmancer-os/src/api/server.ts`. Since 0.39.264 Clear Glass starts it with itself and connects it to its own DevTools port (`clear-glass/src/eros/supervisor.js`). Its spec is `erosmancer/spec/erosmancer.spec`.
+`clear-glass/erosmancer/erosmancer-os/` is ErosmancerOS, a TypeScript engine that drives a browser over the Chrome DevTools Protocol: behavior profiles for human-like input, routing, hostile-page detection, replay and adaptive memory, served on port 7432 by `clear-glass/erosmancer/erosmancer-os/src/api/server.ts`. Since 0.39.264 Clear Glass starts it with itself and connects it to its own DevTools port (`clear-glass/src/eros/supervisor.js`). Its spec is `clear-glass/erosmancer/spec/erosmancer.spec`.
 
 `cockpit/cockpit.spec` is the forge IDE's full specification, with its core in `cockpit/core.js` and its pipeline in `cockpit/pipeline.js`. The healer, once a system scaffolded by loom's generator beside these, moved into diagnostic in 0.60.136 (his call: diagnostic and the healer are one system): `diagnostic/healer/api/index.js`, with its spec in `diagnostic/spec/healer.spec.md`.
 
-`architecture-spec/` is the base a new sovereign system is built on before it has features: components, hooks and wires compiled into a lattice (`architecture-spec/registry/lattice.js`), a watcher per node type (`architecture-spec/registry/watcher.js`), friction (`architecture-spec/registry/friction.js`), decomposition (`architecture-spec/registry/decompose.js`), phases (`architecture-spec/registry/phases.js`), and the atlas tools (`architecture-spec/registry/create-atlas.js`, `architecture-spec/registry/edit-atlas.js`, `architecture-spec/registry/nexus-atlas-aggregate.js`). Its own atlas is `architecture-spec-atlas.md`.
+`idearium/architecture-spec/` is the base a new sovereign system is built on before it has features: components, hooks and wires compiled into a lattice (`idearium/architecture-spec/registry/lattice.js`), a watcher per node type (`idearium/architecture-spec/registry/watcher.js`), friction (`idearium/architecture-spec/registry/friction.js`), decomposition (`idearium/architecture-spec/registry/decompose.js`), phases (`idearium/architecture-spec/registry/phases.js`), and the atlas tools (`idearium/architecture-spec/registry/create-atlas.js`, `idearium/architecture-spec/registry/edit-atlas.js`, `idearium/architecture-spec/registry/nexus-atlas-aggregate.js`). Its own atlas is `architecture-spec-atlas.md`.
 
 ---
 
-## Operations: service/, sentinel/, scripts/, skills/, tablet/
+## Operations: service/, sentinel/, scripts/, skills/, cos/tablet/
 
-`service/guardian-service.js` and `service/idearium-service.js` boot a kernel as a supervised ICO service with every lifecycle event in its ledger. `sentinel/interaction-contract.json` is the sentinel's contract. `scripts/` holds release and verification tools: `scripts/verify-boot.js`, `scripts/verify-wires.js`, `scripts/precommit-check.js`, `scripts/run-verification-manifest.cjs`, `scripts/bump-version.py`. `skills/` holds session skills (`skills/nexus-session-changelog/SKILL.md`, `skills/james-brooks/SKILL.md`). `tablet/` is the tablet homepage (`tablet/index.html`) and its 3D map (`tablet/map3d.html`).
+`guardian/guardian-service.js` and `idearium/idearium-service.js` boot a kernel as a supervised ICO service with every lifecycle event in its ledger. `sentinel/interaction-contract.json` is the sentinel's contract. `scripts/` holds release and verification tools: `scripts/verify-boot.js`, `scripts/verify-wires.js`, `scripts/precommit-check.js`, `scripts/run-verification-manifest.cjs`, `scripts/bump-version.py`. `skills/` holds session skills (`skills/nexus-session-changelog/SKILL.md`, `skills/james-brooks/SKILL.md`). `cos/tablet/` is the tablet homepage (`cos/tablet/index.html`) and its 3D map (`cos/tablet/map3d.html`).
 
 ---
 
@@ -176,7 +179,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 > Generated by `scripts/generate-atlases.js` from loom's registry and events (loom/data/registry.json, loom/data/events.json — data, outside the snapshot, so written plain) and the tree itself, 2026-10-24. Everything between the markers is rewritten on the next run — write narrative above them. The same facts, one component at a time, are what `lib/registry-harness.js` hands a repo agent (loom.card.tool).
 
-**4419** files · **1687** code files · **9** registry components declared here · **274** events emitted · **97** heard · **9** routes · **178** code files with a covering test
+**4475** files · **1594** code files · **9** registry components declared here · **181** events emitted · **66** heard · **9** routes · **166** code files with a covering test
 
 ### Routes (9)
 
@@ -190,7 +193,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - POST /api/snapshot — Snapshot before applying patch · declared in `emerge/registry-components.js`
 - POST /compile — Compile .emerge spec → T0/T1/T2 pipeline · declared in `emerge/registry-components.js`
 
-### Events it emits (274) — and who hears them
+### Events it emits (181) — and who hears them
 
 - **guardian.ncp.sync_result** — from `tests/modules/test-chat-sync-agent-routing.test.js` → `guardian/lib/chat-sync.js` (guardian), `guardian/lib/chat-transcripts.js` (guardian)
 - **anomaly.detected** — from `lib/config-governance.js`, `tests/modules/test-escalation.js` +2 → `cortex/orion/index.js` (cortex), `tests/modules/test-config-governance.js`, `tests/nexus-full-audit.js`
@@ -205,35 +208,15 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - **guardian.job.chunk** — from `tests/modules/test-guardian-mesh-client.js` → `tests/modules/test-live-everywhere.test.js`, `tests/modules/test-work-journal.test.js`
 - **guardian.job.timeout** — from `tests/modules/test-economy-guardian.test.js` → `tests/modules/test-back-and-forth.test.js`, `tests/modules/test-profile-tabs.test.js`
 - **ico:ledger:fork** — from `lib/ico.js` → `tests/full.test.js`, `tests/modules/test-ico-ledger-writethrough.js`
-- **input:rate_limited** — from `remote-desktop/input-injector.js` → `remote-desktop/bridge-electron/main.js`, `remote-desktop/tests/test-input-injector.js`
-- **input:rejected** — from `remote-desktop/input-injector.js` → `remote-desktop/bridge-electron/main.js`, `remote-desktop/tests/test-input-injector.js`
-- **bus:basic** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:enrich** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:err.safe** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:multi** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:mutate** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:off** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:once** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:seq** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:sig.check** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:ts** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- **bus:unsub** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
 - **cortex.orion.classified** — from `tests/modules/test-raid-orion-wiring.js` → `tests/modules/test-orion.js`
-- **enrich:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
-- **err:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
 - **guardian.tool.called** — from `tests/modules/tool-call-listener.test.js` → `lib/agent-tools/tool-call-listener.js`
 - **ico:crystal:formed** — from `lib/ico.js` → `tests/full.test.js`
 - **ico:drop** — from `lib/ico.js` → `tests/full.test.js`
 - **ico:failure** — from `lib/ico.js` → `tests/full.test.js`
 - **ico:pipe:error** — from `lib/ico.js` → `tests/full.test.js`
-- **input:injected** — from `remote-desktop/input-injector.js` → `remote-desktop/tests/test-input-injector.js`
-- **net.dns.add_record** — from `mesh/lib/ddns.js` → `mesh/lib/dns-server.js`
-- **once:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
 - **shadow.declared** — from `lib/shadow.js` → `tests/modules/test-shadow.test.js`
 - **shadow.settled** — from `lib/shadow.js` → `tests/modules/test-shadow.test.js`
 - **store.flushed** — from `tests/modules/test-registry-harness.test.js` → `tests/modules/test-registry-harness.test.js`
-- **test:event** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
-- **unsub:test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js` → `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
 - **a.thing.done** — from `tests/modules/test-event-contracts.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **alk.rel.bid.detected** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **alk.rel.bid.response** — from `emergence/vendor/rfr2/field/relational.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
@@ -260,25 +243,45 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - **architect.hook.updated** — from `lib/hook-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **architect.hook.wired** — from `lib/hook-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **artifacts.changed** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **authority:ready** — from `remote-desktop/session-token.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **blueprint.loaded** — from `lib/blueprint.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **bus:all.a** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **bus:all.b** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **bus:meta:observer_error** — from `remote-desktop/bridge-os-core/bridge-core/bus.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **bus:wild.1** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **bus:wild.2** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- **capture.test** — from `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **causal:record** — from `emergence/loop.js`, `emergence/test/loop.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **cfr:create** — from `emergence/loop.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **cfr.influence.applied** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
 - **cfr.influence.diagnostic_requested** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
-- … 194 more — loom.find.tool kind "event"
+- **cfr.influence.guardian_throttled** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cfr.influence.guardian_unthrottled** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cfr.influence.snr_floor_cleared** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cfr.influence.snr_floor_raised** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cfr.influence.versionium_accelerated** — from `nexus/nexus-cfr-influence.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ci:run:started** — from `tests/modules/test-event-contracts.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cli.exec.done** — from `cockpit/cli.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **commented.out** — from `tests/modules/test-event-contracts.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **compartment.spawned** — from `lib/compartment-engine.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **compiler.check** — from `tests/modules/test-event-contracts.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **component.deprecated** — from `lib/component-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **component.hard_deleted** — from `lib/component-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **component.updated** — from `lib/component-registry.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **config.changed** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **constitution.decision** — from `lib/constitutional-ai.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **contract-registry.axiom.changed** — from `lib/contract-registry-writer.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **contract-registry.violation.flagged** — from `lib/contract-registry-writer.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **cortex.memory.updated** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **entropy.changed** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ess:bind** — from `lib/ess.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ess:noise_alert** — from `lib/ess.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ess:resolve** — from `lib/ess.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ess:unbind** — from `lib/ess.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **ess:write** — from `lib/ess.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **eventlog.bulk** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **eventlog.push** — from `ui/store.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- **fake.event** — from `tests/modules/test-capability-spec.test.js` → no listener in the tree (heard over HTTP/SSE, or by nobody)
+- … 101 more — loom.find.tool kind "event"
 
-### Events it hears from elsewhere (59)
+### Events it hears from elsewhere (48)
 
-**architect.snr.flagged** (architect) · **copilot.error.detected** (copilot) · **cortex.gap.found** (orchestrator) · **cortex.raid.decided** · **cortex.self-heal.deep_scan_findings** · **cortex.self-heal.failure_mode** · **cortex.self-heal.fix_proposed** · **cortex.self-heal.fix_staged** · **cortex.self-heal.remediation_requested** · **cortex.self-heal.skipped** · **dom:pick-result** · **escalation.failure_mode** · **escalation.friction.increased** · **gap.found** · **guardian.chat.transcript.recorded** (guardian) · **guardian.economy.fallback** · **guardian.economy.wait** · **guardian:job:complete** · **host:compartment:error** · **host:compartment:runtime-set** · **idearium.spec.collected** · **idearium.spec.compiled** · **job.done** · **liminal.velocity.runaway** · **net.ddns.add_entry** · **net.ddns.force_check** · **net.ddns.update** · **net.dns.allow_domain** · **net.dns.block_domain** · **net.fw.add_rule** · **net.fw.import_json** · **net.fw.remove_rule** · **net.fw.set_vars** · **net.proxy.add_route** · **net.proxy.remove_route** · **nexus.self-build.housekeeping-complete** · **nexus:cookie-request** · **plugin:test:seen** · **raid.route.decided** (cortex) · **raid.route.fulfilled** · **raid.route.no_route** (cortex) · **real.evt** · **ring:evicted** · **ring:pushed** · **shortcut:action** · **spatial.kernel.landscape.updated** · **spatial.resonance.scored** · **sql.plan** · **step.blocked** · **step.passed** · **t.absent** · **t.broken** · **t.build** · **t.lattice** · **t.ledger** · **t.model** · **t.reuse** · **t.vector** · **test:build**
+**architect.snr.flagged** (architect) · **copilot.error.detected** (copilot) · **cortex.gap.found** (orchestrator) · **cortex.raid.decided** · **cortex.self-heal.deep_scan_findings** · **cortex.self-heal.failure_mode** · **cortex.self-heal.fix_proposed** · **cortex.self-heal.fix_staged** · **cortex.self-heal.remediation_requested** · **cortex.self-heal.skipped** · **dom:pick-result** · **escalation.failure_mode** · **escalation.friction.increased** · **gap.found** · **guardian.chat.transcript.recorded** (guardian) · **guardian.economy.fallback** · **guardian.economy.wait** · **guardian:job:complete** · **host:compartment:error** · **host:compartment:runtime-set** · **idearium.spec.collected** · **idearium.spec.compiled** · **job.done** · **liminal.velocity.runaway** · **nexus.self-build.housekeeping-complete** · **nexus:cookie-request** · **plugin:test:seen** · **raid.route.decided** (cortex) · **raid.route.fulfilled** · **raid.route.no_route** (cortex) · **real.evt** · **ring:evicted** · **ring:pushed** · **shortcut:action** · **spatial.kernel.landscape.updated** · **spatial.resonance.scored** · **sql.plan** · **step.blocked** · **step.passed** · **t.absent** · **t.broken** · **t.build** · **t.lattice** · **t.ledger** · **t.model** · **t.reuse** · **t.vector** · **test:build**
 
-### Files, directory by directory (516 directories)
+### Files, directory by directory (512 directories)
 
 #### `.gitignore`
 
@@ -287,55 +290,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   requires 3 · required by 0
 - `test-node-index.js` (106 lines)  
   requires 3 · required by 0
-- other: 453 files (.gitignore, .json, .npmrc, .md, VERSION, .jsonl)
-
-#### `architecture-spec/registry/`
-
-14 code file(s).
-
-- `architecture-spec/registry/api.js` (95 lines) — .architecture/registry/api.js — the real, cross-system-safe surface onto this registry. Other systems (copilot, agents, anything) reach  
-  exports createRegistryApi, query, history · requires 1 · required by 0
-- `architecture-spec/registry/bundle.js` (22 lines) — .architecture/schema/bundle.js — NodeBundle schema + validator. A reference-only grouping of related node ids (a component with its  
-  exports BUNDLE_SCHEMA, checkBundle
-- `architecture-spec/registry/component.js` (21 lines) — .architecture/schema/component.js — Component node schema + validator. Restates loom/schema/component.js COMPONENT_SCHEMA unchanged; scoped  
-  exports COMPONENT_SCHEMA, checkComponent
-- `architecture-spec/registry/config.js` (21 lines) — .architecture/schema/config.js — Config node schema + validator. Deliberately minimal — a config node's whole point is that its value  
-  exports CONFIG_SCHEMA, checkConfig
-- `architecture-spec/registry/create-atlas.js` (129 lines) — .architecture/registry/create-atlas.js — scaffolds a new system atlas from atlas-template.md, pre-filling whatever a real .spec object  
-  exports scaffoldAtlas, synthesize, toCortexMemory
-- `architecture-spec/registry/decompose.js` (139 lines) — .architecture/registry/decompose.js — agnostic decomposition tool. Takes anything with declared seams (cut points) — a phasemap, a  
-  exports findSeamsByTopLevelKeys, decomposePhasemap, migrateToSystemFolders, wireIntoRegistry
-- `architecture-spec/registry/edit-atlas.js` (71 lines) — .architecture/registry/edit-atlas.js — edits ONE module section of an atlas.md by id, without touching anything else in the file. The  
-  exports findSection, editSection
-- `architecture-spec/registry/friction.js` (69 lines) — .architecture/registry/friction.js — per-system self-diagnostic score, computed live from the system's own registry state. Direct  
-  exports computeFriction, computeTension, gapsFromSpecFile
-- `architecture-spec/registry/hook.js` (36 lines) — .architecture/schema/hook.js — Hook node schema + validator. Restates loom/schema/hook.js HOOK_SCHEMA unchanged. type is an open  
-  exports HOOK_SCHEMA, KNOWN_HOOK_TYPES, HOOK_DIRECTIONS, checkHook
-- `architecture-spec/registry/lattice.js` (58 lines) — .architecture/compiler/lattice.js — compiles every Component/Hook/Wire node file into a single CompiledLattice. Generalization of  
-  exports compileLattice
-- `architecture-spec/registry/nexus-atlas-aggregate.js` (54 lines) — .architecture/registry/nexus-atlas-aggregate.js — rolls up idearium's real per-project atlas.json files (repository, fileCount, byLanguage,  
-  exports aggregate · requires 0 · required by 1
-- `architecture-spec/registry/phases.js` (77 lines) — .architecture/registry/phases.js — Phase as a full node kind, not just prose in a phasemap doc. The point: querying "what's the state of  
-  exports PHASE_SCHEMA, PHASE_STATUSES, checkPhase, summarize, oneLine
-- `architecture-spec/registry/watcher.js` (84 lines) — .architecture/registry/watcher.js — live per-type node index + ledger. Generalization of guardian/lib/node-registry.js out of guardian and  
-  exports createWatcher, NODE_TYPES · requires 1 · required by 1
-- `architecture-spec/registry/wire.js` (23 lines) — .architecture/schema/wire.js — Wire node schema + validator. Restates loom/schema/wire.js WIRE_SCHEMA unchanged. A wire is the  
-  exports WIRE_SCHEMA, checkWire
-
-#### `auth/`
-
-2 code · 1 other file(s).
-
-- `auth/client.js` (513 lines) — NEXUS Remote Client First-run: generates RSA-2048 keypair, prints public key for admin to register
-- `auth/index.js` (510 lines)  
-  exports init, handleChallenge, handleHandshake, handleRevoke, handleClients, handleRegisterClient +4 · requires 1 · required by 0
-- other: `auth/policy.json`
-
-#### `auth/keys/`
-
-2 other file(s).
-
-- other: `auth/keys/nexus-private.pem`, `auth/keys/nexus-public.pem`
+- other: 456 files (.gitignore, .json, .npmrc, .md, VERSION, .jsonl)
 
 #### `cli/`
 
@@ -452,9 +407,9 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `docs/`
 
-399 other file(s).
+402 other file(s).
 
-- other: 399 files (.spec, .md, .json, .htm, .yaml, .html)
+- other: 402 files (.spec, .md, .json, .htm, .yaml, .html)
 
 #### `docs/architecture-spec/`
 
@@ -903,121 +858,6 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `emergence/vendor/rfr2/liminal/structural.js` (96 lines) — ╔══════════════════════════════════════════════════════════════════════════╗ ║ STRUCTURAL MODULE · modules/structural/index.js · v1.0.0 ║  
   exports MODULE_ID, MODULE_VERSION, MODULE_UUID, StructuralAssumptionModule · requires 2 · required by 0
 
-#### `erosmancer/erosmancer-os/`
-
-6 other file(s).
-
-- other: `erosmancer/erosmancer-os/CHANGELOG.md`, `erosmancer/erosmancer-os/MANIFEST.json`, `erosmancer/erosmancer-os/README.md`, `erosmancer/erosmancer-os/ROADMAP.md`, `erosmancer/erosmancer-os/package.json`, `erosmancer/erosmancer-os/tsconfig.json`
-
-#### `erosmancer/erosmancer-os/src/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/index.ts` (291 lines) — // ============================================================ // ErosmancerOS — Orchestrator v2  
-  exports ErosmancerOS, DEFAULT_CONFIG, BEHAVIOR_DEFAULTS, BehaviorEngine, BEHAVIOR_PROFILES, RoutingEngine +3
-
-#### `erosmancer/erosmancer-os/src/adaptive/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/adaptive/index.ts` (399 lines) — // ============================================================ // ErosmancerOS — Adaptive Layer  
-  exports PatternMemory, StrategyOptimizer
-
-#### `erosmancer/erosmancer-os/src/api/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/api/server.ts` (753 lines) — // ============================================================ // ErosmancerOS — API Server v2  
-  exports app, server · requires 1 · required by 1
-
-#### `erosmancer/erosmancer-os/src/behavior/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/behavior/index.ts` (569 lines) — Box-Muller transform → normal distribution sample  
-  exports curvedPath, BEHAVIOR_PROFILES, BehaviorEngine
-
-#### `erosmancer/erosmancer-os/src/bridge/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/bridge/index.ts` (407 lines) — // ============================================================ // ErosmancerOS — Bridge Core (continued)  
-  exports GOOGLE_SIGNIN_HOST, isGoogleSignin, BridgeCore
-
-#### `erosmancer/erosmancer-os/src/dispatcher/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/dispatcher/index.ts` (490 lines) — // ============================================================ // ErosmancerOS — Signal Dispatcher  
-  exports SignalDispatcher
-
-#### `erosmancer/erosmancer-os/src/hostile/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/hostile/index.ts` (471 lines) — // ============================================================ // ErosmancerOS — Hostile Detection  
-  exports HostileDetection
-
-#### `erosmancer/erosmancer-os/src/observer/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/observer/index.ts` (470 lines) — // ============================================================ // ErosmancerOS — DOM Observer  
-  exports DOMObserver, ShadowDOMMapper
-
-#### `erosmancer/erosmancer-os/src/registry/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/registry/index.ts` (394 lines) — // ============================================================ // ErosmancerOS — Node Registry  
-  exports NodeRegistry
-
-#### `erosmancer/erosmancer-os/src/replay/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/replay/index.ts` (355 lines) — // ============================================================ // ErosmancerOS — ScriptReplayQueue  
-  exports ScriptReplayQueue · requires 0 · required by 1
-
-#### `erosmancer/erosmancer-os/src/routing/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/routing/index.ts` (349 lines) — // ============================================================ // ErosmancerOS — Routing Engine  
-  exports RoutingEngine
-
-#### `erosmancer/erosmancer-os/src/selector/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/selector/index.ts` (404 lines) — // ============================================================ // ErosmancerOS — Selector Engine  
-  exports SelectorEngine
-
-#### `erosmancer/erosmancer-os/src/telemetry/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/telemetry/index.ts` (144 lines) — // ============================================================ // ErosmancerOS — Telemetry  
-  exports Telemetry
-
-#### `erosmancer/erosmancer-os/src/types/`
-
-1 code file(s).
-
-- `erosmancer/erosmancer-os/src/types/index.ts` (471 lines) — // ============================================================ // ErosmancerOS — Core Types  
-  exports NodeSchema, TabSchema, DEFAULT_CONFIG, BEHAVIOR_DEFAULTS
-
-#### `erosmancer/erosmancer-os/tests/`
-
-6 test file(s).
-
-
-#### `erosmancer/spec/`
-
-1 other file(s).
-
-- other: `erosmancer/spec/erosmancer.spec`
-
 #### `hooks/`
 
 11 code file(s).
@@ -1045,15 +885,9 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `hooks/side-effect-parser.js` (121 lines)  
   exports parseSideEffect, structuredSideEffects · requires 0 · required by 1 · tested by `tests/hooks-side-effect-parser.test.js`
 
-#### `jaa/`
-
-2 other file(s).
-
-- other: `jaa/schema-full.sql`, `jaa/schema.sql`
-
 #### `lib/`
 
-290 code · 1 other file(s).
+292 code · 2 other file(s).
 
 - `lib/account-identity-index.js` (61 lines) — a real, stable UUID per (agent, account), not per session. James: "having a uuid for accounts in the cookie  
   exports resolve, touch, forAgent, TABLE, MODULE_ID, VERSION · requires 1 · required by 0
@@ -1097,6 +931,10 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports MODULE_ID, VERSION, SEED, get, observe, interrogationPrompt +4
 - `lib/agent-tool-call.js` (109 lines) — // lib/agent-tool-call.js — real, pure parser for the tool-call syntax a // browser-typed agent reply uses to request a real tool execution.  
   exports parseToolCall, parseAllToolCalls, stripToolCall, formatToolResult, MODULE_ID, VERSION
+- `lib/architecture-apply.js` (191 lines)  
+  exports MODULE_ID, VERSION, plan, apply, check
+- `lib/architecture-migrate.js` (210 lines)  
+  exports MODULE_ID, VERSION, CORE, RETIRED, RETIRED_DIR, read +5
 - `lib/atlas-generate.js` (238 lines)  
   exports generate, sectionFor, splice, walk, atlasFileFor, syncReadme +4 · requires 4 · required by 2
 - `lib/autonomous-loop.js` (114 lines) — // ── lib/autonomous-loop.js ─────────────────────────────────────────────────── // UUID: nexus-autonomous-loop-v1-0000-4000-0000-000000000001  
@@ -1171,12 +1009,8 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
   exports VERSION, VIA, planEdits, unifiedDiff, diagnose, current +7 · requires 4 · required by 3
 - `lib/coder-brief.js` (94 lines) — CB1 (0.60.171): the brief a coder gets for one file, in the five parts Gemini said make it code at its best. Map: docs/2026-10-19-pipeline-root-causes-phasemap.spec CB1  
   exports MODULE_ID, VERSION, AXIOM_RULES, stackOf, compose · requires 1 · required by 1
-- `lib/command-builder.js` (182 lines)  
-  exports parseRequest, resolveCapability, buildCommand, getCommand, listCommands, runCommand +3 · requires 4 · required by 1
-- `lib/compartment-dom-ledger.js` (57 lines) — lib/compartment-dom-ledger.js §MCO10 2026-09-13 — James: "stream the DOM to the compartment ledger per  
-  exports recordDomEvent · tested by `tests/modules/mco10-compartment-dom-ledger.test.js`
-- … 230 more code files — loom.find.tool
-- other: `lib/repo-prompt-blocks.previous.json`
+- … 232 more code files — loom.find.tool
+- other: `lib/architecture-migrate.decisions.json`, `lib/repo-prompt-blocks.previous.json`
 
 #### `lib/activity-log/`
 
@@ -1749,13 +1583,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 7 other file(s).
 
-- other: `lib/phases/2026-08-22-session-full/graph/SF10_agent_notes-2d100608bc826abf.graph`, `lib/phases/2026-08-22-session-full/graph/SF12_end_state_vision_and_full_phase_map_docs-e20580490f498608.graph`, `lib/phases/2026-08-22-session-full/graph/SF13_orchestrator_agent_pipeline-de5ad9a019286d15.graph`, `lib/phases/2026-08-22-session-full/graph/SF16_event_types_real_registry-71639da711eaaf6d.graph`, `lib/phases/2026-08-22-session-full/graph/SF17_intelligence_system_all_4_phases-8f00a4235b63cc7b.graph`, `lib/phases/2026-08-22-session-full/graph/SF5_wiring_gap_bridge-91251df2a9f05ad8.graph`, `lib/phases/2026-08-22-session-full/graph/SF7_axiom_8_7-0396343d7665f754.graph`
+- other: `lib/phases/2026-08-22-session-full/graph/SF10_agent_notes-2d100608bc826abf.graph`, `lib/phases/2026-08-22-session-full/graph/SF12_end_state_vision_and_full_phase_map_docs-e20580490f498608.graph`, `lib/phases/2026-08-22-session-full/graph/SF13_orchestrator_agent_pipeline-de5ad9a019286d15.graph`, `lib/phases/2026-08-22-session-full/graph/SF16_event_types_real_registry-71639da711eaaf6d.graph`, `lib/phases/2026-08-22-session-full/graph/SF17_intelligence_system_all_4_phases-4c31159075863608.graph`, `lib/phases/2026-08-22-session-full/graph/SF5_wiring_gap_bridge-91251df2a9f05ad8.graph`, `lib/phases/2026-08-22-session-full/graph/SF7_axiom_8_7-0396343d7665f754.graph`
 
 #### `lib/phases/2026-08-22-session-full/graph/_superseded/`
 
-2 other file(s).
+3 other file(s).
 
-- other: `lib/phases/2026-08-22-session-full/graph/_superseded/SF12_end_state_vision_and_full_phase_map_docs-1d20559f29b851d2.graph`, `lib/phases/2026-08-22-session-full/graph/_superseded/SF7_axiom_8_7-c236c56937c33593.graph`
+- other: `lib/phases/2026-08-22-session-full/graph/_superseded/SF12_end_state_vision_and_full_phase_map_docs-1d20559f29b851d2.graph`, `lib/phases/2026-08-22-session-full/graph/_superseded/SF17_intelligence_system_all_4_phases-8f00a4235b63cc7b.graph`, `lib/phases/2026-08-22-session-full/graph/_superseded/SF7_axiom_8_7-c236c56937c33593.graph`
 
 #### `lib/phases/2026-08-23-backlog/`
 
@@ -1767,7 +1601,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 8 other file(s).
 
-- other: `lib/phases/2026-08-23-backlog/graph/BL11_orchestrator_folder_consolidation-d04b773d3d681ed0.graph`, `lib/phases/2026-08-23-backlog/graph/BL12_nexus_heal_loop_to_diagnostic-aedd1b0928da63f4.graph`, `lib/phases/2026-08-23-backlog/graph/BL15_agent_tools_tree_restructure-8c572d92803d3fae.graph`, `lib/phases/2026-08-23-backlog/graph/BL24_userscript_suite_enterprise_grade-edba621e935840c5.graph`, `lib/phases/2026-08-23-backlog/graph/BL25_nexus_options_config-abb545081f8c4e3e.graph`, `lib/phases/2026-08-23-backlog/graph/BL27_agent_suite_consolidation-5312857a8c56f41a.graph`, `lib/phases/2026-08-23-backlog/graph/BL4_port_element_picker_ux-8f7a989bfea93b3a.graph`, `lib/phases/2026-08-23-backlog/graph/BL7_emerge_files_to_emerge_folder-3ab7a1f57237920a.graph`
+- other: `lib/phases/2026-08-23-backlog/graph/BL11_orchestrator_folder_consolidation-e8629d7afc8fe155.graph`, `lib/phases/2026-08-23-backlog/graph/BL12_nexus_heal_loop_to_diagnostic-4f389d7509036062.graph`, `lib/phases/2026-08-23-backlog/graph/BL15_agent_tools_tree_restructure-8c572d92803d3fae.graph`, `lib/phases/2026-08-23-backlog/graph/BL24_userscript_suite_enterprise_grade-edba621e935840c5.graph`, `lib/phases/2026-08-23-backlog/graph/BL25_nexus_options_config-abb545081f8c4e3e.graph`, `lib/phases/2026-08-23-backlog/graph/BL27_agent_suite_consolidation-5312857a8c56f41a.graph`, `lib/phases/2026-08-23-backlog/graph/BL4_port_element_picker_ux-8f7a989bfea93b3a.graph`, `lib/phases/2026-08-23-backlog/graph/BL7_emerge_files_to_emerge_folder-3ab7a1f57237920a.graph`
+
+#### `lib/phases/2026-08-23-backlog/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-08-23-backlog/graph/_superseded/BL11_orchestrator_folder_consolidation-d04b773d3d681ed0.graph`, `lib/phases/2026-08-23-backlog/graph/_superseded/BL12_nexus_heal_loop_to_diagnostic-aedd1b0928da63f4.graph`
 
 #### `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/`
 
@@ -1779,25 +1619,25 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 8 other file(s).
 
-- other: `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR2_ollama_output_folder_listener-c5cdd4d86ddb5b74.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR3_account_registry_userscript_hook-8be6d498ddcef7ec.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR5_build_contract_per_agent_per_intent-36bf07b27fc48bd7.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR6_copilot_as_agent_chat_model-fd8edb04f0f53aaf.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR7_guardian_dispatch_connectivity_sweep-e8d5cbb04e0fb190.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET2_guardian_event_taxonomy-3864f053a89e1c31.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET6_sigma_gates_on_taxonomy-161a85ba5515e7c0.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/SS3_unified_living_model_system_plus_person-0bbbc7d8adf65f4e.graph`
+- other: `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR2_ollama_output_folder_listener-c5cdd4d86ddb5b74.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR3_account_registry_userscript_hook-8be6d498ddcef7ec.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR5_build_contract_per_agent_per_intent-36bf07b27fc48bd7.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR6_copilot_as_agent_chat_model-fd8edb04f0f53aaf.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR7_guardian_dispatch_connectivity_sweep-e8d5cbb04e0fb190.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET2_guardian_event_taxonomy-499ad40e6e9c3414.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET6_sigma_gates_on_taxonomy-161a85ba5515e7c0.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/SS3_unified_living_model_system_plus_person-0bbbc7d8adf65f4e.graph`
 
 #### `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/`
 
-2 other file(s).
+3 other file(s).
 
-- other: `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/ET6_sigma_gates_on_taxonomy-39103ee4912fdf0c.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/SS3_unified_living_model_system_plus_person-b7991f62394431da.graph`
+- other: `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/ET2_guardian_event_taxonomy-3864f053a89e1c31.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/ET6_sigma_gates_on_taxonomy-39103ee4912fdf0c.graph`, `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/SS3_unified_living_model_system_plus_person-b7991f62394431da.graph`
 
 #### `lib/phases/2026-08-28-definition-of-complete/`
 
-5 other file(s).
+4 other file(s).
 
-- other: `lib/phases/2026-08-28-definition-of-complete/DOD2_diagnose_and_self_repair.phase`, `lib/phases/2026-08-28-definition-of-complete/DOD4_build_and_expand_from_loom.phase`, `lib/phases/2026-08-28-definition-of-complete/DOD5_maps_snapshots_backups_living_model.phase`, `lib/phases/2026-08-28-definition-of-complete/DOD6_respects_axioms.phase`, `lib/phases/2026-08-28-definition-of-complete/DOD8_contract_conditions_comparison_and_drift_engines.phase`
+- other: `lib/phases/2026-08-28-definition-of-complete/DOD4_build_and_expand_from_loom.phase`, `lib/phases/2026-08-28-definition-of-complete/DOD5_maps_snapshots_backups_living_model.phase`, `lib/phases/2026-08-28-definition-of-complete/DOD6_respects_axioms.phase`, `lib/phases/2026-08-28-definition-of-complete/DOD8_contract_conditions_comparison_and_drift_engines.phase`
 
 #### `lib/phases/2026-08-28-definition-of-complete/graph/`
 
-5 other file(s).
+4 other file(s).
 
-- other: `lib/phases/2026-08-28-definition-of-complete/graph/DOD2_diagnose_and_self_repair-5bfd602924d700e1.graph`, `lib/phases/2026-08-28-definition-of-complete/graph/DOD4_build_and_expand_from_loom-8ee63f9d1b09068e.graph`, `lib/phases/2026-08-28-definition-of-complete/graph/DOD5_maps_snapshots_backups_living_model-3908fcdebd5c6049.graph`, `lib/phases/2026-08-28-definition-of-complete/graph/DOD6_respects_axioms-0f8fab7681fae1d5.graph`, `lib/phases/2026-08-28-definition-of-complete/graph/DOD8_contract_conditions_comparison_and_drift_engines-1d10a9ee9575d398.graph`
+- other: `lib/phases/2026-08-28-definition-of-complete/graph/DOD4_build_and_expand_from_loom-8ee63f9d1b09068e.graph`, `lib/phases/2026-08-28-definition-of-complete/graph/DOD5_maps_snapshots_backups_living_model-3908fcdebd5c6049.graph`, `lib/phases/2026-08-28-definition-of-complete/graph/DOD6_respects_axioms-0f8fab7681fae1d5.graph`, `lib/phases/2026-08-28-definition-of-complete/graph/DOD8_contract_conditions_comparison_and_drift_engines-1d10a9ee9575d398.graph`
 
 #### `lib/phases/2026-08-28-self-building-pipeline/`
 
@@ -1813,15 +1653,21 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `lib/phases/2026-08-30-interaction-contract-context/`
 
-5 other file(s).
+4 other file(s).
 
-- other: `lib/phases/2026-08-30-interaction-contract-context/IC10_diagnostic_own_real_system_structure.phase`, `lib/phases/2026-08-30-interaction-contract-context/IC12_universal_gap_and_symmetry_detection.phase`, `lib/phases/2026-08-30-interaction-contract-context/IC13_agent_mesh_chat_index.phase`, `lib/phases/2026-08-30-interaction-contract-context/IC5_full_input_queue_output_qc_lifecycle.phase`, `lib/phases/2026-08-30-interaction-contract-context/IC7_drift_and_comparison_tracking_in_the_pipeline.phase`
+- other: `lib/phases/2026-08-30-interaction-contract-context/IC12_universal_gap_and_symmetry_detection.phase`, `lib/phases/2026-08-30-interaction-contract-context/IC13_agent_mesh_chat_index.phase`, `lib/phases/2026-08-30-interaction-contract-context/IC5_full_input_queue_output_qc_lifecycle.phase`, `lib/phases/2026-08-30-interaction-contract-context/IC7_drift_and_comparison_tracking_in_the_pipeline.phase`
 
 #### `lib/phases/2026-08-30-interaction-contract-context/graph/`
 
-5 other file(s).
+4 other file(s).
 
-- other: `lib/phases/2026-08-30-interaction-contract-context/graph/IC10_diagnostic_own_real_system_structure-37d61971e616a68c.graph`, `lib/phases/2026-08-30-interaction-contract-context/graph/IC12_universal_gap_and_symmetry_detection-4c68e3f3c0900e7c.graph`, `lib/phases/2026-08-30-interaction-contract-context/graph/IC13_agent_mesh_chat_index-acae83a88cfed8cd.graph`, `lib/phases/2026-08-30-interaction-contract-context/graph/IC5_full_input_queue_output_qc_lifecycle-5cf93f4f44f1c70a.graph`, `lib/phases/2026-08-30-interaction-contract-context/graph/IC7_drift_and_comparison_tracking_in_the_pipeline-57b2a934eab904b3.graph`
+- other: `lib/phases/2026-08-30-interaction-contract-context/graph/IC12_universal_gap_and_symmetry_detection-4c68e3f3c0900e7c.graph`, `lib/phases/2026-08-30-interaction-contract-context/graph/IC13_agent_mesh_chat_index-acae83a88cfed8cd.graph`, `lib/phases/2026-08-30-interaction-contract-context/graph/IC5_full_input_queue_output_qc_lifecycle-5cf93f4f44f1c70a.graph`, `lib/phases/2026-08-30-interaction-contract-context/graph/IC7_drift_and_comparison_tracking_in_the_pipeline-57b2a934eab904b3.graph`
+
+#### `lib/phases/2026-08-30-interaction-contract-context/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-08-30-interaction-contract-context/graph/_superseded/IC10_diagnostic_own_real_system_structure-37d61971e616a68c.graph`
 
 #### `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/`
 
@@ -1859,6 +1705,12 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 - other: 20 files (.graph)
 
+#### `lib/phases/2026-09-02-nexus-vision-master/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-02-nexus-vision-master/graph/_superseded/SR11_spec_project_import_to_compartment-3ba40fae475bab7c.graph`, `lib/phases/2026-09-02-nexus-vision-master/graph/_superseded/SR3_artifact_extraction_introspect_bridge-4f813123ae64e4bd.graph`
+
 #### `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/`
 
 2 other file(s).
@@ -1893,19 +1745,31 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 9 other file(s).
 
-- other: `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR1_architect_retirement_and_hooks_to_loom-c44714dfce980acf.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR2_decentralize_interaction_contracts-004da81f2aa79f85.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/C1_cli_per_system_split-7b2166b145a6e248.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/D1_diagnostic_real_folder-326872f5777c2e88.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N1_root_md_consolidation-d7ece054f8e1b547.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N2_root_nexus_js_to_nexus_folder-6088de94a4c19d4b.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N3_stray_root_files_found_after_N1-46553cc0a1125676.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/T1_extend_system_scaffold-c85e7dedf727b889.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/X1_node_decomposition_tool-6dc260de77610029.graph`
+- other: `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR1_architect_retirement_and_hooks_to_loom-ec476c801239c1a2.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR2_decentralize_interaction_contracts-004da81f2aa79f85.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/C1_cli_per_system_split-7b2166b145a6e248.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/D1_diagnostic_real_folder-475c655800cebc65.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N1_root_md_consolidation-d7ece054f8e1b547.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N2_root_nexus_js_to_nexus_folder-6088de94a4c19d4b.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N3_stray_root_files_found_after_N1-46553cc0a1125676.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/T1_extend_system_scaffold-c85e7dedf727b889.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/X1_node_decomposition_tool-6f5db2348ba53165.graph`
+
+#### `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/AR1_architect_retirement_and_hooks_to_loom-c44714dfce980acf.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/D1_diagnostic_real_folder-326872f5777c2e88.graph`, `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/X1_node_decomposition_tool-6dc260de77610029.graph`
 
 #### `lib/phases/2026-09-11-sovereign-node-architecture/`
 
-12 other file(s).
+11 other file(s).
 
-- other: `lib/phases/2026-09-11-sovereign-node-architecture/P12_compartment_per_contract.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P19_dynamic_nodes_via_causal_graph.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P1_fix_the_declared_living_maps.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P22_ledger_data_integrity_checker.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P25_universal_per_system_queue.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P30_provider_ping_delta.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P33_every_system_runs_its_node_registry.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P36_an_event_ledger_per_registry.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P38_every_graph_has_its_route_command_and_node.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P3_per_system_node_schemas.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P4_full_node_type_coverage_per_system.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P9_diagnostic_from_expected_behavior.phase`
+- other: `lib/phases/2026-09-11-sovereign-node-architecture/P12_compartment_per_contract.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P19_dynamic_nodes_via_causal_graph.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P1_fix_the_declared_living_maps.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P22_ledger_data_integrity_checker.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P25_universal_per_system_queue.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P30_provider_ping_delta.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P33_every_system_runs_its_node_registry.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P36_an_event_ledger_per_registry.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P38_every_graph_has_its_route_command_and_node.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P3_per_system_node_schemas.phase`, `lib/phases/2026-09-11-sovereign-node-architecture/P4_full_node_type_coverage_per_system.phase`
 
 #### `lib/phases/2026-09-11-sovereign-node-architecture/graph/`
 
-12 other file(s).
+11 other file(s).
 
-- other: `lib/phases/2026-09-11-sovereign-node-architecture/graph/P12_compartment_per_contract-8cfd3609296f0e65.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P19_dynamic_nodes_via_causal_graph-14175a5931199ebc.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P1_fix_the_declared_living_maps-6e2243bd608aa76f.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P22_ledger_data_integrity_checker-80f256cd544672ab.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P25_universal_per_system_queue-624624c871ccb0f6.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P30_provider_ping_delta-81b879ff6f24b8b2.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P33_every_system_runs_its_node_registry-7955afec14f5b4a5.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P36_an_event_ledger_per_registry-fbd0abb2a175f847.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P38_every_graph_has_its_route_command_and_node-ba638bb548c28c0d.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P3_per_system_node_schemas-71d0409c318c73a0.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P4_full_node_type_coverage_per_system-7d7cc69568624b23.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P9_diagnostic_from_expected_behavior-d3f4fcb51886b539.graph`
+- other: `lib/phases/2026-09-11-sovereign-node-architecture/graph/P12_compartment_per_contract-8cfd3609296f0e65.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P19_dynamic_nodes_via_causal_graph-14175a5931199ebc.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P1_fix_the_declared_living_maps-6e2243bd608aa76f.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P22_ledger_data_integrity_checker-80f256cd544672ab.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P25_universal_per_system_queue-25f546a0afcd48d4.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P30_provider_ping_delta-81b879ff6f24b8b2.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P33_every_system_runs_its_node_registry-e35fe116fff586c0.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P36_an_event_ledger_per_registry-fbd0abb2a175f847.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P38_every_graph_has_its_route_command_and_node-ba638bb548c28c0d.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P3_per_system_node_schemas-71d0409c318c73a0.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/P4_full_node_type_coverage_per_system-7d7cc69568624b23.graph`
+
+#### `lib/phases/2026-09-11-sovereign-node-architecture/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-11-sovereign-node-architecture/graph/_superseded/P25_universal_per_system_queue-624624c871ccb0f6.graph`, `lib/phases/2026-09-11-sovereign-node-architecture/graph/_superseded/P33_every_system_runs_its_node_registry-7955afec14f5b4a5.graph`
 
 #### `lib/phases/2026-09-13-track-b-sovereignty/`
 
@@ -1941,7 +1805,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 4 other file(s).
 
-- other: `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B3_availability_tier-1a4f7859f0f50ce1.graph`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B5_port_3753_collision-3d6b1fadb758d77c.graph`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/D5_new-8a8997642f5cb4af.graph`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P0_map-270831fdfdc19271.graph`
+- other: `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B3_availability_tier-1a4f7859f0f50ce1.graph`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B5_port_3753_collision-3d6b1fadb758d77c.graph`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/D5_new-6de18476e3420697.graph`, `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P0_map-270831fdfdc19271.graph`
+
+#### `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/_superseded/D5_new-8a8997642f5cb4af.graph`
 
 #### `lib/phases/2026-09-22-brainos-agent-suite/`
 
@@ -1981,15 +1851,15 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/`
 
-3 other file(s).
+2 other file(s).
 
-- other: `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/E1.phase`, `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/N1.phase`, `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/X1.phase`
+- other: `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/N1.phase`, `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/X1.phase`
 
 #### `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/`
 
-3 other file(s).
+2 other file(s).
 
-- other: `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/E1-48449faf7b7f8211.graph`, `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/N1-afc3f2d2b1971c2a.graph`, `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/X1-7a889bbcd135db9f.graph`
+- other: `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/N1-afc3f2d2b1971c2a.graph`, `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/X1-7a889bbcd135db9f.graph`
 
 #### `lib/phases/2026-09-27-agent-hat-memory-download-manager/`
 
@@ -2013,7 +1883,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 5 other file(s).
 
-- other: `lib/phases/2026-09-27-components-store-and-atlases/graph/A1-362ff4dd0f06f283.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/A2-c42260b792aebce5.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/C1-c901b0518083f11c.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/C3-6f53d9aa14fc9e97.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/C4-1e1f2af6d71358cb.graph`
+- other: `lib/phases/2026-09-27-components-store-and-atlases/graph/A1-362ff4dd0f06f283.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/A2-c42260b792aebce5.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/C1-c901b0518083f11c.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/C3-9bc63567919d15c7.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/C4-f4160414eefade2b.graph`
+
+#### `lib/phases/2026-09-27-components-store-and-atlases/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-27-components-store-and-atlases/graph/_superseded/C3-6f53d9aa14fc9e97.graph`, `lib/phases/2026-09-27-components-store-and-atlases/graph/_superseded/C4-1e1f2af6d71358cb.graph`
 
 #### `lib/phases/2026-09-27-idearium-atlas/`
 
@@ -2025,7 +1901,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 1 other file(s).
 
-- other: `lib/phases/2026-09-27-idearium-atlas/graph/A2-2ca200087c34a761.graph`
+- other: `lib/phases/2026-09-27-idearium-atlas/graph/A2-f56a8ed10fd0ab19.graph`
+
+#### `lib/phases/2026-09-27-idearium-atlas/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-27-idearium-atlas/graph/_superseded/A2-2ca200087c34a761.graph`
 
 #### `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/`
 
@@ -2037,7 +1919,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 7 other file(s).
 
-- other: `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T1_suite_process-f9f50c78f096c750.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T2_all_tests-f20e3b22238a10f1.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T3_debug_report-7765b07df0393f7b.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X1_system_nodes-46e5cb034f4618e8.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X4_command_index_spec-f0c28b0337bbaf38.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X5_core_scripts-071bcce96653212c.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/Z1_release-8e268e22b5c92e0c.graph`
+- other: `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T1_suite_process-f9f50c78f096c750.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T2_all_tests-f20e3b22238a10f1.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T3_debug_report-073d1fb7cf9cd997.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X1_system_nodes-46e5cb034f4618e8.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X4_command_index_spec-f0c28b0337bbaf38.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X5_core_scripts-071bcce96653212c.graph`, `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/Z1_release-8e268e22b5c92e0c.graph`
+
+#### `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/T3_debug_report-7765b07df0393f7b.graph`
 
 #### `lib/phases/2026-09-28-graph-build-context-settings-memory/`
 
@@ -2061,7 +1949,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 4 other file(s).
 
-- other: `lib/phases/2026-09-28-staging-self-heal/graph/A1-678cef6eb0b005d6.graph`, `lib/phases/2026-09-28-staging-self-heal/graph/C0-0b7235ad10d93e23.graph`, `lib/phases/2026-09-28-staging-self-heal/graph/S1-7fb03e9518bd1d90.graph`, `lib/phases/2026-09-28-staging-self-heal/graph/X1-5196f7fe55a3de4b.graph`
+- other: `lib/phases/2026-09-28-staging-self-heal/graph/A1-678cef6eb0b005d6.graph`, `lib/phases/2026-09-28-staging-self-heal/graph/C0-0b7235ad10d93e23.graph`, `lib/phases/2026-09-28-staging-self-heal/graph/S1-ff2b556d4de9defe.graph`, `lib/phases/2026-09-28-staging-self-heal/graph/X1-5196f7fe55a3de4b.graph`
+
+#### `lib/phases/2026-09-28-staging-self-heal/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-28-staging-self-heal/graph/_superseded/S1-7fb03e9518bd1d90.graph`
 
 #### `lib/phases/2026-09-29-build-surface/`
 
@@ -2087,6 +1981,12 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 - other: 26 files (.graph)
 
+#### `lib/phases/2026-09-29-nex-node-store/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-09-29-nex-node-store/graph/_superseded/N29_full_run_only_failures-3ccc80b708b1184e.graph`, `lib/phases/2026-09-29-nex-node-store/graph/_superseded/N30_archive_import_dropbox_and_copilot_command-dedd8b0e675c778d.graph`
+
 #### `lib/phases/2026-09-29-provider-economy/`
 
 9 other file(s).
@@ -2097,7 +1997,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 9 other file(s).
 
-- other: `lib/phases/2026-09-29-provider-economy/graph/EC0_policy_model-f08917980459b73a.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC10_eros_workbench-27a839ee0a545a60.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC11_release-3ddf9b68b334fa07.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC1_usage_ledger-3bb692c134237f3f.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC2_gate-5b5011336adda021.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC3_token_constraints-3231820165317198.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC4_learning_router-5ea981995e6aa2aa.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC5_staging_by_economy-a13ffbca0770c51b.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC7_router_in_builds-e6f92fef8dfca5e3.graph`
+- other: `lib/phases/2026-09-29-provider-economy/graph/EC0_policy_model-f08917980459b73a.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC10_eros_workbench-4d940447a9772128.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC11_release-3ddf9b68b334fa07.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC1_usage_ledger-3bb692c134237f3f.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC2_gate-5b5011336adda021.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC3_token_constraints-3231820165317198.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC4_learning_router-5ea981995e6aa2aa.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC5_staging_by_economy-a13ffbca0770c51b.graph`, `lib/phases/2026-09-29-provider-economy/graph/EC7_router_in_builds-e6f92fef8dfca5e3.graph`
+
+#### `lib/phases/2026-09-29-provider-economy/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-09-29-provider-economy/graph/_superseded/EC10_eros_workbench-27a839ee0a545a60.graph`
 
 #### `lib/phases/2026-09-29-tool-layers-and-pane-memory/`
 
@@ -2125,15 +2031,21 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `lib/phases/2026-10-01-idearium-agent-ready-master/`
 
-22 other file(s).
+21 other file(s).
 
-- other: 22 files (.phase)
+- other: 21 files (.phase)
 
 #### `lib/phases/2026-10-01-idearium-agent-ready-master/graph/`
 
-22 other file(s).
+21 other file(s).
 
-- other: 22 files (.graph)
+- other: 21 files (.graph)
+
+#### `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/`
+
+3 other file(s).
+
+- other: `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/CI1_compounding_iterate-1ceee25ce29d30d7.graph`, `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/FT1_file_tools_merge_patch_drop-b482bb0cc2b2da5b.graph`, `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/PF3_snapshot_names_changed_files-ef1e8fe4b8bff7c1.graph`
 
 #### `lib/phases/2026-10-01-routing-registry-genesis/`
 
@@ -2249,6 +2161,12 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 - other: 26 files (.graph)
 
+#### `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/`
+
+9 other file(s).
+
+- other: `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/BC2_the_build_agent_gets_all_of_the_hat_and_repo_context-32034bedc3229b78.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB23_a_new_system_slots_in-d8c8e1bb9fdc8301.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB25_atlas_template_in_his_structure-8782436b6f63495b.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB33_the_agent_runs_the_pipeline-4535cb3c5069ae44.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB36_every_agent_can_use_the_tools-dccbe766f7ed1fa8.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB42_a_repo_expands_from_its_spec-e363fb41c2435456.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB47_built_and_run_in_cos-00c4a05731de14a2.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB48_proof_in_cos_closes_the_phase-054d76a838a4463d.graph`, `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/WS1_agents_use_the_work_surface-3a87213be2eb4b9d.graph`
+
 #### `lib/phases/2026-10-05-cli-data-code/`
 
 12 other file(s).
@@ -2259,7 +2177,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 12 other file(s).
 
-- other: `lib/phases/2026-10-05-cli-data-code/graph/CL1_commands_declared_by_their_system-17ce5c8f22a70bb7.graph`, `lib/phases/2026-10-05-cli-data-code/graph/CT1_one_pending_change_path-e9d4a2ab8a870183.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG1_components_store_map_parses-dcd4302a4f92f533.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG3_bv09_the_detector_and_files-8f5946737fc02601.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG4_scripts_inside_the_sandbox-a8510e63e202d6f6.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG7_the_law_and_clear_glass-e775e5b9fae4d6a3.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG8_raid_phases_belong_to_cortex-dc05cb067c7d5dd0.graph`, `lib/phases/2026-10-05-cli-data-code/graph/PB1_no_build_below_a_floor-aa5354fee35ba1e8.graph`, `lib/phases/2026-10-05-cli-data-code/graph/PB3_verify_counts_what_this_run_broke-2c3748ba8d24ac93.graph`, `lib/phases/2026-10-05-cli-data-code/graph/PB5_the_real_broken_imports-64c2d31e9c1a9aff.graph`, `lib/phases/2026-10-05-cli-data-code/graph/SY1_fifteen_systems-0b9d29e5e19e2532.graph`, `lib/phases/2026-10-05-cli-data-code/graph/SY2_cos_its_own_system-5140e15f0bab147d.graph`
+- other: `lib/phases/2026-10-05-cli-data-code/graph/CL1_commands_declared_by_their_system-17ce5c8f22a70bb7.graph`, `lib/phases/2026-10-05-cli-data-code/graph/CT1_one_pending_change_path-e9d4a2ab8a870183.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG1_components_store_map_parses-dcd4302a4f92f533.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG3_bv09_the_detector_and_files-8f5946737fc02601.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG4_scripts_inside_the_sandbox-a8510e63e202d6f6.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG7_the_law_and_clear_glass-e775e5b9fae4d6a3.graph`, `lib/phases/2026-10-05-cli-data-code/graph/HG8_raid_phases_belong_to_cortex-8583fa2b6f57da3a.graph`, `lib/phases/2026-10-05-cli-data-code/graph/PB1_no_build_below_a_floor-aa5354fee35ba1e8.graph`, `lib/phases/2026-10-05-cli-data-code/graph/PB3_verify_counts_what_this_run_broke-3aa1d43480832705.graph`, `lib/phases/2026-10-05-cli-data-code/graph/PB5_the_real_broken_imports-7736bfcd3a2587b3.graph`, `lib/phases/2026-10-05-cli-data-code/graph/SY1_fifteen_systems-2b7d8f61b0358084.graph`, `lib/phases/2026-10-05-cli-data-code/graph/SY2_cos_its_own_system-aac3d8f060ae686c.graph`
+
+#### `lib/phases/2026-10-05-cli-data-code/graph/_superseded/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-05-cli-data-code/graph/_superseded/HG8_raid_phases_belong_to_cortex-dc05cb067c7d5dd0.graph`, `lib/phases/2026-10-05-cli-data-code/graph/_superseded/PB3_verify_counts_what_this_run_broke-2c3748ba8d24ac93.graph`, `lib/phases/2026-10-05-cli-data-code/graph/_superseded/PB5_the_real_broken_imports-64c2d31e9c1a9aff.graph`, `lib/phases/2026-10-05-cli-data-code/graph/_superseded/SY1_fifteen_systems-0b9d29e5e19e2532.graph`, `lib/phases/2026-10-05-cli-data-code/graph/_superseded/SY2_cos_its_own_system-5140e15f0bab147d.graph`
 
 #### `lib/phases/2026-10-05-code-tab-and-one-router/`
 
@@ -2331,7 +2255,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 7 other file(s).
 
-- other: `lib/phases/2026-10-07-compartment-control-and-activity/graph/AL1_activity_log-f60e21ab10d46017.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/CC1_claude_code_lands_like_every_agent-bab5260f8cf63874.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/CM2_every_command_for_every_agent-96b5745236336c5b.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/DT1_desktop_into_the_log-8ce7b320cd5c0cd0.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/DX1_diagnose_it-589ac7374abdf907.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/SP1_one_spotlight-094a82781d95acdc.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/UN1_nexus_surfaces_in_the_field-6a1c22a94c4ecbba.graph`
+- other: `lib/phases/2026-10-07-compartment-control-and-activity/graph/AL1_activity_log-a33d6d01469c5bdf.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/CC1_claude_code_lands_like_every_agent-bab5260f8cf63874.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/CM2_every_command_for_every_agent-b960e463b6a6c257.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/DT1_desktop_into_the_log-8ce7b320cd5c0cd0.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/DX1_diagnose_it-589ac7374abdf907.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/SP1_one_spotlight-094a82781d95acdc.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/UN1_nexus_surfaces_in_the_field-6a1c22a94c4ecbba.graph`
+
+#### `lib/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/AL1_activity_log-f60e21ab10d46017.graph`, `lib/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/CM2_every_command_for_every_agent-96b5745236336c5b.graph`
 
 #### `lib/phases/2026-10-07-idearium-one-surface/`
 
@@ -2415,7 +2345,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 12 other file(s).
 
-- other: `lib/phases/2026-10-09-one-model-engine/graph/ME0_the_inventory_proved-9d64861419da9a7a.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME10_nested_ladders_folded-4010d5284074ac51.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME12_callers_moved-9e7765b848590053.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME13_no_bypass-5db1b29401ba54fb.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME14_across_callers-0d67fbee2de537c0.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME15_the_docs_tell_the_truth-e4a2663f9650838b.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME1_one_failure_list-6aa7efde8e0d3998.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME2_caller_policy-9ddb1c53e714496d.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME3_one_engine_one_budget-82b28a68e6a7adbb.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME4_one_attempt_record-f2a989a0e8ce7614.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME5_one_chooser-c19c4acf0d80ec8c.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME6_one_learner-a3c93c03d487932a.graph`
+- other: `lib/phases/2026-10-09-one-model-engine/graph/ME0_the_inventory_proved-9d64861419da9a7a.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME10_nested_ladders_folded-4010d5284074ac51.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME12_callers_moved-734d6fb40e0248fb.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME13_no_bypass-5db1b29401ba54fb.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME14_across_callers-0d67fbee2de537c0.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME15_the_docs_tell_the_truth-e4a2663f9650838b.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME1_one_failure_list-6aa7efde8e0d3998.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME2_caller_policy-9ddb1c53e714496d.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME3_one_engine_one_budget-82b28a68e6a7adbb.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME4_one_attempt_record-f2a989a0e8ce7614.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME5_one_chooser-c19c4acf0d80ec8c.graph`, `lib/phases/2026-10-09-one-model-engine/graph/ME6_one_learner-a3c93c03d487932a.graph`
+
+#### `lib/phases/2026-10-09-one-model-engine/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-09-one-model-engine/graph/_superseded/ME12_callers_moved-9e7765b848590053.graph`
 
 #### `lib/phases/2026-10-09-one-roadmap/`
 
@@ -2427,7 +2363,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 6 other file(s).
 
-- other: `lib/phases/2026-10-09-one-roadmap/graph/OR0_the_census-b3f330f789402a35.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR2_how_done_is_checked-438048adff31f436.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR2_the_proposal-87394dbbf51c92a7.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR3_his_decisions_applied-f52f9193180a26cb.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR6_old_code_out-6af214e0e32a3243.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR7_the_shelf_combed-5e186047ef132114.graph`
+- other: `lib/phases/2026-10-09-one-roadmap/graph/OR0_the_census-b3f330f789402a35.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR2_how_done_is_checked-438048adff31f436.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR2_the_proposal-87394dbbf51c92a7.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR3_his_decisions_applied-f52f9193180a26cb.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR6_old_code_out-613aca89c535c7bf.graph`, `lib/phases/2026-10-09-one-roadmap/graph/OR7_the_shelf_combed-5e186047ef132114.graph`
+
+#### `lib/phases/2026-10-09-one-roadmap/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-09-one-roadmap/graph/_superseded/OR6_old_code_out-6af214e0e32a3243.graph`
 
 #### `lib/phases/2026-10-10-design-surface/`
 
@@ -2439,7 +2381,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 6 other file(s).
 
-- other: `lib/phases/2026-10-10-design-surface/graph/DS0_one_token_source-385edcecb63311aa.graph`, `lib/phases/2026-10-10-design-surface/graph/DS3_components_are_mods-bb967cfd589a6163.graph`, `lib/phases/2026-10-10-design-surface/graph/DS5_the_agents_design_too-1fd7bef8de2d374a.graph`, `lib/phases/2026-10-10-design-surface/graph/DS6_one_module_contract_nested-53a34b1d184d1911.graph`, `lib/phases/2026-10-10-design-surface/graph/DS7_tools_are_mods-95b991d2ba973682.graph`, `lib/phases/2026-10-10-design-surface/graph/DS8_the_registry_routes_the_ui_reflects-9db061f88abf55a1.graph`
+- other: `lib/phases/2026-10-10-design-surface/graph/DS0_one_token_source-385edcecb63311aa.graph`, `lib/phases/2026-10-10-design-surface/graph/DS3_components_are_mods-bb967cfd589a6163.graph`, `lib/phases/2026-10-10-design-surface/graph/DS5_the_agents_design_too-1fd7bef8de2d374a.graph`, `lib/phases/2026-10-10-design-surface/graph/DS6_one_module_contract_nested-fd400d57a71b916d.graph`, `lib/phases/2026-10-10-design-surface/graph/DS7_tools_are_mods-95b991d2ba973682.graph`, `lib/phases/2026-10-10-design-surface/graph/DS8_the_registry_routes_the_ui_reflects-9db061f88abf55a1.graph`
+
+#### `lib/phases/2026-10-10-design-surface/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-10-design-surface/graph/_superseded/DS6_one_module_contract_nested-53a34b1d184d1911.graph`
 
 #### `lib/phases/2026-10-10-idearium-access/`
 
@@ -2463,7 +2411,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 7 other file(s).
 
-- other: `lib/phases/2026-10-10-idearium-solid/graph/SD0_versionium_down_is_said_and_restarted-d745c23ff321527a.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD10_the_adversarial_gate-903ae831ea1a844a.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD20_a_starved_machine_does_not_spin-76dc07b8a12db6ca.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD4_agents_live_in_guardian-d79b599501f437b1.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD5_account_fallback-655edc147445e9ca.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD7_blocks_that_generate_themselves-0d8df190210c4970.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD9_claude_code_inside_idearium-681f598deb142c6d.graph`
+- other: `lib/phases/2026-10-10-idearium-solid/graph/SD0_versionium_down_is_said_and_restarted-d745c23ff321527a.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD10_the_adversarial_gate-903ae831ea1a844a.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD20_a_starved_machine_does_not_spin-91403d453740d322.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD4_agents_live_in_guardian-d79b599501f437b1.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD5_account_fallback-655edc147445e9ca.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD7_blocks_that_generate_themselves-0d8df190210c4970.graph`, `lib/phases/2026-10-10-idearium-solid/graph/SD9_claude_code_inside_idearium-681f598deb142c6d.graph`
+
+#### `lib/phases/2026-10-10-idearium-solid/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-10-idearium-solid/graph/_superseded/SD20_a_starved_machine_does_not_spin-76dc07b8a12db6ca.graph`
 
 #### `lib/phases/2026-10-10-self-awareness/`
 
@@ -2511,7 +2465,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 8 other file(s).
 
-- other: `lib/phases/2026-10-12-browser-providers-and-work/graph/CS0_projects_decomposed_into_components-c12a1ca2cc3030ee.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/JB5_varied_wording_true_facts-88d2ca99cff642c0.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/MX4_one_system_digest-b1af60343305fd6c.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV0_claude_code_is_a_guardian_provider-700deffb992647b8.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV1_providers_read_from_nodes-727b5bb6b91c22ad.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV2_hats_are_nodes-66c258dbf8ec8139.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV4_inputs_are_history-a129834872fdbcc9.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV5_conversation_carries_across_providers-221b5ffcc46bedbf.graph`
+- other: `lib/phases/2026-10-12-browser-providers-and-work/graph/CS0_projects_decomposed_into_components-5eac0923400df9d4.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/JB5_varied_wording_true_facts-88d2ca99cff642c0.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/MX4_one_system_digest-b1af60343305fd6c.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV0_claude_code_is_a_guardian_provider-700deffb992647b8.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV1_providers_read_from_nodes-c83ac4b82fb3e70c.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV2_hats_are_nodes-66c258dbf8ec8139.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV4_inputs_are_history-a129834872fdbcc9.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/PV5_conversation_carries_across_providers-221b5ffcc46bedbf.graph`
+
+#### `lib/phases/2026-10-12-browser-providers-and-work/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-12-browser-providers-and-work/graph/_superseded/CS0_projects_decomposed_into_components-c12a1ca2cc3030ee.graph`, `lib/phases/2026-10-12-browser-providers-and-work/graph/_superseded/PV1_providers_read_from_nodes-727b5bb6b91c22ad.graph`
 
 #### `lib/phases/2026-10-12-request-spine/`
 
@@ -2524,6 +2484,12 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 19 other file(s).
 
 - other: 19 files (.graph)
+
+#### `lib/phases/2026-10-12-request-spine/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-12-request-spine/graph/_superseded/RQ17_observe_by_request-33924dbf8607becb.graph`
 
 #### `lib/phases/2026-10-13-gates-that-learn-and-priorities/`
 
@@ -2559,7 +2525,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 7 other file(s).
 
-- other: `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT0_the_contract_is_a_reference-78068c3fef97cff2.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT1_dynamic_chunking-f7d073f269227f58.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT2_ingestion_as_contracts-ba7095d82e6aabf3.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CX0_context_from_dependencies-dbe7d50a20a425b3.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/GT0_every_interaction_gated-03a2a715a7b70f73.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/IM0_intent_map_his_to_change-6349e71baccd8530.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/PF0_profiles_linked_to_hats-1617b623eba97216.graph`
+- other: `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT0_the_contract_is_a_reference-df6fb16d25b92bcf.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT1_dynamic_chunking-f7d073f269227f58.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT2_ingestion_as_contracts-ba7095d82e6aabf3.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CX0_context_from_dependencies-dbe7d50a20a425b3.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/GT0_every_interaction_gated-03a2a715a7b70f73.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/IM0_intent_map_his_to_change-6349e71baccd8530.graph`, `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/PF0_profiles_linked_to_hats-1617b623eba97216.graph`
+
+#### `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/_superseded/CT0_the_contract_is_a_reference-78068c3fef97cff2.graph`
 
 #### `lib/phases/2026-10-13-projects-raid-and-gates/`
 
@@ -2571,7 +2543,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 10 other file(s).
 
-- other: `lib/phases/2026-10-13-projects-raid-and-gates/graph/CK1_the_catalogue_runs-1f64ff14ad327042.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL0_his_projects_imported_for_real-061b0f3b31ea86d0.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL2_history_kept-5b4cd0e60f00b85b.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL3_versions_become_history-0044abaf283377f6.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL4_import_reports_what_is_broken-463d5b3d9d4f4c22.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL6_global_links_seen-d930008daef10476.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RD3_the_registry_carries_events-f2ceaa39f7c300e5.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF0_architecture_read-c117168ac25aa9f0.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF1_migration_proposed_as_phases-0653cb1c1c976e54.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF2_applied_one_phase_at_a_time-fcaca59eda2838e7.graph`
+- other: `lib/phases/2026-10-13-projects-raid-and-gates/graph/CK1_the_catalogue_runs-1f64ff14ad327042.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL0_his_projects_imported_for_real-061b0f3b31ea86d0.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL2_history_kept-5b4cd0e60f00b85b.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL3_versions_become_history-0044abaf283377f6.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL4_import_reports_what_is_broken-463d5b3d9d4f4c22.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL6_global_links_seen-d930008daef10476.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RD3_the_registry_carries_events-f2ceaa39f7c300e5.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF0_architecture_read-c117168ac25aa9f0.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF1_migration_proposed_as_phases-37ed11040317ceba.graph`, `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF2_applied_one_phase_at_a_time-fcaca59eda2838e7.graph`
+
+#### `lib/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/RF1_migration_proposed_as_phases-0653cb1c1c976e54.graph`
 
 #### `lib/phases/2026-10-15-automatic-tracking/`
 
@@ -2655,7 +2633,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 3 other file(s).
 
-- other: `lib/phases/2026-10-15-fiverr-ledger/graph/PF0_the_ledger-a4583a7c88b46cd6.graph`, `lib/phases/2026-10-15-fiverr-ledger/graph/PF1_the_sources-e60ed3365a0a2cec.graph`, `lib/phases/2026-10-15-fiverr-ledger/graph/PF2_the_slots_into_a_gig-6abf349983e78cdf.graph`
+- other: `lib/phases/2026-10-15-fiverr-ledger/graph/PF0_the_ledger-a4583a7c88b46cd6.graph`, `lib/phases/2026-10-15-fiverr-ledger/graph/PF1_the_sources-28198a8912efefda.graph`, `lib/phases/2026-10-15-fiverr-ledger/graph/PF2_the_slots_into_a_gig-6abf349983e78cdf.graph`
+
+#### `lib/phases/2026-10-15-fiverr-ledger/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-15-fiverr-ledger/graph/_superseded/PF1_the_sources-e60ed3365a0a2cec.graph`
 
 #### `lib/phases/2026-10-15-gate-held-work/`
 
@@ -2667,7 +2651,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 11 other file(s).
 
-- other: `lib/phases/2026-10-15-gate-held-work/graph/GW10_the_listener_knows_what_to_hear-539f9afb9e5ba54e.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW15_every_file_tested-01a6f0bce2e5893d.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW16_parallel_branches_benchmark-7496bd8f1af2a364.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW18_debug_by_bisect-356417f6dfb2bb3d.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW22_find_before_generate-ebd47dffa0a8bc56.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW2_the_run_follows_the_gate-8f78d99aa885a501.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW3_a_contract_is_traced-7ee6767772d2310d.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW5_agents_are_copilot-6b97cd0bef25edcb.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW6_the_intelligence_system_on_every_gate-88688bb77b7d9ade.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW7_failure_macro_and_rewind-9ea220d322030fc4.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW8_causal_graph_and_failure_mode_field-663a3a1b6c41b6e9.graph`
+- other: `lib/phases/2026-10-15-gate-held-work/graph/GW10_the_listener_knows_what_to_hear-539f9afb9e5ba54e.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW15_every_file_tested-01a6f0bce2e5893d.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW16_parallel_branches_benchmark-7496bd8f1af2a364.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW18_debug_by_bisect-356417f6dfb2bb3d.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW22_find_before_generate-0d881b61d2b990e3.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW2_the_run_follows_the_gate-8f78d99aa885a501.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW3_a_contract_is_traced-7ee6767772d2310d.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW5_agents_are_copilot-a8082de2026469af.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW6_the_intelligence_system_on_every_gate-88688bb77b7d9ade.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW7_failure_macro_and_rewind-9ea220d322030fc4.graph`, `lib/phases/2026-10-15-gate-held-work/graph/GW8_causal_graph_and_failure_mode_field-663a3a1b6c41b6e9.graph`
+
+#### `lib/phases/2026-10-15-gate-held-work/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-15-gate-held-work/graph/_superseded/GW22_find_before_generate-ebd47dffa0a8bc56.graph`, `lib/phases/2026-10-15-gate-held-work/graph/_superseded/GW5_agents_are_copilot-6b97cd0bef25edcb.graph`
 
 #### `lib/phases/2026-10-15-macro-node-recording/`
 
@@ -2703,7 +2693,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 2 other file(s).
 
-- other: `lib/phases/2026-10-15-personal-chat-import/graph/PI1_the_importer-4811bb5810fcbe4d.graph`, `lib/phases/2026-10-15-personal-chat-import/graph/PI3_the_intelligence_pass-081c0303b5cee64e.graph`
+- other: `lib/phases/2026-10-15-personal-chat-import/graph/PI1_the_importer-c54409bf4a46b62d.graph`, `lib/phases/2026-10-15-personal-chat-import/graph/PI3_the_intelligence_pass-081c0303b5cee64e.graph`
+
+#### `lib/phases/2026-10-15-personal-chat-import/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-15-personal-chat-import/graph/_superseded/PI1_the_importer-4811bb5810fcbe4d.graph`
 
 #### `lib/phases/2026-10-15-spec-foundation-model/`
 
@@ -2727,7 +2723,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 10 other file(s).
 
-- other: `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/IS1_intent_settings_per_repo-6e793c69f386d367.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP1_nexus_maps_every_phase-38eb3640a0730199.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP3_builds_get_the_mapped_context-a8ea1fb30dbfd70b.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF1_intent_blocks-a8afa92a489433cd.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF2_spec_framework_block-f3369f9f0bb0ba75.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF3_collect_the_spec-2752c0d140f6df49.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF4_compile_on_collect-aadcbf4561eb1533.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB0_census-9a044eef08fa5b1b.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB1_warp_at_the_rung-60eb99e47c8e797a.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB2_raid_bricks_and_officiator_through_warp-c5988e845eadf750.graph`
+- other: `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/IS1_intent_settings_per_repo-6e793c69f386d367.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP1_nexus_maps_every_phase-38eb3640a0730199.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP3_builds_get_the_mapped_context-ea105d5b59c94356.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF1_intent_blocks-a8afa92a489433cd.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF2_spec_framework_block-f3369f9f0bb0ba75.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF3_collect_the_spec-2752c0d140f6df49.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF4_compile_on_collect-aadcbf4561eb1533.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB0_census-9a044eef08fa5b1b.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB1_warp_at_the_rung-9b6591af8b02377f.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB2_raid_bricks_and_officiator_through_warp-c5988e845eadf750.graph`
+
+#### `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/MP3_builds_get_the_mapped_context-a8ea1fb30dbfd70b.graph`, `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/WB1_warp_at_the_rung-60eb99e47c8e797a.graph`
 
 #### `lib/phases/2026-10-16-agent-work-funnel/`
 
@@ -2739,7 +2741,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 4 other file(s).
 
-- other: `lib/phases/2026-10-16-agent-work-funnel/graph/FN0_the_funnel_as_data-36bff935bc611507.graph`, `lib/phases/2026-10-16-agent-work-funnel/graph/FN1_every_door_goes_through_it-1841c94aa41f3eef.graph`, `lib/phases/2026-10-16-agent-work-funnel/graph/FN2_what_is_missing_is_made_first-94e1791ebf408132.graph`, `lib/phases/2026-10-16-agent-work-funnel/graph/FN3_every_answer_a_node-f0fd6a276c7d1d69.graph`
+- other: `lib/phases/2026-10-16-agent-work-funnel/graph/FN0_the_funnel_as_data-36bff935bc611507.graph`, `lib/phases/2026-10-16-agent-work-funnel/graph/FN1_every_door_goes_through_it-3eaa762c5d3deb20.graph`, `lib/phases/2026-10-16-agent-work-funnel/graph/FN2_what_is_missing_is_made_first-94e1791ebf408132.graph`, `lib/phases/2026-10-16-agent-work-funnel/graph/FN3_every_answer_a_node-f0fd6a276c7d1d69.graph`
+
+#### `lib/phases/2026-10-16-agent-work-funnel/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-agent-work-funnel/graph/_superseded/FN1_every_door_goes_through_it-1841c94aa41f3eef.graph`
 
 #### `lib/phases/2026-10-16-canvas-compartments/`
 
@@ -2751,7 +2759,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 2 other file(s).
 
-- other: `lib/phases/2026-10-16-canvas-compartments/graph/CN3_nested_compartments-567d60a0f20626fb.graph`, `lib/phases/2026-10-16-canvas-compartments/graph/CN6_canvas_screen-a122a921c355bbd5.graph`
+- other: `lib/phases/2026-10-16-canvas-compartments/graph/CN3_nested_compartments-a9434777c262960b.graph`, `lib/phases/2026-10-16-canvas-compartments/graph/CN6_canvas_screen-a122a921c355bbd5.graph`
+
+#### `lib/phases/2026-10-16-canvas-compartments/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-canvas-compartments/graph/_superseded/CN3_nested_compartments-567d60a0f20626fb.graph`
 
 #### `lib/phases/2026-10-16-code-tab-rebuild/`
 
@@ -2763,7 +2777,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 6 other file(s).
 
-- other: `lib/phases/2026-10-16-code-tab-rebuild/graph/DK1_procedures_backend-8caea4d0996d7b22.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB1_read_model_per_tab-28d795fe5701a47d.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB3a_tool_calls_saved-7ee37636c61d4d6c.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB4_reuse_responses-cf2073506d98196c.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB7d_node_controls-4f2be3f82aed75ef.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB8_proof_and_wiring-bea6b955a3f4631e.graph`
+- other: `lib/phases/2026-10-16-code-tab-rebuild/graph/DK1_procedures_backend-74a55268895b8cd2.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB1_read_model_per_tab-28d795fe5701a47d.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB3a_tool_calls_saved-7ee37636c61d4d6c.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB4_reuse_responses-cf2073506d98196c.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB7d_node_controls-4f2be3f82aed75ef.graph`, `lib/phases/2026-10-16-code-tab-rebuild/graph/TB8_proof_and_wiring-bea6b955a3f4631e.graph`
+
+#### `lib/phases/2026-10-16-code-tab-rebuild/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-code-tab-rebuild/graph/_superseded/DK1_procedures_backend-8caea4d0996d7b22.graph`
 
 #### `lib/phases/2026-10-16-cos-console/`
 
@@ -2787,7 +2807,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 5 other file(s).
 
-- other: `lib/phases/2026-10-16-durable-work-timeline/graph/TL1_chunks_land_as_they_arrive-477fcfa607154070.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL2_resume_at_boot-a0f0fae0e4e8a429.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL3_the_timeline-c61967b5d3fdb797.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL4_rewind_to_a_gate-1b73172e3db632d6.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL6_proof_and_wiring-2b6b52d3b29be7d3.graph`
+- other: `lib/phases/2026-10-16-durable-work-timeline/graph/TL1_chunks_land_as_they_arrive-477fcfa607154070.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL2_resume_at_boot-a0f0fae0e4e8a429.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL3_the_timeline-c61967b5d3fdb797.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL4_rewind_to_a_gate-218c037d5e3cb485.graph`, `lib/phases/2026-10-16-durable-work-timeline/graph/TL6_proof_and_wiring-2b6b52d3b29be7d3.graph`
+
+#### `lib/phases/2026-10-16-durable-work-timeline/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-durable-work-timeline/graph/_superseded/TL4_rewind_to_a_gate-1b73172e3db632d6.graph`
 
 #### `lib/phases/2026-10-16-eravos-removal/`
 
@@ -2799,19 +2825,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 3 other file(s).
 
-- other: `lib/phases/2026-10-16-eravos-removal/graph/ER1_delete_the_system-2d6cbb2fd32f8057.graph`, `lib/phases/2026-10-16-eravos-removal/graph/ER2_unwire_the_platform-eccf746a91d275e5.graph`, `lib/phases/2026-10-16-eravos-removal/graph/ER3_unwire_the_screens-39401869987f58e9.graph`
+- other: `lib/phases/2026-10-16-eravos-removal/graph/ER1_delete_the_system-2d6cbb2fd32f8057.graph`, `lib/phases/2026-10-16-eravos-removal/graph/ER2_unwire_the_platform-eccf746a91d275e5.graph`, `lib/phases/2026-10-16-eravos-removal/graph/ER3_unwire_the_screens-b77762163146e22d.graph`
 
-#### `lib/phases/2026-10-16-google-signin/`
-
-1 other file(s).
-
-- other: `lib/phases/2026-10-16-google-signin/GS7_no_debugger_on_signin.phase`
-
-#### `lib/phases/2026-10-16-google-signin/graph/`
+#### `lib/phases/2026-10-16-eravos-removal/graph/_superseded/`
 
 1 other file(s).
 
-- other: `lib/phases/2026-10-16-google-signin/graph/GS7_no_debugger_on_signin-69372ec12b6080c9.graph`
+- other: `lib/phases/2026-10-16-eravos-removal/graph/_superseded/ER3_unwire_the_screens-39401869987f58e9.graph`
 
 #### `lib/phases/2026-10-16-intent-hat-agent-chain/`
 
@@ -2859,7 +2879,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 1 other file(s).
 
-- other: `lib/phases/2026-10-16-plan-sidebar/graph/PS1_context_recorded-140511f9d8b21da5.graph`
+- other: `lib/phases/2026-10-16-plan-sidebar/graph/PS1_context_recorded-d021d698da4d1307.graph`
+
+#### `lib/phases/2026-10-16-plan-sidebar/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-16-plan-sidebar/graph/_superseded/PS1_context_recorded-140511f9d8b21da5.graph`
 
 #### `lib/phases/2026-10-16-proposal-evidence/`
 
@@ -2919,7 +2945,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 4 other file(s).
 
-- other: `lib/phases/2026-10-17-failure-mode-report/graph/FMR11_import_into_any_test_env-53ed35ed7a5f4718.graph`, `lib/phases/2026-10-17-failure-mode-report/graph/FMR1_every_ledger_into_rfr2-d672a060fcb71369.graph`, `lib/phases/2026-10-17-failure-mode-report/graph/FMR2_every_failure_reaches_the_record-7d5ad1479d3e7570.graph`, `lib/phases/2026-10-17-failure-mode-report/graph/FMR7_a_fix_proven_by_its_macro-6e7c8d81f12d75e7.graph`
+- other: `lib/phases/2026-10-17-failure-mode-report/graph/FMR11_import_into_any_test_env-b5e54d1c4aa8322b.graph`, `lib/phases/2026-10-17-failure-mode-report/graph/FMR1_every_ledger_into_rfr2-d672a060fcb71369.graph`, `lib/phases/2026-10-17-failure-mode-report/graph/FMR2_every_failure_reaches_the_record-7d5ad1479d3e7570.graph`, `lib/phases/2026-10-17-failure-mode-report/graph/FMR7_a_fix_proven_by_its_macro-6e7c8d81f12d75e7.graph`
+
+#### `lib/phases/2026-10-17-failure-mode-report/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-17-failure-mode-report/graph/_superseded/FMR11_import_into_any_test_env-53ed35ed7a5f4718.graph`
 
 #### `lib/phases/2026-10-17-infrastructure-migration/`
 
@@ -2931,7 +2963,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 5 other file(s).
 
-- other: `lib/phases/2026-10-17-infrastructure-migration/graph/IM1_the_shape_census_as_a_command-6d5ddff3294636fc.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM2_clean_the_redundant-072ba52c90e90175.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM3_wire_what_exists-44f254336361884c.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM5_each_system_to_the_template-aebf66ab8872db55.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM7_the_ui_on_the_registry-a6263831c386b825.graph`
+- other: `lib/phases/2026-10-17-infrastructure-migration/graph/IM1_the_shape_census_as_a_command-3abb3b64d2b71c76.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM2_clean_the_redundant-072ba52c90e90175.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM3_wire_what_exists-44f254336361884c.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM5_each_system_to_the_template-aebf66ab8872db55.graph`, `lib/phases/2026-10-17-infrastructure-migration/graph/IM7_the_ui_on_the_registry-a6263831c386b825.graph`
+
+#### `lib/phases/2026-10-17-infrastructure-migration/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-17-infrastructure-migration/graph/_superseded/IM1_the_shape_census_as_a_command-6d5ddff3294636fc.graph`
 
 #### `lib/phases/2026-10-17-pieces-not-order/`
 
@@ -2957,6 +2995,12 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 - other: 15 files (.graph)
 
+#### `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/`
+
+4 other file(s).
+
+- other: `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/DB13_the_tunnel-1bdf18b3efb9edf1.graph`, `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/DB17_files_stay_with_their_system-0a30e279c2724858.graph`, `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/DB1_the_census_and_the_ratchet-6bb5eb9cc6cd21f1.graph`, `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/P33a_a_registry_for_any_system-973379dc15f50e89.graph`
+
 #### `lib/phases/2026-10-18-compartment-environment/`
 
 1 other file(s).
@@ -2979,13 +3023,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 6 other file(s).
 
-- other: `lib/phases/2026-10-18-debugging-product/graph/DBG1_the_key-e4c6f44f796d9405.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG2_the_case-1fa8c76c4772fdd9.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG3_deviation_and_friction_per_run-3cdc3022f02a4874.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG4_dependency_gaps-1cbb2701c89b4f58.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG6_cases_crystallize-84f9d57bd845faf7.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG8_in_the_product-fb23f2c646765085.graph`
+- other: `lib/phases/2026-10-18-debugging-product/graph/DBG1_the_key-6716c6c874b49d8e.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG2_the_case-1fa8c76c4772fdd9.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG3_deviation_and_friction_per_run-3cdc3022f02a4874.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG4_dependency_gaps-1cbb2701c89b4f58.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG6_cases_crystallize-84f9d57bd845faf7.graph`, `lib/phases/2026-10-18-debugging-product/graph/DBG8_in_the_product-fb23f2c646765085.graph`
 
 #### `lib/phases/2026-10-18-debugging-product/graph/_superseded/`
 
-1 other file(s).
+2 other file(s).
 
-- other: `lib/phases/2026-10-18-debugging-product/graph/_superseded/DBG4_dependency_gaps-958076dca62f887c.graph`
+- other: `lib/phases/2026-10-18-debugging-product/graph/_superseded/DBG1_the_key-e4c6f44f796d9405.graph`, `lib/phases/2026-10-18-debugging-product/graph/_superseded/DBG4_dependency_gaps-958076dca62f887c.graph`
 
 #### `lib/phases/2026-10-18-gate-memory/`
 
@@ -3009,13 +3053,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 4 other file(s).
 
-- other: `lib/phases/2026-10-18-gating-census/graph/GC0_the_census-46d5041e29861a47.graph`, `lib/phases/2026-10-18-gating-census/graph/GC1_layer_one-c6818f0350f0d936.graph`, `lib/phases/2026-10-18-gating-census/graph/L1_primitives_no_decision-0a03918617e67a44.graph`, `lib/phases/2026-10-18-gating-census/graph/L2_one_of_each-15bb418b41b19b2a.graph`
+- other: `lib/phases/2026-10-18-gating-census/graph/GC0_the_census-46d5041e29861a47.graph`, `lib/phases/2026-10-18-gating-census/graph/GC1_layer_one-3f15fb69b24b7b4f.graph`, `lib/phases/2026-10-18-gating-census/graph/L1_primitives_no_decision-af2037ec4c7c7ccd.graph`, `lib/phases/2026-10-18-gating-census/graph/L2_one_of_each-15bb418b41b19b2a.graph`
 
 #### `lib/phases/2026-10-18-gating-census/graph/_superseded/`
 
-1 other file(s).
+3 other file(s).
 
-- other: `lib/phases/2026-10-18-gating-census/graph/_superseded/GC0_the_census-6e90f2f13b83fa5b.graph`
+- other: `lib/phases/2026-10-18-gating-census/graph/_superseded/GC0_the_census-6e90f2f13b83fa5b.graph`, `lib/phases/2026-10-18-gating-census/graph/_superseded/GC1_layer_one-c6818f0350f0d936.graph`, `lib/phases/2026-10-18-gating-census/graph/_superseded/L1_primitives_no_decision-0a03918617e67a44.graph`
 
 #### `lib/phases/2026-10-19-gate-quality-checks/`
 
@@ -3039,7 +3083,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 5 other file(s).
 
-- other: `lib/phases/2026-10-19-idearium-control/graph/IM2_promote_to_phase-1569487c0a2437d9.graph`, `lib/phases/2026-10-19-idearium-control/graph/IM3_ideas_mapped_to_nexus-4ab9902894ad0c86.graph`, `lib/phases/2026-10-19-idearium-control/graph/IX1_everything_linked-9bb44518c22de6ae.graph`, `lib/phases/2026-10-19-idearium-control/graph/NM1_one_name_per_file-4139029cd3912f57.graph`, `lib/phases/2026-10-19-idearium-control/graph/VS2_diff_only_backups-536284767e3a671e.graph`
+- other: `lib/phases/2026-10-19-idearium-control/graph/IM2_promote_to_phase-3d3122e110bd5fcd.graph`, `lib/phases/2026-10-19-idearium-control/graph/IM3_ideas_mapped_to_nexus-4ab9902894ad0c86.graph`, `lib/phases/2026-10-19-idearium-control/graph/IX1_everything_linked-936103a671e951e6.graph`, `lib/phases/2026-10-19-idearium-control/graph/NM1_one_name_per_file-4139029cd3912f57.graph`, `lib/phases/2026-10-19-idearium-control/graph/VS2_diff_only_backups-536284767e3a671e.graph`
+
+#### `lib/phases/2026-10-19-idearium-control/graph/_superseded/`
+
+2 other file(s).
+
+- other: `lib/phases/2026-10-19-idearium-control/graph/_superseded/IM2_promote_to_phase-1569487c0a2437d9.graph`, `lib/phases/2026-10-19-idearium-control/graph/_superseded/IX1_everything_linked-9bb44518c22de6ae.graph`
 
 #### `lib/phases/2026-10-19-infrastructure-spine/`
 
@@ -3052,6 +3102,12 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 21 other file(s).
 
 - other: 21 files (.graph)
+
+#### `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/`
+
+8 other file(s).
+
+- other: `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/IN6_systems_onto_the_spine-cdcb05f20732c595.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/IN7_every_phase_and_spec_on_the_spine-ac080692893504b1.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/NC1_neutral_core_boundary-5ed2fce6c3979dcb.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/PN2_dual_read-29e3557d98277a3d.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/PRC1_phase_reality_check-681b3b0a01191eac.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/PRC1_phase_reality_check-fc6855be1061677b.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/SC1_scaling_limits_named-74bbc16498f13eed.graph`, `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/VC1_a_change_entry_for_every_event-2d6d84c716d3eda0.graph`
 
 #### `lib/phases/2026-10-19-pipeline-root-causes/`
 
@@ -3067,9 +3123,9 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/`
 
-10 other file(s).
+14 other file(s).
 
-- other: `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/ID1_ideas_wired_through-b12b2d82d3da6242.graph`, `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/MEM1_cortex_keeps_the_books-945fb1de062e2087.graph`, `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC1_watchers_never_kill_a_kernel-5dd01d2da36edeb7.graph`, `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC2_linear_node_scan-77759fcaf402a194.graph`, `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC3_windows_safe_node_names-26a266c4495e09d0.graph`, `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC3_windows_safe_node_names-abac5983cc545d58.graph`, `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC4_agent_file_names_guarded-771ccf0a4d65cb41.graph`, `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/SS1_system_store_adoption-ad8ef05a560160bc.graph`, `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/SS1_system_store_adoption-f5e49c04fe5a9255.graph`, `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/VF1_verify_first-58454d1b9f24ee04.graph`
+- other: 14 files (.graph)
 
 #### `lib/phases/2026-10-19-solid-build-foundation/`
 
@@ -3081,7 +3137,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 6 other file(s).
 
-- other: `lib/phases/2026-10-19-solid-build-foundation/graph/AB1_autobuild_loop_and_resume-3d44db3a3fb6e381.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/AB2_hat_aware_ladder-ad9fe7f865a988d6.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/CR1_project_registry_spine-ad00a0602536365c.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/GQ1_quality_stream-85b1ad483b041f8f.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/GQ3_brick_tests-3769b79e631ed6e6.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/MF1_model_fit_routing-933ae7ea59a963fb.graph`
+- other: `lib/phases/2026-10-19-solid-build-foundation/graph/AB1_autobuild_loop_and_resume-8bebaae7ef8ec3d2.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/AB2_hat_aware_ladder-ad9fe7f865a988d6.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/CR1_project_registry_spine-ad00a0602536365c.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/GQ1_quality_stream-85b1ad483b041f8f.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/GQ3_brick_tests-3769b79e631ed6e6.graph`, `lib/phases/2026-10-19-solid-build-foundation/graph/MF1_model_fit_routing-933ae7ea59a963fb.graph`
+
+#### `lib/phases/2026-10-19-solid-build-foundation/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-19-solid-build-foundation/graph/_superseded/AB1_autobuild_loop_and_resume-3d44db3a3fb6e381.graph`
 
 #### `lib/phases/2026-10-19-upload-intent-and-page-map/`
 
@@ -3121,9 +3183,9 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/`
 
-3 other file(s).
+4 other file(s).
 
-- other: `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW2_gates_at_every_level-b10b437f7e757cde.graph`, `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/PS1_phase_specs-3ff2290d219d6c7c.graph`, `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/PS1_phase_specs-77e8fe5e41ea6ccc.graph`
+- other: `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW2_gates_at_every_level-612136b666d5ea1e.graph`, `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW2_gates_at_every_level-b10b437f7e757cde.graph`, `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/PS1_phase_specs-3ff2290d219d6c7c.graph`, `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/PS1_phase_specs-77e8fe5e41ea6ccc.graph`
 
 #### `lib/phases/2026-10-21-approval-chain/`
 
@@ -3153,13 +3215,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 3 other file(s).
 
-- other: `lib/phases/2026-10-21-brainos-into-idearium/graph/BX1_census-94187d8db6335e81.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/BX9_retire-0c410c080c84da17.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/CNS1_phase_census-ac4aa4a9dde1d8b0.graph`
+- other: `lib/phases/2026-10-21-brainos-into-idearium/graph/BX1_census-94187d8db6335e81.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/BX9_retire-0c410c080c84da17.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/CNS1_phase_census-576dec22d027e819.graph`
 
 #### `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/`
 
-2 other file(s).
+4 other file(s).
 
-- other: `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX9_retire-2bc31a1a8b772044.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-ee838c5e542aa524.graph`
+- other: `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX9_retire-2bc31a1a8b772044.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-7ed45d431576d002.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-ac4aa4a9dde1d8b0.graph`, `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-ee838c5e542aa524.graph`
 
 #### `lib/phases/2026-10-21-data-layout/`
 
@@ -3189,13 +3251,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 4 other file(s).
 
-- other: `lib/phases/2026-10-22-system-node-db/graph/ND1_every_system_has_its_database-d31a6f77d650fe55.graph`, `lib/phases/2026-10-22-system-node-db/graph/ND2_one_node_route_for_every_system-15ec1ac071c27e69.graph`, `lib/phases/2026-10-22-system-node-db/graph/ND3_each_server_serves_its_nodes-e4e6017c5d941f7b.graph`, `lib/phases/2026-10-22-system-node-db/graph/ND4_commands_and_capabilities_from_the_schemas-ae691a15e3aa12bb.graph`
+- other: `lib/phases/2026-10-22-system-node-db/graph/ND1_every_system_has_its_database-d31a6f77d650fe55.graph`, `lib/phases/2026-10-22-system-node-db/graph/ND2_one_node_route_for_every_system-15ec1ac071c27e69.graph`, `lib/phases/2026-10-22-system-node-db/graph/ND3_each_server_serves_its_nodes-a5ccfda0efc215f8.graph`, `lib/phases/2026-10-22-system-node-db/graph/ND4_commands_and_capabilities_from_the_schemas-ae691a15e3aa12bb.graph`
 
 #### `lib/phases/2026-10-22-system-node-db/graph/_superseded/`
 
-2 other file(s).
+3 other file(s).
 
-- other: `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND1_every_system_has_its_database-87dd2ec53f3067a4.graph`, `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND3_each_server_serves_its_nodes-ea22d024a9a37bb4.graph`
+- other: `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND1_every_system_has_its_database-87dd2ec53f3067a4.graph`, `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND3_each_server_serves_its_nodes-e4e6017c5d941f7b.graph`, `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND3_each_server_serves_its_nodes-ea22d024a9a37bb4.graph`
 
 #### `lib/phases/2026-10-23-cos-spine/`
 
@@ -3219,13 +3281,43 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 5 other file(s).
 
-- other: `lib/phases/2026-10-23-self-building-loop/graph/SL2_done_by_evidence-7bb9c1e91cb43b0f.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL3_the_backlog_groomed-d984c6d6901fa316.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL5_when_a_proven_change_lands_alone-379b566ca6597dd5.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL6_the_loop_counts_itself-596269867e9d3b8f.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL9_every_phase_a_node-607e664a07b3c690.graph`
+- other: `lib/phases/2026-10-23-self-building-loop/graph/SL2_done_by_evidence-e233725464e7928b.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL3_the_backlog_groomed-9333226d9dad1360.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL5_when_a_proven_change_lands_alone-379b566ca6597dd5.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL6_the_loop_counts_itself-596269867e9d3b8f.graph`, `lib/phases/2026-10-23-self-building-loop/graph/SL9_every_phase_a_node-849580405cd11e1a.graph`
 
 #### `lib/phases/2026-10-23-self-building-loop/graph/_superseded/`
 
-8 other file(s).
+12 other file(s).
 
-- other: `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-07f020fcde0980ec.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-a5f720db904d7f54.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-f4cbd242e47d17fc.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-596ba88d3bb5ab0a.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-9fd399bb539845a2.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL5_when_a_proven_change_lands_alone-4cb047583c75887c.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL6_the_loop_counts_itself-fb8338f83e0b2ad5.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-cf5ae14f76bef8fc.graph`
+- other: `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-07f020fcde0980ec.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-7bb9c1e91cb43b0f.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-a5f720db904d7f54.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-f4cbd242e47d17fc.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-596ba88d3bb5ab0a.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-9fd399bb539845a2.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-d984c6d6901fa316.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL5_when_a_proven_change_lands_alone-4cb047583c75887c.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL6_the_loop_counts_itself-fb8338f83e0b2ad5.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-607e664a07b3c690.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-6243f40c578704b7.graph`, `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-cf5ae14f76bef8fc.graph`
+
+#### `lib/phases/2026-10-24-fifteen-systems-migration/`
+
+39 other file(s).
+
+- other: 39 files (.phase)
+
+#### `lib/phases/2026-10-24-fifteen-systems-migration/graph/`
+
+39 other file(s).
+
+- other: 39 files (.graph)
+
+#### `lib/phases/2026-10-24-fifteen-systems-migration/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/2026-10-24-fifteen-systems-migration/graph/_superseded/MV11_seams-cde977a3ee02d317.graph`
+
+#### `lib/phases/2026-10-24-github-context-and-agent-settings/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-24-github-context-and-agent-settings/AS2_each_provider_its_own_profile.phase`, `lib/phases/2026-10-24-github-context-and-agent-settings/GH2_the_context_brief_at_the_root.phase`, `lib/phases/2026-10-24-github-context-and-agent-settings/GH4_the_link_as_an_injection_method.phase`, `lib/phases/2026-10-24-github-context-and-agent-settings/GH5_a_github_agent_tool.phase`, `lib/phases/2026-10-24-github-context-and-agent-settings/GH6_send_a_requested_file.phase`
+
+#### `lib/phases/2026-10-24-github-context-and-agent-settings/graph/`
+
+5 other file(s).
+
+- other: `lib/phases/2026-10-24-github-context-and-agent-settings/graph/AS2_each_provider_its_own_profile-8d89f1159394b129.graph`, `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH2_the_context_brief_at_the_root-4b61d2ee6d98ba20.graph`, `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH4_the_link_as_an_injection_method-5fd840c54ff4624d.graph`, `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH5_a_github_agent_tool-3f7b8323b911d2b0.graph`, `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH6_send_a_requested_file-b5163ccb719b6466.graph`
 
 #### `lib/phases/agent-intelligence-loop/`
 
@@ -3249,7 +3341,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 9 other file(s).
 
-- other: `lib/phases/agent-model-and-user-continuity/graph/AM10_thinking_partner_rename_and_ui_builder-c0328146fae33b3e.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM1_per_agent_learned_model-9f79131e9be93d52.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM2_incident_debrief-04a4544016b9bb00.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM3_open_ended_grounded_conversation-487ff1e8c712e962.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM5_ambiguity_triggered_pull-ca63b016e003ffb7.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM6_perplexity_confidence_loop-200f6a2a6a5cf5dd.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM7_agent_switch_continuity_and_chat_recall-e7c6fbbbe5175699.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM8_lifeline_as_general_channel_and_reasoning_upgrade-6413a4c688ff13df.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM9_get_to_know_you_and_idea_capture-32fca166c640cfd4.graph`
+- other: `lib/phases/agent-model-and-user-continuity/graph/AM10_thinking_partner_rename_and_ui_builder-c0328146fae33b3e.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM1_per_agent_learned_model-9f79131e9be93d52.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM2_incident_debrief-04a4544016b9bb00.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM3_open_ended_grounded_conversation-487ff1e8c712e962.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM5_ambiguity_triggered_pull-ca63b016e003ffb7.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM6_perplexity_confidence_loop-adca06647d527ddd.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM7_agent_switch_continuity_and_chat_recall-e7c6fbbbe5175699.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM8_lifeline_as_general_channel_and_reasoning_upgrade-6413a4c688ff13df.graph`, `lib/phases/agent-model-and-user-continuity/graph/AM9_get_to_know_you_and_idea_capture-32fca166c640cfd4.graph`
+
+#### `lib/phases/agent-model-and-user-continuity/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/agent-model-and-user-continuity/graph/_superseded/AM6_perplexity_confidence_loop-200f6a2a6a5cf5dd.graph`
 
 #### `lib/phases/clearglass-agent-suite-and-cfr-loom/`
 
@@ -3279,7 +3377,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 6 other file(s).
 
-- other: `lib/phases/copilot-autonomous/graph/CA1_scheduler-f646093248081abd.graph`, `lib/phases/copilot-autonomous/graph/CA3_pipeline_chains-c33bc76e820f40fa.graph`, `lib/phases/copilot-autonomous/graph/CA4_connections-fd002fc2bc10c045.graph`, `lib/phases/copilot-autonomous/graph/CA5_system_control_and_clearglass-292f947e788fddeb.graph`, `lib/phases/copilot-autonomous/graph/CA6_self_building_commands-4fc1ad9fd3f90dd6.graph`, `lib/phases/copilot-autonomous/graph/CA7_constant_autonomy-bcaaa823adb0c656.graph`
+- other: `lib/phases/copilot-autonomous/graph/CA1_scheduler-f646093248081abd.graph`, `lib/phases/copilot-autonomous/graph/CA3_pipeline_chains-c33bc76e820f40fa.graph`, `lib/phases/copilot-autonomous/graph/CA4_connections-fd002fc2bc10c045.graph`, `lib/phases/copilot-autonomous/graph/CA5_system_control_and_clearglass-292f947e788fddeb.graph`, `lib/phases/copilot-autonomous/graph/CA6_self_building_commands-4fc1ad9fd3f90dd6.graph`, `lib/phases/copilot-autonomous/graph/CA7_constant_autonomy-fbcc8e9d8af7ed20.graph`
+
+#### `lib/phases/copilot-autonomous/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/copilot-autonomous/graph/_superseded/CA7_constant_autonomy-bcaaa823adb0c656.graph`
 
 #### `lib/phases/copilot-awareness-routing/`
 
@@ -3319,15 +3423,21 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `lib/phases/copilot-omniscience/`
 
-3 other file(s).
+2 other file(s).
 
-- other: `lib/phases/copilot-omniscience/P2_persistence_threaded.phase`, `lib/phases/copilot-omniscience/P4_gate_never_actually_verified.phase`, `lib/phases/copilot-omniscience/P6_every_system_reachable.phase`
+- other: `lib/phases/copilot-omniscience/P4_gate_never_actually_verified.phase`, `lib/phases/copilot-omniscience/P6_every_system_reachable.phase`
 
 #### `lib/phases/copilot-omniscience/graph/`
 
-3 other file(s).
+2 other file(s).
 
-- other: `lib/phases/copilot-omniscience/graph/P2_persistence_threaded-0abc56b443205734.graph`, `lib/phases/copilot-omniscience/graph/P4_gate_never_actually_verified-c081947773f7a8cc.graph`, `lib/phases/copilot-omniscience/graph/P6_every_system_reachable-7d719f5d40d918b1.graph`
+- other: `lib/phases/copilot-omniscience/graph/P4_gate_never_actually_verified-8d7d2e038d509427.graph`, `lib/phases/copilot-omniscience/graph/P6_every_system_reachable-7d719f5d40d918b1.graph`
+
+#### `lib/phases/copilot-omniscience/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/copilot-omniscience/graph/_superseded/P4_gate_never_actually_verified-c081947773f7a8cc.graph`
 
 #### `lib/phases/cortex-schema-registry/`
 
@@ -3363,25 +3473,25 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 5 other file(s).
 
-- other: `lib/phases/idearium-repository-overhaul/graph/MCO-A_schemas-912297af517ed265.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO-E_roadmap_ui-b86c0d6b1a69cd1d.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO-G_git_cicd_credentials-209210182fab359f.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO4_hooks_wires_flows_tools-1792b3e7c6ba3523.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO6_compartment_ownership-ccbefa5d407a1b18.graph`
+- other: `lib/phases/idearium-repository-overhaul/graph/MCO-A_schemas-912297af517ed265.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO-E_roadmap_ui-b86c0d6b1a69cd1d.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO-G_git_cicd_credentials-209210182fab359f.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO4_hooks_wires_flows_tools-1792b3e7c6ba3523.graph`, `lib/phases/idearium-repository-overhaul/graph/MCO6_compartment_ownership-e6332bb58736f1e3.graph`
 
 #### `lib/phases/idearium-repository-overhaul/graph/_superseded/`
 
-1 other file(s).
+2 other file(s).
 
-- other: `lib/phases/idearium-repository-overhaul/graph/_superseded/MCO-E_roadmap_ui-05dd511a8ef21910.graph`
+- other: `lib/phases/idearium-repository-overhaul/graph/_superseded/MCO-E_roadmap_ui-05dd511a8ef21910.graph`, `lib/phases/idearium-repository-overhaul/graph/_superseded/MCO6_compartment_ownership-ccbefa5d407a1b18.graph`
 
 #### `lib/phases/nexus-architecture-rebuild/`
 
-9 other file(s).
+8 other file(s).
 
-- other: `lib/phases/nexus-architecture-rebuild/P10_safe_apply_verify_before_merge.phase`, `lib/phases/nexus-architecture-rebuild/P11_agent_council.phase`, `lib/phases/nexus-architecture-rebuild/P12_fault_logging_first_class.phase`, `lib/phases/nexus-architecture-rebuild/P13_roundtable_shared_council_chat.phase`, `lib/phases/nexus-architecture-rebuild/P14_emergence_axioms_endstate.phase`, `lib/phases/nexus-architecture-rebuild/P20_intelligence_reads_present_not_oldest.phase`, `lib/phases/nexus-architecture-rebuild/P2_autopilot_spawn_crash.phase`, `lib/phases/nexus-architecture-rebuild/P8_hat_forge_command.phase`, `lib/phases/nexus-architecture-rebuild/P9_multi_agent_parallel_dispatch.phase`
+- other: `lib/phases/nexus-architecture-rebuild/P10_safe_apply_verify_before_merge.phase`, `lib/phases/nexus-architecture-rebuild/P11_agent_council.phase`, `lib/phases/nexus-architecture-rebuild/P12_fault_logging_first_class.phase`, `lib/phases/nexus-architecture-rebuild/P13_roundtable_shared_council_chat.phase`, `lib/phases/nexus-architecture-rebuild/P14_emergence_axioms_endstate.phase`, `lib/phases/nexus-architecture-rebuild/P2_autopilot_spawn_crash.phase`, `lib/phases/nexus-architecture-rebuild/P8_hat_forge_command.phase`, `lib/phases/nexus-architecture-rebuild/P9_multi_agent_parallel_dispatch.phase`
 
 #### `lib/phases/nexus-architecture-rebuild/graph/`
 
-9 other file(s).
+8 other file(s).
 
-- other: `lib/phases/nexus-architecture-rebuild/graph/P10_safe_apply_verify_before_merge-321a65ed784d8a03.graph`, `lib/phases/nexus-architecture-rebuild/graph/P11_agent_council-2c8598728dc1ff30.graph`, `lib/phases/nexus-architecture-rebuild/graph/P12_fault_logging_first_class-45cc2cf048e77d57.graph`, `lib/phases/nexus-architecture-rebuild/graph/P13_roundtable_shared_council_chat-bbfce2d577125626.graph`, `lib/phases/nexus-architecture-rebuild/graph/P14_emergence_axioms_endstate-7c968ba80520bc34.graph`, `lib/phases/nexus-architecture-rebuild/graph/P20_intelligence_reads_present_not_oldest-a58469a80f09bd67.graph`, `lib/phases/nexus-architecture-rebuild/graph/P2_autopilot_spawn_crash-7b3595f0354c6063.graph`, `lib/phases/nexus-architecture-rebuild/graph/P8_hat_forge_command-dfd13349bbd7e4e9.graph`, `lib/phases/nexus-architecture-rebuild/graph/P9_multi_agent_parallel_dispatch-8ad7c5128e9ee3f3.graph`
+- other: `lib/phases/nexus-architecture-rebuild/graph/P10_safe_apply_verify_before_merge-321a65ed784d8a03.graph`, `lib/phases/nexus-architecture-rebuild/graph/P11_agent_council-2c8598728dc1ff30.graph`, `lib/phases/nexus-architecture-rebuild/graph/P12_fault_logging_first_class-45cc2cf048e77d57.graph`, `lib/phases/nexus-architecture-rebuild/graph/P13_roundtable_shared_council_chat-bbfce2d577125626.graph`, `lib/phases/nexus-architecture-rebuild/graph/P14_emergence_axioms_endstate-7c968ba80520bc34.graph`, `lib/phases/nexus-architecture-rebuild/graph/P2_autopilot_spawn_crash-7b3595f0354c6063.graph`, `lib/phases/nexus-architecture-rebuild/graph/P8_hat_forge_command-dfd13349bbd7e4e9.graph`, `lib/phases/nexus-architecture-rebuild/graph/P9_multi_agent_parallel_dispatch-8ad7c5128e9ee3f3.graph`
 
 #### `lib/phases/nexus-live-mind/`
 
@@ -3393,31 +3503,43 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 2 other file(s).
 
-- other: `lib/phases/nexus-live-mind/graph/P3_diagnostic_kernel-75ac0a6dcf420224.graph`, `lib/phases/nexus-live-mind/graph/P6_copilot_programmable-52e733c13ed35b06.graph`
+- other: `lib/phases/nexus-live-mind/graph/P3_diagnostic_kernel-18615a25df10af8b.graph`, `lib/phases/nexus-live-mind/graph/P6_copilot_programmable-aa8ea0b8ea0f0c37.graph`
+
+#### `lib/phases/nexus-live-mind/graph/_superseded/`
+
+3 other file(s).
+
+- other: `lib/phases/nexus-live-mind/graph/_superseded/P3_diagnostic_kernel-75ac0a6dcf420224.graph`, `lib/phases/nexus-live-mind/graph/_superseded/P3_diagnostic_kernel-9d8fd727a94f0524.graph`, `lib/phases/nexus-live-mind/graph/_superseded/P6_copilot_programmable-52e733c13ed35b06.graph`
 
 #### `lib/phases/nexus-observability-tablet/`
 
-3 other file(s).
+2 other file(s).
 
-- other: `lib/phases/nexus-observability-tablet/OB11_edge_case_mapping.phase`, `lib/phases/nexus-observability-tablet/OB3_movement_map.phase`, `lib/phases/nexus-observability-tablet/OB5_tablet_modules.phase`
+- other: `lib/phases/nexus-observability-tablet/OB11_edge_case_mapping.phase`, `lib/phases/nexus-observability-tablet/OB3_movement_map.phase`
 
 #### `lib/phases/nexus-observability-tablet/graph/`
 
-3 other file(s).
+2 other file(s).
 
-- other: `lib/phases/nexus-observability-tablet/graph/OB11_edge_case_mapping-be0ff5bccc30824b.graph`, `lib/phases/nexus-observability-tablet/graph/OB3_movement_map-1750f2d80be7b16d.graph`, `lib/phases/nexus-observability-tablet/graph/OB5_tablet_modules-63020901121548d5.graph`
+- other: `lib/phases/nexus-observability-tablet/graph/OB11_edge_case_mapping-be0ff5bccc30824b.graph`, `lib/phases/nexus-observability-tablet/graph/OB3_movement_map-1750f2d80be7b16d.graph`
 
 #### `lib/phases/nexus-repo-compartment-and-rich-dispatch/`
 
-4 other file(s).
+3 other file(s).
 
-- other: `lib/phases/nexus-repo-compartment-and-rich-dispatch/AG1_agent_nodes_sorted_by_provider.phase`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/GC1_global_component_reuse_store.phase`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/RD1_multi_file_response_parser.phase`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/RD2_response_to_multiple_artifact_types.phase`
+- other: `lib/phases/nexus-repo-compartment-and-rich-dispatch/AG1_agent_nodes_sorted_by_provider.phase`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/GC1_global_component_reuse_store.phase`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/RD1_multi_file_response_parser.phase`
 
 #### `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/`
 
-4 other file(s).
+3 other file(s).
 
-- other: `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/AG1_agent_nodes_sorted_by_provider-244704b3a3825cc8.graph`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/GC1_global_component_reuse_store-7caeeeea63576bfe.graph`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/RD1_multi_file_response_parser-747cf5517c059840.graph`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/RD2_response_to_multiple_artifact_types-b35f25d3c582de18.graph`
+- other: `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/AG1_agent_nodes_sorted_by_provider-244704b3a3825cc8.graph`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/GC1_global_component_reuse_store-5905dedcc5f2f956.graph`, `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/RD1_multi_file_response_parser-747cf5517c059840.graph`
+
+#### `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/_superseded/`
+
+1 other file(s).
+
+- other: `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/_superseded/GC1_global_component_reuse_store-7caeeeea63576bfe.graph`
 
 #### `lib/phases/nexus-repository-system-build/`
 
@@ -3501,19 +3623,13 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 10 other file(s).
 
-- other: `lib/phases/repair-contract-and-loom-hub/graph/R10_relational_context_and_reuse-0e23e7835362642d.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R1_repair_contract_schema-3dd078c3c6681b99.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R2_real_snapshot_rollback-b4af0c3b6772dee3.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R3_autonomous_repair_trigger-4f6cbfa55d7722d6.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R4_loom_ledger_awareness-605c42ef21895483.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R5_loom_visual_map-486b78f53c8cc3c0.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R6_living_documentation-52d5fcd6b04a85b2.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R7_fault_taxonomy_reconnection-3fb547b4cfbe5881.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R8_ui_diagnostic_surfaces_wired_together-89ea8783a73fb339.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R9_ui_design_philosophy-bb1f4bfdb151ae73.graph`
+- other: `lib/phases/repair-contract-and-loom-hub/graph/R10_relational_context_and_reuse-0e23e7835362642d.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R1_repair_contract_schema-3dd078c3c6681b99.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R2_real_snapshot_rollback-b681fb6ca7cb6813.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R3_autonomous_repair_trigger-4f6cbfa55d7722d6.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R4_loom_ledger_awareness-605c42ef21895483.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R5_loom_visual_map-486b78f53c8cc3c0.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R6_living_documentation-52d5fcd6b04a85b2.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R7_fault_taxonomy_reconnection-88c6c02aa5089a74.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R8_ui_diagnostic_surfaces_wired_together-89ea8783a73fb339.graph`, `lib/phases/repair-contract-and-loom-hub/graph/R9_ui_design_philosophy-bb1f4bfdb151ae73.graph`
 
-#### `lib/phases/rich-atlas/`
+#### `lib/phases/repair-contract-and-loom-hub/graph/_superseded/`
 
-1 other file(s).
+2 other file(s).
 
-- other: `lib/phases/rich-atlas/AT2_atlas_editor.phase`
-
-#### `lib/phases/rich-atlas/graph/`
-
-1 other file(s).
-
-- other: `lib/phases/rich-atlas/graph/AT2_atlas_editor-a1b09cdf79d9b614.graph`
+- other: `lib/phases/repair-contract-and-loom-hub/graph/_superseded/R2_real_snapshot_rollback-b4af0c3b6772dee3.graph`, `lib/phases/repair-contract-and-loom-hub/graph/_superseded/R7_fault_taxonomy_reconnection-3fb547b4cfbe5881.graph`
 
 #### `lib/seam/`
 
@@ -3591,39 +3707,6 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `lib/uid/normalize.js` (145 lines) — NEXUS UID Normalization Layer Status: pre-release  
   exports normalize, resolveAny, resolveComponent, AliasLedger, _ledger · requires 2 · required by 1
 
-#### `mesh/`
-
-3 code · 1 other file(s).
-
-- `mesh/config.js` (32 lines) — // mesh/config.js — config for the mesh subsystem // UUID: nexus-mesh-config-v1-0000-4700-0000-000000000001  
-  exports DATA_DIR · requires 0 · required by 2
-- `mesh/daemons.js` (72 lines) — // mesh/daemons.js — optional standalone network daemons ported from BrainOS. // UUID: nexus-mesh-daemons-v1-0000-4700-0000-000000000004  
-  exports main · requires 5 · required by 0
-- `mesh/install.js` (151 lines) — // mesh/install.js — wires the ported mesh modules together. // UUID: nexus-mesh-install-v1-0000-4700-0000-000000000002  
-  exports install · requires 1 · required by 0 · emits mesh.ready
-- other: `mesh/README.md`
-
-#### `mesh/lib/`
-
-10 code file(s).
-
-- `mesh/lib/canvas-persistence.js` (436 lines)  
-  exports install, handle, watchdog, upsertNode, removeNode, appendDelta +3
-- `mesh/lib/crypto-engine.js` (557 lines) — NEXUS Crypto Engine — v1.0.0 Standalone cryptographic primitives. Zero external dependencies.  
-  exports CryptoEngine, VERSION, MODULE_UUID
-- `mesh/lib/ddns.js` (216 lines) — BrainOS Dynamic DNS Client No-IP style DDNS. Detects public IP changes, updates records.  
-  exports DDNSClient, getPublicIP · requires 0 · required by 1 · emits net.ddns.entry_added, net.ddns.ip_detected, net.ddns.started, net.ddns.updated +2 · hears net.ddns.add_entry, net.ddns.force_check
-- `mesh/lib/dns-server.js` (508 lines) — BrainOS Custom DNS Server Hook: brainos.dns:dns-server-v5:d0002  
-  exports BrainOSDNS · requires 0 · required by 1 · emits net.ddns.updated, net.dns.block, net.dns.blocklist_imported, net.dns.domain_blocked +4 · hears net.ddns.update, net.dns.add_record, net.dns.allow_domain, net.dns.block_domain
-- `mesh/lib/firewall.js` (299 lines) — BrainOS Firewall Engine Hook: brainos.firewall:firewall-v5:f0003  
-  exports FirewallEngine · requires 0 · required by 1 · emits net.fw.block, net.fw.json_imported, net.fw.logged, net.fw.os_sync +3 · hears net.fw.add_rule, net.fw.import_json, net.fw.remove_rule, net.fw.set_vars
-- `mesh/lib/host-rotation.js` (437 lines) — NEXUS Host Rotation — v1.0.0 Standalone module. Manages alternating host list for bridge connections.
-- `mesh/lib/key-manager.js` (588 lines) — NEXUS Key Manager — v1.0.0 Standalone module. Manages logical key lifecycle:
-- `mesh/lib/mesh-snr-filter.js` (1097 lines)
-- `mesh/lib/port-registry.js` (371 lines) — NEXUS Port Registry — v1.0.0 Standalone module. Tracks port → service mapping.
-- `mesh/lib/reverse-proxy.js` (162 lines) — BrainOS Reverse Proxy HTTP/HTTPS reverse proxy with SNI routing. No port-forward required.  
-  exports ReverseProxy · requires 0 · required by 1 · emits net.proxy.route_added, net.proxy.route_removed, net.proxy.started, system.error · hears net.proxy.add_route, net.proxy.remove_route
-
 #### `meta/`
 
 4 code file(s).
@@ -3676,174 +3759,6 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `products/flight-recorder/lib/versions.js` (40 lines) — FR4a: a project's versions, through Versionium in-process (no server). Product: flight-recorder (part of products/flight-recorder; the branch tool carries every file tagged so)  
   exports commit, list · requires 3 · required by 1
 
-#### `remote-desktop/`
-
-5 code · 6 other file(s).
-
-- `remote-desktop/contracts.js` (52 lines) — interaction contracts for this project. Started as just the remote-desktop/bridge-os-core boundary; now covers  
-  exports validate, CONTRACTS · requires 0 · required by 2
-- `remote-desktop/input-auth.js` (113 lines) — per-message input authentication (closes the phase-4 gap: "no per-message authentication on the input channel — a MITM on a  
-  requires 0 · required by 1 · tested by `remote-desktop/tests/test-input-auth.js`, `remote-desktop/tests/test-input-pipeline.js`
-- `remote-desktop/input-injector.js` (157 lines) — phase 4 deliverable: host_input_listener_and_injector ("per-OS backend behind one interface"), plus input_rate_limiter_coalescer  
-  exports createInputInjector, loggingBackend · requires 1 · required by 1 · emits input:coalesced, input:injected, input:rate_limited, input:rejected +1 · tested by `remote-desktop/tests/test-input-injector.js`, `remote-desktop/tests/test-input-pipeline.js`
-- `remote-desktop/session-token.js` (115 lines) — closes remote-desktop.spec phase 2 gap: 'session_token_issuance' (uses 'secrets_keystore_module' — see notes).  
-  exports createSessionAuthority · requires 3 · required by 1 · emits authority:ready, token:expired, token:issued, token:rejected +2 · tested by `remote-desktop/tests/test-session-token.js`
-- `remote-desktop/signal.js` (114 lines) — // signal.js — core module 0: signaling // Relays offer/answer/ICE between exactly one host and one viewer per session.  
-  exports start · requires 2 · required by 1
-- other: `remote-desktop/README.md`, `remote-desktop/host.html`, `remote-desktop/package-lock.json`, `remote-desktop/package.json`, `remote-desktop/remote-desktop.spec`, `remote-desktop/viewer.html`
-
-#### `remote-desktop/bridge-electron/`
-
-2 code · 1 other file(s).
-
-- `remote-desktop/bridge-electron/main.js` (189 lines) — bridge-electron/main.js — phase 7 (host_application_shell), taken early out of spec order at explicit request. Wraps host.html + signal.js;  
-  requires 3 · required by 0 · hears input:rate_limited, input:rejected
-- `remote-desktop/bridge-electron/preload.js` (32 lines) — the entire Electron-to-renderer surface. host.html degrades gracefully without any of this (checks
-- other: `remote-desktop/bridge-electron/package.json`
-
-#### `remote-desktop/bridge-electron/assets/`
-
-2 other file(s).
-
-- other: `remote-desktop/bridge-electron/assets/icon.png`, `remote-desktop/bridge-electron/assets/tray-icon.png`
-
-#### `remote-desktop/bridge-os-core/`
-
-1 code · 2 other file(s).
-
-- `remote-desktop/bridge-os-core/index.js` (150 lines) — CORE Boots the 7 vital modules (bridge-node/boot.js) and exposes only the  
-  requires 1 · required by 0
-- other: `remote-desktop/bridge-os-core/README.md`, `remote-desktop/bridge-os-core/package.json`
-
-#### `remote-desktop/bridge-os-core/bridge-IME/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-IME/index.js` (480 lines) — bridge-IME/index.js Identity Memory Engine — WHO did WHAT across every protocol over time.  
-  exports IME, createIME · requires 0 · required by 1 · tested by `remote-desktop/bridge-os-core/bridge-IME/tests/test-ime.js`, `remote-desktop/bridge-os-core/bridge-IME/tests/test-ime-deep.js` +3
-
-#### `remote-desktop/bridge-os-core/bridge-IME/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-contracts/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-contracts/index.js` (256 lines) — bridge-contracts/index.js Frozen, versioned interaction contracts between modules.  
-  exports validate, validateAll, contracts · requires 0 · required by 2 · tested by `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`, `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts-deep.js`
-
-#### `remote-desktop/bridge-os-core/bridge-contracts/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-core/`
-
-3 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-core/bus.js` (157 lines) — bridge-core/bus.js Central event bus for bridge-node ecosystem.  
-  exports createBus · requires 1 · required by 2 · emits bus:meta:observer_error
-- `remote-desktop/bridge-os-core/bridge-core/crypto-engine.js` (402 lines) — NEXUS Crypto Engine — v1.0.0 Standalone cryptographic primitives. Zero external dependencies.  
-  exports CryptoEngine, VERSION, MODULE_UUID
-- `remote-desktop/bridge-os-core/bridge-core/index.js` (23 lines) — bridge-core/index.js Common primitives every bridge module imports.  
-  exports Gate, Stream, StreamLog · requires 3 · required by 0 · tested by `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`, `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-
-#### `remote-desktop/bridge-os-core/bridge-core/registry/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-core/registry/index.js` (142 lines) — bridge-core/registry/index.js NodeRegistry — pure state ledger. Observes facts. Emits events. Makes NO decisions.  
-  exports createNodeRegistry, LIFECYCLE · requires 0 · required by 2 · emits node:evicted, node:registered, node:revived, node:state:dead +2
-
-#### `remote-desktop/bridge-os-core/bridge-core/siso/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-core/siso/index.js` (174 lines) — bridge-core/siso/index.js SISO: Event → Gate → Stream → StreamLog  
-  exports Event, Gate, Stream, StreamLog, LOG_LEVELS · requires 0 · required by 2
-
-#### `remote-desktop/bridge-os-core/bridge-core/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-data/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-data/index.js` (170 lines) — bridge-data/index.js Universal data intake pipeline.  
-  exports createDataBus · requires 0 · required by 1 · tested by `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`, `remote-desktop/bridge-os-core/bridge-data/tests/test-data.js` +1
-
-#### `remote-desktop/bridge-os-core/bridge-data/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-heartbeat/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-heartbeat/index.js` (303 lines) — bridge-heartbeat/index.js v2.0.0 Pulse. Every node proves it's alive by beating. Silence = dead.  
-  exports createHeartbeatManager, createPulseEmitter, createPulseListener, createBPMTracker, checkHealth, latencyGrade · requires 0 · required by 1 · emits heartbeat:pulse, node:dead, node:degraded · tested by `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`, `remote-desktop/bridge-os-core/bridge-heartbeat/tests/test-heartbeat.js` +1
-
-#### `remote-desktop/bridge-os-core/bridge-heartbeat/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-identity/`
-
-2 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-identity/identity.js` (212 lines) — bridge-identity/identity.js Ed25519 keypair generation, UUID derivation, signing.  
-  exports Identity, deriveUUID, verifyHandshake, makeHandshake · requires 0 · required by 1 · tested by `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity.js`, `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity-deep.js`
-- `remote-desktop/bridge-os-core/bridge-identity/index.js` (160 lines) — bridge-identity/index.js Public API: { Identity, KeyStore, loadOrInit, verifyHandshake }  
-  exports loadOrInit, resetIdentity, migrateIdentity, verifyHandshake, deriveUUID, Identity · requires 2 · required by 2 · tested by `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`, `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity.js` +1
-
-#### `remote-desktop/bridge-os-core/bridge-identity/keystore/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-identity/keystore/index.js` (218 lines) — bridge-identity/keystore/index.js KeyStore abstraction: selects best available backend.  
-  exports FileKeyStore, DPAPIKeyStore, TPMKeyStore, PassphraseKeyStore, selectKeyStore · requires 0 · required by 1 · tested by `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity.js`
-
-#### `remote-desktop/bridge-os-core/bridge-identity/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/bridge-os-core/bridge-node/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-node/boot.js` (108 lines) — bridge-node/boot.js — CORE build Everything MANIFEST.json marks "vital": true, and nothing else.  
-  exports boot · requires 8 · required by 1
-
-#### `remote-desktop/bridge-os-core/bridge-sngate/`
-
-1 code file(s).
-
-- `remote-desktop/bridge-os-core/bridge-sngate/index.js` (369 lines) — bridge-sngate/index.js Programmable trust primitive. One engine, three adapters.  
-  exports SNGate, createSNGate · requires 0 · required by 1 · tested by `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`, `remote-desktop/bridge-os-core/bridge-data/tests/test-data.js` +2
-
-#### `remote-desktop/bridge-os-core/bridge-sngate/tests/`
-
-2 test file(s).
-
-
-#### `remote-desktop/scripts/`
-
-2 other file(s).
-
-- other: `remote-desktop/scripts/start-signal-background.bat`, `remote-desktop/scripts/stop-signal-background.bat`
-
-#### `remote-desktop/tests/`
-
-5 test file(s).
-
-
 #### `scripts/`
 
 16 code · 1 other file(s).
@@ -3877,36 +3792,11 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 - `scripts/verify-wires.js` (224 lines) — Wire Integrity Checker §17.7-DRIVEN — the actual missing primitive behind five separate
 - other: `scripts/bump-version.py`
 
-#### `seams/`
-
-1 code file(s).
-
-- `seams/seam-contracts.js` (73 lines) — NEXUS Seam Contract Registry §SEAM: Growth happens at the seam. Every seam is declared here.  
-  exports GUARDIAN_WSS_CONTRACT, FORGE_CONTRACT, SPEC_SEAM_CONTRACT, CLI_UI_CONTRACT, BRIDGE_CONTRACT
-
-#### `security/`
-
-2 code file(s).
-
-- `security/e2e-channel.js` (280 lines)
-- `security/signaling-envelope.js` (164 lines) — signed envelope for the signaling channel (join/offer/answer/ice), closing remote-desktop.spec phase 6's
-
 #### `sentinel/`
 
 1 other file(s).
 
 - other: `sentinel/interaction-contract.json`
-
-#### `service/`
-
-3 code file(s).
-
-- `service/cortex-service.js` (104 lines) — // service/cortex-service.js — Cortex ICO Kernel Service // UUID: nexus-cortex-service-v1-0000-4000-0000-000000000001  
-  requires 4 · required by 0
-- `service/guardian-service.js` (201 lines) — // service/guardian-service.js — Guardian ICO Kernel Service // UUID: nexus-guardian-service-v1-0000-4000-0000-000000000001  
-  requires 4 · required by 0
-- `service/idearium-service.js` (104 lines) — // service/idearium-service.js — Idearium ICO Kernel Service // UUID: nexus-idearium-service-v1-0000-4000-0000-000000000001  
-  requires 4 · required by 0
 
 #### `siso/`
 
@@ -3962,12 +3852,6 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 - other: `skills/nexus-session-changelog/SKILL.md`
 
-#### `tablet/`
-
-2 other file(s).
-
-- other: `tablet/index.html`, `tablet/map3d.html`
-
 #### `tests/`
 
 33 test file(s).
@@ -3990,7 +3874,7 @@ The law: `docs/AXIOMS-v3.1.md` and its predecessors, the working agreement `docs
 
 #### `tests/modules/`
 
-748 test file(s).
+749 test file(s).
 
 
 #### `tests/modules/fixtures/`

@@ -7,11 +7,11 @@ intent: null
 summary: SL0_what_can_be_built_now (library) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792775550200
+exported_at: 1792822478443
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550200
-lastSeenAt: 1792775550200
+firstSeenAt: 1792822478443
+lastSeenAt: 1792822478443
 fingerprint: null
 payload:
   id: SL0_what_can_be_built_now
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-SL-QUEUE
   spec: docs/self-building-loop.spec
-  graph: d4b7b03b3139be7f
+  graph: eb2acda9c8595faf

@@ -7,11 +7,11 @@ intent: null
 summary: GM7_the_context_panel_per_gate (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677872
+exported_at: 1792822478195
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677872
-lastSeenAt: 1792787677872
+firstSeenAt: 1792822478195
+lastSeenAt: 1792822478195
 fingerprint: null
 payload:
   id: GM7_the_context_panel_per_gate
@@ -29,4 +29,4 @@ payload:
     - GM5_the_context_ladder
   blocks: []
   spec: null
-  graph: 2031c0c663349829
+  graph: 2ed37a32420fdf17

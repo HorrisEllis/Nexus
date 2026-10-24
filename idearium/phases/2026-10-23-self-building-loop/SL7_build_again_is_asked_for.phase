@@ -7,11 +7,11 @@ intent: null
 summary: SL7_build_again_is_asked_for (integration) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678086
+exported_at: 1792822478451
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678086
-lastSeenAt: 1792787678086
+firstSeenAt: 1792822478451
+lastSeenAt: 1792822478451
 fingerprint: null
 payload:
   id: SL7_build_again_is_asked_for
@@ -35,4 +35,4 @@ payload:
   blocks:
     - MOD-SL-REBUILD
   spec: docs/self-building-loop.spec
-  graph: 0f0ab8a3543b9460
+  graph: b4bfe731e603bdfb

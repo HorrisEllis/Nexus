@@ -9,11 +9,11 @@ intent: null
 summary: SB44_phases_are_chunked_then_coded (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676931
+exported_at: 1792822477146
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676931
-lastSeenAt: 1792787676931
+firstSeenAt: 1792822477146
+lastSeenAt: 1792822477146
 fingerprint: null
 payload:
   id: SB44_phases_are_chunked_then_coded
@@ -29,4 +29,4 @@ payload:
     - SB43_the_expansion_is_phased
   blocks: []
   spec: null
-  graph: e4aee8b08443f21c
+  graph: 5379476adecf9506

@@ -9,11 +9,11 @@ intent: null
 summary: SB42_a_repo_expands_from_its_spec (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676926
+exported_at: 1792822477140
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676926
-lastSeenAt: 1792787676926
+firstSeenAt: 1792822477140
+lastSeenAt: 1792822477140
 fingerprint: null
 payload:
   id: SB42_a_repo_expands_from_its_spec
@@ -29,4 +29,4 @@ payload:
     - SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
   blocks: []
   spec: null
-  graph: e363fb41c2435456
+  graph: ec1b9907273648f1

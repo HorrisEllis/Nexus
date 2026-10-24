@@ -954,7 +954,7 @@ if (section('§29 cli/session.js')) {
 
 // ─── §30 seam-contracts.js ───────────────────────────────────────────────────
 if (section('§30 seam-contracts.js')) {
-  const sc=require(path.join(ROOT,'seams/seam-contracts'));
+  const sc=require(path.join(ROOT, '_archive', '2026-10-24-retired-systems', 'seams', 'seam-contracts'));
   test('exports 5 contracts',()=>{
     for(const k of ['CORTEX_CONTRACT','GUARDIAN_WSS_CONTRACT','FORGE_CONTRACT','SPEC_SEAM_CONTRACT','CLI_UI_CONTRACT'])
       assert(sc[k],k);
