@@ -23,7 +23,7 @@ const LIVE_REFUSAL = "I can't safely rebuild src/kernel/state.js because the pro
 async function run() {
   console.log('\ntest-step-gate\n');
   const SG = require(path.join(ROOT, 'lib', 'step-gate.js'));
-  const bus = require(path.join(ROOT, 'nexus', 'nexus-bus.js'));
+  const bus = require(path.join(ROOT, 'lib', 'nexus', 'nexus-bus.js'));
   const seen = [];
   bus.on('step.blocked', e => seen.push(e)); bus.on('step.passed', e => seen.push(e));
 

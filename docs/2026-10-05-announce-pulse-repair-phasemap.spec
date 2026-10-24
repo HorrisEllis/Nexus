@@ -66,7 +66,7 @@ spec:
       status: "DONE (0.39.342) — lib/pulse-watch.js announce/expect; the diagnostic adopts a system that announces itself (SYSTEMS gains it and a baseline monitor, no file edited). Expected: the diagnostic's declared non-optional systems — autopilot's kernel list (lib/nexus-self/systems.js) is the better source, not yet read."
       james: '"need the systems to anounce themselves. that way i can add new systems automatically."'
       depends_on: []
-      files: [orchestrator/orchestrator.js, nexus/autopilot.js, lib/expected-systems.js]
+      files: [orchestrator/orchestrator.js, lib/nexus/autopilot.js, lib/expected-systems.js]
       does: >-
         The list of systems is what has announced (orchestrator's registry: id, port, interval, health) plus what
         autopilot started (the expected set). A new system that calls createPulse is watched from its first beat, with
@@ -115,7 +115,7 @@ spec:
       status: OPEN
       james: '"we need to make that a real system, with the ability to actual repair nexus."'
       depends_on: [PR3_negative_space_for_missed_heartbeats]
-      files: [nexus/autopilot.js, diagnostic/nexus-heal-loop.js, lib/shadow-space.js]
+      files: [lib/nexus/autopilot.js, diagnostic/nexus-heal-loop.js, lib/shadow-space.js]
       does: >-
         A gap from a missed heartbeat is repaired: (1) probe once; (2) restart through autopilot (a new POST
         /restart/:name — kill and respawn, under its circuit breaker); (3) the repair is proven only by the system's next

@@ -133,7 +133,7 @@ function hasShebang(filePath) {
 function loadAutopilotKernelRefs() {
   const refs = new Set();
   try {
-    const src = fs.readFileSync(path.join(ROOT, 'nexus', 'autopilot.js'), 'utf8');
+    const src = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
     for (const f of listJsFiles(ROOT)) {
       const rel = path.relative(ROOT, f).replace(/\\/g, '/');
       if (src.includes(`'${rel}'`) || src.includes(`"${rel}"`)) refs.add(f);

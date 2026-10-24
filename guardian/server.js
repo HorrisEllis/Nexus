@@ -423,7 +423,7 @@ const HTTP_PORT     = config.HTTP_PORT;
 const ORCH_PORT     = config.ORCH_PORT;
 
 // nexus-connect: unified cross-system I/O with §1.2 gating
-const nc = (() => { try { return require('../nexus/nexus-connect'); } catch(_) { return null; } })();
+const nc = (() => { try { return require('../lib/nexus/nexus-connect'); } catch(_) { return null; } })();
 function _postLedger(system, type, payload) {
   if (nc) nc.postLedger(system, type, payload).catch(() => {});
 }
@@ -919,7 +919,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
     // §0.60.131 P33b — Guardian onto the shared node registry (lib/node-registry.js): the same per-file rules its own
     // guardian/lib/node-registry.js had, now indexed into guardian/data/node-index (its OWN store; the old one wrote the
     // central cortex store) and announced on the bus. guardian/lib/node-registry.js is kept (test-node-index.js uses it).
-    try { require('../lib/node-registry.js').startForSystem('guardian', { bus: require('../nexus/nexus-bus.js'), delayMs: 0 }); } catch (e) { console.warn(`[guardian] node registry did not start (non-fatal): ${e.message}`); }
+    try { require('../lib/node-registry.js').startForSystem('guardian', { bus: require('../lib/nexus/nexus-bus.js'), delayMs: 0 }); } catch (e) { console.warn(`[guardian] node registry did not start (non-fatal): ${e.message}`); }
   }, 3000);
   // Mesh subsystem relocated 2026-09-03 to clear-glass/src/network/
   // (James: "DNS/firewall/crypto/host-rotation/reverse-proxy maybe
@@ -936,7 +936,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
   // every pipeline trigger path (run_pipeline/run_chain/run_closed_loop)
   // already emits to — not a second, guardian-local event path.
   try {
-    require('../lib/self-build-loop.js').install(require('../nexus/nexus-bus.js'));
+    require('../lib/self-build-loop.js').install(require('../lib/nexus/nexus-bus.js'));
   } catch (err) {
     console.warn('[guardian] self-build-loop install failed:', err.message);
   }
@@ -972,7 +972,7 @@ server.listen(HTTP_PORT, '127.0.0.1', async () => {
   }
 
   const { BootSequence } = require('../lib/boot-sequence');
-  const nc2 = require('../nexus/nexus-connect');
+  const nc2 = require('../lib/nexus/nexus-connect');
 
   // §BUGFIX 2026-07-04: was a hardcoded '3.6.1' here, independent of
   // lib/version.js's registry — sourcing from it directly now.
@@ -3556,7 +3556,7 @@ function handleExtendedRoutes(req, res, url, method) {
           // §P97: read CFR field state for sigma-aware routing
           let _cfrCtx = {};
           try {
-            const _cfrInfl = require('../nexus/nexus-cfr-influence');
+            const _cfrInfl = require('../lib/nexus/nexus-cfr-influence');
             _cfrCtx = { sigmaFloor: _cfrInfl.getSigmaFloor?.() || 0,
                         regime: _cfrInfl.getState?.()?.regime || 'stable' };
           } catch(_) {}

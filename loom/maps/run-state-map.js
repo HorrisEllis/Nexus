@@ -10,7 +10,7 @@ const { declareMap } = require('./declare-map');
 const I = (rel) => idFor(rel);
 
 const FILES = [
-  ['lib/run-state.js',   I('lib/run-state.js'),   [I('lib/node-export.js'), I('nexus/nexus-bus.js')]],
+  ['lib/run-state.js',   I('lib/run-state.js'),   [I('lib/node-export.js'), I('lib/nexus/nexus-bus.js')]],
   ['lib/reply-kind.js',  I('lib/reply-kind.js'),  [I('lib/step-gate.js')]],
   ['lib/gig-ledger.js',  I('lib/gig-ledger.js'),  []],   // §0.60.53 PF0
   ['lib/checks/ck-248-toolchain.js', I('lib/checks/ck-248-toolchain.js'), []],   // §0.60.77 MB5: 18 languages, each by its own parser; selfTest/coverage/checkText
@@ -94,7 +94,7 @@ const FILES = [
   ['clear-glass/src/fingerprint/firefox-version.js', I('clear-glass/src/fingerprint/firefox-version.js'), []],   // §0.60.108 GS3: the Firefox version from Mozilla's calendar
   ['clear-glass/src/preload/google-signin.js', I('clear-glass/src/preload/google-signin.js'), []],   // §0.60.108 GS4: the sign-in page reads as Firefox, no debugger   // §0.60.106 GS1: Google's sign-in as Firefox, consistently
   ['clear-glass/src/tls/helper.js', I('clear-glass/src/tls/helper.js'), []],   // §0.60.109 TLS2: runs cg-tls-helper (clear-glass/tls-helper, Go + uTLS); its CA trust for personas
-  ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
+  ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('lib/nexus/nexus-bus.js')]],
   ['lib/repo-procedures.js', I('lib/repo-procedures.js'), [I('lib/node-export.js'), I('lib/run-state.js'), I('idearium/lib/data-dir.cjs')]],   // §0.60.118 DK1: .procedure files, replayed through an injected tool runner
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)

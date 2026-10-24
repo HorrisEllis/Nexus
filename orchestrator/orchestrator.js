@@ -145,10 +145,10 @@ let gapField;
 try { gapField = require('../lib/gap-field'); } catch (e) { console.warn('[orchestrator] gap-field not found:', e.message); gapField = null; }
 
 // ── NEXUS INTERCONNECT LAYER ──────────────────────────────────────────────────
-const nexusBus       = (() => { try { return require('../nexus/nexus-bus');           } catch(e) { console.warn('[orc] nexus-bus:',e.message); return null; } })();
-const nexusQuery     = (() => { try { return require('../nexus/nexus-query');         } catch(e) { return null; } })();
-const nexusKnowledge = (() => { try { return require('../nexus/nexus-knowledge');     } catch(e) { return null; } })();
-const nexusCFR       = (() => { try { return require('../nexus/nexus-cfr-influence'); } catch(e) { return null; } })();
+const nexusBus       = (() => { try { return require('../lib/nexus/nexus-bus');           } catch(e) { console.warn('[orc] nexus-bus:',e.message); return null; } })();
+const nexusQuery     = (() => { try { return require('../lib/nexus/nexus-query');         } catch(e) { return null; } })();
+const nexusKnowledge = (() => { try { return require('../lib/nexus/nexus-knowledge');     } catch(e) { return null; } })();
+const nexusCFR       = (() => { try { return require('../lib/nexus/nexus-cfr-influence'); } catch(e) { return null; } })();
 const nexusHealLoop  = (() => { try { return require('../diagnostic/lib/heal-loop');     } catch(e) { return null; } })();
 try { ({ spawn: spawnChild } = require('child_process')); } catch(e) { spawnChild = null; }
 

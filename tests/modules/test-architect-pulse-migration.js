@@ -56,7 +56,7 @@ function run() {
   });
 
   test('AP-006', 'nexus-connect.js\'s real startHeartbeat genuinely uses createPulse() internally — the actual claim this whole fix rests on, checked directly rather than assumed', () => {
-    const ncSrc = fs.readFileSync(path.join(__dirname, '../../nexus/nexus-connect.js'), 'utf8');
+    const ncSrc = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'nexus', 'nexus-connect.js'), 'utf8');
     const fnStart = ncSrc.indexOf('function startHeartbeat');
     assert.ok(fnStart !== -1, 'startHeartbeat function not found in nexus-connect.js');
     const fnEnd = ncSrc.indexOf('\n}', fnStart) + 2;

@@ -141,7 +141,7 @@ spec:
       status: "OPEN"
       james: '"what about changing to the component registry for the event bus instead of hooking into each other then the ui is a reflection of that instead?"'
       depends_on: [DS7_tools_are_mods]
-      files: [eravos/ui/kernel/kernel.js, eravos/ui/runtime/wire-system.js, loom/driver.js, nexus/nexus-bus.js]
+      files: [eravos/ui/kernel/kernel.js, eravos/ui/runtime/wire-system.js, loom/driver.js, lib/nexus/nexus-bus.js]
       does: >-
         Found: Eravos is already half this — mods never call each other; a wire is a bus subscription that republishes
         one mod's event as another's input (wire-system.js), held in the canvas's own memory. And Nexus already has a

@@ -169,7 +169,7 @@ test('IOM-013', 'no in-repo consumer reads the CFR field from cortex (all read t
 
 test('IOM-014', 'intelligence fabricates no `tension` (field provider) and cfr-influence treats it as optional', () => {
   assert.ok(!('tension' in require(path.join(ROOT, 'intelligence/field-provider.js')).DEFAULTS), 'provider must not invent a tension value');
-  const src = read('nexus/nexus-cfr-influence.js');
+  const src = read('lib/nexus/nexus-cfr-influence.js');
   assert.ok(/const required = \['coherence', 'friction', 'entropy', 'resonance'\]/.test(src), 'tension must not be a required field');
   assert.ok(/typeof tension === 'number'/.test(src), 'tension branches must be guarded');
 });

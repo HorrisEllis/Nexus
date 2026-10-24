@@ -24,7 +24,7 @@ const ROOT = path.join(__dirname, '../..');
 const CI = require(path.join(ROOT, 'cortex/core/raid/contract-intake.js'));
 const CG = require(path.join(ROOT, 'cortex/core/raid/contract-gates.js'));
 const CA = require(path.join(ROOT, 'cortex/core/raid/contract-adapters.js'));
-const bus = require(path.join(ROOT, 'nexus/nexus-bus.js'));
+const bus = require(path.join(ROOT, 'lib', 'nexus', 'nexus-bus.js'));
 
 let passed = 0, failed = 0;
 async function test(id, desc, fn) {

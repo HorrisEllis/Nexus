@@ -40,7 +40,7 @@
 'use strict';
 
 const { jaaDB, uid } = require('../cortex/memory/jaa-db');
-const bus = require('../nexus/nexus-bus');
+const bus = require('../lib/nexus/nexus-bus');
 const domainNodes = require('./lib/domain-nodes.js');
 
 const MODULE_ID = 'cortex/intelligence';

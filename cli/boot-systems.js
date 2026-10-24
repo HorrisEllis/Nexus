@@ -237,7 +237,7 @@ async function _bootSystems(ledgerWrite, orchPort, connectBridgeSSE, _eventLedge
   // Bridge registration
   setTimeout(async () => {
     try {
-      const nc = require('../nexus/nexus-connect');
+      const nc = require('../lib/nexus/nexus-connect');
       const r = await nc._req('orchestrator', 'POST', '/api/register', {
         systemId: 'orchestrator', appId: 'orchestrator',
         secret: 'nexus-orchestrator-internal-v1',

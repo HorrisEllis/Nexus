@@ -271,7 +271,7 @@ spec:
     # Tier 0 — keep the machine up (§16.1: nothing is provable while it crash-loops)
     - id: M0
       name: baseline — RSS/heap and rows loaded per table, per process, at boot and +60 min
-      files: [nexus/autopilot.js (resource-monitor), guardian/jaa-store.js (existing "Loaded N rows" lines)]
+      files: [lib/nexus/autopilot.js (resource-monitor), guardian/jaa-store.js (existing "Loaded N rows" lines)]
       closes: [I10 precondition]
       note: collect from what already reports; no new monitor.
     - id: M1

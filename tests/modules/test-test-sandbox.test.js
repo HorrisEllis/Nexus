@@ -65,10 +65,10 @@ function check(name, cond, detail) {
 console.log('\ntest-test-sandbox\n');
 
 // ── 1. who counts as a test ──
-const AUTOPILOT = fs.readFileSync(path.join(ROOT, 'nexus', 'autopilot.js'), 'utf8');
+const AUTOPILOT = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
 const entries = [...AUTOPILOT.matchAll(/args:\s*\['([^']+\.js)'\]/g)].map(m => m[1]);
 check('autopilot\'s supervised entry points were found (≥ 10)', entries.length >= 10, entries.join(', '));
-const misread = entries.concat(['nexus/autopilot.js', 'orchestrator/orchestrator.js', 'cli/clear-idearium.js'])
+const misread = entries.concat(['lib/nexus/autopilot.js', 'orchestrator/orchestrator.js', 'cli/clear-idearium.js'])
   .filter(e => SB.isTestProcess(path.join(ROOT, e), {}));
 check('no production entry point is taken for a test process', misread.length === 0, misread.join(', '));
 check('clear-glass (electron ".") is not a test process', !SB.isTestProcess(path.join(ROOT, '.'), {}));

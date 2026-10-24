@@ -118,7 +118,7 @@ const { createPulse } = require('../orchestrator/lib/pulse.js');
 // orchestrator) were already POSTing to cortex's /api/event with it in mind
 // — but this file never required it, so nothing arriving at /api/event ever
 // reached an in-process listener. Fixed at the two points below.
-const bus = require('../nexus/nexus-bus');
+const bus = require('../lib/nexus/nexus-bus');
 
 // -- Event relay to the intelligence system (2026-09-19) ----------------------
 // liminal-space now runs inside intelligence/server.js on ITS OWN bus. The events

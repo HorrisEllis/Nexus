@@ -17,7 +17,7 @@
 const fs = require('fs'), path = require('path'), net = require('net'), http = require('http'), { spawn, execFileSync } = require('child_process');
 
 const MODULE_ID = 'cos.app.runtime';
-const DEFAULTS = { entry: 'nexus/autopilot.js', statusPort: 7799, ports: [7799, 7820, 4800, 9000], healthTimeoutMs: 60000, graceMs: 8000, keepLogs: 10 };
+const DEFAULTS = { entry: 'lib/nexus/autopilot.js', statusPort: 7799, ports: [7799, 7820, 4800, 9000], healthTimeoutMs: 60000, graceMs: 8000, keepLogs: 10 };
 const paths = (root, project) => { const p = path.join(root, 'projects', project); return { project: p, logs: path.join(p, 'logs'), run: path.join(p, 'run.json') }; };
 const rmf = (f) => { try { fs.unlinkSync(f); } catch (_) {} };
 

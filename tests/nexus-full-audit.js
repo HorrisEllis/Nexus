@@ -53,7 +53,7 @@ function syntaxOk(rel) {
 console.log('\n══ §1 CRITICAL FILES ══\n');
 
 const criticalFiles = [
-  'orchestrator/orchestrator.js', 'nexus/nexus-connect.js', 'nexus/autopilot.js',
+  'orchestrator/orchestrator.js', 'lib/nexus/nexus-connect.js', 'lib/nexus/autopilot.js',
   'guardian/server.js', 'guardian/agents/co-pilot/index.js',
   'cortex/cortex.js', 'cortex/self-heal/index.js', 'cortex/self-heal/escalation.js',
   'intelligence/index.js',
@@ -77,7 +77,7 @@ criticalFiles.forEach(f => t(`exists: ${f}`, () => exists(f) || `MISSING: ${f}`)
 console.log('\n══ §2 SYNTAX ══\n');
 
 const jsFiles = [
-  'orchestrator/orchestrator.js', 'nexus/nexus-connect.js',
+  'orchestrator/orchestrator.js', 'lib/nexus/nexus-connect.js',
   'guardian/server.js', 'guardian/agents/co-pilot/index.js',
   'cortex/self-heal/index.js', 'cortex/self-heal/escalation.js',
   'intelligence/index.js',

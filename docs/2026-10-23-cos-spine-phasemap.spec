@@ -112,7 +112,7 @@ phases:
     layer: foundation
     status: OPEN
     depends_on: [CS_D7_sovereign_first, COSA3_run_and_supervise]
-    files: [cos/spine/boot.js, cos/app/runtime.js, nexus/autopilot.js, cos/compartment/process-runner.js]
+    files: [cos/spine/boot.js, cos/app/runtime.js, lib/nexus/autopilot.js, cos/compartment/process-runner.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-BOOT]
     does: >-

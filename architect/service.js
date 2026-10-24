@@ -156,7 +156,7 @@ function createBusEmit(cfrLedger) {
 // guardian/server.js already uses (registerWithOrchestrator + real
 // startHeartbeat, which uses createPulse() internally, not a second
 // hand-rolled implementation).
-const nc2 = require('../nexus/nexus-connect');
+const nc2 = require('../lib/nexus/nexus-connect');
 function registerWithOrchestrator() {
   let _rc = []; try { _rc = require('./registry-components'); } catch(_) {}
   nc2.registerWithOrchestrator('architect', PORT, {

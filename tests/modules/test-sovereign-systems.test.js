@@ -83,7 +83,7 @@ test('SV-07 an unreachable intelligence is said, never faked', async () => {
 });
 test('SV-08 the census: which systems are sovereign, and each blocker named (data / primitive / capability), on the route and the command', async () => {
   const SB = require('../../lib/system-boundary.js');
-  assert.deepStrictEqual(['cortex/memory/jaa-db.js', 'nexus/nexus-bus.js', 'intelligence/cfr/field.js'].map(SB.blockerOf), ['data', 'primitive', 'capability']);
+  assert.deepStrictEqual(['cortex/memory/jaa-db.js', 'lib/nexus/nexus-bus.js', 'intelligence/cfr/field.js'].map(SB.blockerOf), ['data', 'primitive', 'capability']);
   const r = SB.sovereignty({ root: REPO });
   assert.ok(r.sovereign.includes('sentinel') && !r.sovereign.includes('nexus-healer'), 'nexus-healer is no system of its own now');
   const one = SB.sovereignty({ root: REPO, system: 'versionium' }).systems[0];

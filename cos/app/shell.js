@@ -84,7 +84,7 @@ function plan(root, project, line, opts = {}) {
   if (!fs.existsSync(path.join(cwd, file))) return { ok: false, error: `${file} does not exist in ${project} ${st.current}` };
   const modules = opts.modulesDir === undefined ? RT.defaultModulesDir() : opts.modulesDir;
   const env = { ...process.env, ...(opts.env || {}), NEXUS_DATA_ROOT: path.join(root, 'projects', project, 'data'), ...(modules ? { NODE_PATH: [modules, process.env.NODE_PATH].filter(Boolean).join(path.delimiter) } : {}), ...(process.versions.electron ? { ELECTRON_RUN_AS_NODE: '1' } : {}) };
-  const boots = /(^|[\\/])nexus[\\/]autopilot\.js$/.test(file.replace(/\\/g, '/')) || file.replace(/\\/g, '/') === 'nexus/autopilot.js';
+  const boots = /(^|[\\/])nexus[\\/]autopilot\.js$/.test(file.replace(/\\/g, '/')) || file.replace(/\\/g, '/') === 'lib/nexus/autopilot.js';
   return { ok: true, kind: 'run', display: `${w === 'npm' ? line.trim() : `${w} ${t.slice(1).join(' ')}`.trim()}  →  node ${[file, ...args].join(' ')}  (${project} ${st.current})`, cmd: opts.node || process.execPath, args: [file, ...args], cwd, env, boots, version: st.current };
 }
 

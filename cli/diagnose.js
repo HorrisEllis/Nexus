@@ -27,7 +27,7 @@ const { randomUUID } = require('crypto');
 // never required anywhere in this file. Real, exported function
 // already exists in nexus-connect.js (used the same way by guardian/
 // copilot/etc.) — was simply never imported here.
-const { postLedger, postEvent } = require('../nexus/nexus-connect.js');
+const { postLedger, postEvent } = require('../lib/nexus/nexus-connect.js');
 
 // §BUGFIX 2026-08-30 — a SECOND, real, pre-existing bug found while
 // fixing the first: _escalateGap is called in 5 real places below
@@ -180,7 +180,7 @@ async function diagOrchestrator() {
 
   const checks = [
     ['file: orchestrator/orchestrator.js', () => fileExists('orchestrator/orchestrator.js')],
-    ['file: nexus/nexus-connect.js', () => fileExists('nexus/nexus-connect.js')],
+    ['file: nexus/nexus-connect.js', () => fileExists('lib/nexus/nexus-connect.js')],
     ['file: cli/nexus-repl.js',  () => fileExists('cli/nexus-repl.js')],
     ['file: cli/diagnose.js',    () => fileExists('cli/diagnose.js')],
     ['file: ui/orchestrator/',   () => fileExists('ui/orchestrator/index.html')],
@@ -942,7 +942,7 @@ async function runAll() {
   // so it can never drift from what is actually supervised (§10.3).
   async function diagPortsFor(name) {
     let kernels = [];
-    try { ({ ALL_KERNELS: kernels } = require(path.join(ROOT, 'nexus', 'autopilot.js'))); } catch (_) {}
+    try { ({ ALL_KERNELS: kernels } = require(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'))); } catch (_) {}
     const k = (kernels || []).find(x => x.name === name);
     if (!k) { console.log(`   '${name}' is not a supervised kernel — nothing further to check.`); return; }
     if (!k.healthUrl) { console.log(`   '${name}' declares no healthUrl (no HTTP surface) — liveness cannot be probed.`); return; }
@@ -1139,7 +1139,7 @@ const INTEGRITY_MANIFEST = [
   // Core
   { file:'orchestrator/orchestrator.js', system:'orchestrator', critical:true,  check: src => !src.includes('require is not defined') },
   { file:'package.json',             system:'orchestrator', critical:true,  check: src => src.includes('"type": "commonjs"') || !src.includes('"type"') },
-  { file:'nexus/nexus-connect.js',         system:'orchestrator', critical:true,  check: src => src.includes('postBridge') },
+  { file:'lib/nexus/nexus-connect.js',         system:'orchestrator', critical:true,  check: src => src.includes('postBridge') },
   // Guardian
   { file:'guardian/server.js',       system:'guardian',     critical:true,  check: src => {
     const hasWrite = src.includes('function _write(res, data)');
