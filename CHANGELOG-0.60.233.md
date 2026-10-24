@@ -32,5 +32,21 @@ The checks ran on full git history. The clone was shallow at first, which made t
   They were regenerated with SL9's own tool (`emerge/compiler/phase-specs.js`). `--all --check` now reports **1944 phases, 0 with
   drift**. A stale `.graph` for an old hash is replaced by the tool; it is regenerated from the map, so it is redundant, not lost.
 
+## What the branch broke, found before merging (§0.1), and fixed here
+On the branch's own tip, six test files failed that pass on `main`. Merging it as it was would have turned them red on `main`, which
+is not additive. Each one was traced to its root cause:
+- **`idearium/ui/js/repo-tasks.js` did not parse.** SL7's edit to `rtRetry` wrote its `// §0.60.226 SL7 …` comment in the middle of a
+  line. The comment swallowed the rest of the line: the toast, and the `}` that closes the `try`. The file stopped at `catch`
+  (`SyntaxError: Unexpected token 'catch'`), so nothing in it loaded, `rtToggleDrawer` included. That broke the Plan and Code-tab
+  screens: `test-plan-sidebar`, `test-plan-pieces`, `test-code-tab-merge` and `test-code-dock`. The comment now has its own lines,
+  and SL7's behaviour is kept. Every `idearium/ui/js/*.js` file is checked to parse.
+- **The atlases named `.graph` files that no longer exist** (`test-nexus-atlas-refs`). A `.graph` file is named by its hash, and
+  the hashes moved when the phases' graphs changed. Fix: regenerated with the atlases' own generator (`scripts/generate-atlases.js`);
+  the inventory lists no untracked files.
+- **CT0 was stale** (`test-contract-ct0-self`). SL7 changed the contract evaluator (`cortex/core/raid/contract-gates.js`), and by
+  design that invalidates CT0's recorded proof until its gates pass again *through the evaluator*. Its four gates (evaluator,
+  commands, verify, self-host) were re-run with `contract check` (the same load → check → save path) and all passed. CT0 is
+  complete by the evaluator again, not by declaration.
+
 ## Proof
 See the PR: the branch's own tests, JA1–JA5, the release check, and the full suite compared against the last run.

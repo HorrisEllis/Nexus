@@ -162,7 +162,7 @@ It owns its declared components in `orchestrator/orchestrator-contract.json` and
 <!-- generated:readme:system:orchestrator:start -->
 #### orchestrator: every module and every file
 
-Orchestrator is 27 files in 3 modules, entry `orchestrator/orchestrator.js`, port 9000, spec `orchestrator/spec/orchestrator.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/orchestrator-atlas.md`.
+Orchestrator is 67 files in 4 modules, entry `orchestrator/orchestrator.js`, port 9000, spec `orchestrator/spec/orchestrator.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/orchestrator-atlas.md`.
 
 <details>
 <summary>`orchestrator/` · 5 files</summary>
@@ -171,7 +171,7 @@ Orchestrator is 27 files in 3 modules, entry `orchestrator/orchestrator.js`, por
 - `orchestrator/interaction-contract.json`
 - `orchestrator/orchestrator-contract.json`
 - `orchestrator/orchestrator.config.json`
-- `orchestrator/orchestrator.js` — // ════════════════════════════════════════════════════════════════════════════ // NEXUS ORCHESTRATOR — v2.0.0
+- `orchestrator/orchestrator.js` — // 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come…
 
 </details>
 
@@ -203,6 +203,52 @@ Orchestrator is 27 files in 3 modules, entry `orchestrator/orchestrator.js`, por
 </details>
 
 <details>
+<summary>`orchestrator/phases/` · 40 files</summary>
+
+- `orchestrator/phases/2026-08-27-event-taxonomy-and-brainstorm/ET4_orchestrator_autopilot_event_taxonomy.phase`
+- `orchestrator/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET4_orchestrator_autopilot_event_taxonomy-b566d3c8985e27fb.graph`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/CG2_native_password_permission_zoom.phase`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/CG3_ublock_style_adblocker.phase`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/MEM2_ledger_folder_reorg.phase`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/MEM3_timestamps_everywhere.phase`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/VS1_sovereign_folder_and_foundation.phase`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/VS4_active_drift_enforcement.phase`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/CG2_native_password_permission_zoom-9e420f8cb79a33fb.graph`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/CG3_ublock_style_adblocker-303ef29f7a7e41db.graph`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/MEM2_ledger_folder_reorg-2338a73cb6de9f6f.graph`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/MEM3_timestamps_everywhere-3782812ddfa09005.graph`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/VS1_sovereign_folder_and_foundation-0347201816acd368.graph`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/VS4_active_drift_enforcement-225162f916d418e1.graph`
+- `orchestrator/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P4_repoint_callers.phase`
+- `orchestrator/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P4_repoint_callers-052187ecb12107d5.graph`
+- `orchestrator/phases/2026-09-27-one-idearium-phases-living-spec-nodes/R1_ui_dir_redirect.phase`
+- `orchestrator/phases/2026-09-27-one-idearium-phases-living-spec-nodes/V1_versionium_proxies.phase`
+- `orchestrator/phases/2026-09-27-one-idearium-phases-living-spec-nodes/X3_nodes_route.phase`
+- `orchestrator/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/R1_ui_dir_redirect-2635438fe347f665.graph`
+- `orchestrator/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/V1_versionium_proxies-2086de738783e68e.graph`
+- `orchestrator/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X3_nodes_route-c4340ed9cd3aa9e9.graph`
+- `orchestrator/phases/2026-10-05-announce-pulse-repair/PR4_deviation_raises_the_bpm.phase`
+- `orchestrator/phases/2026-10-05-announce-pulse-repair/graph/PR4_deviation_raises_the_bpm-5aab20c0be8a099d.graph`
+- `orchestrator/phases/2026-10-15-capability-specs-and-semantic-page-tree/CS2_spec_the_unspecced.phase`
+- `orchestrator/phases/2026-10-15-capability-specs-and-semantic-page-tree/graph/CS2_spec_the_unspecced-9358da2e9e6a8e73.graph`
+- `orchestrator/phases/2026-10-17-system-drawbridge/DB5_the_handshake_for_every_system.phase`
+- `orchestrator/phases/2026-10-17-system-drawbridge/graph/DB5_the_handshake_for_every_system-78b6fef273ac958e.graph`
+- `orchestrator/phases/2026-10-18-gating-census/L0_the_record_tells_the_truth.phase`
+- `orchestrator/phases/2026-10-18-gating-census/L3_needs_GM0a.phase`
+- `orchestrator/phases/2026-10-18-gating-census/L4_above.phase`
+- `orchestrator/phases/2026-10-18-gating-census/graph/L0_the_record_tells_the_truth-7adb29f2991be2a8.graph`
+- `orchestrator/phases/2026-10-18-gating-census/graph/L3_needs_GM0a-479b1bdf2c376727.graph`
+- `orchestrator/phases/2026-10-18-gating-census/graph/L4_above-712576e859588ca1.graph`
+- `orchestrator/phases/2026-10-20-belief-loop/RA0_rca_says_what_it_does.phase`
+- `orchestrator/phases/2026-10-20-belief-loop/graph/RA0_rca_says_what_it_does-a63f882b1b3c07af.graph`
+- `orchestrator/phases/2026-10-21-data-layout/DL7_cortex_snapshot_out.phase`
+- `orchestrator/phases/2026-10-21-data-layout/graph/DL7_cortex_snapshot_out-8a40ede24582f4ff.graph`
+- `orchestrator/phases/2026-10-21-data-layout/graph/_superseded/DL7_cortex_snapshot_out-af1c908b9a84788d.graph`
+- `orchestrator/phases/INDEX.md`
+
+</details>
+
+<details>
 <summary>`orchestrator/spec/` · 1 file</summary>
 
 - `orchestrator/spec/orchestrator.spec` — ── ADDENDUM 2026-09-27 (0.39.271) — docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec ──
@@ -222,7 +268,7 @@ RAID, the routing authority every request passes through (§5.2, §9.1), lives i
 <!-- generated:readme:system:cortex:start -->
 #### cortex: every module and every file
 
-Cortex is 78 files in 13 modules, entry `cortex/boot.js`, port 3748, spec `cortex/spec/cortex.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cortex-atlas.md`.
+Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cortex/spec/cortex.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cortex-atlas.md`.
 
 <details>
 <summary>`cortex/` · 9 files</summary>
@@ -313,6 +359,226 @@ Cortex is 78 files in 13 modules, entry `cortex/boot.js`, port 3748, spec `corte
 </details>
 
 <details>
+<summary>`cortex/phases/` · 214 files</summary>
+
+- `cortex/phases/2026-08-23-backlog/BL13_cortex_component_registry_move.phase`
+- `cortex/phases/2026-08-23-backlog/graph/BL13_cortex_component_registry_move-7967e5a04f2c6d03.graph`
+- `cortex/phases/2026-08-28-self-building-pipeline/SBP3_wire_contract_intake_through_routing_ir.phase`
+- `cortex/phases/2026-08-28-self-building-pipeline/SBP4_wire_loom_and_selfheal_as_real_contract_sources.phase`
+- `cortex/phases/2026-08-28-self-building-pipeline/SBP5_cortex_data_organization_scoping.phase`
+- `cortex/phases/2026-08-28-self-building-pipeline/SBP7_DESIGN_PRINCIPLE_automation_over_code.phase`
+- `cortex/phases/2026-08-28-self-building-pipeline/graph/SBP3_wire_contract_intake_through_routing_ir-cd59baa39d390724.graph`
+- `cortex/phases/2026-08-28-self-building-pipeline/graph/SBP4_wire_loom_and_selfheal_as_real_contract_sources-8d7fc37478dacfed.graph`
+- `cortex/phases/2026-08-28-self-building-pipeline/graph/SBP5_cortex_data_organization_scoping-6d939bafad4b1587.graph`
+- `cortex/phases/2026-08-28-self-building-pipeline/graph/SBP7_DESIGN_PRINCIPLE_automation_over_code-d3947752becd8cf4.graph`
+- `cortex/phases/2026-08-30-interaction-contract-context/IC6_multi_source_code_request_intake.phase`
+- `cortex/phases/2026-08-30-interaction-contract-context/graph/IC6_multi_source_code_request_intake-f808f7b781912a8f.graph`
+- `cortex/phases/2026-09-02-nexus-vision-master/LM5_data_decay_per_system.phase`
+- `cortex/phases/2026-09-02-nexus-vision-master/SR4_fitness_driven_contract_adjustment.phase`
+- `cortex/phases/2026-09-02-nexus-vision-master/T5_raid_full_cli.phase`
+- `cortex/phases/2026-09-02-nexus-vision-master/V9_precommit_gate_for_raid_contracts.phase`
+- `cortex/phases/2026-09-02-nexus-vision-master/graph/LM5_data_decay_per_system-968c129f68946726.graph`
+- `cortex/phases/2026-09-02-nexus-vision-master/graph/SR4_fitness_driven_contract_adjustment-d411d9559fb15a73.graph`
+- `cortex/phases/2026-09-02-nexus-vision-master/graph/T5_raid_full_cli-0ea6cdd19666fd57.graph`
+- `cortex/phases/2026-09-02-nexus-vision-master/graph/V9_precommit_gate_for_raid_contracts-088f2ec27fdd977e.graph`
+- `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/CG3_relay_into_cortex_sse.phase`
+- `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/DF2_cortex_and_versionium_off_root_data.phase`
+- `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/HIST1_boundary_constraint_history_schema.phase`
+- `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/CG3_relay_into_cortex_sse-24e51983a5045f80.graph`
+- `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/DF2_cortex_and_versionium_off_root_data-878b01658023f007.graph`
+- `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/HIST1_boundary_constraint_history_schema-7a9b8b7a2b2c78de.graph`
+- `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/D2_self_heal_migration.phase`
+- `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/R1_recall_to_lib.phase`
+- `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/V2_snapshot_ownership_decision.phase`
+- `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/graph/D2_self_heal_migration-5f98a58f11bf4291.graph`
+- `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/graph/R1_recall_to_lib-32458afe2804d0bc.graph`
+- `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/graph/V2_snapshot_ownership_decision-812e620fe68626d8.graph`
+- `cortex/phases/2026-09-11-sovereign-node-architecture/P11_unify_failure_tracking.phase`
+- `cortex/phases/2026-09-11-sovereign-node-architecture/graph/P11_unify_failure_tracking-3a5dd3cf9faa33c1.graph`
+- `cortex/phases/2026-09-13-axiom-5-2-raid-routing/MCO12_guardian_audit_complete.phase`
+- `cortex/phases/2026-09-13-axiom-5-2-raid-routing/MCO8_wire_the_honest_subset.phase`
+- `cortex/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO12_guardian_audit_complete-ff11ef686e0084e9.graph`
+- `cortex/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO8_wire_the_honest_subset-ea1b8c0c845ac17a.graph`
+- `cortex/phases/2026-09-13-track-b-sovereignty/MCO17_contract_boundary_retracted.phase`
+- `cortex/phases/2026-09-13-track-b-sovereignty/MCO18_interaction_contract_split_scoped.phase`
+- `cortex/phases/2026-09-13-track-b-sovereignty/graph/MCO17_contract_boundary_retracted-7e7a95ae7baa92ae.graph`
+- `cortex/phases/2026-09-13-track-b-sovereignty/graph/MCO18_interaction_contract_split_scoped-cdf5f24602f5099b.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/B1_field_ownership.phase`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/B2_jaadb_not_single_writer.phase`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/B4_userscript_cutover.phase`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/B6_two_intelligence_runtimes.phase`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P1_characterization.phase`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P3_cortex_becomes_forwarder.phase`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P5_retire_second_runtime.phase`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P6_versionium_residue.phase`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B1_field_ownership-b57173bf62bbbbb6.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B2_jaadb_not_single_writer-d497d683710ee21c.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B4_userscript_cutover-3f2e8e0e67d4f20b.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B6_two_intelligence_runtimes-0258dad07ec7a2de.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P1_characterization-47dc454012e2d666.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P3_cortex_becomes_forwarder-76fa1bf1526a963a.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P5_retire_second_runtime-7cbaf0dae879f2ed.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P6_versionium_residue-16ec7c94e45a4c8c.graph`
+- `cortex/phases/2026-09-28-graph-build-context-settings-memory/C2.phase`
+- `cortex/phases/2026-09-28-graph-build-context-settings-memory/M2.phase`
+- `cortex/phases/2026-09-28-graph-build-context-settings-memory/M3.phase`
+- `cortex/phases/2026-09-28-graph-build-context-settings-memory/graph/C2-b34cbf403596480b.graph`
+- `cortex/phases/2026-09-28-graph-build-context-settings-memory/graph/M2-3bfe2ca613898a9e.graph`
+- `cortex/phases/2026-09-28-graph-build-context-settings-memory/graph/M3-bad6fa3cd17bd889.graph`
+- `cortex/phases/2026-09-28-staging-self-heal/C1.phase`
+- `cortex/phases/2026-09-28-staging-self-heal/graph/C1-54047179b286c733.graph`
+- `cortex/phases/2026-10-01-idearium-agent-ready-master/PF9_boot_memory_census.phase`
+- `cortex/phases/2026-10-01-idearium-agent-ready-master/graph/PF9_boot_memory_census-c2a0c372cf2327b6.graph`
+- `cortex/phases/2026-10-02-emerge-field-memory-build/FM1_mining_failure_modes.phase`
+- `cortex/phases/2026-10-02-emerge-field-memory-build/MR4_field_memory.phase`
+- `cortex/phases/2026-10-02-emerge-field-memory-build/graph/FM1_mining_failure_modes-4584c0639e11da24.graph`
+- `cortex/phases/2026-10-02-emerge-field-memory-build/graph/MR4_field_memory-3f0c971304297739.graph`
+- `cortex/phases/2026-10-05-cli-data-code/DS1_cortex_the_catalog.phase`
+- `cortex/phases/2026-10-05-cli-data-code/DS2_one_system_moves_home.phase`
+- `cortex/phases/2026-10-05-cli-data-code/graph/DS1_cortex_the_catalog-9b630dee8890208b.graph`
+- `cortex/phases/2026-10-05-cli-data-code/graph/DS2_one_system_moves_home-96e381a353f57785.graph`
+- `cortex/phases/2026-10-07-heal-nodes/HL0_runtime_faults_reach_the_ladder.phase`
+- `cortex/phases/2026-10-07-heal-nodes/HL1_the_heal_node.phase`
+- `cortex/phases/2026-10-07-heal-nodes/HL2_level_zero_reads_heals.phase`
+- `cortex/phases/2026-10-07-heal-nodes/HL3_heal_before_it_breaks.phase`
+- `cortex/phases/2026-10-07-heal-nodes/HL4_the_heal_ledger.phase`
+- `cortex/phases/2026-10-07-heal-nodes/graph/HL0_runtime_faults_reach_the_ladder-947d5607680d7d04.graph`
+- `cortex/phases/2026-10-07-heal-nodes/graph/HL1_the_heal_node-15acb9f6783aa960.graph`
+- `cortex/phases/2026-10-07-heal-nodes/graph/HL2_level_zero_reads_heals-90ff9b6cb72f2226.graph`
+- `cortex/phases/2026-10-07-heal-nodes/graph/HL3_heal_before_it_breaks-9e2f2e991abd05e1.graph`
+- `cortex/phases/2026-10-07-heal-nodes/graph/HL4_the_heal_ledger-4d7fa995a99f7a73.graph`
+- `cortex/phases/2026-10-07-runtime-load/PF5_bounded_tables.phase`
+- `cortex/phases/2026-10-07-runtime-load/graph/PF5_bounded_tables-6ba51de2ef5c30a7.graph`
+- `cortex/phases/2026-10-09-one-model-engine/ME7_raid_spine_joins.phase`
+- `cortex/phases/2026-10-09-one-model-engine/ME8_the_drainers_run_the_engine.phase`
+- `cortex/phases/2026-10-09-one-model-engine/graph/ME7_raid_spine_joins-e2bc735f29322953.graph`
+- `cortex/phases/2026-10-09-one-model-engine/graph/ME8_the_drainers_run_the_engine-a10cd5fa948ace2c.graph`
+- `cortex/phases/2026-10-12-browser-providers-and-work/PV6_raid_reads_health_everywhere.phase`
+- `cortex/phases/2026-10-12-browser-providers-and-work/graph/PV6_raid_reads_health_everywhere-50948b43a1f650ab.graph`
+- `cortex/phases/2026-10-12-request-spine/RQ21_the_contract_file_is_its_record.phase`
+- `cortex/phases/2026-10-12-request-spine/RQ7_the_context_obligations.phase`
+- `cortex/phases/2026-10-12-request-spine/RQ9_the_chunked_contract.phase`
+- `cortex/phases/2026-10-12-request-spine/graph/RQ21_the_contract_file_is_its_record-edb46c91a98d61cd.graph`
+- `cortex/phases/2026-10-12-request-spine/graph/RQ7_the_context_obligations-31e6486efe8a56e7.graph`
+- `cortex/phases/2026-10-12-request-spine/graph/RQ9_the_chunked_contract-3abf89c90ee33111.graph`
+- `cortex/phases/2026-10-13-gates-that-learn-and-priorities/GT1_gates_route_diagnose_retry.phase`
+- `cortex/phases/2026-10-13-gates-that-learn-and-priorities/graph/GT1_gates_route_diagnose_retry-8014549b43dcfa51.graph`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/CT1b_reviewed.phase`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/EX0_executors_he_already_built.phase`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/MEM0_nexus_holds_everything.phase`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/SC0_scheduler.phase`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/TD0_today_and_yesterday_working.phase`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT1b_reviewed-3178ffe24c2f885c.graph`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/EX0_executors_he_already_built-d7ad680fcecf9144.graph`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/MEM0_nexus_holds_everything-b3af5dee49c651c8.graph`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/SC0_scheduler-c788fb307eb53e0b.graph`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/TD0_today_and_yesterday_working-91e91c8146a1148c.graph`
+- `cortex/phases/2026-10-13-projects-raid-and-gates/RD0_raid_has_its_own_contract.phase`
+- `cortex/phases/2026-10-13-projects-raid-and-gates/RD1_raid_commands.phase`
+- `cortex/phases/2026-10-13-projects-raid-and-gates/RD4_the_fulfilled_contract_is_one_file.phase`
+- `cortex/phases/2026-10-13-projects-raid-and-gates/graph/RD0_raid_has_its_own_contract-3b0ad3c04c18a6bb.graph`
+- `cortex/phases/2026-10-13-projects-raid-and-gates/graph/RD1_raid_commands-eaf659e67016b3ac.graph`
+- `cortex/phases/2026-10-13-projects-raid-and-gates/graph/RD4_the_fulfilled_contract_is_one_file-757df4a3809c380a.graph`
+- `cortex/phases/2026-10-15-automatic-tracking/GA1_the_gate_assesses_before_it_spends.phase`
+- `cortex/phases/2026-10-15-automatic-tracking/GT2_each_gate_tags_and_reports.phase`
+- `cortex/phases/2026-10-15-automatic-tracking/QA2_a_real_run.phase`
+- `cortex/phases/2026-10-15-automatic-tracking/RT2_routed_by_intent_account_and_fallback.phase`
+- `cortex/phases/2026-10-15-automatic-tracking/graph/GA1_the_gate_assesses_before_it_spends-8219e00f69d5db25.graph`
+- `cortex/phases/2026-10-15-automatic-tracking/graph/GT2_each_gate_tags_and_reports-3797d6cbb370567f.graph`
+- `cortex/phases/2026-10-15-automatic-tracking/graph/QA2_a_real_run-37774413980dc0ec.graph`
+- `cortex/phases/2026-10-15-automatic-tracking/graph/RT2_routed_by_intent_account_and_fallback-e032f09d67bd248e.graph`
+- `cortex/phases/2026-10-15-gate-held-work/GW1_the_baton.phase`
+- `cortex/phases/2026-10-15-gate-held-work/GW24_the_gate_holds_the_agent_gets_a_projection.phase`
+- `cortex/phases/2026-10-15-gate-held-work/GW25_the_systems_at_the_gate_moments.phase`
+- `cortex/phases/2026-10-15-gate-held-work/GW26_everything_declares_what_it_needs.phase`
+- `cortex/phases/2026-10-15-gate-held-work/graph/GW1_the_baton-2558d35dc4282735.graph`
+- `cortex/phases/2026-10-15-gate-held-work/graph/GW24_the_gate_holds_the_agent_gets_a_projection-80b3bd80f12d4cc4.graph`
+- `cortex/phases/2026-10-15-gate-held-work/graph/GW25_the_systems_at_the_gate_moments-0b4eab67c2ed65d7.graph`
+- `cortex/phases/2026-10-15-gate-held-work/graph/GW26_everything_declares_what_it_needs-c970dbd56ce21cc0.graph`
+- `cortex/phases/2026-10-15-one-contract-raid-releases/BR2_recursion_to_a_depth.phase`
+- `cortex/phases/2026-10-15-one-contract-raid-releases/GT1a_exhausted_climb_spends_its_attempt.phase`
+- `cortex/phases/2026-10-15-one-contract-raid-releases/RD0_raid_runs_the_contract.phase`
+- `cortex/phases/2026-10-15-one-contract-raid-releases/graph/BR2_recursion_to_a_depth-2e171420309b04aa.graph`
+- `cortex/phases/2026-10-15-one-contract-raid-releases/graph/GT1a_exhausted_climb_spends_its_attempt-6108f2a7ab7f09d8.graph`
+- `cortex/phases/2026-10-15-one-contract-raid-releases/graph/RD0_raid_runs_the_contract-e1539a5fce346d1b.graph`
+- `cortex/phases/2026-10-15-spec-foundation-model/SF1_foundation_field.phase`
+- `cortex/phases/2026-10-15-spec-foundation-model/SF2_state_and_gate.phase`
+- `cortex/phases/2026-10-15-spec-foundation-model/SF3_evidence_not_claims.phase`
+- `cortex/phases/2026-10-15-spec-foundation-model/SF5_hat_intent_injection.phase`
+- `cortex/phases/2026-10-15-spec-foundation-model/SF6_addenda_view.phase`
+- `cortex/phases/2026-10-15-spec-foundation-model/SF7_get_his_run_current.phase`
+- `cortex/phases/2026-10-15-spec-foundation-model/graph/SF1_foundation_field-403be3a3de4097fa.graph`
+- `cortex/phases/2026-10-15-spec-foundation-model/graph/SF2_state_and_gate-adb0d3d7e575647a.graph`
+- `cortex/phases/2026-10-15-spec-foundation-model/graph/SF3_evidence_not_claims-2b678b0269fe99ed.graph`
+- `cortex/phases/2026-10-15-spec-foundation-model/graph/SF5_hat_intent_injection-10e5a79bbc7cf1e9.graph`
+- `cortex/phases/2026-10-15-spec-foundation-model/graph/SF6_addenda_view-d7b4036d0d6df1de.graph`
+- `cortex/phases/2026-10-15-spec-foundation-model/graph/SF7_get_his_run_current-b512f674cbcad8ad.graph`
+- `cortex/phases/2026-10-17-debugging-product/DP9_crystallize_the_fix.phase`
+- `cortex/phases/2026-10-17-debugging-product/graph/DP9_crystallize_the_fix-bb202e146d2c087f.graph`
+- `cortex/phases/2026-10-17-failure-mode-report/FMR3_the_report.phase`
+- `cortex/phases/2026-10-17-failure-mode-report/FMR4_the_macro_bundle.phase`
+- `cortex/phases/2026-10-17-failure-mode-report/FMR9_agents_have_it.phase`
+- `cortex/phases/2026-10-17-failure-mode-report/graph/FMR3_the_report-299dbc8fd18c04ed.graph`
+- `cortex/phases/2026-10-17-failure-mode-report/graph/FMR4_the_macro_bundle-ae03f54c04d34a09.graph`
+- `cortex/phases/2026-10-17-failure-mode-report/graph/FMR9_agents_have_it-63ef698ad90660e2.graph`
+- `cortex/phases/2026-10-17-infrastructure-migration/IM4_the_kernel_boundary.phase`
+- `cortex/phases/2026-10-17-infrastructure-migration/IM6_cortex_unclumped.phase`
+- `cortex/phases/2026-10-17-infrastructure-migration/graph/IM4_the_kernel_boundary-2fa27fc4450f490d.graph`
+- `cortex/phases/2026-10-17-infrastructure-migration/graph/IM6_cortex_unclumped-fd9d4833cc2172df.graph`
+- `cortex/phases/2026-10-17-pieces-not-order/PC2_any_order.phase`
+- `cortex/phases/2026-10-17-pieces-not-order/PC3_verified_alone_resumed_by_recheck.phase`
+- `cortex/phases/2026-10-17-pieces-not-order/PC6_assembled_and_checked_whole.phase`
+- `cortex/phases/2026-10-17-pieces-not-order/graph/PC2_any_order-6bc0af47ff8e008b.graph`
+- `cortex/phases/2026-10-17-pieces-not-order/graph/PC3_verified_alone_resumed_by_recheck-c2d9bfbcf28fdd80.graph`
+- `cortex/phases/2026-10-17-pieces-not-order/graph/PC6_assembled_and_checked_whole-02773cb04a5358ed.graph`
+- `cortex/phases/2026-10-18-gate-memory/GM1_the_gate_record.phase`
+- `cortex/phases/2026-10-18-gate-memory/GM2_restarts_resume_from_records.phase`
+- `cortex/phases/2026-10-18-gate-memory/GM3_the_fulfilled_contract_index.phase`
+- `cortex/phases/2026-10-18-gate-memory/graph/GM1_the_gate_record-7b2f7b374309d9af.graph`
+- `cortex/phases/2026-10-18-gate-memory/graph/GM2_restarts_resume_from_records-2cab55cf6b2e5f35.graph`
+- `cortex/phases/2026-10-18-gate-memory/graph/GM3_the_fulfilled_contract_index-5f982253e7259033.graph`
+- `cortex/phases/2026-10-19-pipeline-root-causes/SS2_every_system_home.phase`
+- `cortex/phases/2026-10-19-pipeline-root-causes/graph/SS2_every_system_home-8abdeb8d18ad7e5d.graph`
+- `cortex/phases/2026-10-19-solid-build-foundation/DC1_dynamic_chunk_at_plan.phase`
+- `cortex/phases/2026-10-19-solid-build-foundation/graph/DC1_dynamic_chunk_at_plan-a3e911b7984ff47a.graph`
+- `cortex/phases/2026-10-20-belief-loop/CY1_lifecycle_and_injection.phase`
+- `cortex/phases/2026-10-20-belief-loop/graph/CY1_lifecycle_and_injection-f9114a7b5b7207b8.graph`
+- `cortex/phases/2026-10-20-substrate-graph-traversal-chunking-gating/DK1_dynamic_chunking.phase`
+- `cortex/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/DK1_dynamic_chunking-2e1c9985830b2941.graph`
+- `cortex/phases/2026-10-21-data-layout/DL6_cortex_server.phase`
+- `cortex/phases/2026-10-21-data-layout/graph/DL6_cortex_server-12bcbaa9f6f99ef8.graph`
+- `cortex/phases/2026-10-21-data-layout/graph/_superseded/DL6_cortex_server-1ac803216ae293ca.graph`
+- `cortex/phases/INDEX.md`
+- `cortex/phases/agent-model-and-user-continuity/AM4_full_user_continuity.phase`
+- `cortex/phases/agent-model-and-user-continuity/graph/AM4_full_user_continuity-3a71daf44b278748.graph`
+- `cortex/phases/copilot-awareness-routing/CA5_intent_routing.phase`
+- `cortex/phases/copilot-awareness-routing/graph/CA5_intent_routing-3a5f0d9163ea6078.graph`
+- `cortex/phases/copilot-full-capability/P1_cross_agent_recall.phase`
+- `cortex/phases/copilot-full-capability/P4_raid_snr_query_tool.phase`
+- `cortex/phases/copilot-full-capability/graph/P1_cross_agent_recall-a040d6583f3e1e8b.graph`
+- `cortex/phases/copilot-full-capability/graph/P4_raid_snr_query_tool-f934b5bf077cf0cd.graph`
+- `cortex/phases/gemini-multiagent-coding/P3_line_block_seam_sync.phase`
+- `cortex/phases/gemini-multiagent-coding/graph/P3_line_block_seam_sync-4c9b125899b7ce0f.graph`
+- `cortex/phases/nexus-architecture-rebuild/P7_schema_based_persistence_system_wide.phase`
+- `cortex/phases/nexus-architecture-rebuild/graph/P7_schema_based_persistence_system_wide-553361839aed4212.graph`
+- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/NC1_compartment_bootstrapping_decision.phase`
+- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/NC2_nested_compartment_support.phase`
+- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/RS1_repo_settings_sections.phase`
+- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/graph/NC1_compartment_bootstrapping_decision-bf4d956cc2a7c398.graph`
+- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/graph/NC2_nested_compartment_support-0b4000d92371184e.graph`
+- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/graph/RS1_repo_settings_sections-06ec8dbcca479409.graph`
+- `cortex/phases/raid-routing-fidelity/RR1_verify_and_wire_the_snr_fidelity_gate.phase`
+- `cortex/phases/raid-routing-fidelity/RR6_cortex_fitness_and_fluid_configs.phase`
+- `cortex/phases/raid-routing-fidelity/graph/RR1_verify_and_wire_the_snr_fidelity_gate-811ac85b77bfb21d.graph`
+- `cortex/phases/raid-routing-fidelity/graph/RR6_cortex_fitness_and_fluid_configs-6e58e5b8e1945e9b.graph`
+- `cortex/phases/snapshot-trigger/SS1_drift_triggered_snapshot.phase`
+- `cortex/phases/snapshot-trigger/SS2_snapshot_in_diagnostics.phase`
+- `cortex/phases/snapshot-trigger/graph/SS1_drift_triggered_snapshot-a29e09c529c8d673.graph`
+- `cortex/phases/snapshot-trigger/graph/SS2_snapshot_in_diagnostics-a6929e53be935126.graph`
+
+</details>
+
+<details>
 <summary>`cortex/schemas/` · 27 files</summary>
 
 - `cortex/schemas/index.js`
@@ -380,7 +646,7 @@ Cortex is 78 files in 13 modules, entry `cortex/boot.js`, port 3748, spec `corte
 
 </details>
 
-29 release notes name a file of cortex: 0.60.158., 0.60.157., 0.60.150., 0.60.149., 0.60.147., 0.60.145., 0.60.133., 0.60.132., 0.60.131., 0.60.94., 0.60.79., 0.60.78., 0.60.75., 0.60.73., 0.60.36., 0.60.30., 0.60.29., 0.60.18., 0.60.16., 0.60.15., 0.60.3., 0.59.6., 0.43.0., 0.39.342., 0.39.333., 0.39.277., 0.39.267., 0.39.236., 0.39.181.. Each is in the version history below, in his words.
+33 release notes name a file of cortex: 0.60.226., 0.60.224., 0.60.203., 0.60.177., 0.60.158., 0.60.157., 0.60.150., 0.60.149., 0.60.147., 0.60.145., 0.60.133., 0.60.132., 0.60.131., 0.60.94., 0.60.79., 0.60.78., 0.60.75., 0.60.73., 0.60.36., 0.60.30., 0.60.29., 0.60.18., 0.60.16., 0.60.15., 0.60.3., 0.59.6., 0.43.0., 0.39.342., 0.39.333., 0.39.277., 0.39.267., 0.39.236., 0.39.181.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:cortex:end -->
 
@@ -393,7 +659,7 @@ The provider side is the userscripts: `guardian/userscript-chatgpt.js`, `guardia
 <!-- generated:readme:system:guardian:start -->
 #### guardian: every module and every file
 
-Guardian is 202 files in 10 modules, entry `guardian/server.js`, port 7820, spec `guardian/spec/guardian.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/guardian-atlas.md`.
+Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec `guardian/spec/guardian.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/guardian-atlas.md`.
 
 <details>
 <summary>`guardian/` · 35 files</summary>
@@ -601,6 +867,406 @@ Guardian is 202 files in 10 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
+<summary>`guardian/phases/` · 1 file</summary>
+
+- `guardian/phases/INDEX.md` — guardian — its phases
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-08-22-session-full/` · 14 files</summary>
+
+- `guardian/phases/2026-08-22-session-full/SF15_wake_pipeline_real_bugs_fixed.phase`
+- `guardian/phases/2026-08-22-session-full/SF1_sse_reconnect_leak.phase`
+- `guardian/phases/2026-08-22-session-full/SF2_providerhost_stopall_missing.phase`
+- `guardian/phases/2026-08-22-session-full/SF3_chat_history_panel_wrong_url.phase`
+- `guardian/phases/2026-08-22-session-full/SF4_copilot_missing_own_tools.phase`
+- `guardian/phases/2026-08-22-session-full/SF8_meta_shim_cleanup.phase`
+- `guardian/phases/2026-08-22-session-full/SF9_account_identity_capture.phase`
+- `guardian/phases/2026-08-22-session-full/graph/SF15_wake_pipeline_real_bugs_fixed-31df01244706d8fa.graph`
+- `guardian/phases/2026-08-22-session-full/graph/SF1_sse_reconnect_leak-36a10b8830fc0eb0.graph`
+- `guardian/phases/2026-08-22-session-full/graph/SF2_providerhost_stopall_missing-28f6c81204f42cea.graph`
+- `guardian/phases/2026-08-22-session-full/graph/SF3_chat_history_panel_wrong_url-fc0dad959f17616a.graph`
+- `guardian/phases/2026-08-22-session-full/graph/SF4_copilot_missing_own_tools-511751da9313072f.graph`
+- `guardian/phases/2026-08-22-session-full/graph/SF8_meta_shim_cleanup-dfd2bf6c9c55ba77.graph`
+- `guardian/phases/2026-08-22-session-full/graph/SF9_account_identity_capture-3eb75500093ff04c.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-08-23-backlog/` · 2 files</summary>
+
+- `guardian/phases/2026-08-23-backlog/BL3_port_social_listener_pattern.phase`
+- `guardian/phases/2026-08-23-backlog/graph/BL3_port_social_listener_pattern-0f003446efc1eb09.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-08-30-interaction-contract-context/` · 2 files</summary>
+
+- `guardian/phases/2026-08-30-interaction-contract-context/IC1_context_by_uuid_injection.phase`
+- `guardian/phases/2026-08-30-interaction-contract-context/graph/IC1_context_by_uuid_injection-e3fff7e8482237f8.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-02-agent-mesh-full-map/` · 2 files</summary>
+
+- `guardian/phases/2026-09-02-agent-mesh-full-map/AM4_userscript_shared_core_dedup.phase`
+- `guardian/phases/2026-09-02-agent-mesh-full-map/graph/AM4_userscript_shared_core_dedup-2a7095a3c05cd5cb.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-02-nexus-vision-master/` · 64 files</summary>
+
+- `guardian/phases/2026-09-02-nexus-vision-master/AM11_per_agent_tasks_automation.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/AM8_element_picker_agent_wiring.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/C1_copilot_spec_wizard.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/C3_component_import_decomposition.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/CG10_zoom_and_hotkeys_bug.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/CG11_ublock_adblocker_native_features.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/CG4_macros_plugin_autofill.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/CG5_copilot_guided_spotlight_macro.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/CG6_element_picker_to_listener_queue.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/CG7_cli_first_architecture.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/CG8_devtools_screenshot_dom_archaeology.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/CG9_history_via_rewind_engine.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/CP1_less_rigid_copilot.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/D1_bridgeos_readme_template.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/D2_idearium_compartment_structure.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/D3_loom_compartment_readme.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/D4_spec_bulk_import.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/G1_guardian_agents_folder.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/LM2_per_system_living_model_completion.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/LM3_component_registry_hooks_spec.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/LM4_hotswap_ui_contracts.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/SR1_per_agent_wake_words.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/SR2_copilot_clarifying_questions.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/SR5_large_file_chunk_working_memory.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/SR6_per_output_build_surface.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/SR8_deterministic_claude_replication.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/T3_tool_to_event_mapping.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/V10_dynamic_registry_self_wiring.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/V8_full_change_tracking_hashing.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/WF1_workflow_automation_engine.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/WF2_canvas_visual_pipeline.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/WF3_cockpit_ui_shell.phase`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/AM11_per_agent_tasks_automation-7883cb15f206e4d3.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/AM8_element_picker_agent_wiring-1e65be4bd0ebc982.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/C1_copilot_spec_wizard-df6cd6e5900b6ad4.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/C3_component_import_decomposition-161153bb675e4ff1.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/CG10_zoom_and_hotkeys_bug-4433572db3edc3a9.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/CG11_ublock_adblocker_native_features-fed21457aecdec12.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/CG4_macros_plugin_autofill-28b2a325170ef2f1.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/CG5_copilot_guided_spotlight_macro-c2df75d5133452f2.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/CG6_element_picker_to_listener_queue-94fdca8c6a094fd0.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/CG7_cli_first_architecture-b57d50165ca5bd29.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/CG8_devtools_screenshot_dom_archaeology-08ddcfae15dfe9b5.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/CG9_history_via_rewind_engine-236f3a18df458ec9.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/CP1_less_rigid_copilot-ce68f1c10420ee04.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/D1_bridgeos_readme_template-4fb8fecea9b65f50.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/D2_idearium_compartment_structure-80dbc60fc6451eb9.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/D3_loom_compartment_readme-8e08088d72c8d83a.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/D4_spec_bulk_import-a8957d46b0a04c43.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/G1_guardian_agents_folder-6b3bc0c422f31286.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/LM2_per_system_living_model_completion-9102177dca43ea27.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/LM3_component_registry_hooks_spec-128374a4d532fba0.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/LM4_hotswap_ui_contracts-3793f13db0642bcf.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/SR1_per_agent_wake_words-e51fea7cf9dc2e35.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/SR2_copilot_clarifying_questions-fe1ec9e7087e46e1.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/SR5_large_file_chunk_working_memory-43d0d7b0b6b6a579.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/SR6_per_output_build_surface-67b0a4481b1bbd4f.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/SR8_deterministic_claude_replication-2655ab144b7b2237.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/T3_tool_to_event_mapping-963fe75d4ce7268a.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/V10_dynamic_registry_self_wiring-c55603e97de1585c.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/V8_full_change_tracking_hashing-4371829fd3cff4f1.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/WF1_workflow_automation_engine-632d349bf949759c.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/WF2_canvas_visual_pipeline-9d8971d7af662125.graph`
+- `guardian/phases/2026-09-02-nexus-vision-master/graph/WF3_cockpit_ui_shell-e038ecb5ad9f4172.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-05-observability-sovereignty-and-agent-mesh/` · 2 files</summary>
+
+- `guardian/phases/2026-09-05-observability-sovereignty-and-agent-mesh/DF1_guardian_own_data_folder.phase`
+- `guardian/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/DF1_guardian_own_data_folder-688ee953c3e55552.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-11-sovereign-node-architecture/` · 4 files</summary>
+
+- `guardian/phases/2026-09-11-sovereign-node-architecture/P26_unify_conversation_logging.phase`
+- `guardian/phases/2026-09-11-sovereign-node-architecture/P31_job_reference_command_syntax.phase`
+- `guardian/phases/2026-09-11-sovereign-node-architecture/graph/P26_unify_conversation_logging-77d4192f746b7566.graph`
+- `guardian/phases/2026-09-11-sovereign-node-architecture/graph/P31_job_reference_command_syntax-05330631270dac6a.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-13-axiom-5-2-raid-routing/` · 2 files</summary>
+
+- `guardian/phases/2026-09-13-axiom-5-2-raid-routing/MCO12_guardian_list_was_unreliable.phase`
+- `guardian/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO12_guardian_list_was_unreliable-699ffb5ba2eb8fea.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-19-guardian-mesh-first-dispatch/` · 2 files</summary>
+
+- `guardian/phases/2026-09-19-guardian-mesh-first-dispatch/P5_guardian_transport.phase`
+- `guardian/phases/2026-09-19-guardian-mesh-first-dispatch/graph/P5_guardian_transport-ff368c143d948ffb.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/` · 14 files</summary>
+
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/AN1_anchor_node_capture.phase`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/CLI1_headless_dispatch_via_mesh.phase`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/TR1_repo_derived_agentId_in_dispatch.phase`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/TX1_converge_the_three_transports.phase`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/UI1_one_file_per_ui_area.phase`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/UI1_progress_2026_09_23.phase`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/UI2_downloads_manager_chat_view.phase`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/graph/AN1_anchor_node_capture-b26c7c736581b2bd.graph`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/graph/CLI1_headless_dispatch_via_mesh-361e4ee667b1a789.graph`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/graph/TR1_repo_derived_agentId_in_dispatch-5c03d66d2ea72bc7.graph`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/graph/TX1_converge_the_three_transports-8d100320582a910a.graph`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/graph/UI1_one_file_per_ui_area-8e0014e69c3c248b.graph`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/graph/UI1_progress_2026_09_23-040c4016ec196fff.graph`
+- `guardian/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/graph/UI2_downloads_manager_chat_view-a1b9b83ad247406b.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/` · 4 files</summary>
+
+- `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/R1.phase`
+- `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/T1.phase`
+- `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/R1-3c37b05f3eb39ced.graph`
+- `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/T1-a15775f6e0b048ee.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-27-agent-hat-memory-download-manager/` · 2 files</summary>
+
+- `guardian/phases/2026-09-27-agent-hat-memory-download-manager/G3.phase`
+- `guardian/phases/2026-09-27-agent-hat-memory-download-manager/graph/G3-9e1fa9749c4f73cd.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` · 2 files</summary>
+
+- `guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/X2_guardian_hat_agent.phase`
+- `guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X2_guardian_hat_agent-03ec77b2152e6de4.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-27-registry-harness-and-stability/` · 2 files</summary>
+
+- `guardian/phases/2026-09-27-registry-harness-and-stability/S1.phase`
+- `guardian/phases/2026-09-27-registry-harness-and-stability/graph/S1-e58044a67741c0ac.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-28-graph-build-context-settings-memory/` · 4 files</summary>
+
+- `guardian/phases/2026-09-28-graph-build-context-settings-memory/M4.phase`
+- `guardian/phases/2026-09-28-graph-build-context-settings-memory/SV3.phase`
+- `guardian/phases/2026-09-28-graph-build-context-settings-memory/graph/M4-02b0ddec35827cc4.graph`
+- `guardian/phases/2026-09-28-graph-build-context-settings-memory/graph/SV3-221b311c3eb9b080.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-29-build-surface/` · 2 files</summary>
+
+- `guardian/phases/2026-09-29-build-surface/BS16_provider_login_wall.phase`
+- `guardian/phases/2026-09-29-build-surface/graph/BS16_provider_login_wall-b6c1499352b07bb4.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-29-provider-economy/` · 2 files</summary>
+
+- `guardian/phases/2026-09-29-provider-economy/EC6_guardian_enforcement.phase`
+- `guardian/phases/2026-09-29-provider-economy/graph/EC6_guardian_enforcement-f302afba554cf0ff.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-09-29-tool-layers-and-pane-memory/` · 2 files</summary>
+
+- `guardian/phases/2026-09-29-tool-layers-and-pane-memory/P6.phase`
+- `guardian/phases/2026-09-29-tool-layers-and-pane-memory/graph/P6-5880174cc33d421b.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-01-work-visibility-job-reuse/` · 2 files</summary>
+
+- `guardian/phases/2026-10-01-work-visibility-job-reuse/J1.phase`
+- `guardian/phases/2026-10-01-work-visibility-job-reuse/graph/J1-1e8293ee40b537f7.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-02-emerge-field-memory-build/` · 2 files</summary>
+
+- `guardian/phases/2026-10-02-emerge-field-memory-build/GA1_guardian_source_of_truth.phase`
+- `guardian/phases/2026-10-02-emerge-field-memory-build/graph/GA1_guardian_source_of_truth-ccca30879096d636.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-02-workshop-codex-rewind/` · 2 files</summary>
+
+- `guardian/phases/2026-10-02-workshop-codex-rewind/GD1_guardian_supervises_cos.phase`
+- `guardian/phases/2026-10-02-workshop-codex-rewind/graph/GD1_guardian_supervises_cos-1d0485d9b5519bbc.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-07-runtime-load/` · 4 files</summary>
+
+- `guardian/phases/2026-10-07-runtime-load/PF3_append_not_rewrite.phase`
+- `guardian/phases/2026-10-07-runtime-load/PF4_hold_only_what_you_read.phase`
+- `guardian/phases/2026-10-07-runtime-load/graph/PF3_append_not_rewrite-ae5e13b4f39fc2d6.graph`
+- `guardian/phases/2026-10-07-runtime-load/graph/PF4_hold_only_what_you_read-e035361560d2d6d0.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-09-hardening-pass/` · 16 files</summary>
+
+- `guardian/phases/2026-10-09-hardening-pass/HP11_a_reply_on_the_page_is_never_sent_again.phase`
+- `guardian/phases/2026-10-09-hardening-pass/HP13_the_failure_is_put_at_the_right_gate.phase`
+- `guardian/phases/2026-10-09-hardening-pass/HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds.phase`
+- `guardian/phases/2026-10-09-hardening-pass/HP15_a_typed_prompt_is_never_sent_again.phase`
+- `guardian/phases/2026-10-09-hardening-pass/HP16_a_job_nobody_waits_for_is_not_sent_later.phase`
+- `guardian/phases/2026-10-09-hardening-pass/HP17_no_tab_is_said_in_seconds.phase`
+- `guardian/phases/2026-10-09-hardening-pass/HP21_the_economy_holding_a_job_is_said.phase`
+- `guardian/phases/2026-10-09-hardening-pass/HP22_a_missing_tab_is_not_a_login_wall.phase`
+- `guardian/phases/2026-10-09-hardening-pass/graph/HP11_a_reply_on_the_page_is_never_sent_again-fefc2312b6a59efa.graph`
+- `guardian/phases/2026-10-09-hardening-pass/graph/HP13_the_failure_is_put_at_the_right_gate-17395f231ced9d63.graph`
+- `guardian/phases/2026-10-09-hardening-pass/graph/HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds-484cb9512f837f5a.graph`
+- `guardian/phases/2026-10-09-hardening-pass/graph/HP15_a_typed_prompt_is_never_sent_again-5c7b24fc42656fde.graph`
+- `guardian/phases/2026-10-09-hardening-pass/graph/HP16_a_job_nobody_waits_for_is_not_sent_later-2655911d9edadb7f.graph`
+- `guardian/phases/2026-10-09-hardening-pass/graph/HP17_no_tab_is_said_in_seconds-9bc532dfbe78e5c6.graph`
+- `guardian/phases/2026-10-09-hardening-pass/graph/HP21_the_economy_holding_a_job_is_said-987bfbb18c496d42.graph`
+- `guardian/phases/2026-10-09-hardening-pass/graph/HP22_a_missing_tab_is_not_a_login_wall-7116d27e8a0491f4.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-09-one-model-engine/` · 2 files</summary>
+
+- `guardian/phases/2026-10-09-one-model-engine/ME9_the_layers_below_report.phase`
+- `guardian/phases/2026-10-09-one-model-engine/graph/ME9_the_layers_below_report-cd11715c75119ecd.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-10-copilot-talk-to-nexus/` · 2 files</summary>
+
+- `guardian/phases/2026-10-10-copilot-talk-to-nexus/TN1.phase`
+- `guardian/phases/2026-10-10-copilot-talk-to-nexus/graph/TN1-6f462d9a0ad9d3e2.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-10-idearium-solid/` · 4 files</summary>
+
+- `guardian/phases/2026-10-10-idearium-solid/SD15_no_website_can_drive_nexus.phase`
+- `guardian/phases/2026-10-10-idearium-solid/SD3_the_person_goes_first.phase`
+- `guardian/phases/2026-10-10-idearium-solid/graph/SD15_no_website_can_drive_nexus-c5838680af6ae20a.graph`
+- `guardian/phases/2026-10-10-idearium-solid/graph/SD3_the_person_goes_first-244b6541848ccd0b.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-10-self-awareness/` · 2 files</summary>
+
+- `guardian/phases/2026-10-10-self-awareness/AW1_guardian_reflected_in_nodes.phase`
+- `guardian/phases/2026-10-10-self-awareness/graph/AW1_guardian_reflected_in_nodes-c659f7d61e4da4c9.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-12-browser-providers-and-work/` · 2 files</summary>
+
+- `guardian/phases/2026-10-12-browser-providers-and-work/PV3_input_nodes.phase`
+- `guardian/phases/2026-10-12-browser-providers-and-work/graph/PV3_input_nodes-73528fe4f1a5e74b.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-15-code-tab-run-state/` · 4 files</summary>
+
+- `guardian/phases/2026-10-15-code-tab-run-state/CE10_lost_jobs_fall_back.phase`
+- `guardian/phases/2026-10-15-code-tab-run-state/CE4_reply_kind_and_tags.phase`
+- `guardian/phases/2026-10-15-code-tab-run-state/graph/CE10_lost_jobs_fall_back-75cbbf1b8a77a1aa.graph`
+- `guardian/phases/2026-10-15-code-tab-run-state/graph/CE4_reply_kind_and_tags-98f434cfcf498822.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-16-proposal-evidence/` · 10 files</summary>
+
+- `guardian/phases/2026-10-16-proposal-evidence/PE4_rejection_context.phase`
+- `guardian/phases/2026-10-16-proposal-evidence/PE5_show_it.phase`
+- `guardian/phases/2026-10-16-proposal-evidence/PE6_tests_first.phase`
+- `guardian/phases/2026-10-16-proposal-evidence/PE7_comparison_engine.phase`
+- `guardian/phases/2026-10-16-proposal-evidence/PE8_learn.phase`
+- `guardian/phases/2026-10-16-proposal-evidence/graph/PE4_rejection_context-f5ec69ca26ebcfda.graph`
+- `guardian/phases/2026-10-16-proposal-evidence/graph/PE5_show_it-cd4648aa33c9f614.graph`
+- `guardian/phases/2026-10-16-proposal-evidence/graph/PE6_tests_first-4997403b606e1628.graph`
+- `guardian/phases/2026-10-16-proposal-evidence/graph/PE7_comparison_engine-97b6ca5d0f989aea.graph`
+- `guardian/phases/2026-10-16-proposal-evidence/graph/PE8_learn-46caf2fc3643edf1.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-17-failure-mode-report/` · 2 files</summary>
+
+- `guardian/phases/2026-10-17-failure-mode-report/FMR5_replay_routes.phase`
+- `guardian/phases/2026-10-17-failure-mode-report/graph/FMR5_replay_routes-fbcdf4cf365d0b2c.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/2026-10-19-pipeline-root-causes/` · 3 files</summary>
+
+- `guardian/phases/2026-10-19-pipeline-root-causes/RC5_find_where_the_label_enters.phase`
+- `guardian/phases/2026-10-19-pipeline-root-causes/graph/RC5_find_where_the_label_enters-bd2fa8c8c5ea9078.graph`
+- `guardian/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC5_find_where_the_label_enters-c11e275559f4451a.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/copilot-omniscience/` · 2 files</summary>
+
+- `guardian/phases/copilot-omniscience/P4_guardian_tool_loop.phase`
+- `guardian/phases/copilot-omniscience/graph/P4_guardian_tool_loop-c8dd2f30f0b16d44.graph`
+
+</details>
+
+<details>
+<summary>`guardian/phases/nexus-observability-tablet/` · 2 files</summary>
+
+- `guardian/phases/nexus-observability-tablet/OB2_gap_detection_diagnostic.phase`
+- `guardian/phases/nexus-observability-tablet/graph/OB2_gap_detection_diagnostic-94d6f60ae9374459.graph`
+
+</details>
+
+<details>
 <summary>`guardian/routes/` · 3 files</summary>
 
 - `guardian/routes/autonomous-loop.js` — // guardian/routes/autonomous-loop.js — the first real caller of // lib/autonomous-loop.js's run(). Phase 13…
@@ -657,7 +1323,7 @@ Guardian is 202 files in 10 modules, entry `guardian/server.js`, port 7820, spec
 
 </details>
 
-55 release notes name a file of guardian: 0.60.158., 0.60.149., 0.60.148., 0.60.146., 0.60.143., 0.60.133., 0.60.132., 0.60.131., 0.60.130., 0.60.124., 0.60.120., 0.60.113., 0.60.100., 0.60.70., 0.60.28., 0.60.15., 0.60.10., 0.60.2., 0.60.0., 0.59.15., 0.57.0., 0.54.0., 0.42.0., 0.41.0., 0.40.1., 0.39.335., 0.39.282., 0.39.281., 0.39.279., 0.39.278., 0.39.269., 0.39.268., 0.39.267., 0.39.266., 0.39.263., 0.39.256., 0.39.255., 0.39.254., 0.39.252., 0.39.249., and 15 older. Each is in the version history below, in his words.
+59 release notes name a file of guardian: 0.60.225., 0.60.208., 0.60.205., 0.60.191., 0.60.158., 0.60.149., 0.60.148., 0.60.146., 0.60.143., 0.60.133., 0.60.132., 0.60.131., 0.60.130., 0.60.124., 0.60.120., 0.60.113., 0.60.100., 0.60.70., 0.60.28., 0.60.15., 0.60.10., 0.60.2., 0.60.0., 0.59.15., 0.57.0., 0.54.0., 0.42.0., 0.41.0., 0.40.1., 0.39.335., 0.39.282., 0.39.281., 0.39.279., 0.39.278., 0.39.269., 0.39.268., 0.39.267., 0.39.266., 0.39.263., 0.39.256., and 19 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:guardian:end -->
 
@@ -670,7 +1336,7 @@ The spec engine in `idearium/spec-engine/` turns an idea into a spec by chunking
 <!-- generated:readme:system:idearium:start -->
 #### idearium: every module and every file
 
-Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, spec `idearium/spec/idearium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/idearium-atlas.md`.
+Idearium is 991 files in 108 modules, entry `idearium/api/index.js`, port 4800, spec `idearium/spec/idearium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/idearium-atlas.md`.
 
 <details>
 <summary>`idearium/` · 12 files</summary>
@@ -759,7 +1425,1311 @@ Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, s
 </details>
 
 <details>
-<summary>`idearium/repo/` · 31 files</summary>
+<summary>`idearium/phases/` · 1 file</summary>
+
+- `idearium/phases/INDEX.md` — idearium — its phases
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-08-28-definition-of-complete/` · 6 files</summary>
+
+- `idearium/phases/2026-08-28-definition-of-complete/DOD1_fully_autonomous.phase`
+- `idearium/phases/2026-08-28-definition-of-complete/DOD3_build_using_idearium.phase`
+- `idearium/phases/2026-08-28-definition-of-complete/DOD7_tested_using_cos.phase`
+- `idearium/phases/2026-08-28-definition-of-complete/graph/DOD1_fully_autonomous-e5fd79a1162932ba.graph`
+- `idearium/phases/2026-08-28-definition-of-complete/graph/DOD3_build_using_idearium-081cb2e45bf759cd.graph`
+- `idearium/phases/2026-08-28-definition-of-complete/graph/DOD7_tested_using_cos-a31ec4e8442ad5dc.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-08-28-self-building-pipeline/` · 2 files</summary>
+
+- `idearium/phases/2026-08-28-self-building-pipeline/SBP1_reconcile_repo_layer_vs_cos_compartment.phase`
+- `idearium/phases/2026-08-28-self-building-pipeline/graph/SBP1_reconcile_repo_layer_vs_cos_compartment-811af61fec93be21.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-01-living-model-and-autonomous-pipeline/` · 2 files</summary>
+
+- `idearium/phases/2026-09-01-living-model-and-autonomous-pipeline/LM19_atlas_spec_coverage_prerequisite.phase`
+- `idearium/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM19_atlas_spec_coverage_prerequisite-8a1244b9d4b5690b.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-05-observability-sovereignty-and-agent-mesh/` · 2 files</summary>
+
+- `idearium/phases/2026-09-05-observability-sovereignty-and-agent-mesh/ID2_verify_idearium_reconciliation_reads_right_store.phase`
+- `idearium/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/ID2_verify_idearium_reconciliation_reads_right_store-3298f9ee81c629d7.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-11-compartment-nodetype-and-reorg/` · 2 files</summary>
+
+- `idearium/phases/2026-09-11-compartment-nodetype-and-reorg/T2_idearium_genesis_alignment.phase`
+- `idearium/phases/2026-09-11-compartment-nodetype-and-reorg/graph/T2_idearium_genesis_alignment-155669da42eb09b4.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-13-axiom-5-2-raid-routing/` · 2 files</summary>
+
+- `idearium/phases/2026-09-13-axiom-5-2-raid-routing/MCO7_map_real_proxy_traffic.phase`
+- `idearium/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO7_map_real_proxy_traffic-5b0ac9cdc5f323dc.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` · 4 files</summary>
+
+- `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/N1.phase`
+- `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/T6.phase`
+- `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/N1-3390cee61d2ebd05.graph`
+- `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T6-3810abea7c97f392.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/` · 2 files</summary>
+
+- `idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/I1.phase`
+- `idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/I1-3e215fa27c0ef67b.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-27-agent-hat-memory-download-manager/` · 6 files</summary>
+
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/G5.phase`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/H3.phase`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/M5.phase`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/G5-48560a4db949405d.graph`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/H3-0ab7eb9f0c2f66ba.graph`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/M5-757541e5426618eb.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-27-components-store-and-atlases/` · 4 files</summary>
+
+- `idearium/phases/2026-09-27-components-store-and-atlases/A3.phase`
+- `idearium/phases/2026-09-27-components-store-and-atlases/C2.phase`
+- `idearium/phases/2026-09-27-components-store-and-atlases/graph/A3-0b6cdaaf9610556c.graph`
+- `idearium/phases/2026-09-27-components-store-and-atlases/graph/C2-cd615ce780f27fd5.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-27-idearium-atlas/` · 6 files</summary>
+
+- `idearium/phases/2026-09-27-idearium-atlas/A1.phase`
+- `idearium/phases/2026-09-27-idearium-atlas/A3.phase`
+- `idearium/phases/2026-09-27-idearium-atlas/A4.phase`
+- `idearium/phases/2026-09-27-idearium-atlas/graph/A1-07c090325d3ac0fe.graph`
+- `idearium/phases/2026-09-27-idearium-atlas/graph/A3-45d18c7975a04b6f.graph`
+- `idearium/phases/2026-09-27-idearium-atlas/graph/A4-05516e0391cf85cd.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` · 14 files</summary>
+
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/N1_one_idearium.phase`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/P2_phases_model.phase`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/P3_phase_build.phase`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/P4_phases_ui.phase`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/S1_living_spec.phase`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/S2_spec_tab.phase`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/V2_nexus_versionium_view.phase`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/N1_one_idearium-5fda47e81740f919.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/P2_phases_model-816d5f0b94fe19d0.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/P3_phase_build-bb6a1484090698da.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/P4_phases_ui-35f5c870235cabfb.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/S1_living_spec-54457ecfb317ec4d.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/S2_spec_tab-13a6b256674ca997.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/V2_nexus_versionium_view-68284806b8692565.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-27-registry-harness-and-stability/` · 14 files</summary>
+
+- `idearium/phases/2026-09-27-registry-harness-and-stability/H2.phase`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/H3.phase`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/H4.phase`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/H5.phase`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/S2.phase`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/S3.phase`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/S4.phase`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/H2-37211885df010962.graph`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/H3-017eb2a36885874c.graph`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/H4-92d77964b48812eb.graph`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/H5-03cc29d13bf3176d.graph`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/S2-a5388d560a488d09.graph`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/S3-de417ceb54735a28.graph`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/S4-d3b6ee7978d85cca.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-28-graph-build-context-settings-memory/` · 20 files</summary>
+
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/B0.phase`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/B3.phase`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/C0.phase`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/G0.phase`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/G1.phase`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/G2.phase`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/G3.phase`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/R1.phase`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/R2.phase`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/SV0.phase`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/B0-933386e010c3ebb1.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/B3-d58404b70218a8eb.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/C0-32aeb3adb8f9dce3.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/G0-a214982f7f87efc5.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/G1-f85015d13bbbc49d.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/G2-0901ec7498435dd0.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/G3-528cf353349dea70.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/R1-ec37c4f3de4fb0de.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/R2-626eb489d1376cbe.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/SV0-52bc14057534aec7.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-29-build-surface/` · 24 files</summary>
+
+- `idearium/phases/2026-09-29-build-surface/BS10_settings_and_environment_ui.phase`
+- `idearium/phases/2026-09-29-build-surface/BS11_plan_panel.phase`
+- `idearium/phases/2026-09-29-build-surface/BS13_provider_sovereignty.phase`
+- `idearium/phases/2026-09-29-build-surface/BS15_code_repo_delete.phase`
+- `idearium/phases/2026-09-29-build-surface/BS18_sync_ci_theme.phase`
+- `idearium/phases/2026-09-29-build-surface/BS2_file_states.phase`
+- `idearium/phases/2026-09-29-build-surface/BS3_baseline_deviation.phase`
+- `idearium/phases/2026-09-29-build-surface/BS5_spec_to_phasemap.phase`
+- `idearium/phases/2026-09-29-build-surface/BS6_build_plan.phase`
+- `idearium/phases/2026-09-29-build-surface/BS7_api.phase`
+- `idearium/phases/2026-09-29-build-surface/BS8_files_ui.phase`
+- `idearium/phases/2026-09-29-build-surface/BS9_spec_and_phase_build_ui.phase`
+- `idearium/phases/2026-09-29-build-surface/graph/BS10_settings_and_environment_ui-e7b1f0a8ff8eb8f9.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS11_plan_panel-90c293ef2576305c.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS13_provider_sovereignty-a2118e304b33e3d9.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS15_code_repo_delete-adf5a2f3bb4f53af.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS18_sync_ci_theme-58d5e571901660d4.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS2_file_states-f0c78c53f55cc0ca.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS3_baseline_deviation-caf5c578ba0ab542.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS5_spec_to_phasemap-3d49ffccdcc03a7d.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS6_build_plan-d849379e83770f3b.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS7_api-557eb6b884c71f12.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS8_files_ui-c46c3ff81f3ff946.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS9_spec_and_phase_build_ui-1dcee63c429e1ed4.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-29-nex-node-store/` · 6 files</summary>
+
+- `idearium/phases/2026-09-29-nex-node-store/N12_ui.phase`
+- `idearium/phases/2026-09-29-nex-node-store/N16_settings_without_iframes.phase`
+- `idearium/phases/2026-09-29-nex-node-store/N25_manage_button_enterprise.phase`
+- `idearium/phases/2026-09-29-nex-node-store/graph/N12_ui-278ef4d8f071d90f.graph`
+- `idearium/phases/2026-09-29-nex-node-store/graph/N16_settings_without_iframes-81ecfb6e1dbf2207.graph`
+- `idearium/phases/2026-09-29-nex-node-store/graph/N25_manage_button_enterprise-76b8735454ef17a9.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-29-provider-economy/` · 2 files</summary>
+
+- `idearium/phases/2026-09-29-provider-economy/EC8_economy_console.phase`
+- `idearium/phases/2026-09-29-provider-economy/graph/EC8_economy_console-1d70149370aba577.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-09-30-idearium-coding-flow/` · 8 files</summary>
+
+- `idearium/phases/2026-09-30-idearium-coding-flow/W2_plan_always_lands.phase`
+- `idearium/phases/2026-09-30-idearium-coding-flow/W3_work_surface.phase`
+- `idearium/phases/2026-09-30-idearium-coding-flow/W4_navigation.phase`
+- `idearium/phases/2026-09-30-idearium-coding-flow/W5_theme_and_css.phase`
+- `idearium/phases/2026-09-30-idearium-coding-flow/graph/W2_plan_always_lands-ab26ca62c4c01f00.graph`
+- `idearium/phases/2026-09-30-idearium-coding-flow/graph/W3_work_surface-d22aa3fd5498f953.graph`
+- `idearium/phases/2026-09-30-idearium-coding-flow/graph/W4_navigation-5dd9ebc74f199860.graph`
+- `idearium/phases/2026-09-30-idearium-coding-flow/graph/W5_theme_and_css-ec86ed1c0f589dd1.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-01-idearium-agent-ready-master/` · 60 files</summary>
+
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/BK1_blocked_is_actionable.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/BK2_phase_build_writes_code.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/DK2_desktop_setup_popup.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/DT3_failure_modes_routes_and_preflight.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/DT4_registry_block_to_nodes.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/DT4b_registry_chunk_in_repo_chunking.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/IL1_spec_library_as_ideas.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/IL2_library_spec_into_the_pipeline.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/PF1_sync_names_its_slow_step.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/PF2_yielding_ingest.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/PF4_manifest_meta_sidecar.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/PF5_in_place_spec_update.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/PF6_boot_sync_yields_to_the_person.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/PF7_pipeline_scoped_to_changes.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/PF8_settings_console_one_cheap_read.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/PV2_repair_feedback.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/PV3_prove_loop.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/PV4_cli_and_ui.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/SW1_spec_workshop.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/TP1_promote_to_spec_templates.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/UI10_debug_and_intelligence_one_tab.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/UI11_nav_and_look_restored.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/UI1_history_and_save_in_manage.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/UI2_desktop_environment_menu.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/UI3_settings_tab_retheme_collapse.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/UI5_work_surface_from_contracts.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/UI6_idea_and_phases_one_tab.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/UI7_phasemaps_out_of_files_and_tree_ops.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/UI8_code_tab_is_code.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/UI9_plan_and_work_surface_panels.phase`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/BK1_blocked_is_actionable-01332261b8dcdc42.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/BK2_phase_build_writes_code-44c59481c9cd44ba.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/DK2_desktop_setup_popup-334decc7beb3a1fe.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/DT3_failure_modes_routes_and_preflight-16167e797e66f7b5.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/DT4_registry_block_to_nodes-4c6a53201ba84026.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/DT4b_registry_chunk_in_repo_chunking-8d3fc5c82176532b.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/IL1_spec_library_as_ideas-562cd46bda388a55.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/IL2_library_spec_into_the_pipeline-db5333e7b31f7131.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF1_sync_names_its_slow_step-a427008df9c74099.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF2_yielding_ingest-9f9a7bc28177655b.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF4_manifest_meta_sidecar-406969092594bed8.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF5_in_place_spec_update-ffc0ff73206feef3.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF6_boot_sync_yields_to_the_person-f8e349719667eff2.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF7_pipeline_scoped_to_changes-74c2988f7fb0dbb6.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF8_settings_console_one_cheap_read-8b3388d417799343.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PV2_repair_feedback-048005a4daa6896a.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PV3_prove_loop-1b213b5688552009.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PV4_cli_and_ui-5720214899fed175.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/SW1_spec_workshop-72769d08ce74fe9f.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/TP1_promote_to_spec_templates-6373324428f83107.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI10_debug_and_intelligence_one_tab-d3d4f4ec84151974.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI11_nav_and_look_restored-bf1ee50b5fb1fd60.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI1_history_and_save_in_manage-a01c5d1997949e6a.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI2_desktop_environment_menu-4272919c36d8ef27.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI3_settings_tab_retheme_collapse-ccdf3a127c208ee6.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI5_work_surface_from_contracts-c718624c129a0cae.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI6_idea_and_phases_one_tab-3d173a75197812ed.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI7_phasemaps_out_of_files_and_tree_ops-44303ff60d0f06bc.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI8_code_tab_is_code-cfa6aff53868c372.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI9_plan_and_work_surface_panels-6013a07a8ca625f2.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-01-routing-registry-genesis/` · 12 files</summary>
+
+- `idearium/phases/2026-10-01-routing-registry-genesis/GN1_genesis.phase`
+- `idearium/phases/2026-10-01-routing-registry-genesis/RC1_registry_block.phase`
+- `idearium/phases/2026-10-01-routing-registry-genesis/RC2_registry_as_nodes.phase`
+- `idearium/phases/2026-10-01-routing-registry-genesis/RG2_routing_config_api_cli.phase`
+- `idearium/phases/2026-10-01-routing-registry-genesis/RG3_dispatch_uses_the_route.phase`
+- `idearium/phases/2026-10-01-routing-registry-genesis/RG4_routing_ui.phase`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/GN1_genesis-9c19816095e79246.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RC1_registry_block-54c0652a67274b90.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RC2_registry_as_nodes-89682c310007557f.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RG2_routing_config_api_cli-8fdd3d0d4da406d6.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RG3_dispatch_uses_the_route-d3d17279f019b332.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RG4_routing_ui-0480ecf02ae62d8c.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-01-work-visibility-job-reuse/` · 10 files</summary>
+
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/D0.phase`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/D2.phase`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/J2.phase`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/J3.phase`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/J6.phase`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/D0-c46d86f5fed6ba44.graph`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/D2-0622afce43bf66fc.graph`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/J2-2dbf1ea4ae7e7b8c.graph`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/J3-7c8a64dbe9e7d597.graph`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/J6-e6e3f0df4bcd8345.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-02-emerge-field-memory-build/` · 26 files</summary>
+
+- `idearium/phases/2026-10-02-emerge-field-memory-build/CB1_cfr_build_logic.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/DA1_domain_agnostic_end_states.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/FV0_fulfil_a_taken_order.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/FV1_client_jobs.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/GL1_the_graphs_as_a_model.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/LN1_lenses_on_the_canvas.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/MR6_contradictions_held.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/PH1_phase_runs_end_in_proof.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/PR1_proof_run_the_delivery_checker.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/RC1_the_repo_main_chat.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/ST1_settings.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/UI0_the_stations_agree.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/WS6_workshop_parts_and_modes.phase`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/CB1_cfr_build_logic-5bec749cb555f4e2.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/DA1_domain_agnostic_end_states-6b50e373c633cffb.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/FV0_fulfil_a_taken_order-848e1bff5519633a.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/FV1_client_jobs-662e29c3c4d7c409.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/GL1_the_graphs_as_a_model-590458d74b8d9a0a.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/LN1_lenses_on_the_canvas-792316b31766a3f3.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/MR6_contradictions_held-66efe147c088270c.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/PH1_phase_runs_end_in_proof-9ce02babee77ae98.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/PR1_proof_run_the_delivery_checker-621112f06399821f.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/RC1_the_repo_main_chat-f42bc647bfb8ea76.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/ST1_settings-c4d6d286b5d353b4.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/UI0_the_stations_agree-70ddba11613a1584.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/WS6_workshop_parts_and_modes-c8e779005ab897fb.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-02-fractal-graph-any-size-agent/` · 14 files</summary>
+
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/FG1_containment_tree.phase`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/FG3_summaries_up_the_tree.phase`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/FG4_context_for_any_agent.phase`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/FG5_recursive_build.phase`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/FG6_relations_and_fractals.phase`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/UV1_versioned_ui_compartments.phase`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/WS5_the_whole_workshop.phase`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG1_containment_tree-aaca074a00f1ef2c.graph`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG3_summaries_up_the_tree-b2a59b562ac95c2c.graph`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG4_context_for_any_agent-b0b88cad66b15693.graph`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG5_recursive_build-b8e78a1fd1f50e1a.graph`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG6_relations_and_fractals-8a43ab6d43bbcebd.graph`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/UV1_versioned_ui_compartments-6876460bb288b810.graph`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/WS5_the_whole_workshop-be72ff97f0f348b3.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-02-spatial-void/` · 12 files</summary>
+
+- `idearium/phases/2026-10-02-spatial-void/V1_fonts_local.phase`
+- `idearium/phases/2026-10-02-spatial-void/V2_void_engine.phase`
+- `idearium/phases/2026-10-02-spatial-void/V3_ideas_carry_the_void.phase`
+- `idearium/phases/2026-10-02-spatial-void/V4_routes_and_cli.phase`
+- `idearium/phases/2026-10-02-spatial-void/V5_the_page.phase`
+- `idearium/phases/2026-10-02-spatial-void/V6_replaces_ideas_and_brainstorm.phase`
+- `idearium/phases/2026-10-02-spatial-void/graph/V1_fonts_local-032a1c9ee94025d4.graph`
+- `idearium/phases/2026-10-02-spatial-void/graph/V2_void_engine-92fad98a05ccf78f.graph`
+- `idearium/phases/2026-10-02-spatial-void/graph/V3_ideas_carry_the_void-d03b7633ea5d2bc2.graph`
+- `idearium/phases/2026-10-02-spatial-void/graph/V4_routes_and_cli-a9f04ac36a0b6f1c.graph`
+- `idearium/phases/2026-10-02-spatial-void/graph/V5_the_page-598efc9ae1916e6f.graph`
+- `idearium/phases/2026-10-02-spatial-void/graph/V6_replaces_ideas_and_brainstorm-c80f4e0208c7a97c.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-02-synthesis-zoom-versionium/` · 6 files</summary>
+
+- `idearium/phases/2026-10-02-synthesis-zoom-versionium/AZ1_semantic_zoom.phase`
+- `idearium/phases/2026-10-02-synthesis-zoom-versionium/VX1_versionium_degrades_not_crashes.phase`
+- `idearium/phases/2026-10-02-synthesis-zoom-versionium/WS3_the_pipeline_together.phase`
+- `idearium/phases/2026-10-02-synthesis-zoom-versionium/graph/AZ1_semantic_zoom-4803c502f673ce60.graph`
+- `idearium/phases/2026-10-02-synthesis-zoom-versionium/graph/VX1_versionium_degrades_not_crashes-4b86fc459aa038cf.graph`
+- `idearium/phases/2026-10-02-synthesis-zoom-versionium/graph/WS3_the_pipeline_together-1d67e5ca764d0db6.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-02-workshop-codex-rewind/` · 20 files</summary>
+
+- `idearium/phases/2026-10-02-workshop-codex-rewind/AR2_architect_in_the_workshop.phase`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/AR3_one_architect_canvas.phase`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/AR4_pipeline_architect_on_the_canvas.phase`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/AR5_repo_architect_on_the_canvas.phase`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/DP1_desktop_popout_options.phase`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/PL1_one_entry_point.phase`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/SW1_spec_workshop.phase`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/SW2_workshop_page_in_the_voids_style.phase`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/UI12_workshop_surface.phase`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/WS7_the_full_workshop.phase`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/AR2_architect_in_the_workshop-32d0b6cc32026023.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/AR3_one_architect_canvas-78c9c0ecdde06280.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/AR4_pipeline_architect_on_the_canvas-cec156eb688fb013.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/AR5_repo_architect_on_the_canvas-c7fee44243c248cf.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/DP1_desktop_popout_options-e73c4e98f5f196a7.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/PL1_one_entry_point-140d09417fa111f5.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/SW1_spec_workshop-143188e3446aa061.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/SW2_workshop_page_in_the_voids_style-acac3b974a3233a1.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/UI12_workshop_surface-005dd01e2ba96ba8.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/WS7_the_full_workshop-7115b04f434c37ca.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-05-build-from-the-spec/` · 58 files</summary>
+
+- `idearium/phases/2026-10-05-build-from-the-spec/CH1_compartment_charter.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB10_reuse_first_keyed_on_the_contract.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB11_each_block_chunked.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB12_the_registry_is_the_component_list.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB13_each_component_chunked.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB14_reuse_compounds.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB16_genesis_nodes_domain.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB17_the_system_template_is_complete.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB18_the_system_template_is_used.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB1_templates_are_the_default_frame.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB26_an_imported_project_shows_its_progress.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB27_expanding_a_repo_keeps_its_spec_and_phases_current.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB28_genesis_in_the_shape_nexus_systems_have.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB29_the_build_flow_in_his_order.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB2_his_words_seed_the_spec.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB30_the_template_is_a_skeleton.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB31_every_new_repo_is_the_skeleton_the_idea_slots_in.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB35_the_index_is_there_when_the_agent_asks.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB3_the_section_prompt_is_domain_agnostic.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB44_phases_are_chunked_then_coded.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB45_skeletons_grey_until_coded.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB49_an_idea_runs_through_by_itself.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB4_template_fidelity.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB50_every_task_timestamped.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB51_a_phase_built_in_chunks.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB52_proven_on_the_proposed_code.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB8_promote_with_full_block_options.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/SB9_the_spec_is_a_spec_file.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/WS2_the_work_surface_streams_the_writing.phase`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/CH1_compartment_charter-3faf15b7b007ec19.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB10_reuse_first_keyed_on_the_contract-9422db472ab6bb14.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB11_each_block_chunked-c80702c27e56d8d4.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB12_the_registry_is_the_component_list-663b7c8d93d31c6f.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB13_each_component_chunked-ee3c5820b2bc2761.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB14_reuse_compounds-b122c110a18dd51b.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB16_genesis_nodes_domain-c9ee88ad2a876a14.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB17_the_system_template_is_complete-3da27595c5dc5343.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB18_the_system_template_is_used-518b2cbff03e266a.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB1_templates_are_the_default_frame-90e92a3e0e88e5e1.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB26_an_imported_project_shows_its_progress-7ddc383988ffdfbc.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB27_expanding_a_repo_keeps_its_spec_and_phases_current-2f6ef3f3a636044e.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB28_genesis_in_the_shape_nexus_systems_have-34ff7104d20a1a90.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB29_the_build_flow_in_his_order-7a9f4dc3ffde4f9b.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB2_his_words_seed_the_spec-c38006264a07413e.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB30_the_template_is_a_skeleton-22cd72ac9008bd9b.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB31_every_new_repo_is_the_skeleton_the_idea_slots_in-a632e63c0a0c153d.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB35_the_index_is_there_when_the_agent_asks-c03d44f4b918532e.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB3_the_section_prompt_is_domain_agnostic-3b5793a0e3e8bb58.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB44_phases_are_chunked_then_coded-e4aee8b08443f21c.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB45_skeletons_grey_until_coded-a6b4f44b25b6f1db.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB49_an_idea_runs_through_by_itself-9272ab6662f32a97.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB4_template_fidelity-b5cd3fe3d598abc0.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB50_every_task_timestamped-31bb47cf8a30809d.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB51_a_phase_built_in_chunks-d52a77216aaefbe3.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB52_proven_on_the_proposed_code-e7942c807caa456b.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB8_promote_with_full_block_options-59a2cc99ce55bb7c.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB9_the_spec_is_a_spec_file-2a0075e7f7a66b99.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/WS2_the_work_surface_streams_the_writing-6b554fb740867279.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-05-cli-data-code/` · 10 files</summary>
+
+- `idearium/phases/2026-10-05-cli-data-code/CL2_the_agent_tab_is_the_endpoint.phase`
+- `idearium/phases/2026-10-05-cli-data-code/CT2_the_code_tab.phase`
+- `idearium/phases/2026-10-05-cli-data-code/LS3_one_feed_for_every_agent.phase`
+- `idearium/phases/2026-10-05-cli-data-code/LS4_live_in_the_code_tab_and_the_work_surface.phase`
+- `idearium/phases/2026-10-05-cli-data-code/PB2_a_reply_that_changed_nothing_is_incomplete.phase`
+- `idearium/phases/2026-10-05-cli-data-code/graph/CL2_the_agent_tab_is_the_endpoint-cd07a65975c0f372.graph`
+- `idearium/phases/2026-10-05-cli-data-code/graph/CT2_the_code_tab-4c5f7f3919966700.graph`
+- `idearium/phases/2026-10-05-cli-data-code/graph/LS3_one_feed_for_every_agent-cbe6c8256329685a.graph`
+- `idearium/phases/2026-10-05-cli-data-code/graph/LS4_live_in_the_code_tab_and_the_work_surface-02a22b8ffa0fbdc1.graph`
+- `idearium/phases/2026-10-05-cli-data-code/graph/PB2_a_reply_that_changed_nothing_is_incomplete-cd4f2e31ab5e8a36.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-05-code-tab-and-one-router/` · 10 files</summary>
+
+- `idearium/phases/2026-10-05-code-tab-and-one-router/CT3_the_code_tab_is_the_work_surface.phase`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/CT4_ollama_checked_on_his_machine.phase`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/CT5_hooked_into_the_plan.phase`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/CT7_the_plan_shows_current_work.phase`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/CT9_the_plan_pull_tab.phase`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT3_the_code_tab_is_the_work_surface-05771164854f548f.graph`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT4_ollama_checked_on_his_machine-1d3a38b45bcc1514.graph`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT5_hooked_into_the_plan-d3f933a20724f93e.graph`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT7_the_plan_shows_current_work-a52abee8ded7dd97.graph`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT9_the_plan_pull_tab-c7ffc8d1f1c7dacb.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-05-failure-reproduction/` · 2 files</summary>
+
+- `idearium/phases/2026-10-05-failure-reproduction/FM4_the_report.phase`
+- `idearium/phases/2026-10-05-failure-reproduction/graph/FM4_the_report-e488e3464b6c5db8.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-05-idea-to-spec-workshop/` · 12 files</summary>
+
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/WK1_the_workshop_is_blocks_from_the_templates.phase`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/WK2_templates_edited_saved_removed.phase`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/WK3_the_agent_drafts_every_block.phase`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/WK4_the_void_feeds_the_workshop.phase`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/WK5_lanes_feed_gaps_and_phases.phase`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/WK6_enterprise_grade.phase`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK1_the_workshop_is_blocks_from_the_templates-7118b38fec612014.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK2_templates_edited_saved_removed-c001b523d5755bdc.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK3_the_agent_drafts_every_block-06035725e06b5b37.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK4_the_void_feeds_the_workshop-239d2f058e122ae9.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK5_lanes_feed_gaps_and_phases-600c57b241fdd5b2.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK6_enterprise_grade-0d8254a618965546.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-05-spec-workshop-rebuild/` · 14 files</summary>
+
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/RS10_the_phases_tab_rebuilt.phase`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/RS11_workshop_and_phases_one_surface.phase`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/RS4_the_pipeline_on_warp2.phase`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/RS5_the_template_picker.phase`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/RS6_the_workshop_as_the_editor.phase`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/RS7_architect_and_blueprint_stations.phase`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/RS9_the_thread.phase`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS10_the_phases_tab_rebuilt-2b8342c245cb1a43.graph`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS11_workshop_and_phases_one_surface-0c60b2ce6d21565f.graph`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS4_the_pipeline_on_warp2-1b500110a3a75d95.graph`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS5_the_template_picker-2047af4e58c842c4.graph`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS6_the_workshop_as_the_editor-65ed3468201e5940.graph`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS7_architect_and_blueprint_stations-a3f6ef1273789a83.graph`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS9_the_thread-f06ed39fcd8adc6f.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-05-verified-primitives/` · 2 files</summary>
+
+- `idearium/phases/2026-10-05-verified-primitives/VP7_the_settings_tab_in_categories.phase`
+- `idearium/phases/2026-10-05-verified-primitives/graph/VP7_the_settings_tab_in_categories-bde114aa4d10f923.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-07-compartment-control-and-activity/` · 12 files</summary>
+
+- `idearium/phases/2026-10-07-compartment-control-and-activity/AL2_log_tab.phase`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/BO1_brainos_reads_the_log.phase`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/CM1_every_capability_a_command.phase`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/CM3_this_sessions_work_as_commands.phase`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/NC2_nexus_systems_as_compartments.phase`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/UI1_the_screens_for_cm3.phase`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/AL2_log_tab-4edf93608071f912.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/BO1_brainos_reads_the_log-8567a373d208f9e7.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/CM1_every_capability_a_command-7b012b7934a26bf1.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/CM3_this_sessions_work_as_commands-65881101a8767d62.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/NC2_nexus_systems_as_compartments-bd7a70b20d504253.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/UI1_the_screens_for_cm3-66b98ef97a9f4405.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-07-idearium-one-surface/` · 16 files</summary>
+
+- `idearium/phases/2026-10-07-idearium-one-surface/OS2_the_plan_panel_holds_it.phase`
+- `idearium/phases/2026-10-07-idearium-one-surface/OS3_the_code_tab_knows_its_history.phase`
+- `idearium/phases/2026-10-07-idearium-one-surface/OS4_every_agent_option_in_the_agent_tab.phase`
+- `idearium/phases/2026-10-07-idearium-one-surface/OS5_settings_without_iframes.phase`
+- `idearium/phases/2026-10-07-idearium-one-surface/OS7_one_proposal_surface.phase`
+- `idearium/phases/2026-10-07-idearium-one-surface/OS8_settings_agents_holds_every_agent_option.phase`
+- `idearium/phases/2026-10-07-idearium-one-surface/SP1_phases_from_the_sections.phase`
+- `idearium/phases/2026-10-07-idearium-one-surface/SP2_complete_the_blanks.phase`
+- `idearium/phases/2026-10-07-idearium-one-surface/graph/OS2_the_plan_panel_holds_it-7c79a17a177f132e.graph`
+- `idearium/phases/2026-10-07-idearium-one-surface/graph/OS3_the_code_tab_knows_its_history-0b3333775435ecb5.graph`
+- `idearium/phases/2026-10-07-idearium-one-surface/graph/OS4_every_agent_option_in_the_agent_tab-e7ab294fffd58bff.graph`
+- `idearium/phases/2026-10-07-idearium-one-surface/graph/OS5_settings_without_iframes-17bd8eab79f40c3b.graph`
+- `idearium/phases/2026-10-07-idearium-one-surface/graph/OS7_one_proposal_surface-ecf19282ae895337.graph`
+- `idearium/phases/2026-10-07-idearium-one-surface/graph/OS8_settings_agents_holds_every_agent_option-b98ee2ed7bced97d.graph`
+- `idearium/phases/2026-10-07-idearium-one-surface/graph/SP1_phases_from_the_sections-74d13d62a255e6a3.graph`
+- `idearium/phases/2026-10-07-idearium-one-surface/graph/SP2_complete_the_blanks-77fd5cd417d72e25.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-07-system-expectations/` · 6 files</summary>
+
+- `idearium/phases/2026-10-07-system-expectations/EX3_the_diagnostic_reads_expectations.phase`
+- `idearium/phases/2026-10-07-system-expectations/EX4_intelligence_learns_the_normal.phase`
+- `idearium/phases/2026-10-07-system-expectations/EX5_time_to_breach.phase`
+- `idearium/phases/2026-10-07-system-expectations/graph/EX3_the_diagnostic_reads_expectations-2bec3e78837d68f5.graph`
+- `idearium/phases/2026-10-07-system-expectations/graph/EX4_intelligence_learns_the_normal-5991de2b3e18f190.graph`
+- `idearium/phases/2026-10-07-system-expectations/graph/EX5_time_to_breach-cb016f9887da62f8.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-07-versionium-releases/` · 6 files</summary>
+
+- `idearium/phases/2026-10-07-versionium-releases/RN1_release_is_a_node_and_a_tag.phase`
+- `idearium/phases/2026-10-07-versionium-releases/RN3_releases_section.phase`
+- `idearium/phases/2026-10-07-versionium-releases/VR1_every_change_a_commit.phase`
+- `idearium/phases/2026-10-07-versionium-releases/graph/RN1_release_is_a_node_and_a_tag-ac55d5c78a92cf41.graph`
+- `idearium/phases/2026-10-07-versionium-releases/graph/RN3_releases_section-4141ba7fc63cd48b.graph`
+- `idearium/phases/2026-10-07-versionium-releases/graph/VR1_every_change_a_commit-14c51a8423588640.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-09-hardening-pass/` · 14 files</summary>
+
+- `idearium/phases/2026-10-09-hardening-pass/HP10_the_work_surface_in_view.phase`
+- `idearium/phases/2026-10-09-hardening-pass/HP1_stale_spreads_along_dependencies.phase`
+- `idearium/phases/2026-10-09-hardening-pass/HP2_interrupted_runs_are_said.phase`
+- `idearium/phases/2026-10-09-hardening-pass/HP3_the_ladder_climbs_only_what_is_installed.phase`
+- `idearium/phases/2026-10-09-hardening-pass/HP6_the_build_surface_opens.phase`
+- `idearium/phases/2026-10-09-hardening-pass/HP8_the_ladder_says_why_ollama_is_missing.phase`
+- `idearium/phases/2026-10-09-hardening-pass/HP9_the_plan_is_current_work.phase`
+- `idearium/phases/2026-10-09-hardening-pass/graph/HP10_the_work_surface_in_view-f1241943f37108b2.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/HP1_stale_spreads_along_dependencies-9df169732afe005e.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/HP2_interrupted_runs_are_said-79dee1361e48c6a2.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/HP3_the_ladder_climbs_only_what_is_installed-c8c7d13d9c60af92.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/HP6_the_build_surface_opens-cb6c79f8c844d719.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/HP8_the_ladder_says_why_ollama_is_missing-57815805593abe9b.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/HP9_the_plan_is_current_work-f627db089c793902.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-09-one-model-engine/` · 2 files</summary>
+
+- `idearium/phases/2026-10-09-one-model-engine/ME11_old_settings_translated.phase`
+- `idearium/phases/2026-10-09-one-model-engine/graph/ME11_old_settings_translated-5b0ec7fc75e2ad91.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-09-one-roadmap/` · 2 files</summary>
+
+- `idearium/phases/2026-10-09-one-roadmap/OR4_one_roadmap_in_idearium.phase`
+- `idearium/phases/2026-10-09-one-roadmap/graph/OR4_one_roadmap_in_idearium-eccb05a79ab9f7b3.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-10-idearium-access/` · 12 files</summary>
+
+- `idearium/phases/2026-10-10-idearium-access/IA0_the_door_checks_who_is_asking.phase`
+- `idearium/phases/2026-10-10-idearium-access/IA1_the_routes.phase`
+- `idearium/phases/2026-10-10-idearium-access/IA2_the_command.phase`
+- `idearium/phases/2026-10-10-idearium-access/IA3_the_screens.phase`
+- `idearium/phases/2026-10-10-idearium-access/IA6_every_local_caller_carries_the_key.phase`
+- `idearium/phases/2026-10-10-idearium-access/IA7_the_hat_is_the_actor.phase`
+- `idearium/phases/2026-10-10-idearium-access/graph/IA0_the_door_checks_who_is_asking-e61c74f72a1e0e07.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/IA1_the_routes-524b4ed85ce0024b.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/IA2_the_command-447eafe8b6ed97e1.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/IA3_the_screens-84728ca7fed20a3f.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/IA6_every_local_caller_carries_the_key-48cf449554a93a5a.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/IA7_the_hat_is_the_actor-cff039c2c9e53264.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-10-idearium-solid/` · 22 files</summary>
+
+- `idearium/phases/2026-10-10-idearium-solid/SD11_the_desktop_inside_idearium.phase`
+- `idearium/phases/2026-10-10-idearium-solid/SD12_a_spec_starts_from_its_primitives.phase`
+- `idearium/phases/2026-10-10-idearium-solid/SD14_chunks_cut_at_primitives.phase`
+- `idearium/phases/2026-10-10-idearium-solid/SD16_a_plan_step_never_proposes_code.phase`
+- `idearium/phases/2026-10-10-idearium-solid/SD17_an_imported_project_continues.phase`
+- `idearium/phases/2026-10-10-idearium-solid/SD18_mastermind_ready.phase`
+- `idearium/phases/2026-10-10-idearium-solid/SD19_a_refusal_goes_back_to_its_agent.phase`
+- `idearium/phases/2026-10-10-idearium-solid/SD1_rewind_and_versions_on_the_repo_card.phase`
+- `idearium/phases/2026-10-10-idearium-solid/SD21_what_his_run_log_showed.phase`
+- `idearium/phases/2026-10-10-idearium-solid/SD22_a_wrapped_repo_lifts_to_its_root.phase`
+- `idearium/phases/2026-10-10-idearium-solid/SD6_an_idea_logged_asked_expanded.phase`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD11_the_desktop_inside_idearium-355bfb9bb8b0c1e5.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD12_a_spec_starts_from_its_primitives-5f1332ad4be21d47.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD14_chunks_cut_at_primitives-9c0e825565000d6e.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD16_a_plan_step_never_proposes_code-15a5817d56c7df8e.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD17_an_imported_project_continues-ca41b1efd7fa26c1.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD18_mastermind_ready-0605b1ba0a0ed196.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD19_a_refusal_goes_back_to_its_agent-5ef0ac81785ee32f.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD1_rewind_and_versions_on_the_repo_card-2652c3fb731ca33b.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD21_what_his_run_log_showed-b16c046b8f39cc7d.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD22_a_wrapped_repo_lifts_to_its_root-790d3ecb08212ea7.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD6_an_idea_logged_asked_expanded-05cd4cbce953cad2.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-10-self-awareness/` · 2 files</summary>
+
+- `idearium/phases/2026-10-10-self-awareness/AW5_its_own_face.phase`
+- `idearium/phases/2026-10-10-self-awareness/graph/AW5_its_own_face-e328b4fcf66e26af.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-10-shape-of-nexus/` · 8 files</summary>
+
+- `idearium/phases/2026-10-10-shape-of-nexus/FN1_the_field_as_commands.phase`
+- `idearium/phases/2026-10-10-shape-of-nexus/OP2_the_system_settings_in_its_repo.phase`
+- `idearium/phases/2026-10-10-shape-of-nexus/OP3_copilot_reads_and_sets_options.phase`
+- `idearium/phases/2026-10-10-shape-of-nexus/OP4_environment_and_desktop_one_menu.phase`
+- `idearium/phases/2026-10-10-shape-of-nexus/graph/FN1_the_field_as_commands-97a9854ac7d50136.graph`
+- `idearium/phases/2026-10-10-shape-of-nexus/graph/OP2_the_system_settings_in_its_repo-a31db0f4424409aa.graph`
+- `idearium/phases/2026-10-10-shape-of-nexus/graph/OP3_copilot_reads_and_sets_options-32a68d26ad74f22e.graph`
+- `idearium/phases/2026-10-10-shape-of-nexus/graph/OP4_environment_and_desktop_one_menu-f9648ccd1a2a07d5.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-12-browser-providers-and-work/` · 6 files</summary>
+
+- `idearium/phases/2026-10-12-browser-providers-and-work/CS1_drop_zips_to_decompose.phase`
+- `idearium/phases/2026-10-12-browser-providers-and-work/CS2_uploaded_projects_managed.phase`
+- `idearium/phases/2026-10-12-browser-providers-and-work/MX1_nothing_built_unmapped.phase`
+- `idearium/phases/2026-10-12-browser-providers-and-work/graph/CS1_drop_zips_to_decompose-122d522bc936da0d.graph`
+- `idearium/phases/2026-10-12-browser-providers-and-work/graph/CS2_uploaded_projects_managed-494c0ceef6476375.graph`
+- `idearium/phases/2026-10-12-browser-providers-and-work/graph/MX1_nothing_built_unmapped-eebb2de339d0afaf.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-12-request-spine/` · 4 files</summary>
+
+- `idearium/phases/2026-10-12-request-spine/RQ12_the_phase_dag.phase`
+- `idearium/phases/2026-10-12-request-spine/RQ25_progress_is_evidence_not_activity.phase`
+- `idearium/phases/2026-10-12-request-spine/graph/RQ12_the_phase_dag-657be08a0225c679.graph`
+- `idearium/phases/2026-10-12-request-spine/graph/RQ25_progress_is_evidence_not_activity-20b27d207cb31ec8.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-13-identities-tabs-and-automation/` · 2 files</summary>
+
+- `idearium/phases/2026-10-13-identities-tabs-and-automation/IR0_intent_routing_for_reasoning.phase`
+- `idearium/phases/2026-10-13-identities-tabs-and-automation/graph/IR0_intent_routing_for_reasoning-d117c137eb21d499.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-13-nexus-memory-gates-and-contract/` · 2 files</summary>
+
+- `idearium/phases/2026-10-13-nexus-memory-gates-and-contract/LN0_lines_tool.phase`
+- `idearium/phases/2026-10-13-nexus-memory-gates-and-contract/graph/LN0_lines_tool-88358d2f2c9e4f7e.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-13-projects-raid-and-gates/` · 11 files</summary>
+
+- `idearium/phases/2026-10-13-projects-raid-and-gates/NT0_notes.phase`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/PL1_many_projects_at_once.phase`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/PL5_specs_become_the_roadmap.phase`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/RD2_idearium_routes_through_raid.phase`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/VM0_versionium_managed_per_repo.phase`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/NT0_notes-6b7863af6bf2d475.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/PL1_many_projects_at_once-1adf76c32de48afd.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/PL5_specs_become_the_roadmap-494bc4384547022a.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/RD2_idearium_routes_through_raid-2983b6458a4a5d56.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/VM0_versionium_managed_per_repo-040fc109a1d5cee4.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/PL5_specs_become_the_roadmap-1b3e39b06f431b10.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-15-automatic-tracking/` · 2 files</summary>
+
+- `idearium/phases/2026-10-15-automatic-tracking/CP1_the_contract_panel.phase`
+- `idearium/phases/2026-10-15-automatic-tracking/graph/CP1_the_contract_panel-c237d6f98a19ae59.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-15-code-tab-run-state/` · 19 files</summary>
+
+- `idearium/phases/2026-10-15-code-tab-run-state/CE11_contract_panel_and_context.phase`
+- `idearium/phases/2026-10-15-code-tab-run-state/CE6_one_tab.phase`
+- `idearium/phases/2026-10-15-code-tab-run-state/CE7_ai_assisted_editing.phase`
+- `idearium/phases/2026-10-15-code-tab-run-state/CE8_the_cli_reads_the_surface.phase`
+- `idearium/phases/2026-10-15-code-tab-run-state/CE9_the_panels.phase`
+- `idearium/phases/2026-10-15-code-tab-run-state/CV1_one_menu.phase`
+- `idearium/phases/2026-10-15-code-tab-run-state/CV3_file_rewind.phase`
+- `idearium/phases/2026-10-15-code-tab-run-state/CV4_tagged_history.phase`
+- `idearium/phases/2026-10-15-code-tab-run-state/CV6_phases_in_idearium.phase`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CE11_contract_panel_and_context-1c20d408c33edd4a.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CE6_one_tab-cd0e8325ed28c665.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CE7_ai_assisted_editing-78ed53aff1a36f1d.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CE8_the_cli_reads_the_surface-0aea42978ca6e896.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CE9_the_panels-e21c35e06e99c19e.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CV1_one_menu-ee95a78a4705be68.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CV3_file_rewind-b559809f1fb359df.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CV4_tagged_history-bf93d47b9e08cca2.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CV6_phases_in_idearium-46e06b29cc567261.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/_superseded/CV6_phases_in_idearium-219944fafb6e0b35.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-15-gate-held-work/` · 2 files</summary>
+
+- `idearium/phases/2026-10-15-gate-held-work/GW9_the_contract_panel.phase`
+- `idearium/phases/2026-10-15-gate-held-work/graph/GW9_the_contract_panel-cab4409f3fc2daed.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-15-one-contract-raid-releases/` · 6 files</summary>
+
+- `idearium/phases/2026-10-15-one-contract-raid-releases/BR1_bricks_on_every_path.phase`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/RD1_every_build_goes_through_raid.phase`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/RN3_releases_in_idearium.phase`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/BR1_bricks_on_every_path-7f1e4cefe519e0ea.graph`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/RD1_every_build_goes_through_raid-393f8766ca06b8e6.graph`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/RN3_releases_in_idearium-1b5d6979e4dd7138.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-15-warp-builds-and-spec-framework/` · 4 files</summary>
+
+- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/MP2_automatic_in_every_repo.phase`
+- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/MP4_a_model_only_where_nothing_maps.phase`
+- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP2_automatic_in_every_repo-bf38793cc2c63870.graph`
+- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP4_a_model_only_where_nothing_maps-caa26af1fd162af7.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-16-agent-work-funnel/` · 2 files</summary>
+
+- `idearium/phases/2026-10-16-agent-work-funnel/FN4_the_screen.phase`
+- `idearium/phases/2026-10-16-agent-work-funnel/graph/FN4_the_screen-ebe40a77dd865050.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-16-canvas-compartments/` · 2 files</summary>
+
+- `idearium/phases/2026-10-16-canvas-compartments/CN4_workshop_templates.phase`
+- `idearium/phases/2026-10-16-canvas-compartments/graph/CN4_workshop_templates-ca880b9d3e8fd1e4.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-16-code-tab-rebuild/` · 22 files</summary>
+
+- `idearium/phases/2026-10-16-code-tab-rebuild/DK2_the_dock.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/TB0_decisions.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/TB2_persistence_audit.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/TB3_close_the_persistence_gaps.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/TB4a_recall_in_the_dispatcher.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/TB4b_nexus_recall_tool.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/TB4c_measure.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/TB5_tab_shell.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/TB6_files_changes_plans_cos_tabs.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/TB7a_edges_recorded.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/TB7b_keep_every_step.phase`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/DK2_the_dock-fab19127bc19d5c2.graph`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/TB0_decisions-9af0f76e404926bf.graph`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/TB2_persistence_audit-dc51aa7374ac0e10.graph`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/TB3_close_the_persistence_gaps-84bee17604195980.graph`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/TB4a_recall_in_the_dispatcher-9adab27152f90da2.graph`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/TB4b_nexus_recall_tool-0850a81b6d5d8bbf.graph`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/TB4c_measure-a6559845267cef0c.graph`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/TB5_tab_shell-45459c6b9780f0d9.graph`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/TB6_files_changes_plans_cos_tabs-53d029fe85983028.graph`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/TB7a_edges_recorded-69330154410e55a9.graph`
+- `idearium/phases/2026-10-16-code-tab-rebuild/graph/TB7b_keep_every_step-0195fb0a003654e7.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-16-cos-console/` · 2 files</summary>
+
+- `idearium/phases/2026-10-16-cos-console/CON2_grammar_and_completion.phase`
+- `idearium/phases/2026-10-16-cos-console/graph/CON2_grammar_and_completion-8bab477abc0720ae.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-16-durable-work-timeline/` · 2 files</summary>
+
+- `idearium/phases/2026-10-16-durable-work-timeline/TL5_the_code_tab_timeline.phase`
+- `idearium/phases/2026-10-16-durable-work-timeline/graph/TL5_the_code_tab_timeline-143fd58bcbeb02d8.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-16-intent-hat-agent-chain/` · 2 files</summary>
+
+- `idearium/phases/2026-10-16-intent-hat-agent-chain/IH4_api_command_ui.phase`
+- `idearium/phases/2026-10-16-intent-hat-agent-chain/graph/IH4_api_command_ui-491e5bd186c25940.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-16-plan-sidebar/` · 4 files</summary>
+
+- `idearium/phases/2026-10-16-plan-sidebar/PS2_plan_panel_three_cards.phase`
+- `idearium/phases/2026-10-16-plan-sidebar/PS3_the_rest_their_own_panels.phase`
+- `idearium/phases/2026-10-16-plan-sidebar/graph/PS2_plan_panel_three_cards-0c8cdf906f861391.graph`
+- `idearium/phases/2026-10-16-plan-sidebar/graph/PS3_the_rest_their_own_panels-c48c2855bc50e215.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-16-reject-learn-retry/` · 4 files</summary>
+
+- `idearium/phases/2026-10-16-reject-learn-retry/RL2_learn_then_retry.phase`
+- `idearium/phases/2026-10-16-reject-learn-retry/RL4_the_lessons_on_the_door.phase`
+- `idearium/phases/2026-10-16-reject-learn-retry/graph/RL2_learn_then_retry-39af0667fca566e6.graph`
+- `idearium/phases/2026-10-16-reject-learn-retry/graph/RL4_the_lessons_on_the_door-bbafadd375cd2657.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-16-repo-carve/` · 4 files</summary>
+
+- `idearium/phases/2026-10-16-repo-carve/CV1_carve_backend_route_command_ui.phase`
+- `idearium/phases/2026-10-16-repo-carve/FR9_sandboxed_in_compartments.phase`
+- `idearium/phases/2026-10-16-repo-carve/graph/CV1_carve_backend_route_command_ui-e3edbcdf3d659991.graph`
+- `idearium/phases/2026-10-16-repo-carve/graph/FR9_sandboxed_in_compartments-b650b1973c9adbba.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-17-debugging-product/` · 2 files</summary>
+
+- `idearium/phases/2026-10-17-debugging-product/DP1_the_doors.phase`
+- `idearium/phases/2026-10-17-debugging-product/graph/DP1_the_doors-9c5b97f48be11c5b.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-17-failure-mode-report/` · 2 files</summary>
+
+- `idearium/phases/2026-10-17-failure-mode-report/FMR8_the_report_on_screen.phase`
+- `idearium/phases/2026-10-17-failure-mode-report/graph/FMR8_the_report_on_screen-36b40641e24aae8e.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-17-pieces-not-order/` · 2 files</summary>
+
+- `idearium/phases/2026-10-17-pieces-not-order/PC5_control_when_he_chooses.phase`
+- `idearium/phases/2026-10-17-pieces-not-order/graph/PC5_control_when_he_chooses-11bf61bdc8df910b.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-17-system-drawbridge/` · 18 files</summary>
+
+- `idearium/phases/2026-10-17-system-drawbridge/DB0a_still_open.phase`
+- `idearium/phases/2026-10-17-system-drawbridge/DB0b_reading.phase`
+- `idearium/phases/2026-10-17-system-drawbridge/DB15_toasts_declared.phase`
+- `idearium/phases/2026-10-17-system-drawbridge/DB19_genesis_sandboxed_fork.phase`
+- `idearium/phases/2026-10-17-system-drawbridge/DB2_the_registry_says_what_it_offers.phase`
+- `idearium/phases/2026-10-17-system-drawbridge/DB4_one_bus_per_system.phase`
+- `idearium/phases/2026-10-17-system-drawbridge/DB7_the_ui_floats_on_top.phase`
+- `idearium/phases/2026-10-17-system-drawbridge/DB8_agents_have_it.phase`
+- `idearium/phases/2026-10-17-system-drawbridge/P33_slices.phase`
+- `idearium/phases/2026-10-17-system-drawbridge/graph/DB0a_still_open-c850c4ed5b9cba3f.graph`
+- `idearium/phases/2026-10-17-system-drawbridge/graph/DB0b_reading-33012a35bf1f82ac.graph`
+- `idearium/phases/2026-10-17-system-drawbridge/graph/DB15_toasts_declared-0e1c1ccd78450583.graph`
+- `idearium/phases/2026-10-17-system-drawbridge/graph/DB19_genesis_sandboxed_fork-68f0ea951c3c9dae.graph`
+- `idearium/phases/2026-10-17-system-drawbridge/graph/DB2_the_registry_says_what_it_offers-4121727170f95b81.graph`
+- `idearium/phases/2026-10-17-system-drawbridge/graph/DB4_one_bus_per_system-2212630faddc3883.graph`
+- `idearium/phases/2026-10-17-system-drawbridge/graph/DB7_the_ui_floats_on_top-3edb553849e9c3bc.graph`
+- `idearium/phases/2026-10-17-system-drawbridge/graph/DB8_agents_have_it-1436fb94e6e0ff14.graph`
+- `idearium/phases/2026-10-17-system-drawbridge/graph/P33_slices-175c69cb48638ad2.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-18-compartment-environment/` · 4 files</summary>
+
+- `idearium/phases/2026-10-18-compartment-environment/CE6_the_code_tab.phase`
+- `idearium/phases/2026-10-18-compartment-environment/CE7_agents_and_commands.phase`
+- `idearium/phases/2026-10-18-compartment-environment/graph/CE6_the_code_tab-f11d856e1aa25e18.graph`
+- `idearium/phases/2026-10-18-compartment-environment/graph/CE7_agents_and_commands-cc438bb660d2012c.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-18-debugging-product/` · 4 files</summary>
+
+- `idearium/phases/2026-10-18-debugging-product/DBG5_rewind_from_a_case.phase`
+- `idearium/phases/2026-10-18-debugging-product/DBG7_route_command_ui.phase`
+- `idearium/phases/2026-10-18-debugging-product/graph/DBG5_rewind_from_a_case-cfffc4ab781d68ec.graph`
+- `idearium/phases/2026-10-18-debugging-product/graph/DBG7_route_command_ui-b81f989842d93bc7.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-18-gate-memory/` · 4 files</summary>
+
+- `idearium/phases/2026-10-18-gate-memory/GM7_the_context_panel_per_gate.phase`
+- `idearium/phases/2026-10-18-gate-memory/GM8_agents_have_it.phase`
+- `idearium/phases/2026-10-18-gate-memory/graph/GM7_the_context_panel_per_gate-2031c0c663349829.graph`
+- `idearium/phases/2026-10-18-gate-memory/graph/GM8_agents_have_it-45a73d0250d2d055.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-19-gate-quality-checks/` · 8 files</summary>
+
+- `idearium/phases/2026-10-19-gate-quality-checks/GQ2_brick_gate_runs_the_test.phase`
+- `idearium/phases/2026-10-19-gate-quality-checks/GQ4_phase_gate_keeps_the_test.phase`
+- `idearium/phases/2026-10-19-gate-quality-checks/GQ5_command.phase`
+- `idearium/phases/2026-10-19-gate-quality-checks/GQ6_ui.phase`
+- `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ2_brick_gate_runs_the_test-44bd9b0fe7114c73.graph`
+- `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ4_phase_gate_keeps_the_test-8d183bcb2f8535fe.graph`
+- `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ5_command-176adf36740d9ccb.graph`
+- `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ6_ui-60394e9276084fea.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-19-gig-autofill-and-learn/` · 2 files</summary>
+
+- `idearium/phases/2026-10-19-gig-autofill-and-learn/GA5_commands_and_the_panel.phase`
+- `idearium/phases/2026-10-19-gig-autofill-and-learn/graph/GA5_commands_and_the_panel-df6524bf85b1a1f6.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-19-idearium-control/` · 16 files</summary>
+
+- `idearium/phases/2026-10-19-idearium-control/CT0_code_tab_census.phase`
+- `idearium/phases/2026-10-19-idearium-control/CT1_fewer_wider_tabs.phase`
+- `idearium/phases/2026-10-19-idearium-control/FM1_file_manager.phase`
+- `idearium/phases/2026-10-19-idearium-control/FM2_stores_in_the_files_tab.phase`
+- `idearium/phases/2026-10-19-idearium-control/IM1_ideas_and_notes_as_one.phase`
+- `idearium/phases/2026-10-19-idearium-control/PC1_phase_controls.phase`
+- `idearium/phases/2026-10-19-idearium-control/TB1_toolbox.phase`
+- `idearium/phases/2026-10-19-idearium-control/VS1_versions_in_the_surface.phase`
+- `idearium/phases/2026-10-19-idearium-control/graph/CT0_code_tab_census-68fe806d18a6ee3e.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/CT1_fewer_wider_tabs-454129e18b89f64d.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/FM1_file_manager-30ae3862a6fbedde.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/FM2_stores_in_the_files_tab-0cb3102874e66839.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/IM1_ideas_and_notes_as_one-b11d0d8dc6b1eec4.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/PC1_phase_controls-530560b20a4638d0.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/TB1_toolbox-573f4e5a75544e59.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/VS1_versions_in_the_surface-2f948ae931b8b5ff.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-19-infrastructure-spine/` · 4 files</summary>
+
+- `idearium/phases/2026-10-19-infrastructure-spine/IN3a_build_stands_on_the_registry.phase`
+- `idearium/phases/2026-10-19-infrastructure-spine/IN8_any_size.phase`
+- `idearium/phases/2026-10-19-infrastructure-spine/graph/IN3a_build_stands_on_the_registry-a6693c99336de552.graph`
+- `idearium/phases/2026-10-19-infrastructure-spine/graph/IN8_any_size-93a371269b367b64.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-19-pipeline-root-causes/` · 18 files</summary>
+
+- `idearium/phases/2026-10-19-pipeline-root-causes/DG3_the_whole_dag.phase`
+- `idearium/phases/2026-10-19-pipeline-root-causes/DG4_nexus_maps_meet_the_standard.phase`
+- `idearium/phases/2026-10-19-pipeline-root-causes/DG5_dag_in_the_brief_and_the_ui.phase`
+- `idearium/phases/2026-10-19-pipeline-root-causes/PR2_autofill_and_copilot_read_first.phase`
+- `idearium/phases/2026-10-19-pipeline-root-causes/RC6_unowned_ollama_load.phase`
+- `idearium/phases/2026-10-19-pipeline-root-causes/RC7_every_run_names_its_starter.phase`
+- `idearium/phases/2026-10-19-pipeline-root-causes/UI2_version_in_code.phase`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/DG3_the_whole_dag-387f28abb7b7bfa6.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/DG4_nexus_maps_meet_the_standard-8326c3166e4620ea.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/DG5_dag_in_the_brief_and_the_ui-7c64f9ae4e29eb6a.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/PR2_autofill_and_copilot_read_first-b4ddc2d39aad8dc7.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/RC6_unowned_ollama_load-67b8e7d0ffd6cf9d.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/RC7_every_run_names_its_starter-4b99cd95537cb85c.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/UI2_version_in_code-d70b04b30efde11f.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/DG3_the_whole_dag-9cfb242403b7f8b3.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/DG3_the_whole_dag-b29958cf7cd36370.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC7_every_run_names_its_starter-e71ac0a4e3f549ec.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/UI2_version_in_code-a31a39722f93b060.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-19-solid-build-foundation/` · 8 files</summary>
+
+- `idearium/phases/2026-10-19-solid-build-foundation/GQ2_brick_gate_runs_the_test.phase`
+- `idearium/phases/2026-10-19-solid-build-foundation/GQ4_phase_gate_keeps_the_test.phase`
+- `idearium/phases/2026-10-19-solid-build-foundation/SET1_autobuild_config_and_command.phase`
+- `idearium/phases/2026-10-19-solid-build-foundation/SET2_autobuild_settings_ui.phase`
+- `idearium/phases/2026-10-19-solid-build-foundation/graph/GQ2_brick_gate_runs_the_test-384b9e70be3b7f5b.graph`
+- `idearium/phases/2026-10-19-solid-build-foundation/graph/GQ4_phase_gate_keeps_the_test-dea1678c49093827.graph`
+- `idearium/phases/2026-10-19-solid-build-foundation/graph/SET1_autobuild_config_and_command-8ba4dcf5e6c54fd0.graph`
+- `idearium/phases/2026-10-19-solid-build-foundation/graph/SET2_autobuild_settings_ui-c78e2af0f32b3534.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-19-upload-intent-and-page-map/` · 4 files</summary>
+
+- `idearium/phases/2026-10-19-upload-intent-and-page-map/UP3_upload_routes_and_commands.phase`
+- `idearium/phases/2026-10-19-upload-intent-and-page-map/UP4_upload_ui.phase`
+- `idearium/phases/2026-10-19-upload-intent-and-page-map/graph/UP3_upload_routes_and_commands-482f723155e730e0.graph`
+- `idearium/phases/2026-10-19-upload-intent-and-page-map/graph/UP4_upload_ui-dcd2230ed41c4df6.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-20-belief-loop/` · 3 files</summary>
+
+- `idearium/phases/2026-10-20-belief-loop/CY3_belief_panel.phase`
+- `idearium/phases/2026-10-20-belief-loop/graph/CY3_belief_panel-38cb88c35d626a37.graph`
+- `idearium/phases/2026-10-20-belief-loop/graph/_superseded/CY3_belief_panel-e6a09dc8b785fe0e.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` · 9 files</summary>
+
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/CH3_chunk_inspector.phase`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GR3_graph_query_surface.phase`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GW3_gate_panel.phase`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/CH3_chunk_inspector-c8566fe9a29a7307.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR3_graph_query_surface-270c359dad6ee6b9.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW3_gate_panel-69c269bf13faff30.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/CH3_chunk_inspector-99f25ae95f99935d.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GR3_graph_query_surface-d0e57a5baa382165.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW3_gate_panel-c9d8030a699919e0.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-21-approval-chain/` · 6 files</summary>
+
+- `idearium/phases/2026-10-21-approval-chain/APV3_changelog_read.phase`
+- `idearium/phases/2026-10-21-approval-chain/APV4_emit_on_the_ledger.phase`
+- `idearium/phases/2026-10-21-approval-chain/graph/APV3_changelog_read-a8799b04b953ec28.graph`
+- `idearium/phases/2026-10-21-approval-chain/graph/APV4_emit_on_the_ledger-831e03b8acdf10fc.graph`
+- `idearium/phases/2026-10-21-approval-chain/graph/_superseded/APV3_changelog_read-4b56ad2bdd0f2cad.graph`
+- `idearium/phases/2026-10-21-approval-chain/graph/_superseded/APV4_emit_on_the_ledger-cedb2fe875e7db6e.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-21-brainos-into-idearium/` · 17 files</summary>
+
+- `idearium/phases/2026-10-21-brainos-into-idearium/BX2_flow_sources.phase`
+- `idearium/phases/2026-10-21-brainos-into-idearium/BX3_flow_canvas.phase`
+- `idearium/phases/2026-10-21-brainos-into-idearium/BX4_agents_layer.phase`
+- `idearium/phases/2026-10-21-brainos-into-idearium/BX5_node_controls.phase`
+- `idearium/phases/2026-10-21-brainos-into-idearium/BX6_pipeline_edit.phase`
+- `idearium/phases/2026-10-21-brainos-into-idearium/BX7_automation.phase`
+- `idearium/phases/2026-10-21-brainos-into-idearium/BX8_dock_panels.phase`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX2_flow_sources-0f02f30efeb426ac.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX3_flow_canvas-0cfcc543816b7eee.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX4_agents_layer-a877f16582b136ef.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX5_node_controls-18d39953f30981ae.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX6_pipeline_edit-a7874d45d8fbf5a0.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX7_automation-1f9e4c1632626090.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX8_dock_panels-13df1648e45b6aa2.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX2_flow_sources-37e364e91aef63f4.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX5_node_controls-8af169be49d40dc5.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX7_automation-6615544c90e45a2a.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-21-data-layout/` · 2 files</summary>
+
+- `idearium/phases/2026-10-21-data-layout/DL4_one_repo_folder.phase`
+- `idearium/phases/2026-10-21-data-layout/graph/DL4_one_repo_folder-60343e03dda1be5f.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-22-system-node-db/` · 5 files</summary>
+
+- `idearium/phases/2026-10-22-system-node-db/ND5_every_agent_reaches_every_system.phase`
+- `idearium/phases/2026-10-22-system-node-db/ND6_the_nodes_screen.phase`
+- `idearium/phases/2026-10-22-system-node-db/graph/ND5_every_agent_reaches_every_system-85c309ce09d5a7d5.graph`
+- `idearium/phases/2026-10-22-system-node-db/graph/ND6_the_nodes_screen-84631efc91474720.graph`
+- `idearium/phases/2026-10-22-system-node-db/graph/_superseded/ND5_every_agent_reaches_every_system-f07c86902defd601.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-23-self-building-loop/` · 13 files</summary>
+
+- `idearium/phases/2026-10-23-self-building-loop/SL0_what_can_be_built_now.phase`
+- `idearium/phases/2026-10-23-self-building-loop/SL1_a_proven_phase_closes_itself.phase`
+- `idearium/phases/2026-10-23-self-building-loop/SL4_the_loop.phase`
+- `idearium/phases/2026-10-23-self-building-loop/SL7_build_again_is_asked_for.phase`
+- `idearium/phases/2026-10-23-self-building-loop/SL8_the_agent_maps_what_nexus_cannot.phase`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL0_what_can_be_built_now-d4b7b03b3139be7f.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL1_a_proven_phase_closes_itself-c3e5309c4ae10c83.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL4_the_loop-3dcb223b8d82e43d.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL7_build_again_is_asked_for-0f0ab8a3543b9460.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL8_the_agent_maps_what_nexus_cannot-0f39da6d2b92c695.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL0_what_can_be_built_now-b32fb6604d2567f7.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL1_a_proven_phase_closes_itself-6bccee108a7faf2e.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL4_the_loop-25e5d0a903e2cd92.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/idearium-creative-repo-overhaul/` · 2 files</summary>
+
+- `idearium/phases/idearium-creative-repo-overhaul/MCO-E_roadmap_ui.phase`
+- `idearium/phases/idearium-creative-repo-overhaul/graph/MCO-E_roadmap_ui-2258bb8a5d931465.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/idearium-repository-overhaul/` · 14 files</summary>
+
+- `idearium/phases/idearium-repository-overhaul/MCO-C_repo_materialize.phase`
+- `idearium/phases/idearium-repository-overhaul/MCO-D_zoom_subrepo.phase`
+- `idearium/phases/idearium-repository-overhaul/MCO-F_config.phase`
+- `idearium/phases/idearium-repository-overhaul/MCO0_audit_real_coverage.phase`
+- `idearium/phases/idearium-repository-overhaul/MCO1_graph_layer.phase`
+- `idearium/phases/idearium-repository-overhaul/MCO2_verification_deepening.phase`
+- `idearium/phases/idearium-repository-overhaul/MCO3_snapshot_compliance.phase`
+- `idearium/phases/idearium-repository-overhaul/graph/MCO-C_repo_materialize-a03f31b0a540144f.graph`
+- `idearium/phases/idearium-repository-overhaul/graph/MCO-D_zoom_subrepo-3cf6d02affb08ecc.graph`
+- `idearium/phases/idearium-repository-overhaul/graph/MCO-F_config-7292893fe836f4d3.graph`
+- `idearium/phases/idearium-repository-overhaul/graph/MCO0_audit_real_coverage-a2d64fda1e986d73.graph`
+- `idearium/phases/idearium-repository-overhaul/graph/MCO1_graph_layer-85de28ae27e35120.graph`
+- `idearium/phases/idearium-repository-overhaul/graph/MCO2_verification_deepening-6b47c1fa993010fe.graph`
+- `idearium/phases/idearium-repository-overhaul/graph/MCO3_snapshot_compliance-db5a3f4597bead05.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/nexus-repository-system-build/` · 10 files</summary>
+
+- `idearium/phases/nexus-repository-system-build/MCO0_audit_real_coverage.phase`
+- `idearium/phases/nexus-repository-system-build/MCO1_graph_layer.phase`
+- `idearium/phases/nexus-repository-system-build/MCO2_verification_deepening.phase`
+- `idearium/phases/nexus-repository-system-build/MCO5_git_integration_credentials.phase`
+- `idearium/phases/nexus-repository-system-build/MCO6_compartment_ownership.phase`
+- `idearium/phases/nexus-repository-system-build/graph/MCO0_audit_real_coverage-d1328f345333d6df.graph`
+- `idearium/phases/nexus-repository-system-build/graph/MCO1_graph_layer-bec51ffa7d78bab9.graph`
+- `idearium/phases/nexus-repository-system-build/graph/MCO2_verification_deepening-385db87094adb932.graph`
+- `idearium/phases/nexus-repository-system-build/graph/MCO5_git_integration_credentials-987edd70d4a2ee2a.graph`
+- `idearium/phases/nexus-repository-system-build/graph/MCO6_compartment_ownership-cc8efc7174f10e2c.graph`
+
+</details>
+
+<details>
+<summary>`idearium/repo/` · 33 files</summary>
 
 - `idearium/repo/architecture.js`
 - `idearium/repo/build-plan.js`
@@ -771,6 +2741,7 @@ Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, s
 - `idearium/repo/import-pipeline-worker.js`
 - `idearium/repo/import-pipeline.js`
 - `idearium/repo/index.js`
+- `idearium/repo/lift-root.js`
 - `idearium/repo/living-spec.js`
 - `idearium/repo/nexus-self.js`
 - `idearium/repo/phase-mapping.js`
@@ -778,6 +2749,7 @@ Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, s
 - `idearium/repo/pipeline-events.js`
 - `idearium/repo/proof-run.js`
 - `idearium/repo/repo-node.js`
+- `idearium/repo/roadmap-import.js`
 - `idearium/repo/roadmap.js`
 - `idearium/repo/run-reconcile.js`
 - `idearium/repo/runtime-proof.js`
@@ -840,7 +2812,7 @@ Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, s
 </details>
 
 <details>
-<summary>`idearium/spec-engine/templates/` · 25 files</summary>
+<summary>`idearium/spec-engine/templates/` · 26 files</summary>
 
 - `idearium/spec-engine/templates/ai-agent-system.spec`
 - `idearium/spec-engine/templates/api-service.spec`
@@ -853,6 +2825,7 @@ Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, s
 - `idearium/spec-engine/templates/eravos-canvas.spec`
 - `idearium/spec-engine/templates/eravos-tool.spec`
 - `idearium/spec-engine/templates/event-system.spec`
+- `idearium/spec-engine/templates/genesis-sandboxed.spec`
 - `idearium/spec-engine/templates/genesis.spec`
 - `idearium/spec-engine/templates/minimal-kernel.spec`
 - `idearium/spec-engine/templates/plugin-runtime.md`
@@ -913,7 +2886,7 @@ Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, s
 </details>
 
 <details>
-<summary>`idearium/ui/css/` · 16 files</summary>
+<summary>`idearium/ui/css/` · 17 files</summary>
 
 - `idearium/ui/css/agent-blocks.css`
 - `idearium/ui/css/agent-options.css`
@@ -928,6 +2901,7 @@ Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, s
 - `idearium/ui/css/phase-graph-view.css`
 - `idearium/ui/css/phases.css`
 - `idearium/ui/css/repo-tasks.css`
+- `idearium/ui/css/upload-intent.css`
 - `idearium/ui/css/void-theme.css`
 - `idearium/ui/css/work-surface.css`
 - `idearium/ui/css/workshop.css`
@@ -949,7 +2923,7 @@ Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, s
 </details>
 
 <details>
-<summary>`idearium/ui/js/` · 38 files</summary>
+<summary>`idearium/ui/js/` · 39 files</summary>
 
 - `idearium/ui/js/access-guard.js`
 - `idearium/ui/js/agent-blocks.js`
@@ -985,6 +2959,7 @@ Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, s
 - `idearium/ui/js/theme.js`
 - `idearium/ui/js/ui-editor-doc.js`
 - `idearium/ui/js/ui-editor.js`
+- `idearium/ui/js/upload-intent.js`
 - `idearium/ui/js/void-sky.js`
 - `idearium/ui/js/window-chrome.js`
 - `idearium/ui/js/work-surface.js`
@@ -1002,7 +2977,7 @@ Idearium is 210 files in 20 modules, entry `idearium/api/index.js`, port 4800, s
 
 </details>
 
-111 release notes name a file of idearium: 0.60.156., 0.60.153., 0.60.151., 0.60.150., 0.60.148., 0.60.145., 0.60.143., 0.60.141., 0.60.140., 0.60.134., 0.60.132., 0.60.131., 0.60.130., 0.60.128., 0.60.127., 0.60.124., 0.60.123., 0.60.122., 0.60.121., 0.60.118., 0.60.107., 0.60.105., 0.60.103., 0.60.102., 0.60.99., 0.60.94., 0.60.80., 0.60.79., 0.60.74., 0.60.73., 0.60.67., 0.60.65., 0.60.63., 0.60.29., 0.60.19., 0.60.12., 0.60.11., 0.60.10., 0.60.6., 0.60.5., and 71 older. Each is in the version history below, in his words.
+134 release notes name a file of idearium: 0.60.231., 0.60.230., 0.60.228., 0.60.225., 0.60.223., 0.60.222., 0.60.221., 0.60.206., 0.60.205., 0.60.203., 0.60.199., 0.60.198., 0.60.197., 0.60.196., 0.60.193., 0.60.188., 0.60.177., 0.60.168., 0.60.167., 0.60.165., 0.60.164., 0.60.163., 0.60.162., 0.60.156., 0.60.153., 0.60.151., 0.60.150., 0.60.148., 0.60.145., 0.60.143., 0.60.141., 0.60.140., 0.60.134., 0.60.132., 0.60.131., 0.60.130., 0.60.128., 0.60.127., 0.60.124., 0.60.123., and 94 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:idearium:end -->
 
@@ -1015,7 +2990,7 @@ Its node schemas live in `architect/schemas/`, and its spec `architect/spec/arch
 <!-- generated:readme:system:architect:start -->
 #### architect: every module and every file
 
-Architect is 24 files in 6 modules, entry `architect/service.js`, port 3747, spec `architect/spec/architect.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/architect-atlas.md`.
+Architect is 33 files in 7 modules, entry `architect/service.js`, port 3747, spec `architect/spec/architect.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/architect-atlas.md`.
 
 <details>
 <summary>`architect/` · 6 files</summary>
@@ -1040,6 +3015,21 @@ Architect is 24 files in 6 modules, entry `architect/service.js`, port 3747, spe
 <summary>`architect/output/` · 1 file</summary>
 
 - `architect/output/.gitkeep`
+
+</details>
+
+<details>
+<summary>`architect/phases/` · 9 files</summary>
+
+- `architect/phases/2026-09-13-axiom-5-2-raid-routing/MCO12_architect_remaining_routes.phase`
+- `architect/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO12_architect_remaining_routes-3f4e0875f3387d46.graph`
+- `architect/phases/2026-09-30-idearium-coding-flow/W7_next_mapped_2026_09_30.phase`
+- `architect/phases/2026-09-30-idearium-coding-flow/graph/W7_next_mapped_2026_09_30-79c974c5ac8dc850.graph`
+- `architect/phases/2026-10-02-workshop-codex-rewind/BP1_destroy_and_rebuild_blueprint.phase`
+- `architect/phases/2026-10-02-workshop-codex-rewind/graph/BP1_destroy_and_rebuild_blueprint-62cf850a997b6f1b.graph`
+- `architect/phases/2026-10-19-infrastructure-spine/IN5_architect_mirrors_the_registry.phase`
+- `architect/phases/2026-10-19-infrastructure-spine/graph/IN5_architect_mirrors_the_registry-20117e52fe90f953.graph`
+- `architect/phases/INDEX.md`
 
 </details>
 
@@ -1077,7 +3067,7 @@ Architect is 24 files in 6 modules, entry `architect/service.js`, port 3747, spe
 
 </details>
 
-3 release notes name a file of architect: 0.60.131., 0.60.0., 0.39.299.. Each is in the version history below, in his words.
+4 release notes name a file of architect: 0.60.212., 0.60.131., 0.60.0., 0.39.299.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:architect:end -->
 
@@ -1088,7 +3078,7 @@ The system that watches the others. `diagnostic/nexus-diagnostic.js` on :7825 re
 <!-- generated:readme:system:diagnostic:start -->
 #### diagnostic: every module and every file
 
-Diagnostic is 33 files in 7 modules, entry `diagnostic/nexus-diagnostic.js`, port 7825, spec `diagnostic/spec/diagnostic.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/diagnostic-atlas.md`.
+Diagnostic is 58 files in 8 modules, entry `diagnostic/nexus-diagnostic.js`, port 7825, spec `diagnostic/spec/diagnostic.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/diagnostic-atlas.md`.
 
 <details>
 <summary>`diagnostic/` · 9 files</summary>
@@ -1132,6 +3122,37 @@ Diagnostic is 33 files in 7 modules, entry `diagnostic/nexus-diagnostic.js`, por
 </details>
 
 <details>
+<summary>`diagnostic/phases/` · 25 files</summary>
+
+- `diagnostic/phases/2026-08-27-event-taxonomy-and-brainstorm/ET3_clearglass_event_taxonomy.phase`
+- `diagnostic/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET3_clearglass_event_taxonomy-716426b659cd5b43.graph`
+- `diagnostic/phases/2026-09-28-staging-self-heal/S2.phase`
+- `diagnostic/phases/2026-09-28-staging-self-heal/S5.phase`
+- `diagnostic/phases/2026-09-28-staging-self-heal/graph/S2-a3384fc440fa0ce2.graph`
+- `diagnostic/phases/2026-09-28-staging-self-heal/graph/S5-210d8368d0d1dec3.graph`
+- `diagnostic/phases/2026-10-05-announce-pulse-repair/PR2_the_diagnostic_listens_not_polls.phase`
+- `diagnostic/phases/2026-10-05-announce-pulse-repair/graph/PR2_the_diagnostic_listens_not_polls-aa9c34277977a16e.graph`
+- `diagnostic/phases/2026-10-17-debugging-product/DP10_the_report_and_the_debug_tab.phase`
+- `diagnostic/phases/2026-10-17-debugging-product/DP3_runtime_deviation_reaches_the_diagnostic.phase`
+- `diagnostic/phases/2026-10-17-debugging-product/DP4_every_ledger_into_rfr2.phase`
+- `diagnostic/phases/2026-10-17-debugging-product/DP5_the_case.phase`
+- `diagnostic/phases/2026-10-17-debugging-product/DP6_reproduce_in_cos.phase`
+- `diagnostic/phases/2026-10-17-debugging-product/DP7_back_to_known_good.phase`
+- `diagnostic/phases/2026-10-17-debugging-product/DP8_a_proven_fix.phase`
+- `diagnostic/phases/2026-10-17-debugging-product/graph/DP10_the_report_and_the_debug_tab-7b6dac6f7055e661.graph`
+- `diagnostic/phases/2026-10-17-debugging-product/graph/DP3_runtime_deviation_reaches_the_diagnostic-d3704c2cf309571e.graph`
+- `diagnostic/phases/2026-10-17-debugging-product/graph/DP4_every_ledger_into_rfr2-51d10e03bd0afe5c.graph`
+- `diagnostic/phases/2026-10-17-debugging-product/graph/DP5_the_case-cf1e15322534ca7f.graph`
+- `diagnostic/phases/2026-10-17-debugging-product/graph/DP6_reproduce_in_cos-c5f5f220559d416e.graph`
+- `diagnostic/phases/2026-10-17-debugging-product/graph/DP7_back_to_known_good-ad47526edc616bb2.graph`
+- `diagnostic/phases/2026-10-17-debugging-product/graph/DP8_a_proven_fix-33947ca526c2dde4.graph`
+- `diagnostic/phases/2026-10-17-failure-mode-report/FMR0_causality_measured.phase`
+- `diagnostic/phases/2026-10-17-failure-mode-report/graph/FMR0_causality_measured-f921952916dd5696.graph`
+- `diagnostic/phases/INDEX.md`
+
+</details>
+
+<details>
 <summary>`diagnostic/schemas/` · 9 files</summary>
 
 - `diagnostic/schemas/index.js`
@@ -1165,7 +3186,7 @@ Diagnostic is 33 files in 7 modules, entry `diagnostic/nexus-diagnostic.js`, por
 
 </details>
 
-8 release notes name a file of diagnostic: 0.60.150., 0.60.138., 0.60.136., 0.60.131., 0.39.342., 0.39.327., 0.39.260., 0.39.173.. Each is in the version history below, in his words.
+9 release notes name a file of diagnostic: 0.60.207., 0.60.150., 0.60.138., 0.60.136., 0.60.131., 0.39.342., 0.39.327., 0.39.260., 0.39.173.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:diagnostic:end -->
 
@@ -1176,7 +3197,7 @@ The cognition layer, consolidated from three places that had no single home. `in
 <!-- generated:readme:system:intelligence:start -->
 #### intelligence: every module and every file
 
-Intelligence is 128 files in 37 modules, entry `intelligence/server.js`, port 3753, spec `intelligence/spec/intelligence.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/intelligence-atlas.md`.
+Intelligence is 189 files in 60 modules, entry `intelligence/server.js`, port 3753, spec `intelligence/spec/intelligence.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/intelligence-atlas.md`.
 
 <details>
 <summary>`intelligence/` · 18 files</summary>
@@ -1322,6 +3343,205 @@ Intelligence is 128 files in 37 modules, entry `intelligence/server.js`, port 37
 <summary>`intelligence/output/` · 1 file</summary>
 
 - `intelligence/output/.gitkeep`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/` · 1 file</summary>
+
+- `intelligence/phases/INDEX.md` — intelligence — its phases
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-08-22-session-full/` · 2 files</summary>
+
+- `intelligence/phases/2026-08-22-session-full/SF18_intelligence_becomes_a_real_system.phase`
+- `intelligence/phases/2026-08-22-session-full/graph/SF18_intelligence_becomes_a_real_system-9ed23465f0df57af.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-08-23-backlog/` · 2 files</summary>
+
+- `intelligence/phases/2026-08-23-backlog/BL16_per_server_configs.phase`
+- `intelligence/phases/2026-08-23-backlog/graph/BL16_per_server_configs-a021f5040bbb4163.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-08-30-interaction-contract-context/` · 2 files</summary>
+
+- `intelligence/phases/2026-08-30-interaction-contract-context/IC2_raid_test_env_hook.phase`
+- `intelligence/phases/2026-08-30-interaction-contract-context/graph/IC2_raid_test_env_hook-6c2cc014708dd5ce.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-09-02-versionium-sovereign-and-cleanup/` · 2 files</summary>
+
+- `intelligence/phases/2026-09-02-versionium-sovereign-and-cleanup/MEM1_three_tier_memory_formalized.phase`
+- `intelligence/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/MEM1_three_tier_memory_formalized-9be52a539ecdbb7a.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-09-11-compartment-nodetype-and-reorg/` · 2 files</summary>
+
+- `intelligence/phases/2026-09-11-compartment-nodetype-and-reorg/I1_boot_js_intelligence_routes.phase`
+- `intelligence/phases/2026-09-11-compartment-nodetype-and-reorg/graph/I1_boot_js_intelligence_routes-18997881da9f86c9.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-09-11-sovereign-node-architecture/` · 2 files</summary>
+
+- `intelligence/phases/2026-09-11-sovereign-node-architecture/P20_intelligence_reflexive_cfr_field.phase`
+- `intelligence/phases/2026-09-11-sovereign-node-architecture/graph/P20_intelligence_reflexive_cfr_field-9c9558f07253d4ee.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-09-19-architect-blueprint-forge-idearium/` · 2 files</summary>
+
+- `intelligence/phases/2026-09-19-architect-blueprint-forge-idearium/P1_reconcile_node_schema_precedent.phase`
+- `intelligence/phases/2026-09-19-architect-blueprint-forge-idearium/graph/P1_reconcile_node_schema_precedent-774ed515bc4d0e37.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/` · 6 files</summary>
+
+- `intelligence/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/D3_snapshot.phase`
+- `intelligence/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P2_intelligence_gains_routes.phase`
+- `intelligence/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P7_hostile_verify_and_ship.phase`
+- `intelligence/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/D3_snapshot-e5fca670ff95bc86.graph`
+- `intelligence/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P2_intelligence_gains_routes-2f2eff88a31edf66.graph`
+- `intelligence/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P7_hostile_verify_and_ship-1bb77afdfb5cf6af.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-09-28-graph-build-context-settings-memory/` · 2 files</summary>
+
+- `intelligence/phases/2026-09-28-graph-build-context-settings-memory/M6.phase`
+- `intelligence/phases/2026-09-28-graph-build-context-settings-memory/graph/M6-11c7f177b88ab4a1.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-09-28-staging-self-heal/` · 6 files</summary>
+
+- `intelligence/phases/2026-09-28-staging-self-heal/S4.phase`
+- `intelligence/phases/2026-09-28-staging-self-heal/S6.phase`
+- `intelligence/phases/2026-09-28-staging-self-heal/S7.phase`
+- `intelligence/phases/2026-09-28-staging-self-heal/graph/S4-b1f73dc53cc4c0b2.graph`
+- `intelligence/phases/2026-09-28-staging-self-heal/graph/S6-d5fb158cbc0ba8f0.graph`
+- `intelligence/phases/2026-09-28-staging-self-heal/graph/S7-020e2cd2cef915b4.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-09-29-nex-node-store/` · 2 files</summary>
+
+- `intelligence/phases/2026-09-29-nex-node-store/N11_adopters.phase`
+- `intelligence/phases/2026-09-29-nex-node-store/graph/N11_adopters-f7c6777d110dfd74.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-10-02-emerge-field-memory-build/` · 2 files</summary>
+
+- `intelligence/phases/2026-10-02-emerge-field-memory-build/CF1_cfr_improved_with_rfr2.phase`
+- `intelligence/phases/2026-10-02-emerge-field-memory-build/graph/CF1_cfr_improved_with_rfr2-f185d6cfdfa80ada.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-10-02-synthesis-zoom-versionium/` · 4 files</summary>
+
+- `intelligence/phases/2026-10-02-synthesis-zoom-versionium/SY1_gap_synthesis_engine.phase`
+- `intelligence/phases/2026-10-02-synthesis-zoom-versionium/SY2_synthesis_surfaces.phase`
+- `intelligence/phases/2026-10-02-synthesis-zoom-versionium/graph/SY1_gap_synthesis_engine-042dc79969e20121.graph`
+- `intelligence/phases/2026-10-02-synthesis-zoom-versionium/graph/SY2_synthesis_surfaces-aae4f3b1d0b3a1d2.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-10-05-failure-reproduction/` · 2 files</summary>
+
+- `intelligence/phases/2026-10-05-failure-reproduction/FM2_a_failure_is_a_clip.phase`
+- `intelligence/phases/2026-10-05-failure-reproduction/graph/FM2_a_failure_is_a_clip-a487cd62141f833a.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-10-10-self-awareness/` · 4 files</summary>
+
+- `intelligence/phases/2026-10-10-self-awareness/AW0_no_guessed_causes.phase`
+- `intelligence/phases/2026-10-10-self-awareness/AW3_the_field_hears_the_lifecycle.phase`
+- `intelligence/phases/2026-10-10-self-awareness/graph/AW0_no_guessed_causes-d522d06f2ddb0050.graph`
+- `intelligence/phases/2026-10-10-self-awareness/graph/AW3_the_field_hears_the_lifecycle-79083f2ccb474917.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-10-10-snapshot-compartments/` · 2 files</summary>
+
+- `intelligence/phases/2026-10-10-snapshot-compartments/SN3_measured_by_rfr2.phase`
+- `intelligence/phases/2026-10-10-snapshot-compartments/graph/SN3_measured_by_rfr2-0cf6510fcc61eccc.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-10-12-request-spine/` · 2 files</summary>
+
+- `intelligence/phases/2026-10-12-request-spine/RQ26_comparison_and_drift_on_real_signals.phase`
+- `intelligence/phases/2026-10-12-request-spine/graph/RQ26_comparison_and_drift_on_real_signals-4f918005e469cb46.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-10-15-gate-held-work/` · 2 files</summary>
+
+- `intelligence/phases/2026-10-15-gate-held-work/GW17_friction_and_tension_per_file.phase`
+- `intelligence/phases/2026-10-15-gate-held-work/graph/GW17_friction_and_tension_per_file-f7852ec8e72a97a8.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/2026-10-18-gate-memory/` · 2 files</summary>
+
+- `intelligence/phases/2026-10-18-gate-memory/GM4_the_node_lattice.phase`
+- `intelligence/phases/2026-10-18-gate-memory/graph/GM4_the_node_lattice-e541a10241def49f.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/agent-intelligence-loop/` · 6 files</summary>
+
+- `intelligence/phases/agent-intelligence-loop/AP2_agent_events_to_intelligence.phase`
+- `intelligence/phases/agent-intelligence-loop/AP3_strategy_dynamic_db.phase`
+- `intelligence/phases/agent-intelligence-loop/AP4_intelligence_optimizes.phase`
+- `intelligence/phases/agent-intelligence-loop/graph/AP2_agent_events_to_intelligence-7eaa646dd401b978.graph`
+- `intelligence/phases/agent-intelligence-loop/graph/AP3_strategy_dynamic_db-0aefb3a3ab80c9af.graph`
+- `intelligence/phases/agent-intelligence-loop/graph/AP4_intelligence_optimizes-8f53bceb7cf58c12.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/nexus-live-mind/` · 2 files</summary>
+
+- `intelligence/phases/nexus-live-mind/P2_snapshot_on_sigma.phase`
+- `intelligence/phases/nexus-live-mind/graph/P2_snapshot_on_sigma-e9c2e2af02f2273e.graph`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/nexus-observability-tablet/` · 2 files</summary>
+
+- `intelligence/phases/nexus-observability-tablet/OB10_sigma_role_intent_map.phase`
+- `intelligence/phases/nexus-observability-tablet/graph/OB10_sigma_role_intent_map-4415c9c48a379a34.graph`
 
 </details>
 
@@ -1539,7 +3759,7 @@ Local model dispatch, deliberately isolated from guardian: if guardian goes down
 <!-- generated:readme:system:ollama-bridge:start -->
 #### ollama-bridge: every module and every file
 
-Ollama-bridge is 56 files in 7 modules, entry `ollama/server.js`, port 3749. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/ollama-atlas.md`.
+Ollama-bridge is 73 files in 8 modules, entry `ollama/server.js`, port 3749. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/ollama-atlas.md`.
 
 <details>
 <summary>`ollama/` · 7 files</summary>
@@ -1601,6 +3821,29 @@ Ollama-bridge is 56 files in 7 modules, entry `ollama/server.js`, port 3749. Eac
 </details>
 
 <details>
+<summary>`ollama/phases/` · 17 files</summary>
+
+- `ollama/phases/2026-08-27-event-taxonomy-and-brainstorm/ET1_event_taxonomy_pattern.phase`
+- `ollama/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET1_event_taxonomy_pattern-7834cc624fa6c264.graph`
+- `ollama/phases/2026-09-27-agent-hat-memory-download-manager/M2.phase`
+- `ollama/phases/2026-09-27-agent-hat-memory-download-manager/graph/M2-7c36941b7bccca3b.graph`
+- `ollama/phases/2026-10-05-cli-data-code/LS1_the_bridge_job_holds_what_is_written_so_far.phase`
+- `ollama/phases/2026-10-05-cli-data-code/graph/LS1_the_bridge_job_holds_what_is_written_so_far-22224f60f8a23d5a.graph`
+- `ollama/phases/2026-10-07-ollama-recorder/OR1_one_door.phase`
+- `ollama/phases/2026-10-07-ollama-recorder/OR3_the_cassette.phase`
+- `ollama/phases/2026-10-07-ollama-recorder/OR4_live_and_what_if.phase`
+- `ollama/phases/2026-10-07-ollama-recorder/OR5_model_vitals.phase`
+- `ollama/phases/2026-10-07-ollama-recorder/graph/OR1_one_door-1fb3963d095de33b.graph`
+- `ollama/phases/2026-10-07-ollama-recorder/graph/OR3_the_cassette-f2cd6cab689d5744.graph`
+- `ollama/phases/2026-10-07-ollama-recorder/graph/OR4_live_and_what_if-7005c50c7012704b.graph`
+- `ollama/phases/2026-10-07-ollama-recorder/graph/OR5_model_vitals-ce09fca42b652b41.graph`
+- `ollama/phases/INDEX.md`
+- `ollama/phases/copilot-full-capability/P10_load_balancer.phase`
+- `ollama/phases/copilot-full-capability/graph/P10_load_balancer-3732489409fd4b99.graph`
+
+</details>
+
+<details>
 <summary>`ollama/routes/` · 7 files</summary>
 
 - `ollama/routes/jobs.js` — ollama/routes/jobs.js POST /api/jobs, POST /api/jobs/tools, GET /api/jobs, GET /api/jobs/:id,
@@ -1639,7 +3882,7 @@ Ollama-bridge is 56 files in 7 modules, entry `ollama/server.js`, port 3749. Eac
 
 </details>
 
-12 release notes name a file of ollama-bridge: 0.60.149., 0.60.131., 0.60.123., 0.60.10., 0.46.0., 0.39.350., 0.39.289., 0.39.274., 0.39.269., 0.39.267., 0.39.190., 0.39.181.. Each is in the version history below, in his words.
+13 release notes name a file of ollama-bridge: 0.60.209., 0.60.149., 0.60.131., 0.60.123., 0.60.10., 0.46.0., 0.39.350., 0.39.289., 0.39.274., 0.39.269., 0.39.267., 0.39.190., 0.39.181.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:ollama-bridge:end -->
 
@@ -1650,7 +3893,7 @@ Causal version control: temporal replay, calendar playback, sigma-gated commits.
 <!-- generated:readme:system:versionium:start -->
 #### versionium: every module and every file
 
-Versionium is 32 files in 5 modules, entry `versionium/server.js`, port 3754, spec `versionium/spec/versionium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/versionium-atlas.md`.
+Versionium is 47 files in 6 modules, entry `versionium/server.js`, port 3754, spec `versionium/spec/versionium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/versionium-atlas.md`.
 
 <details>
 <summary>`versionium/` · 6 files</summary>
@@ -1660,7 +3903,7 @@ Versionium is 32 files in 5 modules, entry `versionium/server.js`, port 3754, sp
 - `versionium/event-taxonomy.js` — // versionium/event-taxonomy.js — real event vocabulary for the sovereign // Versionium system. Conforms to…
 - `versionium/interaction-contract.json`
 - `versionium/registry-components.js` — versionium/registry-components.js
-- `versionium/server.js`
+- `versionium/server.js` — // 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come…
 
 </details>
 
@@ -1679,6 +3922,27 @@ Versionium is 32 files in 5 modules, entry `versionium/server.js`, port 3754, sp
 - `versionium/lib/snapshot.js`
 - `versionium/lib/store.js`
 - `versionium/lib/text-diff.js`
+
+</details>
+
+<details>
+<summary>`versionium/phases/` · 15 files</summary>
+
+- `versionium/phases/2026-09-11-compartment-nodetype-and-reorg/V1_repoint_old_versionium_refs.phase`
+- `versionium/phases/2026-09-11-compartment-nodetype-and-reorg/graph/V1_repoint_old_versionium_refs-18f7f308b8d3dab0.graph`
+- `versionium/phases/2026-09-11-sovereign-node-architecture/P21_versionium_causal_field.phase`
+- `versionium/phases/2026-09-11-sovereign-node-architecture/graph/P21_versionium_causal_field-550fedf3badde5a5.graph`
+- `versionium/phases/2026-09-28-staging-self-heal/S0.phase`
+- `versionium/phases/2026-09-28-staging-self-heal/graph/S0-737ffe340934da47.graph`
+- `versionium/phases/2026-10-07-versionium-releases/VR2_history_and_diff.phase`
+- `versionium/phases/2026-10-07-versionium-releases/graph/VR2_history_and_diff-af17f1343ce4b473.graph`
+- `versionium/phases/2026-10-10-snapshot-compartments/SN1_open_a_snapshot_as_a_compartment.phase`
+- `versionium/phases/2026-10-10-snapshot-compartments/graph/SN1_open_a_snapshot_as_a_compartment-436e57c6d013f324.graph`
+- `versionium/phases/2026-10-15-one-contract-raid-releases/RN1_versionium_tags_and_releases.phase`
+- `versionium/phases/2026-10-15-one-contract-raid-releases/graph/RN1_versionium_tags_and_releases-176ac709020a4ba7.graph`
+- `versionium/phases/INDEX.md`
+- `versionium/phases/idearium-repository-overhaul/MCO-B_versionium_bridge.phase`
+- `versionium/phases/idearium-repository-overhaul/graph/MCO-B_versionium_bridge-b5be98b34a3a8658.graph`
 
 </details>
 
@@ -1725,7 +3989,7 @@ Intelligence as opposed to dispatch: copilot receives intent, assembles context,
 <!-- generated:readme:system:copilot:start -->
 #### copilot: every module and every file
 
-Copilot is 64 files in 7 modules, entry `copilot/server.js`, port 3750, spec `copilot/spec/copilot.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/copilot-atlas.md`.
+Copilot is 189 files in 8 modules, entry `copilot/server.js`, port 3750, spec `copilot/spec/copilot.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/copilot-atlas.md`.
 
 <details>
 <summary>`copilot/` · 26 files</summary>
@@ -1791,6 +4055,137 @@ Copilot is 64 files in 7 modules, entry `copilot/server.js`, port 3750, spec `co
 </details>
 
 <details>
+<summary>`copilot/phases/` · 125 files</summary>
+
+- `copilot/phases/2026-08-23-backlog/BL21_agent_mesh_real_connection.phase`
+- `copilot/phases/2026-08-23-backlog/graph/BL21_agent_mesh_real_connection-82582a994731b7ce.graph`
+- `copilot/phases/2026-09-01-living-model-and-autonomous-pipeline/LM18_atlas_map_each_system_first.phase`
+- `copilot/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM18_atlas_map_each_system_first-3e1939e10f908db4.graph`
+- `copilot/phases/2026-09-02-nexus-vision-master/CP2_copilot_learning_memory.phase`
+- `copilot/phases/2026-09-02-nexus-vision-master/graph/CP2_copilot_learning_memory-a6a813f538df0a06.graph`
+- `copilot/phases/2026-09-11-sovereign-node-architecture/P15_redundant_file_purge.phase`
+- `copilot/phases/2026-09-11-sovereign-node-architecture/P7_copilot_ticket_queue.phase`
+- `copilot/phases/2026-09-11-sovereign-node-architecture/graph/P15_redundant_file_purge-879b6ff1790cef09.graph`
+- `copilot/phases/2026-09-11-sovereign-node-architecture/graph/P7_copilot_ticket_queue-b589a19081663f16.graph`
+- `copilot/phases/2026-09-19-guardian-mesh-first-dispatch/T1_loop.phase`
+- `copilot/phases/2026-09-19-guardian-mesh-first-dispatch/graph/T1_loop-528376a1fb70a883.graph`
+- `copilot/phases/2026-09-22-brainos-agent-suite/AS1_agent_system_tab.phase`
+- `copilot/phases/2026-09-22-brainos-agent-suite/IJ1_injection_editor.phase`
+- `copilot/phases/2026-09-22-brainos-agent-suite/MM1_module_manager.phase`
+- `copilot/phases/2026-09-22-brainos-agent-suite/graph/AS1_agent_system_tab-4907efefd5944bb4.graph`
+- `copilot/phases/2026-09-22-brainos-agent-suite/graph/IJ1_injection_editor-e4b57f2548044110.graph`
+- `copilot/phases/2026-09-22-brainos-agent-suite/graph/MM1_module_manager-d3b53816c694dbec.graph`
+- `copilot/phases/2026-09-26-guardian-retry-novelty-and-installs/N2.phase`
+- `copilot/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/N2-03d814e87979bfea.graph`
+- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/H1.phase`
+- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/M3.phase`
+- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/O1.phase`
+- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/O2.phase`
+- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/graph/H1-9a057fb15580f17d.graph`
+- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/graph/M3-9ca7b4fc793e42a3.graph`
+- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/graph/O1-78637aa71993ad81.graph`
+- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/graph/O2-5dc25ce343cba266.graph`
+- `copilot/phases/2026-09-27-one-idearium-phases-living-spec-nodes/C1_copilot_contract.phase`
+- `copilot/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/C1_copilot_contract-c7e07067de82c969.graph`
+- `copilot/phases/2026-09-28-graph-build-context-settings-memory/M1.phase`
+- `copilot/phases/2026-09-28-graph-build-context-settings-memory/M5.phase`
+- `copilot/phases/2026-09-28-graph-build-context-settings-memory/graph/M1-f0b52b32e763c3af.graph`
+- `copilot/phases/2026-09-28-graph-build-context-settings-memory/graph/M5-47f9fc2d4ac5f4ef.graph`
+- `copilot/phases/2026-10-01-work-visibility-job-reuse/J7.phase`
+- `copilot/phases/2026-10-01-work-visibility-job-reuse/graph/J7-58dc5b6c1cc9744f.graph`
+- `copilot/phases/2026-10-02-emerge-field-memory-build/RD1_raid_complete_or_build.phase`
+- `copilot/phases/2026-10-02-emerge-field-memory-build/graph/RD1_raid_complete_or_build-3aaf92a635841a37.graph`
+- `copilot/phases/2026-10-05-build-from-the-spec/SB37_the_working_set_signal_to_noise.phase`
+- `copilot/phases/2026-10-05-build-from-the-spec/graph/SB37_the_working_set_signal_to_noise-bd7d6f47a4d010c5.graph`
+- `copilot/phases/2026-10-05-cli-data-code/LS2_copilot_sends_the_text_as_it_comes.phase`
+- `copilot/phases/2026-10-05-cli-data-code/graph/LS2_copilot_sends_the_text_as_it_comes-92023bff51219ae4.graph`
+- `copilot/phases/2026-10-05-verified-primitives/VP3_the_repo_model_of_the_user.phase`
+- `copilot/phases/2026-10-05-verified-primitives/graph/VP3_the_repo_model_of_the_user-92bc2dd650ca2e8f.graph`
+- `copilot/phases/2026-10-09-hardening-pass/HP7_a_browser_agent_gets_its_wait.phase`
+- `copilot/phases/2026-10-09-hardening-pass/graph/HP7_a_browser_agent_gets_its_wait-a4195cb04cac45ee.graph`
+- `copilot/phases/2026-10-10-copilot-talk-to-nexus/TN2.phase`
+- `copilot/phases/2026-10-10-copilot-talk-to-nexus/TN3.phase`
+- `copilot/phases/2026-10-10-copilot-talk-to-nexus/TN4.phase`
+- `copilot/phases/2026-10-10-copilot-talk-to-nexus/graph/TN2-55fe5df0d8b17a28.graph`
+- `copilot/phases/2026-10-10-copilot-talk-to-nexus/graph/TN3-69be44658219c6e1.graph`
+- `copilot/phases/2026-10-10-copilot-talk-to-nexus/graph/TN4-bdbf333184d40c6d.graph`
+- `copilot/phases/2026-10-10-idearium-solid/SD2_copilot_never_answers_ok_with_nothing.phase`
+- `copilot/phases/2026-10-10-idearium-solid/graph/SD2_copilot_never_answers_ok_with_nothing-8d00d3029511847a.graph`
+- `copilot/phases/2026-10-15-gate-held-work/GW4_copilot_on_the_gates.phase`
+- `copilot/phases/2026-10-15-gate-held-work/graph/GW4_copilot_on_the_gates-716480a2afed4f07.graph`
+- `copilot/phases/INDEX.md`
+- `copilot/phases/copilot-full-capability/P11_nexus_help_tool.phase`
+- `copilot/phases/copilot-full-capability/P2_never_say_no_completion.phase`
+- `copilot/phases/copilot-full-capability/P6_identity_naming.phase`
+- `copilot/phases/copilot-full-capability/P9_meta_systems_toolkit.phase`
+- `copilot/phases/copilot-full-capability/graph/P11_nexus_help_tool-d7a1283161e7eb97.graph`
+- `copilot/phases/copilot-full-capability/graph/P2_never_say_no_completion-b53237e38ad335da.graph`
+- `copilot/phases/copilot-full-capability/graph/P6_identity_naming-0c33f7aab8915a01.graph`
+- `copilot/phases/copilot-full-capability/graph/P9_meta_systems_toolkit-fb6fd4c9b63c1f34.graph`
+- `copilot/phases/copilot-guardian-cos-expansion/GA10_copilot_capability_self_awareness.phase`
+- `copilot/phases/copilot-guardian-cos-expansion/GA4_lib_meta_as_cortex_tools.phase`
+- `copilot/phases/copilot-guardian-cos-expansion/GA5_history_and_spec_integrity.phase`
+- `copilot/phases/copilot-guardian-cos-expansion/GA7_clear_glass_guardian_userscript_expansion.phase`
+- `copilot/phases/copilot-guardian-cos-expansion/GA9_cos_expansion_via_copilot.phase`
+- `copilot/phases/copilot-guardian-cos-expansion/graph/GA10_copilot_capability_self_awareness-a85de0a884ce625f.graph`
+- `copilot/phases/copilot-guardian-cos-expansion/graph/GA4_lib_meta_as_cortex_tools-f334e2fccb2cff97.graph`
+- `copilot/phases/copilot-guardian-cos-expansion/graph/GA5_history_and_spec_integrity-aa8b6dbf976bed84.graph`
+- `copilot/phases/copilot-guardian-cos-expansion/graph/GA7_clear_glass_guardian_userscript_expansion-ff4aff7c9f9c1eb2.graph`
+- `copilot/phases/copilot-guardian-cos-expansion/graph/GA9_cos_expansion_via_copilot-a05b29515f65294a.graph`
+- `copilot/phases/copilot-omniscience/P1_copilot_tool_loop.phase`
+- `copilot/phases/copilot-omniscience/P3_continuous_stream_to_copilot.phase`
+- `copilot/phases/copilot-omniscience/P5_faculties_as_tools.phase`
+- `copilot/phases/copilot-omniscience/P7_stream_to_all_systems.phase`
+- `copilot/phases/copilot-omniscience/graph/P1_copilot_tool_loop-bbfc868d79c0aa22.graph`
+- `copilot/phases/copilot-omniscience/graph/P3_continuous_stream_to_copilot-074a4aec5b0e38e9.graph`
+- `copilot/phases/copilot-omniscience/graph/P5_faculties_as_tools-7ce0d0cbf1e459e5.graph`
+- `copilot/phases/copilot-omniscience/graph/P7_stream_to_all_systems-765df9d3dc2003cb.graph`
+- `copilot/phases/cortex-schema-registry/P3_observe_on_write_no_block.phase`
+- `copilot/phases/cortex-schema-registry/P4_editable_surface.phase`
+- `copilot/phases/cortex-schema-registry/UM2_query_on_every_path.phase`
+- `copilot/phases/cortex-schema-registry/UM3_richer_capture.phase`
+- `copilot/phases/cortex-schema-registry/UM4_editable_self_optimizing_surface.phase`
+- `copilot/phases/cortex-schema-registry/graph/P3_observe_on_write_no_block-719d251a2203bc5e.graph`
+- `copilot/phases/cortex-schema-registry/graph/P4_editable_surface-9c61c4aa8a24d3ff.graph`
+- `copilot/phases/cortex-schema-registry/graph/UM2_query_on_every_path-f64a1ce92571c43c.graph`
+- `copilot/phases/cortex-schema-registry/graph/UM3_richer_capture-9ad12f13bf921264.graph`
+- `copilot/phases/cortex-schema-registry/graph/UM4_editable_self_optimizing_surface-9c4c844e8246ac7c.graph`
+- `copilot/phases/idearium-creative-repo-overhaul/MCO-A_schemas.phase`
+- `copilot/phases/idearium-creative-repo-overhaul/MCO-B_versionium_bridge.phase`
+- `copilot/phases/idearium-creative-repo-overhaul/MCO-C_repo_materialize.phase`
+- `copilot/phases/idearium-creative-repo-overhaul/MCO-D_zoom_subrepo.phase`
+- `copilot/phases/idearium-creative-repo-overhaul/MCO-F_config.phase`
+- `copilot/phases/idearium-creative-repo-overhaul/MCO-G_cicd_ssh.phase`
+- `copilot/phases/idearium-creative-repo-overhaul/graph/MCO-A_schemas-afc557e1106f1140.graph`
+- `copilot/phases/idearium-creative-repo-overhaul/graph/MCO-B_versionium_bridge-dc0a0680fdc16cf2.graph`
+- `copilot/phases/idearium-creative-repo-overhaul/graph/MCO-C_repo_materialize-39f84f1824ac58fb.graph`
+- `copilot/phases/idearium-creative-repo-overhaul/graph/MCO-D_zoom_subrepo-226e468de9139f21.graph`
+- `copilot/phases/idearium-creative-repo-overhaul/graph/MCO-F_config-2b2b4a75392d248d.graph`
+- `copilot/phases/idearium-creative-repo-overhaul/graph/MCO-G_cicd_ssh-08ec48531c316087.graph`
+- `copilot/phases/nexus-live-mind/P4_copilot_awareness.phase`
+- `copilot/phases/nexus-live-mind/P5_copilot_dynamic_and_user_aware.phase`
+- `copilot/phases/nexus-live-mind/graph/P4_copilot_awareness-ccacba0791d50925.graph`
+- `copilot/phases/nexus-live-mind/graph/P5_copilot_dynamic_and_user_aware-c4de9a7b4031461d.graph`
+- `copilot/phases/nexus-observability-tablet/OB1_live_diagnostics.phase`
+- `copilot/phases/nexus-observability-tablet/OB4_bottleneck_detection.phase`
+- `copilot/phases/nexus-observability-tablet/OB6_continuous_ollama_injection.phase`
+- `copilot/phases/nexus-observability-tablet/OB7_intelligence_optimization.phase`
+- `copilot/phases/nexus-observability-tablet/OB8_pattern_leverage_ratio.phase`
+- `copilot/phases/nexus-observability-tablet/OB9_3d_visual_map.phase`
+- `copilot/phases/nexus-observability-tablet/graph/OB1_live_diagnostics-b96f43f0be72f7ee.graph`
+- `copilot/phases/nexus-observability-tablet/graph/OB4_bottleneck_detection-591af951a6da1c78.graph`
+- `copilot/phases/nexus-observability-tablet/graph/OB6_continuous_ollama_injection-48971e046feff0e8.graph`
+- `copilot/phases/nexus-observability-tablet/graph/OB7_intelligence_optimization-7e1433b5ec9d5df9.graph`
+- `copilot/phases/nexus-observability-tablet/graph/OB8_pattern_leverage_ratio-0c003c79fea3e208.graph`
+- `copilot/phases/nexus-observability-tablet/graph/OB9_3d_visual_map-7aca0f52f9a1f8aa.graph`
+- `copilot/phases/raid-warp-verification/P10_diagnose_and_notify.phase`
+- `copilot/phases/raid-warp-verification/P9_gated_events_to_copilot.phase`
+- `copilot/phases/raid-warp-verification/graph/P10_diagnose_and_notify-40f9f0bd5ff91845.graph`
+- `copilot/phases/raid-warp-verification/graph/P9_gated_events_to_copilot-71cc6b1d9dcc7aa6.graph`
+
+</details>
+
+<details>
 <summary>`copilot/routes/` · 2 files</summary>
 
 - `copilot/routes/opportunity.js` — /api/opportunity/* and /api/context/* on copilot port 3750. 0.39.272. The HTTP door to lib/opportunity…
@@ -1833,7 +4228,7 @@ Copilot is 64 files in 7 modules, entry `copilot/server.js`, port 3750, spec `co
 
 </details>
 
-20 release notes name a file of copilot: 0.60.131., 0.60.127., 0.60.77., 0.60.70., 0.60.62., 0.60.26., 0.59.11., 0.59.6., 0.55.0., 0.39.337., 0.39.336., 0.39.330., 0.39.271., 0.39.269., 0.39.267., 0.39.256., 0.39.253., 0.39.248., 0.39.244., 0.39.188.. Each is in the version history below, in his words.
+24 release notes name a file of copilot: 0.60.230., 0.60.226., 0.60.205., 0.60.182., 0.60.131., 0.60.127., 0.60.77., 0.60.70., 0.60.62., 0.60.26., 0.59.11., 0.59.6., 0.55.0., 0.39.337., 0.39.336., 0.39.330., 0.39.271., 0.39.269., 0.39.267., 0.39.256., 0.39.253., 0.39.248., 0.39.244., 0.39.188.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:copilot:end -->
 
@@ -1844,7 +4239,7 @@ The registry authority. `loom/server.js` on :3752 serves the registry of compone
 <!-- generated:readme:system:loom:start -->
 #### loom: every module and every file
 
-Loom is 80 files in 14 modules, entry `loom/server.js`, port 3752, spec `loom/spec/loom.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/loom-atlas.md`.
+Loom is 244 files in 42 modules, entry `loom/server.js`, port 3752, spec `loom/spec/loom.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/loom-atlas.md`.
 
 <details>
 <summary>`loom/` · 7 files</summary>
@@ -1913,6 +4308,338 @@ Loom is 80 files in 14 modules, entry `loom/server.js`, port 3752, spec `loom/sp
 - `loom/maps/ui-map.js`
 - `loom/maps/verified-primitives-map.js`
 - `loom/maps/warp-map.js`
+
+</details>
+
+<details>
+<summary>`loom/phases/` · 1 file</summary>
+
+- `loom/phases/INDEX.md` — loom — its phases
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-08-22-session-full/` · 5 files</summary>
+
+- `loom/phases/2026-08-22-session-full/SF11_phasemap_backfill.phase`
+- `loom/phases/2026-08-22-session-full/SF19_loom_registry_never_auto_synced.phase`
+- `loom/phases/2026-08-22-session-full/graph/SF11_phasemap_backfill-bf4299e5982fba6c.graph`
+- `loom/phases/2026-08-22-session-full/graph/SF19_loom_registry_never_auto_synced-73c7fd75c8376239.graph`
+- `loom/phases/2026-08-22-session-full/graph/_superseded/SF11_phasemap_backfill-36ccf0662c84b6ce.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-08-23-backlog/` · 8 files</summary>
+
+- `loom/phases/2026-08-23-backlog/BL20_loom_map_becomes_real_visual_graph.phase`
+- `loom/phases/2026-08-23-backlog/BL8_docs_consolidation.phase`
+- `loom/phases/2026-08-23-backlog/BL9_per_system_phasemap_folders.phase`
+- `loom/phases/2026-08-23-backlog/graph/BL20_loom_map_becomes_real_visual_graph-762077890aeb5d5d.graph`
+- `loom/phases/2026-08-23-backlog/graph/BL8_docs_consolidation-f11d47b75fd95959.graph`
+- `loom/phases/2026-08-23-backlog/graph/BL9_per_system_phasemap_folders-f4b6da5aabf94c14.graph`
+- `loom/phases/2026-08-23-backlog/graph/_superseded/BL8_docs_consolidation-4bd638212282d840.graph`
+- `loom/phases/2026-08-23-backlog/graph/_superseded/BL9_per_system_phasemap_folders-a0a3b9315f60e821.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-08-27-event-taxonomy-and-brainstorm/` · 3 files</summary>
+
+- `loom/phases/2026-08-27-event-taxonomy-and-brainstorm/ET5_loom_event_taxonomy_map.phase`
+- `loom/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET5_loom_event_taxonomy_map-9aaa3b469d6c50fc.graph`
+- `loom/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/ET5_loom_event_taxonomy_map-96283cd2a039045a.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-09-01-living-model-and-autonomous-pipeline/` · 32 files</summary>
+
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM11_copilot_ollama_guardian_toggle.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM12_successful_prompt_caching.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM13_guardian_agents_folder_refactor.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM15_master_settings.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM16_per_system_data_decay.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM20_atlas_schema_and_deterministic_seed.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM21_atlas_fact_extractors.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM22_atlas_structure_ledger.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM26_atlas_completeness_and_release_gate.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM2_registry_as_hub_with_watchdog.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM3_interaction_contract_wired_to_registry.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM4_per_system_tool_index.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM5_copilot_capability_zoom.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM7_agent_mesh_intent_programming.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/LM9_deterministic_agent_switch_cli.phase`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM11_copilot_ollama_guardian_toggle-209243b79f19c6f8.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM12_successful_prompt_caching-fa9d4d86415f97ee.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM13_guardian_agents_folder_refactor-6ec05f2ae6a14f52.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM15_master_settings-8efc35ac45481212.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM16_per_system_data_decay-750e2cda196b99e0.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM20_atlas_schema_and_deterministic_seed-601c13a899ed4574.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM21_atlas_fact_extractors-4fdac497540c63a7.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM22_atlas_structure_ledger-508f340855c7ea37.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM26_atlas_completeness_and_release_gate-47765d95129f3a03.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM2_registry_as_hub_with_watchdog-519224c23b9cef9e.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM3_interaction_contract_wired_to_registry-449bc0047be37e21.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM4_per_system_tool_index-86152b1c6afc3eb8.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM5_copilot_capability_zoom-9f3676d4351df0b6.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM7_agent_mesh_intent_programming-3488b61a28cf6bff.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM9_deterministic_agent_switch_cli-e66e4bcde0f0b933.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/_superseded/LM20_atlas_schema_and_deterministic_seed-b4e4374b5ce1026a.graph`
+- `loom/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/_superseded/LM21_atlas_fact_extractors-a213471d50b5a6d7.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-09-11-compartment-nodetype-and-reorg/` · 2 files</summary>
+
+- `loom/phases/2026-09-11-compartment-nodetype-and-reorg/T4_cos_role_confirmed.phase`
+- `loom/phases/2026-09-11-compartment-nodetype-and-reorg/graph/T4_cos_role_confirmed-73888c5f227ef76d.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-09-19-architect-blueprint-forge-idearium/` · 11 files</summary>
+
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/P2_decide_D1_D2_D3.phase`
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/P3_architect_canvas_onto_loom_registry.phase`
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/P4_blueprint_as_canvas_mode.phase`
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/P5_forge_as_phasemap_view.phase`
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/P6_idearium_build_authority.phase`
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/graph/P2_decide_D1_D2_D3-adc3df99c5a9096d.graph`
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/graph/P3_architect_canvas_onto_loom_registry-0b52d656863e5839.graph`
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/graph/P4_blueprint_as_canvas_mode-03cf72ff64e11941.graph`
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/graph/P5_forge_as_phasemap_view-afc40acee5a4b7cc.graph`
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/graph/P6_idearium_build_authority-6a967cacc9231f14.graph`
+- `loom/phases/2026-09-19-architect-blueprint-forge-idearium/graph/_superseded/P5_forge_as_phasemap_view-041a2d8cb63aeaa0.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` · 3 files</summary>
+
+- `loom/phases/2026-09-27-one-idearium-phases-living-spec-nodes/P1_phasemap_list_form.phase`
+- `loom/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/P1_phasemap_list_form-8e17fb4800a62ea5.graph`
+- `loom/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/P1_phasemap_list_form-fd8d361ec32dabe0.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-09-27-registry-harness-and-stability/` · 2 files</summary>
+
+- `loom/phases/2026-09-27-registry-harness-and-stability/H1.phase`
+- `loom/phases/2026-09-27-registry-harness-and-stability/graph/H1-d8a53b79e9f88d89.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-09-28-graph-build-context-settings-memory/` · 2 files</summary>
+
+- `loom/phases/2026-09-28-graph-build-context-settings-memory/L1.phase`
+- `loom/phases/2026-09-28-graph-build-context-settings-memory/graph/L1-5ea3ba1965c46f0d.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-09-28-staging-self-heal/` · 2 files</summary>
+
+- `loom/phases/2026-09-28-staging-self-heal/L1.phase`
+- `loom/phases/2026-09-28-staging-self-heal/graph/L1-f9baab1fe72d6f56.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-05-build-from-the-spec/` · 2 files</summary>
+
+- `loom/phases/2026-10-05-build-from-the-spec/SB24_loom_builds_a_new_system.phase`
+- `loom/phases/2026-10-05-build-from-the-spec/graph/SB24_loom_builds_a_new_system-bdd03972022356be.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-05-cli-data-code/` · 10 files</summary>
+
+- `loom/phases/2026-10-05-cli-data-code/HG2_loom_bootstrap_rejections.phase`
+- `loom/phases/2026-10-05-cli-data-code/HG5_bootstrap_keeps_registration_times.phase`
+- `loom/phases/2026-10-05-cli-data-code/HG6_scanner_status_vocabulary.phase`
+- `loom/phases/2026-10-05-cli-data-code/HG9_persist_history_diff.phase`
+- `loom/phases/2026-10-05-cli-data-code/graph/HG2_loom_bootstrap_rejections-966dd95e7e861011.graph`
+- `loom/phases/2026-10-05-cli-data-code/graph/HG5_bootstrap_keeps_registration_times-71df2c9ea26652cf.graph`
+- `loom/phases/2026-10-05-cli-data-code/graph/HG6_scanner_status_vocabulary-f79a44488c30eea9.graph`
+- `loom/phases/2026-10-05-cli-data-code/graph/HG9_persist_history_diff-95c5a644e3d78081.graph`
+- `loom/phases/2026-10-05-cli-data-code/graph/_superseded/HG6_scanner_status_vocabulary-49086cd86ee95b15.graph`
+- `loom/phases/2026-10-05-cli-data-code/graph/_superseded/HG9_persist_history_diff-4445ae8cae3baf26.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-09-one-roadmap/` · 6 files</summary>
+
+- `loom/phases/2026-10-09-one-roadmap/OR1_five_answers_for_an_open_phase.phase`
+- `loom/phases/2026-10-09-one-roadmap/OR5_it_stays_decluttered.phase`
+- `loom/phases/2026-10-09-one-roadmap/graph/OR1_five_answers_for_an_open_phase-dc0983a787d924ad.graph`
+- `loom/phases/2026-10-09-one-roadmap/graph/OR5_it_stays_decluttered-9060a707b377db33.graph`
+- `loom/phases/2026-10-09-one-roadmap/graph/_superseded/OR1_five_answers_for_an_open_phase-8767ec179c02d02d.graph`
+- `loom/phases/2026-10-09-one-roadmap/graph/_superseded/OR5_it_stays_decluttered-d9858c6f5ddd36e2.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-12-browser-providers-and-work/` · 5 files</summary>
+
+- `loom/phases/2026-10-12-browser-providers-and-work/MX0_phases_tagged_to_components.phase`
+- `loom/phases/2026-10-12-browser-providers-and-work/MX2_the_0_60_components_wired_in_loom.phase`
+- `loom/phases/2026-10-12-browser-providers-and-work/graph/MX0_phases_tagged_to_components-ebed791fafbb5d61.graph`
+- `loom/phases/2026-10-12-browser-providers-and-work/graph/MX2_the_0_60_components_wired_in_loom-119b6279fd663960.graph`
+- `loom/phases/2026-10-12-browser-providers-and-work/graph/_superseded/MX0_phases_tagged_to_components-27729eaceec7d145.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-12-request-spine/` · 2 files</summary>
+
+- `loom/phases/2026-10-12-request-spine/RQ11_spec_and_registry_reconciled.phase`
+- `loom/phases/2026-10-12-request-spine/graph/RQ11_spec_and_registry_reconciled-ac250d713085c01a.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-13-projects-raid-and-gates/` · 2 files</summary>
+
+- `loom/phases/2026-10-13-projects-raid-and-gates/LM0_loom_wires_have_stable_ids.phase`
+- `loom/phases/2026-10-13-projects-raid-and-gates/graph/LM0_loom_wires_have_stable_ids-64d53d8e7a486546.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-15-fiverr-ledger/` · 2 files</summary>
+
+- `loom/phases/2026-10-15-fiverr-ledger/PF3_the_screen.phase`
+- `loom/phases/2026-10-15-fiverr-ledger/graph/PF3_the_screen-e8d5082305f259ca.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-15-gate-held-work/` · 2 files</summary>
+
+- `loom/phases/2026-10-15-gate-held-work/GW23_wire_what_exists.phase`
+- `loom/phases/2026-10-15-gate-held-work/graph/GW23_wire_what_exists-cef06578bf31e272.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-15-warp-builds-and-spec-framework/` · 6 files</summary>
+
+- `loom/phases/2026-10-15-warp-builds-and-spec-framework/PT1_specs_tagged_per_phase.phase`
+- `loom/phases/2026-10-15-warp-builds-and-spec-framework/PT2_phases_tagged_by_system_repo.phase`
+- `loom/phases/2026-10-15-warp-builds-and-spec-framework/graph/PT1_specs_tagged_per_phase-d3ea293dbc480b04.graph`
+- `loom/phases/2026-10-15-warp-builds-and-spec-framework/graph/PT2_phases_tagged_by_system_repo-abc1512198265fee.graph`
+- `loom/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/PT1_specs_tagged_per_phase-621f016cdcca51c1.graph`
+- `loom/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/PT2_phases_tagged_by_system_repo-764aabf1594ac20e.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-19-infrastructure-spine/` · 2 files</summary>
+
+- `loom/phases/2026-10-19-infrastructure-spine/IN4_retire_hand_maps.phase`
+- `loom/phases/2026-10-19-infrastructure-spine/graph/IN4_retire_hand_maps-b5cba90de8bdff76.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-19-pipeline-root-causes/` · 2 files</summary>
+
+- `loom/phases/2026-10-19-pipeline-root-causes/SS4_seal_into_compartments.phase`
+- `loom/phases/2026-10-19-pipeline-root-causes/graph/SS4_seal_into_compartments-369aaef9557e2030.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/2026-10-21-approval-chain/` · 2 files</summary>
+
+- `loom/phases/2026-10-21-approval-chain/APV5_wired_in_loom.phase`
+- `loom/phases/2026-10-21-approval-chain/graph/APV5_wired_in_loom-73a4e2239e5435a3.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/loom-phasemap-section/` · 9 files</summary>
+
+- `loom/phases/loom-phasemap-section/LP1_phasemap_scanner.phase`
+- `loom/phases/loom-phasemap-section/LP2_split_by_system.phase`
+- `loom/phases/loom-phasemap-section/LP3_loom_section.phase`
+- `loom/phases/loom-phasemap-section/graph/LP1_phasemap_scanner-4959567292bb0430.graph`
+- `loom/phases/loom-phasemap-section/graph/LP2_split_by_system-0829f785bafd438e.graph`
+- `loom/phases/loom-phasemap-section/graph/LP3_loom_section-73211575ee3c6f2a.graph`
+- `loom/phases/loom-phasemap-section/graph/_superseded/LP1_phasemap_scanner-9baa3673ba62906c.graph`
+- `loom/phases/loom-phasemap-section/graph/_superseded/LP2_split_by_system-31c9d5d0ffc1bfd0.graph`
+- `loom/phases/loom-phasemap-section/graph/_superseded/LP3_loom_section-c5805f62164aa4cd.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/nexus-architecture-rebuild/` · 26 files</summary>
+
+- `loom/phases/nexus-architecture-rebuild/P15_forge_shell_into_loom.phase`
+- `loom/phases/nexus-architecture-rebuild/P16_architect_node_canvas_in_loom.phase`
+- `loom/phases/nexus-architecture-rebuild/P17_blueprint_builder_onto_canvas.phase`
+- `loom/phases/nexus-architecture-rebuild/P18_tv_ui_triage.phase`
+- `loom/phases/nexus-architecture-rebuild/P19_tablet_continue.phase`
+- `loom/phases/nexus-architecture-rebuild/P1_dangling_hook_flood.phase`
+- `loom/phases/nexus-architecture-rebuild/P21_loom_boundary_import_hooks.phase`
+- `loom/phases/nexus-architecture-rebuild/P22_scanner_hand_map_id_drift.phase`
+- `loom/phases/nexus-architecture-rebuild/P3_remaining_dangling_hooks.phase`
+- `loom/phases/nexus-architecture-rebuild/P4_forge_shell_rebuild.phase`
+- `loom/phases/nexus-architecture-rebuild/P5_cockpit_to_copilot_control_surface.phase`
+- `loom/phases/nexus-architecture-rebuild/P6_copilot_toasts.phase`
+- `loom/phases/nexus-architecture-rebuild/graph/P15_forge_shell_into_loom-8ba7d89591e9ed40.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P16_architect_node_canvas_in_loom-e1fe4417843573a5.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P17_blueprint_builder_onto_canvas-c9dc8279be53da93.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P18_tv_ui_triage-f01cd98115ddf748.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P19_tablet_continue-d79f4c355f96ff81.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P1_dangling_hook_flood-c2a48d9b68d5b863.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P21_loom_boundary_import_hooks-907e46438b65288f.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P22_scanner_hand_map_id_drift-dded8b9e97b3ca01.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P3_remaining_dangling_hooks-903fa24d744e6bd3.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P4_forge_shell_rebuild-40a2f883e2298610.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P5_cockpit_to_copilot_control_surface-fcb861ad77e320a9.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P6_copilot_toasts-a09fd4021c8e4d8e.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/_superseded/P15_forge_shell_into_loom-5354ae367b60de9c.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/_superseded/P4_forge_shell_rebuild-8e2cf5d748e1fd80.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/nexus-self-build-pipeline/` · 2 files</summary>
+
+- `loom/phases/nexus-self-build-pipeline/SB1_schema_extension.phase`
+- `loom/phases/nexus-self-build-pipeline/graph/SB1_schema_extension-72f0c5f1efbfffb5.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/nexus-system-standardization/` · 10 files</summary>
+
+- `loom/phases/nexus-system-standardization/SS0_clear_clutter.phase`
+- `loom/phases/nexus-system-standardization/SS1_system_manifest.phase`
+- `loom/phases/nexus-system-standardization/SS4_full_logging_per_system.phase`
+- `loom/phases/nexus-system-standardization/SS6_dynamic_commands_and_cortex_data.phase`
+- `loom/phases/nexus-system-standardization/SS7_decoupling_audit.phase`
+- `loom/phases/nexus-system-standardization/graph/SS0_clear_clutter-868ea5cf38cf8404.graph`
+- `loom/phases/nexus-system-standardization/graph/SS1_system_manifest-a9200dbf3224b519.graph`
+- `loom/phases/nexus-system-standardization/graph/SS4_full_logging_per_system-80f873187821fffc.graph`
+- `loom/phases/nexus-system-standardization/graph/SS6_dynamic_commands_and_cortex_data-2d38a1102ce3d793.graph`
+- `loom/phases/nexus-system-standardization/graph/SS7_decoupling_audit-3a4d6d0780b5923e.graph`
+
+</details>
+
+<details>
+<summary>`loom/phases/repair-contract-and-loom-hub/` · 3 files</summary>
+
+- `loom/phases/repair-contract-and-loom-hub/R0_phasemap_history_in_cortex.phase`
+- `loom/phases/repair-contract-and-loom-hub/graph/R0_phasemap_history_in_cortex-9f7fec7fb67eb3bf.graph`
+- `loom/phases/repair-contract-and-loom-hub/graph/_superseded/R0_phasemap_history_in_cortex-d461c96866f2c73e.graph`
 
 </details>
 
@@ -2010,7 +4737,7 @@ Loom is 80 files in 14 modules, entry `loom/server.js`, port 3752, spec `loom/sp
 
 </details>
 
-49 release notes name a file of loom: 0.60.157., 0.60.156., 0.60.155., 0.60.153., 0.60.150., 0.60.143., 0.60.134., 0.60.131., 0.60.127., 0.60.126., 0.60.118., 0.60.80., 0.60.72., 0.60.63., 0.60.41., 0.60.7., 0.60.5., 0.60.4., 0.59.11., 0.53.0., 0.49.0., 0.44.0., 0.39.367., 0.39.359., 0.39.349., 0.39.334., 0.39.332., 0.39.330., 0.39.329., 0.39.313., 0.39.310., 0.39.305., 0.39.302., 0.39.298., 0.39.281., 0.39.280., 0.39.278., 0.39.275., 0.39.273., 0.39.271., and 9 older. Each is in the version history below, in his words.
+60 release notes name a file of loom: 0.60.225., 0.60.222., 0.60.199., 0.60.188., 0.60.176., 0.60.170., 0.60.168., 0.60.166., 0.60.164., 0.60.161., 0.60.160., 0.60.157., 0.60.156., 0.60.155., 0.60.153., 0.60.150., 0.60.143., 0.60.134., 0.60.131., 0.60.127., 0.60.126., 0.60.118., 0.60.80., 0.60.72., 0.60.63., 0.60.41., 0.60.7., 0.60.5., 0.60.4., 0.59.11., 0.53.0., 0.49.0., 0.44.0., 0.39.367., 0.39.359., 0.39.349., 0.39.334., 0.39.332., 0.39.330., 0.39.329., and 20 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:loom:end -->
 
@@ -2021,7 +4748,7 @@ The sovereign browser: Electron and Chromium, with its own fingerprint control, 
 <!-- generated:readme:system:clear-glass:start -->
 #### clear-glass: every module and every file
 
-Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-glass.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/clear-glass-atlas.md`.
+Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear-glass.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/clear-glass-atlas.md`.
 
 <details>
 <summary>`clear-glass/` · 6 files</summary>
@@ -2059,9 +4786,956 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
+<summary>`clear-glass/phases/` · 1 file</summary>
+
+- `clear-glass/phases/INDEX.md` — clear-glass — its phases
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-08-22-session-full/` · 2 files</summary>
+
+- `clear-glass/phases/2026-08-22-session-full/SF14_wake_pipeline_real_architecture.phase`
+- `clear-glass/phases/2026-08-22-session-full/graph/SF14_wake_pipeline_real_architecture-197e4087240a93cd.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-08-23-backlog/` · 34 files</summary>
+
+- `clear-glass/phases/2026-08-23-backlog/BL0_macro_system.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL10_nexus_roadmap_html_files.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL14_seam_to_lib_seam.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL17_nexus_url_scheme.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL18_tools_per_url.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL19_roadmap_readability.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL1_macro_erosmancer_integration.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL22_rewind_timeline_ui.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL23_ncp_providers_start_verification.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL26_account_agent_window_uuid_linking.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL28_background_tabs_setting.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL29_tab_context_menu_move_to_background.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL2_guardian_zip_mining_report.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL30_registry_components_drift_audit.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL31_architect_block_canvas_component_swap.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL5_port_killswitch_pattern.phase`
+- `clear-glass/phases/2026-08-23-backlog/BL6_captcha_detection.phase`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL0_macro_system-58296859ab5e1418.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL10_nexus_roadmap_html_files-80b8c025c01b3474.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL14_seam_to_lib_seam-a139a48406c5ffd1.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL17_nexus_url_scheme-99bb8e363414a436.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL18_tools_per_url-6e529aec0748e9ba.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL19_roadmap_readability-acd486febb7a758e.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL1_macro_erosmancer_integration-16a373b699bcfb38.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL22_rewind_timeline_ui-c303b8516180f930.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL23_ncp_providers_start_verification-68e2b72f9c16e13c.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL26_account_agent_window_uuid_linking-a60e3d64b570800c.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL28_background_tabs_setting-179098e301fdb617.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL29_tab_context_menu_move_to_background-801abdd7b0833200.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL2_guardian_zip_mining_report-064061cd3e8c7740.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL30_registry_components_drift_audit-eac106116feaaa9a.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL31_architect_block_canvas_component_swap-5361bbb7f4319623.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL5_port_killswitch_pattern-48ab969e8779224d.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL6_captcha_detection-acc28d69b4475ef7.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-08-27-event-taxonomy-and-brainstorm/` · 8 files</summary>
+
+- `clear-glass/phases/2026-08-27-event-taxonomy-and-brainstorm/BR1_callto_component_hotswap_catalog.phase`
+- `clear-glass/phases/2026-08-27-event-taxonomy-and-brainstorm/BR4_erosmancer_as_clearglass_plugin.phase`
+- `clear-glass/phases/2026-08-27-event-taxonomy-and-brainstorm/BR8_clearglass_full_agent_tool_parity.phase`
+- `clear-glass/phases/2026-08-27-event-taxonomy-and-brainstorm/BR9_theme_consolidation_to_nexus_dark.phase`
+- `clear-glass/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR1_callto_component_hotswap_catalog-e6e82690ee483733.graph`
+- `clear-glass/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR4_erosmancer_as_clearglass_plugin-03ecdb7f9c99b61f.graph`
+- `clear-glass/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR8_clearglass_full_agent_tool_parity-62e54d03c6ab830a.graph`
+- `clear-glass/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR9_theme_consolidation_to_nexus_dark-4ab785621dee1689.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-08-28-self-building-pipeline/` · 2 files</summary>
+
+- `clear-glass/phases/2026-08-28-self-building-pipeline/SBP7_agent_suite_lives_in_clearglass.phase`
+- `clear-glass/phases/2026-08-28-self-building-pipeline/graph/SBP7_agent_suite_lives_in_clearglass-48087c2a9f893bf5.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-08-30-interaction-contract-context/` · 11 files</summary>
+
+- `clear-glass/phases/2026-08-30-interaction-contract-context/IC11_agent_truth_fragmentation.phase`
+- `clear-glass/phases/2026-08-30-interaction-contract-context/IC3_intention_taxonomy_per_system.phase`
+- `clear-glass/phases/2026-08-30-interaction-contract-context/IC4_idearium_system_template_update.phase`
+- `clear-glass/phases/2026-08-30-interaction-contract-context/IC8_callto_event_driven_cli_injection.phase`
+- `clear-glass/phases/2026-08-30-interaction-contract-context/IC9_diagnostic_stall_detection_and_autofix.phase`
+- `clear-glass/phases/2026-08-30-interaction-contract-context/graph/IC11_agent_truth_fragmentation-0a51b71bfcb6edc5.graph`
+- `clear-glass/phases/2026-08-30-interaction-contract-context/graph/IC3_intention_taxonomy_per_system-4e285ed5aef34d74.graph`
+- `clear-glass/phases/2026-08-30-interaction-contract-context/graph/IC4_idearium_system_template_update-9f874130772add91.graph`
+- `clear-glass/phases/2026-08-30-interaction-contract-context/graph/IC8_callto_event_driven_cli_injection-f44516d2a55c9222.graph`
+- `clear-glass/phases/2026-08-30-interaction-contract-context/graph/IC9_diagnostic_stall_detection_and_autofix-13ed862cf85ae1ff.graph`
+- `clear-glass/phases/2026-08-30-interaction-contract-context/graph/_superseded/IC11_agent_truth_fragmentation-b9dc58c002c61d18.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-09-01-living-model-and-autonomous-pipeline/` · 6 files</summary>
+
+- `clear-glass/phases/2026-09-01-living-model-and-autonomous-pipeline/LM17_downloads_manager_for_artifacts.phase`
+- `clear-glass/phases/2026-09-01-living-model-and-autonomous-pipeline/LM24_atlas_prose_layer.phase`
+- `clear-glass/phases/2026-09-01-living-model-and-autonomous-pipeline/LM8_full_pipeline_wiring.phase`
+- `clear-glass/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM17_downloads_manager_for_artifacts-3d19dd972de8a30e.graph`
+- `clear-glass/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM24_atlas_prose_layer-fb1d1886928a6b42.graph`
+- `clear-glass/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM8_full_pipeline_wiring-b48e3d072c5de953.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-09-02-nexus-vision-master/` · 2 files</summary>
+
+- `clear-glass/phases/2026-09-02-nexus-vision-master/T4_userscript_event_types.phase`
+- `clear-glass/phases/2026-09-02-nexus-vision-master/graph/T4_userscript_event_types-921142887d6d72f5.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-09-02-versionium-sovereign-and-cleanup/` · 2 files</summary>
+
+- `clear-glass/phases/2026-09-02-versionium-sovereign-and-cleanup/CG1_process_manager_in_settings.phase`
+- `clear-glass/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/CG1_process_manager_in_settings-fb5aa1a99a71129f.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/` · 16 files</summary>
+
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/CG1_ncp_events_real.phase`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/CG2_route_ncp_onto_guardian_sse.phase`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/CP1_tool_index_hooked_to_living_model.phase`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/CP2_copilot_versionium_awareness.phase`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/CP3_git_vs_versionium_decision.phase`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/DA2_dispatch_outcome_events.phase`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/ID1_resolve_versionium_cortex_dependency.phase`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/IDU1_idearium_homepage_and_repo_browser.phase`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/CG1_ncp_events_real-d173963e478d5d69.graph`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/CG2_route_ncp_onto_guardian_sse-5a0bf626fc918b86.graph`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/CP1_tool_index_hooked_to_living_model-ce14ab9b2c29744b.graph`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/CP2_copilot_versionium_awareness-dc90fa1d06d6df9e.graph`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/CP3_git_vs_versionium_decision-5596e1b70a39c284.graph`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/DA2_dispatch_outcome_events-24bdcc78690144b7.graph`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/ID1_resolve_versionium_cortex_dependency-4782d4c5e56ab572.graph`
+- `clear-glass/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/IDU1_idearium_homepage_and_repo_browser-59239d65a2593d97.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-09-11-sovereign-node-architecture/` · 32 files</summary>
+
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P10_intelligence_reads_sse_and_data_folders.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P13_interaction_contract_plus_handshake_for_every_cross_system_call.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P14_per_system_living_gap_index.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P23_guardian_job_durability.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P24_response_queue_and_delivery_ack.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P27_guardian_picker_userscript_manager.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P28_dom_tool_and_command_flow.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P29_clearglass_brainos_canvas.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P2_per_system_interaction_contracts.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P32_clearglass_enterprise_ui_scope.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P34_nodes_in_the_lattice.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P35_copilot_reads_edits_creates_nodes.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P37_the_ui_floats_on_the_registry.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P5_data_folder_completion.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P6_per_system_contract_schemas.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/P8_per_system_component_registry.phase`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P10_intelligence_reads_sse_and_data_folders-7adf7e1b825e4987.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P13_interaction_contract_plus_handshake_for_every_cross_system_call-58cf76a841513887.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P14_per_system_living_gap_index-9458a22e955dc98a.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P23_guardian_job_durability-27a5e87ffd5ddbc2.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P24_response_queue_and_delivery_ack-df6fe63556075f03.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P27_guardian_picker_userscript_manager-44ddc6e72cdb237e.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P28_dom_tool_and_command_flow-0b2ddb3502c0b4d6.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P29_clearglass_brainos_canvas-bb6cf64c44552e5c.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P2_per_system_interaction_contracts-1cb7c61b5c6e9d93.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P32_clearglass_enterprise_ui_scope-f2ef2defe3ad1ca5.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P34_nodes_in_the_lattice-2e02ff3713ff6e57.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P35_copilot_reads_edits_creates_nodes-4c5e2012491d8686.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P37_the_ui_floats_on_the_registry-c73e397fa682657f.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P5_data_folder_completion-2905a720e667ce30.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P6_per_system_contract_schemas-238173594117490a.graph`
+- `clear-glass/phases/2026-09-11-sovereign-node-architecture/graph/P8_per_system_component_registry-9b441101dc4ad8c8.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/` · 18 files</summary>
+
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/P1_driver.phase`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/P2_mesh_transport.phase`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/P3_endpoint.phase`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/P4_identity.phase`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/P6_verify.phase`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/T2_duplicate_prompt.phase`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/T3_wrong_page.phase`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/T4_two_actuators.phase`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/T5_untestable_here.phase`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/P1_driver-ca4c42738e1cad5b.graph`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/P2_mesh_transport-fb229d927ed658aa.graph`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/P3_endpoint-80b9c1cda9f7d5a5.graph`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/P4_identity-f5af86aa56495490.graph`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/P6_verify-e233123773468798.graph`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/T2_duplicate_prompt-fd69a7a86a7aeec7.graph`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/T3_wrong_page-36dd2c25439e70e1.graph`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/T4_two_actuators-1e41d389b0d7fe92.graph`
+- `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/T5_untestable_here-3ec3c1ec8bf6950c.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-09-29-build-surface/` · 4 files</summary>
+
+- `clear-glass/phases/2026-09-29-build-surface/BS0_compartment_windows.phase`
+- `clear-glass/phases/2026-09-29-build-surface/BS17_copilot_browser_verbs.phase`
+- `clear-glass/phases/2026-09-29-build-surface/graph/BS0_compartment_windows-96cfa0a56795fd3f.graph`
+- `clear-glass/phases/2026-09-29-build-surface/graph/BS17_copilot_browser_verbs-612a170a43473d39.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-09-29-provider-economy/` · 2 files</summary>
+
+- `clear-glass/phases/2026-09-29-provider-economy/EC9_input_path_in_editors.phase`
+- `clear-glass/phases/2026-09-29-provider-economy/graph/EC9_input_path_in_editors-2b376534e7e951b9.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-01-idearium-agent-ready-master/` · 6 files</summary>
+
+- `clear-glass/phases/2026-10-01-idearium-agent-ready-master/CG1_clear_glass_accounts_and_private.phase`
+- `clear-glass/phases/2026-10-01-idearium-agent-ready-master/CG2_clear_glass_drag_wrapper_and_fluid_url_bar.phase`
+- `clear-glass/phases/2026-10-01-idearium-agent-ready-master/PF10_clear_glass_err_aborted_9000.phase`
+- `clear-glass/phases/2026-10-01-idearium-agent-ready-master/graph/CG1_clear_glass_accounts_and_private-adf380e049b8562f.graph`
+- `clear-glass/phases/2026-10-01-idearium-agent-ready-master/graph/CG2_clear_glass_drag_wrapper_and_fluid_url_bar-c9f738c8197eb8e4.graph`
+- `clear-glass/phases/2026-10-01-idearium-agent-ready-master/graph/PF10_clear_glass_err_aborted_9000-8f9d250d6b6fb2ea.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-01-work-visibility-job-reuse/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-01-work-visibility-job-reuse/J5.phase`
+- `clear-glass/phases/2026-10-01-work-visibility-job-reuse/graph/J5-664d74fc10c451b6.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-02-emerge-field-memory-build/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-02-emerge-field-memory-build/PR2_screenshots_through_clear_glass.phase`
+- `clear-glass/phases/2026-10-02-emerge-field-memory-build/graph/PR2_screenshots_through_clear_glass-3444f6584530ed41.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-05-fiverr-guide/` · 4 files</summary>
+
+- `clear-glass/phases/2026-10-05-fiverr-guide/FR1_the_guide.phase`
+- `clear-glass/phases/2026-10-05-fiverr-guide/FR2_show_me_on_the_page.phase`
+- `clear-glass/phases/2026-10-05-fiverr-guide/graph/FR1_the_guide-c57302eaf1167ddf.graph`
+- `clear-glass/phases/2026-10-05-fiverr-guide/graph/FR2_show_me_on_the_page-b6e7861ffe663d01.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-05-idea-to-spec-workshop/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-05-idea-to-spec-workshop/WK0_pop_out_windows_borderless.phase`
+- `clear-glass/phases/2026-10-05-idea-to-spec-workshop/graph/WK0_pop_out_windows_borderless-460dfe0e0222e3da.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-07-compartment-control-and-activity/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-07-compartment-control-and-activity/DC1_a_click_that_did_nothing.phase`
+- `clear-glass/phases/2026-10-07-compartment-control-and-activity/graph/DC1_a_click_that_did_nothing-58a4e2e09bd4dc9c.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-10-design-surface/` · 6 files</summary>
+
+- `clear-glass/phases/2026-10-10-design-surface/DS1_tokens_edited_live.phase`
+- `clear-glass/phases/2026-10-10-design-surface/DS2_pick_and_edit_any_page.phase`
+- `clear-glass/phases/2026-10-10-design-surface/DS4_interface_types_by_adapter.phase`
+- `clear-glass/phases/2026-10-10-design-surface/graph/DS1_tokens_edited_live-8d477dcf2270ac45.graph`
+- `clear-glass/phases/2026-10-10-design-surface/graph/DS2_pick_and_edit_any_page-47581699d0b5073d.graph`
+- `clear-glass/phases/2026-10-10-design-surface/graph/DS4_interface_types_by_adapter-23e21f01a2f3ded3.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-10-idearium-access/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-10-idearium-access/IA4_clear_glass_signs_in_for_you.phase`
+- `clear-glass/phases/2026-10-10-idearium-access/graph/IA4_clear_glass_signs_in_for_you-5aa67551e81230b4.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-10-idearium-solid/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-10-idearium-solid/SD8_an_agent_can_see_and_fix_a_tab.phase`
+- `clear-glass/phases/2026-10-10-idearium-solid/graph/SD8_an_agent_can_see_and_fix_a_tab-487ac3e1e6056957.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-10-shape-of-nexus/` · 12 files</summary>
+
+- `clear-glass/phases/2026-10-10-shape-of-nexus/CG1_the_field_injects_once.phase`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/CG2_one_source_of_truth_for_the_browser.phase`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/CG3_the_fiverr_tutorial_in_the_browser.phase`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/FN2_nerve_sees_the_field.phase`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/SH2_explain_this_anywhere.phase`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/TU1_the_nexus_tutorial.phase`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/graph/CG1_the_field_injects_once-d4aad8bc65bd8eba.graph`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/graph/CG2_one_source_of_truth_for_the_browser-b8620004bc4e6726.graph`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/graph/CG3_the_fiverr_tutorial_in_the_browser-aaa3675caef098b9.graph`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/graph/FN2_nerve_sees_the_field-716118daf05d258b.graph`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/graph/SH2_explain_this_anywhere-ee5f18699614cf8c.graph`
+- `clear-glass/phases/2026-10-10-shape-of-nexus/graph/TU1_the_nexus_tutorial-3c410e7addc61b7e.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-12-browser-providers-and-work/` · 38 files</summary>
+
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/AS1_provider_tab_runs_as_the_default_account.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/JB0_gig_files.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/JB1_the_agent_writes_the_gig_file.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/JB2_the_copilot_hat_agent_and_account.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/JB3_autofill_fields_mapped_by_pick.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/JB4_resume_import.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/JB6_the_application_ledger.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/JB7_the_follow_up.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/RN0_the_renderer_as_a_cos_window.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/TB0_the_webview_session_proved.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/TB1_a_tab_is_its_own_webview.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/TB2_a_tab_runs_as_an_account.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/TB3_tabs_are_compartments.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/TB4_bookmark_checklists.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/TB5_site_and_account_nodes.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/TB6_element_endpoints.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/TB7_human_tabs_never_spoofed.phase`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/AS1_provider_tab_runs_as_the_default_account-8f04aea70b3f8c4c.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/JB0_gig_files-e3c172dca44dd01b.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/JB1_the_agent_writes_the_gig_file-897ac09840418686.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/JB2_the_copilot_hat_agent_and_account-62b2420dcfc3416c.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/JB3_autofill_fields_mapped_by_pick-2a7158bf98595a74.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/JB4_resume_import-b1c70c5840717e4e.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/JB6_the_application_ledger-c7beddcbfaae4371.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/JB7_the_follow_up-ba331fb30a195c2d.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/RN0_the_renderer_as_a_cos_window-4a9bc7c74df8a2b0.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/TB0_the_webview_session_proved-0413e61ab4296a70.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/TB1_a_tab_is_its_own_webview-d0d5c9dc749e3d31.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/TB2_a_tab_runs_as_an_account-ad3933093002c9e3.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/TB3_tabs_are_compartments-91b6321036f635ee.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/TB4_bookmark_checklists-8c52de1ac7a8caf8.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/TB5_site_and_account_nodes-e21cc26fac945969.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/TB6_element_endpoints-43ef5bbbbaab7af2.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/TB7_human_tabs_never_spoofed-4e31472027e2ef56.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/_superseded/JB3_autofill_fields_mapped_by_pick-f03c5d98203972f2.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/_superseded/JB4_resume_import-5f5bfc35c620b31f.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/_superseded/JB6_the_application_ledger-46f6fdd5ad1b1534.graph`
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/graph/_superseded/TB5_site_and_account_nodes-43acd84436dcbc96.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-13-gates-that-learn-and-priorities/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-13-gates-that-learn-and-priorities/PF1_profiles_hats_tabs.phase`
+- `clear-glass/phases/2026-10-13-gates-that-learn-and-priorities/graph/PF1_profiles_hats_tabs-559a264e9111dce2.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-13-identities-tabs-and-automation/` · 32 files</summary>
+
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/CU0_chat_url_reload_before_escalating.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/HM1_chatgpt_connection_kept.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/ID0_signed_in_where_he_signs_in.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/ID1_identities.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/ID2_every_cookie_a_row.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/ID3_bookmarks_carry_the_identity.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/ID4_incognito.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/MC0_recorder_records_the_tab.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/MC1_steps_as_events_and_snapshots.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/MC2_hotkeys_for_macros.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/NV0_scripts_injected_once.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/NV1_words_to_elements.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/NV2_tell_clear_glass_what_to_do.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/TB1_tab_is_a_view.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/TB2_new_tab_menu.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/TB3_browser_rebuilt.phase`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/CU0_chat_url_reload_before_escalating-d7b06cef88a5d5b8.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/HM1_chatgpt_connection_kept-c58eb03d6c919db7.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/ID0_signed_in_where_he_signs_in-8b26dcbb3d411c99.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/ID1_identities-b977f6b54637a686.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/ID2_every_cookie_a_row-fe5049365936c188.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/ID3_bookmarks_carry_the_identity-fe345d2788c05a2e.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/ID4_incognito-4d6262129208311e.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/MC0_recorder_records_the_tab-5b2c303ade2f84c7.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/MC1_steps_as_events_and_snapshots-b7dfa5c5ff2fcec2.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/MC2_hotkeys_for_macros-a0d99d8f06fb8ca4.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/NV0_scripts_injected_once-10ac55e1555a339a.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/NV1_words_to_elements-b3eedddb8bbbae8e.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/NV2_tell_clear_glass_what_to_do-c31060359b5f7fc4.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/TB1_tab_is_a_view-ee8c681d5d8a4bf4.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/TB2_new_tab_menu-12881bf49a145127.graph`
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/graph/TB3_browser_rebuilt-cc1d0fefce82b17d.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-13-projects-raid-and-gates/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-13-projects-raid-and-gates/WF0_workflows.phase`
+- `clear-glass/phases/2026-10-13-projects-raid-and-gates/graph/WF0_workflows-974d9c5ead887971.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-15-capability-specs-and-semantic-page-tree/` · 6 files</summary>
+
+- `clear-glass/phases/2026-10-15-capability-specs-and-semantic-page-tree/CS3_feature_starts_as_a_spec.phase`
+- `clear-glass/phases/2026-10-15-capability-specs-and-semantic-page-tree/SP1_semantic_page_tree.phase`
+- `clear-glass/phases/2026-10-15-capability-specs-and-semantic-page-tree/SP2_semantic_addresses_for_the_field_map.phase`
+- `clear-glass/phases/2026-10-15-capability-specs-and-semantic-page-tree/graph/CS3_feature_starts_as_a_spec-a5a6068f4e05064d.graph`
+- `clear-glass/phases/2026-10-15-capability-specs-and-semantic-page-tree/graph/SP1_semantic_page_tree-8a8b6900ce74fa3b.graph`
+- `clear-glass/phases/2026-10-15-capability-specs-and-semantic-page-tree/graph/SP2_semantic_addresses_for_the_field_map-e4824b3db829762f.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-15-clear-glass-network-posture/` · 36 files</summary>
+
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP10_browser_surface.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP11_context_menu.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP12_plugin_split.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP13_settings_html.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP14_macros_and_automation.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP15_kill_switch.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP16_quarantine_pipeline.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP17_hold_primitive.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP18_freeze_plugin.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP1_compartment.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP2_policy_and_storage.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP3_apply_to_electron.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP4_webrtc.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP5_leak_test.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP6_settings.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP7_p2p.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP8_macro_hooks.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/NP9_cli_first.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP10_browser_surface-09f4a73e43ffab7d.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP11_context_menu-4075b599a76694ed.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP12_plugin_split-581a7f5c1194fe97.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP13_settings_html-7963737bd097d29a.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP14_macros_and_automation-2847a26c9d226bd5.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP15_kill_switch-bf2c7c8a892bc080.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP16_quarantine_pipeline-36b6cda16caeb659.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP17_hold_primitive-114f488ecf1e98c4.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP18_freeze_plugin-53c52b561aea759a.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP1_compartment-0bc26a82e83f2e24.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP2_policy_and_storage-80223590c3dad8ed.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP3_apply_to_electron-b7c76e01e263d382.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP4_webrtc-e1c386e4367500af.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP5_leak_test-d8d86049fe3ea73a.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP6_settings-01027becd9b14386.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP7_p2p-b46600783db8bec5.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP8_macro_hooks-0ee4cb8e3bf471c6.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/graph/NP9_cli_first-65e757a992580a74.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-15-clear-glass-surfaces/` · 10 files</summary>
+
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/CS1_one_popup_frame.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/CS2_settings_providers_and_accounts.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/CS3_clear_glass_users_as_plugins.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/PF2_the_items.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/PF3_the_section.phase`
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/graph/CS1_one_popup_frame-2309fce9f645ea6b.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/graph/CS2_settings_providers_and_accounts-377b41fc576de436.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/graph/CS3_clear_glass_users_as_plugins-65f150cb1b4a6789.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/graph/PF2_the_items-63bc80b6b271a79e.graph`
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/graph/PF3_the_section-66f9578d26cb5b2c.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-15-cos-app/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-15-cos-app/COSA7_clear_glass_delivers.phase`
+- `clear-glass/phases/2026-10-15-cos-app/graph/COSA7_clear_glass_delivers-07b5a7f81ad0d2e7.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-15-macro-node-recording/` · 26 files</summary>
+
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR11_into_nexus.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR12_magnet_p2p.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR13_hypothesis_tracker.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR1_live_node.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR2_richer_events.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR3_dialog.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR3b_guide_and_hotkey_toast.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR4_listener_as_nodes.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR5_role_tags.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR6_macro_to_automation.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR7_bind_and_trigger.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR8_virtual_mouse_record.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/MR9_page_event_record.phase`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR11_into_nexus-de5d0fa9290bde04.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR12_magnet_p2p-2f67b50f8b6c45db.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR13_hypothesis_tracker-9895d3d7a9960edd.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR1_live_node-d02eb93be714620a.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR2_richer_events-210b0c392ca052ce.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR3_dialog-d48a589841854876.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR3b_guide_and_hotkey_toast-c7090557628cbfe8.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR4_listener_as_nodes-92f8747119b47a89.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR5_role_tags-947a6872f9bd98e5.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR6_macro_to_automation-806c89ac1dcff4f2.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR7_bind_and_trigger-85a2b68eacd68d1f.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR8_virtual_mouse_record-8f07c8e16762a989.graph`
+- `clear-glass/phases/2026-10-15-macro-node-recording/graph/MR9_page_event_record-a54df1454c00eb90.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-15-personal-chat-import/` · 14 files</summary>
+
+- `clear-glass/phases/2026-10-15-personal-chat-import/PI2_the_listener.phase`
+- `clear-glass/phases/2026-10-15-personal-chat-import/PI3b_the_measured_patterns.phase`
+- `clear-glass/phases/2026-10-15-personal-chat-import/PI4_the_review_screen.phase`
+- `clear-glass/phases/2026-10-15-personal-chat-import/PI5_the_crawler.phase`
+- `clear-glass/phases/2026-10-15-personal-chat-import/PI5_the_sync.phase`
+- `clear-glass/phases/2026-10-15-personal-chat-import/PI6_the_firefox_script.phase`
+- `clear-glass/phases/2026-10-15-personal-chat-import/PI7_the_links.phase`
+- `clear-glass/phases/2026-10-15-personal-chat-import/graph/PI2_the_listener-d65ed1a624638d21.graph`
+- `clear-glass/phases/2026-10-15-personal-chat-import/graph/PI3b_the_measured_patterns-6edf264fc41eb579.graph`
+- `clear-glass/phases/2026-10-15-personal-chat-import/graph/PI4_the_review_screen-3419972235b0c3d4.graph`
+- `clear-glass/phases/2026-10-15-personal-chat-import/graph/PI5_the_crawler-f8d69ae582cc49df.graph`
+- `clear-glass/phases/2026-10-15-personal-chat-import/graph/PI5_the_sync-548476dceeead35e.graph`
+- `clear-glass/phases/2026-10-15-personal-chat-import/graph/PI6_the_firefox_script-bf5f6880f62879e2.graph`
+- `clear-glass/phases/2026-10-15-personal-chat-import/graph/PI7_the_links-8e6fdc9331be6c5f.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-16-code-tab-rebuild/` · 4 files</summary>
+
+- `clear-glass/phases/2026-10-16-code-tab-rebuild/TB7_runs_tab.phase`
+- `clear-glass/phases/2026-10-16-code-tab-rebuild/TB7c_graph_and_zoom.phase`
+- `clear-glass/phases/2026-10-16-code-tab-rebuild/graph/TB7_runs_tab-56ae3f6835f01b06.graph`
+- `clear-glass/phases/2026-10-16-code-tab-rebuild/graph/TB7c_graph_and_zoom-78e30e5a8955bb39.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-16-google-signin/` · 12 files</summary>
+
+- `clear-glass/phases/2026-10-16-google-signin/GS1_present_as_firefox_on_google_signin.phase`
+- `clear-glass/phases/2026-10-16-google-signin/GS2_request_hooks_compose.phase`
+- `clear-glass/phases/2026-10-16-google-signin/GS3_domains_and_version.phase`
+- `clear-glass/phases/2026-10-16-google-signin/GS4_page_without_a_debugger.phase`
+- `clear-glass/phases/2026-10-16-google-signin/GS5_contexts_one_firefox.phase`
+- `clear-glass/phases/2026-10-16-google-signin/GS6_proxy.phase`
+- `clear-glass/phases/2026-10-16-google-signin/graph/GS1_present_as_firefox_on_google_signin-0c6919648171727e.graph`
+- `clear-glass/phases/2026-10-16-google-signin/graph/GS2_request_hooks_compose-0889c4dbc2a8419e.graph`
+- `clear-glass/phases/2026-10-16-google-signin/graph/GS3_domains_and_version-be7633a1c9ac3502.graph`
+- `clear-glass/phases/2026-10-16-google-signin/graph/GS4_page_without_a_debugger-b89e3f9a2ae563ec.graph`
+- `clear-glass/phases/2026-10-16-google-signin/graph/GS5_contexts_one_firefox-8fd91edb7c3ff9cb.graph`
+- `clear-glass/phases/2026-10-16-google-signin/graph/GS6_proxy-aea64bd8ae7f3973.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-16-nexus-git-sync/` · 10 files</summary>
+
+- `clear-glass/phases/2026-10-16-nexus-git-sync/GS1_commands.phase`
+- `clear-glass/phases/2026-10-16-nexus-git-sync/GS2_nexus_as_a_repo.phase`
+- `clear-glass/phases/2026-10-16-nexus-git-sync/GS3_pull_is_a_switch.phase`
+- `clear-glass/phases/2026-10-16-nexus-git-sync/GS4_push_policy.phase`
+- `clear-glass/phases/2026-10-16-nexus-git-sync/GS6_update_notice.phase`
+- `clear-glass/phases/2026-10-16-nexus-git-sync/graph/GS1_commands-81faeb652af072b8.graph`
+- `clear-glass/phases/2026-10-16-nexus-git-sync/graph/GS2_nexus_as_a_repo-202b9f274359c7c1.graph`
+- `clear-glass/phases/2026-10-16-nexus-git-sync/graph/GS3_pull_is_a_switch-39af288a02e05a34.graph`
+- `clear-glass/phases/2026-10-16-nexus-git-sync/graph/GS4_push_policy-498533e55109c664.graph`
+- `clear-glass/phases/2026-10-16-nexus-git-sync/graph/GS6_update_notice-1d54722ef89351a1.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-16-tls-layer/` · 6 files</summary>
+
+- `clear-glass/phases/2026-10-16-tls-layer/TLS1_helper.phase`
+- `clear-glass/phases/2026-10-16-tls-layer/TLS2_clear_glass_runs_it.phase`
+- `clear-glass/phases/2026-10-16-tls-layer/TLS3_personas_use_it.phase`
+- `clear-glass/phases/2026-10-16-tls-layer/graph/TLS1_helper-65a76242b17b178d.graph`
+- `clear-glass/phases/2026-10-16-tls-layer/graph/TLS2_clear_glass_runs_it-b14334ea754ba2f7.graph`
+- `clear-glass/phases/2026-10-16-tls-layer/graph/TLS3_personas_use_it-01945ef6a6f43e3f.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-19-gig-autofill-and-learn/` · 23 files</summary>
+
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/GA1_copilot_fills_the_gig.phase`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/GA1a_a_written_gig_is_remembered.phase`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/GA2_a_missed_field_asks_the_picker.phase`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/GA3_the_pick_is_saved_three_ways.phase`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/GA4_the_matcher_learns.phase`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/JA1_the_matcher_consults_learned.phase`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/JA2_a_pick_is_saved_per_site.phase`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/JA3_the_picker_on_a_miss.phase`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/JA4_the_learn_loop_ui.phase`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/JA5_the_pick_is_also_a_macro.phase`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/GA1_copilot_fills_the_gig-6d8a7e5ce0db2455.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/GA1a_a_written_gig_is_remembered-dfa9db0a9ad9b3e7.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/GA2_a_missed_field_asks_the_picker-5486fbf8b49b9969.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/GA3_the_pick_is_saved_three_ways-b06bce491aee3a8d.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/GA4_the_matcher_learns-a4442f1b8c96933e.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/JA1_the_matcher_consults_learned-8650f43be33938ea.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/JA2_a_pick_is_saved_per_site-af5f76542e8c50de.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/JA3_the_picker_on_a_miss-5c93f0806d60b930.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/JA4_the_learn_loop_ui-bf671d3ddbd3bbcc.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/JA5_the_pick_is_also_a_macro-66ae4523314f8948.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/_superseded/GA1a_a_written_gig_is_remembered-f600c0df5b9c0f5c.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/_superseded/GA2_a_missed_field_asks_the_picker-99874dafdee9dee9.graph`
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/graph/_superseded/GA3_the_pick_is_saved_three_ways-44b0a16a16b16c5c.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-19-pipeline-root-causes/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-19-pipeline-root-causes/PR1_page_reader.phase`
+- `clear-glass/phases/2026-10-19-pipeline-root-causes/graph/PR1_page_reader-1b941aeeae85b18a.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-19-upload-intent-and-page-map/` · 14 files</summary>
+
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/PM1_blocks.phase`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/PM2_index_and_chunks.phase`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/PM3_synthesized_map_that_learns.phase`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/PM4_intent_to_targets.phase`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/PM5_tools_routes_commands.phase`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/PM7_live_injected_map.phase`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/PM8_page_map_panel.phase`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/graph/PM1_blocks-283abe1c8554e022.graph`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/graph/PM2_index_and_chunks-7f6219ca6e083920.graph`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/graph/PM3_synthesized_map_that_learns-96e7aa80c587e8fa.graph`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/graph/PM4_intent_to_targets-e1554f1dbdf1cb92.graph`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/graph/PM5_tools_routes_commands-00c3906ed11442c9.graph`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/graph/PM7_live_injected_map-0026f5b7f1346993.graph`
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/graph/PM8_page_map_panel-cbb3ab807175cb3c.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-21-adblock/` · 14 files</summary>
+
+- `clear-glass/phases/2026-10-21-adblock/AB1_engine.phase`
+- `clear-glass/phases/2026-10-21-adblock/AB2_lists.phase`
+- `clear-glass/phases/2026-10-21-adblock/AB3_wiring.phase`
+- `clear-glass/phases/2026-10-21-adblock/AB4_surface.phase`
+- `clear-glass/phases/2026-10-21-adblock/AB5_import.phase`
+- `clear-glass/phases/2026-10-21-adblock/graph/AB1_engine-ce7213dcdf797a4c.graph`
+- `clear-glass/phases/2026-10-21-adblock/graph/AB2_lists-403ef9771243dd1b.graph`
+- `clear-glass/phases/2026-10-21-adblock/graph/AB3_wiring-0f2843b6cd64ba0b.graph`
+- `clear-glass/phases/2026-10-21-adblock/graph/AB4_surface-3faa436c3064d0f8.graph`
+- `clear-glass/phases/2026-10-21-adblock/graph/AB5_import-8bd5bbcc7bc580a9.graph`
+- `clear-glass/phases/2026-10-21-adblock/graph/_superseded/AB1_engine-20cef4608d9b1787.graph`
+- `clear-glass/phases/2026-10-21-adblock/graph/_superseded/AB2_lists-48ec7173619ce759.graph`
+- `clear-glass/phases/2026-10-21-adblock/graph/_superseded/AB3_wiring-f21a76a58142b5cf.graph`
+- `clear-glass/phases/2026-10-21-adblock/graph/_superseded/AB4_surface-c9c24c363b6af3aa.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-21-brainos-into-idearium/` · 2 files</summary>
+
+- `clear-glass/phases/2026-10-21-brainos-into-idearium/BX10_float.phase`
+- `clear-glass/phases/2026-10-21-brainos-into-idearium/graph/BX10_float-718eb952045d7b89.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-21-browser-shell/` · 45 files</summary>
+
+- `clear-glass/phases/2026-10-21-browser-shell/BS10_new_tab.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS11_copilot_pane.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS12_context_automatic.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS13_plugin_settings.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS14_zoom_core.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS15_context_menu.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS16_import_fields.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS17_menu_consolidated.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS18_chrome_context_menus.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS19_ctx_point_from_page.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS1_firefox_import.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS20_bookmark_site_accounts.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS2_shell_rebuild.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS3_menus.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS4_extensions.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS5_downloads_panel.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS6_float_cli.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS7_surface.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS8_design_system.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/BS9_agents_hub.phase`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS10_new_tab-e31b41b3f7ee6b17.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS11_copilot_pane-caad6884da55762a.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS12_context_automatic-bf412d88e3d0cd2a.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS13_plugin_settings-1e5c8fe7ff5bb197.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS14_zoom_core-ad165f3fde0be418.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS15_context_menu-afd2ae50d818a04b.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS16_import_fields-598249e869f9e7b4.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS17_menu_consolidated-f5d69e62d20f3d9c.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS18_chrome_context_menus-9123369f3fa7ce07.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS19_ctx_point_from_page-c852821cbea10b9d.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS1_firefox_import-d3c52db1223874d1.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS20_bookmark_site_accounts-17041ebd38f3c392.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS2_shell_rebuild-274f7a19aecede02.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS3_menus-d4a6503f3fdadee9.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS4_extensions-e040b9a57e2237a0.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS5_downloads_panel-f349b0efcf5ca190.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS6_float_cli-1600a40993ac1a76.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS7_surface-650e56a6af5ece66.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS8_design_system-45800c467fe1ee6c.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS9_agents_hub-e6c8cd1e2f573362.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/_superseded/BS12_context_automatic-0ff3ebe721017029.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/_superseded/BS12_context_automatic-953b56c3f6ba45cd.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/_superseded/BS14_zoom_core-5aa982aa70280429.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/_superseded/BS15_context_menu-b603bd17ec87a808.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/_superseded/BS6_float_cli-c0fd47f327b73e8c.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-21-compartment-downloads/` · 12 files</summary>
+
+- `clear-glass/phases/2026-10-21-compartment-downloads/CD1_magnet_parse.phase`
+- `clear-glass/phases/2026-10-21-compartment-downloads/CD2_quarantine_downloads.phase`
+- `clear-glass/phases/2026-10-21-compartment-downloads/CD3_verified_handoff.phase`
+- `clear-glass/phases/2026-10-21-compartment-downloads/CD4_kill_on_disconnect.phase`
+- `clear-glass/phases/2026-10-21-compartment-downloads/CD5_surface.phase`
+- `clear-glass/phases/2026-10-21-compartment-downloads/graph/CD1_magnet_parse-e3defc132656fe7c.graph`
+- `clear-glass/phases/2026-10-21-compartment-downloads/graph/CD2_quarantine_downloads-3d4f0cd284c268ef.graph`
+- `clear-glass/phases/2026-10-21-compartment-downloads/graph/CD3_verified_handoff-b1f1f8ce8c648a8f.graph`
+- `clear-glass/phases/2026-10-21-compartment-downloads/graph/CD4_kill_on_disconnect-5cffcae8e1562525.graph`
+- `clear-glass/phases/2026-10-21-compartment-downloads/graph/CD5_surface-925d52606c535ce8.graph`
+- `clear-glass/phases/2026-10-21-compartment-downloads/graph/_superseded/CD4_kill_on_disconnect-37c214a6e1300775.graph`
+- `clear-glass/phases/2026-10-21-compartment-downloads/graph/_superseded/CD5_surface-182f083bae4413ca.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-21-passwords/` · 10 files</summary>
+
+- `clear-glass/phases/2026-10-21-passwords/PW1_service.phase`
+- `clear-glass/phases/2026-10-21-passwords/PW2_page.phase`
+- `clear-glass/phases/2026-10-21-passwords/PW3_wiring.phase`
+- `clear-glass/phases/2026-10-21-passwords/PW4_surface.phase`
+- `clear-glass/phases/2026-10-21-passwords/graph/PW1_service-1adb1f53787dac35.graph`
+- `clear-glass/phases/2026-10-21-passwords/graph/PW2_page-a3c8be28c7f429ea.graph`
+- `clear-glass/phases/2026-10-21-passwords/graph/PW3_wiring-a624445100ffd099.graph`
+- `clear-glass/phases/2026-10-21-passwords/graph/PW4_surface-3c20d9cd7701c3e2.graph`
+- `clear-glass/phases/2026-10-21-passwords/graph/_superseded/PW1_service-0fb18010d2b4dadf.graph`
+- `clear-glass/phases/2026-10-21-passwords/graph/_superseded/PW3_wiring-7f2131c31f53703e.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-21-snowflake-compartment/` · 26 files</summary>
+
+- `clear-glass/phases/2026-10-21-snowflake-compartment/SF1_honest_detection.phase`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/SF2_bridge_sources.phase`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/SF3_page_in_the_compartment.phase`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/SF4_https_only.phase`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/SF5_circuit_check.phase`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/SF6_surface.phase`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/SF7_bridge_automatic.phase`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/SF8_host_import.phase`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/SF9_install_in_use.phase`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF1_honest_detection-bcc77d2324b63a88.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF2_bridge_sources-ea5b5eea6b68382f.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF3_page_in_the_compartment-0ccd30fdd4450abd.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF4_https_only-502b5c00f2ac8030.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF5_circuit_check-1d7cfbc07fe905be.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF6_surface-87e275793f76b7a7.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF7_bridge_automatic-130bca196028d7d7.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF8_host_import-b02e6f7310f9be5f.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF9_install_in_use-0f35a722345fb09e.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/_superseded/SF1_honest_detection-8e5bdcaa5c7f6e9f.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/_superseded/SF1_honest_detection-e5aa6ec75cff3f9c.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/_superseded/SF3_page_in_the_compartment-f34764dd0fbfd96e.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/_superseded/SF5_circuit_check-ac5c7c03123bac85.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/_superseded/SF5_circuit_check-f8487134f916abcc.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/_superseded/SF6_surface-6689d30ab14e6f63.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/_superseded/SF6_surface-dfa1169546059591.graph`
+- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/_superseded/SF7_bridge_automatic-1fb57e40a95cf705.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-10-23-site-profile-processes/` · 21 files</summary>
+
+- `clear-glass/phases/2026-10-23-site-profile-processes/SP1_one_resolver_for_every_feature.phase`
+- `clear-glass/phases/2026-10-23-site-profile-processes/SP2_each_feature_reads_its_site_value.phase`
+- `clear-glass/phases/2026-10-23-site-profile-processes/SP3_the_site_settings_screen.phase`
+- `clear-glass/phases/2026-10-23-site-profile-processes/SP4_cleardriver_mesh_guardian_settings.phase`
+- `clear-glass/phases/2026-10-23-site-profile-processes/SP5_processes_and_activity.phase`
+- `clear-glass/phases/2026-10-23-site-profile-processes/SP6_the_processes_screen.phase`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/SP1_one_resolver_for_every_feature-26dcc9df7dd4d061.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/SP2_each_feature_reads_its_site_value-5cb374cc92e52409.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/SP3_the_site_settings_screen-344ad9a833e51ca5.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/SP4_cleardriver_mesh_guardian_settings-fb57cef4503dcfda.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/SP5_processes_and_activity-d43cecd51dde3c80.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/SP6_the_processes_screen-ba0b54480cfed70e.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/_superseded/SP1_one_resolver_for_every_feature-603b7985ce8f9b73.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/_superseded/SP1_one_resolver_for_every_feature-7eae9a633ce4b434.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/_superseded/SP2_each_feature_reads_its_site_value-249259a90e6883d4.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/_superseded/SP2_each_feature_reads_its_site_value-817ef2353afca489.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/_superseded/SP3_the_site_settings_screen-1d671034540d6a5c.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/_superseded/SP4_cleardriver_mesh_guardian_settings-4ef5b98a501e3da4.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/_superseded/SP4_cleardriver_mesh_guardian_settings-daaaec093ead2831.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/_superseded/SP5_processes_and_activity-ca2e1a930897994f.graph`
+- `clear-glass/phases/2026-10-23-site-profile-processes/graph/_superseded/SP6_the_processes_screen-d170b15d089baaf0.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/clearglass-agent-suite-and-cfr-loom/` · 16 files</summary>
+
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/TX12_bookmark_reconciliation.phase`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/TX13_browser_chrome_backlog.phase`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/TX15_whisper_as_a_real_optional_capability.phase`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/TX16_persistent_listener_registry_and_callable_elements.phase`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/TX3_talk_to_agent_launcher.phase`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/TX5_backup_snapshot_for_talk_to_agent.phase`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/TX6_stop_using_this_chat_migration.phase`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/TX8_3d_cfr_visual_for_loom.phase`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/graph/TX12_bookmark_reconciliation-c7c761c27904fff6.graph`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/graph/TX13_browser_chrome_backlog-6657fef2cd1f6328.graph`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/graph/TX15_whisper_as_a_real_optional_capability-9064ceff1c0912a4.graph`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/graph/TX16_persistent_listener_registry_and_callable_elements-22078f9597907db9.graph`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/graph/TX3_talk_to_agent_launcher-095e5e9f21e07bf9.graph`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/graph/TX5_backup_snapshot_for_talk_to_agent-c39c26b3536d05a0.graph`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/graph/TX6_stop_using_this_chat_migration-70835de8de91fd23.graph`
+- `clear-glass/phases/clearglass-agent-suite-and-cfr-loom/graph/TX8_3d_cfr_visual_for_loom-ebbf61ff54a94603.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/copilot-autonomous/` · 2 files</summary>
+
+- `clear-glass/phases/copilot-autonomous/CA2_triggers_conditions.phase`
+- `clear-glass/phases/copilot-autonomous/graph/CA2_triggers_conditions-92729b5ec5388a88.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/copilot-awareness-routing/` · 8 files</summary>
+
+- `clear-glass/phases/copilot-awareness-routing/CA1_status_report.phase`
+- `clear-glass/phases/copilot-awareness-routing/CA3_tool_first.phase`
+- `clear-glass/phases/copilot-awareness-routing/CA4_capability_extend.phase`
+- `clear-glass/phases/copilot-awareness-routing/CA7_clearglass_multi_account.phase`
+- `clear-glass/phases/copilot-awareness-routing/graph/CA1_status_report-12cbbffc8d376eab.graph`
+- `clear-glass/phases/copilot-awareness-routing/graph/CA3_tool_first-913f66ec208c6737.graph`
+- `clear-glass/phases/copilot-awareness-routing/graph/CA4_capability_extend-7ebf1286b0abb9d9.graph`
+- `clear-glass/phases/copilot-awareness-routing/graph/CA7_clearglass_multi_account-efcdff2b11c0d466.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/copilot-full-capability/` · 4 files</summary>
+
+- `clear-glass/phases/copilot-full-capability/P5_clear_glass_url_tools.phase`
+- `clear-glass/phases/copilot-full-capability/P8_rewind_replay_tool.phase`
+- `clear-glass/phases/copilot-full-capability/graph/P5_clear_glass_url_tools-f149cbe6b2883fce.graph`
+- `clear-glass/phases/copilot-full-capability/graph/P8_rewind_replay_tool-ad52bfced684ea88.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/nexus-self-build-pipeline/` · 2 files</summary>
+
+- `clear-glass/phases/nexus-self-build-pipeline/SB9_full_clearglass_control.phase`
+- `clear-glass/phases/nexus-self-build-pipeline/graph/SB9_full_clearglass_control-77c994bfadf395ac.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/raid-verification-spine/` · 9 files</summary>
+
+- `clear-glass/phases/raid-verification-spine/P2_constitution_on_the_approve_path.phase`
+- `clear-glass/phases/raid-verification-spine/P4_sigma_and_drift_scoring.phase`
+- `clear-glass/phases/raid-verification-spine/P5_compare_contract_vs_output.phase`
+- `clear-glass/phases/raid-verification-spine/P7_one_raid_verify_entrypoint.phase`
+- `clear-glass/phases/raid-verification-spine/graph/P2_constitution_on_the_approve_path-c2b44c2f71d1648f.graph`
+- `clear-glass/phases/raid-verification-spine/graph/P4_sigma_and_drift_scoring-0bc9660bb9269c47.graph`
+- `clear-glass/phases/raid-verification-spine/graph/P5_compare_contract_vs_output-056dbb544ba1058f.graph`
+- `clear-glass/phases/raid-verification-spine/graph/P7_one_raid_verify_entrypoint-f6475ea7b7f6cac4.graph`
+- `clear-glass/phases/raid-verification-spine/graph/_superseded/P2_constitution_on_the_approve_path-f38f5f3bd87e3832.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/raid-warp-verification/` · 17 files</summary>
+
+- `clear-glass/phases/raid-warp-verification/P11_diagnose_and_repair_on_prompt.phase`
+- `clear-glass/phases/raid-warp-verification/P1_raid_records_every_decision.phase`
+- `clear-glass/phases/raid-warp-verification/P2_constitution_gate.phase`
+- `clear-glass/phases/raid-warp-verification/P3_cos_isolate_and_verify.phase`
+- `clear-glass/phases/raid-warp-verification/P4_sigma_drift_score.phase`
+- `clear-glass/phases/raid-warp-verification/P5_compare_contract_vs_output.phase`
+- `clear-glass/phases/raid-warp-verification/P7_one_raid_verify_spine.phase`
+- `clear-glass/phases/raid-warp-verification/P8_ui_as_copilot_tools.phase`
+- `clear-glass/phases/raid-warp-verification/graph/P11_diagnose_and_repair_on_prompt-fd9f03d8e2ba0434.graph`
+- `clear-glass/phases/raid-warp-verification/graph/P1_raid_records_every_decision-50590a227a1bc452.graph`
+- `clear-glass/phases/raid-warp-verification/graph/P2_constitution_gate-8aac611e5c52d941.graph`
+- `clear-glass/phases/raid-warp-verification/graph/P3_cos_isolate_and_verify-3c5807492e4c58ca.graph`
+- `clear-glass/phases/raid-warp-verification/graph/P4_sigma_drift_score-f97bb1eb7af72c05.graph`
+- `clear-glass/phases/raid-warp-verification/graph/P5_compare_contract_vs_output-aee6030d764aba5b.graph`
+- `clear-glass/phases/raid-warp-verification/graph/P7_one_raid_verify_spine-d51684d9b6de9d1f.graph`
+- `clear-glass/phases/raid-warp-verification/graph/P8_ui_as_copilot_tools-34bbffc617747a9c.graph`
+- `clear-glass/phases/raid-warp-verification/graph/_superseded/P2_constitution_gate-dff121c29106c93f.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/rich-atlas/` · 4 files</summary>
+
+- `clear-glass/phases/rich-atlas/AT1_full_enumeration_and_clickable_links.phase`
+- `clear-glass/phases/rich-atlas/AT3_agent_queryable_atlas.phase`
+- `clear-glass/phases/rich-atlas/graph/AT1_full_enumeration_and_clickable_links-b44d8db195669926.graph`
+- `clear-glass/phases/rich-atlas/graph/AT3_agent_queryable_atlas-528df862578c4752.graph`
+
+</details>
+
+<details>
 <summary>`clear-glass/plugins/adblocker/` · 2 files</summary>
 
-- `clear-glass/plugins/adblocker/index.js` — plugins/adblocker/index.js — real content-filter contribution. §HONEST SCOPE — the actual Electron wiring…
+- `clear-glass/plugins/adblocker/index.js` — plugins/adblocker/index.js — the Ad Blocker plugin: the surface of Clear Glass's content blocker (AB3,…
 - `clear-glass/plugins/adblocker/manifest.json`
 
 </details>
@@ -2085,7 +5759,7 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 <details>
 <summary>`clear-glass/plugins/passwords/` · 2 files</summary>
 
-- `clear-glass/plugins/passwords/index.js` — plugins/passwords/index.js — real userscript + page-detector + toolbar-command contributions.
+- `clear-glass/plugins/passwords/index.js` — PW4 (0.60.186) — James, 2026-10-21: "can you have websites use the passowrd manager and hook it into the…
 - `clear-glass/plugins/passwords/manifest.json`
 
 </details>
@@ -2099,27 +5773,36 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/plugins/zoom/` · 2 files</summary>
+<summary>`clear-glass/plugins/snowflake/` · 2 files</summary>
 
-- `clear-glass/plugins/zoom/index.js` — plugins/zoom/index.js — real toolbar-command contributions. Composes the real driver.exec 'zoom' action…
-- `clear-glass/plugins/zoom/manifest.json`
+- `clear-glass/plugins/snowflake/index.js` — plugins/snowflake/index.js — "Open link with Snowflake" (context-menu-item), NP11/NP12; its page (settings),…
+- `clear-glass/plugins/snowflake/manifest.json`
 
 </details>
 
 <details>
-<summary>`clear-glass/renderer/` · 11 files</summary>
+<summary>`clear-glass/renderer/` · 20 files</summary>
 
 - `clear-glass/renderer/browser.css`
 - `clear-glass/renderer/browser.html`
 - `clear-glass/renderer/browser.js`
 - `clear-glass/renderer/copilot-cli.js`
 - `clear-glass/renderer/cos-theme.css`
+- `clear-glass/renderer/float-cli.css`
+- `clear-glass/renderer/float-cli.html`
+- `clear-glass/renderer/float-cli.js`
 - `clear-glass/renderer/gig-panel.js`
 - `clear-glass/renderer/guardian-picker.js`
 - `clear-glass/renderer/library.html`
 - `clear-glass/renderer/mesh-picker.js`
+- `clear-glass/renderer/page-map-panel.js`
+- `clear-glass/renderer/processes.css`
+- `clear-glass/renderer/processes.html`
+- `clear-glass/renderer/processes.js`
 - `clear-glass/renderer/selector-check.js`
 - `clear-glass/renderer/settings.html`
+- `clear-glass/renderer/site-profile-groups.css`
+- `clear-glass/renderer/site-profile-groups.js`
 
 </details>
 
@@ -2156,7 +5839,7 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/renderer/settings/` · 41 files</summary>
+<summary>`clear-glass/renderer/settings/` · 49 files</summary>
 
 - `clear-glass/renderer/settings/boot.js`
 - `clear-glass/renderer/settings/core.js`
@@ -2176,16 +5859,24 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 - `clear-glass/renderer/settings/sections/diagnostics.js`
 - `clear-glass/renderer/settings/sections/downloads.css`
 - `clear-glass/renderer/settings/sections/downloads.js`
+- `clear-glass/renderer/settings/sections/driver.css`
+- `clear-glass/renderer/settings/sections/driver.js`
 - `clear-glass/renderer/settings/sections/eros.css`
 - `clear-glass/renderer/settings/sections/eros.js`
 - `clear-glass/renderer/settings/sections/fingerprint.css`
 - `clear-glass/renderer/settings/sections/fingerprint.js`
 - `clear-glass/renderer/settings/sections/general.css`
 - `clear-glass/renderer/settings/sections/general.js`
+- `clear-glass/renderer/settings/sections/guardian.css`
+- `clear-glass/renderer/settings/sections/guardian.js`
+- `clear-glass/renderer/settings/sections/import.css`
+- `clear-glass/renderer/settings/sections/import.js`
 - `clear-glass/renderer/settings/sections/macros.css`
 - `clear-glass/renderer/settings/sections/macros.js`
 - `clear-glass/renderer/settings/sections/mesh.css`
 - `clear-glass/renderer/settings/sections/mesh.js`
+- `clear-glass/renderer/settings/sections/network.css`
+- `clear-glass/renderer/settings/sections/network.js`
 - `clear-glass/renderer/settings/sections/plugins.css`
 - `clear-glass/renderer/settings/sections/plugins.js`
 - `clear-glass/renderer/settings/sections/privacy.css`
@@ -2199,6 +5890,24 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 - `clear-glass/renderer/settings/sections/suite.css`
 - `clear-glass/renderer/settings/sections/suite.js`
 - `clear-glass/renderer/settings/settings.css`
+
+</details>
+
+<details>
+<summary>`clear-glass/renderer/shell/` · 12 files</summary>
+
+- `clear-glass/renderer/shell/agents.js`
+- `clear-glass/renderer/shell/copilot.css`
+- `clear-glass/renderer/shell/ctxmenu.js`
+- `clear-glass/renderer/shell/downloads.js`
+- `clear-glass/renderer/shell/extensions.js`
+- `clear-glass/renderer/shell/icons.js`
+- `clear-glass/renderer/shell/menus.js`
+- `clear-glass/renderer/shell/newtab.js`
+- `clear-glass/renderer/shell/passwords.js`
+- `clear-glass/renderer/shell/shell.css`
+- `clear-glass/renderer/shell/shell.js`
+- `clear-glass/renderer/shell/toolbar.css`
 
 </details>
 
@@ -2236,13 +5945,19 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/spec/` · 5 files</summary>
+<summary>`clear-glass/spec/` · 11 files</summary>
 
-- `clear-glass/spec/clear-glass.node-taxonomy.md` — Node type → system map — Clear-glass
-- `clear-glass/spec/clear-glass.spec` — ── ADDENDUM 2026-10-05 (0.39.357) — 3.24.0 ──
-- `clear-glass/spec/design-surface.spec` — Design surface — made in the spec workshop (idearium)
-- `clear-glass/spec/guided-browser.spec` — Guided browser — made in the spec workshop (idearium)
-- `clear-glass/spec/semantic-tree.spec` — SP1 (0.60.49). Surface drafted from the code (lib/capability-spec.js draft); purpose from the map.
+- `clear-glass/spec/adblock.spec`
+- `clear-glass/spec/browser-shell.spec`
+- `clear-glass/spec/clear-glass.node-taxonomy.md`
+- `clear-glass/spec/clear-glass.spec`
+- `clear-glass/spec/compartment-downloads.spec`
+- `clear-glass/spec/design-surface.spec`
+- `clear-glass/spec/guided-browser.spec`
+- `clear-glass/spec/passwords.spec`
+- `clear-glass/spec/semantic-tree.spec`
+- `clear-glass/spec/site-profile.spec`
+- `clear-glass/spec/snowflake.spec`
 
 </details>
 
@@ -2254,10 +5969,20 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/accounts/` · 2 files</summary>
+<summary>`clear-glass/src/accounts/` · 3 files</summary>
 
+- `clear-glass/src/accounts/for-site.js` — which of his accounts are signed in to a site (BS20, 0.60.185). Spec: clear-glass/spec/browser-shell.spec…
 - `clear-glass/src/accounts/idearium-login.js` — src/accounts/idearium-login.js — Clear Glass signs in to Idearium for you (IA4,…
 - `clear-glass/src/accounts/login-portal.js`
+
+</details>
+
+<details>
+<summary>`clear-glass/src/adblock/` · 3 files</summary>
+
+- `clear-glass/src/adblock/engine.js` — the content blocker's engine: filter lists parsed, requests matched, element hiding per page (AB1,…
+- `clear-glass/src/adblock/import.js` — his own lists: files, folders, host lists (AB5, 0.60.184). Spec: clear-glass/spec/adblock.spec…
+- `clear-glass/src/adblock/lists.js` — the blocker's lists, state and store, and the one service a process has (AB2, 0.60.183). Spec:…
 
 </details>
 
@@ -2269,9 +5994,10 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/autofill/` · 4 files</summary>
+<summary>`clear-glass/src/autofill/` · 5 files</summary>
 
 - `clear-glass/src/autofill/gig.js`
+- `clear-glass/src/autofill/learn-pick.js`
 - `clear-glass/src/autofill/matcher.js` — real form-field matching §BUILT 2026-09-19 — pure functions, no DOM/network access, so this
 - `clear-glass/src/autofill/proposal.js` — cover letters and freelance proposals from an autofill profile.
 - `clear-glass/src/autofill/store.js` — Autofill Profile Store §BUILT 2026-09-19 — James: "autofill." Deliberately NOT named
@@ -2327,10 +6053,11 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/copilot/` · 6 files</summary>
+<summary>`clear-glass/src/copilot/` · 7 files</summary>
 
 - `clear-glass/src/copilot/bridge.js`
 - `clear-glass/src/copilot/chat-store.js` — the co-pilot pane's conversation, kept. §0.39.278 — James: "copilot and clearglass, isnt really working. its…
+- `clear-glass/src/copilot/context-need.js` — what a message needs from the page, decided before any model is asked (BS12, 0.60.182). Spec:…
 - `clear-glass/src/copilot/hat.js` — src/copilot/hat.js — the Clear Glass hat component_id: cg.copilot.hat
 - `clear-glass/src/copilot/tools.js` — src/copilot/tools.js — Co-pilot Tool Registry Every Clear Glass capability the co-pilot can invoke, declared…
 - `clear-glass/src/copilot/verbs.js`
@@ -2339,9 +6066,10 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/core/` · 1 file</summary>
+<summary>`clear-glass/src/core/` · 2 files</summary>
 
 - `clear-glass/src/core/bus.js` — src/core/bus.js — Clear Glass Central SISO Bus The single Stream that owns all Clear Glass events.
+- `clear-glass/src/core/zoom.js` — page zoom, one implementation in Clear Glass's core (BS14, 0.60.183). Spec:…
 
 </details>
 
@@ -2373,8 +6101,9 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/driver/` · 6 files</summary>
+<summary>`clear-glass/src/driver/` · 7 files</summary>
 
+- `clear-glass/src/driver/cg-stub.js` — a stand-in window.ClearGlass for driving Clear Glass's own pages in its engine (glass.js) without the…
 - `clear-glass/src/driver/glass-host/main.js` — Clear Glass's engine, run as a page host for glass.js. §0.39.263 — James: "playright? no what is that for?…
 - `clear-glass/src/driver/glass-host/package.json`
 - `clear-glass/src/driver/glass.js`
@@ -2414,6 +6143,13 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
+<summary>`clear-glass/src/import/` · 1 file</summary>
+
+- `clear-glass/src/import/firefox.js` — bring a Firefox profile into Clear Glass, for real (BS1, 0.60.179). Spec:…
+
+</details>
+
+<details>
 <summary>`clear-glass/src/ipc/` · 3 files</summary>
 
 - `clear-glass/src/ipc/agent-routes.js`
@@ -2439,11 +6175,13 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/main/` · 4 files</summary>
+<summary>`clear-glass/src/main/` · 6 files</summary>
 
 - `clear-glass/src/main/compartment-window.js` — idearium's pop-out pages as COS-compartment windows. §0.39.280. James: "can you have the electron popup…
+- `clear-glass/src/main/float-cli.js` — the floating CLI's own window (BS6, 0.60.179). Spec: clear-glass/spec/browser-shell.spec MOD-BSH-FLOAT-CLI.…
 - `clear-glass/src/main/index.js` — src/main/index.js — Clear Glass v3 SISO-native boot Boot order (law — §3.1 bottom-up only):
 - `clear-glass/src/main/index.pre-userscripts.js` — src/main/index.js — Clear Glass v3 SISO-native boot Boot order (law — §3.1 bottom-up only):
+- `clear-glass/src/main/passwords-wiring.js` — pages ↔ the password service ↔ the window (PW3, 0.60.186). Spec: clear-glass/spec/passwords.spec…
 - `clear-glass/src/main/window-frame.js` — one dark frame for every Clear Glass window that is not the main browser (CS1, 0.60.54) Map:…
 
 </details>
@@ -2460,11 +6198,20 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/net/` · 3 files</summary>
+<summary>`clear-glass/src/net/` · 12 files</summary>
 
-- `clear-glass/src/net/policy.js` — which way does a request go? (NP2, 0.60.60). Pure: no Electron, no network. James, 2026-10-15: "protocol…
-- `clear-glass/src/net/service.js` — the one door for routes and the transport (NP1+NP2+NP3 slice, 0.60.60). CLI first (James's order):…
-- `clear-glass/src/net/transport-host.js` — tor with Snowflake as its bridge, run as an isolated child (NP1, 0.60.60). Everything impure is injected.…
+- `clear-glass/src/net/bridge-sources.js`
+- `clear-glass/src/net/compartment.js`
+- `clear-glass/src/net/host-import.js`
+- `clear-glass/src/net/https-only.js`
+- `clear-glass/src/net/installer.js`
+- `clear-glass/src/net/kill-switch.js`
+- `clear-glass/src/net/magnet.js`
+- `clear-glass/src/net/policy.js`
+- `clear-glass/src/net/qbittorrent.js`
+- `clear-glass/src/net/quarantine.js`
+- `clear-glass/src/net/service.js`
+- `clear-glass/src/net/transport-host.js`
 
 </details>
 
@@ -2485,26 +6232,32 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/page/` · 5 files</summary>
+<summary>`clear-glass/src/page/` · 9 files</summary>
 
-- `clear-glass/src/page/attention.js` — where each window's attention is (FN2, docs/2026-10-10-shape-of-nexus-phasemap.spec). James, 2026-10-10:…
+- `clear-glass/src/page/attention.js`
+- `clear-glass/src/page/blocks.js`
 - `clear-glass/src/page/field.js`
 - `clear-glass/src/page/nexus-chat.js`
-- `clear-glass/src/page/reader.js` — one call that tells an agent what is on the page. James, 2026-09-27: "i want copilot completely aware of…
+- `clear-glass/src/page/page-map.js`
+- `clear-glass/src/page/page-memory.js`
+- `clear-glass/src/page/page-session.js`
+- `clear-glass/src/page/reader.js`
 - `clear-glass/src/page/semantic-tree.js`
 
 </details>
 
 <details>
-<summary>`clear-glass/src/passwords/` · 1 file</summary>
+<summary>`clear-glass/src/passwords/` · 2 files</summary>
 
+- `clear-glass/src/passwords/service.js` — the one door between pages, the window and the password vault (PW1, 0.60.186). Spec:…
 - `clear-glass/src/passwords/vault.js`
 
 </details>
 
 <details>
-<summary>`clear-glass/src/plugins/` · 6 files</summary>
+<summary>`clear-glass/src/plugins/` · 7 files</summary>
 
+- `clear-glass/src/plugins/context-items.js` — src/plugins/context-items.js — the right-click menu entries plugins contribute (contribution type…
 - `clear-glass/src/plugins/contribution-types.js`
 - `clear-glass/src/plugins/host.js`
 - `clear-glass/src/plugins/permission-adapter.js` — src/plugins/permission-adapter.js — permission-filter ↔ Electron wiring §HONEST LIMIT — traced against…
@@ -2515,12 +6268,20 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/preload/` · 4 files</summary>
+<summary>`clear-glass/src/preload/` · 5 files</summary>
 
 - `clear-glass/src/preload/compartment-window.js` — // clear-glass/src/preload/compartment-window.js — §0.39.280. The only thing idearium's compartment windows…
 - `clear-glass/src/preload/google-signin.js` — src/preload/google-signin.js — a session preload: on Google's sign-in pages, before Google's own scripts…
 - `clear-glass/src/preload/index.js` — Preload — contextIsolation bridge Exposes a minimal, typed API to the renderer.
+- `clear-glass/src/preload/passwords.js` — the page side of the password manager (PW2, 0.60.186). Spec: clear-glass/spec/passwords.spec MOD-PW-PAGE.…
 - `clear-glass/src/preload/webview-bridge.js` — src/preload/webview-bridge.js §BUILD 2026-07-09 — the injected PICKER_SCRIPT in renderer/browser.html
+
+</details>
+
+<details>
+<summary>`clear-glass/src/processes/` · 1 file</summary>
+
+- `clear-glass/src/processes/index.js`
 
 </details>
 
@@ -2547,9 +6308,10 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/rewind/` · 1 file</summary>
+<summary>`clear-glass/src/rewind/` · 2 files</summary>
 
 - `clear-glass/src/rewind/engine.js` — src/rewind/engine.js — Clear Glass Rewind Engine Rewind is the session time-machine. Every N seconds (or on…
+- `clear-glass/src/rewind/resume.js` — a site's "resume state": on a revisit, put back where he was (SP2, 0.60.216). Spec:…
 
 </details>
 
@@ -2582,8 +6344,11 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/site-settings/` · 1 file</summary>
+<summary>`clear-glass/src/site-settings/` · 4 files</summary>
 
+- `clear-glass/src/site-settings/keys.js` — the per-site keys every feature reads (SP1, 0.60.215). Spec: clear-glass/spec/site-profile.spec MOD-SP-KEYS…
+- `clear-glass/src/site-settings/profile.js` — one site's settings for every feature, through one resolver (SP1, 0.60.215). Spec:…
+- `clear-glass/src/site-settings/readers.js` — each feature reads its site value at its decision point (SP2, 0.60.216). Spec:…
 - `clear-glass/src/site-settings/store.js` — src/site-settings/store.js — Real Per-Site Settings Store Real gap named directly in…
 
 </details>
@@ -2697,7 +6462,7 @@ Clear-glass is 266 files in 68 modules, port 7704, spec `clear-glass/spec/clear-
 
 </details>
 
-68 release notes name a file of clear-glass: 0.60.149., 0.60.146., 0.60.145., 0.60.137., 0.60.131., 0.60.109., 0.60.108., 0.60.106., 0.60.93., 0.60.85., 0.60.84., 0.60.71., 0.60.70., 0.60.69., 0.60.60., 0.60.58., 0.60.55., 0.60.54., 0.60.51., 0.60.49., 0.60.29., 0.60.14., 0.60.13., 0.60.12., 0.60.11., 0.60.10., 0.60.7., 0.60.5., 0.60.4., 0.60.3., 0.60.2., 0.60.0., 0.59.12., 0.59.11., 0.59.10., 0.59.9., 0.59.8., 0.59.7., 0.59.6., 0.59.5., and 28 older. Each is in the version history below, in his words.
+90 release notes name a file of clear-glass: 0.60.232., 0.60.231., 0.60.230., 0.60.226., 0.60.225., 0.60.220., 0.60.219., 0.60.218., 0.60.217., 0.60.216., 0.60.215., 0.60.214., 0.60.213., 0.60.211., 0.60.210., 0.60.206., 0.60.204., 0.60.183., 0.60.179., 0.60.178., 0.60.175., 0.60.174., 0.60.149., 0.60.146., 0.60.145., 0.60.137., 0.60.131., 0.60.109., 0.60.108., 0.60.106., 0.60.93., 0.60.85., 0.60.84., 0.60.71., 0.60.70., 0.60.69., 0.60.60., 0.60.58., 0.60.55., 0.60.54., and 50 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:clear-glass:end -->
 
@@ -2726,7 +6491,7 @@ The Compartment OS: isolated sandboxes with their own process, network and runti
 <!-- generated:readme:system:cos:start -->
 #### cos: every module and every file
 
-Cos is 307 files in 31 modules, spec `cos/spec/cos.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cos-atlas.md`.
+Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cos-atlas.md`.
 
 <details>
 <summary>`cos/` · 5 files</summary>
@@ -3093,6 +6858,383 @@ Cos is 307 files in 31 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
+<summary>`cos/phases/` · 1 file</summary>
+
+- `cos/phases/INDEX.md` — cos — its phases
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-08-22-session-full/` · 2 files</summary>
+
+- `cos/phases/2026-08-22-session-full/SF6_wiring_gaps_applied.phase`
+- `cos/phases/2026-08-22-session-full/graph/SF6_wiring_gaps_applied-2514d77da46a8488.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-08-28-self-building-pipeline/` · 2 files</summary>
+
+- `cos/phases/2026-08-28-self-building-pipeline/SBP2_loom_idearium_template_to_cos_blueprint_bridge.phase`
+- `cos/phases/2026-08-28-self-building-pipeline/graph/SBP2_loom_idearium_template_to_cos_blueprint_bridge-dea73234c887a0ea.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-09-11-compartment-nodetype-and-reorg/` · 2 files</summary>
+
+- `cos/phases/2026-09-11-compartment-nodetype-and-reorg/T3_warp_replaces_siso.phase`
+- `cos/phases/2026-09-11-compartment-nodetype-and-reorg/graph/T3_warp_replaces_siso-4a279856f4f7d1cc.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` · 8 files</summary>
+
+- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/T1.phase`
+- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/T2.phase`
+- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/T4.phase`
+- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/T5.phase`
+- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T1-ea5089d771a5cc69.graph`
+- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T2-b9eb08e456c5fca6.graph`
+- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T4-fc078d75e30b8beb.graph`
+- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T5-196f20cd476129df.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-09-28-graph-build-context-settings-memory/` · 2 files</summary>
+
+- `cos/phases/2026-09-28-graph-build-context-settings-memory/B4.phase`
+- `cos/phases/2026-09-28-graph-build-context-settings-memory/graph/B4-220b4ae717d05c04.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-09-28-staging-self-heal/` · 2 files</summary>
+
+- `cos/phases/2026-09-28-staging-self-heal/S3.phase`
+- `cos/phases/2026-09-28-staging-self-heal/graph/S3-9e150090cf73a41d.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-09-29-build-surface/` · 4 files</summary>
+
+- `cos/phases/2026-09-29-build-surface/BS14_branch_git_honest.phase`
+- `cos/phases/2026-09-29-build-surface/BS4_environment_check.phase`
+- `cos/phases/2026-09-29-build-surface/graph/BS14_branch_git_honest-3478da45faa77597.graph`
+- `cos/phases/2026-09-29-build-surface/graph/BS4_environment_check-acea625c798e9a60.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-09-29-nex-node-store/` · 2 files</summary>
+
+- `cos/phases/2026-09-29-nex-node-store/N20_desktop_login.phase`
+- `cos/phases/2026-09-29-nex-node-store/graph/N20_desktop_login-4254a95488f078bd.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-09-30-idearium-coding-flow/` · 2 files</summary>
+
+- `cos/phases/2026-09-30-idearium-coding-flow/W1_idearium_never_blocks_on_git.phase`
+- `cos/phases/2026-09-30-idearium-coding-flow/graph/W1_idearium_never_blocks_on_git-0c2b3bd63ecb5cb9.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-01-idearium-agent-ready-master/` · 4 files</summary>
+
+- `cos/phases/2026-10-01-idearium-agent-ready-master/DK1_desktop_image_and_login.phase`
+- `cos/phases/2026-10-01-idearium-agent-ready-master/DK3_vm_engines.phase`
+- `cos/phases/2026-10-01-idearium-agent-ready-master/graph/DK1_desktop_image_and_login-0ce31841af1a7c24.graph`
+- `cos/phases/2026-10-01-idearium-agent-ready-master/graph/DK3_vm_engines-c8c57bc98a3b8bdc.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-01-work-visibility-job-reuse/` · 2 files</summary>
+
+- `cos/phases/2026-10-01-work-visibility-job-reuse/D1.phase`
+- `cos/phases/2026-10-01-work-visibility-job-reuse/graph/D1-651a6b744089f017.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-02-emerge-field-memory-build/` · 2 files</summary>
+
+- `cos/phases/2026-10-02-emerge-field-memory-build/LB1_the_end_state_lab.phase`
+- `cos/phases/2026-10-02-emerge-field-memory-build/graph/LB1_the_end_state_lab-e780bee785bbcbb0.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-02-workshop-codex-rewind/` · 2 files</summary>
+
+- `cos/phases/2026-10-02-workshop-codex-rewind/RW1_rewind_engine_vm_snapshots.phase`
+- `cos/phases/2026-10-02-workshop-codex-rewind/graph/RW1_rewind_engine_vm_snapshots-823f1c8b9650eab6.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-05-build-from-the-spec/` · 2 files</summary>
+
+- `cos/phases/2026-10-05-build-from-the-spec/SB46_every_step_by_hand.phase`
+- `cos/phases/2026-10-05-build-from-the-spec/graph/SB46_every_step_by_hand-357aee72b6d95aa7.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-05-cli-data-code/` · 2 files</summary>
+
+- `cos/phases/2026-10-05-cli-data-code/PB4_imports_inside_text_are_not_imports.phase`
+- `cos/phases/2026-10-05-cli-data-code/graph/PB4_imports_inside_text_are_not_imports-d0e4233a40cc3822.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-05-cos-machines/` · 16 files</summary>
+
+- `cos/phases/2026-10-05-cos-machines/AP1_android_build_compartment.phase`
+- `cos/phases/2026-10-05-cos-machines/AP3_release_like_an_enterprise.phase`
+- `cos/phases/2026-10-05-cos-machines/EL1_electron_compiler.phase`
+- `cos/phases/2026-10-05-cos-machines/OS1_compartments_as_operating_systems.phase`
+- `cos/phases/2026-10-05-cos-machines/OS2_images_downloaded_and_kept_current.phase`
+- `cos/phases/2026-10-05-cos-machines/SU1_the_setup_asks_the_os_and_its_version.phase`
+- `cos/phases/2026-10-05-cos-machines/SU2_every_language_and_the_repos_own_dependencies.phase`
+- `cos/phases/2026-10-05-cos-machines/VM1_control_like_vmware.phase`
+- `cos/phases/2026-10-05-cos-machines/graph/AP1_android_build_compartment-f70e475fce428144.graph`
+- `cos/phases/2026-10-05-cos-machines/graph/AP3_release_like_an_enterprise-84659775a8f5692d.graph`
+- `cos/phases/2026-10-05-cos-machines/graph/EL1_electron_compiler-1d546cb97bd68077.graph`
+- `cos/phases/2026-10-05-cos-machines/graph/OS1_compartments_as_operating_systems-b747eb322d0734a6.graph`
+- `cos/phases/2026-10-05-cos-machines/graph/OS2_images_downloaded_and_kept_current-7a1fb496219ebe9e.graph`
+- `cos/phases/2026-10-05-cos-machines/graph/SU1_the_setup_asks_the_os_and_its_version-9797666d275643e9.graph`
+- `cos/phases/2026-10-05-cos-machines/graph/SU2_every_language_and_the_repos_own_dependencies-0d04ebd8abe18320.graph`
+- `cos/phases/2026-10-05-cos-machines/graph/VM1_control_like_vmware-6722ac63e2d3dd68.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-07-compartment-control-and-activity/` · 2 files</summary>
+
+- `cos/phases/2026-10-07-compartment-control-and-activity/VM1_checkpoints_on_the_log.phase`
+- `cos/phases/2026-10-07-compartment-control-and-activity/graph/VM1_checkpoints_on_the_log-120f9c6befec0413.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-10-idearium-solid/` · 2 files</summary>
+
+- `cos/phases/2026-10-10-idearium-solid/SD13_the_machine_is_cos.phase`
+- `cos/phases/2026-10-10-idearium-solid/graph/SD13_the_machine_is_cos-1141a9ac8cf919f0.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-10-shape-of-nexus/` · 2 files</summary>
+
+- `cos/phases/2026-10-10-shape-of-nexus/EP2_cos_is_the_empirical_layer.phase`
+- `cos/phases/2026-10-10-shape-of-nexus/graph/EP2_cos_is_the_empirical_layer-abb7cdf7233d1a4c.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-10-snapshot-compartments/` · 4 files</summary>
+
+- `cos/phases/2026-10-10-snapshot-compartments/SN0_one_branch.phase`
+- `cos/phases/2026-10-10-snapshot-compartments/SN2_run_in_parallel.phase`
+- `cos/phases/2026-10-10-snapshot-compartments/graph/SN0_one_branch-1e77410bef5d0634.graph`
+- `cos/phases/2026-10-10-snapshot-compartments/graph/SN2_run_in_parallel-e5161f5f9848abe0.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-12-request-spine/` · 4 files</summary>
+
+- `cos/phases/2026-10-12-request-spine/RQ15_cells_in_parallel.phase`
+- `cos/phases/2026-10-12-request-spine/RQ18_test_and_attack_intents.phase`
+- `cos/phases/2026-10-12-request-spine/graph/RQ15_cells_in_parallel-9586f7906829df41.graph`
+- `cos/phases/2026-10-12-request-spine/graph/RQ18_test_and_attack_intents-8496c9d2a82eb910.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-13-projects-raid-and-gates/` · 2 files</summary>
+
+- `cos/phases/2026-10-13-projects-raid-and-gates/CK0_the_catalogue_written.phase`
+- `cos/phases/2026-10-13-projects-raid-and-gates/graph/CK0_the_catalogue_written-79d0db81c79ea43f.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-15-cos-app/` · 14 files</summary>
+
+- `cos/phases/2026-10-15-cos-app/COSA10_compartment_window.phase`
+- `cos/phases/2026-10-15-cos-app/COSA11_nested_tree.phase`
+- `cos/phases/2026-10-15-cos-app/COSA13_auto_update.phase`
+- `cos/phases/2026-10-15-cos-app/COSA1_version_store_and_import.phase`
+- `cos/phases/2026-10-15-cos-app/COSA2_runtime_and_dependencies.phase`
+- `cos/phases/2026-10-15-cos-app/COSA3_run_and_supervise.phase`
+- `cos/phases/2026-10-15-cos-app/COSA4_switch_and_rollback.phase`
+- `cos/phases/2026-10-15-cos-app/graph/COSA10_compartment_window-b221406d3e785772.graph`
+- `cos/phases/2026-10-15-cos-app/graph/COSA11_nested_tree-38fee2523eb2eed8.graph`
+- `cos/phases/2026-10-15-cos-app/graph/COSA13_auto_update-5d782bdcac57ed2b.graph`
+- `cos/phases/2026-10-15-cos-app/graph/COSA1_version_store_and_import-e72f32ca6a953d76.graph`
+- `cos/phases/2026-10-15-cos-app/graph/COSA2_runtime_and_dependencies-df3ed9356c77d331.graph`
+- `cos/phases/2026-10-15-cos-app/graph/COSA3_run_and_supervise-d173bfd7f8056f35.graph`
+- `cos/phases/2026-10-15-cos-app/graph/COSA4_switch_and_rollback-3bc800982689e9a5.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-15-gate-held-work/` · 8 files</summary>
+
+- `cos/phases/2026-10-15-gate-held-work/GW11_a_snapshot_per_gate.phase`
+- `cos/phases/2026-10-15-gate-held-work/GW12_desktop_is_optional.phase`
+- `cos/phases/2026-10-15-gate-held-work/GW13_the_sandbox_door.phase`
+- `cos/phases/2026-10-15-gate-held-work/GW14_copy_in_diff_out.phase`
+- `cos/phases/2026-10-15-gate-held-work/graph/GW11_a_snapshot_per_gate-c999f94ef6a49515.graph`
+- `cos/phases/2026-10-15-gate-held-work/graph/GW12_desktop_is_optional-382b3d3a9de3de0f.graph`
+- `cos/phases/2026-10-15-gate-held-work/graph/GW13_the_sandbox_door-4f040753e8ae2406.graph`
+- `cos/phases/2026-10-15-gate-held-work/graph/GW14_copy_in_diff_out-581149a84eca7d04.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-16-canvas-compartments/` · 6 files</summary>
+
+- `cos/phases/2026-10-16-canvas-compartments/CN1_canvas_archetype.phase`
+- `cos/phases/2026-10-16-canvas-compartments/CN2_tool_archetypes.phase`
+- `cos/phases/2026-10-16-canvas-compartments/CN5_idearium.phase`
+- `cos/phases/2026-10-16-canvas-compartments/graph/CN1_canvas_archetype-80bf09efae3df71b.graph`
+- `cos/phases/2026-10-16-canvas-compartments/graph/CN2_tool_archetypes-9e4df65ef5b2a643.graph`
+- `cos/phases/2026-10-16-canvas-compartments/graph/CN5_idearium-cd3acbaaaaf6698a.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-16-cos-console/` · 12 files</summary>
+
+- `cos/phases/2026-10-16-cos-console/CON1_one_door_client.phase`
+- `cos/phases/2026-10-16-cos-console/CON3_system_controls.phase`
+- `cos/phases/2026-10-16-cos-console/CON4_safety_gate.phase`
+- `cos/phases/2026-10-16-cos-console/CON6_shell_escape.phase`
+- `cos/phases/2026-10-16-cos-console/CON7_enterprise_bar.phase`
+- `cos/phases/2026-10-16-cos-console/CON9_configure.phase`
+- `cos/phases/2026-10-16-cos-console/graph/CON1_one_door_client-09df167b6e5084dc.graph`
+- `cos/phases/2026-10-16-cos-console/graph/CON3_system_controls-9bea20876814d6b2.graph`
+- `cos/phases/2026-10-16-cos-console/graph/CON4_safety_gate-6aeb5837dbad6f77.graph`
+- `cos/phases/2026-10-16-cos-console/graph/CON6_shell_escape-a539b2efcad651dc.graph`
+- `cos/phases/2026-10-16-cos-console/graph/CON7_enterprise_bar-5de970d3b3bb3578.graph`
+- `cos/phases/2026-10-16-cos-console/graph/CON9_configure-f5b6397fdf950de4.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-16-mobile-compartments/` · 10 files</summary>
+
+- `cos/phases/2026-10-16-mobile-compartments/MB1_terminal_passthrough.phase`
+- `cos/phases/2026-10-16-mobile-compartments/MB2_android_compartment.phase`
+- `cos/phases/2026-10-16-mobile-compartments/MB3_testenv_stacks.phase`
+- `cos/phases/2026-10-16-mobile-compartments/MB4_apple_via_a_real_mac.phase`
+- `cos/phases/2026-10-16-mobile-compartments/MB6_everything_else.phase`
+- `cos/phases/2026-10-16-mobile-compartments/graph/MB1_terminal_passthrough-eff48fb25b66e772.graph`
+- `cos/phases/2026-10-16-mobile-compartments/graph/MB2_android_compartment-9674795718df2e8a.graph`
+- `cos/phases/2026-10-16-mobile-compartments/graph/MB3_testenv_stacks-e76b4664f81e1e35.graph`
+- `cos/phases/2026-10-16-mobile-compartments/graph/MB4_apple_via_a_real_mac-7d75149232a2bd8e.graph`
+- `cos/phases/2026-10-16-mobile-compartments/graph/MB6_everything_else-50374ed305625db3.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-17-failure-mode-report/` · 4 files</summary>
+
+- `cos/phases/2026-10-17-failure-mode-report/FMR10_it_compounds.phase`
+- `cos/phases/2026-10-17-failure-mode-report/FMR6_run_it_in_cos.phase`
+- `cos/phases/2026-10-17-failure-mode-report/graph/FMR10_it_compounds-ef3258cec40e1e23.graph`
+- `cos/phases/2026-10-17-failure-mode-report/graph/FMR6_run_it_in_cos-c179a8fd6c6b4eb5.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-17-system-drawbridge/` · 2 files</summary>
+
+- `cos/phases/2026-10-17-system-drawbridge/DB20_sealed_archetype.phase`
+- `cos/phases/2026-10-17-system-drawbridge/graph/DB20_sealed_archetype-605ac3bd31181a00.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-18-compartment-environment/` · 10 files</summary>
+
+- `cos/phases/2026-10-18-compartment-environment/CE1_the_compartment_machine.phase`
+- `cos/phases/2026-10-18-compartment-environment/CE1a_cos_answers_on_a_route.phase`
+- `cos/phases/2026-10-18-compartment-environment/CE2_the_shell_is_declared.phase`
+- `cos/phases/2026-10-18-compartment-environment/CE4_the_terminal_bridge.phase`
+- `cos/phases/2026-10-18-compartment-environment/CE5_the_guest_file_tree.phase`
+- `cos/phases/2026-10-18-compartment-environment/graph/CE1_the_compartment_machine-eb3bd9235c93618f.graph`
+- `cos/phases/2026-10-18-compartment-environment/graph/CE1a_cos_answers_on_a_route-42f314b45461a0f5.graph`
+- `cos/phases/2026-10-18-compartment-environment/graph/CE2_the_shell_is_declared-95cc76040589304d.graph`
+- `cos/phases/2026-10-18-compartment-environment/graph/CE4_the_terminal_bridge-008607ecef551be9.graph`
+- `cos/phases/2026-10-18-compartment-environment/graph/CE5_the_guest_file_tree-828a2472ed4dff16.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-19-solid-build-foundation/` · 2 files</summary>
+
+- `cos/phases/2026-10-19-solid-build-foundation/CT1_cos_test_runner.phase`
+- `cos/phases/2026-10-19-solid-build-foundation/graph/CT1_cos_test_runner-c61f114e9661a751.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/2026-10-23-cos-spine/` · 22 files</summary>
+
+- `cos/phases/2026-10-23-cos-spine/CS11_raid_in_the_exe.phase`
+- `cos/phases/2026-10-23-cos-spine/CS1_a_version_is_a_system_state.phase`
+- `cos/phases/2026-10-23-cos-spine/CS2_test_every_version.phase`
+- `cos/phases/2026-10-23-cos-spine/CS3_the_registry_is_the_bridge.phase`
+- `cos/phases/2026-10-23-cos-spine/CS4_every_system_a_compartment.phase`
+- `cos/phases/2026-10-23-cos-spine/CS4a_cos_boots_alone.phase`
+- `cos/phases/2026-10-23-cos-spine/CS5_caps_per_compartment.phase`
+- `cos/phases/2026-10-23-cos-spine/CS6_rebuild_from_the_spec.phase`
+- `cos/phases/2026-10-23-cos-spine/CS7_spawn_despawn_and_balance.phase`
+- `cos/phases/2026-10-23-cos-spine/CS8_the_cos_screen.phase`
+- `cos/phases/2026-10-23-cos-spine/CS9_every_project_a_compartment.phase`
+- `cos/phases/2026-10-23-cos-spine/graph/CS11_raid_in_the_exe-3899474125085d16.graph`
+- `cos/phases/2026-10-23-cos-spine/graph/CS1_a_version_is_a_system_state-523fbc38e04e24be.graph`
+- `cos/phases/2026-10-23-cos-spine/graph/CS2_test_every_version-b2df3232bd29e9b2.graph`
+- `cos/phases/2026-10-23-cos-spine/graph/CS3_the_registry_is_the_bridge-269cc4b7c5c5f55b.graph`
+- `cos/phases/2026-10-23-cos-spine/graph/CS4_every_system_a_compartment-8dfe260df6e33a3d.graph`
+- `cos/phases/2026-10-23-cos-spine/graph/CS4a_cos_boots_alone-5a7d46b9d98781db.graph`
+- `cos/phases/2026-10-23-cos-spine/graph/CS5_caps_per_compartment-60ce4faf0b415181.graph`
+- `cos/phases/2026-10-23-cos-spine/graph/CS6_rebuild_from_the_spec-2027a2ea6546f0e2.graph`
+- `cos/phases/2026-10-23-cos-spine/graph/CS7_spawn_despawn_and_balance-145fe81d23c58732.graph`
+- `cos/phases/2026-10-23-cos-spine/graph/CS8_the_cos_screen-75756ab60cc23333.graph`
+- `cos/phases/2026-10-23-cos-spine/graph/CS9_every_project_a_compartment-4ceb779c4ef8413d.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/copilot-full-capability/` · 2 files</summary>
+
+- `cos/phases/copilot-full-capability/P3_cos_toolkit_tools.phase`
+- `cos/phases/copilot-full-capability/graph/P3_cos_toolkit_tools-242126ebcb2eda89.graph`
+
+</details>
+
+<details>
+<summary>`cos/phases/nexus-live-mind/` · 2 files</summary>
+
+- `cos/phases/nexus-live-mind/P1_nervous_system_live.phase`
+- `cos/phases/nexus-live-mind/graph/P1_nervous_system_live-e25e65b0dc86651a.graph`
+
+</details>
+
+<details>
 <summary>`cos/playground/` · 5 files</summary>
 
 - `cos/playground/branch.js` — Compartment Branch Engine Status: pre-release
@@ -3148,10 +7290,11 @@ Cos is 307 files in 31 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
-<summary>`cos/spec/` · 9 files</summary>
+<summary>`cos/spec/` · 10 files</summary>
 
 - `cos/spec/check-catalogue.spec`
 - `cos/spec/cos-design-v1.7.0.md`
+- `cos/spec/cos-spine.spec`
 - `cos/spec/cos.spec`
 - `cos/spec/deny-list.spec`
 - `cos/spec/lab.spec`
@@ -3170,7 +7313,7 @@ Cos is 307 files in 31 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
-<summary>`cos/testenv/` · 10 files</summary>
+<summary>`cos/testenv/` · 11 files</summary>
 
 - `cos/testenv/detect.js`
 - `cos/testenv/environment.js`
@@ -3178,6 +7321,7 @@ Cos is 307 files in 31 modules, spec `cos/spec/cos.spec`. Each module below open
 - `cos/testenv/index.js`
 - `cos/testenv/installer.js`
 - `cos/testenv/provision.js`
+- `cos/testenv/run-target.js`
 - `cos/testenv/setup-job.js`
 - `cos/testenv/setup-vm.bat`
 - `cos/testenv/setup-vm.sh`
@@ -3221,7 +7365,7 @@ Cos is 307 files in 31 modules, spec `cos/spec/cos.spec`. Each module below open
 
 </details>
 
-51 release notes name a file of cos: 0.60.159., 0.60.157., 0.60.151., 0.60.149., 0.60.148., 0.60.137., 0.60.136., 0.60.134., 0.60.132., 0.60.130., 0.60.126., 0.60.111., 0.60.105., 0.60.104., 0.60.103., 0.60.101., 0.60.96., 0.60.91., 0.60.89., 0.60.88., 0.60.87., 0.60.67., 0.60.33., 0.60.19., 0.60.12., 0.60.6., 0.60.5., 0.60.1., 0.59.6., 0.59.2., 0.39.375., 0.39.371., 0.39.370., 0.39.367., 0.39.363., 0.39.359., 0.39.344., 0.39.330., 0.39.293., 0.39.284., and 11 older. Each is in the version history below, in his words.
+54 release notes name a file of cos: 0.60.176., 0.60.168., 0.60.166., 0.60.159., 0.60.157., 0.60.151., 0.60.149., 0.60.148., 0.60.137., 0.60.136., 0.60.134., 0.60.132., 0.60.130., 0.60.126., 0.60.111., 0.60.105., 0.60.104., 0.60.103., 0.60.101., 0.60.96., 0.60.91., 0.60.89., 0.60.88., 0.60.87., 0.60.67., 0.60.33., 0.60.19., 0.60.12., 0.60.6., 0.60.5., 0.60.1., 0.59.6., 0.59.2., 0.39.375., 0.39.371., 0.39.370., 0.39.367., 0.39.363., 0.39.359., 0.39.344., and 14 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:cos:end -->
 
@@ -3232,10 +7376,10 @@ Everything no kernel owns. Core has no port and no entry: its code runs inside w
 <!-- generated:readme:system:core:start -->
 #### core: every module and every file
 
-Core is 2624 files in 48 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
+Core is 4420 files in 49 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
 
 <details>
-<summary>the files at the top of the tree · 18 files</summary>
+<summary>the files at the top of the tree · 19 files</summary>
 
 - `.gitignore`
 - `.mcp.json`
@@ -3247,6 +7391,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `NODE-TAXONOMY.md`
 - `README-PATCH.md`
 - `README.md`
+- `VERSION`
 - `blueprint-index.json`
 - `package-lock.json`
 - `package.json`
@@ -3358,7 +7503,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`docs/` · 409 files</summary>
+<summary>`docs/` · 442 files</summary>
 
 - `docs/2026-08-22-session-full-phasemap.spec`
 - `docs/2026-08-23-backlog-phasemap.spec`
@@ -3495,6 +7640,28 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `docs/2026-10-18-debugging-product-phasemap.spec`
 - `docs/2026-10-18-gate-memory-phasemap.spec`
 - `docs/2026-10-18-gating-census-phasemap.spec`
+- `docs/2026-10-19-gate-quality-checks-phasemap.spec`
+- `docs/2026-10-19-gig-autofill-and-learn-phasemap.spec`
+- `docs/2026-10-19-idearium-control-phasemap.spec`
+- `docs/2026-10-19-infrastructure-spine-phasemap.spec`
+- `docs/2026-10-19-pipeline-root-causes-phasemap.spec`
+- `docs/2026-10-19-solid-build-foundation-phasemap.spec`
+- `docs/2026-10-19-upload-intent-and-page-map-phasemap.spec`
+- `docs/2026-10-20-belief-loop-phasemap.spec`
+- `docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec`
+- `docs/2026-10-21-adblock-phasemap.spec`
+- `docs/2026-10-21-approval-chain-phasemap.spec`
+- `docs/2026-10-21-brainos-into-idearium-phasemap.spec`
+- `docs/2026-10-21-browser-shell-phasemap.spec`
+- `docs/2026-10-21-compartment-downloads-phasemap.spec`
+- `docs/2026-10-21-data-layout-phasemap.spec`
+- `docs/2026-10-21-passwords-phasemap.spec`
+- `docs/2026-10-21-snowflake-compartment-phasemap.spec`
+- `docs/2026-10-22-system-node-db-phasemap.spec`
+- `docs/2026-10-23-cos-spine-phasemap.spec`
+- `docs/2026-10-23-evidence-dry-run.md`
+- `docs/2026-10-23-self-building-loop-phasemap.spec`
+- `docs/2026-10-23-site-profile-processes-phasemap.spec`
 - `docs/AXIOMS-PHASE-MAP.md`
 - `docs/AXIOMS-v1.0.md`
 - `docs/AXIOMS-v2.0.md`
@@ -3513,6 +7680,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `docs/HANDOFF-2026-09-19-pulse-and-domain-nodes.md`
 - `docs/HANDOFF-2026-09-22.md`
 - `docs/HANDOFF-2026-10-06.md`
+- `docs/HANDOFF-2026-10-19-verify-first-and-dag.md`
 - `docs/HANDOFF-local-claude-code.md`
 - `docs/HANDOFF.md`
 - `docs/HISTORY-BOOKSHELF.md`
@@ -3548,6 +7716,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `docs/alk-gl-intelligence-canvas.spec`
 - `docs/alk-perception.spec`
 - `docs/api-dispatch.spec`
+- `docs/approval-chain.spec`
 - `docs/architect.spec`
 - `docs/architecture-spec/architecture-spec.spec`
 - `docs/atlases/architect-atlas.md`
@@ -3558,6 +7727,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `docs/atlases/core-atlas.md`
 - `docs/atlases/cortex-atlas.md`
 - `docs/atlases/cos-atlas.md`
+- `docs/atlases/data-census.md`
 - `docs/atlases/diagnostic-atlas.md`
 - `docs/atlases/guardian-atlas.md`
 - `docs/atlases/idearium-atlas.md`
@@ -3571,7 +7741,9 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `docs/autonomous-loop.spec`
 - `docs/bda.spec`
 - `docs/behavioral-boundary.spec`
+- `docs/belief-loop.spec`
 - `docs/blueprint.spec`
+- `docs/brainos-in-idearium.spec`
 - `docs/brainos-live-control-panel.spec`
 - `docs/build-context.spec`
 - `docs/builder.spec`
@@ -3615,6 +7787,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `docs/cortex.spec`
 - `docs/cos-debug-report.spec`
 - `docs/cos.spec`
+- `docs/data-layout.spec`
 - `docs/diagnostic-engines.spec`
 - `docs/diagnostic-fixes.spec`
 - `docs/diagnostic-phase-map.spec`
@@ -3642,6 +7815,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `docs/idearium-creative-repo-overhaul-phasemap.md`
 - `docs/idearium-creative-repo-overhaul-phasemap.spec`
 - `docs/idearium-creative-repo.spec`
+- `docs/idearium-phase-census.md`
 - `docs/idearium-repository-overhaul-phasemap.spec`
 - `docs/idearium-templates.spec`
 - `docs/idearium.spec`
@@ -3710,6 +7884,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `docs/orchestrator.spec`
 - `docs/phase_map_11.html`
 - `docs/phases-manager.spec`
+- `docs/pipeline.spec`
 - `docs/pressure-causality.spec`
 - `docs/raid-routing-fidelity-phasemap.spec`
 - `docs/raid-simulation-engine.spec`
@@ -3732,6 +7907,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `docs/seam-component-registry.spec`
 - `docs/seam-queue.spec`
 - `docs/seam.spec`
+- `docs/self-building-loop.spec`
 - `docs/self-heal.spec`
 - `docs/service.spec`
 - `docs/session-2026-08-18-axioms-governed-phasemap.spec`
@@ -3754,7 +7930,9 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `docs/specs/ORCHESTRATOR-COS.spec.md`
 - `docs/specs/SYSTEM-MAP.spec.md`
 - `docs/specs/VERSIONIUM.spec.md`
+- `docs/substrate.spec`
 - `docs/system-architecture.spec`
+- `docs/system-node-db.spec`
 - `docs/system-nodes.spec`
 - `docs/telemetry-codec.spec`
 - `docs/tests.spec`
@@ -3773,7 +7951,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`emerge/` · 63 files</summary>
+<summary>`emerge/` · 64 files</summary>
 
 - `emerge/SPEC_COMPILER.spec`
 - `emerge/chunk/index.js`
@@ -3783,6 +7961,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `emerge/compiler/index.js`
 - `emerge/compiler/invariants-engine.js`
 - `emerge/compiler/kg-builder.js`
+- `emerge/compiler/phase-specs.js`
 - `emerge/compiler/pipeline.js`
 - `emerge/compiler/reply-engine.js`
 - `emerge/compiler/ring-buffer.js`
@@ -3990,7 +8169,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`lib/` · 274 files</summary>
+<summary>`lib/` · 291 files</summary>
 
 - `lib/account-identity-index.js`
 - `lib/account-registry.js`
@@ -4011,6 +8190,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/agent-reach.js`
 - `lib/agent-record.js`
 - `lib/agent-router.js`
+- `lib/agent-self-model.js`
 - `lib/agent-tool-call.js`
 - `lib/atlas-generate.js`
 - `lib/autonomous-loop.js`
@@ -4022,6 +8202,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/build-context.js`
 - `lib/build-paths.js`
 - `lib/build-pipeline.js`
+- `lib/build-queue.js`
 - `lib/build-verify.js`
 - `lib/bus-subscriptions.js`
 - `lib/canvas-compartments.js`
@@ -4030,11 +8211,13 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/case-library.js`
 - `lib/cg-learning.js`
 - `lib/chains.js`
+- `lib/change-entry.js`
 - `lib/change-record.js`
 - `lib/charter.js`
 - `lib/chat-crawl-plan.js`
 - `lib/chat-crawl-settings.js`
 - `lib/chat-index.js`
+- `lib/chat-ledger-client.js`
 - `lib/chat-logger.js`
 - `lib/check-catalogue.js`
 - `lib/chunk-build-orchestrator.js`
@@ -4045,6 +8228,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/cli-map.js`
 - `lib/cli-reasoning.js`
 - `lib/code-edit.js`
+- `lib/coder-brief.js`
 - `lib/command-builder.js`
 - `lib/compartment-dom-ledger.js`
 - `lib/compartment-engine.js`
@@ -4072,6 +8256,8 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/cos-debug-report.js`
 - `lib/cos-remote.js`
 - `lib/cos-run.js`
+- `lib/data-clearup.js`
+- `lib/data-home.js`
 - `lib/diagnostic-causal.js`
 - `lib/diagnostic-engines.js`
 - `lib/diagnostic-report.js`
@@ -4160,14 +8346,20 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/open-loop-taxonomy.patch.js`
 - `lib/options.js`
 - `lib/parallel-dispatch.js`
+- `lib/path-guard.js`
 - `lib/pattern-leverage.js`
+- `lib/phase-census.js`
+- `lib/phase-close.js`
 - `lib/phase-cost.js`
+- `lib/phase-dag.js`
 - `lib/phase-deps-gate.js`
 - `lib/phase-faults.js`
 - `lib/phase-files.js`
 - `lib/phase-graph.js`
+- `lib/phase-groom.js`
 - `lib/phase-map-auto.js`
 - `lib/phase-plan.js`
+- `lib/pipeline-nodes.js`
 - `lib/pipeline-routing.js`
 - `lib/plan-learning.js`
 - `lib/pressure-window.js`
@@ -4176,6 +8368,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/project-container.js`
 - `lib/project-decompose.js`
 - `lib/project-import.config.js`
+- `lib/project-registry.js`
 - `lib/proof-overlay.js`
 - `lib/proposal-evidence.js`
 - `lib/queue.js`
@@ -4221,6 +8414,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/run-state.js`
 - `lib/run-watch.js`
 - `lib/safe-apply.js`
+- `lib/safe-watch.js`
 - `lib/scheduler.js`
 - `lib/schema-registry.js`
 - `lib/self-build-loop.js`
@@ -4256,7 +8450,9 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/tool-forge.js`
 - `lib/tool-index.js`
 - `lib/triggers.js`
+- `lib/upload-placement.js`
 - `lib/vector-memory.js`
+- `lib/verify-first.js`
 - `lib/version.js`
 - `lib/warp-bus.js`
 - `lib/warp-rung.js`
@@ -4286,7 +8482,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`lib/agent-tools/` · 116 files</summary>
+<summary>`lib/agent-tools/` · 118 files</summary>
 
 - `lib/agent-tools/generate-agent-nodes.js`
 - `lib/agent-tools/generate-tool-nodes.js`
@@ -4301,11 +8497,13 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/agent-tools/tools/autofill/autofill-manage.js`
 - `lib/agent-tools/tools/bookmarks/bookmarks-manage.js`
 - `lib/agent-tools/tools/browser/browser-action.js`
+- `lib/agent-tools/tools/clear-glass/adblock.js`
 - `lib/agent-tools/tools/clear-glass/automation.js`
 - `lib/agent-tools/tools/clear-glass/browser-automation.js`
 - `lib/agent-tools/tools/clear-glass/browser.js`
 - `lib/agent-tools/tools/clear-glass/command-index.js`
 - `lib/agent-tools/tools/clear-glass/dom-archaeology.js`
+- `lib/agent-tools/tools/clear-glass/firefox.js`
 - `lib/agent-tools/tools/clear-glass/learned.js`
 - `lib/agent-tools/tools/clear-glass/macro.js`
 - `lib/agent-tools/tools/clear-glass/net.js`
@@ -4511,7 +8709,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`lib/node-schemas/` · 65 files</summary>
+<summary>`lib/node-schemas/` · 68 files</summary>
 
 - `lib/node-schemas/schema.account_identity_index_entry`
 - `lib/node-schemas/schema.agent`
@@ -4536,6 +8734,8 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/node-schemas/schema.filetree`
 - `lib/node-schemas/schema.framework`
 - `lib/node-schemas/schema.gap`
+- `lib/node-schemas/schema.gate`
+- `lib/node-schemas/schema.graph`
 - `lib/node-schemas/schema.guardian_listener`
 - `lib/node-schemas/schema.hat`
 - `lib/node-schemas/schema.health`
@@ -4558,6 +8758,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/node-schemas/schema.output`
 - `lib/node-schemas/schema.pat`
 - `lib/node-schemas/schema.pattern_sequence`
+- `lib/node-schemas/schema.phase`
 - `lib/node-schemas/schema.procedure`
 - `lib/node-schemas/schema.provider`
 - `lib/node-schemas/schema.raid_contract`
@@ -4592,6 +8793,1623 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `lib/opportunity/sources.js`
 - `lib/opportunity/stages.js` — the gated states an opportunity moves through, and who may move it. Pure. The compartment model (QUEUED → ……
 - `lib/opportunity/store.js` — the opportunity pipeline's persistence: cortex's JAA store, six tables, one ledger. TABLES (none decays —…
+
+</details>
+
+<details>
+<summary>`lib/phases/` · 1611 files</summary>
+
+- `lib/phases/2026-08-22-session-full/SF10_agent_notes.phase`
+- `lib/phases/2026-08-22-session-full/SF12_end_state_vision_and_full_phase_map_docs.phase`
+- `lib/phases/2026-08-22-session-full/SF13_orchestrator_agent_pipeline.phase`
+- `lib/phases/2026-08-22-session-full/SF16_event_types_real_registry.phase`
+- `lib/phases/2026-08-22-session-full/SF17_intelligence_system_all_4_phases.phase`
+- `lib/phases/2026-08-22-session-full/SF5_wiring_gap_bridge.phase`
+- `lib/phases/2026-08-22-session-full/SF7_axiom_8_7.phase`
+- `lib/phases/2026-08-22-session-full/graph/SF10_agent_notes-2d100608bc826abf.graph`
+- `lib/phases/2026-08-22-session-full/graph/SF12_end_state_vision_and_full_phase_map_docs-e20580490f498608.graph`
+- `lib/phases/2026-08-22-session-full/graph/SF13_orchestrator_agent_pipeline-de5ad9a019286d15.graph`
+- `lib/phases/2026-08-22-session-full/graph/SF16_event_types_real_registry-71639da711eaaf6d.graph`
+- `lib/phases/2026-08-22-session-full/graph/SF17_intelligence_system_all_4_phases-8f00a4235b63cc7b.graph`
+- `lib/phases/2026-08-22-session-full/graph/SF5_wiring_gap_bridge-91251df2a9f05ad8.graph`
+- `lib/phases/2026-08-22-session-full/graph/SF7_axiom_8_7-0396343d7665f754.graph`
+- `lib/phases/2026-08-22-session-full/graph/_superseded/SF12_end_state_vision_and_full_phase_map_docs-1d20559f29b851d2.graph`
+- `lib/phases/2026-08-22-session-full/graph/_superseded/SF7_axiom_8_7-c236c56937c33593.graph`
+- `lib/phases/2026-08-23-backlog/BL11_orchestrator_folder_consolidation.phase`
+- `lib/phases/2026-08-23-backlog/BL12_nexus_heal_loop_to_diagnostic.phase`
+- `lib/phases/2026-08-23-backlog/BL15_agent_tools_tree_restructure.phase`
+- `lib/phases/2026-08-23-backlog/BL24_userscript_suite_enterprise_grade.phase`
+- `lib/phases/2026-08-23-backlog/BL25_nexus_options_config.phase`
+- `lib/phases/2026-08-23-backlog/BL27_agent_suite_consolidation.phase`
+- `lib/phases/2026-08-23-backlog/BL4_port_element_picker_ux.phase`
+- `lib/phases/2026-08-23-backlog/BL7_emerge_files_to_emerge_folder.phase`
+- `lib/phases/2026-08-23-backlog/graph/BL11_orchestrator_folder_consolidation-d04b773d3d681ed0.graph`
+- `lib/phases/2026-08-23-backlog/graph/BL12_nexus_heal_loop_to_diagnostic-aedd1b0928da63f4.graph`
+- `lib/phases/2026-08-23-backlog/graph/BL15_agent_tools_tree_restructure-8c572d92803d3fae.graph`
+- `lib/phases/2026-08-23-backlog/graph/BL24_userscript_suite_enterprise_grade-edba621e935840c5.graph`
+- `lib/phases/2026-08-23-backlog/graph/BL25_nexus_options_config-abb545081f8c4e3e.graph`
+- `lib/phases/2026-08-23-backlog/graph/BL27_agent_suite_consolidation-5312857a8c56f41a.graph`
+- `lib/phases/2026-08-23-backlog/graph/BL4_port_element_picker_ux-8f7a989bfea93b3a.graph`
+- `lib/phases/2026-08-23-backlog/graph/BL7_emerge_files_to_emerge_folder-3ab7a1f57237920a.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR2_ollama_output_folder_listener.phase`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR3_account_registry_userscript_hook.phase`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR5_build_contract_per_agent_per_intent.phase`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR6_copilot_as_agent_chat_model.phase`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR7_guardian_dispatch_connectivity_sweep.phase`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/ET2_guardian_event_taxonomy.phase`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/ET6_sigma_gates_on_taxonomy.phase`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/SS3_unified_living_model_system_plus_person.phase`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR2_ollama_output_folder_listener-c5cdd4d86ddb5b74.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR3_account_registry_userscript_hook-8be6d498ddcef7ec.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR5_build_contract_per_agent_per_intent-36bf07b27fc48bd7.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR6_copilot_as_agent_chat_model-fd8edb04f0f53aaf.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR7_guardian_dispatch_connectivity_sweep-e8d5cbb04e0fb190.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET2_guardian_event_taxonomy-3864f053a89e1c31.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET6_sigma_gates_on_taxonomy-161a85ba5515e7c0.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/SS3_unified_living_model_system_plus_person-0bbbc7d8adf65f4e.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/ET6_sigma_gates_on_taxonomy-39103ee4912fdf0c.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/SS3_unified_living_model_system_plus_person-b7991f62394431da.graph`
+- `lib/phases/2026-08-28-definition-of-complete/DOD2_diagnose_and_self_repair.phase`
+- `lib/phases/2026-08-28-definition-of-complete/DOD4_build_and_expand_from_loom.phase`
+- `lib/phases/2026-08-28-definition-of-complete/DOD5_maps_snapshots_backups_living_model.phase`
+- `lib/phases/2026-08-28-definition-of-complete/DOD6_respects_axioms.phase`
+- `lib/phases/2026-08-28-definition-of-complete/DOD8_contract_conditions_comparison_and_drift_engines.phase`
+- `lib/phases/2026-08-28-definition-of-complete/graph/DOD2_diagnose_and_self_repair-5bfd602924d700e1.graph`
+- `lib/phases/2026-08-28-definition-of-complete/graph/DOD4_build_and_expand_from_loom-8ee63f9d1b09068e.graph`
+- `lib/phases/2026-08-28-definition-of-complete/graph/DOD5_maps_snapshots_backups_living_model-3908fcdebd5c6049.graph`
+- `lib/phases/2026-08-28-definition-of-complete/graph/DOD6_respects_axioms-0f8fab7681fae1d5.graph`
+- `lib/phases/2026-08-28-definition-of-complete/graph/DOD8_contract_conditions_comparison_and_drift_engines-1d10a9ee9575d398.graph`
+- `lib/phases/2026-08-28-self-building-pipeline/SBP10_per_hat_model_assignment.phase`
+- `lib/phases/2026-08-28-self-building-pipeline/SBP11_agent_tools_registry_awareness.phase`
+- `lib/phases/2026-08-28-self-building-pipeline/SBP12_listener_and_userscript_suite_view.phase`
+- `lib/phases/2026-08-28-self-building-pipeline/SBP6_system_schema_inventory.phase`
+- `lib/phases/2026-08-28-self-building-pipeline/SBP8_agent_mesh_consolidation.phase`
+- `lib/phases/2026-08-28-self-building-pipeline/SBP9_hat_forge_real_hats.phase`
+- `lib/phases/2026-08-28-self-building-pipeline/graph/SBP10_per_hat_model_assignment-7abdac008edcde3d.graph`
+- `lib/phases/2026-08-28-self-building-pipeline/graph/SBP11_agent_tools_registry_awareness-10a463896c66d6e4.graph`
+- `lib/phases/2026-08-28-self-building-pipeline/graph/SBP12_listener_and_userscript_suite_view-dc9e3b5d6c5777b3.graph`
+- `lib/phases/2026-08-28-self-building-pipeline/graph/SBP6_system_schema_inventory-01abcd223ab08b29.graph`
+- `lib/phases/2026-08-28-self-building-pipeline/graph/SBP8_agent_mesh_consolidation-5a5600d90602c11e.graph`
+- `lib/phases/2026-08-28-self-building-pipeline/graph/SBP9_hat_forge_real_hats-7d6322a91f58a6d6.graph`
+- `lib/phases/2026-08-30-interaction-contract-context/IC10_diagnostic_own_real_system_structure.phase`
+- `lib/phases/2026-08-30-interaction-contract-context/IC12_universal_gap_and_symmetry_detection.phase`
+- `lib/phases/2026-08-30-interaction-contract-context/IC13_agent_mesh_chat_index.phase`
+- `lib/phases/2026-08-30-interaction-contract-context/IC5_full_input_queue_output_qc_lifecycle.phase`
+- `lib/phases/2026-08-30-interaction-contract-context/IC7_drift_and_comparison_tracking_in_the_pipeline.phase`
+- `lib/phases/2026-08-30-interaction-contract-context/graph/IC10_diagnostic_own_real_system_structure-37d61971e616a68c.graph`
+- `lib/phases/2026-08-30-interaction-contract-context/graph/IC12_universal_gap_and_symmetry_detection-4c68e3f3c0900e7c.graph`
+- `lib/phases/2026-08-30-interaction-contract-context/graph/IC13_agent_mesh_chat_index-acae83a88cfed8cd.graph`
+- `lib/phases/2026-08-30-interaction-contract-context/graph/IC5_full_input_queue_output_qc_lifecycle-5cf93f4f44f1c70a.graph`
+- `lib/phases/2026-08-30-interaction-contract-context/graph/IC7_drift_and_comparison_tracking_in_the_pipeline-57b2a934eab904b3.graph`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM10_per_agent_wake_words.phase`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM14_components_store.phase`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM1_spec_as_living_model.phase`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM23_atlas_history_versions_calendar.phase`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM25_atlas_living_update.phase`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM6_who_creates_contracts.phase`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM10_per_agent_wake_words-181848264f44d530.graph`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM14_components_store-c5ab3492fddbea5d.graph`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM1_spec_as_living_model-0fafcb56a76e6808.graph`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM23_atlas_history_versions_calendar-cc8f2ab0d0593e31.graph`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM25_atlas_living_update-fffff5497b586859.graph`
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM6_who_creates_contracts-916424c3f4eeec02.graph`
+- `lib/phases/2026-09-02-agent-mesh-full-map/AM1_raid_intent_contracts_per_agent.phase`
+- `lib/phases/2026-09-02-agent-mesh-full-map/AM2_first_principles_hat_or_modifier.phase`
+- `lib/phases/2026-09-02-agent-mesh-full-map/AM3_agent_mesh_folder_consolidation.phase`
+- `lib/phases/2026-09-02-agent-mesh-full-map/AM5_tool_forge_real_usage_audit.phase`
+- `lib/phases/2026-09-02-agent-mesh-full-map/AM6_raid_contract_gate_before_dispatch.phase`
+- `lib/phases/2026-09-02-agent-mesh-full-map/graph/AM1_raid_intent_contracts_per_agent-e561c466fdbbdbb2.graph`
+- `lib/phases/2026-09-02-agent-mesh-full-map/graph/AM2_first_principles_hat_or_modifier-0e345d95c9a3188b.graph`
+- `lib/phases/2026-09-02-agent-mesh-full-map/graph/AM3_agent_mesh_folder_consolidation-6a436c038ec43868.graph`
+- `lib/phases/2026-09-02-agent-mesh-full-map/graph/AM5_tool_forge_real_usage_audit-28fa7d9090fb0f06.graph`
+- `lib/phases/2026-09-02-agent-mesh-full-map/graph/AM6_raid_contract_gate_before_dispatch-95e22ab925e053e4.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/AM10_ollama_models_in_mesh.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/AM7_agent_suite_welcome_ui.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/AM9_per_account_sub_agents.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/B1_full_build_contract_schema.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/B2_chunk_contract_chaining.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/C2_templates_folder_structure.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/C4_build_wizard_two_modes.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/CP3_dynamic_model_selection.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/CP4_copilot_cli_deterministic_toggle.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/LM6_model_template.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/SR10_iterative_prompt_optimization_loop.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/SR11_spec_project_import_to_compartment.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/SR12_system_parse_query_surface.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/SR13_copilot_chat_ui.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/SR3_artifact_extraction_introspect_bridge.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/SR7_token_reduction_toolkit.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/SR9_autonomous_self_build_end_state.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/T1_tool_listing_command.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/T2_event_taxonomy_per_system.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/VM1_versionium_owns_loom_map_sync.phase`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/AM10_ollama_models_in_mesh-096f5e7ddf0d6aa1.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/AM7_agent_suite_welcome_ui-67a22c4161e9ad41.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/AM9_per_account_sub_agents-20952744b4aa19cf.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/B1_full_build_contract_schema-75201db85d2752cc.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/B2_chunk_contract_chaining-4b6fdc464e5dc7fe.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/C2_templates_folder_structure-4b30f66e40536e56.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/C4_build_wizard_two_modes-9a05d43747e1ddbd.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/CP3_dynamic_model_selection-2bda1b4b75b52bf7.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/CP4_copilot_cli_deterministic_toggle-3e9bf786171d55b3.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/LM6_model_template-58c8bda5255910c8.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/SR10_iterative_prompt_optimization_loop-cb5c36dca66dacba.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/SR11_spec_project_import_to_compartment-3ba40fae475bab7c.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/SR12_system_parse_query_surface-8c16a48512a80c7c.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/SR13_copilot_chat_ui-86f6ac2d0b97306a.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/SR3_artifact_extraction_introspect_bridge-4f813123ae64e4bd.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/SR7_token_reduction_toolkit-3530c94e6e6673f7.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/SR9_autonomous_self_build_end_state-5e2b9a8991cf1a0d.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/T1_tool_listing_command-360e0c29705d7e89.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/T2_event_taxonomy_per_system-d01cf8ce65fbb403.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/VM1_versionium_owns_loom_map_sync-645d8fc81f9cd1b8.graph`
+- `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/VS2_ring_buffer_and_causal_field.phase`
+- `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/VS3_agent_chat_log_query.phase`
+- `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/VS2_ring_buffer_and_causal_field-a136f794f2a44987.graph`
+- `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/VS3_agent_chat_log_query-c1653dec5e1a00a7.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/BR1_brainos_cross_system_relay.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/BR2_brainos_controls_agents.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/DA1_fix_stale_guardian_coverage_gate.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/DBG1_consolidate_debug_surfaces.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/EVT1_commands_and_tools_emit_events.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/REG1_component_registry_remap.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/RP1_repository_per_system.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/SPEC1_rewrite_nexus_spec.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/TC1_tools_get_real_contracts.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/UX1_design_philosophy_consolidation.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/VSB1_fix_versionium_split_brain.phase`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/BR1_brainos_cross_system_relay-74f187aeb527e717.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/BR2_brainos_controls_agents-eee077467b2c6ac8.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/DA1_fix_stale_guardian_coverage_gate-f96bc8899f2f2334.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/DBG1_consolidate_debug_surfaces-251300f01adf0239.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/EVT1_commands_and_tools_emit_events-cd104364a7ca3847.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/REG1_component_registry_remap-2636c28afb4b764e.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/RP1_repository_per_system-95bead78e697c269.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/SPEC1_rewrite_nexus_spec-8486df46c0ff1a3d.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/TC1_tools_get_real_contracts-e88ee91b4fa0d7c3.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/UX1_design_philosophy_consolidation-8518048c60a27800.graph`
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/VSB1_fix_versionium_split_brain-10cd9ca6595a4662.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/AR1_architect_retirement_and_hooks_to_loom.phase`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/AR2_decentralize_interaction_contracts.phase`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/C1_cli_per_system_split.phase`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/D1_diagnostic_real_folder.phase`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/N1_root_md_consolidation.phase`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/N2_root_nexus_js_to_nexus_folder.phase`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/N3_stray_root_files_found_after_N1.phase`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/T1_extend_system_scaffold.phase`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/X1_node_decomposition_tool.phase`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR1_architect_retirement_and_hooks_to_loom-c44714dfce980acf.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR2_decentralize_interaction_contracts-004da81f2aa79f85.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/C1_cli_per_system_split-7b2166b145a6e248.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/D1_diagnostic_real_folder-326872f5777c2e88.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N1_root_md_consolidation-d7ece054f8e1b547.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N2_root_nexus_js_to_nexus_folder-6088de94a4c19d4b.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N3_stray_root_files_found_after_N1-46553cc0a1125676.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/T1_extend_system_scaffold-c85e7dedf727b889.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/X1_node_decomposition_tool-6dc260de77610029.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P12_compartment_per_contract.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P19_dynamic_nodes_via_causal_graph.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P1_fix_the_declared_living_maps.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P22_ledger_data_integrity_checker.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P25_universal_per_system_queue.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P30_provider_ping_delta.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P33_every_system_runs_its_node_registry.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P36_an_event_ledger_per_registry.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P38_every_graph_has_its_route_command_and_node.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P3_per_system_node_schemas.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P4_full_node_type_coverage_per_system.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/P9_diagnostic_from_expected_behavior.phase`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P12_compartment_per_contract-8cfd3609296f0e65.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P19_dynamic_nodes_via_causal_graph-14175a5931199ebc.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P1_fix_the_declared_living_maps-6e2243bd608aa76f.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P22_ledger_data_integrity_checker-80f256cd544672ab.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P25_universal_per_system_queue-624624c871ccb0f6.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P30_provider_ping_delta-81b879ff6f24b8b2.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P33_every_system_runs_its_node_registry-7955afec14f5b4a5.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P36_an_event_ledger_per_registry-fbd0abb2a175f847.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P38_every_graph_has_its_route_command_and_node-ba638bb548c28c0d.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P3_per_system_node_schemas-71d0409c318c73a0.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P4_full_node_type_coverage_per_system-7d7cc69568624b23.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P9_diagnostic_from_expected_behavior-d3f4fcb51886b539.graph`
+- `lib/phases/2026-09-13-track-b-sovereignty/MCO16_component_projections_retracted.phase`
+- `lib/phases/2026-09-13-track-b-sovereignty/graph/MCO16_component_projections_retracted-4e9c11ff0b4b91af.graph`
+- `lib/phases/2026-09-19-architect-blueprint-forge-idearium/P0_place_spec_compiler.phase`
+- `lib/phases/2026-09-19-architect-blueprint-forge-idearium/graph/P0_place_spec_compiler-816ab40bc00d49c5.graph`
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/B3_availability_tier.phase`
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/B5_port_3753_collision.phase`
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/D5_new.phase`
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P0_map.phase`
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B3_availability_tier-1a4f7859f0f50ce1.graph`
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B5_port_3753_collision-3d6b1fadb758d77c.graph`
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/D5_new-8a8997642f5cb4af.graph`
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P0_map-270831fdfdc19271.graph`
+- `lib/phases/2026-09-22-brainos-agent-suite/HT1_hat_manager.phase`
+- `lib/phases/2026-09-22-brainos-agent-suite/RD1_reader.phase`
+- `lib/phases/2026-09-22-brainos-agent-suite/TL1_tool_browser.phase`
+- `lib/phases/2026-09-22-brainos-agent-suite/graph/HT1_hat_manager-c65f629e4c701947.graph`
+- `lib/phases/2026-09-22-brainos-agent-suite/graph/RD1_reader-ffe56609c225d915.graph`
+- `lib/phases/2026-09-22-brainos-agent-suite/graph/TL1_tool_browser-c1e834b49a05b3a2.graph`
+- `lib/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/TR2_tab_lifecycle_and_visibility.phase`
+- `lib/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/graph/TR2_tab_lifecycle_and_visibility-f48c6d68235b7c84.graph`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/A1.phase`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/A2.phase`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/E1.phase`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/R1.phase`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/T3.phase`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/T7.phase`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/A1-369bde5ee0a043bb.graph`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/A2-fc6a51b24eaf102b.graph`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/E1-8b75f1c7cf514a23.graph`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/R1-2fc594cd0c71aec9.graph`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T3-255b5681dc7d3f96.graph`
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T7-0870291c8f83c928.graph`
+- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/E1.phase`
+- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/N1.phase`
+- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/X1.phase`
+- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/E1-48449faf7b7f8211.graph`
+- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/N1-afc3f2d2b1971c2a.graph`
+- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/X1-7a889bbcd135db9f.graph`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/G1.phase`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/G2.phase`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/G4.phase`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/H2.phase`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/H4.phase`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/M1.phase`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/M4.phase`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/O3.phase`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/X1.phase`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/G1-a03b49e7e8269c3f.graph`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/G2-ae911f4c7c242c54.graph`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/G4-45ac7ff9b3f272be.graph`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/H2-614a688e1eeeef44.graph`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/H4-3e25fcd3222e73f8.graph`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/M1-6f7e0c6335c28637.graph`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/M4-665ecb7fca2292ef.graph`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/O3-5cacc4d6647c995e.graph`
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/graph/X1-3523be12dc3e544d.graph`
+- `lib/phases/2026-09-27-components-store-and-atlases/A1.phase`
+- `lib/phases/2026-09-27-components-store-and-atlases/A2.phase`
+- `lib/phases/2026-09-27-components-store-and-atlases/C1.phase`
+- `lib/phases/2026-09-27-components-store-and-atlases/C3.phase`
+- `lib/phases/2026-09-27-components-store-and-atlases/C4.phase`
+- `lib/phases/2026-09-27-components-store-and-atlases/graph/A1-362ff4dd0f06f283.graph`
+- `lib/phases/2026-09-27-components-store-and-atlases/graph/A2-c42260b792aebce5.graph`
+- `lib/phases/2026-09-27-components-store-and-atlases/graph/C1-c901b0518083f11c.graph`
+- `lib/phases/2026-09-27-components-store-and-atlases/graph/C3-6f53d9aa14fc9e97.graph`
+- `lib/phases/2026-09-27-components-store-and-atlases/graph/C4-1e1f2af6d71358cb.graph`
+- `lib/phases/2026-09-27-idearium-atlas/A2.phase`
+- `lib/phases/2026-09-27-idearium-atlas/graph/A2-2ca200087c34a761.graph`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/T1_suite_process.phase`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/T2_all_tests.phase`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/T3_debug_report.phase`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/X1_system_nodes.phase`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/X4_command_index_spec.phase`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/X5_core_scripts.phase`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/Z1_release.phase`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T1_suite_process-f9f50c78f096c750.graph`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T2_all_tests-f20e3b22238a10f1.graph`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T3_debug_report-7765b07df0393f7b.graph`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X1_system_nodes-46e5cb034f4618e8.graph`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X4_command_index_spec-f0c28b0337bbaf38.graph`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X5_core_scripts-071bcce96653212c.graph`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/Z1_release-8e268e22b5c92e0c.graph`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/A1.phase`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/B1.phase`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/C1.phase`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/C3.phase`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/M0.phase`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/R0.phase`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/SV1.phase`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/SV2.phase`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/X1.phase`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/A1-1b42fcb0ed4d9adc.graph`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/B1-78425d6a9af5ccae.graph`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/C1-4d3b419ed124ed8e.graph`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/C3-d965f28349f6b6fa.graph`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/M0-90edb156dad368a7.graph`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/R0-9bc06ef9e121c4ef.graph`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/SV1-aba511479e53415c.graph`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/SV2-233056d110ca606c.graph`
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/graph/X1-960b6d032d829383.graph`
+- `lib/phases/2026-09-28-staging-self-heal/A1.phase`
+- `lib/phases/2026-09-28-staging-self-heal/C0.phase`
+- `lib/phases/2026-09-28-staging-self-heal/S1.phase`
+- `lib/phases/2026-09-28-staging-self-heal/X1.phase`
+- `lib/phases/2026-09-28-staging-self-heal/graph/A1-678cef6eb0b005d6.graph`
+- `lib/phases/2026-09-28-staging-self-heal/graph/C0-0b7235ad10d93e23.graph`
+- `lib/phases/2026-09-28-staging-self-heal/graph/S1-7fb03e9518bd1d90.graph`
+- `lib/phases/2026-09-28-staging-self-heal/graph/X1-5196f7fe55a3de4b.graph`
+- `lib/phases/2026-09-29-build-surface/BS12_release.phase`
+- `lib/phases/2026-09-29-build-surface/BS19_copilot_atlas_guide.phase`
+- `lib/phases/2026-09-29-build-surface/BS1_rewind_hit_test.phase`
+- `lib/phases/2026-09-29-build-surface/graph/BS12_release-8f67d5e56dcc7344.graph`
+- `lib/phases/2026-09-29-build-surface/graph/BS19_copilot_atlas_guide-8cfe36554eded916.graph`
+- `lib/phases/2026-09-29-build-surface/graph/BS1_rewind_hit_test-338736611c96d096.graph`
+- `lib/phases/2026-09-29-nex-node-store/N0_census.phase`
+- `lib/phases/2026-09-29-nex-node-store/N10_migration.phase`
+- `lib/phases/2026-09-29-nex-node-store/N13_release.phase`
+- `lib/phases/2026-09-29-nex-node-store/N14_failure_mode_field.phase`
+- `lib/phases/2026-09-29-nex-node-store/N15_contract_history.phase`
+- `lib/phases/2026-09-29-nex-node-store/N17_data_migration_to_owning_systems.phase`
+- `lib/phases/2026-09-29-nex-node-store/N18_hardcode_census.phase`
+- `lib/phases/2026-09-29-nex-node-store/N19_suite_triage_and_known_gaps.phase`
+- `lib/phases/2026-09-29-nex-node-store/N1_record_and_log.phase`
+- `lib/phases/2026-09-29-nex-node-store/N21_no_empty_generation_event_gates.phase`
+- `lib/phases/2026-09-29-nex-node-store/N22_shadow_and_negative_space_reasoning.phase`
+- `lib/phases/2026-09-29-nex-node-store/N23_ollama_first_build_then_agent_review.phase`
+- `lib/phases/2026-09-29-nex-node-store/N24_no_json_yaml_node_types_only.phase`
+- `lib/phases/2026-09-29-nex-node-store/N26_work_surface_and_tv_ui_from_contracts.phase`
+- `lib/phases/2026-09-29-nex-node-store/N27_history_import_from_700_zips.phase`
+- `lib/phases/2026-09-29-nex-node-store/N28_live_run_findings.phase`
+- `lib/phases/2026-09-29-nex-node-store/N29_full_run_only_failures.phase`
+- `lib/phases/2026-09-29-nex-node-store/N2_types_and_gates.phase`
+- `lib/phases/2026-09-29-nex-node-store/N30_archive_import_dropbox_and_copilot_command.phase`
+- `lib/phases/2026-09-29-nex-node-store/N3_projection_and_indexes.phase`
+- `lib/phases/2026-09-29-nex-node-store/N4_kinds_record_ledger_ring_blob.phase`
+- `lib/phases/2026-09-29-nex-node-store/N5_kinds_edge_and_lattice.phase`
+- `lib/phases/2026-09-29-nex-node-store/N6_time.phase`
+- `lib/phases/2026-09-29-nex-node-store/N7_views_yaml_and_nex.phase`
+- `lib/phases/2026-09-29-nex-node-store/N8_service.phase`
+- `lib/phases/2026-09-29-nex-node-store/N9_cli.phase`
+- `lib/phases/2026-09-29-nex-node-store/graph/N0_census-9b89ddab0ca4dd15.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N10_migration-22105d4423c79d62.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N13_release-9057f45c32bc5a7a.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N14_failure_mode_field-b296d7b4bd69362b.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N15_contract_history-a9ca7dca146ef7fe.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N17_data_migration_to_owning_systems-a936213ccfa0c257.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N18_hardcode_census-5c8fe27e11df3386.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N19_suite_triage_and_known_gaps-e41f290ddd43afc5.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N1_record_and_log-6d4e3abb4292bf6a.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N21_no_empty_generation_event_gates-22cd6c8351ac8c9e.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N22_shadow_and_negative_space_reasoning-4843bec3597696fa.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N23_ollama_first_build_then_agent_review-5beb3a63e79bdd5f.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N24_no_json_yaml_node_types_only-2e2bc510c6a525a5.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N26_work_surface_and_tv_ui_from_contracts-642ec62479f9e52c.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N27_history_import_from_700_zips-e06097bc3f5fc96c.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N28_live_run_findings-fbb9ca7ade269a9e.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N29_full_run_only_failures-3ccc80b708b1184e.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N2_types_and_gates-5e4c8e5f9b3fa871.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N30_archive_import_dropbox_and_copilot_command-dedd8b0e675c778d.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N3_projection_and_indexes-e869d4762f5f68e4.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N4_kinds_record_ledger_ring_blob-0808a2146da71927.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N5_kinds_edge_and_lattice-be77dec312fae18a.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N6_time-1d45bad2579387a6.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N7_views_yaml_and_nex-d19115c9bdab18db.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N8_service-a93084e10fd5c6be.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N9_cli-2bd8335f5d98134a.graph`
+- `lib/phases/2026-09-29-provider-economy/EC0_policy_model.phase`
+- `lib/phases/2026-09-29-provider-economy/EC10_eros_workbench.phase`
+- `lib/phases/2026-09-29-provider-economy/EC11_release.phase`
+- `lib/phases/2026-09-29-provider-economy/EC1_usage_ledger.phase`
+- `lib/phases/2026-09-29-provider-economy/EC2_gate.phase`
+- `lib/phases/2026-09-29-provider-economy/EC3_token_constraints.phase`
+- `lib/phases/2026-09-29-provider-economy/EC4_learning_router.phase`
+- `lib/phases/2026-09-29-provider-economy/EC5_staging_by_economy.phase`
+- `lib/phases/2026-09-29-provider-economy/EC7_router_in_builds.phase`
+- `lib/phases/2026-09-29-provider-economy/graph/EC0_policy_model-f08917980459b73a.graph`
+- `lib/phases/2026-09-29-provider-economy/graph/EC10_eros_workbench-27a839ee0a545a60.graph`
+- `lib/phases/2026-09-29-provider-economy/graph/EC11_release-3ddf9b68b334fa07.graph`
+- `lib/phases/2026-09-29-provider-economy/graph/EC1_usage_ledger-3bb692c134237f3f.graph`
+- `lib/phases/2026-09-29-provider-economy/graph/EC2_gate-5b5011336adda021.graph`
+- `lib/phases/2026-09-29-provider-economy/graph/EC3_token_constraints-3231820165317198.graph`
+- `lib/phases/2026-09-29-provider-economy/graph/EC4_learning_router-5ea981995e6aa2aa.graph`
+- `lib/phases/2026-09-29-provider-economy/graph/EC5_staging_by_economy-a13ffbca0770c51b.graph`
+- `lib/phases/2026-09-29-provider-economy/graph/EC7_router_in_builds-e6f92fef8dfca5e3.graph`
+- `lib/phases/2026-09-29-tool-layers-and-pane-memory/P5.phase`
+- `lib/phases/2026-09-29-tool-layers-and-pane-memory/graph/P5-8d626c5118de90a9.graph`
+- `lib/phases/2026-09-30-idearium-coding-flow/W0_map.phase`
+- `lib/phases/2026-09-30-idearium-coding-flow/W6_release.phase`
+- `lib/phases/2026-09-30-idearium-coding-flow/graph/W0_map-48e0fd2adc75cbe4.graph`
+- `lib/phases/2026-09-30-idearium-coding-flow/graph/W6_release-16020646cb3d4924.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/AG1_coding_agent_provider.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/CI1_compounding_iterate.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/CP1_copilot_drives_idearium_and_talks_to_its_agents.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/CT1_cut_replies_are_finished.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/CX1_context_cascade.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/DI1_chunking_for_data_ingestion.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/DK4_the_screen_through_remote_desktop.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/DT1_persistence_census.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/DT2_failure_mode_field.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/DT5_pipeline_routing_spec.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/DT6_node_store.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/EN1_run_isolated_and_environments.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/FT1_file_tools_merge_patch_drop.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/GL1_gate_verify_fix_loop.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/HC1_hat_agent_to_cos_build.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/M0_map.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/PF3_snapshot_names_changed_files.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/PV1_verify.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/R1_release_per_phase.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/RM1_registry_driven_moves.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/UI4_w7_open_items.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/UM1_nexus_understands_james.phase`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/AG1_coding_agent_provider-7098e6ab122046fe.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/CI1_compounding_iterate-1ceee25ce29d30d7.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/CP1_copilot_drives_idearium_and_talks_to_its_agents-9573fd740fb5af49.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/CT1_cut_replies_are_finished-44a5ea9533f0d015.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/CX1_context_cascade-ca712cb3559b1665.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DI1_chunking_for_data_ingestion-91bad89cab545ae9.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DK4_the_screen_through_remote_desktop-068dbdde9fe76e51.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DT1_persistence_census-a397051c2ba83059.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DT2_failure_mode_field-6c0d9717247bc31e.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DT5_pipeline_routing_spec-4d9d36b0f640099b.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DT6_node_store-587b34312496b309.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/EN1_run_isolated_and_environments-8b73ac9da187069c.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/FT1_file_tools_merge_patch_drop-b482bb0cc2b2da5b.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/GL1_gate_verify_fix_loop-c375ed7a6843eff0.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/HC1_hat_agent_to_cos_build-27c92f78114946f9.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/M0_map-8ffcfde00fa30d75.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/PF3_snapshot_names_changed_files-ef1e8fe4b8bff7c1.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/PV1_verify-8d8471a331531c9e.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/R1_release_per_phase-46c6115b0a540652.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/RM1_registry_driven_moves-37e44e3fd7c0b5e6.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/UI4_w7_open_items-18e3783da1c40086.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/UM1_nexus_understands_james-941120d6e488072b.graph`
+- `lib/phases/2026-10-01-routing-registry-genesis/AR1_architecture_spec.phase`
+- `lib/phases/2026-10-01-routing-registry-genesis/RG0_map.phase`
+- `lib/phases/2026-10-01-routing-registry-genesis/RG1_routing_policy_library.phase`
+- `lib/phases/2026-10-01-routing-registry-genesis/RG9_release.phase`
+- `lib/phases/2026-10-01-routing-registry-genesis/graph/AR1_architecture_spec-8cd719427be6e25f.graph`
+- `lib/phases/2026-10-01-routing-registry-genesis/graph/RG0_map-2dbe0930b534d57a.graph`
+- `lib/phases/2026-10-01-routing-registry-genesis/graph/RG1_routing_policy_library-6f62f23ea86dfc53.graph`
+- `lib/phases/2026-10-01-routing-registry-genesis/graph/RG9_release-cf3afc2add05bd8b.graph`
+- `lib/phases/2026-10-01-work-visibility-job-reuse/J0.phase`
+- `lib/phases/2026-10-01-work-visibility-job-reuse/J4.phase`
+- `lib/phases/2026-10-01-work-visibility-job-reuse/graph/J0-e486fc05d2ee7537.graph`
+- `lib/phases/2026-10-01-work-visibility-job-reuse/graph/J4-d0598b9fa84035cf.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/AC1_accounts_into_agents.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/BT1_build_teams.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/CB2_analysis_then_synthesis.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/CB3_the_causal_spec_block.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/CB4_the_emergence_loop_builds.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/CL1_the_component_lab.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/CX0_codex_component_store.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/EC6_economy_and_the_tokenizer.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/EM0_ground.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/EM1_emerge_core.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/EM2_warp_his_own.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/EV0_contracts_for_every_system.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/GG1_graphs_generate_code.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/IN1_nexus_as_claude_codes_toolbox.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/IN2_claude_code_inside_nexus.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/MR10_the_field_between_james_and_the_agents.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/MR11_rewind_the_mind.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/MR1_recall_triad_and_context_table.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/MR2_vector_space_for_the_field.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/MR3_gap_driven_search.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/MR5_fractal_levels_with_the_field.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/MR7_recipes.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/MR8_crystallization.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/MR9_liminal_on_the_agents.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/MS1_mental_simulation.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/OT1_one_write_path.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/RF1_relational_field.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/SH1_shadow_space.phase`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/AC1_accounts_into_agents-b0a53df2fc8f1dea.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/BT1_build_teams-f20168a39b99e978.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/CB2_analysis_then_synthesis-6526c6e29a6f1882.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/CB3_the_causal_spec_block-416677392d644f26.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/CB4_the_emergence_loop_builds-f55b34562227851d.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/CL1_the_component_lab-a2eea2a6f08f0b6a.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/CX0_codex_component_store-a475e453d53efd69.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/EC6_economy_and_the_tokenizer-8672a4aa6309a394.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/EM0_ground-5e6f8714cf4c18ab.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/EM1_emerge_core-73c6df41c03bcc05.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/EM2_warp_his_own-43449bdeda43d0e1.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/EV0_contracts_for_every_system-effdf129b11ae306.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/GG1_graphs_generate_code-e8989d4b9064ae28.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/IN1_nexus_as_claude_codes_toolbox-ea1bc06a4bc07a29.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/IN2_claude_code_inside_nexus-26136e2c5eed6fe6.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/MR10_the_field_between_james_and_the_agents-26426e0877de2189.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/MR11_rewind_the_mind-7408928bead323c8.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/MR1_recall_triad_and_context_table-8d98f6c45ce31135.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/MR2_vector_space_for_the_field-0dc9b5c41e9b71b8.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/MR3_gap_driven_search-9b368a799ea724a4.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/MR5_fractal_levels_with_the_field-b0db8d29198ad6c3.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/MR7_recipes-dba6a7b218cea00c.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/MR8_crystallization-b7db5295beb68216.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/MR9_liminal_on_the_agents-6faebe0d8292d4ed.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/MS1_mental_simulation-7cb6b7e7414bd2be.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/OT1_one_write_path-7c9eae93ea3da6cd.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/RF1_relational_field-42da3a417bea3c55.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/SH1_shadow_space-f4d22958311863ce.graph`
+- `lib/phases/2026-10-02-emerge-field-memory-build/graph/_superseded/EV0_contracts_for_every_system-26eab57c8fd5152e.graph`
+- `lib/phases/2026-10-02-fractal-graph-any-size-agent/FG2_token_budget_chunking.phase`
+- `lib/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG2_token_budget_chunking-869f29022b91a647.graph`
+- `lib/phases/2026-10-02-spatial-void/V7_proof.phase`
+- `lib/phases/2026-10-02-spatial-void/graph/V7_proof-c207baa9194ab90d.graph`
+- `lib/phases/2026-10-02-synthesis-zoom-versionium/LV1_fill_the_highest_leverage.phase`
+- `lib/phases/2026-10-02-synthesis-zoom-versionium/graph/LV1_fill_the_highest_leverage-cb833cd372794400.graph`
+- `lib/phases/2026-10-02-workshop-codex-rewind/CX0_codex_component_store.phase`
+- `lib/phases/2026-10-02-workshop-codex-rewind/NX1_nexus_in_a_vm.phase`
+- `lib/phases/2026-10-02-workshop-codex-rewind/graph/CX0_codex_component_store-a6c33671bbad00ca.graph`
+- `lib/phases/2026-10-02-workshop-codex-rewind/graph/NX1_nexus_in_a_vm-24f038cc5c7b50f4.graph`
+- `lib/phases/2026-10-05-announce-pulse-repair/PR1_the_announced_registry_is_the_list.phase`
+- `lib/phases/2026-10-05-announce-pulse-repair/PR3_negative_space_for_missed_heartbeats.phase`
+- `lib/phases/2026-10-05-announce-pulse-repair/PR5_repair_for_real.phase`
+- `lib/phases/2026-10-05-announce-pulse-repair/graph/PR1_the_announced_registry_is_the_list-641bbd05951e0d82.graph`
+- `lib/phases/2026-10-05-announce-pulse-repair/graph/PR3_negative_space_for_missed_heartbeats-36f6155753d9c5cc.graph`
+- `lib/phases/2026-10-05-announce-pulse-repair/graph/PR5_repair_for_real-620eceb6ad914afa.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/BC1_build_context.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/BC2_the_build_agent_gets_all_of_the_hat_and_repo_context.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/BC3_what_a_build_was_sent_as_a_node.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/BC4_relational_context_wired_or_archived.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB0_map.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB15_empty_is_not_built.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB19_atlases_per_component.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB20_each_system_owns_its_own.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB21_deterministic_parts_grow_with_the_system.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB22_every_component_capability_command_events_as_nodes.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB23_a_new_system_slots_in.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB25_atlas_template_in_his_structure.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB32_context_is_never_optional.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB33_the_agent_runs_the_pipeline.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB34_context_is_the_code_tab_the_graphs_and_memory.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB36_every_agent_can_use_the_tools.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB38_prerequisites_the_questions_first.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB39_the_checklist_builds_the_working_set.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB42_a_repo_expands_from_its_spec.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB43_the_expansion_is_phased.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB47_built_and_run_in_cos.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB48_proof_in_cos_closes_the_phase.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB5_nexus_rebuilds_a_system_from_its_spec.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB6_hundreds_of_specs.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/SB7_domain_file_tree_templates.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/WS1_agents_use_the_work_surface.phase`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/BC1_build_context-a104b548fa539506.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/BC2_the_build_agent_gets_all_of_the_hat_and_repo_context-32034bedc3229b78.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/BC3_what_a_build_was_sent_as_a_node-c3fd5f52e2545073.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/BC4_relational_context_wired_or_archived-13b633faec59fe77.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB0_map-af5948d939560015.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB15_empty_is_not_built-39cd55ae1d782360.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB19_atlases_per_component-9e59927620ffe280.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB20_each_system_owns_its_own-4b6d2494146e3c0b.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB21_deterministic_parts_grow_with_the_system-f055f4bb449380e9.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB22_every_component_capability_command_events_as_nodes-0dc30ff0fe394f6b.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB23_a_new_system_slots_in-d8c8e1bb9fdc8301.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB25_atlas_template_in_his_structure-8782436b6f63495b.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB32_context_is_never_optional-811c78496a6d6038.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB33_the_agent_runs_the_pipeline-4535cb3c5069ae44.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB34_context_is_the_code_tab_the_graphs_and_memory-2adfa9887db541f0.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB36_every_agent_can_use_the_tools-dccbe766f7ed1fa8.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB38_prerequisites_the_questions_first-a417012ad83099c0.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB39_the_checklist_builds_the_working_set-2ebaab7551ee77f8.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB42_a_repo_expands_from_its_spec-e363fb41c2435456.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB43_the_expansion_is_phased-d07fa0b1c8d777ac.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB47_built_and_run_in_cos-00c4a05731de14a2.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB48_proof_in_cos_closes_the_phase-054d76a838a4463d.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB5_nexus_rebuilds_a_system_from_its_spec-17dc36ec94b3a10e.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB6_hundreds_of_specs-121a25b96ccdf275.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB7_domain_file_tree_templates-51af06abc8952960.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/WS1_agents_use_the_work_surface-3a87213be2eb4b9d.graph`
+- `lib/phases/2026-10-05-cli-data-code/CL1_commands_declared_by_their_system.phase`
+- `lib/phases/2026-10-05-cli-data-code/CT1_one_pending_change_path.phase`
+- `lib/phases/2026-10-05-cli-data-code/HG1_components_store_map_parses.phase`
+- `lib/phases/2026-10-05-cli-data-code/HG3_bv09_the_detector_and_files.phase`
+- `lib/phases/2026-10-05-cli-data-code/HG4_scripts_inside_the_sandbox.phase`
+- `lib/phases/2026-10-05-cli-data-code/HG7_the_law_and_clear_glass.phase`
+- `lib/phases/2026-10-05-cli-data-code/HG8_raid_phases_belong_to_cortex.phase`
+- `lib/phases/2026-10-05-cli-data-code/PB1_no_build_below_a_floor.phase`
+- `lib/phases/2026-10-05-cli-data-code/PB3_verify_counts_what_this_run_broke.phase`
+- `lib/phases/2026-10-05-cli-data-code/PB5_the_real_broken_imports.phase`
+- `lib/phases/2026-10-05-cli-data-code/SY1_fifteen_systems.phase`
+- `lib/phases/2026-10-05-cli-data-code/SY2_cos_its_own_system.phase`
+- `lib/phases/2026-10-05-cli-data-code/graph/CL1_commands_declared_by_their_system-17ce5c8f22a70bb7.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/CT1_one_pending_change_path-e9d4a2ab8a870183.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/HG1_components_store_map_parses-dcd4302a4f92f533.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/HG3_bv09_the_detector_and_files-8f5946737fc02601.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/HG4_scripts_inside_the_sandbox-a8510e63e202d6f6.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/HG7_the_law_and_clear_glass-e775e5b9fae4d6a3.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/HG8_raid_phases_belong_to_cortex-dc05cb067c7d5dd0.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/PB1_no_build_below_a_floor-aa5354fee35ba1e8.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/PB3_verify_counts_what_this_run_broke-2c3748ba8d24ac93.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/PB5_the_real_broken_imports-64c2d31e9c1a9aff.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/SY1_fifteen_systems-0b9d29e5e19e2532.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/SY2_cos_its_own_system-5140e15f0bab147d.graph`
+- `lib/phases/2026-10-05-code-tab-and-one-router/CT1_one_door_for_models.phase`
+- `lib/phases/2026-10-05-code-tab-and-one-router/CT2_it_learns_and_switches.phase`
+- `lib/phases/2026-10-05-code-tab-and-one-router/CT6_the_escalation_ladder.phase`
+- `lib/phases/2026-10-05-code-tab-and-one-router/CT8_live_agent_activity.phase`
+- `lib/phases/2026-10-05-code-tab-and-one-router/graph/CT1_one_door_for_models-73db225aab49ebc2.graph`
+- `lib/phases/2026-10-05-code-tab-and-one-router/graph/CT2_it_learns_and_switches-5b7e5862f894dcd4.graph`
+- `lib/phases/2026-10-05-code-tab-and-one-router/graph/CT6_the_escalation_ladder-efb8afe9cf9edd48.graph`
+- `lib/phases/2026-10-05-code-tab-and-one-router/graph/CT8_live_agent_activity-d4a3a275c6d63391.graph`
+- `lib/phases/2026-10-05-cos-machines/AP2_test_on_the_android_compartment.phase`
+- `lib/phases/2026-10-05-cos-machines/graph/AP2_test_on_the_android_compartment-1a8e2550e9c6190b.graph`
+- `lib/phases/2026-10-05-failure-reproduction/FM1_every_ledger_into_rfr2.phase`
+- `lib/phases/2026-10-05-failure-reproduction/FM3_run_it_in_cos.phase`
+- `lib/phases/2026-10-05-failure-reproduction/graph/FM1_every_ledger_into_rfr2-3f69872ecac3e79c.graph`
+- `lib/phases/2026-10-05-failure-reproduction/graph/FM3_run_it_in_cos-9c26dcce49a297be.graph`
+- `lib/phases/2026-10-05-spec-workshop-rebuild/RS1_the_generation_recorder.phase`
+- `lib/phases/2026-10-05-spec-workshop-rebuild/RS2_replay_rewind_branch.phase`
+- `lib/phases/2026-10-05-spec-workshop-rebuild/RS3_the_spec_document.phase`
+- `lib/phases/2026-10-05-spec-workshop-rebuild/RS8_what_converges_becomes_deterministic.phase`
+- `lib/phases/2026-10-05-spec-workshop-rebuild/graph/RS1_the_generation_recorder-fb8844b445a656ad.graph`
+- `lib/phases/2026-10-05-spec-workshop-rebuild/graph/RS2_replay_rewind_branch-ed0fd5754ecc8b3a.graph`
+- `lib/phases/2026-10-05-spec-workshop-rebuild/graph/RS3_the_spec_document-6a4e782e7d9fcab1.graph`
+- `lib/phases/2026-10-05-spec-workshop-rebuild/graph/RS8_what_converges_becomes_deterministic-14a9d76c2db6ad37.graph`
+- `lib/phases/2026-10-05-verified-primitives/VP0_map_and_atlas.phase`
+- `lib/phases/2026-10-05-verified-primitives/VP1_confidence_from_evidence.phase`
+- `lib/phases/2026-10-05-verified-primitives/VP2_adversarial_review.phase`
+- `lib/phases/2026-10-05-verified-primitives/VP4_the_primitive_field.phase`
+- `lib/phases/2026-10-05-verified-primitives/VP5_provenance.phase`
+- `lib/phases/2026-10-05-verified-primitives/VP6_debug_and_intelligence_in_the_desktop.phase`
+- `lib/phases/2026-10-05-verified-primitives/graph/VP0_map_and_atlas-0153feef7a3d9938.graph`
+- `lib/phases/2026-10-05-verified-primitives/graph/VP1_confidence_from_evidence-d274b14ef5df1bea.graph`
+- `lib/phases/2026-10-05-verified-primitives/graph/VP2_adversarial_review-861894593ce759d9.graph`
+- `lib/phases/2026-10-05-verified-primitives/graph/VP4_the_primitive_field-e222cd9217f780b8.graph`
+- `lib/phases/2026-10-05-verified-primitives/graph/VP5_provenance-f17055700f5ac665.graph`
+- `lib/phases/2026-10-05-verified-primitives/graph/VP6_debug_and_intelligence_in_the_desktop-cb17f73919611193.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/AL1_activity_log.phase`
+- `lib/phases/2026-10-07-compartment-control-and-activity/CC1_claude_code_lands_like_every_agent.phase`
+- `lib/phases/2026-10-07-compartment-control-and-activity/CM2_every_command_for_every_agent.phase`
+- `lib/phases/2026-10-07-compartment-control-and-activity/DT1_desktop_into_the_log.phase`
+- `lib/phases/2026-10-07-compartment-control-and-activity/DX1_diagnose_it.phase`
+- `lib/phases/2026-10-07-compartment-control-and-activity/SP1_one_spotlight.phase`
+- `lib/phases/2026-10-07-compartment-control-and-activity/UN1_nexus_surfaces_in_the_field.phase`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/AL1_activity_log-f60e21ab10d46017.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/CC1_claude_code_lands_like_every_agent-bab5260f8cf63874.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/CM2_every_command_for_every_agent-96b5745236336c5b.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/DT1_desktop_into_the_log-8ce7b320cd5c0cd0.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/DX1_diagnose_it-589ac7374abdf907.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/SP1_one_spotlight-094a82781d95acdc.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/UN1_nexus_surfaces_in_the_field-6a1c22a94c4ecbba.graph`
+- `lib/phases/2026-10-07-idearium-one-surface/OS1_commits_say_what_they_touched.phase`
+- `lib/phases/2026-10-07-idearium-one-surface/OS6_proved_on_the_real_page.phase`
+- `lib/phases/2026-10-07-idearium-one-surface/OS9_the_agent_is_in_the_code_tab.phase`
+- `lib/phases/2026-10-07-idearium-one-surface/SP3_the_file_tree_is_the_spine.phase`
+- `lib/phases/2026-10-07-idearium-one-surface/graph/OS1_commits_say_what_they_touched-cd4a72feed007e70.graph`
+- `lib/phases/2026-10-07-idearium-one-surface/graph/OS6_proved_on_the_real_page-6e7f9d7881770520.graph`
+- `lib/phases/2026-10-07-idearium-one-surface/graph/OS9_the_agent_is_in_the_code_tab-b061d20cf1e09377.graph`
+- `lib/phases/2026-10-07-idearium-one-surface/graph/SP3_the_file_tree_is_the_spine-a05d1bb6700d15b8.graph`
+- `lib/phases/2026-10-07-ollama-recorder/OR2_every_call_a_frame.phase`
+- `lib/phases/2026-10-07-ollama-recorder/graph/OR2_every_call_a_frame-350154edf9f42462.graph`
+- `lib/phases/2026-10-07-runtime-load/PF1_the_stall.phase`
+- `lib/phases/2026-10-07-runtime-load/PF2_velocity_steers_the_governor.phase`
+- `lib/phases/2026-10-07-runtime-load/PF6_slow_ticks_name_themselves.phase`
+- `lib/phases/2026-10-07-runtime-load/graph/PF1_the_stall-7057301b9979c4f4.graph`
+- `lib/phases/2026-10-07-runtime-load/graph/PF2_velocity_steers_the_governor-5c6b870477e755ff.graph`
+- `lib/phases/2026-10-07-runtime-load/graph/PF6_slow_ticks_name_themselves-433ed474eed245fb.graph`
+- `lib/phases/2026-10-07-system-expectations/EX1_the_expectation_schema.phase`
+- `lib/phases/2026-10-07-system-expectations/EX2_vitals_from_every_process.phase`
+- `lib/phases/2026-10-07-system-expectations/graph/EX1_the_expectation_schema-19589d1a025b2723.graph`
+- `lib/phases/2026-10-07-system-expectations/graph/EX2_vitals_from_every_process-8337bd39d03384c4.graph`
+- `lib/phases/2026-10-07-versionium-releases/GH1_the_git_bridge.phase`
+- `lib/phases/2026-10-07-versionium-releases/LT1_provenance_lattice.phase`
+- `lib/phases/2026-10-07-versionium-releases/RN2_cortex_is_the_bookkeeper.phase`
+- `lib/phases/2026-10-07-versionium-releases/graph/GH1_the_git_bridge-6dd3595186ddbb17.graph`
+- `lib/phases/2026-10-07-versionium-releases/graph/LT1_provenance_lattice-91871c2b63fe20e1.graph`
+- `lib/phases/2026-10-07-versionium-releases/graph/RN2_cortex_is_the_bookkeeper-86535db74885de3a.graph`
+- `lib/phases/2026-10-09-hardening-pass/HP12_a_failure_names_the_agent.phase`
+- `lib/phases/2026-10-09-hardening-pass/HP18_auto_tries_agents_with_a_tab_first.phase`
+- `lib/phases/2026-10-09-hardening-pass/HP19_the_simulator_stays.phase`
+- `lib/phases/2026-10-09-hardening-pass/HP20_a_routing_try_is_not_a_job.phase`
+- `lib/phases/2026-10-09-hardening-pass/HP4_signals_weighted.phase`
+- `lib/phases/2026-10-09-hardening-pass/HP5_odd_files_round_trip.phase`
+- `lib/phases/2026-10-09-hardening-pass/graph/HP12_a_failure_names_the_agent-bec3f59ad333b46f.graph`
+- `lib/phases/2026-10-09-hardening-pass/graph/HP18_auto_tries_agents_with_a_tab_first-f11a7f42d67241f0.graph`
+- `lib/phases/2026-10-09-hardening-pass/graph/HP19_the_simulator_stays-68d2133829f37a8f.graph`
+- `lib/phases/2026-10-09-hardening-pass/graph/HP20_a_routing_try_is_not_a_job-d5e16036c01329d2.graph`
+- `lib/phases/2026-10-09-hardening-pass/graph/HP4_signals_weighted-036df943c960cf97.graph`
+- `lib/phases/2026-10-09-hardening-pass/graph/HP5_odd_files_round_trip-a3b1cad180508350.graph`
+- `lib/phases/2026-10-09-one-model-engine/ME0_the_inventory_proved.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME10_nested_ladders_folded.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME12_callers_moved.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME13_no_bypass.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME14_across_callers.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME15_the_docs_tell_the_truth.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME1_one_failure_list.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME2_caller_policy.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME3_one_engine_one_budget.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME4_one_attempt_record.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME5_one_chooser.phase`
+- `lib/phases/2026-10-09-one-model-engine/ME6_one_learner.phase`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME0_the_inventory_proved-9d64861419da9a7a.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME10_nested_ladders_folded-4010d5284074ac51.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME12_callers_moved-9e7765b848590053.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME13_no_bypass-5db1b29401ba54fb.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME14_across_callers-0d67fbee2de537c0.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME15_the_docs_tell_the_truth-e4a2663f9650838b.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME1_one_failure_list-6aa7efde8e0d3998.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME2_caller_policy-9ddb1c53e714496d.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME3_one_engine_one_budget-82b28a68e6a7adbb.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME4_one_attempt_record-f2a989a0e8ce7614.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME5_one_chooser-c19c4acf0d80ec8c.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME6_one_learner-a3c93c03d487932a.graph`
+- `lib/phases/2026-10-09-one-roadmap/OR0_the_census.phase`
+- `lib/phases/2026-10-09-one-roadmap/OR2_how_done_is_checked.phase`
+- `lib/phases/2026-10-09-one-roadmap/OR2_the_proposal.phase`
+- `lib/phases/2026-10-09-one-roadmap/OR3_his_decisions_applied.phase`
+- `lib/phases/2026-10-09-one-roadmap/OR6_old_code_out.phase`
+- `lib/phases/2026-10-09-one-roadmap/OR7_the_shelf_combed.phase`
+- `lib/phases/2026-10-09-one-roadmap/graph/OR0_the_census-b3f330f789402a35.graph`
+- `lib/phases/2026-10-09-one-roadmap/graph/OR2_how_done_is_checked-438048adff31f436.graph`
+- `lib/phases/2026-10-09-one-roadmap/graph/OR2_the_proposal-87394dbbf51c92a7.graph`
+- `lib/phases/2026-10-09-one-roadmap/graph/OR3_his_decisions_applied-f52f9193180a26cb.graph`
+- `lib/phases/2026-10-09-one-roadmap/graph/OR6_old_code_out-6af214e0e32a3243.graph`
+- `lib/phases/2026-10-09-one-roadmap/graph/OR7_the_shelf_combed-5e186047ef132114.graph`
+- `lib/phases/2026-10-10-design-surface/DS0_one_token_source.phase`
+- `lib/phases/2026-10-10-design-surface/DS3_components_are_mods.phase`
+- `lib/phases/2026-10-10-design-surface/DS5_the_agents_design_too.phase`
+- `lib/phases/2026-10-10-design-surface/DS6_one_module_contract_nested.phase`
+- `lib/phases/2026-10-10-design-surface/DS7_tools_are_mods.phase`
+- `lib/phases/2026-10-10-design-surface/DS8_the_registry_routes_the_ui_reflects.phase`
+- `lib/phases/2026-10-10-design-surface/graph/DS0_one_token_source-385edcecb63311aa.graph`
+- `lib/phases/2026-10-10-design-surface/graph/DS3_components_are_mods-bb967cfd589a6163.graph`
+- `lib/phases/2026-10-10-design-surface/graph/DS5_the_agents_design_too-1fd7bef8de2d374a.graph`
+- `lib/phases/2026-10-10-design-surface/graph/DS6_one_module_contract_nested-53a34b1d184d1911.graph`
+- `lib/phases/2026-10-10-design-surface/graph/DS7_tools_are_mods-95b991d2ba973682.graph`
+- `lib/phases/2026-10-10-design-surface/graph/DS8_the_registry_routes_the_ui_reflects-9db061f88abf55a1.graph`
+- `lib/phases/2026-10-10-idearium-access/IA5_provider_accounts_per_hat_and_repo.phase`
+- `lib/phases/2026-10-10-idearium-access/graph/IA5_provider_accounts_per_hat_and_repo-fd55efa3a8901e7f.graph`
+- `lib/phases/2026-10-10-idearium-solid/SD0_versionium_down_is_said_and_restarted.phase`
+- `lib/phases/2026-10-10-idearium-solid/SD10_the_adversarial_gate.phase`
+- `lib/phases/2026-10-10-idearium-solid/SD20_a_starved_machine_does_not_spin.phase`
+- `lib/phases/2026-10-10-idearium-solid/SD4_agents_live_in_guardian.phase`
+- `lib/phases/2026-10-10-idearium-solid/SD5_account_fallback.phase`
+- `lib/phases/2026-10-10-idearium-solid/SD7_blocks_that_generate_themselves.phase`
+- `lib/phases/2026-10-10-idearium-solid/SD9_claude_code_inside_idearium.phase`
+- `lib/phases/2026-10-10-idearium-solid/graph/SD0_versionium_down_is_said_and_restarted-d745c23ff321527a.graph`
+- `lib/phases/2026-10-10-idearium-solid/graph/SD10_the_adversarial_gate-903ae831ea1a844a.graph`
+- `lib/phases/2026-10-10-idearium-solid/graph/SD20_a_starved_machine_does_not_spin-76dc07b8a12db6ca.graph`
+- `lib/phases/2026-10-10-idearium-solid/graph/SD4_agents_live_in_guardian-d79b599501f437b1.graph`
+- `lib/phases/2026-10-10-idearium-solid/graph/SD5_account_fallback-655edc147445e9ca.graph`
+- `lib/phases/2026-10-10-idearium-solid/graph/SD7_blocks_that_generate_themselves-0d8df190210c4970.graph`
+- `lib/phases/2026-10-10-idearium-solid/graph/SD9_claude_code_inside_idearium-681f598deb142c6d.graph`
+- `lib/phases/2026-10-10-self-awareness/AW2_every_call_says_who_asked.phase`
+- `lib/phases/2026-10-10-self-awareness/AW4_the_door_reads_the_lattice.phase`
+- `lib/phases/2026-10-10-self-awareness/graph/AW2_every_call_says_who_asked-a5bd86f3bfadf956.graph`
+- `lib/phases/2026-10-10-self-awareness/graph/AW4_the_door_reads_the_lattice-4de82ab7f378354b.graph`
+- `lib/phases/2026-10-10-shape-of-nexus/EP1_every_claim_says_how_it_is_known.phase`
+- `lib/phases/2026-10-10-shape-of-nexus/FN3_the_nerve_shows_it_and_the_field_sees_the_nerve.phase`
+- `lib/phases/2026-10-10-shape-of-nexus/LR0_the_shared_primitives_are_the_glyph.phase`
+- `lib/phases/2026-10-10-shape-of-nexus/LR1_each_component_in_the_language_that_fits.phase`
+- `lib/phases/2026-10-10-shape-of-nexus/OP0_one_options_shape_for_every_system.phase`
+- `lib/phases/2026-10-10-shape-of-nexus/OP1_every_system_declares_its_options.phase`
+- `lib/phases/2026-10-10-shape-of-nexus/SH1_one_home_for_every_concept.phase`
+- `lib/phases/2026-10-10-shape-of-nexus/graph/EP1_every_claim_says_how_it_is_known-518303ecd7d85d85.graph`
+- `lib/phases/2026-10-10-shape-of-nexus/graph/FN3_the_nerve_shows_it_and_the_field_sees_the_nerve-5a5715d4e3cba86c.graph`
+- `lib/phases/2026-10-10-shape-of-nexus/graph/LR0_the_shared_primitives_are_the_glyph-6952439b2f80c99c.graph`
+- `lib/phases/2026-10-10-shape-of-nexus/graph/LR1_each_component_in_the_language_that_fits-811033a724b0ca79.graph`
+- `lib/phases/2026-10-10-shape-of-nexus/graph/OP0_one_options_shape_for_every_system-a172702727a5d91e.graph`
+- `lib/phases/2026-10-10-shape-of-nexus/graph/OP1_every_system_declares_its_options-954ea8eee677f68e.graph`
+- `lib/phases/2026-10-10-shape-of-nexus/graph/SH1_one_home_for_every_concept-d30f0553638eb554.graph`
+- `lib/phases/2026-10-10-snapshot-compartments/SN4_benchmarks_teach.phase`
+- `lib/phases/2026-10-10-snapshot-compartments/graph/SN4_benchmarks_teach-c23057ec2723dd8b.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/CS0_projects_decomposed_into_components.phase`
+- `lib/phases/2026-10-12-browser-providers-and-work/JB5_varied_wording_true_facts.phase`
+- `lib/phases/2026-10-12-browser-providers-and-work/MX4_one_system_digest.phase`
+- `lib/phases/2026-10-12-browser-providers-and-work/PV0_claude_code_is_a_guardian_provider.phase`
+- `lib/phases/2026-10-12-browser-providers-and-work/PV1_providers_read_from_nodes.phase`
+- `lib/phases/2026-10-12-browser-providers-and-work/PV2_hats_are_nodes.phase`
+- `lib/phases/2026-10-12-browser-providers-and-work/PV4_inputs_are_history.phase`
+- `lib/phases/2026-10-12-browser-providers-and-work/PV5_conversation_carries_across_providers.phase`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/CS0_projects_decomposed_into_components-c12a1ca2cc3030ee.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/JB5_varied_wording_true_facts-88d2ca99cff642c0.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/MX4_one_system_digest-b1af60343305fd6c.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/PV0_claude_code_is_a_guardian_provider-700deffb992647b8.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/PV1_providers_read_from_nodes-727b5bb6b91c22ad.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/PV2_hats_are_nodes-66c258dbf8ec8139.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/PV4_inputs_are_history-a129834872fdbcc9.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/PV5_conversation_carries_across_providers-221b5ffcc46bedbf.graph`
+- `lib/phases/2026-10-12-request-spine/RQ0_the_inventory_proved.phase`
+- `lib/phases/2026-10-12-request-spine/RQ10_anchors_and_the_diff_reconciled.phase`
+- `lib/phases/2026-10-12-request-spine/RQ13_the_work_surface_and_provenance.phase`
+- `lib/phases/2026-10-12-request-spine/RQ14_the_spine_end_to_end.phase`
+- `lib/phases/2026-10-12-request-spine/RQ16_hypotheses_in_parallel.phase`
+- `lib/phases/2026-10-12-request-spine/RQ17_observe_by_request.phase`
+- `lib/phases/2026-10-12-request-spine/RQ19_what_nexus_can_take_over.phase`
+- `lib/phases/2026-10-12-request-spine/RQ1_the_verifier_library.phase`
+- `lib/phases/2026-10-12-request-spine/RQ20_the_budget_meter.phase`
+- `lib/phases/2026-10-12-request-spine/RQ22_the_dependency_boundary_with_invariants_that_run.phase`
+- `lib/phases/2026-10-12-request-spine/RQ23_acceptance_conditions_that_cannot_be_moved.phase`
+- `lib/phases/2026-10-12-request-spine/RQ24_the_gate_transaction.phase`
+- `lib/phases/2026-10-12-request-spine/RQ27_the_reasoning_half_gets_its_home.phase`
+- `lib/phases/2026-10-12-request-spine/RQ2_the_generation_failure_vocabulary_and_index.phase`
+- `lib/phases/2026-10-12-request-spine/RQ3_repair_with_the_checks_own_words.phase`
+- `lib/phases/2026-10-12-request-spine/RQ4_escalate_on_the_checks_and_keep_the_lesson.phase`
+- `lib/phases/2026-10-12-request-spine/RQ5_the_small_model_baseline.phase`
+- `lib/phases/2026-10-12-request-spine/RQ6_one_intent_map.phase`
+- `lib/phases/2026-10-12-request-spine/RQ8_the_gap_is_a_question.phase`
+- `lib/phases/2026-10-12-request-spine/graph/RQ0_the_inventory_proved-12cd112c5dccb7ef.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ10_anchors_and_the_diff_reconciled-7bbed5785d277733.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ13_the_work_surface_and_provenance-26d29fe3a64d548b.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ14_the_spine_end_to_end-293afff90452c8de.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ16_hypotheses_in_parallel-39c60cb36660f79d.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ17_observe_by_request-33924dbf8607becb.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ19_what_nexus_can_take_over-18b7aa141588697b.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ1_the_verifier_library-ce3d943947d62331.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ20_the_budget_meter-9d7db0cfde669293.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ22_the_dependency_boundary_with_invariants_that_run-8ca887e33d3969e3.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ23_acceptance_conditions_that_cannot_be_moved-6eb606b5ddc53407.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ24_the_gate_transaction-ad6d4d6afc88c72b.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ27_the_reasoning_half_gets_its_home-ed8b75d6432e38bc.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ2_the_generation_failure_vocabulary_and_index-5df3e6faedddd92c.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ3_repair_with_the_checks_own_words-d4c1d91c1ca5d6a9.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ4_escalate_on_the_checks_and_keep_the_lesson-8a42351a9f6f78fc.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ5_the_small_model_baseline-4c70d01e0d9a89a3.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ6_one_intent_map-d5b9477b2e039d62.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ8_the_gap_is_a_question-103a81b4f5d8cf1c.graph`
+- `lib/phases/2026-10-13-gates-that-learn-and-priorities/QA1_the_catalogue_runs.phase`
+- `lib/phases/2026-10-13-gates-that-learn-and-priorities/RT1_eligibility_then_preference.phase`
+- `lib/phases/2026-10-13-gates-that-learn-and-priorities/graph/QA1_the_catalogue_runs-2f28022294f93cfe.graph`
+- `lib/phases/2026-10-13-gates-that-learn-and-priorities/graph/RT1_eligibility_then_preference-db32153ad00baf8c.graph`
+- `lib/phases/2026-10-13-identities-tabs-and-automation/HM0_the_hat_keeps_a_model_of_the_repo.phase`
+- `lib/phases/2026-10-13-identities-tabs-and-automation/graph/HM0_the_hat_keeps_a_model_of_the_repo-3e7320f2d7cabfcb.graph`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/CT0_the_contract_is_a_reference.phase`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/CT1_dynamic_chunking.phase`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/CT2_ingestion_as_contracts.phase`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/CX0_context_from_dependencies.phase`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/GT0_every_interaction_gated.phase`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/IM0_intent_map_his_to_change.phase`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/PF0_profiles_linked_to_hats.phase`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT0_the_contract_is_a_reference-78068c3fef97cff2.graph`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT1_dynamic_chunking-f7d073f269227f58.graph`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT2_ingestion_as_contracts-ba7095d82e6aabf3.graph`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CX0_context_from_dependencies-dbe7d50a20a425b3.graph`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/GT0_every_interaction_gated-03a2a715a7b70f73.graph`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/IM0_intent_map_his_to_change-6349e71baccd8530.graph`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/PF0_profiles_linked_to_hats-1617b623eba97216.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/CK1_the_catalogue_runs.phase`
+- `lib/phases/2026-10-13-projects-raid-and-gates/PL0_his_projects_imported_for_real.phase`
+- `lib/phases/2026-10-13-projects-raid-and-gates/PL2_history_kept.phase`
+- `lib/phases/2026-10-13-projects-raid-and-gates/PL3_versions_become_history.phase`
+- `lib/phases/2026-10-13-projects-raid-and-gates/PL4_import_reports_what_is_broken.phase`
+- `lib/phases/2026-10-13-projects-raid-and-gates/PL6_global_links_seen.phase`
+- `lib/phases/2026-10-13-projects-raid-and-gates/RD3_the_registry_carries_events.phase`
+- `lib/phases/2026-10-13-projects-raid-and-gates/RF0_architecture_read.phase`
+- `lib/phases/2026-10-13-projects-raid-and-gates/RF1_migration_proposed_as_phases.phase`
+- `lib/phases/2026-10-13-projects-raid-and-gates/RF2_applied_one_phase_at_a_time.phase`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/CK1_the_catalogue_runs-1f64ff14ad327042.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL0_his_projects_imported_for_real-061b0f3b31ea86d0.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL2_history_kept-5b4cd0e60f00b85b.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL3_versions_become_history-0044abaf283377f6.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL4_import_reports_what_is_broken-463d5b3d9d4f4c22.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL6_global_links_seen-d930008daef10476.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/RD3_the_registry_carries_events-f2ceaa39f7c300e5.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF0_architecture_read-c117168ac25aa9f0.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF1_migration_proposed_as_phases-0653cb1c1c976e54.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF2_applied_one_phase_at_a_time-fcaca59eda2838e7.graph`
+- `lib/phases/2026-10-15-automatic-tracking/AU1_addenda_written_for_you.phase`
+- `lib/phases/2026-10-15-automatic-tracking/CS1_every_brick_a_component.phase`
+- `lib/phases/2026-10-15-automatic-tracking/CX1_context_from_the_dependencies.phase`
+- `lib/phases/2026-10-15-automatic-tracking/KT1_observations_on_a_semantic_tree.phase`
+- `lib/phases/2026-10-15-automatic-tracking/LA1_one_self_model.phase`
+- `lib/phases/2026-10-15-automatic-tracking/MC1_macros_from_repeats.phase`
+- `lib/phases/2026-10-15-automatic-tracking/graph/AU1_addenda_written_for_you-a1c1fe9139548e36.graph`
+- `lib/phases/2026-10-15-automatic-tracking/graph/CS1_every_brick_a_component-7d658969a189e1e4.graph`
+- `lib/phases/2026-10-15-automatic-tracking/graph/CX1_context_from_the_dependencies-7fa78ba0b9bcd675.graph`
+- `lib/phases/2026-10-15-automatic-tracking/graph/KT1_observations_on_a_semantic_tree-3bef71197a9bf793.graph`
+- `lib/phases/2026-10-15-automatic-tracking/graph/LA1_one_self_model-d1166e769184d12d.graph`
+- `lib/phases/2026-10-15-automatic-tracking/graph/MC1_macros_from_repeats-611c1e68d8c1dd1b.graph`
+- `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/CS1_capability_spec_and_surface_check.phase`
+- `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/SP3_the_browser_agent_reads_the_tree.phase`
+- `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/graph/CS1_capability_spec_and_surface_check-a1190cde7dea8320.graph`
+- `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/graph/SP3_the_browser_agent_reads_the_tree-0f6a46c1ba15a7e6.graph`
+- `lib/phases/2026-10-15-clear-glass-network-posture/NP19_container.phase`
+- `lib/phases/2026-10-15-clear-glass-network-posture/graph/NP19_container-ec54a18411dad545.graph`
+- `lib/phases/2026-10-15-clear-glass-surfaces/PF1_read_the_log.phase`
+- `lib/phases/2026-10-15-clear-glass-surfaces/graph/PF1_read_the_log-5490f29c2a420c27.graph`
+- `lib/phases/2026-10-15-code-tab-run-state/CE12_proof_and_wiring.phase`
+- `lib/phases/2026-10-15-code-tab-run-state/CE1_the_run_state.phase`
+- `lib/phases/2026-10-15-code-tab-run-state/CE2_the_task_header.phase`
+- `lib/phases/2026-10-15-code-tab-run-state/CE3_reply_on_task_gate.phase`
+- `lib/phases/2026-10-15-code-tab-run-state/CE5_events.phase`
+- `lib/phases/2026-10-15-code-tab-run-state/CV2_a_version_per_diff.phase`
+- `lib/phases/2026-10-15-code-tab-run-state/CV5_universal_versioning.phase`
+- `lib/phases/2026-10-15-code-tab-run-state/graph/CE12_proof_and_wiring-dc6801d7a1de9fef.graph`
+- `lib/phases/2026-10-15-code-tab-run-state/graph/CE1_the_run_state-48bba9cee37fd0d2.graph`
+- `lib/phases/2026-10-15-code-tab-run-state/graph/CE2_the_task_header-5cf233239ddf24a1.graph`
+- `lib/phases/2026-10-15-code-tab-run-state/graph/CE3_reply_on_task_gate-6494fb36f98b0242.graph`
+- `lib/phases/2026-10-15-code-tab-run-state/graph/CE5_events-4e7457d69c24f4b1.graph`
+- `lib/phases/2026-10-15-code-tab-run-state/graph/CV2_a_version_per_diff-fa951e6ce16e4c3d.graph`
+- `lib/phases/2026-10-15-code-tab-run-state/graph/CV5_universal_versioning-caf16dc4d08f56cc.graph`
+- `lib/phases/2026-10-15-cos-app/COSA12_vmware_window.phase`
+- `lib/phases/2026-10-15-cos-app/COSA14_versionium_record.phase`
+- `lib/phases/2026-10-15-cos-app/COSA5_data_root.phase`
+- `lib/phases/2026-10-15-cos-app/COSA6_the_exe.phase`
+- `lib/phases/2026-10-15-cos-app/COSA8_other_projects.phase`
+- `lib/phases/2026-10-15-cos-app/COSA9_idearium_sync.phase`
+- `lib/phases/2026-10-15-cos-app/graph/COSA12_vmware_window-c348ed645b8dabb1.graph`
+- `lib/phases/2026-10-15-cos-app/graph/COSA14_versionium_record-19b95401bebec01f.graph`
+- `lib/phases/2026-10-15-cos-app/graph/COSA5_data_root-8c58d98a92114457.graph`
+- `lib/phases/2026-10-15-cos-app/graph/COSA6_the_exe-6de6d4ad67498fc0.graph`
+- `lib/phases/2026-10-15-cos-app/graph/COSA8_other_projects-5f67a6ff59ecd341.graph`
+- `lib/phases/2026-10-15-cos-app/graph/COSA9_idearium_sync-ddd57d8b3fb336bf.graph`
+- `lib/phases/2026-10-15-fiverr-ledger/PF0_the_ledger.phase`
+- `lib/phases/2026-10-15-fiverr-ledger/PF1_the_sources.phase`
+- `lib/phases/2026-10-15-fiverr-ledger/PF2_the_slots_into_a_gig.phase`
+- `lib/phases/2026-10-15-fiverr-ledger/graph/PF0_the_ledger-a4583a7c88b46cd6.graph`
+- `lib/phases/2026-10-15-fiverr-ledger/graph/PF1_the_sources-e60ed3365a0a2cec.graph`
+- `lib/phases/2026-10-15-fiverr-ledger/graph/PF2_the_slots_into_a_gig-6abf349983e78cdf.graph`
+- `lib/phases/2026-10-15-gate-held-work/GW10_the_listener_knows_what_to_hear.phase`
+- `lib/phases/2026-10-15-gate-held-work/GW15_every_file_tested.phase`
+- `lib/phases/2026-10-15-gate-held-work/GW16_parallel_branches_benchmark.phase`
+- `lib/phases/2026-10-15-gate-held-work/GW18_debug_by_bisect.phase`
+- `lib/phases/2026-10-15-gate-held-work/GW22_find_before_generate.phase`
+- `lib/phases/2026-10-15-gate-held-work/GW2_the_run_follows_the_gate.phase`
+- `lib/phases/2026-10-15-gate-held-work/GW3_a_contract_is_traced.phase`
+- `lib/phases/2026-10-15-gate-held-work/GW5_agents_are_copilot.phase`
+- `lib/phases/2026-10-15-gate-held-work/GW6_the_intelligence_system_on_every_gate.phase`
+- `lib/phases/2026-10-15-gate-held-work/GW7_failure_macro_and_rewind.phase`
+- `lib/phases/2026-10-15-gate-held-work/GW8_causal_graph_and_failure_mode_field.phase`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW10_the_listener_knows_what_to_hear-539f9afb9e5ba54e.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW15_every_file_tested-01a6f0bce2e5893d.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW16_parallel_branches_benchmark-7496bd8f1af2a364.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW18_debug_by_bisect-356417f6dfb2bb3d.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW22_find_before_generate-ebd47dffa0a8bc56.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW2_the_run_follows_the_gate-8f78d99aa885a501.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW3_a_contract_is_traced-7ee6767772d2310d.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW5_agents_are_copilot-6b97cd0bef25edcb.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW6_the_intelligence_system_on_every_gate-88688bb77b7d9ade.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW7_failure_macro_and_rewind-9ea220d322030fc4.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW8_causal_graph_and_failure_mode_field-663a3a1b6c41b6e9.graph`
+- `lib/phases/2026-10-15-macro-node-recording/MR10_capabilities_as_steps.phase`
+- `lib/phases/2026-10-15-macro-node-recording/MR14_tasks_and_mesh_spec.phase`
+- `lib/phases/2026-10-15-macro-node-recording/graph/MR10_capabilities_as_steps-7fc5751ee0244562.graph`
+- `lib/phases/2026-10-15-macro-node-recording/graph/MR14_tasks_and_mesh_spec-4cb900f7984eca36.graph`
+- `lib/phases/2026-10-15-one-contract-raid-releases/AT1_atlases_and_specs_from_releases.phase`
+- `lib/phases/2026-10-15-one-contract-raid-releases/FR1_failure_reports.phase`
+- `lib/phases/2026-10-15-one-contract-raid-releases/GS1_a_snapshot_per_gate_rewind_and_compare.phase`
+- `lib/phases/2026-10-15-one-contract-raid-releases/RN2_changelog_from_the_commits.phase`
+- `lib/phases/2026-10-15-one-contract-raid-releases/ST1_stability_checks.phase`
+- `lib/phases/2026-10-15-one-contract-raid-releases/graph/AT1_atlases_and_specs_from_releases-dc5b8827fb668ce2.graph`
+- `lib/phases/2026-10-15-one-contract-raid-releases/graph/FR1_failure_reports-dafc215b29905071.graph`
+- `lib/phases/2026-10-15-one-contract-raid-releases/graph/GS1_a_snapshot_per_gate_rewind_and_compare-019413470fb371c3.graph`
+- `lib/phases/2026-10-15-one-contract-raid-releases/graph/RN2_changelog_from_the_commits-1e0e93783f21a1c4.graph`
+- `lib/phases/2026-10-15-one-contract-raid-releases/graph/ST1_stability_checks-73c9424926bf802e.graph`
+- `lib/phases/2026-10-15-personal-chat-import/PI1_the_importer.phase`
+- `lib/phases/2026-10-15-personal-chat-import/PI3_the_intelligence_pass.phase`
+- `lib/phases/2026-10-15-personal-chat-import/graph/PI1_the_importer-4811bb5810fcbe4d.graph`
+- `lib/phases/2026-10-15-personal-chat-import/graph/PI3_the_intelligence_pass-081c0303b5cee64e.graph`
+- `lib/phases/2026-10-15-spec-foundation-model/SF4_the_listener.phase`
+- `lib/phases/2026-10-15-spec-foundation-model/graph/SF4_the_listener-6ccc005b3e35e04e.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/IS1_intent_settings_per_repo.phase`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/MP1_nexus_maps_every_phase.phase`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/MP3_builds_get_the_mapped_context.phase`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/SF1_intent_blocks.phase`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/SF2_spec_framework_block.phase`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/SF3_collect_the_spec.phase`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/SF4_compile_on_collect.phase`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/WB0_census.phase`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/WB1_warp_at_the_rung.phase`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/WB2_raid_bricks_and_officiator_through_warp.phase`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/IS1_intent_settings_per_repo-6e793c69f386d367.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP1_nexus_maps_every_phase-38eb3640a0730199.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP3_builds_get_the_mapped_context-a8ea1fb30dbfd70b.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF1_intent_blocks-a8afa92a489433cd.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF2_spec_framework_block-f3369f9f0bb0ba75.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF3_collect_the_spec-2752c0d140f6df49.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF4_compile_on_collect-aadcbf4561eb1533.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB0_census-9a044eef08fa5b1b.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB1_warp_at_the_rung-60eb99e47c8e797a.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB2_raid_bricks_and_officiator_through_warp-c5988e845eadf750.graph`
+- `lib/phases/2026-10-16-agent-work-funnel/FN0_the_funnel_as_data.phase`
+- `lib/phases/2026-10-16-agent-work-funnel/FN1_every_door_goes_through_it.phase`
+- `lib/phases/2026-10-16-agent-work-funnel/FN2_what_is_missing_is_made_first.phase`
+- `lib/phases/2026-10-16-agent-work-funnel/FN3_every_answer_a_node.phase`
+- `lib/phases/2026-10-16-agent-work-funnel/graph/FN0_the_funnel_as_data-36bff935bc611507.graph`
+- `lib/phases/2026-10-16-agent-work-funnel/graph/FN1_every_door_goes_through_it-1841c94aa41f3eef.graph`
+- `lib/phases/2026-10-16-agent-work-funnel/graph/FN2_what_is_missing_is_made_first-94e1791ebf408132.graph`
+- `lib/phases/2026-10-16-agent-work-funnel/graph/FN3_every_answer_a_node-f0fd6a276c7d1d69.graph`
+- `lib/phases/2026-10-16-canvas-compartments/CN3_nested_compartments.phase`
+- `lib/phases/2026-10-16-canvas-compartments/CN6_canvas_screen.phase`
+- `lib/phases/2026-10-16-canvas-compartments/graph/CN3_nested_compartments-567d60a0f20626fb.graph`
+- `lib/phases/2026-10-16-canvas-compartments/graph/CN6_canvas_screen-a122a921c355bbd5.graph`
+- `lib/phases/2026-10-16-code-tab-rebuild/DK1_procedures_backend.phase`
+- `lib/phases/2026-10-16-code-tab-rebuild/TB1_read_model_per_tab.phase`
+- `lib/phases/2026-10-16-code-tab-rebuild/TB3a_tool_calls_saved.phase`
+- `lib/phases/2026-10-16-code-tab-rebuild/TB4_reuse_responses.phase`
+- `lib/phases/2026-10-16-code-tab-rebuild/TB7d_node_controls.phase`
+- `lib/phases/2026-10-16-code-tab-rebuild/TB8_proof_and_wiring.phase`
+- `lib/phases/2026-10-16-code-tab-rebuild/graph/DK1_procedures_backend-8caea4d0996d7b22.graph`
+- `lib/phases/2026-10-16-code-tab-rebuild/graph/TB1_read_model_per_tab-28d795fe5701a47d.graph`
+- `lib/phases/2026-10-16-code-tab-rebuild/graph/TB3a_tool_calls_saved-7ee37636c61d4d6c.graph`
+- `lib/phases/2026-10-16-code-tab-rebuild/graph/TB4_reuse_responses-cf2073506d98196c.graph`
+- `lib/phases/2026-10-16-code-tab-rebuild/graph/TB7d_node_controls-4f2be3f82aed75ef.graph`
+- `lib/phases/2026-10-16-code-tab-rebuild/graph/TB8_proof_and_wiring-bea6b955a3f4631e.graph`
+- `lib/phases/2026-10-16-cos-console/CON5_pane.phase`
+- `lib/phases/2026-10-16-cos-console/CON8_nexus_server_hook.phase`
+- `lib/phases/2026-10-16-cos-console/graph/CON5_pane-8bbaf7e5aa41faf7.graph`
+- `lib/phases/2026-10-16-cos-console/graph/CON8_nexus_server_hook-fd911e37cdaf9fee.graph`
+- `lib/phases/2026-10-16-durable-work-timeline/TL1_chunks_land_as_they_arrive.phase`
+- `lib/phases/2026-10-16-durable-work-timeline/TL2_resume_at_boot.phase`
+- `lib/phases/2026-10-16-durable-work-timeline/TL3_the_timeline.phase`
+- `lib/phases/2026-10-16-durable-work-timeline/TL4_rewind_to_a_gate.phase`
+- `lib/phases/2026-10-16-durable-work-timeline/TL6_proof_and_wiring.phase`
+- `lib/phases/2026-10-16-durable-work-timeline/graph/TL1_chunks_land_as_they_arrive-477fcfa607154070.graph`
+- `lib/phases/2026-10-16-durable-work-timeline/graph/TL2_resume_at_boot-a0f0fae0e4e8a429.graph`
+- `lib/phases/2026-10-16-durable-work-timeline/graph/TL3_the_timeline-c61967b5d3fdb797.graph`
+- `lib/phases/2026-10-16-durable-work-timeline/graph/TL4_rewind_to_a_gate-1b73172e3db632d6.graph`
+- `lib/phases/2026-10-16-durable-work-timeline/graph/TL6_proof_and_wiring-2b6b52d3b29be7d3.graph`
+- `lib/phases/2026-10-16-eravos-removal/ER1_delete_the_system.phase`
+- `lib/phases/2026-10-16-eravos-removal/ER2_unwire_the_platform.phase`
+- `lib/phases/2026-10-16-eravos-removal/ER3_unwire_the_screens.phase`
+- `lib/phases/2026-10-16-eravos-removal/graph/ER1_delete_the_system-2d6cbb2fd32f8057.graph`
+- `lib/phases/2026-10-16-eravos-removal/graph/ER2_unwire_the_platform-eccf746a91d275e5.graph`
+- `lib/phases/2026-10-16-eravos-removal/graph/ER3_unwire_the_screens-39401869987f58e9.graph`
+- `lib/phases/2026-10-16-google-signin/GS7_no_debugger_on_signin.phase`
+- `lib/phases/2026-10-16-google-signin/graph/GS7_no_debugger_on_signin-69372ec12b6080c9.graph`
+- `lib/phases/2026-10-16-intent-hat-agent-chain/IH1_intent_nodes_point_at_hats.phase`
+- `lib/phases/2026-10-16-intent-hat-agent-chain/IH2_agents_bound.phase`
+- `lib/phases/2026-10-16-intent-hat-agent-chain/IH3_routers_read_the_chain.phase`
+- `lib/phases/2026-10-16-intent-hat-agent-chain/IH5_proof_and_wiring.phase`
+- `lib/phases/2026-10-16-intent-hat-agent-chain/graph/IH1_intent_nodes_point_at_hats-7a8dccf49acfd507.graph`
+- `lib/phases/2026-10-16-intent-hat-agent-chain/graph/IH2_agents_bound-c734fd5092d03e43.graph`
+- `lib/phases/2026-10-16-intent-hat-agent-chain/graph/IH3_routers_read_the_chain-7b604cd3c79ab423.graph`
+- `lib/phases/2026-10-16-intent-hat-agent-chain/graph/IH5_proof_and_wiring-0a8286e69167fdbd.graph`
+- `lib/phases/2026-10-16-mobile-compartments/MB5_language_checks.phase`
+- `lib/phases/2026-10-16-mobile-compartments/graph/MB5_language_checks-a070742238698d85.graph`
+- `lib/phases/2026-10-16-nexus-git-sync/GS5_release_alignment.phase`
+- `lib/phases/2026-10-16-nexus-git-sync/graph/GS5_release_alignment-9cea81dfaa362267.graph`
+- `lib/phases/2026-10-16-plan-sidebar/PS1_context_recorded.phase`
+- `lib/phases/2026-10-16-plan-sidebar/graph/PS1_context_recorded-140511f9d8b21da5.graph`
+- `lib/phases/2026-10-16-proposal-evidence/PE1_test_map.phase`
+- `lib/phases/2026-10-16-proposal-evidence/PE2_evidence.phase`
+- `lib/phases/2026-10-16-proposal-evidence/PE3_wired_and_gated.phase`
+- `lib/phases/2026-10-16-proposal-evidence/PE9_infrastructure_failures.phase`
+- `lib/phases/2026-10-16-proposal-evidence/graph/PE1_test_map-ae196f649f98e2e7.graph`
+- `lib/phases/2026-10-16-proposal-evidence/graph/PE2_evidence-87adde4d74c5c418.graph`
+- `lib/phases/2026-10-16-proposal-evidence/graph/PE3_wired_and_gated-c822ef9e98c403c2.graph`
+- `lib/phases/2026-10-16-proposal-evidence/graph/PE9_infrastructure_failures-fbe72f5dec0e8cfb.graph`
+- `lib/phases/2026-10-16-reject-learn-retry/RL1_classify_the_rejection.phase`
+- `lib/phases/2026-10-16-reject-learn-retry/RL3_stop_the_regression_before_it_reaches_him.phase`
+- `lib/phases/2026-10-16-reject-learn-retry/graph/RL1_classify_the_rejection-bdf4c489a42b7497.graph`
+- `lib/phases/2026-10-16-reject-learn-retry/graph/RL3_stop_the_regression_before_it_reaches_him-3cdd61da21e0b3a9.graph`
+- `lib/phases/2026-10-16-repo-carve/CV2_untangle_with_rf0.phase`
+- `lib/phases/2026-10-16-repo-carve/FR10_stop_the_ladder.phase`
+- `lib/phases/2026-10-16-repo-carve/FR1_one_record_per_change.phase`
+- `lib/phases/2026-10-16-repo-carve/FR2_tested_before_it_lands.phase`
+- `lib/phases/2026-10-16-repo-carve/FR3_undo_any_change.phase`
+- `lib/phases/2026-10-16-repo-carve/FR4_stands_alone.phase`
+- `lib/phases/2026-10-16-repo-carve/FR5_the_demo.phase`
+- `lib/phases/2026-10-16-repo-carve/FR5_the_demo_note.phase`
+- `lib/phases/2026-10-16-repo-carve/FR6_flight_data.phase`
+- `lib/phases/2026-10-16-repo-carve/FR7_the_causal_record.phase`
+- `lib/phases/2026-10-16-repo-carve/FR8_branches_for_benchmarks.phase`
+- `lib/phases/2026-10-16-repo-carve/PB1_the_product_boundary.phase`
+- `lib/phases/2026-10-16-repo-carve/graph/CV2_untangle_with_rf0-12a1eb1568c475ca.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/FR10_stop_the_ladder-fdadb47c70248a9e.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/FR1_one_record_per_change-969ecbecb227f561.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/FR2_tested_before_it_lands-53d39bac7d121307.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/FR3_undo_any_change-c20f74a0da0c1f4c.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/FR4_stands_alone-7733ba9685bafc07.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/FR5_the_demo-a03b08442bb825c3.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/FR5_the_demo_note-332d5e981a6108fb.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/FR6_flight_data-05ad1f0362cc7289.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/FR7_the_causal_record-8bee8dc012336255.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/FR8_branches_for_benchmarks-802a9c769b0443fa.graph`
+- `lib/phases/2026-10-16-repo-carve/graph/PB1_the_product_boundary-cb390adf322a5601.graph`
+- `lib/phases/2026-10-17-debugging-product/DP11_the_product_boundary.phase`
+- `lib/phases/2026-10-17-debugging-product/DP2_one_gap_door.phase`
+- `lib/phases/2026-10-17-debugging-product/GD1_gaps_from_the_graph_for_any_repo.phase`
+- `lib/phases/2026-10-17-debugging-product/graph/DP11_the_product_boundary-899986b367f9bf2d.graph`
+- `lib/phases/2026-10-17-debugging-product/graph/DP2_one_gap_door-2ff9716abc657ff5.graph`
+- `lib/phases/2026-10-17-debugging-product/graph/GD1_gaps_from_the_graph_for_any_repo-0fec63ba9c0f26c8.graph`
+- `lib/phases/2026-10-17-failure-mode-report/FMR11_import_into_any_test_env.phase`
+- `lib/phases/2026-10-17-failure-mode-report/FMR1_every_ledger_into_rfr2.phase`
+- `lib/phases/2026-10-17-failure-mode-report/FMR2_every_failure_reaches_the_record.phase`
+- `lib/phases/2026-10-17-failure-mode-report/FMR7_a_fix_proven_by_its_macro.phase`
+- `lib/phases/2026-10-17-failure-mode-report/graph/FMR11_import_into_any_test_env-53ed35ed7a5f4718.graph`
+- `lib/phases/2026-10-17-failure-mode-report/graph/FMR1_every_ledger_into_rfr2-d672a060fcb71369.graph`
+- `lib/phases/2026-10-17-failure-mode-report/graph/FMR2_every_failure_reaches_the_record-7d5ad1479d3e7570.graph`
+- `lib/phases/2026-10-17-failure-mode-report/graph/FMR7_a_fix_proven_by_its_macro-6e7c8d81f12d75e7.graph`
+- `lib/phases/2026-10-17-infrastructure-migration/IM1_the_shape_census_as_a_command.phase`
+- `lib/phases/2026-10-17-infrastructure-migration/IM2_clean_the_redundant.phase`
+- `lib/phases/2026-10-17-infrastructure-migration/IM3_wire_what_exists.phase`
+- `lib/phases/2026-10-17-infrastructure-migration/IM5_each_system_to_the_template.phase`
+- `lib/phases/2026-10-17-infrastructure-migration/IM7_the_ui_on_the_registry.phase`
+- `lib/phases/2026-10-17-infrastructure-migration/graph/IM1_the_shape_census_as_a_command-6d5ddff3294636fc.graph`
+- `lib/phases/2026-10-17-infrastructure-migration/graph/IM2_clean_the_redundant-072ba52c90e90175.graph`
+- `lib/phases/2026-10-17-infrastructure-migration/graph/IM3_wire_what_exists-44f254336361884c.graph`
+- `lib/phases/2026-10-17-infrastructure-migration/graph/IM5_each_system_to_the_template-aebf66ab8872db55.graph`
+- `lib/phases/2026-10-17-infrastructure-migration/graph/IM7_the_ui_on_the_registry-a6263831c386b825.graph`
+- `lib/phases/2026-10-17-pieces-not-order/PC1_the_point_first.phase`
+- `lib/phases/2026-10-17-pieces-not-order/PC4_a_procedure_per_kind.phase`
+- `lib/phases/2026-10-17-pieces-not-order/graph/PC1_the_point_first-c775e908897ae8af.graph`
+- `lib/phases/2026-10-17-pieces-not-order/graph/PC4_a_procedure_per_kind-6ad550aea45b1805.graph`
+- `lib/phases/2026-10-17-system-drawbridge/DB0c_reading.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB10_shadow_and_negative_space_at_the_drawbridge.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB11_cos_compartment_per_system.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB12_the_ui_handshake.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB13_the_tunnel.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB14_heartbeat_over_routes.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB16_a_registry_for_each_system.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB17_files_stay_with_their_system.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB18_nodes_in_relation_to_their_system.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB1_the_census_and_the_ratchet.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB3_the_drawbridge.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB6_move_the_crossings.phase`
+- `lib/phases/2026-10-17-system-drawbridge/DB9_every_repo_generates_its_registry.phase`
+- `lib/phases/2026-10-17-system-drawbridge/P33a_a_registry_for_any_system.phase`
+- `lib/phases/2026-10-17-system-drawbridge/P33b_each_system_runs_its_listener.phase`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB0c_reading-4b5a65d5e733f86f.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB10_shadow_and_negative_space_at_the_drawbridge-408f43cb043a2054.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB11_cos_compartment_per_system-9063cc203f88bc1d.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB12_the_ui_handshake-f3192f7dde8331e8.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB13_the_tunnel-1bdf18b3efb9edf1.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB14_heartbeat_over_routes-07e3beb25770350e.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB16_a_registry_for_each_system-1d1f44a2f7482cfa.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB17_files_stay_with_their_system-0a30e279c2724858.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB18_nodes_in_relation_to_their_system-da6e7c02b2315c93.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB1_the_census_and_the_ratchet-6bb5eb9cc6cd21f1.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB3_the_drawbridge-05dd7de14e589723.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB6_move_the_crossings-f3fefc6b9f760ec6.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB9_every_repo_generates_its_registry-2390a659741df494.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/P33a_a_registry_for_any_system-973379dc15f50e89.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/P33b_each_system_runs_its_listener-62329d11d3def412.graph`
+- `lib/phases/2026-10-18-compartment-environment/CE3_the_handshake.phase`
+- `lib/phases/2026-10-18-compartment-environment/graph/CE3_the_handshake-aa79fe09a96f799d.graph`
+- `lib/phases/2026-10-18-debugging-product/DBG1_the_key.phase`
+- `lib/phases/2026-10-18-debugging-product/DBG2_the_case.phase`
+- `lib/phases/2026-10-18-debugging-product/DBG3_deviation_and_friction_per_run.phase`
+- `lib/phases/2026-10-18-debugging-product/DBG4_dependency_gaps.phase`
+- `lib/phases/2026-10-18-debugging-product/DBG6_cases_crystallize.phase`
+- `lib/phases/2026-10-18-debugging-product/DBG8_in_the_product.phase`
+- `lib/phases/2026-10-18-debugging-product/graph/DBG1_the_key-e4c6f44f796d9405.graph`
+- `lib/phases/2026-10-18-debugging-product/graph/DBG2_the_case-1fa8c76c4772fdd9.graph`
+- `lib/phases/2026-10-18-debugging-product/graph/DBG3_deviation_and_friction_per_run-3cdc3022f02a4874.graph`
+- `lib/phases/2026-10-18-debugging-product/graph/DBG4_dependency_gaps-1cbb2701c89b4f58.graph`
+- `lib/phases/2026-10-18-debugging-product/graph/DBG6_cases_crystallize-84f9d57bd845faf7.graph`
+- `lib/phases/2026-10-18-debugging-product/graph/DBG8_in_the_product-fb23f2c646765085.graph`
+- `lib/phases/2026-10-18-debugging-product/graph/_superseded/DBG4_dependency_gaps-958076dca62f887c.graph`
+- `lib/phases/2026-10-18-gate-memory/GM5_the_context_ladder.phase`
+- `lib/phases/2026-10-18-gate-memory/GM6_crystallized_from_what_was_approved.phase`
+- `lib/phases/2026-10-18-gate-memory/graph/GM5_the_context_ladder-d71138f7d24e34f1.graph`
+- `lib/phases/2026-10-18-gate-memory/graph/GM6_crystallized_from_what_was_approved-6f4f97b6125f3591.graph`
+- `lib/phases/2026-10-18-gating-census/GC0_the_census.phase`
+- `lib/phases/2026-10-18-gating-census/GC1_layer_one.phase`
+- `lib/phases/2026-10-18-gating-census/L1_primitives_no_decision.phase`
+- `lib/phases/2026-10-18-gating-census/L2_one_of_each.phase`
+- `lib/phases/2026-10-18-gating-census/graph/GC0_the_census-46d5041e29861a47.graph`
+- `lib/phases/2026-10-18-gating-census/graph/GC1_layer_one-c6818f0350f0d936.graph`
+- `lib/phases/2026-10-18-gating-census/graph/L1_primitives_no_decision-0a03918617e67a44.graph`
+- `lib/phases/2026-10-18-gating-census/graph/L2_one_of_each-15bb418b41b19b2a.graph`
+- `lib/phases/2026-10-18-gating-census/graph/_superseded/GC0_the_census-6e90f2f13b83fa5b.graph`
+- `lib/phases/2026-10-19-gate-quality-checks/GQ1_quality_stream.phase`
+- `lib/phases/2026-10-19-gate-quality-checks/GQ3_brick_tests.phase`
+- `lib/phases/2026-10-19-gate-quality-checks/graph/GQ1_quality_stream-78a010f02db9b5e2.graph`
+- `lib/phases/2026-10-19-gate-quality-checks/graph/GQ3_brick_tests-7bb3b9e18cbc76b9.graph`
+- `lib/phases/2026-10-19-idearium-control/IM2_promote_to_phase.phase`
+- `lib/phases/2026-10-19-idearium-control/IM3_ideas_mapped_to_nexus.phase`
+- `lib/phases/2026-10-19-idearium-control/IX1_everything_linked.phase`
+- `lib/phases/2026-10-19-idearium-control/NM1_one_name_per_file.phase`
+- `lib/phases/2026-10-19-idearium-control/VS2_diff_only_backups.phase`
+- `lib/phases/2026-10-19-idearium-control/graph/IM2_promote_to_phase-1569487c0a2437d9.graph`
+- `lib/phases/2026-10-19-idearium-control/graph/IM3_ideas_mapped_to_nexus-4ab9902894ad0c86.graph`
+- `lib/phases/2026-10-19-idearium-control/graph/IX1_everything_linked-9bb44518c22de6ae.graph`
+- `lib/phases/2026-10-19-idearium-control/graph/NM1_one_name_per_file-4139029cd3912f57.graph`
+- `lib/phases/2026-10-19-idearium-control/graph/VS2_diff_only_backups-536284767e3a671e.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/AD1_adapter_contract.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/AD2_javascript_adapter.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/AD3_python_adapter.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/AD4_documents_adapter.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/FP1_feature_pilot.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/IN0_baseline.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/IN1_old_files_out.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/IN2_quotes_ledger.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/IN3_registry_is_the_spine.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/IN6_systems_onto_the_spine.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/IN7_every_phase_and_spec_on_the_spine.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/NC1_neutral_core_boundary.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/NT1_neutrality_test.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/PN1_phases_to_nodes.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/PN2_dual_read.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/PN3_maps_rendered_from_nodes.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/PRC1_phase_reality_check.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/SC1_scaling_limits_named.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/ST1_schema_for_everything_reusable.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/VC1_a_change_entry_for_every_event.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/VC2_changelogs_rendered.phase`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/AD1_adapter_contract-e91a444c6f2283f5.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/AD2_javascript_adapter-1421bce99f6b0fd1.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/AD3_python_adapter-ddae82510208277e.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/AD4_documents_adapter-71fc91214f3f74f8.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/FP1_feature_pilot-6f5778d20d6e74db.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/IN0_baseline-970f2ba12e563137.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/IN1_old_files_out-84d149d952b4e723.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/IN2_quotes_ledger-746264db652fe47c.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/IN3_registry_is_the_spine-e420e3cd3dcadc6d.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/IN6_systems_onto_the_spine-cdcb05f20732c595.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/IN7_every_phase_and_spec_on_the_spine-ac080692893504b1.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/NC1_neutral_core_boundary-5ed2fce6c3979dcb.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/NT1_neutrality_test-a331400b0767c9a0.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/PN1_phases_to_nodes-d373bee50a742ff2.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/PN2_dual_read-29e3557d98277a3d.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/PN3_maps_rendered_from_nodes-e5c77a3e8f639f3f.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/PRC1_phase_reality_check-681b3b0a01191eac.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/SC1_scaling_limits_named-74bbc16498f13eed.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/ST1_schema_for_everything_reusable-7d79572c6ac4587e.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/VC1_a_change_entry_for_every_event-2d6d84c716d3eda0.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/VC2_changelogs_rendered-991430c3f767143b.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/CB1_coder_brief.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/CB2_gemini_first.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/ID1_ideas_wired_through.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/MEM1_cortex_keeps_the_books.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/RC1_watchers_never_kill_a_kernel.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/RC2_linear_node_scan.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/RC3_windows_safe_node_names.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/RC4_agent_file_names_guarded.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/SM1_agent_self_model.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/SS1_system_store_adoption.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/SS3_nodes_are_the_data.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/UI1_toolbox_and_store_explorer.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/UI3_ideas_and_notes_as_one.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/VF1_verify_first.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/VF2_one_response_bundle.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/VF3_mutation_check.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/VF4_second_opinion_on_need.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/VF5_verdict_cache.phase`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/CB1_coder_brief-1d43c7e9fcfca2cd.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/CB2_gemini_first-8a828fa8e92f645c.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/ID1_ideas_wired_through-d74f2fa08863805e.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/MEM1_cortex_keeps_the_books-5dc59a5287acfba0.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC1_watchers_never_kill_a_kernel-5363c8138bf6ff4a.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC2_linear_node_scan-4cebbf35ed841d10.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC3_windows_safe_node_names-1a150de507d7f945.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC4_agent_file_names_guarded-f7f24c9b4b5b26d9.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/SM1_agent_self_model-33989c7ddb1cbad4.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/SS1_system_store_adoption-d78715b3b21e685b.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/SS3_nodes_are_the_data-42d3b5c93b4e3d49.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/UI1_toolbox_and_store_explorer-18a4d19d0f927715.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/UI3_ideas_and_notes_as_one-a5b53b729416888e.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF1_verify_first-f356503ab603ddbc.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF2_one_response_bundle-48017c6b7737540e.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF3_mutation_check-a28ce7f9bc7982e8.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF4_second_opinion_on_need-9c8416f249e1db5c.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF5_verdict_cache-3f619ac10014ebb3.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/ID1_ideas_wired_through-b12b2d82d3da6242.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/MEM1_cortex_keeps_the_books-945fb1de062e2087.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC1_watchers_never_kill_a_kernel-5dd01d2da36edeb7.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC2_linear_node_scan-77759fcaf402a194.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC3_windows_safe_node_names-26a266c4495e09d0.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC3_windows_safe_node_names-abac5983cc545d58.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC4_agent_file_names_guarded-771ccf0a4d65cb41.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/SS1_system_store_adoption-ad8ef05a560160bc.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/SS1_system_store_adoption-f5e49c04fe5a9255.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/VF1_verify_first-58454d1b9f24ee04.graph`
+- `lib/phases/2026-10-19-solid-build-foundation/AB1_autobuild_loop_and_resume.phase`
+- `lib/phases/2026-10-19-solid-build-foundation/AB2_hat_aware_ladder.phase`
+- `lib/phases/2026-10-19-solid-build-foundation/CR1_project_registry_spine.phase`
+- `lib/phases/2026-10-19-solid-build-foundation/GQ1_quality_stream.phase`
+- `lib/phases/2026-10-19-solid-build-foundation/GQ3_brick_tests.phase`
+- `lib/phases/2026-10-19-solid-build-foundation/MF1_model_fit_routing.phase`
+- `lib/phases/2026-10-19-solid-build-foundation/graph/AB1_autobuild_loop_and_resume-3d44db3a3fb6e381.graph`
+- `lib/phases/2026-10-19-solid-build-foundation/graph/AB2_hat_aware_ladder-ad9fe7f865a988d6.graph`
+- `lib/phases/2026-10-19-solid-build-foundation/graph/CR1_project_registry_spine-ad00a0602536365c.graph`
+- `lib/phases/2026-10-19-solid-build-foundation/graph/GQ1_quality_stream-85b1ad483b041f8f.graph`
+- `lib/phases/2026-10-19-solid-build-foundation/graph/GQ3_brick_tests-3769b79e631ed6e6.graph`
+- `lib/phases/2026-10-19-solid-build-foundation/graph/MF1_model_fit_routing-933ae7ea59a963fb.graph`
+- `lib/phases/2026-10-19-upload-intent-and-page-map/PM6_nerve_feel.phase`
+- `lib/phases/2026-10-19-upload-intent-and-page-map/UP1_placement_tool.phase`
+- `lib/phases/2026-10-19-upload-intent-and-page-map/UP2_learned_placements.phase`
+- `lib/phases/2026-10-19-upload-intent-and-page-map/UP5_registry_wires_on_apply.phase`
+- `lib/phases/2026-10-19-upload-intent-and-page-map/UP6_model_for_the_unplaced.phase`
+- `lib/phases/2026-10-19-upload-intent-and-page-map/graph/PM6_nerve_feel-539b63300c679ad5.graph`
+- `lib/phases/2026-10-19-upload-intent-and-page-map/graph/UP1_placement_tool-166fb192867b3804.graph`
+- `lib/phases/2026-10-19-upload-intent-and-page-map/graph/UP2_learned_placements-ce0e81c67e6b36ce.graph`
+- `lib/phases/2026-10-19-upload-intent-and-page-map/graph/UP5_registry_wires_on_apply-ebe8af443a1f3079.graph`
+- `lib/phases/2026-10-19-upload-intent-and-page-map/graph/UP6_model_for_the_unplaced-76cb86273b1fc6d5.graph`
+- `lib/phases/2026-10-20-belief-loop/AV1_adversarial_review.phase`
+- `lib/phases/2026-10-20-belief-loop/BW1_borrowing.phase`
+- `lib/phases/2026-10-20-belief-loop/CF1_confidence_from_evidence.phase`
+- `lib/phases/2026-10-20-belief-loop/CY0_one_crystal_schema.phase`
+- `lib/phases/2026-10-20-belief-loop/CY2_invariants_are_crystals.phase`
+- `lib/phases/2026-10-20-belief-loop/EW1_evidence_record_and_weights.phase`
+- `lib/phases/2026-10-20-belief-loop/IV0_belief_census.phase`
+- `lib/phases/2026-10-20-belief-loop/IV1_invariant_kinds.phase`
+- `lib/phases/2026-10-20-belief-loop/IV2_invariant_miner.phase`
+- `lib/phases/2026-10-20-belief-loop/PV1_provenance_on_every_claim.phase`
+- `lib/phases/2026-10-20-belief-loop/RA1_root_cause_through_provenance.phase`
+- `lib/phases/2026-10-20-belief-loop/RA2_learned_source_trust.phase`
+- `lib/phases/2026-10-20-belief-loop/XD1_cross_domain_verification.phase`
+- `lib/phases/2026-10-20-belief-loop/graph/AV1_adversarial_review-4309464edd8b01e4.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/BW1_borrowing-d84c6b468dc3ade5.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/CF1_confidence_from_evidence-1d831af2c4ee481e.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/CY0_one_crystal_schema-6952ccb2f43c4c04.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/CY2_invariants_are_crystals-62464b4cfa1cd75a.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/EW1_evidence_record_and_weights-a4ae8dbe0712bb23.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/IV0_belief_census-fd2dad21f04787eb.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/IV1_invariant_kinds-99ee52c0b443d589.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/IV2_invariant_miner-e5b3488a69c7b78e.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/PV1_provenance_on_every_claim-67737d326ae34da8.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/RA1_root_cause_through_provenance-6ad2a67f26a85c69.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/RA2_learned_source_trust-96f3facc75253f80.graph`
+- `lib/phases/2026-10-20-belief-loop/graph/XD1_cross_domain_verification-b5b39aa978305a84.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/CH0_chunk_census_and_contract.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/CH1_strategies_behind_the_contract.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/CH2_chunk_laws.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/DK2_learned_granularity.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GR0_graph_census.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GR1_graph_primitive.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GR2_graph_views.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GW0_gate_census.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GW1_gate_primitive.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GW2_gates_at_every_level.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/PS1_phase_specs.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/TV1_traversal_primitive.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/TV2_invariant_guided_traversal.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/TV3_traversal_as_context.phase`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/CH0_chunk_census_and_contract-181bf3005c9def9a.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/CH1_strategies_behind_the_contract-a5858d41e5ad4b6b.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/CH2_chunk_laws-e5eb2024e856cead.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/DK2_learned_granularity-38954b694b124080.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR0_graph_census-dae50028dcfb9bca.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR1_graph_primitive-8e94a4d6d6d8e5b6.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR2_graph_views-371086c0f14c49a2.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW0_gate_census-0475656455782995.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW1_gate_primitive-0fa8b100c09c9d93.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW2_gates_at_every_level-612136b666d5ea1e.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/PS1_phase_specs-77e8fe5e41ea6ccc.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/TV1_traversal_primitive-addbf1f1b5a09bfa.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/TV2_invariant_guided_traversal-e197883cad031a55.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/TV3_traversal_as_context-8a5009bb03465d08.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW2_gates_at_every_level-b10b437f7e757cde.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/PS1_phase_specs-3ff2290d219d6c7c.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/PS1_phase_specs-77e8fe5e41ea6ccc.graph`
+- `lib/phases/2026-10-21-approval-chain/APV1_change_entry.phase`
+- `lib/phases/2026-10-21-approval-chain/APV2_commit_carries_it.phase`
+- `lib/phases/2026-10-21-approval-chain/graph/APV1_change_entry-84ec3e73d291c157.graph`
+- `lib/phases/2026-10-21-approval-chain/graph/APV2_commit_carries_it-ddcc8eb6b64febdc.graph`
+- `lib/phases/2026-10-21-approval-chain/graph/_superseded/APV1_change_entry-ac405a9ed94958e7.graph`
+- `lib/phases/2026-10-21-approval-chain/graph/_superseded/APV2_commit_carries_it-49cfd8f7769f1070.graph`
+- `lib/phases/2026-10-21-brainos-into-idearium/BX1_census.phase`
+- `lib/phases/2026-10-21-brainos-into-idearium/BX9_retire.phase`
+- `lib/phases/2026-10-21-brainos-into-idearium/CNS1_phase_census.phase`
+- `lib/phases/2026-10-21-brainos-into-idearium/graph/BX1_census-94187d8db6335e81.graph`
+- `lib/phases/2026-10-21-brainos-into-idearium/graph/BX9_retire-0c410c080c84da17.graph`
+- `lib/phases/2026-10-21-brainos-into-idearium/graph/CNS1_phase_census-ac4aa4a9dde1d8b0.graph`
+- `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX9_retire-2bc31a1a8b772044.graph`
+- `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-ee838c5e542aa524.graph`
+- `lib/phases/2026-10-21-data-layout/DL0_data_census.phase`
+- `lib/phases/2026-10-21-data-layout/DL1_clearup_tool.phase`
+- `lib/phases/2026-10-21-data-layout/DL2_one_resolver.phase`
+- `lib/phases/2026-10-21-data-layout/DL3_rewire_writers.phase`
+- `lib/phases/2026-10-21-data-layout/DL5_memory_in_cortex.phase`
+- `lib/phases/2026-10-21-data-layout/graph/DL0_data_census-f0135ef7c3aeb4f1.graph`
+- `lib/phases/2026-10-21-data-layout/graph/DL1_clearup_tool-e0d483cc4889bc70.graph`
+- `lib/phases/2026-10-21-data-layout/graph/DL2_one_resolver-c98c0dd03a13e5a3.graph`
+- `lib/phases/2026-10-21-data-layout/graph/DL3_rewire_writers-7dbe9cbe6436f155.graph`
+- `lib/phases/2026-10-21-data-layout/graph/DL5_memory_in_cortex-59082cf7b07d2717.graph`
+- `lib/phases/2026-10-21-data-layout/graph/_superseded/DL0_data_census-64f85579f51044f8.graph`
+- `lib/phases/2026-10-21-data-layout/graph/_superseded/DL1_clearup_tool-372de2334482d8f2.graph`
+- `lib/phases/2026-10-21-data-layout/graph/_superseded/DL2_one_resolver-db5711605437e8fc.graph`
+- `lib/phases/2026-10-21-data-layout/graph/_superseded/DL3_rewire_writers-370d1616ff8d75f4.graph`
+- `lib/phases/2026-10-22-system-node-db/ND1_every_system_has_its_database.phase`
+- `lib/phases/2026-10-22-system-node-db/ND2_one_node_route_for_every_system.phase`
+- `lib/phases/2026-10-22-system-node-db/ND3_each_server_serves_its_nodes.phase`
+- `lib/phases/2026-10-22-system-node-db/ND4_commands_and_capabilities_from_the_schemas.phase`
+- `lib/phases/2026-10-22-system-node-db/graph/ND1_every_system_has_its_database-d31a6f77d650fe55.graph`
+- `lib/phases/2026-10-22-system-node-db/graph/ND2_one_node_route_for_every_system-15ec1ac071c27e69.graph`
+- `lib/phases/2026-10-22-system-node-db/graph/ND3_each_server_serves_its_nodes-e4e6017c5d941f7b.graph`
+- `lib/phases/2026-10-22-system-node-db/graph/ND4_commands_and_capabilities_from_the_schemas-ae691a15e3aa12bb.graph`
+- `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND1_every_system_has_its_database-87dd2ec53f3067a4.graph`
+- `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND3_each_server_serves_its_nodes-ea22d024a9a37bb4.graph`
+- `lib/phases/2026-10-23-cos-spine/CS10_hats_bound_to_the_compartment.phase`
+- `lib/phases/2026-10-23-cos-spine/graph/CS10_hats_bound_to_the_compartment-9593a2c519f5f235.graph`
+- `lib/phases/2026-10-23-self-building-loop/SL10_the_pipeline_simulated.phase`
+- `lib/phases/2026-10-23-self-building-loop/SL2_done_by_evidence.phase`
+- `lib/phases/2026-10-23-self-building-loop/SL3_the_backlog_groomed.phase`
+- `lib/phases/2026-10-23-self-building-loop/SL5_when_a_proven_change_lands_alone.phase`
+- `lib/phases/2026-10-23-self-building-loop/SL6_the_loop_counts_itself.phase`
+- `lib/phases/2026-10-23-self-building-loop/SL9_every_phase_a_node.phase`
+- `lib/phases/2026-10-23-self-building-loop/graph/SL10_the_pipeline_simulated-fdc2918297e903cc.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/SL2_done_by_evidence-7bb9c1e91cb43b0f.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/SL3_the_backlog_groomed-d984c6d6901fa316.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/SL5_when_a_proven_change_lands_alone-379b566ca6597dd5.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/SL6_the_loop_counts_itself-596269867e9d3b8f.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/SL9_every_phase_a_node-607e664a07b3c690.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-07f020fcde0980ec.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-a5f720db904d7f54.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-f4cbd242e47d17fc.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-596ba88d3bb5ab0a.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-9fd399bb539845a2.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL5_when_a_proven_change_lands_alone-4cb047583c75887c.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL6_the_loop_counts_itself-fb8338f83e0b2ad5.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-cf5ae14f76bef8fc.graph`
+- `lib/phases/INDEX.md`
+- `lib/phases/agent-intelligence-loop/AP1_pull_toolbox.phase`
+- `lib/phases/agent-intelligence-loop/AP5_autonomous_build_loop.phase`
+- `lib/phases/agent-intelligence-loop/graph/AP1_pull_toolbox-0c00d607ee3cf034.graph`
+- `lib/phases/agent-intelligence-loop/graph/AP5_autonomous_build_loop-fee76168c1767280.graph`
+- `lib/phases/agent-model-and-user-continuity/AM10_thinking_partner_rename_and_ui_builder.phase`
+- `lib/phases/agent-model-and-user-continuity/AM1_per_agent_learned_model.phase`
+- `lib/phases/agent-model-and-user-continuity/AM2_incident_debrief.phase`
+- `lib/phases/agent-model-and-user-continuity/AM3_open_ended_grounded_conversation.phase`
+- `lib/phases/agent-model-and-user-continuity/AM5_ambiguity_triggered_pull.phase`
+- `lib/phases/agent-model-and-user-continuity/AM6_perplexity_confidence_loop.phase`
+- `lib/phases/agent-model-and-user-continuity/AM7_agent_switch_continuity_and_chat_recall.phase`
+- `lib/phases/agent-model-and-user-continuity/AM8_lifeline_as_general_channel_and_reasoning_upgrade.phase`
+- `lib/phases/agent-model-and-user-continuity/AM9_get_to_know_you_and_idea_capture.phase`
+- `lib/phases/agent-model-and-user-continuity/graph/AM10_thinking_partner_rename_and_ui_builder-c0328146fae33b3e.graph`
+- `lib/phases/agent-model-and-user-continuity/graph/AM1_per_agent_learned_model-9f79131e9be93d52.graph`
+- `lib/phases/agent-model-and-user-continuity/graph/AM2_incident_debrief-04a4544016b9bb00.graph`
+- `lib/phases/agent-model-and-user-continuity/graph/AM3_open_ended_grounded_conversation-487ff1e8c712e962.graph`
+- `lib/phases/agent-model-and-user-continuity/graph/AM5_ambiguity_triggered_pull-ca63b016e003ffb7.graph`
+- `lib/phases/agent-model-and-user-continuity/graph/AM6_perplexity_confidence_loop-200f6a2a6a5cf5dd.graph`
+- `lib/phases/agent-model-and-user-continuity/graph/AM7_agent_switch_continuity_and_chat_recall-e7c6fbbbe5175699.graph`
+- `lib/phases/agent-model-and-user-continuity/graph/AM8_lifeline_as_general_channel_and_reasoning_upgrade-6413a4c688ff13df.graph`
+- `lib/phases/agent-model-and-user-continuity/graph/AM9_get_to_know_you_and_idea_capture-32fca166c640cfd4.graph`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/TX10_component_registry_discipline.phase`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/TX11_plugin_architecture_decision.phase`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/TX14_plugin_system_v1_build.phase`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/TX1_clearglass_agent_suite_composition.phase`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/TX2_sequential_event_queue.phase`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/TX4_provider_tab_tool_loop.phase`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/TX7_cfr_diagnostic_for_loom.phase`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/TX9_build_contract_file_dir.phase`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX10_component_registry_discipline-95d1f8ac41b8d673.graph`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX11_plugin_architecture_decision-6659d1b03d369470.graph`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX14_plugin_system_v1_build-1a4936ab08174f55.graph`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX1_clearglass_agent_suite_composition-19b14f384dffbacc.graph`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX2_sequential_event_queue-b723e425972e1faa.graph`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX4_provider_tab_tool_loop-9fb61cd3bda009bc.graph`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX7_cfr_diagnostic_for_loom-c1a82bad016c63ef.graph`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/TX9_build_contract_file_dir-a144b4f9e9ba9be2.graph`
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/graph/_superseded/TX9_build_contract_file_dir-11f20eb5730c0d6f.graph`
+- `lib/phases/copilot-autonomous/CA1_scheduler.phase`
+- `lib/phases/copilot-autonomous/CA3_pipeline_chains.phase`
+- `lib/phases/copilot-autonomous/CA4_connections.phase`
+- `lib/phases/copilot-autonomous/CA5_system_control_and_clearglass.phase`
+- `lib/phases/copilot-autonomous/CA6_self_building_commands.phase`
+- `lib/phases/copilot-autonomous/CA7_constant_autonomy.phase`
+- `lib/phases/copilot-autonomous/graph/CA1_scheduler-f646093248081abd.graph`
+- `lib/phases/copilot-autonomous/graph/CA3_pipeline_chains-c33bc76e820f40fa.graph`
+- `lib/phases/copilot-autonomous/graph/CA4_connections-fd002fc2bc10c045.graph`
+- `lib/phases/copilot-autonomous/graph/CA5_system_control_and_clearglass-292f947e788fddeb.graph`
+- `lib/phases/copilot-autonomous/graph/CA6_self_building_commands-4fc1ad9fd3f90dd6.graph`
+- `lib/phases/copilot-autonomous/graph/CA7_constant_autonomy-bcaaa823adb0c656.graph`
+- `lib/phases/copilot-awareness-routing/CA2_tool_self_awareness.phase`
+- `lib/phases/copilot-awareness-routing/CA6_routing_config.phase`
+- `lib/phases/copilot-awareness-routing/graph/CA2_tool_self_awareness-27716cb40c8eca89.graph`
+- `lib/phases/copilot-awareness-routing/graph/CA6_routing_config-c8ec964b0b80f7cb.graph`
+- `lib/phases/copilot-full-capability/P7_continuous_nerve_dom_to_ollama.phase`
+- `lib/phases/copilot-full-capability/graph/P7_continuous_nerve_dom_to_ollama-40f6a3bac3b56676.graph`
+- `lib/phases/copilot-guardian-cos-expansion/GA1_guardian_nexus_reconciliation.phase`
+- `lib/phases/copilot-guardian-cos-expansion/GA2_diagnostic_system_depth.phase`
+- `lib/phases/copilot-guardian-cos-expansion/GA3_guardian_userscript_capability_wiring.phase`
+- `lib/phases/copilot-guardian-cos-expansion/GA6_spec_builder_depth.phase`
+- `lib/phases/copilot-guardian-cos-expansion/GA8_sse_announcements.phase`
+- `lib/phases/copilot-guardian-cos-expansion/graph/GA1_guardian_nexus_reconciliation-7d4f25c26f8d558f.graph`
+- `lib/phases/copilot-guardian-cos-expansion/graph/GA2_diagnostic_system_depth-9e9318bacd6bb0d1.graph`
+- `lib/phases/copilot-guardian-cos-expansion/graph/GA3_guardian_userscript_capability_wiring-378f86881837b81c.graph`
+- `lib/phases/copilot-guardian-cos-expansion/graph/GA6_spec_builder_depth-d8dcc592e1ac180c.graph`
+- `lib/phases/copilot-guardian-cos-expansion/graph/GA8_sse_announcements-2285f347862e5b5c.graph`
+- `lib/phases/copilot-omniscience/P2_persistence_threaded.phase`
+- `lib/phases/copilot-omniscience/P4_gate_never_actually_verified.phase`
+- `lib/phases/copilot-omniscience/P6_every_system_reachable.phase`
+- `lib/phases/copilot-omniscience/graph/P2_persistence_threaded-0abc56b443205734.graph`
+- `lib/phases/copilot-omniscience/graph/P4_gate_never_actually_verified-c081947773f7a8cc.graph`
+- `lib/phases/copilot-omniscience/graph/P6_every_system_reachable-7d719f5d40d918b1.graph`
+- `lib/phases/cortex-schema-registry/P1_schema_table_in_cortex.phase`
+- `lib/phases/cortex-schema-registry/P2_conformance_check_lib.phase`
+- `lib/phases/cortex-schema-registry/P5_expectation_for_consumers.phase`
+- `lib/phases/cortex-schema-registry/UM1_schema_for_user_model.phase`
+- `lib/phases/cortex-schema-registry/graph/P1_schema_table_in_cortex-8a7709b7b3706ea7.graph`
+- `lib/phases/cortex-schema-registry/graph/P2_conformance_check_lib-9d3e03fe9b7e2d00.graph`
+- `lib/phases/cortex-schema-registry/graph/P5_expectation_for_consumers-eda9550483f4ed1c.graph`
+- `lib/phases/cortex-schema-registry/graph/UM1_schema_for_user_model-d62896550a607452.graph`
+- `lib/phases/gemini-multiagent-coding/P1_per_agent_contracts.phase`
+- `lib/phases/gemini-multiagent-coding/P2_tree_parse_recall_injection.phase`
+- `lib/phases/gemini-multiagent-coding/P4_structured_agent_to_agent.phase`
+- `lib/phases/gemini-multiagent-coding/P5_autonomous_multiagent_loop.phase`
+- `lib/phases/gemini-multiagent-coding/graph/P1_per_agent_contracts-0f2fd9ee83912663.graph`
+- `lib/phases/gemini-multiagent-coding/graph/P2_tree_parse_recall_injection-31411292304becfe.graph`
+- `lib/phases/gemini-multiagent-coding/graph/P4_structured_agent_to_agent-8f27af99fec90581.graph`
+- `lib/phases/gemini-multiagent-coding/graph/P5_autonomous_multiagent_loop-7a74916704cceb5b.graph`
+- `lib/phases/idearium-repository-overhaul/MCO-A_schemas.phase`
+- `lib/phases/idearium-repository-overhaul/MCO-E_roadmap_ui.phase`
+- `lib/phases/idearium-repository-overhaul/MCO-G_git_cicd_credentials.phase`
+- `lib/phases/idearium-repository-overhaul/MCO4_hooks_wires_flows_tools.phase`
+- `lib/phases/idearium-repository-overhaul/MCO6_compartment_ownership.phase`
+- `lib/phases/idearium-repository-overhaul/graph/MCO-A_schemas-912297af517ed265.graph`
+- `lib/phases/idearium-repository-overhaul/graph/MCO-E_roadmap_ui-b86c0d6b1a69cd1d.graph`
+- `lib/phases/idearium-repository-overhaul/graph/MCO-G_git_cicd_credentials-209210182fab359f.graph`
+- `lib/phases/idearium-repository-overhaul/graph/MCO4_hooks_wires_flows_tools-1792b3e7c6ba3523.graph`
+- `lib/phases/idearium-repository-overhaul/graph/MCO6_compartment_ownership-ccbefa5d407a1b18.graph`
+- `lib/phases/idearium-repository-overhaul/graph/_superseded/MCO-E_roadmap_ui-05dd511a8ef21910.graph`
+- `lib/phases/nexus-architecture-rebuild/P10_safe_apply_verify_before_merge.phase`
+- `lib/phases/nexus-architecture-rebuild/P11_agent_council.phase`
+- `lib/phases/nexus-architecture-rebuild/P12_fault_logging_first_class.phase`
+- `lib/phases/nexus-architecture-rebuild/P13_roundtable_shared_council_chat.phase`
+- `lib/phases/nexus-architecture-rebuild/P14_emergence_axioms_endstate.phase`
+- `lib/phases/nexus-architecture-rebuild/P20_intelligence_reads_present_not_oldest.phase`
+- `lib/phases/nexus-architecture-rebuild/P2_autopilot_spawn_crash.phase`
+- `lib/phases/nexus-architecture-rebuild/P8_hat_forge_command.phase`
+- `lib/phases/nexus-architecture-rebuild/P9_multi_agent_parallel_dispatch.phase`
+- `lib/phases/nexus-architecture-rebuild/graph/P10_safe_apply_verify_before_merge-321a65ed784d8a03.graph`
+- `lib/phases/nexus-architecture-rebuild/graph/P11_agent_council-2c8598728dc1ff30.graph`
+- `lib/phases/nexus-architecture-rebuild/graph/P12_fault_logging_first_class-45cc2cf048e77d57.graph`
+- `lib/phases/nexus-architecture-rebuild/graph/P13_roundtable_shared_council_chat-bbfce2d577125626.graph`
+- `lib/phases/nexus-architecture-rebuild/graph/P14_emergence_axioms_endstate-7c968ba80520bc34.graph`
+- `lib/phases/nexus-architecture-rebuild/graph/P20_intelligence_reads_present_not_oldest-a58469a80f09bd67.graph`
+- `lib/phases/nexus-architecture-rebuild/graph/P2_autopilot_spawn_crash-7b3595f0354c6063.graph`
+- `lib/phases/nexus-architecture-rebuild/graph/P8_hat_forge_command-dfd13349bbd7e4e9.graph`
+- `lib/phases/nexus-architecture-rebuild/graph/P9_multi_agent_parallel_dispatch-8ad7c5128e9ee3f3.graph`
+- `lib/phases/nexus-live-mind/P3_diagnostic_kernel.phase`
+- `lib/phases/nexus-live-mind/P6_copilot_programmable.phase`
+- `lib/phases/nexus-live-mind/graph/P3_diagnostic_kernel-75ac0a6dcf420224.graph`
+- `lib/phases/nexus-live-mind/graph/P6_copilot_programmable-52e733c13ed35b06.graph`
+- `lib/phases/nexus-observability-tablet/OB11_edge_case_mapping.phase`
+- `lib/phases/nexus-observability-tablet/OB3_movement_map.phase`
+- `lib/phases/nexus-observability-tablet/OB5_tablet_modules.phase`
+- `lib/phases/nexus-observability-tablet/graph/OB11_edge_case_mapping-be0ff5bccc30824b.graph`
+- `lib/phases/nexus-observability-tablet/graph/OB3_movement_map-1750f2d80be7b16d.graph`
+- `lib/phases/nexus-observability-tablet/graph/OB5_tablet_modules-63020901121548d5.graph`
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/AG1_agent_nodes_sorted_by_provider.phase`
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/GC1_global_component_reuse_store.phase`
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/RD1_multi_file_response_parser.phase`
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/RD2_response_to_multiple_artifact_types.phase`
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/AG1_agent_nodes_sorted_by_provider-244704b3a3825cc8.graph`
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/GC1_global_component_reuse_store-7caeeeea63576bfe.graph`
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/RD1_multi_file_response_parser-747cf5517c059840.graph`
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/RD2_response_to_multiple_artifact_types-b35f25d3c582de18.graph`
+- `lib/phases/nexus-repository-system-build/MCO3_snapshot_compliance.phase`
+- `lib/phases/nexus-repository-system-build/MCO4_hooks_wires_flows_tools.phase`
+- `lib/phases/nexus-repository-system-build/MCO7_nexus_systems_as_repo_compartments.phase`
+- `lib/phases/nexus-repository-system-build/graph/MCO3_snapshot_compliance-00fc7f80a15780aa.graph`
+- `lib/phases/nexus-repository-system-build/graph/MCO4_hooks_wires_flows_tools-acba9c545837ded9.graph`
+- `lib/phases/nexus-repository-system-build/graph/MCO7_nexus_systems_as_repo_compartments-b9b0a420afcc0424.graph`
+- `lib/phases/nexus-self-build-pipeline/SB2_universal_file_parse.phase`
+- `lib/phases/nexus-self-build-pipeline/SB3_guided_build_loop.phase`
+- `lib/phases/nexus-self-build-pipeline/SB4_decision_lattice_wiring.phase`
+- `lib/phases/nexus-self-build-pipeline/SB5_self_modification_from_inside.phase`
+- `lib/phases/nexus-self-build-pipeline/SB6_contract_type_schemas_and_toolbox_directory.phase`
+- `lib/phases/nexus-self-build-pipeline/SB7_compartments_as_sessions.phase`
+- `lib/phases/nexus-self-build-pipeline/SB8_tool_agnosticism_and_new_tool_flow.phase`
+- `lib/phases/nexus-self-build-pipeline/graph/SB2_universal_file_parse-2f06c0672e301ca7.graph`
+- `lib/phases/nexus-self-build-pipeline/graph/SB3_guided_build_loop-43e53ddad29a7b4a.graph`
+- `lib/phases/nexus-self-build-pipeline/graph/SB4_decision_lattice_wiring-8250b009e094ad56.graph`
+- `lib/phases/nexus-self-build-pipeline/graph/SB5_self_modification_from_inside-cdb424f27e387b64.graph`
+- `lib/phases/nexus-self-build-pipeline/graph/SB6_contract_type_schemas_and_toolbox_directory-c5ebdf092da9729b.graph`
+- `lib/phases/nexus-self-build-pipeline/graph/SB7_compartments_as_sessions-61dd4a0cac5599fd.graph`
+- `lib/phases/nexus-self-build-pipeline/graph/SB8_tool_agnosticism_and_new_tool_flow-0dad83e5c39c6d0a.graph`
+- `lib/phases/nexus-system-standardization/SS2_config_per_system.phase`
+- `lib/phases/nexus-system-standardization/SS3_event_driven_handshake_contracts.phase`
+- `lib/phases/nexus-system-standardization/SS5_diagnostics_reads_and_fixes.phase`
+- `lib/phases/nexus-system-standardization/graph/SS2_config_per_system-21362d473f86d2b4.graph`
+- `lib/phases/nexus-system-standardization/graph/SS3_event_driven_handshake_contracts-7fca6f4123a25be4.graph`
+- `lib/phases/nexus-system-standardization/graph/SS5_diagnostics_reads_and_fixes-bbc697df4c8f8e23.graph`
+- `lib/phases/raid-routing-fidelity/RR2_contract_based_chunking.phase`
+- `lib/phases/raid-routing-fidelity/RR3_per_agent_config_in_cortex.phase`
+- `lib/phases/raid-routing-fidelity/RR4_governed_handshake_on_handoff.phase`
+- `lib/phases/raid-routing-fidelity/RR5_clearglass_accounts_and_features.phase`
+- `lib/phases/raid-routing-fidelity/RR7_per_system_dashboards_in_tablet.phase`
+- `lib/phases/raid-routing-fidelity/graph/RR2_contract_based_chunking-9f2225141606bc1a.graph`
+- `lib/phases/raid-routing-fidelity/graph/RR3_per_agent_config_in_cortex-efff7260225f5d9a.graph`
+- `lib/phases/raid-routing-fidelity/graph/RR4_governed_handshake_on_handoff-b031ed28511d3eae.graph`
+- `lib/phases/raid-routing-fidelity/graph/RR5_clearglass_accounts_and_features-022fe3f3a22c597f.graph`
+- `lib/phases/raid-routing-fidelity/graph/RR7_per_system_dashboards_in_tablet-a97e4c0989831da2.graph`
+- `lib/phases/raid-verification-spine/P1_raid_records_every_tool_decision.phase`
+- `lib/phases/raid-verification-spine/P3_isolate_and_verify_via_cos.phase`
+- `lib/phases/raid-verification-spine/P6_rewind_on_fail.phase`
+- `lib/phases/raid-verification-spine/graph/P1_raid_records_every_tool_decision-b2e3b501e67e23a4.graph`
+- `lib/phases/raid-verification-spine/graph/P3_isolate_and_verify_via_cos-0019c3a16a9a4f4d.graph`
+- `lib/phases/raid-verification-spine/graph/P6_rewind_on_fail-b0baf09b7e7c036f.graph`
+- `lib/phases/raid-warp-verification/P6_rewind_on_fail.phase`
+- `lib/phases/raid-warp-verification/graph/P6_rewind_on_fail-889c72ca60734872.graph`
+- `lib/phases/repair-contract-and-loom-hub/R10_relational_context_and_reuse.phase`
+- `lib/phases/repair-contract-and-loom-hub/R1_repair_contract_schema.phase`
+- `lib/phases/repair-contract-and-loom-hub/R2_real_snapshot_rollback.phase`
+- `lib/phases/repair-contract-and-loom-hub/R3_autonomous_repair_trigger.phase`
+- `lib/phases/repair-contract-and-loom-hub/R4_loom_ledger_awareness.phase`
+- `lib/phases/repair-contract-and-loom-hub/R5_loom_visual_map.phase`
+- `lib/phases/repair-contract-and-loom-hub/R6_living_documentation.phase`
+- `lib/phases/repair-contract-and-loom-hub/R7_fault_taxonomy_reconnection.phase`
+- `lib/phases/repair-contract-and-loom-hub/R8_ui_diagnostic_surfaces_wired_together.phase`
+- `lib/phases/repair-contract-and-loom-hub/R9_ui_design_philosophy.phase`
+- `lib/phases/repair-contract-and-loom-hub/graph/R10_relational_context_and_reuse-0e23e7835362642d.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R1_repair_contract_schema-3dd078c3c6681b99.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R2_real_snapshot_rollback-b4af0c3b6772dee3.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R3_autonomous_repair_trigger-4f6cbfa55d7722d6.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R4_loom_ledger_awareness-605c42ef21895483.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R5_loom_visual_map-486b78f53c8cc3c0.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R6_living_documentation-52d5fcd6b04a85b2.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R7_fault_taxonomy_reconnection-3fb547b4cfbe5881.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R8_ui_diagnostic_surfaces_wired_together-89ea8783a73fb339.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R9_ui_design_philosophy-bb1f4bfdb151ae73.graph`
+- `lib/phases/rich-atlas/AT2_atlas_editor.phase`
+- `lib/phases/rich-atlas/graph/AT2_atlas_editor-a1b09cdf79d9b614.graph`
 
 </details>
 
@@ -4847,7 +10665,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`tests/` · 767 files</summary>
+<summary>`tests/` · 822 files</summary>
 
 - `tests/audit-results.json`
 - `tests/brutal.test.js`
@@ -4914,6 +10732,8 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/clear-glass-hostile-html.test.js`
 - `tests/modules/clear-glass-indicators.test.js`
 - `tests/modules/clear-glass-library-ui.test.js`
+- `tests/modules/clear-glass-page-map.test.js`
+- `tests/modules/clear-glass-page-session.test.js`
 - `tests/modules/clear-glass-plugin-routes.test.js`
 - `tests/modules/clear-glass-pressure.test.js`
 - `tests/modules/clear-glass-screen-qa-ui.test.js`
@@ -5020,6 +10840,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-accounts-picker-cos.test.js`
 - `tests/modules/test-ack-injection-fix.js`
 - `tests/modules/test-activity-log.js`
+- `tests/modules/test-adblock.test.js`
 - `tests/modules/test-adversarial-causal-wire.js`
 - `tests/modules/test-adversarial-sim.js`
 - `tests/modules/test-agent-build-learning.js`
@@ -5031,6 +10852,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-agent-hat-agnostic.test.js`
 - `tests/modules/test-agent-index-ready.test.js`
 - `tests/modules/test-agent-live.test.js`
+- `tests/modules/test-agent-maps-phase.test.js`
 - `tests/modules/test-agent-memory.test.js`
 - `tests/modules/test-agent-mesh-guardian-coverage.js`
 - `tests/modules/test-agent-mesh-view-endpoint.js`
@@ -5042,13 +10864,20 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-agnostic-lib-tools.js`
 - `tests/modules/test-alk-lattice-live.js`
 - `tests/modules/test-am1-intent-contract.js`
+- `tests/modules/test-any-project-tests.test.js`
 - `tests/modules/test-ap1-agent-pull.js`
+- `tests/modules/test-approval-chain.test.js`
 - `tests/modules/test-architect-pulse-migration.js`
 - `tests/modules/test-architect.test.js`
 - `tests/modules/test-artifact-index-jaa.test.js`
 - `tests/modules/test-artifact-namer.js`
 - `tests/modules/test-ask-tools-shape.js`
 - `tests/modules/test-assist-loop.js`
+- `tests/modules/test-autofill-learn-macro.test.js`
+- `tests/modules/test-autofill-learn-pick.test.js`
+- `tests/modules/test-autofill-learn-save.test.js`
+- `tests/modules/test-autofill-learn-ui.test.js`
+- `tests/modules/test-autofill-learned.test.js`
 - `tests/modules/test-autonomous-repair.js`
 - `tests/modules/test-autonomy-router.js`
 - `tests/modules/test-autopilot-boot-gates.js`
@@ -5064,9 +10893,11 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-brainos-real-access-path.js`
 - `tests/modules/test-brainos-v2-rebuild.js`
 - `tests/modules/test-browser-action-screenshot.js`
+- `tests/modules/test-browser-shell.test.js`
 - `tests/modules/test-build-context.test.js`
 - `tests/modules/test-build-from-the-spec.test.js`
 - `tests/modules/test-build-paths.test.js`
+- `tests/modules/test-build-queue.test.js`
 - `tests/modules/test-build-surface-2.test.js`
 - `tests/modules/test-build-surface.api.js`
 - `tests/modules/test-build-surface.test.js`
@@ -5090,8 +10921,10 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-cg-copilot-verbs.test.js`
 - `tests/modules/test-cg-eros-supervisor.js`
 - `tests/modules/test-cg-field.test.js`
+- `tests/modules/test-cg-gig-autofill.test.js`
 - `tests/modules/test-cg-job-intake.test.js`
 - `tests/modules/test-cg-listener-decay.test.js`
+- `tests/modules/test-cg-network-ui.test.js`
 - `tests/modules/test-cg-selector-assign.test.js`
 - `tests/modules/test-cg-settings-ui-files.test.js`
 - `tests/modules/test-cg-shortcuts.test.js`
@@ -5133,6 +10966,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-command-builder.js`
 - `tests/modules/test-command-parse-null-guard.test.js`
 - `tests/modules/test-compartment-activity-log.test.js`
+- `tests/modules/test-compartment-downloads.test.js`
 - `tests/modules/test-compartment-window.test.js`
 - `tests/modules/test-component-registry.js`
 - `tests/modules/test-component-store.test.js`
@@ -5172,11 +11006,15 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-cos-mount-idempotent.test.js`
 - `tests/modules/test-cos-remote-api.test.js`
 - `tests/modules/test-cos-remote.test.js`
+- `tests/modules/test-cos-run-target.test.js`
 - `tests/modules/test-cos-testenv-any-repo.js`
 - `tests/modules/test-cos-testenv.js`
 - `tests/modules/test-cos-vm-shell.test.js`
 - `tests/modules/test-cos-workspace.test.js`
 - `tests/modules/test-dangling-hooks-and-idearium-load.test.js`
+- `tests/modules/test-data-clearup.test.js`
+- `tests/modules/test-data-home.test.js`
+- `tests/modules/test-data-rewired.test.js`
 - `tests/modules/test-decompose.js`
 - `tests/modules/test-desktop-activity.test.js`
 - `tests/modules/test-desktop-setup-popup.test.js`
@@ -5190,6 +11028,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-drawbridge-registry.test.js`
 - `tests/modules/test-dynamic-tension.js`
 - `tests/modules/test-economy-guardian.test.js`
+- `tests/modules/test-economy-resume.test.js`
 - `tests/modules/test-economy.more.js`
 - `tests/modules/test-economy.test.js`
 - `tests/modules/test-emerge-core.test.js`
@@ -5201,6 +11040,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-escalation-ladder.test.js`
 - `tests/modules/test-escalation.js`
 - `tests/modules/test-event-contracts.test.js`
+- `tests/modules/test-evidence-close.test.js`
 - `tests/modules/test-expectation-tests.test.js`
 - `tests/modules/test-extract-code.js`
 - `tests/modules/test-faculty-tools.js`
@@ -5221,7 +11061,9 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-gates-solid.test.js`
 - `tests/modules/test-gemini-toolbox.js`
 - `tests/modules/test-genesis-and-architecture-spec.test.js`
+- `tests/modules/test-genesis-sandboxed.test.js`
 - `tests/modules/test-gig-ledger.test.js`
+- `tests/modules/test-global-settings.test.js`
 - `tests/modules/test-gm-shim-sse-streaming.js`
 - `tests/modules/test-grammar-engine.js`
 - `tests/modules/test-grammar-fallback.js`
@@ -5234,6 +11076,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-guardian-job-persistence.js`
 - `tests/modules/test-guardian-json-routes.test.js`
 - `tests/modules/test-guardian-mesh-client.js`
+- `tests/modules/test-guardian-own-data.test.js`
 - `tests/modules/test-guardian-raid-feedback.js`
 - `tests/modules/test-guardian-replay-retired.test.js`
 - `tests/modules/test-guardian-retry-novelty-installs.js`
@@ -5287,17 +11130,20 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-lifeline-fault-logging.js`
 - `tests/modules/test-lifeline-guardian-timeout.test.js`
 - `tests/modules/test-lifeline-ollama-dispatch.test.js`
+- `tests/modules/test-lift-root.test.js`
 - `tests/modules/test-liminal-space.js`
 - `tests/modules/test-listener-commands.test.js`
 - `tests/modules/test-live-everywhere.test.js`
 - `tests/modules/test-live-recording.test.js`
 - `tests/modules/test-live-stream-and-gates.test.js`
+- `tests/modules/test-log-fixes.test.js`
 - `tests/modules/test-loom-map.js`
 - `tests/modules/test-loom-phasemap-status.js`
 - `tests/modules/test-loom-phasemap.js`
 - `tests/modules/test-macro.js`
 - `tests/modules/test-manifest-phase1.test.mjs`
 - `tests/modules/test-map3d.js`
+- `tests/modules/test-mastermind-ready.test.js`
 - `tests/modules/test-mco-a-file-delta-schema.js`
 - `tests/modules/test-mco2-verify-deepening.js`
 - `tests/modules/test-mco3-repo-snapshot.js`
@@ -5313,6 +11159,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-moce-roadmap.js`
 - `tests/modules/test-mock-data-finder.js`
 - `tests/modules/test-model-door.test.js`
+- `tests/modules/test-model-fit-ladder.test.js`
 - `tests/modules/test-module-builder-resolve.js`
 - `tests/modules/test-movement-map.js`
 - `tests/modules/test-mutation-contract.js`
@@ -5364,29 +11211,42 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-p4-capabilities.js`
 - `tests/modules/test-p5-grammar-router.js`
 - `tests/modules/test-p5p6-self-model.js`
+- `tests/modules/test-passwords.test.js`
 - `tests/modules/test-person-model.js`
 - `tests/modules/test-pf1-stalls.test.js`
 - `tests/modules/test-pf3-append-store.test.js`
 - `tests/modules/test-pf5-bounded-tables.test.js`
 - `tests/modules/test-phase-actually-builds.test.js`
+- `tests/modules/test-phase-census.test.js`
+- `tests/modules/test-phase-close.test.js`
 - `tests/modules/test-phase-cost.test.js`
+- `tests/modules/test-phase-dag.test.js`
 - `tests/modules/test-phase-deps-gate.test.js`
 - `tests/modules/test-phase-graph.test.js`
+- `tests/modules/test-phase-groom.test.js`
 - `tests/modules/test-phase-map-auto.test.js`
 - `tests/modules/test-phase-mapping.test.js`
+- `tests/modules/test-phase-nodes-all.test.js`
 - `tests/modules/test-phase-proof.test.js`
 - `tests/modules/test-phase-specs-tag.test.js`
+- `tests/modules/test-phase-specs.test.js`
 - `tests/modules/test-phasemap-diagnosis-facts.test.js`
 - `tests/modules/test-phases-tab.test.js`
+- `tests/modules/test-pipeline-nodes.test.js`
+- `tests/modules/test-pipeline-root-causes.test.js`
 - `tests/modules/test-pipeline-routing.test.js`
 - `tests/modules/test-plan-code-run-attention.test.js`
+- `tests/modules/test-plan-conflict.test.js`
 - `tests/modules/test-plan-lands.test.js`
 - `tests/modules/test-plan-pieces.test.js`
 - `tests/modules/test-plan-sidebar.test.js`
 - `tests/modules/test-pressure-window.js`
 - `tests/modules/test-prevention.test.js`
+- `tests/modules/test-processes-ui.test.js`
+- `tests/modules/test-processes.test.js`
 - `tests/modules/test-profile-tabs.test.js`
 - `tests/modules/test-project-decompose.test.js`
+- `tests/modules/test-project-registry.test.js`
 - `tests/modules/test-projects-overview.test.js`
 - `tests/modules/test-proof-run.test.js`
 - `tests/modules/test-proposal-evidence.test.js`
@@ -5413,6 +11273,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-readme-generate.test.js`
 - `tests/modules/test-reasoning-route.test.js`
 - `tests/modules/test-recursive-split.test.js`
+- `tests/modules/test-refusal-sendback.test.js`
 - `tests/modules/test-registration-shape.js`
 - `tests/modules/test-registry-drives-build.test.js`
 - `tests/modules/test-registry-harness.test.js`
@@ -5454,6 +11315,8 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-response-downloads.test.js`
 - `tests/modules/test-response-sink-passthrough.test.js`
 - `tests/modules/test-rfr2-cjs.js`
+- `tests/modules/test-roadmap-import.test.js`
+- `tests/modules/test-root-findings-not-phases.test.js`
 - `tests/modules/test-route-contracts.test.js`
 - `tests/modules/test-route-eligibility.test.js`
 - `tests/modules/test-run-all-process-group.test.js`
@@ -5480,7 +11343,11 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-shadow.test.js`
 - `tests/modules/test-shared-stream.js`
 - `tests/modules/test-sigma-compaction.js`
+- `tests/modules/test-site-profile.test.js`
+- `tests/modules/test-site-readers.test.js`
+- `tests/modules/test-site-settings-ui.test.js`
 - `tests/modules/test-snapshot-half-life-prune.js`
+- `tests/modules/test-snowflake.test.js`
 - `tests/modules/test-snr-filter.js`
 - `tests/modules/test-sovereign-systems.test.js`
 - `tests/modules/test-spatial-void.test.js`
@@ -5493,9 +11360,12 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-spec-workshop.test.js`
 - `tests/modules/test-sr11-import-pipeline.js`
 - `tests/modules/test-staging-s0-s1.test.js`
+- `tests/modules/test-starved-machine.test.js`
 - `tests/modules/test-step-gate.test.js`
+- `tests/modules/test-stream-fallback.test.js`
 - `tests/modules/test-stub-finder.js`
 - `tests/modules/test-stub-scanner.js`
+- `tests/modules/test-substrate-spec.test.js`
 - `tests/modules/test-sync-off-thread.test.js`
 - `tests/modules/test-synthesis-declared-value.test.js`
 - `tests/modules/test-synthesis-zoom-versionium.test.js`
@@ -5522,6 +11392,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-test-first.test.js`
 - `tests/modules/test-test-sandbox.test.js`
 - `tests/modules/test-tested-before-lands.test.js`
+- `tests/modules/test-tf-already-done.test.js`
 - `tests/modules/test-thread.test.js`
 - `tests/modules/test-three-graphs.test.mjs`
 - `tests/modules/test-tls-layer.test.js`
@@ -5536,6 +11407,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-ui-tools.js`
 - `tests/modules/test-undo-any-change.test.js`
 - `tests/modules/test-update-script.test.js`
+- `tests/modules/test-upload-placement.test.js`
 - `tests/modules/test-user-continuity.js`
 - `tests/modules/test-user-model-capture.js`
 - `tests/modules/test-user-model-editable.js`
@@ -5546,6 +11418,7 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-userscript-protocol-parity.js`
 - `tests/modules/test-vector-memory-embed-check.test.js`
 - `tests/modules/test-vector-memory-pipeline.js`
+- `tests/modules/test-verify-first.test.js`
 - `tests/modules/test-versionium-migration.js`
 - `tests/modules/test-versionium-repo-history.test.js`
 - `tests/modules/test-versionium-snapshot-migration.js`
@@ -5783,9 +11656,9 @@ Core is 2624 files in 48 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>the release notes · 364 files (each is in the version history below, in his words)</summary>
+<summary>the release notes · 437 files (each is in the version history below, in his words)</summary>
 
-`CHANGELOG-0.60.159.md` · `CHANGELOG-0.60.158.md` · `CHANGELOG-0.60.157.md` · `CHANGELOG-0.60.156.md` · `CHANGELOG-0.60.155.md` · `CHANGELOG-0.60.154.md` · `CHANGELOG-0.60.153.md` · `CHANGELOG-0.60.152.md` · `CHANGELOG-0.60.151.md` · `CHANGELOG-0.60.150.md` · `CHANGELOG-0.60.149.md` · `CHANGELOG-0.60.148.md` · `CHANGELOG-0.60.147.md` · `CHANGELOG-0.60.146.md` · `CHANGELOG-0.60.145.md` · `CHANGELOG-0.60.144.md` · `CHANGELOG-0.60.143.md` · `CHANGELOG-0.60.142.md` · `CHANGELOG-0.60.141.md` · `CHANGELOG-0.60.140.md` · `CHANGELOG-0.60.139.md` · `CHANGELOG-0.60.138.md` · `CHANGELOG-0.60.137.md` · `CHANGELOG-0.60.136.md` · `CHANGELOG-0.60.135.md` · `CHANGELOG-0.60.134.md` · `CHANGELOG-0.60.133.md` · `CHANGELOG-0.60.132.md` · `CHANGELOG-0.60.131.md` · `CHANGELOG-0.60.130.md` · `CHANGELOG-0.60.129.md` · `CHANGELOG-0.60.128.md` · `CHANGELOG-0.60.127.md` · `CHANGELOG-0.60.126.md` · `CHANGELOG-0.60.125.md` · `CHANGELOG-0.60.124.md` · `CHANGELOG-0.60.123.md` · `CHANGELOG-0.60.122.md` · `CHANGELOG-0.60.121.md` · `CHANGELOG-0.60.120.md` · `CHANGELOG-0.60.119.md` · `CHANGELOG-0.60.118.md` · `CHANGELOG-0.60.117.md` · `CHANGELOG-0.60.116.md` · `CHANGELOG-0.60.115.md` · `CHANGELOG-0.60.114.md` · `CHANGELOG-0.60.113.md` · `CHANGELOG-0.60.112.md` · `CHANGELOG-0.60.111.md` · `CHANGELOG-0.60.110.md` · `CHANGELOG-0.60.109.md` · `CHANGELOG-0.60.108.md` · `CHANGELOG-0.60.107.md` · `CHANGELOG-0.60.106.md` · `CHANGELOG-0.60.105.md` · `CHANGELOG-0.60.104.md` · `CHANGELOG-0.60.103.md` · `CHANGELOG-0.60.102.md` · `CHANGELOG-0.60.101.md` · `CHANGELOG-0.60.100.md` · `CHANGELOG-0.60.99.md` · `CHANGELOG-0.60.98.md` · `CHANGELOG-0.60.97.md` · `CHANGELOG-0.60.96.md` · `CHANGELOG-0.60.95.md` · `CHANGELOG-0.60.94.md` · `CHANGELOG-0.60.93.md` · `CHANGELOG-0.60.92.md` · `CHANGELOG-0.60.91.md` · `CHANGELOG-0.60.90.md` · `CHANGELOG-0.60.89.md` · `CHANGELOG-0.60.88.md` · `CHANGELOG-0.60.87.md` · `CHANGELOG-0.60.86.md` · `CHANGELOG-0.60.85.md` · `CHANGELOG-0.60.84.md` · `CHANGELOG-0.60.83.md` · `CHANGELOG-0.60.82.md` · `CHANGELOG-0.60.81.md` · `CHANGELOG-0.60.80.md` · `CHANGELOG-0.60.79.md` · `CHANGELOG-0.60.78.md` · `CHANGELOG-0.60.77.md` · `CHANGELOG-0.60.76.md` · `CHANGELOG-0.60.75.md` · `CHANGELOG-0.60.74.md` · `CHANGELOG-0.60.73.md` · `CHANGELOG-0.60.72.md` · `CHANGELOG-0.60.71.md` · `CHANGELOG-0.60.70.md` · `CHANGELOG-0.60.69.md` · `CHANGELOG-0.60.68.md` · `CHANGELOG-0.60.67.md` · `CHANGELOG-0.60.66.md` · `CHANGELOG-0.60.65.md` · `CHANGELOG-0.60.64.md` · `CHANGELOG-0.60.63.md` · `CHANGELOG-0.60.62.md` · `CHANGELOG-0.60.61.md` · `CHANGELOG-0.60.60.md` · `CHANGELOG-0.60.59.md` · `CHANGELOG-0.60.58.md` · `CHANGELOG-0.60.57.md` · `CHANGELOG-0.60.56.md` · `CHANGELOG-0.60.55.md` · `CHANGELOG-0.60.54.md` · `CHANGELOG-0.60.53.md` · `CHANGELOG-0.60.52.md` · `CHANGELOG-0.60.51.md` · `CHANGELOG-0.60.50.md` · `CHANGELOG-0.60.49.md` · `CHANGELOG-0.60.48.md` · `CHANGELOG-0.60.47.md` · `CHANGELOG-0.60.46.md` · `CHANGELOG-0.60.45.md` · `CHANGELOG-0.60.44.md` · `CHANGELOG-0.60.43.md` · `CHANGELOG-0.60.42.md` · `CHANGELOG-0.60.41.md` · `CHANGELOG-0.60.40.md` · `CHANGELOG-0.60.39.md` · `CHANGELOG-0.60.38.md` · `CHANGELOG-0.60.37.md` · `CHANGELOG-0.60.36.md` · `CHANGELOG-0.60.35.md` · `CHANGELOG-0.60.34.md` · `CHANGELOG-0.60.33.md` · `CHANGELOG-0.60.32.md` · `CHANGELOG-0.60.31.md` · `CHANGELOG-0.60.30.md` · `CHANGELOG-0.60.29.md` · `CHANGELOG-0.60.28.md` · `CHANGELOG-0.60.27.md` · `CHANGELOG-0.60.26.md` · `CHANGELOG-0.60.21.md` · `CHANGELOG-0.60.20.md` · `CHANGELOG-0.60.19.md` · `CHANGELOG-0.60.18.md` · `CHANGELOG-0.60.17.md` · `CHANGELOG-0.60.16.md` · `CHANGELOG-0.60.15.md` · `CHANGELOG-0.60.14.md` · `CHANGELOG-0.60.13.md` · `CHANGELOG-0.60.12.md` · `CHANGELOG-0.60.11.md` · `CHANGELOG-0.60.10.md` · `CHANGELOG-0.60.9.md` · `CHANGELOG-0.60.8.md` · `CHANGELOG-0.60.7.md` · `CHANGELOG-0.60.6.md` · `CHANGELOG-0.60.5.md` · `CHANGELOG-0.60.4.md` · `CHANGELOG-0.60.3.md` · `CHANGELOG-0.60.2.md` · `CHANGELOG-0.60.1.md` · `CHANGELOG-0.60.0.md` · `CHANGELOG-0.59.15.md` · `CHANGELOG-0.59.14.md` · `CHANGELOG-0.59.13.md` · `CHANGELOG-0.59.12.md` · `CHANGELOG-0.59.11.md` · `CHANGELOG-0.59.10.md` · `CHANGELOG-0.59.9.md` · `CHANGELOG-0.59.8.md` · `CHANGELOG-0.59.7.md` · `CHANGELOG-0.59.6.md` · `CHANGELOG-0.59.5.md` · `CHANGELOG-0.59.4.md` · `CHANGELOG-0.59.3.md` · `CHANGELOG-0.59.2.md` · `CHANGELOG-0.59.1.md` · `CHANGELOG-0.59.0.md` · `CHANGELOG-0.58.0.md` · `CHANGELOG-0.57.1.md` · `CHANGELOG-0.57.0.md` · `CHANGELOG-0.56.0.md` · `CHANGELOG-0.55.2.md` · `CHANGELOG-0.55.1.md` · `CHANGELOG-0.55.0.md` · `CHANGELOG-0.54.2.md` · `CHANGELOG-0.54.1.md` · `CHANGELOG-0.54.0.md` · `CHANGELOG-0.53.0.md` · `CHANGELOG-0.52.0.md` · `CHANGELOG-0.51.0.md` · `CHANGELOG-0.50.0.md` · `CHANGELOG-0.49.0.md` · `CHANGELOG-0.48.0.md` · `CHANGELOG-0.47.0.md` · `CHANGELOG-0.46.0.md` · `CHANGELOG-0.45.0.md` · `CHANGELOG-0.44.0.md` · `CHANGELOG-0.43.0.md` · `CHANGELOG-0.42.0.md` · `CHANGELOG-0.41.0.md` · `CHANGELOG-0.40.1.md` · `CHANGELOG-0.40.0.md` · `CHANGELOG-0.39.376.md` · `CHANGELOG-0.39.375.md` · `CHANGELOG-0.39.374.md` · `CHANGELOG-0.39.373.md` · `CHANGELOG-0.39.372.md` · `CHANGELOG-0.39.371.md` · `CHANGELOG-0.39.370.md` · `CHANGELOG-0.39.369.md` · `CHANGELOG-0.39.368.md` · `CHANGELOG-0.39.367.md` · `CHANGELOG-0.39.366.md` · `CHANGELOG-0.39.365.md` · `CHANGELOG-0.39.364.md` · `CHANGELOG-0.39.363.md` · `CHANGELOG-0.39.362.md` · `CHANGELOG-0.39.361.md` · `CHANGELOG-0.39.360.md` · `CHANGELOG-0.39.359.md` · `CHANGELOG-0.39.358.md` · `CHANGELOG-0.39.357.md` · `CHANGELOG-0.39.356.md` · `CHANGELOG-0.39.355.md` · `CHANGELOG-0.39.354.md` · `CHANGELOG-0.39.353.md` · `CHANGELOG-0.39.352.md` · `CHANGELOG-0.39.351.md` · `CHANGELOG-0.39.350.md` · `CHANGELOG-0.39.349.md` · `CHANGELOG-0.39.348.md` · `CHANGELOG-0.39.347.md` · `CHANGELOG-0.39.346.md` · `CHANGELOG-0.39.345.md` · `CHANGELOG-0.39.344.md` · `CHANGELOG-0.39.343.md` · `CHANGELOG-0.39.342.md` · `CHANGELOG-0.39.341.md` · `CHANGELOG-0.39.340.md` · `CHANGELOG-0.39.339.md` · `CHANGELOG-0.39.338.md` · `CHANGELOG-0.39.337.md` · `CHANGELOG-0.39.336.md` · `CHANGELOG-0.39.335.md` · `CHANGELOG-0.39.334.md` · `CHANGELOG-0.39.333.md` · `CHANGELOG-0.39.332.md` · `CHANGELOG-0.39.331.md` · `CHANGELOG-0.39.330.md` · `CHANGELOG-0.39.329.md` · `CHANGELOG-0.39.328.md` · `CHANGELOG-0.39.327.md` · `CHANGELOG-0.39.326.md` · `CHANGELOG-0.39.325.md` · `CHANGELOG-0.39.324.md` · `CHANGELOG-0.39.323.md` · `CHANGELOG-0.39.322.md` · `CHANGELOG-0.39.321.md` · `CHANGELOG-0.39.320.md` · `CHANGELOG-0.39.319.md` · `CHANGELOG-0.39.318.md` · `CHANGELOG-0.39.317.md` · `CHANGELOG-0.39.316.md` · `CHANGELOG-0.39.315.md` · `CHANGELOG-0.39.314.md` · `CHANGELOG-0.39.313.md` · `CHANGELOG-0.39.312.md` · `CHANGELOG-0.39.311.md` · `CHANGELOG-0.39.310.md` · `CHANGELOG-0.39.309.md` · `CHANGELOG-0.39.308.md` · `CHANGELOG-0.39.307.md` · `CHANGELOG-0.39.306.md` · `CHANGELOG-0.39.305.md` · `CHANGELOG-0.39.304.md` · `CHANGELOG-0.39.303.md` · `CHANGELOG-0.39.302.md` · `CHANGELOG-0.39.301.md` · `CHANGELOG-0.39.300.md` · `CHANGELOG-0.39.299.md` · `CHANGELOG-0.39.298.md` · `CHANGELOG-0.39.297.md` · `CHANGELOG-0.39.296.md` · `CHANGELOG-0.39.295.md` · `CHANGELOG-0.39.294.md` · `CHANGELOG-0.39.293.md` · `CHANGELOG-0.39.292.md` · `CHANGELOG-0.39.291.md` · `CHANGELOG-0.39.290.md` · `CHANGELOG-0.39.289.md` · `CHANGELOG-0.39.288.md` · `CHANGELOG-0.39.287.md` · `CHANGELOG-0.39.286.md` · `CHANGELOG-0.39.285.md` · `CHANGELOG-0.39.284.md` · `CHANGELOG-0.39.283.md` · `CHANGELOG-0.39.282.md` · `CHANGELOG-0.39.281.md` · `CHANGELOG-0.39.280.md` · `CHANGELOG-0.39.279.md` · `CHANGELOG-0.39.278.md` · `CHANGELOG-0.39.277.md` · `CHANGELOG-0.39.276.md` · `CHANGELOG-0.39.275.md` · `CHANGELOG-0.39.274.md` · `CHANGELOG-0.39.273.md` · `CHANGELOG-0.39.272.md` · `CHANGELOG-0.39.271.md` · `CHANGELOG-0.39.270.md` · `CHANGELOG-0.39.269.md` · `CHANGELOG-0.39.268.md` · `CHANGELOG-0.39.267.md` · `CHANGELOG-0.39.266.md` · `CHANGELOG-0.39.264.md` · `CHANGELOG-0.39.263.md` · `CHANGELOG-0.39.262.md` · `CHANGELOG-0.39.261.md` · `CHANGELOG-0.39.260.md` · `CHANGELOG-0.39.259.md` · `CHANGELOG-0.39.258.md` · `CHANGELOG-0.39.257.md` · `CHANGELOG-0.39.256.md` · `CHANGELOG-0.39.255.md` · `CHANGELOG-0.39.254.md` · `CHANGELOG-0.39.253.md` · `CHANGELOG-0.39.252.md` · `CHANGELOG-0.39.251.md` · `CHANGELOG-0.39.250.md` · `CHANGELOG-0.39.249.md` · `CHANGELOG-0.39.248.md` · `CHANGELOG-0.39.247.md` · `CHANGELOG-0.39.246.md` · `CHANGELOG-0.39.245.md` · `CHANGELOG-0.39.244.md` · `CHANGELOG-0.39.243.md` · `CHANGELOG-0.39.242.md` · `CHANGELOG-0.39.241.md` · `CHANGELOG-0.39.240.md` · `CHANGELOG-0.39.239.md` · `CHANGELOG-0.39.238.md` · `CHANGELOG-0.39.237.md` · `CHANGELOG-0.39.236.md` · `CHANGELOG-0.39.228.md` · `CHANGELOG-0.39.227.md` · `CHANGELOG-0.39.223.md` · `CHANGELOG-0.39.194.md` · `CHANGELOG-0.39.193.md` · `CHANGELOG-0.39.192.md` · `CHANGELOG-0.39.191.md` · `CHANGELOG-0.39.190.md` · `CHANGELOG-0.39.188.md` · `CHANGELOG-0.39.182.md` · `CHANGELOG-0.39.181.md` · `CHANGELOG-0.39.179.md` · `CHANGELOG-0.39.178.md` · `CHANGELOG-0.39.177.md` · `CHANGELOG-0.39.176.md` · `CHANGELOG-0.39.175.md` · `CHANGELOG-0.39.174.md` · `CHANGELOG-0.39.173.md` · `CHANGELOG-0.39.172.md` · `CHANGELOG-0.39.170.md` · `CHANGELOG-0.39.169.md` · `CHANGELOG-0.39.168.md` · `CHANGELOG-0.39.167.md` · `CHANGELOG-0.39.166.md` · `CHANGELOG-0.39.165.md` · `CHANGELOG-0.39.144.md` · `CHANGELOG-0.39.144-part2.md`
+`CHANGELOG-0.60.233.md` · `CHANGELOG-0.60.232.md` · `CHANGELOG-0.60.231.md` · `CHANGELOG-0.60.230.md` · `CHANGELOG-0.60.229.md` · `CHANGELOG-0.60.228.md` · `CHANGELOG-0.60.227.md` · `CHANGELOG-0.60.226.md` · `CHANGELOG-0.60.225.md` · `CHANGELOG-0.60.224.md` · `CHANGELOG-0.60.223.md` · `CHANGELOG-0.60.222.md` · `CHANGELOG-0.60.221.md` · `CHANGELOG-0.60.220.md` · `CHANGELOG-0.60.219.md` · `CHANGELOG-0.60.218.md` · `CHANGELOG-0.60.217.md` · `CHANGELOG-0.60.216.md` · `CHANGELOG-0.60.215.md` · `CHANGELOG-0.60.214.md` · `CHANGELOG-0.60.213.md` · `CHANGELOG-0.60.212.md` · `CHANGELOG-0.60.211.md` · `CHANGELOG-0.60.210.md` · `CHANGELOG-0.60.209.md` · `CHANGELOG-0.60.208.md` · `CHANGELOG-0.60.207.md` · `CHANGELOG-0.60.206.md` · `CHANGELOG-0.60.205.md` · `CHANGELOG-0.60.204.md` · `CHANGELOG-0.60.203.md` · `CHANGELOG-0.60.202.md` · `CHANGELOG-0.60.201.md` · `CHANGELOG-0.60.200.md` · `CHANGELOG-0.60.199.md` · `CHANGELOG-0.60.198.md` · `CHANGELOG-0.60.197.md` · `CHANGELOG-0.60.196.md` · `CHANGELOG-0.60.195.md` · `CHANGELOG-0.60.194.md` · `CHANGELOG-0.60.193.md` · `CHANGELOG-0.60.192.md` · `CHANGELOG-0.60.191.md` · `CHANGELOG-0.60.190.md` · `CHANGELOG-0.60.189.md` · `CHANGELOG-0.60.188.md` · `CHANGELOG-0.60.187.md` · `CHANGELOG-0.60.186.md` · `CHANGELOG-0.60.185.md` · `CHANGELOG-0.60.184.md` · `CHANGELOG-0.60.183.md` · `CHANGELOG-0.60.182.md` · `CHANGELOG-0.60.181.md` · `CHANGELOG-0.60.180.md` · `CHANGELOG-0.60.179.md` · `CHANGELOG-0.60.178.md` · `CHANGELOG-0.60.177.md` · `CHANGELOG-0.60.176.md` · `CHANGELOG-0.60.175.md` · `CHANGELOG-0.60.174.md` · `CHANGELOG-0.60.173.md` · `CHANGELOG-0.60.172.md` · `CHANGELOG-0.60.171.md` · `CHANGELOG-0.60.170.md` · `CHANGELOG-0.60.168.md` · `CHANGELOG-0.60.167.md` · `CHANGELOG-0.60.166.md` · `CHANGELOG-0.60.165.md` · `CHANGELOG-0.60.164.md` · `CHANGELOG-0.60.163.md` · `CHANGELOG-0.60.162.md` · `CHANGELOG-0.60.161.md` · `CHANGELOG-0.60.160.md` · `CHANGELOG-0.60.159.md` · `CHANGELOG-0.60.158.md` · `CHANGELOG-0.60.157.md` · `CHANGELOG-0.60.156.md` · `CHANGELOG-0.60.155.md` · `CHANGELOG-0.60.154.md` · `CHANGELOG-0.60.153.md` · `CHANGELOG-0.60.152.md` · `CHANGELOG-0.60.151.md` · `CHANGELOG-0.60.150.md` · `CHANGELOG-0.60.149.md` · `CHANGELOG-0.60.148.md` · `CHANGELOG-0.60.147.md` · `CHANGELOG-0.60.146.md` · `CHANGELOG-0.60.145.md` · `CHANGELOG-0.60.144.md` · `CHANGELOG-0.60.143.md` · `CHANGELOG-0.60.142.md` · `CHANGELOG-0.60.141.md` · `CHANGELOG-0.60.140.md` · `CHANGELOG-0.60.139.md` · `CHANGELOG-0.60.138.md` · `CHANGELOG-0.60.137.md` · `CHANGELOG-0.60.136.md` · `CHANGELOG-0.60.135.md` · `CHANGELOG-0.60.134.md` · `CHANGELOG-0.60.133.md` · `CHANGELOG-0.60.132.md` · `CHANGELOG-0.60.131.md` · `CHANGELOG-0.60.130.md` · `CHANGELOG-0.60.129.md` · `CHANGELOG-0.60.128.md` · `CHANGELOG-0.60.127.md` · `CHANGELOG-0.60.126.md` · `CHANGELOG-0.60.125.md` · `CHANGELOG-0.60.124.md` · `CHANGELOG-0.60.123.md` · `CHANGELOG-0.60.122.md` · `CHANGELOG-0.60.121.md` · `CHANGELOG-0.60.120.md` · `CHANGELOG-0.60.119.md` · `CHANGELOG-0.60.118.md` · `CHANGELOG-0.60.117.md` · `CHANGELOG-0.60.116.md` · `CHANGELOG-0.60.115.md` · `CHANGELOG-0.60.114.md` · `CHANGELOG-0.60.113.md` · `CHANGELOG-0.60.112.md` · `CHANGELOG-0.60.111.md` · `CHANGELOG-0.60.110.md` · `CHANGELOG-0.60.109.md` · `CHANGELOG-0.60.108.md` · `CHANGELOG-0.60.107.md` · `CHANGELOG-0.60.106.md` · `CHANGELOG-0.60.105.md` · `CHANGELOG-0.60.104.md` · `CHANGELOG-0.60.103.md` · `CHANGELOG-0.60.102.md` · `CHANGELOG-0.60.101.md` · `CHANGELOG-0.60.100.md` · `CHANGELOG-0.60.99.md` · `CHANGELOG-0.60.98.md` · `CHANGELOG-0.60.97.md` · `CHANGELOG-0.60.96.md` · `CHANGELOG-0.60.95.md` · `CHANGELOG-0.60.94.md` · `CHANGELOG-0.60.93.md` · `CHANGELOG-0.60.92.md` · `CHANGELOG-0.60.91.md` · `CHANGELOG-0.60.90.md` · `CHANGELOG-0.60.89.md` · `CHANGELOG-0.60.88.md` · `CHANGELOG-0.60.87.md` · `CHANGELOG-0.60.86.md` · `CHANGELOG-0.60.85.md` · `CHANGELOG-0.60.84.md` · `CHANGELOG-0.60.83.md` · `CHANGELOG-0.60.82.md` · `CHANGELOG-0.60.81.md` · `CHANGELOG-0.60.80.md` · `CHANGELOG-0.60.79.md` · `CHANGELOG-0.60.78.md` · `CHANGELOG-0.60.77.md` · `CHANGELOG-0.60.76.md` · `CHANGELOG-0.60.75.md` · `CHANGELOG-0.60.74.md` · `CHANGELOG-0.60.73.md` · `CHANGELOG-0.60.72.md` · `CHANGELOG-0.60.71.md` · `CHANGELOG-0.60.70.md` · `CHANGELOG-0.60.69.md` · `CHANGELOG-0.60.68.md` · `CHANGELOG-0.60.67.md` · `CHANGELOG-0.60.66.md` · `CHANGELOG-0.60.65.md` · `CHANGELOG-0.60.64.md` · `CHANGELOG-0.60.63.md` · `CHANGELOG-0.60.62.md` · `CHANGELOG-0.60.61.md` · `CHANGELOG-0.60.60.md` · `CHANGELOG-0.60.59.md` · `CHANGELOG-0.60.58.md` · `CHANGELOG-0.60.57.md` · `CHANGELOG-0.60.56.md` · `CHANGELOG-0.60.55.md` · `CHANGELOG-0.60.54.md` · `CHANGELOG-0.60.53.md` · `CHANGELOG-0.60.52.md` · `CHANGELOG-0.60.51.md` · `CHANGELOG-0.60.50.md` · `CHANGELOG-0.60.49.md` · `CHANGELOG-0.60.48.md` · `CHANGELOG-0.60.47.md` · `CHANGELOG-0.60.46.md` · `CHANGELOG-0.60.45.md` · `CHANGELOG-0.60.44.md` · `CHANGELOG-0.60.43.md` · `CHANGELOG-0.60.42.md` · `CHANGELOG-0.60.41.md` · `CHANGELOG-0.60.40.md` · `CHANGELOG-0.60.39.md` · `CHANGELOG-0.60.38.md` · `CHANGELOG-0.60.37.md` · `CHANGELOG-0.60.36.md` · `CHANGELOG-0.60.35.md` · `CHANGELOG-0.60.34.md` · `CHANGELOG-0.60.33.md` · `CHANGELOG-0.60.32.md` · `CHANGELOG-0.60.31.md` · `CHANGELOG-0.60.30.md` · `CHANGELOG-0.60.29.md` · `CHANGELOG-0.60.28.md` · `CHANGELOG-0.60.27.md` · `CHANGELOG-0.60.26.md` · `CHANGELOG-0.60.21.md` · `CHANGELOG-0.60.20.md` · `CHANGELOG-0.60.19.md` · `CHANGELOG-0.60.18.md` · `CHANGELOG-0.60.17.md` · `CHANGELOG-0.60.16.md` · `CHANGELOG-0.60.15.md` · `CHANGELOG-0.60.14.md` · `CHANGELOG-0.60.13.md` · `CHANGELOG-0.60.12.md` · `CHANGELOG-0.60.11.md` · `CHANGELOG-0.60.10.md` · `CHANGELOG-0.60.9.md` · `CHANGELOG-0.60.8.md` · `CHANGELOG-0.60.7.md` · `CHANGELOG-0.60.6.md` · `CHANGELOG-0.60.5.md` · `CHANGELOG-0.60.4.md` · `CHANGELOG-0.60.3.md` · `CHANGELOG-0.60.2.md` · `CHANGELOG-0.60.1.md` · `CHANGELOG-0.60.0.md` · `CHANGELOG-0.59.15.md` · `CHANGELOG-0.59.14.md` · `CHANGELOG-0.59.13.md` · `CHANGELOG-0.59.12.md` · `CHANGELOG-0.59.11.md` · `CHANGELOG-0.59.10.md` · `CHANGELOG-0.59.9.md` · `CHANGELOG-0.59.8.md` · `CHANGELOG-0.59.7.md` · `CHANGELOG-0.59.6.md` · `CHANGELOG-0.59.5.md` · `CHANGELOG-0.59.4.md` · `CHANGELOG-0.59.3.md` · `CHANGELOG-0.59.2.md` · `CHANGELOG-0.59.1.md` · `CHANGELOG-0.59.0.md` · `CHANGELOG-0.58.0.md` · `CHANGELOG-0.57.1.md` · `CHANGELOG-0.57.0.md` · `CHANGELOG-0.56.0.md` · `CHANGELOG-0.55.2.md` · `CHANGELOG-0.55.1.md` · `CHANGELOG-0.55.0.md` · `CHANGELOG-0.54.2.md` · `CHANGELOG-0.54.1.md` · `CHANGELOG-0.54.0.md` · `CHANGELOG-0.53.0.md` · `CHANGELOG-0.52.0.md` · `CHANGELOG-0.51.0.md` · `CHANGELOG-0.50.0.md` · `CHANGELOG-0.49.0.md` · `CHANGELOG-0.48.0.md` · `CHANGELOG-0.47.0.md` · `CHANGELOG-0.46.0.md` · `CHANGELOG-0.45.0.md` · `CHANGELOG-0.44.0.md` · `CHANGELOG-0.43.0.md` · `CHANGELOG-0.42.0.md` · `CHANGELOG-0.41.0.md` · `CHANGELOG-0.40.1.md` · `CHANGELOG-0.40.0.md` · `CHANGELOG-0.39.376.md` · `CHANGELOG-0.39.375.md` · `CHANGELOG-0.39.374.md` · `CHANGELOG-0.39.373.md` · `CHANGELOG-0.39.372.md` · `CHANGELOG-0.39.371.md` · `CHANGELOG-0.39.370.md` · `CHANGELOG-0.39.369.md` · `CHANGELOG-0.39.368.md` · `CHANGELOG-0.39.367.md` · `CHANGELOG-0.39.366.md` · `CHANGELOG-0.39.365.md` · `CHANGELOG-0.39.364.md` · `CHANGELOG-0.39.363.md` · `CHANGELOG-0.39.362.md` · `CHANGELOG-0.39.361.md` · `CHANGELOG-0.39.360.md` · `CHANGELOG-0.39.359.md` · `CHANGELOG-0.39.358.md` · `CHANGELOG-0.39.357.md` · `CHANGELOG-0.39.356.md` · `CHANGELOG-0.39.355.md` · `CHANGELOG-0.39.354.md` · `CHANGELOG-0.39.353.md` · `CHANGELOG-0.39.352.md` · `CHANGELOG-0.39.351.md` · `CHANGELOG-0.39.350.md` · `CHANGELOG-0.39.349.md` · `CHANGELOG-0.39.348.md` · `CHANGELOG-0.39.347.md` · `CHANGELOG-0.39.346.md` · `CHANGELOG-0.39.345.md` · `CHANGELOG-0.39.344.md` · `CHANGELOG-0.39.343.md` · `CHANGELOG-0.39.342.md` · `CHANGELOG-0.39.341.md` · `CHANGELOG-0.39.340.md` · `CHANGELOG-0.39.339.md` · `CHANGELOG-0.39.338.md` · `CHANGELOG-0.39.337.md` · `CHANGELOG-0.39.336.md` · `CHANGELOG-0.39.335.md` · `CHANGELOG-0.39.334.md` · `CHANGELOG-0.39.333.md` · `CHANGELOG-0.39.332.md` · `CHANGELOG-0.39.331.md` · `CHANGELOG-0.39.330.md` · `CHANGELOG-0.39.329.md` · `CHANGELOG-0.39.328.md` · `CHANGELOG-0.39.327.md` · `CHANGELOG-0.39.326.md` · `CHANGELOG-0.39.325.md` · `CHANGELOG-0.39.324.md` · `CHANGELOG-0.39.323.md` · `CHANGELOG-0.39.322.md` · `CHANGELOG-0.39.321.md` · `CHANGELOG-0.39.320.md` · `CHANGELOG-0.39.319.md` · `CHANGELOG-0.39.318.md` · `CHANGELOG-0.39.317.md` · `CHANGELOG-0.39.316.md` · `CHANGELOG-0.39.315.md` · `CHANGELOG-0.39.314.md` · `CHANGELOG-0.39.313.md` · `CHANGELOG-0.39.312.md` · `CHANGELOG-0.39.311.md` · `CHANGELOG-0.39.310.md` · `CHANGELOG-0.39.309.md` · `CHANGELOG-0.39.308.md` · `CHANGELOG-0.39.307.md` · `CHANGELOG-0.39.306.md` · `CHANGELOG-0.39.305.md` · `CHANGELOG-0.39.304.md` · `CHANGELOG-0.39.303.md` · `CHANGELOG-0.39.302.md` · `CHANGELOG-0.39.301.md` · `CHANGELOG-0.39.300.md` · `CHANGELOG-0.39.299.md` · `CHANGELOG-0.39.298.md` · `CHANGELOG-0.39.297.md` · `CHANGELOG-0.39.296.md` · `CHANGELOG-0.39.295.md` · `CHANGELOG-0.39.294.md` · `CHANGELOG-0.39.293.md` · `CHANGELOG-0.39.292.md` · `CHANGELOG-0.39.291.md` · `CHANGELOG-0.39.290.md` · `CHANGELOG-0.39.289.md` · `CHANGELOG-0.39.288.md` · `CHANGELOG-0.39.287.md` · `CHANGELOG-0.39.286.md` · `CHANGELOG-0.39.285.md` · `CHANGELOG-0.39.284.md` · `CHANGELOG-0.39.283.md` · `CHANGELOG-0.39.282.md` · `CHANGELOG-0.39.281.md` · `CHANGELOG-0.39.280.md` · `CHANGELOG-0.39.279.md` · `CHANGELOG-0.39.278.md` · `CHANGELOG-0.39.277.md` · `CHANGELOG-0.39.276.md` · `CHANGELOG-0.39.275.md` · `CHANGELOG-0.39.274.md` · `CHANGELOG-0.39.273.md` · `CHANGELOG-0.39.272.md` · `CHANGELOG-0.39.271.md` · `CHANGELOG-0.39.270.md` · `CHANGELOG-0.39.269.md` · `CHANGELOG-0.39.268.md` · `CHANGELOG-0.39.267.md` · `CHANGELOG-0.39.266.md` · `CHANGELOG-0.39.264.md` · `CHANGELOG-0.39.263.md` · `CHANGELOG-0.39.262.md` · `CHANGELOG-0.39.261.md` · `CHANGELOG-0.39.260.md` · `CHANGELOG-0.39.259.md` · `CHANGELOG-0.39.258.md` · `CHANGELOG-0.39.257.md` · `CHANGELOG-0.39.256.md` · `CHANGELOG-0.39.255.md` · `CHANGELOG-0.39.254.md` · `CHANGELOG-0.39.253.md` · `CHANGELOG-0.39.252.md` · `CHANGELOG-0.39.251.md` · `CHANGELOG-0.39.250.md` · `CHANGELOG-0.39.249.md` · `CHANGELOG-0.39.248.md` · `CHANGELOG-0.39.247.md` · `CHANGELOG-0.39.246.md` · `CHANGELOG-0.39.245.md` · `CHANGELOG-0.39.244.md` · `CHANGELOG-0.39.243.md` · `CHANGELOG-0.39.242.md` · `CHANGELOG-0.39.241.md` · `CHANGELOG-0.39.240.md` · `CHANGELOG-0.39.239.md` · `CHANGELOG-0.39.238.md` · `CHANGELOG-0.39.237.md` · `CHANGELOG-0.39.236.md` · `CHANGELOG-0.39.228.md` · `CHANGELOG-0.39.227.md` · `CHANGELOG-0.39.223.md` · `CHANGELOG-0.39.194.md` · `CHANGELOG-0.39.193.md` · `CHANGELOG-0.39.192.md` · `CHANGELOG-0.39.191.md` · `CHANGELOG-0.39.190.md` · `CHANGELOG-0.39.188.md` · `CHANGELOG-0.39.182.md` · `CHANGELOG-0.39.181.md` · `CHANGELOG-0.39.179.md` · `CHANGELOG-0.39.178.md` · `CHANGELOG-0.39.177.md` · `CHANGELOG-0.39.176.md` · `CHANGELOG-0.39.175.md` · `CHANGELOG-0.39.174.md` · `CHANGELOG-0.39.173.md` · `CHANGELOG-0.39.172.md` · `CHANGELOG-0.39.170.md` · `CHANGELOG-0.39.169.md` · `CHANGELOG-0.39.168.md` · `CHANGELOG-0.39.167.md` · `CHANGELOG-0.39.166.md` · `CHANGELOG-0.39.165.md` · `CHANGELOG-0.39.144.md` · `CHANGELOG-0.39.144-part2.md`
 
 </details>
 
@@ -5917,7 +11790,7 @@ Everything below is written by `lib/readme-generate.js` from the tree as it is a
 
 ### Every phase
 
-Every phase of every phasemap, 1698 phases across 137 maps, read by the one phasemap parser loom uses (`loom/scanners/phasemap-map.js`). 677 are done, 10 in progress and 1011 pending. A decision (a question for James, or one his axioms decided) is marked as one. The maps are newest first; each opens to its phases, each phase with its status and what it does. The map itself, with the reasons and the proof, is the file named.
+Every phase of every phasemap, 2066 phases across 159 maps, read by the one phasemap parser loom uses (`loom/scanners/phasemap-map.js`). 841 are done, 11 in progress and 1214 pending. A decision (a question for James, or one his axioms decided) is marked as one. The maps are newest first; each opens to its phases, each phase with its status and what it does. The map itself, with the reasons and the proof, is the file named.
 
 <details>
 <summary>`docs/snapshot-trigger-phasemap.spec` · 2 · 0 done, 0 in progress, 2 pending</summary>
@@ -6026,11 +11899,11 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/nexus-repository-system-build-phasemap.spec` · 8 · 4 done, 0 in progress, 4 pending</summary>
+<summary>`docs/nexus-repository-system-build-phasemap.spec` · 8 · 3 done, 0 in progress, 5 pending</summary>
 
 - **MCO0_audit_real_coverage** · done
 - **MCO1_graph_layer** · done
-- **MCO2_verification_deepening** · done
+- **MCO2_verification_deepening** · pending
 - **MCO3_snapshot_compliance** · done
 - **MCO4_hooks_wires_flows_tools** · pending
 - **MCO5_git_integration_credentials** · pending
@@ -6299,6 +12172,396 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
+<summary>`docs/2026-10-23-site-profile-processes-phasemap.spec` · 6 · 6 done, 0 in progress, 0 pending</summary>
+
+- **SP1_one_resolver_for_every_feature** · done
+- **SP2_each_feature_reads_its_site_value** · done
+- **SP3_the_site_settings_screen** · done
+- **SP4_cleardriver_mesh_guardian_settings** · done
+- **SP5_processes_and_activity** · done
+- **SP6_the_processes_screen** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-23-self-building-loop-phasemap.spec` · 11 · 7 done, 0 in progress, 4 pending</summary>
+
+- **SL0_what_can_be_built_now** · done
+- **SL1_a_proven_phase_closes_itself** · done
+- **SL2_done_by_evidence** · done
+- **SL3_the_backlog_groomed** · done
+- **SL4_the_loop** · pending
+- **SL5_when_a_proven_change_lands_alone** · pending
+- **SL6_the_loop_counts_itself** · pending
+- **SL7_build_again_is_asked_for** · done
+- **SL8_the_agent_maps_what_nexus_cannot** · done
+- **SL9_every_phase_a_node** · done
+- **SL10_the_pipeline_simulated** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-23-cos-spine-phasemap.spec` · 12 · 0 done, 0 in progress, 12 pending</summary>
+
+- **CS1_a_version_is_a_system_state** · pending
+- **CS2_test_every_version** · pending
+- **CS3_the_registry_is_the_bridge** · pending
+- **CS4_every_system_a_compartment** · pending
+- **CS4a_cos_boots_alone** · pending
+- **CS5_caps_per_compartment** · pending
+- **CS6_rebuild_from_the_spec** · pending
+- **CS7_spawn_despawn_and_balance** · pending
+- **CS9_every_project_a_compartment** · pending
+- **CS10_hats_bound_to_the_compartment** · pending
+- **CS11_raid_in_the_exe** · pending
+- **CS8_the_cos_screen** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-22-system-node-db-phasemap.spec` · 6 · 0 done, 0 in progress, 6 pending</summary>
+
+- **ND1_every_system_has_its_database** · pending
+- **ND2_one_node_route_for_every_system** · pending
+- **ND3_each_server_serves_its_nodes** · pending
+- **ND4_commands_and_capabilities_from_the_schemas** · pending
+- **ND5_every_agent_reaches_every_system** · pending
+- **ND6_the_nodes_screen** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-21-snowflake-compartment-phasemap.spec` · 9 · 9 done, 0 in progress, 0 pending</summary>
+
+- **SF2_bridge_sources** · done
+- **SF1_honest_detection** · done
+- **SF4_https_only** · done
+- **SF3_page_in_the_compartment** · done
+- **SF5_circuit_check** · done
+- **SF6_surface** · done
+- **SF7_bridge_automatic** · done
+- **SF8_host_import** · done
+- **SF9_install_in_use** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-21-passwords-phasemap.spec` · 5 · 5 done, 0 in progress, 0 pending</summary>
+
+- **PW0_where_passwords_live** · decision · done
+- **PW1_service** · done
+- **PW2_page** · done
+- **PW3_wiring** · done
+- **PW4_surface** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-21-data-layout-phasemap.spec` · 8 · 3 done, 1 in progress, 4 pending</summary>
+
+- **DL0_data_census** · done
+- **DL1_clearup_tool** · done
+- **DL2_one_resolver** · done
+- **DL3_rewire_writers** · in-progress
+- **DL4_one_repo_folder** · pending
+- **DL5_memory_in_cortex** · pending
+- **DL6_cortex_server** · pending
+- **DL7_cortex_snapshot_out** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-21-compartment-downloads-phasemap.spec` · 7 · 7 done, 0 in progress, 0 pending</summary>
+
+- **CD0_magnet_client** · decision · done
+- **CD0_kill_default** · decision · done
+- **CD1_magnet_parse** · done
+- **CD2_quarantine_downloads** · done
+- **CD3_verified_handoff** · done
+- **CD4_kill_on_disconnect** · done
+- **CD5_surface** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-21-browser-shell-phasemap.spec` · 21 · 21 done, 0 in progress, 0 pending</summary>
+
+- **BS0_cookie_target** · decision · done
+- **BS1_firefox_import** · done
+- **BS2_shell_rebuild** · done
+- **BS3_menus** · done
+- **BS4_extensions** · done
+- **BS5_downloads_panel** · done
+- **BS6_float_cli** · done
+- **BS7_surface** · done
+- **BS8_design_system** · done
+- **BS9_agents_hub** · done
+- **BS10_new_tab** · done
+- **BS11_copilot_pane** · done
+- **BS12_context_automatic** · done
+- **BS13_plugin_settings** · done
+- **BS14_zoom_core** · done
+- **BS15_context_menu** · done
+- **BS16_import_fields** · done
+- **BS17_menu_consolidated** · done
+- **BS18_chrome_context_menus** · done
+- **BS19_ctx_point_from_page** · done
+- **BS20_bookmark_site_accounts** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-21-brainos-into-idearium-phasemap.spec` · 16 · 6 done, 0 in progress, 10 pending</summary>
+
+- **BX0a_where_it_lands** · decision · done
+- **BX0b_retire_brainos_page** · decision · done
+- **BX0c_float** · decision · done
+- **BX0d_order_against_the_pipeline** · decision · done
+- **BX0e_true_map_first** · decision · done
+- **BX1_census** · pending
+- **CNS1_phase_census** · done
+- **BX2_flow_sources** · pending
+- **BX3_flow_canvas** · pending
+- **BX4_agents_layer** · pending
+- **BX5_node_controls** · pending
+- **BX6_pipeline_edit** · pending
+- **BX7_automation** · pending
+- **BX8_dock_panels** · pending
+- **BX9_retire** · pending
+- **BX10_float** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-21-approval-chain-phasemap.spec` · 6 · 6 done, 0 in progress, 0 pending</summary>
+
+- **APV0_one_record** · decision · done
+- **APV1_change_entry** · done
+- **APV2_commit_carries_it** · done
+- **APV3_changelog_read** · done
+- **APV4_emit_on_the_ledger** · done
+- **APV5_wired_in_loom** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-21-adblock-phasemap.spec` · 6 · 6 done, 0 in progress, 0 pending</summary>
+
+- **AB0_engine_in_core** · decision · done
+- **AB1_engine** · done
+- **AB2_lists** · done
+- **AB3_wiring** · done
+- **AB4_surface** · done
+- **AB5_import** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec` · 18 · 0 done, 0 in progress, 18 pending</summary>
+
+- **GR0_graph_census** · pending
+- **GR1_graph_primitive** · pending
+- **GR2_graph_views** · pending
+- **GR3_graph_query_surface** · pending
+- **TV1_traversal_primitive** · pending
+- **TV2_invariant_guided_traversal** · pending
+- **TV3_traversal_as_context** · pending
+- **CH0_chunk_census_and_contract** · pending
+- **CH1_strategies_behind_the_contract** · pending
+- **CH2_chunk_laws** · pending
+- **CH3_chunk_inspector** · pending
+- **DK1_dynamic_chunking** · pending
+- **DK2_learned_granularity** · pending
+- **GW0_gate_census** · pending
+- **GW1_gate_primitive** · pending
+- **GW2_gates_at_every_level** · pending
+- **GW3_gate_panel** · pending
+- **PS1_phase_specs** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-20-belief-loop-phasemap.spec` · 16 · 0 done, 0 in progress, 16 pending</summary>
+
+- **RA0_rca_says_what_it_does** · pending
+- **CY0_one_crystal_schema** · pending
+- **CY1_lifecycle_and_injection** · pending
+- **CY2_invariants_are_crystals** · pending
+- **IV0_belief_census** · pending
+- **IV1_invariant_kinds** · pending
+- **IV2_invariant_miner** · pending
+- **PV1_provenance_on_every_claim** · pending
+- **EW1_evidence_record_and_weights** · pending
+- **CF1_confidence_from_evidence** · pending
+- **AV1_adversarial_review** · pending
+- **RA1_root_cause_through_provenance** · pending
+- **RA2_learned_source_trust** · pending
+- **XD1_cross_domain_verification** · pending
+- **BW1_borrowing** · pending
+- **CY3_belief_panel** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-19-upload-intent-and-page-map-phasemap.spec` · 18 · 12 done, 0 in progress, 6 pending</summary>
+
+- **D1_placement_is_deterministic_first** · decision · pending
+- **D2_one_door_for_writes** · decision · pending
+- **D3_page_map_lives_in_clear_glass** · decision · pending
+- **D4_learning_is_counted_not_trained** · decision · pending
+- **UP1_placement_tool** · done
+- **UP2_learned_placements** · done
+- **UP3_upload_routes_and_commands** · done
+- **UP4_upload_ui** · done
+- **UP5_registry_wires_on_apply** · pending
+- **UP6_model_for_the_unplaced** · pending
+- **PM1_blocks** · done
+- **PM2_index_and_chunks** · done
+- **PM3_synthesized_map_that_learns** · done
+- **PM4_intent_to_targets** · done
+- **PM5_tools_routes_commands** · done
+- **PM6_nerve_feel** · done
+- **PM7_live_injected_map** · done
+- **PM8_page_map_panel** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-19-solid-build-foundation-phasemap.spec` · 12 · 4 done, 0 in progress, 8 pending</summary>
+
+- **MF1_model_fit_routing** · done
+- **DC1_dynamic_chunk_at_plan** · pending
+- **CR1_project_registry_spine** · done
+- **CT1_cos_test_runner** · done
+- **GQ1_quality_stream** · pending
+- **GQ3_brick_tests** · pending
+- **GQ2_brick_gate_runs_the_test** · pending
+- **GQ4_phase_gate_keeps_the_test** · pending
+- **AB1_autobuild_loop_and_resume** · done
+- **AB2_hat_aware_ladder** · pending
+- **SET1_autobuild_config_and_command** · pending
+- **SET2_autobuild_settings_ui** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-19-pipeline-root-causes-phasemap.spec` · 29 · 13 done, 0 in progress, 16 pending</summary>
+
+- **RC1_watchers_never_kill_a_kernel** · done
+- **RC2_linear_node_scan** · done
+- **RC3_windows_safe_node_names** · done
+- **RC4_agent_file_names_guarded** · done
+- **RC5_find_where_the_label_enters** · done
+- **VF1_verify_first** · done
+- **VF2_one_response_bundle** · pending
+- **VF3_mutation_check** · pending
+- **VF4_second_opinion_on_need** · pending
+- **VF5_verdict_cache** · pending
+- **SS1_system_store_adoption** · done
+- **SS2_every_system_home** · pending
+- **SS3_nodes_are_the_data** · pending
+- **SS4_seal_into_compartments** · pending
+- **UI1_toolbox_and_store_explorer** · pending
+- **UI2_version_in_code** · pending
+- **UI3_ideas_and_notes_as_one** · pending
+- **CB1_coder_brief** · done
+- **CB2_gemini_first** · done
+- **SM1_agent_self_model** · done
+- **DG3_the_whole_dag** · done
+- **DG4_nexus_maps_meet_the_standard** · pending
+- **DG5_dag_in_the_brief_and_the_ui** · pending
+- **RC6_unowned_ollama_load** · done
+- **RC7_every_run_names_its_starter** · done
+- **MEM1_cortex_keeps_the_books** · pending
+- **PR1_page_reader** · pending
+- **PR2_autofill_and_copilot_read_first** · pending
+- **ID1_ideas_wired_through** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-19-infrastructure-spine-phasemap.spec` · 25 · 1 done, 0 in progress, 24 pending</summary>
+
+- **IN0_baseline** · pending
+- **IN1_old_files_out** · pending
+- **IN2_quotes_ledger** · pending
+- **IN3_registry_is_the_spine** · pending
+- **IN4_retire_hand_maps** · pending
+- **IN5_architect_mirrors_the_registry** · pending
+- **IN6_systems_onto_the_spine** · pending
+- **IN7_every_phase_and_spec_on_the_spine** · pending
+- **IN8_any_size** · pending
+- **NC1_neutral_core_boundary** · pending
+- **AD1_adapter_contract** · pending
+- **AD2_javascript_adapter** · pending
+- **AD3_python_adapter** · pending
+- **AD4_documents_adapter** · pending
+- **NT1_neutrality_test** · pending
+- **FP1_feature_pilot** · pending
+- **SC1_scaling_limits_named** · pending
+- **ST1_schema_for_everything_reusable** · pending
+- **PN1_phases_to_nodes** · pending
+- **PN2_dual_read** · pending
+- **PN3_maps_rendered_from_nodes** · pending
+- **PRC1_phase_reality_check** · pending
+- **VC1_a_change_entry_for_every_event** · pending
+- **VC2_changelogs_rendered** · pending
+- **IN3a_build_stands_on_the_registry** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-19-idearium-control-phasemap.spec` · 13 · 0 done, 0 in progress, 13 pending</summary>
+
+- **NM1_one_name_per_file** · pending
+- **PC1_phase_controls** · pending
+- **FM1_file_manager** · pending
+- **FM2_stores_in_the_files_tab** · pending
+- **CT0_code_tab_census** · pending
+- **CT1_fewer_wider_tabs** · pending
+- **TB1_toolbox** · pending
+- **VS1_versions_in_the_surface** · pending
+- **VS2_diff_only_backups** · pending
+- **IX1_everything_linked** · pending
+- **IM1_ideas_and_notes_as_one** · pending
+- **IM2_promote_to_phase** · pending
+- **IM3_ideas_mapped_to_nexus** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-19-gig-autofill-and-learn-phasemap.spec` · 14 · 8 done, 0 in progress, 6 pending</summary>
+
+- **GA0a_no_gig_yet** · decision · done
+- **GA0b_where_a_pick_is_kept** · decision · done
+- **GA0c_the_learned_map_is_per_site** · decision · done
+- **GA1_copilot_fills_the_gig** · pending
+- **GA1a_a_written_gig_is_remembered** · pending
+- **GA2_a_missed_field_asks_the_picker** · pending
+- **GA3_the_pick_is_saved_three_ways** · pending
+- **GA4_the_matcher_learns** · pending
+- **GA5_commands_and_the_panel** · pending
+- **JA1_the_matcher_consults_learned** · done
+- **JA2_a_pick_is_saved_per_site** · done
+- **JA3_the_picker_on_a_miss** · done
+- **JA4_the_learn_loop_ui** · done
+- **JA5_the_pick_is_also_a_macro** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-19-gate-quality-checks-phasemap.spec` · 6 · 0 done, 0 in progress, 6 pending</summary>
+
+- **GQ1_quality_stream** · pending
+- **GQ2_brick_gate_runs_the_test** · pending
+- **GQ3_brick_tests** · pending
+- **GQ4_phase_gate_keeps_the_test** · pending
+- **GQ5_command** · pending
+- **GQ6_ui** · pending
+
+</details>
+
+<details>
 <summary>`docs/2026-10-18-gating-census-phasemap.spec` · 7 · 1 done, 0 in progress, 6 pending</summary>
 
 - **L0_the_record_tells_the_truth** · pending
@@ -6312,8 +12575,12 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-18-gate-memory-phasemap.spec` · 8 · 2 done, 0 in progress, 6 pending</summary>
+<summary>`docs/2026-10-18-gate-memory-phasemap.spec` · 12 · 5 done, 0 in progress, 7 pending</summary>
 
+- **GM0a_the_precommit_compartment** · decision · pending
+- **GM0b_files_and_a_table** · decision · done
+- **GM0c_what_a_record_holds** · decision · done
+- **GM0d_the_ladder_order** · decision · done
 - **GM1_the_gate_record** · pending
 - **GM2_restarts_resume_from_records** · pending
 - **GM3_the_fulfilled_contract_index** · pending
@@ -6326,8 +12593,11 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-18-debugging-product-phasemap.spec` · 8 · 0 done, 0 in progress, 8 pending</summary>
+<summary>`docs/2026-10-18-debugging-product-phasemap.spec` · 11 · 2 done, 0 in progress, 9 pending</summary>
 
+- **DBG0a_synchronized_ids** · decision · done
+- **DBG0b_dependencies_map_gaps** · decision · done
+- **DBG0c_which_product** · decision · pending
 - **DBG1_the_key** · pending
 - **DBG2_the_case** · pending
 - **DBG3_deviation_and_friction_per_run** · pending
@@ -6340,8 +12610,15 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-18-compartment-environment-phasemap.spec` · 7 · 0 done, 0 in progress, 7 pending</summary>
+<summary>`docs/2026-10-18-compartment-environment-phasemap.spec` · 14 · 3 done, 1 in progress, 10 pending</summary>
 
+- **CE0a_one_compartment_per_what** · decision · pending
+- **CE0b_the_os** · decision · done
+- **CE0c_the_renderer** · decision · done
+- **CE0d_what_the_handshake_verifies** · decision · done
+- **CE0e_cos_answers_on_a_route** · decision · in-progress
+- **CE0f_the_handshake_is_the_kernel_s** · decision · pending
+- **CE1a_cos_answers_on_a_route** · pending
 - **CE1_the_compartment_machine** · pending
 - **CE2_the_shell_is_declared** · pending
 - **CE3_the_handshake** · pending
@@ -6353,8 +12630,11 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-17-system-drawbridge-phasemap.spec` · 19 · 4 done, 0 in progress, 15 pending</summary>
+<summary>`docs/2026-10-17-system-drawbridge-phasemap.spec` · 29 · 8 done, 0 in progress, 21 pending</summary>
 
+- **DB0a_is_lib_a_system** · decision · done
+- **DB0b_in_process_or_http** · decision · done
+- **DB0c_how_it_is_enforced** · decision · done
 - **DB1_the_census_and_the_ratchet** · done
 - **DB2_the_registry_says_what_it_offers** · pending
 - **DB3_the_drawbridge** · pending
@@ -6363,6 +12643,9 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **DB6_move_the_crossings** · pending
 - **DB7_the_ui_floats_on_top** · pending
 - **DB8_agents_have_it** · pending
+- **DB0b_reading** · pending
+- **DB0a_still_open** · pending
+- **DB0c_reading** · pending
 - **DB9_every_repo_generates_its_registry** · pending
 - **DB10_shadow_and_negative_space_at_the_drawbridge** · pending
 - **DB11_cos_compartment_per_system** · pending
@@ -6373,13 +12656,20 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **DB16_a_registry_for_each_system** · pending
 - **DB17_files_stay_with_their_system** · pending
 - **DB18_nodes_in_relation_to_their_system** · done
-- **P33_slices** · done
+- **P33_slices** · pending
+- **P33a_a_registry_for_any_system** · done
+- **P33b_each_system_runs_its_listener** · done
+- **DB19_genesis_sandboxed_fork** · pending
+- **DB20_sealed_archetype** · pending
 
 </details>
 
 <details>
-<summary>`docs/2026-10-17-pieces-not-order-phasemap.spec` · 6 · 0 done, 0 in progress, 6 pending</summary>
+<summary>`docs/2026-10-17-pieces-not-order-phasemap.spec` · 9 · 2 done, 0 in progress, 7 pending</summary>
 
+- **PC0a_what_a_piece_depends_on** · decision · done
+- **PC0b_first_kinds** · decision · done
+- **PC0c_who_cuts** · decision · pending
 - **PC1_the_point_first** · pending
 - **PC2_any_order** · pending
 - **PC3_verified_alone_resumed_by_recheck** · pending
@@ -6390,8 +12680,12 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-17-infrastructure-migration-phasemap.spec` · 7 · 0 done, 0 in progress, 7 pending</summary>
+<summary>`docs/2026-10-17-infrastructure-migration-phasemap.spec` · 12 · 5 done, 0 in progress, 7 pending</summary>
 
+- **IM0a_state_in_git** · decision · done
+- **IM0b_root_files** · decision · done
+- **IM0c_tests_with_their_system** · decision · done
+- **IM0d_lib_is_the_kernel** · decision · done
 - **IM1_the_shape_census_as_a_command** · pending
 - **IM2_clean_the_redundant** · pending
 - **IM3_wire_what_exists** · pending
@@ -6399,12 +12693,17 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **IM5_each_system_to_the_template** · pending
 - **IM6_cortex_unclumped** · pending
 - **IM7_the_ui_on_the_registry** · pending
+- **IM0e_what_is_a_primitive** · decision · done
 
 </details>
 
 <details>
-<summary>`docs/2026-10-17-failure-mode-report-phasemap.spec` · 12 · 2 done, 0 in progress, 10 pending</summary>
+<summary>`docs/2026-10-17-failure-mode-report-phasemap.spec` · 16 · 5 done, 0 in progress, 11 pending</summary>
 
+- **FMR0a_reproduce_when** · decision · pending
+- **FMR0b_macros_leave_the_machine** · decision · done
+- **FMR0c_first_replay_route** · decision · done
+- **FMR0d_nerve_role** · decision · done
 - **FMR0_causality_measured** · done
 - **FMR1_every_ledger_into_rfr2** · pending
 - **FMR2_every_failure_reaches_the_record** · pending
@@ -6421,8 +12720,13 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-17-debugging-product-phasemap.spec` · 12 · 0 done, 0 in progress, 12 pending</summary>
+<summary>`docs/2026-10-17-debugging-product-phasemap.spec` · 17 · 3 done, 0 in progress, 14 pending</summary>
 
+- **DP0a_one_product_or_two** · decision · pending
+- **DP0b_its_name** · decision · pending
+- **DP0c_ids** · decision · done
+- **DP0d_one_gap_door** · decision · done
+- **DP0e_the_case_is_a_contract** · decision · done
 - **DP1_the_doors** · pending
 - **DP2_one_gap_door** · pending
 - **DP3_runtime_deviation_reaches_the_diagnostic** · pending
@@ -6502,9 +12806,11 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-16-nexus-git-sync-phasemap.spec` · 7 · 0 done, 0 in progress, 7 pending</summary>
+<summary>`docs/2026-10-16-nexus-git-sync-phasemap.spec` · 9 · 0 done, 0 in progress, 9 pending</summary>
 
-- **GS0_authority** · pending
+- **GS0_authority** · decision · pending
+- **GS0b_what_gets_pushed** · decision · pending
+- **GS0c_his_copy** · decision · pending
 - **GS1_commands** · pending
 - **GS2_nexus_as_a_repo** · pending
 - **GS3_pull_is_a_switch** · pending
@@ -6527,8 +12833,10 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-16-intent-hat-agent-chain-phasemap.spec` · 5 · 0 done, 0 in progress, 5 pending</summary>
+<summary>`docs/2026-10-16-intent-hat-agent-chain-phasemap.spec` · 7 · 0 done, 0 in progress, 7 pending</summary>
 
+- **IH0a_one_vocabulary** · decision · pending
+- **IH0b_per_repo** · decision · pending
 - **IH1_intent_nodes_point_at_hats** · pending
 - **IH2_agents_bound** · pending
 - **IH3_routers_read_the_chain** · pending
@@ -6560,9 +12868,11 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-16-durable-work-timeline-phasemap.spec` · 7 · 0 done, 0 in progress, 7 pending</summary>
+<summary>`docs/2026-10-16-durable-work-timeline-phasemap.spec` · 9 · 2 done, 0 in progress, 7 pending</summary>
 
-- **TL0_find_the_loss** · pending
+- **TL0a_unit_of_the_timeline** · decision · done
+- **TL0b_rewind_scope** · decision · done
+- **TL0_find_the_loss** · decision · pending
 - **TL1_chunks_land_as_they_arrive** · pending
 - **TL2_resume_at_boot** · pending
 - **TL3_the_timeline** · pending
@@ -6591,7 +12901,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-16-code-tab-rebuild-phasemap.spec` · 11 · 2 done, 0 in progress, 9 pending</summary>
+<summary>`docs/2026-10-16-code-tab-rebuild-phasemap.spec` · 19 · 2 done, 0 in progress, 17 pending</summary>
 
 - **TB0_decisions** · pending
 - **TB1_read_model_per_tab** · pending
@@ -6602,6 +12912,14 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **TB6_files_changes_plans_cos_tabs** · pending
 - **TB7_runs_tab** · pending
 - **TB8_proof_and_wiring** · pending
+- **TB7a_edges_recorded** · pending
+- **TB7b_keep_every_step** · pending
+- **TB7c_graph_and_zoom** · pending
+- **TB7d_node_controls** · pending
+- **TB3a_tool_calls_saved** · pending
+- **TB4a_recall_in_the_dispatcher** · pending
+- **TB4b_nexus_recall_tool** · pending
+- **TB4c_measure** · pending
 - **DK1_procedures_backend** · done
 - **DK2_the_dock** · done
 
@@ -6651,12 +12969,12 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-15-spec-foundation-model-phasemap.spec` · 7 · 0 done, 1 in progress, 6 pending</summary>
+<summary>`docs/2026-10-15-spec-foundation-model-phasemap.spec` · 7 · 0 done, 0 in progress, 7 pending</summary>
 
 - **SF1_foundation_field** · pending
 - **SF2_state_and_gate** · pending
 - **SF3_evidence_not_claims** · pending
-- **SF4_the_listener** · in-progress
+- **SF4_the_listener** · pending
 - **SF5_hat_intent_injection** · pending
 - **SF6_addenda_view** · pending
 - **SF7_get_his_run_current** · pending
@@ -6664,23 +12982,27 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-15-personal-chat-import-phasemap.spec` · 9 · 0 done, 0 in progress, 9 pending</summary>
+<summary>`docs/2026-10-15-personal-chat-import-phasemap.spec` · 12 · 0 done, 0 in progress, 12 pending</summary>
 
-- **PI0_where_it_is_read** · pending
+- **PI0_where_it_is_read** · decision · pending
+- **PI0b_what_a_chat_may_become** · decision · pending
+- **PI0c_the_listener_default** · decision · pending
 - **PI1_the_importer** · pending
 - **PI2_the_listener** · pending
 - **PI3_the_intelligence_pass** · pending
 - **PI4_the_review_screen** · pending
 - **PI5_the_sync** · pending
 - **PI6_the_firefox_script** · pending
+- **PI3b_the_measured_patterns** · pending
 - **PI5_the_crawler** · pending
 - **PI7_the_links** · pending
 
 </details>
 
 <details>
-<summary>`docs/2026-10-15-one-contract-raid-releases-phasemap.spec` · 11 · 7 done, 0 in progress, 4 pending</summary>
+<summary>`docs/2026-10-15-one-contract-raid-releases-phasemap.spec` · 12 · 8 done, 0 in progress, 4 pending</summary>
 
+- **GT1a_exhausted_climb_spends_its_attempt** · done
 - **RD0_raid_runs_the_contract** · done
 - **RD1_every_build_goes_through_raid** · pending
 - **BR1_bricks_on_every_path** · done
@@ -6696,18 +13018,19 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-15-macro-node-recording-phasemap.spec` · 18 · 3 done, 0 in progress, 15 pending</summary>
+<summary>`docs/2026-10-15-macro-node-recording-phasemap.spec` · 19 · 4 done, 0 in progress, 15 pending</summary>
 
-- **MR0_where_the_file_lives** · pending
+- **MR0_where_the_file_lives** · decision · pending
 - **MR1_live_node** · done
 - **MR2_richer_events** · done
 - **MR3_dialog** · done
+- **MR3b_guide_and_hotkey_toast** · done
 - **MR4_listener_as_nodes** · pending
 - **MR5_role_tags** · pending
 - **MR6_macro_to_automation** · pending
-- **MR7_hotkeys_scope** · pending
-- **MR12_p2p_scope** · pending
-- **MR13_finance_field** · pending
+- **MR7_hotkeys_scope** · decision · pending
+- **MR12_p2p_scope** · decision · pending
+- **MR13_finance_field** · decision · pending
 - **MR7_bind_and_trigger** · pending
 - **MR8_virtual_mouse_record** · pending
 - **MR9_page_event_record** · pending
@@ -6720,9 +13043,17 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-15-gate-held-work-phasemap.spec` · 24 · 1 done, 0 in progress, 23 pending</summary>
+<summary>`docs/2026-10-15-gate-held-work-phasemap.spec` · 32 · 8 done, 0 in progress, 24 pending</summary>
 
-- **GW0_what_is_a_gate** · done
+- **GW0_what_is_a_gate** · decision · done
+- **GW0b_fresh_chat_policy** · decision · done
+- **GW0c_replay_mode** · decision · done
+- **GW0e_sandbox_egress** · decision · done
+- **GW0f_mutation_testing** · decision · done
+- **GW0g_parallel_limit** · decision · done
+- **GW0h_minimal_default** · decision · done
+- **GW0i_find_order** · decision · done
+- **GW0d_listener_question** · decision · pending
 - **GW1_the_baton** · pending
 - **GW2_the_run_follows_the_gate** · pending
 - **GW3_a_contract_is_traced** · pending
@@ -6750,20 +13081,45 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-15-fiverr-ledger-phasemap.spec` · 4 · 1 done, 0 in progress, 3 pending</summary>
+<summary>`docs/2026-10-15-fiverr-ledger-phasemap.spec` · 5 · 1 done, 0 in progress, 4 pending</summary>
 
 - **PF0_the_ledger** · done
 - **PF1_the_sources** · pending
 - **PF2_the_slots_into_a_gig** · pending
 - **PF3_the_screen** · pending
+- **PF0a_what_a_chat_may_claim** · decision · pending
 
 </details>
 
 <details>
-<summary>`docs/2026-10-15-code-tab-run-state-phasemap.spec` · 20 · 17 done, 0 in progress, 3 pending</summary>
+<summary>`docs/2026-10-15-cos-app-phasemap.spec` · 17 · 7 done, 1 in progress, 9 pending</summary>
 
-- **CE0_one_tab_or_two** · done
-- **CV0_versioning_scope** · pending
+- **COSA0_shell** · decision · pending
+- **COSA0b_signing** · decision · pending
+- **COSA0c_update_source** · decision · pending
+- **COSA1_version_store_and_import** · done
+- **COSA2_runtime_and_dependencies** · done
+- **COSA3_run_and_supervise** · done
+- **COSA4_switch_and_rollback** · done
+- **COSA5_data_root** · pending
+- **COSA6_the_exe** · done
+- **COSA7_clear_glass_delivers** · done
+- **COSA8_other_projects** · pending
+- **COSA9_idearium_sync** · pending
+- **COSA10_compartment_window** · pending
+- **COSA11_nested_tree** · pending
+- **COSA12_vmware_window** · done
+- **COSA13_auto_update** · in-progress
+- **COSA14_versionium_record** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-15-code-tab-run-state-phasemap.spec` · 21 · 17 done, 0 in progress, 4 pending</summary>
+
+- **CE0_one_tab_or_two** · decision · done
+- **CE0b_batching** · decision · pending
+- **CV0_versioning_scope** · decision · pending
 - **CE1_the_run_state** · done
 - **CE2_the_task_header** · done
 - **CE3_reply_on_task_gate** · done
@@ -6788,7 +13144,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 <details>
 <summary>`docs/2026-10-15-clear-glass-surfaces-phasemap.spec` · 7 · 0 done, 0 in progress, 7 pending</summary>
 
-- **PF0_internal_vs_client_facing** · pending
+- **PF0_internal_vs_client_facing** · decision · pending
 - **PF1_read_the_log** · pending
 - **PF2_the_items** · pending
 - **PF3_the_section** · pending
@@ -6799,12 +13155,13 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-15-clear-glass-network-posture-phasemap.spec` · 27 · 0 done, 4 in progress, 23 pending</summary>
+<summary>`docs/2026-10-15-clear-glass-network-posture-phasemap.spec` · 34 · 0 done, 4 in progress, 30 pending</summary>
 
-- **MR7_hotkeys_scope** · pending
-- **MR12_p2p_scope** · pending
-- **MR13_finance_field** · pending
-- **NP0_binaries** · pending
+- **MR7_hotkeys_scope** · decision · pending
+- **MR12_p2p_scope** · decision · pending
+- **MR13_finance_field** · decision · pending
+- **NP0_binaries** · decision · pending
+- **NP0b_default_posture** · decision · pending
 - **NP1_compartment** · in-progress
 - **NP2_policy_and_storage** · in-progress
 - **NP3_apply_to_electron** · in-progress
@@ -6813,7 +13170,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **NP6_settings** · pending
 - **NP7_p2p** · pending
 - **NP8_macro_hooks** · pending
-- **NP9_sentinel_meaning** · pending
+- **NP9_sentinel_meaning** · decision · pending
 - **NP9_cli_first** · in-progress
 - **NP10_browser_surface** · pending
 - **NP11_context_menu** · pending
@@ -6821,13 +13178,19 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **NP13_settings_html** · pending
 - **NP14_macros_and_automation** · pending
 - **NP15_kill_switch** · pending
-- **NP16_default_quarantine** · pending
+- **NP16_default_quarantine** · decision · pending
 - **NP16_quarantine_pipeline** · pending
 - **NP17_hold_primitive** · pending
 - **NP18_freeze_plugin** · pending
-- **NP0_binaries** · pending
-- **NP19_passphrase** · pending
+- **NP0_binaries** · decision · pending
+- **NP19_passphrase** · decision · pending
 - **NP19_container** · pending
+- **NP1_compartment** · pending
+- **NP4_webrtc** · pending
+- **NP5_leak_test** · pending
+- **NP16_quarantine_pipeline** · pending
+- **NP15_kill_switch** · pending
+- **NP7_p2p** · pending
 
 </details>
 
@@ -6844,9 +13207,9 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-15-automatic-tracking-phasemap.spec` · 12 · 2 done, 0 in progress, 10 pending</summary>
+<summary>`docs/2026-10-15-automatic-tracking-phasemap.spec` · 12 · 3 done, 0 in progress, 9 pending</summary>
 
-- **LA0_loom_or_architect** · pending
+- **LA0_loom_or_architect** · decision · done
 - **GT2_each_gate_tags_and_reports** · done
 - **QA2_a_real_run** · pending
 - **GA1_the_gate_assesses_before_it_spends** · done
@@ -6889,7 +13252,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec` · 12 · 7 done, 0 in progress, 5 pending</summary>
+<summary>`docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec` · 13 · 8 done, 0 in progress, 5 pending</summary>
 
 - **LN0_lines_tool** · done
 - **IM0_intent_map_his_to_change** · done
@@ -6901,6 +13264,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **TD0_today_and_yesterday_working** · pending
 - **PF0_profiles_linked_to_hats** · done
 - **CT2_ingestion_as_contracts** · pending
+- **CT1b_reviewed** · done
 - **SC0_scheduler** · done
 - **EX0_executors_he_already_built** · pending
 
@@ -7060,7 +13424,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-10-idearium-solid-phasemap.spec` · 17 · 4 done, 0 in progress, 13 pending</summary>
+<summary>`docs/2026-10-10-idearium-solid-phasemap.spec` · 23 · 10 done, 0 in progress, 13 pending</summary>
 
 - **SD0_versionium_down_is_said_and_restarted** · done
 - **SD1_rewind_and_versions_on_the_repo_card** · done
@@ -7079,6 +13443,12 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **SD14_chunks_cut_at_primitives** · pending
 - **SD15_no_website_can_drive_nexus** · pending
 - **SD16_a_plan_step_never_proposes_code** · pending
+- **SD17_an_imported_project_continues** · done
+- **SD18_mastermind_ready** · done
+- **SD19_a_refusal_goes_back_to_its_agent** · done
+- **SD20_a_starved_machine_does_not_spin** · done
+- **SD21_what_his_run_log_showed** · done
+- **SD22_a_wrapped_repo_lifts_to_its_root** · done
 
 </details>
 
@@ -7630,7 +14000,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-01-idearium-agent-ready-master-phasemap.spec` · 57 · 22 done, 0 in progress, 35 pending</summary>
+<summary>`docs/2026-10-01-idearium-agent-ready-master-phasemap.spec` · 58 · 22 done, 0 in progress, 36 pending</summary>
 
 - **M0_map** · done
 - **PF1_sync_names_its_slow_step** · done
@@ -7669,6 +14039,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **BK2_phase_build_writes_code** · pending
 - **UI6_idea_and_phases_one_tab** · pending
 - **UI7_phasemaps_out_of_files_and_tree_ops** · pending
+- **DT4b_registry_chunk_in_repo_chunking** · pending
 - **UI8_code_tab_is_code** · pending
 - **UI11_nav_and_look_restored** · pending
 - **UI9_plan_and_work_surface_panels** · pending
@@ -8008,10 +14379,10 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **P4_identity** · pending
 - **P5_guardian_transport** · pending
 - **P6_verify** · pending
-- **D1_default** · pending
-- **D2_tabs** · pending
-- **D3_account_choice** · pending
-- **D3_decided_2026_09_23** · pending
+- **D1_default** · decision · pending
+- **D2_tabs** · decision · pending
+- **D3_account_choice** · decision · pending
+- **D3_decided_2026_09_23** · decision · pending
 
 </details>
 
@@ -8024,10 +14395,10 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **B4_userscript_cutover** · pending
 - **B5_port_3753_collision** · pending
 - **B6_two_intelligence_runtimes** · pending
-- **D1_field_source** · pending
-- **D2_cutover_policy** · pending
-- **D3_snapshot_ownership** · pending
-- **D4_names** · pending
+- **D1_field_source** · decision · pending
+- **D2_cutover_policy** · decision · pending
+- **D3_snapshot_ownership** · decision · pending
+- **D4_names** · decision · pending
 - **P0_map** · done
 - **P1_characterization** · pending
 - **P2_intelligence_gains_routes** · pending
@@ -8045,9 +14416,9 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 <details>
 <summary>`docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec` · 10 · 0 done, 0 in progress, 10 pending</summary>
 
-- **D1_canvas_authority** · pending
-- **D2_spec_authority** · pending
-- **D3_forge_home** · pending
+- **D1_canvas_authority** · decision · pending
+- **D2_spec_authority** · decision · pending
+- **D3_forge_home** · decision · pending
 - **P0_place_spec_compiler** · pending
 - **P1_reconcile_node_schema_precedent** · pending
 - **P2_decide_D1_D2_D3** · pending
@@ -8079,7 +14450,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-09-11-sovereign-node-architecture-phasemap.spec` · 35 · 0 done, 1 in progress, 34 pending</summary>
+<summary>`docs/2026-09-11-sovereign-node-architecture-phasemap.spec` · 35 · 0 done, 0 in progress, 35 pending</summary>
 
 - **P1_fix_the_declared_living_maps** · pending
 - **P2_per_system_interaction_contracts** · pending
@@ -8098,7 +14469,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **P15_redundant_file_purge** · pending
 - **P19_dynamic_nodes_via_causal_graph** · pending
 - **P20_intelligence_reflexive_cfr_field** · pending
-- **P21_versionium_causal_field** · in-progress
+- **P21_versionium_causal_field** · pending
 - **P22_ledger_data_integrity_checker** · pending
 - **P23_guardian_job_durability** · pending
 - **P24_response_queue_and_delivery_ack** · pending
@@ -8143,7 +14514,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec` · 30 · 4 done, 0 in progress, 26 pending</summary>
+<summary>`docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec` · 32 · 4 done, 0 in progress, 28 pending</summary>
 
 - **RF1_ncp_liveness_is_console_only** · pending
 - **RF2_shared_data_directory_is_the_root_of_the_crash** · pending
@@ -8169,9 +14540,11 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 - **DF2_cortex_and_versionium_off_root_data** · pending
 - **EVT1_commands_and_tools_emit_events** · pending
 - **REG1_component_registry_remap** · pending
+- **SPEC1_rewrite_nexus_spec** · pending
 - **CP1_tool_index_hooked_to_living_model** · pending
 - **CP2_copilot_versionium_awareness** · pending
 - **CP3_git_vs_versionium_decision** · done
+- **HIST1_boundary_constraint_history_schema** · pending
 - **IDU1_idearium_homepage_and_repo_browser** · pending
 - **UX1_design_philosophy_consolidation** · pending
 - **RP1_repository_per_system** · pending
@@ -8445,7 +14818,7 @@ Every phase of every phasemap, 1698 phases across 137 maps, read by the one phas
 NEXUS keeps its state out of git: everything under a data folder is runtime state, never code (docs/CLAUDE.md: "NEVER commit data/**"). The stores below are read from the code itself: every store whose folder can be moved by an environment variable, with the default it falls back to and the files that open it. The test sandbox (`lib/test-sandbox.js`) points each of these into a throwaway folder, so a test never touches the real ones.
 
 <details>
-<summary>the stores · 34 folders, each placed by an environment variable</summary>
+<summary>the stores · 27 folders, each placed by an environment variable</summary>
 
 - **CG_JAA_DIR** — default cgDir(), 'jaa' — opened by `clear-glass/src/storage/jaa.js`
 - **CG_USERSCRIPTS_DIR** — default process.env.APPDATA || process.env.HOME || '.', '.clear-glass', 'userscripts' — opened by `clear-glass/src/userscripts/manager.js`
@@ -8454,21 +14827,16 @@ NEXUS keeps its state out of git: everything under a data folder is runtime stat
 - **COS_DATA_ROOT** — default '' — opened by `lib/cos-bridge.js`
 - **EMERGENCE_DATA_DIR** — default process.cwd(), 'data' — opened by `emergence/cli.js`
 - **GIG_LEDGER_DIR** — default , 'data', 'gig-ledger' — opened by `lib/gig-ledger.js`
-- **GUARDIAN_ACCOUNTS_DIR** — default guardian/lib/, '../../data/guardian/accounts' — opened by `guardian/lib/account-routing.js`
-- **GUARDIAN_AGENTS_DIR** — default guardian/lib/, '../../data/guardian/agents' — opened by `guardian/lib/agent-registry.js`
 - **GUARDIAN_DIR** — default clear-glass/src/main/, // '../../../guardian' — opened by `clear-glass/src/main/index.js`
-- **GUARDIAN_JOBS_DIR** — default , 'data', 'guardian', 'jobs' — opened by `cli/clear-idearium.js`, `guardian/lib/jobs.js`
 - **GUARDIAN_RESPONSE_NODES_DIR** — default guardian/lib/, '..', 'data', 'nodes', 'response' — opened by `guardian/lib/response-sink.js`
 - **IDEARIUM_ACCESS_DIR** — default ideariumDataDir(), 'access' — opened by `idearium/lib/access.cjs`
-- **INTELLIGENCE_DATA_DIR** — default intelligence/, '..', 'data', 'intelligence' — opened by `intelligence/config.js`
 - **INTELLIGENCE_NODES_DIR** — default intelligence/lib/, '..', 'data' — opened by `intelligence/lib/domain-nodes.js`
-- **INTELLIGENCE_SYNTHESIS_DIR** — default process.env.INTELLIGENCE_DATA_DIR || , 'data', 'intelligence'), 'synthesis' — opened by `intelligence/synthesis/index.js`
 - **JAA_DATA_DIR** — default , 'data', 'cortex', 'memory' — opened by `cli/clear-idearium.js`, `cortex/memory/jaa-db.js`, `cortex/memory/table-compactor.js`, `lib/context-atlas.js`
 - **MEMORY_STORE_DIR** — default guardian/, '..', 'data', 'cortex', 'memory' — opened by `guardian/server.js`
 - **NEXUS_CLIENT_DIR** — default os.homedir(), '.nexus-client' — opened by `auth/client.js`
 - **NEXUS_CODE_ARTIFACT_DIR** — default process.env.NEXUS_DATA_ || , 'data'), 'guardian', 'code-artifacts' — opened by `guardian/lib/code-artifact.js`
 - **NEXUS_DATA_DIR** — default process.cwd(), 'data' — opened by `remote-desktop/bridge-os-core/bridge-node/boot.js`, `remote-desktop/bridge-os-core/index.js`
-- **NEXUS_DATA_ROOT** — default clear-glass/src/ipc/, '..', '..', '..', 'data' — opened by `clear-glass/src/ipc/bridge.js`, `clear-glass/src/mesh/automation-engine.js`, `clear-glass/src/providers/registry.js`, `idearium/lib/data-dir.cjs`
+- **NEXUS_DATA_ROOT** — default clear-glass/src/mesh/, '..', '..', '..', 'data' — opened by `clear-glass/src/mesh/automation-engine.js`, `idearium/lib/data-dir.cjs`, `lib/chat-logger.js`, `lib/component-ledger.js`
 - **NEXUS_INTAKE_DIR** — default cortex/core/raid/, '../../../data/intake' — opened by `cortex/core/raid/officiator.js`, `lib/intake.js`
 - **NEXUS_PHASEMAP_DIR** — default , 'docs' — opened by `lib/spec-census.js`, `loom/scanners/phasemap-map.js`
 - **NEXUS_SNAP_DIR** — default versionium/lib/, '..', 'data', 'snapshots' — opened by `versionium/lib/migrate-cortex-snapshots.js`, `versionium/lib/snapshot.js`
@@ -8477,8 +14845,6 @@ NEXUS keeps its state out of git: everything under a data folder is runtime stat
 - **RAID_OUTPUT_DIR** — default cortex/core/raid/, '../../../data/raid/output' — opened by `cortex/core/raid/contract-intake.js`
 - **RAID_SYSTEMS_ROOT** — default cortex/core/raid/, '../../../' — opened by `cortex/core/raid/contract-intake.js`
 - **RUN_STATE_DIR** — default lib/, '..', 'data', 'run-state' — opened by `lib/run-state.js`
-- **VERSIONIUM_DATA_DIR** — default versionium/, '..', 'data', 'versionium' — opened by `versionium/config.js`
-- **VERSIONIUM_FILE_BLOB_DIR** — default process.env.VERSIONIUM_DATA_DIR || versionium/, '..', 'data', 'versionium'), 'file-blobs' — opened by `versionium/config.js`
 - **WORK_JOURNAL_DIR** — default lib/, '..', 'data', 'work' — opened by `lib/work-journal.js`
 - **XDG_DATA_HOME** — default os.homedir(), '.local', 'share' — opened by `cos/app/store.js`
 
@@ -8545,19 +14911,20 @@ The tables. Cortex's JAA store (`jaa/`, `cortex/memory/`) holds the named tables
 The node types. Everything NEXUS keeps as a file is a node: one envelope (`lib/node-export.js`: uuid, type, id, context, intent, summary, system, tags, occurrences, payload) around a typed payload, written as YAML. These are the types the envelope accepts.
 
 <details>
-<summary>the node types · 61</summary>
+<summary>the node types · 64</summary>
 
-.hat · .contract · .component · .cos · .agent · .health · .model · .schema · .provider · .crystal · .ledger · .command · .gap · .pat · .macro · .tool · .node · .failure_mode · .idea · .framework · .toolbox · .job · .intent · .hook · .wire · .inject · .filetree · .repo_agent · .system · .event · .capability · .synthesis · .input · .output · .note · .hypothesis · .agent_tool · .injection · .fault · .bep_pattern · .resonance_crystal · .interstitial_space · .account_identity_index_entry · .pattern_sequence · .inject_rule · .sigma_record · .hook_contract · .component_projection · .constitution_decision · .chat_log · .tool_index_entry · .raid_contract · .debug_macro · .chunk · .response · .repository · .agent_model · .workflow · .step_gate · .run · .procedure
+.hat · .contract · .component · .cos · .agent · .health · .model · .schema · .provider · .crystal · .ledger · .command · .gap · .pat · .macro · .tool · .node · .failure_mode · .idea · .framework · .toolbox · .job · .intent · .hook · .wire · .inject · .filetree · .repo_agent · .system · .event · .capability · .synthesis · .input · .output · .note · .hypothesis · .agent_tool · .injection · .fault · .bep_pattern · .resonance_crystal · .interstitial_space · .account_identity_index_entry · .pattern_sequence · .inject_rule · .sigma_record · .hook_contract · .component_projection · .constitution_decision · .chat_log · .tool_index_entry · .raid_contract · .debug_macro · .chunk · .response · .repository · .agent_model · .workflow · .step_gate · .run · .procedure · .phase · .graph · .gate
 
 </details>
 
 The ledgers. What happened is append-only: each ledger keeps its rows in order and never rewrites one. The contract ledger (`lib/work-journal.js`, 0.60.146) is one per contract, every gate's attempts, jobs and replies; a browser agent's reply text lives once, in Clear Glass's chat ledger (`clear-glass/src/downloads/chat-ledger.js`).
 
 <details>
-<summary>the ledgers and records · 15 modules</summary>
+<summary>the ledgers and records · 16 modules</summary>
 
 - `lib/activity-log/compartment.js`
 - `lib/activity-log/index.js` — per-system activity + error logging into cortex James: "a log for each system, a full log for activity to save in cortex, like
+- `lib/chat-ledger-client.js` — read Clear Glass's live chat ledgers through its own routes (0.60.192). James, 2026-10-21: "look in clearglass download manager". His 0.39.278 idea already…
 - `lib/compartment-dom-ledger.js` — lib/compartment-dom-ledger.js §MCO10 2026-09-13 — James: "stream the DOM to the compartment ledger per
 - `lib/component-ledger.js` — // ── lib/component-ledger.js — Per-Component, Per-System Ledger ────────────── // UUID: nexus-component-ledger-v1-0000-4000-0000-000000000001
 - `lib/engine-ledger.js` — // ── lib/engine-ledger.js — DEPRECATED, kept as a compatibility shim ───────── // Superseded 2026-06-24 by lib/component-ledger.js — per-component,
@@ -8577,10 +14944,10 @@ The ledgers. What happened is append-only: each ledger keeps its rows in order a
 
 ### All the Idearium work
 
-Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and builds, and the Code tab where the agents work. Everything it can do is a route on :4800, served by `idearium/api/index.js`, and every route a person uses is also a command row in `idearium/cli/route-commands.js`, so every agent can do it through the one command tool. Read from the route table itself: 395 routes, and 124 command rows. Its files, module by module, are under its own section above; what each release did to it is in the version history below.
+Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and builds, and the Code tab where the agents work. Everything it can do is a route on :4800, served by `idearium/api/index.js`, and every route a person uses is also a command row in `idearium/cli/route-commands.js`, so every agent can do it through the one command tool. Read from the route table itself: 416 routes, and 157 command rows. Its files, module by module, are under its own section above; what each release did to it is in the version history below.
 
 <details>
-<summary>the routes · 395, grouped by path</summary>
+<summary>the routes · 416, grouped by path</summary>
 
 - **/** — GET /
 - **/api/access** — GET /me · POST /login · POST /logout · GET /keys · POST /keys · POST /keys/:id/revoke
@@ -8599,6 +14966,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/contract** — GET / · GET /live
 - **/api/copilot** — POST /suggest
 - **/api/cos** — GET /testenv · POST /testenv/setup · GET /install · POST /install · GET /compartments · GET /compartments/:cid/remotes · POST /compartments/:cid/remotes · DELETE /compartments/:cid/remotes/:name · GET /compartments/:cid/remotes/:name/status · POST /compartments/:cid/remotes/:name/push · POST /compartments/:cid/remotes/:name/pull · POST /remote/browse · POST /remote/clone
+- **/api/data** — GET /home · GET /home/:system · POST /home/:system · POST /rollback
 - **/api/economy** — GET / · POST / · GET /:what
 - **/api/events** — GET /
 - **/api/gaps** — GET / · POST / · GET /:uuid · POST /:uuid/resolve · POST /:uuid/ignore
@@ -8606,10 +14974,12 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/history** — GET /import · POST /import · PUT /import/upload
 - **/api/ideas** — GET / · POST / · GET /:uuid/workbench · POST /:uuid/workbench/admit · POST /:uuid/workbench · GET /:uuid · PATCH /:uuid · DELETE /:uuid · POST /:uuid/tension · POST /:uuid/link · POST /:uuid/spec · POST /:uuid/phase · POST /:uuid/progress
 - **/api/lattice** — POST /neighbours
+- **/api/ledger** — GET /out
 - **/api/my-projects** — GET /
 - **/api/nexus** — GET /store · GET /tape · GET /tape/:run
 - **/api/notes** — GET / · POST / · PATCH /:id
 - **/api/ollama** — GET /check · POST /check/ask · GET /models
+- **/api/phases** — GET /census · GET /next
 - **/api/projects** — GET / · POST / · GET /:uuid/download · DELETE /:uuid
 - **/api/providers** — GET /ready
 - **/api/queue** — POST /:queueId/progress · GET /:queueId
@@ -8622,6 +14992,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/repos/:uuid/architecture** — GET / · POST /
 - **/api/repos/:uuid/artifacts** — GET /
 - **/api/repos/:uuid/branches** — GET /
+- **/api/repos/:uuid/changelog** — GET /
 - **/api/repos/:uuid/changes** — GET / · GET /:id
 - **/api/repos/:uuid/charter** — GET / · PUT / · POST /check
 - **/api/repos/:uuid/chunk** — GET /:chunkUuid · POST /
@@ -8658,7 +15029,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/repos/:uuid/manage** — POST /
 - **/api/repos/:uuid/map** — GET /
 - **/api/repos/:uuid/notes** — GET / · POST /
-- **/api/repos/:uuid/phases** — GET / · GET /runs · GET /graph · GET /contract · GET /cost · POST /map · GET /map · POST /status · POST /add · POST /build
+- **/api/repos/:uuid/phases** — GET /next · GET / · GET /runs · GET /graph · GET /dag · GET /contract · GET /cost · POST /map · GET /map · POST /status · GET /closes · POST /close · POST /evidence · POST /groom · GET /nodes · POST /add · POST /build
 - **/api/repos/:uuid/plan** — GET /
 - **/api/repos/:uuid/procedures** — GET / · POST / · POST /from-run · POST /:id/replay · DELETE /:id
 - **/api/repos/:uuid/proof** — POST / · GET /
@@ -8666,6 +15037,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/repos/:uuid/reindex** — POST /
 - **/api/repos/:uuid/releases** — GET / · POST /
 - **/api/repos/:uuid/roadmap** — GET / · POST /phase
+- **/api/repos/:uuid/roadmaps** — GET / · POST /import
 - **/api/repos/:uuid/run** — GET / · POST /:op · POST / · GET /capabilities · GET /options
 - **/api/repos/:uuid/runs** — GET / · POST /:runId/rewind
 - **/api/repos/:uuid/scan** — GET /
@@ -8679,6 +15051,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/repos/:uuid/system** — GET / · POST /:op
 - **/api/repos/:uuid/tasks** — GET /
 - **/api/repos/:uuid/thread** — GET /
+- **/api/repos/:uuid/uploads** — GET / · POST / · GET /:id · POST /:id/answer
 - **/api/repos/:uuid/verification** — GET /
 - **/api/repos/:uuid/verify** — POST /
 - **/api/repos/:uuid/versions** — GET / · GET /diff · GET /tree · POST /restore-file
@@ -8704,7 +15077,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 </details>
 
 <details>
-<summary>the command rows · 124 (every agent has them through nexus.command)</summary>
+<summary>the command rows · 157 (every agent has them through nexus.command)</summary>
 
 - **repo ask "" [--provider claude-code|ollama|chatgpt|…] [--model m]** — talk to the agent wearing the repo's hat (its code lands as proposals)
 - **repo agent [--provider p] [--inject review|auto|off] [--scope s] [--model m]** — who wears the hat, and how its code lands
@@ -8751,6 +15124,20 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **contract status** — complete or not, and exactly why — derived from the gates, gaps and invariants
 - **contract audit** — every brick (its agent, attempts, verification), every dependency edge, every checkpoint and every gate — the auditable record of a contract run
 - **repo contract [--map name] [--gate id] [--trace]** — a phase build's contract, audited: every brick (its agent, attempts, verification, the commit it passed at, a rewind), every dependency, checkpoint…
+- **repo dag [phase] [--map path] [--cross]** — 
+- **repo changelog [--limit n] [--all]** — 
+- **ledger out** — 
+- **phases next [--limit n] [--group decision|deps-open|cycle|dangling|no-files|done-by-evidence|held|conflict]** — 
+- **repo next [--limit n] [--group …]** — 
+- **repo closes** — the phases its proven, landed runs closed by themselves (SL1), each with the run and version; reopened ones say which change was undone
+- **repo close** — 
+- **repo nodes** — 
+- **repo groom [--apply] [--map ]** — 
+- **repo evidence [--apply] [--limit n] [--map ]** — 
+- **phases census [--system idearium] [--open]** — 
+- **repo upload --intent "what these files are for"** — upload a zip into a repo with an intent: every file is placed against the repo (its folders, its systems, who requires what, his earlier answers)…
+- **repo uploads [upload-id]** — the uploads waiting for his answer (and the answered ones), or one upload with every file's proposed place, why, its system and registry neighbours
+- **repo upload-answer [--to "from=path,from=path"] [--skip "from,from"] [--no-apply]** — his answer to an upload: keep the proposed places, move files (--to), skip some (--skip); only then is anything written (text through the proposal…
 - **repo map-phases [status] [--limit n] [--no-apply] [--done] [--untrusted]** — map every phase that names no files to its files (an agent, scored first on phases whose files are known) and every phase to its dependencies (from…
 - **repo compile-spec [--into folder] [--template genesis|compiler|]** — lay out a .spec in the compiler's format from its template — genesis by default (the nexus-system skeleton, the spec's modules slotted in as…
 - **repo plan [phase] [--map name]** — the build plan: each phase with its pieces (one per planned file: pending, running, written, failed, proven) — or one phase with every run and its log
@@ -8759,6 +15146,8 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **system compartment [] [--apply]** — each system's COS compartment from loom's template (nexus-self-): its intent (end state: sovereign; conditions; the genesis axioms), runtime, mounts…
 - **system shape []** — does each system match genesis (the skeleton cos/archetype/nexus-system): every role — entry, cli, config, compartment, registry, contract, events,…
 - **system sovereign []** — which systems are sovereign (nothing they require is in another system's folder; lib/ is the kernel) and, for each that is not, what is in the way:…
+- **data home [] [--apply]** — each system's own data: where it lives and what of it still waits in the root data/ (and why); with a system, each file's plan; --apply brings it…
+- **data rollback** — put a bring-home's files back where they were, from the manifest it printed
 - **system nodes [ []]** — a system's own node database (/data/node-index): each node type with its files, its index and its history; with a type, its nodes; with an id, that…
 - **failure list [--open] [--class ] [--limit n]** — every failure mode Nexus recorded (cortex): what failed, where, how often, whether it has a cause chain and a macro yet
 - **failure show** — one failure mode as its report: what failed, the conditions that led to it and the holes in that chain, ripple/wave/tidal, sigma, the CFR field, how…
@@ -8795,8 +15184,11 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **components bundle** — one component and everything it requires as one organized zip (component.json, package.json, README, files at their project paths)
 - **activity [--kind k] [--actor a] [--status failed] [--q words] [--limit n]** — every compartment's activity log at once (what BrainOS shows)
 - **repo phasemap [--ready] [--map name]** — every phase of the repo's phasemaps: done, ready to build, blocked — and its last run
+- **repo roadmaps** — the roadmaps a project brought with it (phases.json, roadmap.json, PHASEMAP.md, ROADMAP.md), and whether each is imported as a phasemap yet
+- **repo lift-root [--apply]** — a project imported inside its own folder (before 0.60.200) lifted to the repo's root, so a phase's paths (lib/title.js) are where the build looks;…
+- **repo roadmap-import [] [--replace]** — import a project's own roadmap as a Nexus phasemap beside it: its ids, states, percent, what blocks what (each edge says which file it came from),…
 - **repo phase-graph [--map name]** — a phase's dependency graph, the one a build is refused without: the files it changes, what they use, who uses them (what a change can break), the…
-- **repo phase [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan] [--anyway]]** — one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan…
+- **repo phase [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan] [--anyway]…** — one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan…
 - **repo versions [--limit n] [--kind snapshot|backup|staging|history|revision]** — every version of the repo, newest first: snapshots (VR1: every change a commit), backups, staging, imported history, work-surface revisions
 - **repo releases [--cut] [--version x.y.z] [--quote "…"] [--notes "…"]** — the repo's releases, newest first (Versionium tags with the commits since each last one); --cut releases the head now
 - **repo desktop [status | start | stop | pause | resume | checkpoint [--label "…"] | checkpoints | rewind ]** — the repo's desktop VM: power, pause, live checkpoints, rewind
@@ -8816,7 +15208,19 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **field point [click|double|right|move|scroll|type] [--text t] [--via native|eros] [--on ]** — act on a numbered target, the way a person's pointer would — a covered target is said, never clicked through
 - **picks [--last] [--html]** — the elements James handed to the agents with the Guardian picker (→ CLAUDE CODE): selector, page, text — newest first
 - **glass signin [provider]** — bring a provider tab (or every one) to its default account's saved sign-in in Clear Glass; says what it did per provider
+- **page [--on ] [--max n]** — the page map of a Clear Glass window: regions, forms (fields, required, submit), actions and headings as short lines, and what changed since the…
+- **page find [--on ] [--fresh]** — intent → the blocks on the page to act on, ranked, each with its selector, address, centre (x,y) and why (words, kind, covered, stable here, worked…
+- **page outcome ok|fail [--on ]** — tell the page map what happened when a found block was acted on — it learns for this intent on this kind of page
+- **page chunks [query…] [--on ] [--max-chars n]** — the page as chunks of text by section — or only the chunks a query hits (reading, analysing, reverse engineering)
+- **page scrape [--json] [--on ] [--out file]** — the whole page as markdown by section (or --json: blocks + chunks + map) — the web scraper; --out writes it to a file
 - **field windows** — what the field is doing in each Clear Glass window: its last map, spotlight and pointer, and how lately the page changed
+- **site [set | clear | keys]** — one site's settings for every Clear Glass feature (autofill, macros, workflows, passwords, network, resume, ClearDriver, Co-pilot, Guardian): each…
+- **autofill pick [--agent ] [--profile ]** — the element picker on a field the autofill missed: he clicks the box for in the application tab; it is checked, saved for that site, and the page is…
+- **autofill learn [--url ] [--agent ]** — teach the autofill a field by name: the field's label/name/id → what goes there, saved for that site
+- **autofill learned []** — the fields the autofill was taught, per site (by the picker or by name): field → what goes there
+- **autofill forget** — forget one taught field on one site: the next fill asks again
+- **glass processes** — what is running in Clear Glass: each process with its tabs and background tabs, memory and CPU (ending one is his, in the Processes window)
+- **glass activity [--kind nav|bgtab|driver|macro|workflow|download|error|process] [--origin https://site]…** — what just happened in Clear Glass, newest first: pages loaded, background tabs, the driver, macros, workflows, downloads, errors
 - **nerve** — Nexus Nerve: the field's regime, which systems are present, and where each window's attention is
 - **dump [--lines]** — drop an idea (or many, one per line with --lines) into the Void — verbatim, sorted later
 - **census [--verdict claimed|verified|contradicted|built?|open] [--specs…** — 
@@ -8829,18 +15233,93 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **grep [--path dir] [--limit n]** — search the Nexus code for a pattern: file:line: text (no node_modules, data or archive)
 - **chat-crawl []** — the personal-chat crawler: reads an account's chat list, then each chat once, then only new or changed ones; off until the account's switch is on in…
 - **nexus-release** — the latest Nexus release and COS: status says what is out, what COS has and what a fetch would do (downloads nothing); fetch puts the zip in COS's…
-- **net |add --via V [--provider p] [--url pattern] [--origin host] [--caller c] [--protocols https,wss]…** — 
+- **adblock on|off|update [id|all]|import [--title T]|remove |allow |disallow |check [page]|rules "">** — 
+- **firefox ]>** — 
+- **net [--via transport|direct|block] [--list name]|unlist |resolve |add --via V [--provider p] [--url pattern]…** — 
 
 </details>
 
 
 ### Every release, in his words
 
-Every release note in the tree, 364 of them, newest first. Each opens with James's own words: what he asked, as he wrote it, his spelling kept. Then what was built, from the note's own section headings. The note itself is the file named, at the top of the tree. Releases are grouped by series; each series opens to its releases.
+Every release note in the tree, 437 of them, newest first. Each opens with James's own words: what he asked, as he wrote it, his spelling kept. Then what was built, from the note's own section headings. The note itself is the file named, at the top of the tree. Releases are grouped by series; each series opens to its releases.
 
 <details>
-<summary>0.60.x · 156 releases · 0.60.0. to 0.60.159.</summary>
+<summary>0.60.x · 229 releases · 0.60.0. to 0.60.233.</summary>
 
+- **0.60.233.** — 2026-10-24 — the SL line merged into main, additively — James: "merge and push" — built: What was checked · What the merge needed
+- **0.60.232.** — 2026-10-24 — JA5: the pick is also a macro and an automation node — James: "merge and push. yes make the macro too." — built: What it does · On screen · Reuse (§8.6)
+- **0.60.231.** — 2026-10-24 — JA4: the learn-loop on screen — James: "continue" — built: What was missing · On screen (Settings › Autofill) · Built (backend → API route → command/agent → UI, his order 2026-10-07)
+- **0.60.230.** — 2026-10-24 — JA3: the element picker on a field the autofill missed — James: "if he doesn't understand, have the element picker popup for me to select the element for him. saves to per site settings, and as a macro…" — built: What was missing · Reuse before build (§8.6) · Built (backend → API route → command/agent, his order 2026-10-07)
+- **0.60.229.** — 2026-10-23 — James: "can you decompose the phases into .phase with the dependancy graph per phase node. then move them into the repsective systems, or sort…" — built: Built · Found and fixed on the way, measured · To confirm with you
+- **0.60.228.** — 2026-10-23 — James: "agent needs to map dependancies if nexus cant map one." — built: Why · Built · Found, said
+- **0.60.227.** — 2026-10-23 — James: "need to do something about the dependancy graph." — built: What was wrong, measured first, each traced to its root · Built · Not done, said
+- **0.60.226.** — 2026-10-23 — JA2: the picked field is saved per site, and the fill path reads it back — James: "then the phases with the per site settings." — built: What was missing · Reuse before build (§8.6) · Built (backend → API route → command/agent, his order 2026-10-07)
+- **0.60.225.** — 2026-10-23 — JA1: the job-application autofill learns per site — James: "confused" — built: Verified first (§0.1, evidence over memory) · The real gap, and the fix (JA1) · Why (traced, §0.1)
+- **0.60.224.** — 2026-10-23 — James: "next" — built: Why · Built (SL2) · The first dry run over Nexus (nothing written)
+- **0.60.223.** — 2026-10-23 — James: "contiue getting idearium building phases" — built: Why · Built (SL1) · Drift from the spec, decided by the axioms
+- **0.60.222.** — 2026-10-23 — James: "whats the most important? can you help me build, invent, innovate, ways for idearium to build phases, all of them, we need this to work so…" — built: Why this first · Spec first (his 2026-10-20 rule) · Built (SL0)
+- **0.60.221.** — 2026-10-23 — built: What he brought · Found · Built (SD17b)
+- **0.60.220.** — the Processes window (SP6) — James: "Also need a processes screen for background tabs and activity." — built: What stands on what · Built
+- **0.60.219.** — what is running, and what just happened (SP5) — James: "Also need a processes screen for background tabs and activity." — built: What stands on what · Built · Found on the way, closed by his axioms
+- **0.60.218.** — ClearDriver, Agent Mesh and Guardian settings (SP4) — James: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state. Cleardriver, agentmesh and…" — built: What stands on what · Built · Not done, said
+- **0.60.217.** — the Site Settings screens, by feature (SP3) — James: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state. Cleardriver, agentmesh and…" — built: What stands on what · The toolbar's Site Settings popup · Settings › Sites
+- **0.60.216.** — each feature reads its site value (SP2) — James: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state. Cleardriver, agentmesh and…" — built: What stands on what · Each feature, at the point it decides · Readings to confirm
+- **0.60.215.** — one site's settings for every feature (SP1) — James: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state. Cleardriver, agentmesh and…" — built: What stands on what · Built · Not yet
+- **0.60.214.** — the agents hub's tools leave the ☰ menu — built: Why they were back · Now · Also
+- **0.60.213.** — no second box inside the start page's search
+- **0.60.212.** — Loom, Copilot and Intelligence hold their own files (DL3) — James: "then resume data migratino" — built: What moved · Architect
+- **0.60.211.** — zoom controls on the toolbar; the start page's agents load reliably — James: "can you integrate that into clearglass, its a basic funcaiton of any browser." — built: Zoom · The start page's agents
+- **0.60.210.** — the ☰ menu's Tools and Customize toolbar, rebuilt — built: Why they looked cheap · What was rebuilt · Found on the way
+- **0.60.209.** — six more systems hold their own files (DL3) — James: "continue" — built: What moved · Found by running the tests one by one
+- **0.60.208.** — Guardian holds its own data (SS1, DL3 for Guardian) — James: "start the data migration. look at the phases, any migrating data to the respective systems, and make each system responsible for it's own…" — built: Guardian no longer writes into Cortex's store · Guardian's paths go through the data-home module · Not yet
+- **0.60.207.** — each system brings its own data home (DL2) — James: "start the data migration. look at the phases, any migrating data to the respective systems, and make each system responsible for it's own…" — built: The phases that migrate data · What was built · What it means today
+- **0.60.206.** — a wrapped repo lifts to its root (SD22) — James: "the agent button does nothing in the code tab.. aloso the ui for clearglass is cut off." — built: What was broken · The fix · The two screen faults from the same screenshots
+- **0.60.205.** — what his run log showed (SD21) — built: The six fixes · Not fixed yet
+- **0.60.204.** — a ChatGPT sign-in popup stays open — James: "also fix chatgpt. i can't login. i click login and it pops up for a second and dissapears" — built: What was happening (read from the code; his run confirms it) · What changed (clear-glass/src/providers/attention.js 1.4.0) · If it still closes
+- **0.60.203.** — a starved machine does not spin — built: What his run log showed · What changed · Not changed, said
+- **0.60.202.** — a refused proposal goes back to its agent with the failing test — James: "need a retry or automatically ask for the fix if possible, or a tool or something" — built: What his screenshots showed · What changed · Found, not changed
+- **0.60.201.** — for any project: a busy Idearium is said plainly, and any project's tests can run — built: What his log showed · What changed, for every project · Not yet for any project
+- **0.60.200.** — what Idearium needed to work on MASTERMIND — James: "i just want you to add what idearium needs to work on mastermind." — built: How the list was made · What the run found, and what changed · Where MASTERMIND stands now (the real run)
+- **0.60.199.** — an imported project continues from its own roadmap — built: Context · What was built (SD17, docs/2026-10-10-idearium-solid-phasemap.spec) · MASTERMIND's real roadmap, run through the importer
+- **0.60.198.** — a build stands on the registry: spine, event bus, interaction contract, component registry — James: "yes, the registry should be the spine, event bus, interaction contract, and component registry." — built: Context · What was found (read from the code) · What changed
+- **0.60.197.** — the snapshot names the component registry — James: "shouldn't that be the component registry. architecture tab" — built: Context · What was found · What changed
+- **0.60.196.** — an upload that outran its wait closes and indexes; a build indexes a repo instead of refusing it — James: "now its not working, i clicked the phases to build it and got: ... the import project ui needs to close when it's complete." — built: What happened · What changed · On his machine
+- **0.60.195.** — 2026-10-21 — Why SP5 never landed: the file that worked was called missing — James: "okay bvut did it not capture response from chatgtp." — built: Did it capture ChatGPT's response? No · The proposal "by chatgpt" was Gemini's · Why nothing fixed SP5 — the real cause
+- **0.60.194.** — 2026-10-21 — SP5's title.js: four reasons it kept failing, and what was fixed — James: "its having so much issue with the title.js. nothing has fixed it. sp_5." — built: 1. ChatGPT changed its chat URLs (the "all of a sudden") — fixed · 2. A junk test file from before the fix was blocking Apply — fixed · 3. The proposed title.js really is wrong — the gate was right
+- **0.60.193.** — 2026-10-21 — The Home tab shows the atlas again — built: Cause · Fix · Measured
+- **0.60.192.** — 2026-10-21 — Your download manager already kept the stream; now the fallback reads it — James: "look in clearglass download manager" — built: What I got wrong in 0.60.191 · What's built in its place · Found on the way
+- **0.60.191.** — 2026-10-21 — What you watched being written is kept: the stream as a fallback route — James: "each system will use its own component registry." — built: The stream as a fallback route · Each system uses its own component registry · Your Idearium tabs
+- **0.60.190.** — 2026-10-21 — An approved change, connected end to end — James: "make sure it's all interconnected, changes are logged and the diff snapshotted in versionium with a change log when approved. what about…" — built: What already held, and what didn't · What's built (decided by your axioms: one record, §7.6 and §0.3) · Measured
+- **0.60.189.** — 2026-10-21 — Every run says who started it — James: "It built 5 phases in a row. I think I see what you mean but there are way more idearium phases than that." — built: The trace · Built: RC7 · Measured
+- **0.60.188.** — 2026-10-21 — The census: every Idearium phase judged against its evidence — James: "Follow the axioms in docs. Use them as law, and for every decision. It built 5 phases in a row. I think I see what you mean but there are…" — built: The census (CNS1) · How the evidence rules got strict · Found and fixed at the cause (§1.2)
+- **0.60.187.** — 2026-10-21 — The pipeline's two open root causes, found and fixed at the cause — James: "Now back to the pipeline workflow and automation in idearium. Look at the phases for idearium and the pipeline." — built: RC5 — where "Gemini said" got into file paths · RC6 — the Ollama job with no owner, every ~90 s · Measured
+- **0.60.186.** — 2026-10-21 — Websites use the password manager; a login belongs to the account the cookie vault keeps — James: "can you have websites use the passowrd manager and hook it into the cookie vault or store what ever it uses." — built: Found · Reading (to confirm) · Built
+- **0.60.185.** — 2026-10-21 — One ☰ menu, Firefox's menus for the UI, the menu at the page's own point, bookmarks by the site's account — James: "bookmarks are meant to be able to link to the accoubt being used for the relative site not the providers. and remove the bookmarks from…" — built: Readings (to confirm) · Built · Measured
+- **0.60.184.** — 2026-10-21 — Your own lists: the ad blocker and Snowflake import files, folders and host lists — James: "Needs filters. you'll be able to import folders and host lists. Same with the Snowflake plugin." — built: Reading (to confirm) · Built · Measured
+- **0.60.183.** — 2026-10-21 — A full ad blocker, plugin pages, zoom in the core, a right-click menu at the mouse — built: Found · Built · Measured
+- **0.60.182.** — 2026-10-21 — Co-pilot decides what to look at — James: "can you have the dom, cookies, and picks buttons migrated into copilot so he does it automatically when he needs it." — built: Found · Built (BS12) · Measured
+- **0.60.181.** — 2026-10-21 — the co-pilot pane is just Co-pilot — built: Changed · Measured
+- **0.60.180.** — 2026-10-21 — the window designed properly, Guardian's agents in one place, the bridge set up by itself — built: What was wrong (the coder's read of the 0.60.179 shots) · Also found: a bug the redesign itself introduced, fixed before release · Built
+- **0.60.179.** — 2026-10-21 — Snowflake downloads with kill on disconnect, a real Firefox import, the window rebuilt like Firefox, a floating CLI no… — James: "add magnet link handling, download manage for the compartment. kill on disconnect." — built: Found before building · Readings (to confirm) · Specced (his rule: spec, then phases, then each phase specced again)
+- **0.60.178.** — 2026-10-21 — Snowflake working end to end: the page inside the compartment — built: Root causes (read in the source before anything was built) · Readings (to confirm) · Specced (his rule: spec, then phases, then each phase specced again)
+- **0.60.177.** — 2026-10-21 — the data layout specced, and a clear-up tool that moves state safely — James: "need all data in the data folder migrated to each relative system" — built: Specced (his rule: spec, then phases, then each phase specced again) · Built: DL0 and DL1, lib/data-clearup.js · Measured
+- **0.60.176.** — 2026-10-20 — full specs first, then phases, then each phase specced again — James: "not phasemaps. full specs to build them. everything needs to be speccced before built,so it can be rebuilt if lost. can you do that? what…" — built: What it stands on (§8.6) · Built · Fixed (specced first)
+- **0.60.175.** — 2026-10-19 — the page map in the co-pilot's hands, felt by Ollama through Nerve, live, with a panel — James: "interaction field, nexus nerve, hooking ollama in to feel with" — built: What it stands on (§8.6) · Built · Not proven
+- **0.60.174.** — 2026-10-19 — the page as blocks, chunks and a map that learns — James: "like i need copilot to use clearglass more effectively. parse the dom, index each element as blocks, then download into a index to chunk,…" — built: What it stands on (§8.6) · Built · Not proven
+- **0.60.173.** — 2026-10-19 — upload a zip with an intent: placed against the repo, asked of him, written only by his answer — James: "i want to be able to upload files to idearium repos. upload zip with an intent, have it map to nexus using a tool, then ask me with the…" — built: What it stands on (§8.6) · Built · Found on the way
+- **0.60.172.** — 2026-10-19 — every phase sits in one checked DAG — James: "okay all of the idearium phases. every phasemap phase needs extensive dag, that needs to start being standard." — built: Built · Nexus's own maps, as it reads them · Not proven
+- **0.60.171.** — 2026-10-19 — verify first: a file that already works is not rebuilt; Gemini first, briefed the way it asked — James: "need verify first, and everything else to solidify the pipeline. prioritize gemini, since clearglass doesn't break terms. need to specify…" — built: What his log showed · Built · Not proven
+- **0.60.170.** — 2026-10-19 — the pipeline's root causes: a watcher can no longer kill a kernel, the node scan is linear, node and agent file names stay… — James: "we need to fix the pipeline though. like i said." — built: What his log showed, and the cause found in the code · The fix · Not proven
+- **0.60.168.** — 2026-10-19 — the repo desktop: a failed WHPX launch no longer drops straight to a desktop too slow to steer; the way in by terminal is shown — James: "can you fix the cos envirement? i can't control it or access it. idearium. look at the spec in the idearium folder called genesis, and…" — built: What the screenshot and the code show · The fix · Not proven
+- **0.60.167.** — 2026-10-19 — a phase that is already done no longer loops forever on test-first — James: "been stuck on that phase for hours." — built: The cause · The fix
+- **0.60.166.** — 2026-10-19 — CT1: COS is the gate's test environment — James: "then we need cos to work for test env." — built: Why · The door · Next
+- **0.60.165.** — 2026-10-19 — AB1 (economy-resume): a rate-limit hold waits and retries, it no longer cancels — James: "fix the economy time out also like retries when the time runs out." — built: The cause · The fix — resume the all-transient case (reuse, no new scheduler) · Safety (the critical part)
+- **0.60.164.** — 2026-10-19 — CR1: the project's component registry (the spine) — James: "the component registry is vital for each project becuase its the spine that makes components dumb." — built: The gap · The fix — every built file joins the spine · Reuse, not new (§8.6)
+- **0.60.163.** — 2026-10-19 — MF1: model-fit routing (the solid foundation, brick 1) — James: "yes, get this solid. learn, and know what for what, limits, contraints, dynamic chunking, etc. memory, everything that can get it working." — built: The problem · The fix — leave off what can't fit, up front · Reuse, not new (§8.6)
+- **0.60.162.** — 2026-10-19 — James: "look at the most recent phases. gates, dag per contract, phase, spec, chunk. need to get the pipeline working." — built: The red error · The cause · The fix — each phase names its files (so the graph is real)
+- **0.60.161.** — 2026-10-19 — James: "need help with the autofill for fiverr." — built: The cause · GA1: one deterministic door for the co-pilot · GA1a: the panel and the co-pilot fill the same gig
+- **0.60.160.** — 2026-10-18 — James: "can you add snowflake to the ui. it doesn't show up as a plugin." — built: Why it isn't a plugin · New section: Settings → Network · Note (for a later pass, his security question)
 - **0.60.159.** — 2026-10-18 (mapped) — James: "Feature in So with the file section in the code tab in Idearium, there needs to be a simulated environment, a file tree for the…" — built: What already exists · The map · Decided by his axioms
 - **0.60.158.** — 2026-10-18 — James: "Need to get the gates solid." — built: The gate machinery: six holes, each proven on the code, then closed · Every gate-related test, run alone · Two more fixes the re-run found
 - **0.60.157.** — 2026-10-18 — James: "associative lattice, every data node, is a node in the associative lattice, interconnected by the timestamp and cuasal graph." — built: The node lattice · Delivered in order · Measured on this tree
