@@ -9,9 +9,9 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '../..');
-const pkg = require(path.join(ROOT, 'emergence/package.json'));
+// 0.60.232 — emergence/ archived (_archive/2026-10-24-not-systems/emergence; James, 2026-10-24: "Archive."): it is not one of Idearium's
+// systems and nothing in Nexus requires it. Its suites went with it; WARP's stay here.
 const suites = [
-  ...pkg.scripts.test.split('&&').map(s => s.trim().replace(/^node\s+/, '')).map(f => ['emergence', f]),
   ...['core', 'digest-regression', 'v1.1.0-additions', 'v1.4-additions'].map(n => ['warp', `test/${n}.test.js`]),
 ];
 let passed = 0, failed = 0;

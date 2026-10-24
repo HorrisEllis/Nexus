@@ -474,3 +474,18 @@ James, 2026-10-24, after 0.60.230 counted 20 systems: "15 systems. only the ones
 - **What is left for the unhomed:** each needs a home (moved into the system that uses it, DB17) or to be archived; the census lists their
   users, so the home is read from the evidence, as 0.60.230 did for the eight. warp is used by ten folders (it is the primitive the
   census's PRIMITIVES already names), nexus by eleven.
+
+## ADDENDUM 2026-10-24 (0.60.232) — "Archive."
+James, 2026-10-24: "Archive." — his answer to the coder's "1. Home or archive the unhomed folders … Your erosmancer question is still open."
+- **The coder's reading (to confirm):** archive what is not a system and is not needed. By the axioms (REVERSIBILITY, §1.2 nothing fails
+  silently), a folder that live code still uses cannot be archived without breaking it; it needs a home instead. Each candidate was checked
+  for requires, paths named by name (spawned, served, read), workspaces and tests.
+- **Archived** to _archive/2026-10-24-not-systems/ (git mv; a README says why and how to restore): remote-desktop, security (the top-level
+  e2e-channel and signaling-envelope), emergence (with its own suites; tests/modules/test-emergence-and-warp-suites.test.js keeps WARP's).
+- **Not archived, his to decide:** erosmancer (Clear Glass starts ErosmancerOS from erosmancer/erosmancer-os, his "erosmanceros to start
+  with clearglass"; an npm workspace) and sentinel (cli/sentinel.js and two tests use it). **Kept, live:** service (the Idearium UI tells him
+  to start node service/idearium-service.js), tablet (two tests read its pages), seams (tests/brutal.test.js requires it), ui (served), and
+  the used unhomed folders (warp, nexus, meta, emerge, cli, cockpit, hooks, contracts, architecture-spec): each needs a home, not the archive.
+- **A regression of 0.60.230, found and fixed:** test-cos-compartment-template CT-03/CT-04 used sentinel as the sovereign example; 0.60.230
+  made sentinel not a system and the test was not run then (it passed at 0.60.229). The example is now components (of his 15, the one that
+  requires nothing in another system). CT-07 fails as it did at 0.60.229 (the ratchet's three crossings).

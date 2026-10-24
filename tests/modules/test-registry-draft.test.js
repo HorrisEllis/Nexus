@@ -90,7 +90,7 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
 
   await test('RD-05', "his 2026-10-24 \"Aren't systems\": the eight are folded into their home or parked, never listed, never drafted", () => {
     const SB = require(path.join(ROOT, 'lib/system-boundary.js'));
-    assert.deepStrictEqual(Object.keys(SB.FOLDED).sort(), ['auth', 'erosmancer', 'jaa', 'mesh', 'remote-desktop', 'security', 'sentinel', 'siso']);
+    assert.deepStrictEqual(Object.keys(SB.FOLDED).sort(), ['auth', 'erosmancer', 'jaa', 'mesh', 'sentinel', 'siso'], 'remote-desktop and security were archived (0.60.232)');
     const sys = SB.systems(ROOT);
     for (const f of Object.keys(SB.FOLDED)) assert.ok(!sys.includes(f), `${f} is not a system`);   // the parts stay in the scan (crossings into hooks/ are real edges); they leave only the sovereignty list
     const scan = SB.scan({ root: ROOT });
@@ -115,9 +115,11 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
     assert.ok(sov.systems.every(r => folders.has(r.system)), 'only Idearium\'s systems are listed');
     assert.strictEqual(sov.systems.length, 14, 'the 14 with a folder (core is the kernel)');
     const unhomed = sov.notSystems.unhomed.map(u => u.folder);
-    for (const f of ['warp', 'nexus', 'meta', 'cli', 'cockpit', 'emerge', 'emergence']) assert.ok(unhomed.includes(f), `${f} is not a system: unhomed`);
+    for (const f of ['warp', 'nexus', 'meta', 'cli', 'cockpit', 'emerge']) assert.ok(unhomed.includes(f), `${f} is not a system: unhomed`);
     assert.ok(sov.notSystems.unhomed.find(u => u.folder === 'warp').usedBy.cos > 0, 'with who uses it');
-    for (const f of ['cli', 'cockpit', 'emergence', 'meta', 'nexus', 'warp']) assert.ok(!fs.existsSync(path.join(ROOT, f, 'registry-components.draft.json')), `${f}: its draft was withdrawn`);
+    for (const f of ['cli', 'cockpit', 'meta', 'nexus', 'warp']) assert.ok(!fs.existsSync(path.join(ROOT, f, 'registry-components.draft.json')), `${f}: its draft was withdrawn`);
+    // 0.60.232 his "Archive.": kept in the archive, gone from the tree, never a system
+    for (const f of ['remote-desktop', 'security', 'emergence']) { assert.ok(!fs.existsSync(path.join(ROOT, f)), `${f} left the tree`); assert.ok(fs.existsSync(path.join(ROOT, '_archive/2026-10-24-not-systems', f)), `${f} is kept in the archive`); assert.ok(!unhomed.includes(f)); }
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`);

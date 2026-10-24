@@ -582,7 +582,7 @@ const SUITES = [
   'test-shadow-space.test.js',   // 0.39.322 SH1 — a change acts in a shadow space; only what passes its test and its shadow reaches the real tree
   'test-emerge-core.test.js',   // 0.39.321 EM1 — Emerge core: rejected by id, a gap names its input, a lens cannot write, one seed one history
   'test-route-contracts.test.js',   // 0.39.320 EV0 (2)(3) — every served route in its system's contract, and nothing more
-  'test-emergence-and-warp-suites.test.js',   // 0.39.319 EM0 (3) — Emergence's and WARP's own suites inside Nexus
+  'test-emergence-and-warp-suites.test.js',   // 0.39.319 EM0 (3) — WARP's own suites inside Nexus (0.60.232: Emergence's went to the archive with it)
   'test-nexstore-types.test.js',   // 0.39.300 N2 — the type registry and the gate per type (warp Axiom): missing field, ledger patch, dangling reference refused and logged
   'test-nexstore-writers.test.js', // 0.39.300 DT1 — every writer that persists data has a type, a reason, or is listed owed; a new writer fails
   'test-spec-library.test.js',  // 0.39.290 IL1 — a zip of specs → ideas + specs (duplicates folded, zips in zips, programs refused, by family); importSpec in memory

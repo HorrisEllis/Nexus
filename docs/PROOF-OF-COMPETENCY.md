@@ -100,6 +100,13 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-24: "Archive."** (0.60.232)
+  - **Context:** the folders that turned out not to be systems.
+  - **What it shows:** decluttering by evidence. Three folders that nothing needed were archived with their history kept. Every
+    candidate was checked first for anything that still runs it. Two that are still wired in (ErosmancerOS starts with Clear Glass, and
+    sentinel's CLI) came back to him rather than being broken.
+  - **Evidence:** `CHANGELOG-0.60.232.md`; `_archive/2026-10-24-not-systems/README.md`.
+
 - **2026-10-24: "Aren't systems. They should have been dealt with already" · "15 systems. only the ones with a .spec in the directory. all
   the systems in idearium"** (0.60.230, 0.60.231)
   - **Context:** the coder's census counted 20, then 28, "systems", including folders that are libraries, schemas and parked code. Its
