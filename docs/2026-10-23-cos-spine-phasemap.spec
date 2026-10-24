@@ -330,3 +330,12 @@ test env, web servers, etc all of them" · "this is all the networking backend f
 - **Open, to map against what it replaces (not a phase yet):** Nexus's networking that already exists — Clear Glass's net posture and
   transports (clear-glass/src/net, docs/2026-10-15-clear-glass-network-posture-phasemap.spec), the TLS layer (docs/2026-10-16-tls-layer-phasemap.spec,
   clear-glass/tls-helper). Each moves onto these services as its own phase once SV1 runs; nothing is replaced silently.
+
+## ADDENDUM 2026-10-24 — his point: in COS, a boundary is physical
+James, 2026-10-24, after the systems-sovereign work and emerge + warp: "Oh, and just think, once it's merged with COS, those fucking
+boundaries, they're not, it's not coupling after that. There's no coupling after that."
+The coder's reading: once each system runs in its own compartment, reaching into another system's code stops being a habit to police and
+becomes impossible, because the folder is not there. What remains is coupling through contracts (routes, events, .job/.response, the command
+table): explicit, versioned and checkable, the kind the design wants. Two things a compartment does not remove by itself: the shared data
+store (cortex/memory/jaa-db.js, which has to split, IM6) and a contract's shape (if one changes, every caller feels it). That is why CS_D7
+holds: a system goes into COS only once it is sovereign.
