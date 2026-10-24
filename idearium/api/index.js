@@ -3294,6 +3294,7 @@ const ROUTE_CAP = {
   'system.drawbridge': CAPS.READ_IDEAS,   // 0.60.126 DB1 — the crossings between systems, and the ratchet
   'system.homes': CAPS.READ_IDEAS,   // 0.60.129 DB17
   'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
+  'system.tables': CAPS.READ_IDEAS,   // 0.60.250 SV1 — which system writes and reads which table of the shared store
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
   'system.nodes.list': CAPS.READ_IDEAS,   // 0.60.157 GM4
@@ -3591,6 +3592,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','drawbridge'], 'system.drawbridge'],   // 0.60.126 DB1 — every require() that crosses a system boundary; ?new=1 the ratchet's drift only
     ['GET',    ['api','system','homes'], 'system.homes'],
     ['GET',    ['api','system','sovereign'], 'system.sovereign'],
+    ['GET',    ['api','system','tables'], 'system.tables'],
     ['GET',    ['api','system','shape'], 'system.shape'],   // 0.60.138 — does each system match genesis: every role, its own file, the kernel, or missing (?system=)   // 0.60.133 IM1 — which systems are sovereign, and what stands in each one's way (?system=)
     ['GET',    ['api','data','home'], 'data.home.list'],                 // 0.60.207 DL2 — every system: where its data lives, what still waits in the root data/
     ['GET',    ['api','data','home',':system'], 'data.home.get'],        // 0.60.207 DL2 — one system: its record and each file's plan
@@ -5979,6 +5981,10 @@ async function handle(req, res, route, query, body) {
     case 'system.sovereign': {   // 0.60.133 IM1 — James: "need to get the systems soveriegn again like we were talking about."
       const SB = _require('../../lib/system-boundary.js');
       return ok(res, SB.sovereignty({ root: path.dirname(_require.resolve('../../package.json')), system: (query && query.system) || null }));
+    }
+    case 'system.tables': {   // 0.60.250 SV1 — James: "i want to get each system soveriegn and inside a cos compartment". Evidence only.
+      const SB = _require('../../lib/system-boundary.js');
+      return ok(res, SB.tables({ root: path.dirname(_require.resolve('../../package.json')), system: (query && query.system) || null }));
     }
     case 'system.homes': {   // 0.60.129 DB17 — James: "all system relevant files should stay with the system."
       const SB = _require('../../lib/system-boundary.js');

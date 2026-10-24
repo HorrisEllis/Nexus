@@ -120,6 +120,28 @@ test('SV-09 the census tells the truth: a commented require is no crossing; sove
   assert.ok(c2.sovereign && c2.step === 'registry', 'c is sovereign; its next step is its registry');
 });
 
+// 0.60.250 SV1 (census only) — which system writes and reads which table of the shared store; evidence, never a decision
+test('SV-10 the table census: writers and readers per table, the owner the evidence names, contested said, a constant read, a comment not', async () => {
+  const SB = require('../../lib/system-boundary.js');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sv10-'));
+  const w = (f, t) => { fs.mkdirSync(path.dirname(path.join(root, f)), { recursive: true }); fs.writeFileSync(path.join(root, f), t); };
+  w('cortex/memory/jaa-db.js', 'module.exports = {};\n');
+  w('a/x.js', "const { jaaDB } = require('../cortex/memory/jaa-db');\nconst T = 'a_runs';\njaaDB.insert(T, {});\njaaDB.insert('shared', {});\n// jaaDB.insert('ghost', {})\n");
+  w('b/y.js', "const db = require('../cortex/memory/jaa-db.js').jaaDB;\ndb.query('a_runs');\ndb.upsert('shared', {});\n");
+  w('lib/k.js', "const { jaaDB } = require('../cortex/memory/jaa-db');\njaaDB.update('core_only', {}, {});\n");
+  const r = SB.tables({ root }); const by = Object.fromEntries(r.tables.map(t => [t.table, t]));
+  assert.deepStrictEqual([by.a_runs.status, by.a_runs.owner, by.a_runs.readers], ['one writer', 'a', ['b']], 'a table named by a constant is read');
+  assert.deepStrictEqual([by.shared.status, by.shared.owner, by.shared.writers], ['contested', null, ['a', 'b']], 'two writers: contested, no owner guessed');
+  assert.deepStrictEqual([by.core_only.status, by.core_only.owner], ['only core writes', null]);
+  assert.ok(!by.ghost, 'a call in a comment is not counted');
+  assert.strictEqual(SB.tables({ root, system: 'b' }).tables.length, 2);
+  const { SPEC } = require('../../idearium/cli/route-commands.js');
+  assert.strictEqual(SPEC.find(x => x.key === 'system.tables').req({ args: ['loom'], flags: {} }).path, '/api/system/tables?system=loom');
+  const g = await quiet(async () => { const api = await import(path.join(REPO, 'idearium/api/index.js')); return api._route('GET', '/api/system/tables?system=loom'); });
+  const d = g.json.data || g.json;
+  assert.strictEqual(g.status, 200); assert.ok(d.ok && Array.isArray(d.tables) && d.summary.tables > 0, JSON.stringify(d).slice(0, 200));
+});
+
 (async () => {
   for (const [n, f] of tests) { try { await f(); passed++; console.log(`  ✓ ${n}`); } catch (e) { failed++; console.log(`  ✗ ${n}\n    ${e.message}`); } }
   console.log(`\n  ${passed} passed, ${failed} failed`);
