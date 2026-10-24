@@ -106,7 +106,7 @@ spec:
       status_before: OPEN
       james: '"to rebuild or reconstruct data using events, snapshots etc."'
       depends_on: [RS1_the_generation_recorder]
-      files: [lib/generation-recorder.js, emergence/vendor/rfr2/cfr-kernel/rewind.js]
+      files: [lib/generation-recorder.js, lib/emergence/vendor/rfr2/cfr-kernel/rewind.js]
       does: >-
         Replay a macro: the document rebuilt from the recorded outputs, byte-identical, no model asked. Rewind to any
         step (the rewind engine's seek over the snapshots). Branch from a step: ask again from there, the old path kept.

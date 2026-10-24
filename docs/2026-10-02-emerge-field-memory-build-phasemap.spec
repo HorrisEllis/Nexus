@@ -209,7 +209,7 @@ spec:
       systems: [loom, emerge, emergence, warp]
       value: { score: 4, cost: M, for: [foundation], why: "everything sits on it; brings in main and fixes the 38-versions-stale component registry" }
       status: "DONE (1.7.14, 0.39.319) — (1) and (2) at 1.7.3. (3) emergence/ in beside emerge/; warp/ forked to 1.5.0 at 0.39.318 (additive). Emergence's tests read StreamLog's gateClaimed/eventType, which Nexus's StreamLog had renamed to claimed/type; both names now kept. Emergence 155/155 (the upload itself runs 155, not the 157 written above), WARP 43/43, WARP consumers green; tests/modules/test-emergence-and-warp-suites.test.js. warp/test/dispatch.test.js needs siso_ref/, absent — failed before the fork too. (4) docs/emerge-copies-divergence.md. Not yet: emergence in loom (EV0 adds it to loom's systems)."
-      files: [loom/data/registry.json, loom/data/events.json, emergence/, lib/warp/, docs/emerge-copies-divergence.md]
+      files: [loom/data/registry.json, loom/data/events.json, lib/emergence/, lib/warp/, docs/emerge-copies-divergence.md]
       does: >-
         (1) This branch brought in line with main 0.39.300 (a merge, main's tree wins; this branch's 0.39.298
         Architect stays in history — main's 0.39.299 rebuild supersedes it). (2) loom/data/registry.json regenerated
@@ -397,7 +397,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [MR1_recall_triad_and_context_table]
-      files: [lib/gap-search.js, emergence/vendor/rfr2/liminal/negative-space.js, emergence/vendor/rfr2/liminal/relational-gaps.js]
+      files: [lib/gap-search.js, lib/emergence/vendor/rfr2/liminal/negative-space.js, lib/emergence/vendor/rfr2/liminal/relational-gaps.js]
       does: >-
         Search for what is missing. The negative-space and relational-gap detectors find what is absent; Emerge's
         pressure ("significance of missing structure") and density ("generative potential of a gap") order the gaps;
@@ -454,7 +454,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic]
-      files: [lib/case-library.js, emergence/components/pattern-engine/, lib/repo-hat-memory.js, lib/meta/crystal-lattice.js]
+      files: [lib/case-library.js, lib/emergence/components/pattern-engine/, lib/repo-hat-memory.js, lib/meta/crystal-lattice.js]
       does: >-
         Every converged build's EndStateFirst trace (the conditions that led there, walked backward) is stored as a
         RECIPE in the case library; a failed chain as an ANTI-RECIPE (crystal-lattice's negative match). The pattern
@@ -483,7 +483,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [CF1_cfr_improved_with_rfr2]
-      files: [emergence/vendor/rfr2/liminal/, lib/agent-memory.js]
+      files: [lib/emergence/vendor/rfr2/liminal/, lib/agent-memory.js]
       does: >-
         RFR2's detectors read every agent reply before it counts: assumption (a claim stated as fact — a hallucination
         signal), reversal (contradicting itself), oscillatory (circling — CFR resonance), negative space (what it
@@ -498,7 +498,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [MR9_liminal_on_the_agents]
-      files: [emergence/vendor/rfr2/field/relational.js, lib/repo-hat-memory.js]
+      files: [lib/emergence/vendor/rfr2/field/relational.js, lib/repo-hat-memory.js]
       does: >-
         The relational module models "not individuals — the space between them". Pointed at James ↔ each agent:
         meaning, decay, rupture ("I hate that ui you made"), repair ("lets do it"). What each agent learns about how
@@ -573,7 +573,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR2_vector_space_for_the_field]
-      files: [emergence/loop.js]
+      files: [lib/emergence/loop.js]
       does: >-
         Emergence's loop aimed at building: observations = analysis rows; the Lens = the relational field over code
         and spec; the target = the contract's end-state, with its mass; convergence = the build closing on the
@@ -656,7 +656,7 @@ spec:
       status: 'LATER — off the path; partly built — lib/shadow.js is live in phase builds (N22) (declutter 2026-10-09)'
       status_before: "PARTIAL (1.7.17, 0.39.322) — (2) done: lib/shadow-space.js — a change acts in a COS workspace branch with its shadow declared; commit() runs the test inside the space itself, settles the shadow, and merges fast-forward only on both passing; otherwise the space is discarded and the real tree untouched; an absent file is a gap with the step as cause. Found and fixed: self_repair's promote trusted a testResult the caller handed in — now only its own test()'s pass opens it. (1) one record with WARP 2's expectation is EM2's; (3) the shadow read is MR9's. Not yet: idearium's codegen writing through a shadow space."
       depends_on: [EM0_ground, EV0_contracts_for_every_system]
-      files: [lib/shadow.js, intelligence/liminal-space/, cos/workspace/, emergence/vendor/rfr2/liminal/shadow.js]
+      files: [lib/shadow.js, intelligence/liminal-space/, cos/workspace/, lib/emergence/vendor/rfr2/liminal/shadow.js]
       does: >-
         "shadow space?" One idea, three uses joined. (1) The SHADOW is the expectation: WARP 2's expectations ARE
         lib/shadow.js's declarations — before a step runs it declares what must exist after; negative space on settle

@@ -9,7 +9,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '../..');
-const pkg = require(path.join(ROOT, 'emergence/package.json'));
+const pkg = require(path.join(ROOT, 'lib', 'emergence', 'package.json'));
 const suites = [
   ...pkg.scripts.test.split('&&').map(s => s.trim().replace(/^node\s+/, '')).map(f => ['emergence', f]),
   ...['core', 'digest-regression', 'v1.1.0-additions', 'v1.4-additions'].map(n => ['warp', `test/${n}.test.js`]),
