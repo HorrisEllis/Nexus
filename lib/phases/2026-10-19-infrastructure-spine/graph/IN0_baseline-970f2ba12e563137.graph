@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682158
+exported_at: 1792880100498
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682158
-lastSeenAt: 1792877682158
+firstSeenAt: 1792880100498
+lastSeenAt: 1792880100498
 fingerprint: null
 payload:
   for: IN0_baseline
@@ -96,6 +96,11 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy: []
@@ -112,7 +117,7 @@ payload:
       - 'depends on (0): —'
       - >-
         needed by (5): IN1_old_files_out, IN2_quotes_ledger, IN3_registry_is_the_spine,
-        IN8_any_size, ST1_schema_for_everything_reusable · all downstream 61 · finishing it unlocks
+        IN8_any_size, ST1_schema_for_everything_reusable · all downstream 66 · finishing it unlocks
         IN1_old_files_out, IN2_quotes_ledger, IN3_registry_is_the_spine, IN8_any_size,
         ST1_schema_for_everything_reusable
     edges: []

@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MG6_settings_by_template_and_type:f0cc6fb8f4a34069
+type: graph
+id: phase:MG6_settings_by_template_and_type:f0cc6fb8f4a34069
+context: dependency graph of phase MG6_settings_by_template_and_type
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792880100859
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100859
+lastSeenAt: 1792880100859
+fingerprint: null
+payload:
+  for: MG6_settings_by_template_and_type
+  kind: phase
+  repo: null
+  hash: f0cc6fb8f4a34069
+  nodes:
+    - path: cos/manager/settings.js
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+    upstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+    blockedBy:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by MG0b_the_full_spec, AS1_one_resolver_global_then_repo
+      - 'depends on (2): MG0b_the_full_spec, AS1_one_resolver_global_then_repo · all upstream 4'
+      - 'needed by (1): MG9_the_console_ui'
+    edges:
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+        kind: declared
+      - from: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+        kind: declared

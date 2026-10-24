@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677024
+exported_at: 1792880099219
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677024
-lastSeenAt: 1792787677024
+firstSeenAt: 1792880099219
+lastSeenAt: 1792880099219
 fingerprint: null
 payload:
   for: EL1_electron_compiler
@@ -170,11 +170,14 @@ payload:
     layer: 2
     deps:
       - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
-    dependents: []
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
     upstream:
       - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
       - docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
-    downstream: []
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
     unlocks: []
@@ -202,7 +205,7 @@ payload:
     lines:
       - layer 2 · blocked by OS1_compartments_as_operating_systems
       - 'depends on (1): OS1_compartments_as_operating_systems · all upstream 2'
-      - 'needed by (0): —'
+      - 'needed by (1): MG8_the_factory · all downstream 2'
       - >-
         same files as OS2_images_downloaded_and_kept_current with no order between them:
         cos/testenv/provision.js

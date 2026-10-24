@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+context: pipeline phase MG4_resources_per_compartment of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG4_resources_per_compartment (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792880100857
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100857
+lastSeenAt: 1792880100857
+fingerprint: null
+payload:
+  id: MG4_resources_per_compartment
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/resources.js
+  depends_on:
+    - MG3_the_state_manager
+    - CS5_caps_per_compartment
+    - CS7_spawn_despawn_and_balance
+  blocks: []
+  spec: null
+  graph: 45437b4444ec3e8d

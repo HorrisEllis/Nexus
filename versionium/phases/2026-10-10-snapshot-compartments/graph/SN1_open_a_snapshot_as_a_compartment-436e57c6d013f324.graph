@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677280
+exported_at: 1792880099572
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677280
-lastSeenAt: 1792787677280
+firstSeenAt: 1792880099572
+lastSeenAt: 1792880099572
 fingerprint: null
 payload:
   for: SN1_open_a_snapshot_as_a_compartment
@@ -201,6 +201,10 @@ payload:
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN4_benchmarks_teach
       - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG3_the_state_manager
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
     unlocks:
@@ -211,7 +215,7 @@ payload:
       - layer 1 · blocked by SN0_one_branch
       - 'depends on (1): SN0_one_branch'
       - >-
-        needed by (2): SN2_run_in_parallel, CS2_test_every_version · all downstream 5 · finishing it
+        needed by (2): SN2_run_in_parallel, CS2_test_every_version · all downstream 9 · finishing it
         unlocks SN2_run_in_parallel
     edges:
       - from: docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch

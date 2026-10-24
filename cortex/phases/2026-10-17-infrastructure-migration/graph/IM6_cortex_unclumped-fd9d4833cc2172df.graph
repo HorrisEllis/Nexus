@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792787677794
+exported_at: 1792880100296
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677794
-lastSeenAt: 1792787677794
+firstSeenAt: 1792880100296
+lastSeenAt: 1792880100296
 fingerprint: null
 payload:
   for: IM6_cortex_unclumped
@@ -32,6 +32,8 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy: []
     unlocks: []
     conflicts: []
@@ -39,6 +41,6 @@ payload:
     lines:
       - layer 0 · ready
       - 'depends on (0): —'
-      - 'needed by (1): CS11_raid_in_the_exe · all downstream 3'
+      - 'needed by (1): CS11_raid_in_the_exe · all downstream 5'
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges: []

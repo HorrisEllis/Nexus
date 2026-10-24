@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
+context: pipeline phase MG8_the_factory of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG8_the_factory (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792880100861
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100861
+lastSeenAt: 1792880100861
+fingerprint: null
+payload:
+  id: MG8_the_factory
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/factory.js
+  depends_on:
+    - MG5_browsers_and_editors
+    - SV2_into_a_compartment
+    - CE1_the_compartment_machine
+    - EL1_electron_compiler
+  blocks: []
+  spec: null
+  graph: bb32f86a72592754

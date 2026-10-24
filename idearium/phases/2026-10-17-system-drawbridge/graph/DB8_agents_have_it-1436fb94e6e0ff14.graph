@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682027
+exported_at: 1792880100335
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682027
-lastSeenAt: 1792877682027
+firstSeenAt: 1792880100335
+lastSeenAt: 1792880100335
 fingerprint: null
 payload:
   for: DB8_agents_have_it
@@ -80,6 +80,11 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy: []
@@ -89,6 +94,6 @@ payload:
     lines:
       - layer 0 · ON THE CRITICAL PATH · ready
       - 'depends on (0): —'
-      - 'needed by (1): DB0c_reading · all downstream 35'
+      - 'needed by (1): DB0c_reading · all downstream 40'
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges: []

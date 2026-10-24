@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792875541768
+exported_at: 1792880100403
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792875541768
-lastSeenAt: 1792875541768
+firstSeenAt: 1792880100403
+lastSeenAt: 1792880100403
 fingerprint: null
 payload:
   for: DB26_the_ui_floats_on_the_registry
@@ -35,7 +35,8 @@ payload:
     deps:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
-    dependents: []
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     upstream:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
@@ -51,7 +52,8 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
-    downstream: []
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
@@ -61,7 +63,7 @@ payload:
     lines:
       - layer 11 · blocked by DB25_the_lifecycle_verbs, DB12_the_ui_handshake
       - 'depends on (2): DB25_the_lifecycle_verbs, DB12_the_ui_handshake · all upstream 14'
-      - 'needed by (0): —'
+      - 'needed by (1): MG9_the_console_ui'
     edges:
       - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
         kind: declared

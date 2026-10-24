@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877163793
+exported_at: 1792880100789
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163793
-lastSeenAt: 1792877163793
+firstSeenAt: 1792880100789
+lastSeenAt: 1792880100789
 fingerprint: null
 payload:
   for: ND6_the_nodes_screen
@@ -69,7 +69,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 14 · ON THE CRITICAL PATH · blocked by ND5_every_agent_reaches_every_system
+      - layer 14 · blocked by ND5_every_agent_reaches_every_system
       - 'depends on (1): ND5_every_agent_reaches_every_system · all upstream 26'
       - 'needed by (0): —'
     edges:

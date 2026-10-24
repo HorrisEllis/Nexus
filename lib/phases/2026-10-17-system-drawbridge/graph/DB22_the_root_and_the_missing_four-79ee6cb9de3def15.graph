@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792875541760
+exported_at: 1792880100393
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792875541760
-lastSeenAt: 1792875541760
+firstSeenAt: 1792880100393
+lastSeenAt: 1792880100393
 fingerprint: null
 payload:
   for: DB22_the_root_and_the_missing_four
@@ -64,6 +64,7 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB24_cos_reads_only_the_registry
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
     unlocks: []
@@ -72,7 +73,7 @@ payload:
     lines:
       - layer 8 · blocked by DB21_one_registry_schema_every_level
       - 'depends on (1): DB21_one_registry_schema_every_level · all upstream 11'
-      - 'needed by (1): DB24_cos_reads_only_the_registry · all downstream 3'
+      - 'needed by (1): DB24_cos_reads_only_the_registry · all downstream 4'
     edges:
       - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
         kind: declared

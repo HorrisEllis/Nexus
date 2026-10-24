@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+context: pipeline phase MG9_the_console_ui of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: MG9_the_console_ui (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792880100862
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792880100862
+lastSeenAt: 1792880100862
+fingerprint: null
+payload:
+  id: MG9_the_console_ui
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/ui
+  depends_on:
+    - MG3_the_state_manager
+    - MG4_resources_per_compartment
+    - MG5_browsers_and_editors
+    - MG6_settings_by_template_and_type
+    - MG7_automation_macros_and_hats
+    - MG8_the_factory
+    - MG_D1_ui_isolated_per_component
+    - DB26_the_ui_floats_on_the_registry
+    - COSA12_vmware_window
+  blocks: []
+  spec: null
+  graph: 66862ef658e800ac
