@@ -3294,6 +3294,7 @@ function handleExtendedRoutes(req, res, url, method) {
         // the request body. Forwarded now; askSync itself still needs
         // its own patch to pass this through to createJob (see ask.js).
         agentId:   body.agentId || undefined,
+        openTab:   body.openTab === true,   // §0.60.231 CL1 — a person's pick: open the agent's tab and wait, never refuse it for being closed
         sessionId: typeof body.sessionId === 'string' ? body.sessionId : undefined,   // §0.60.50 CE4
         // 0.39.265 — the meaning, when `prompt` is copilot's reworded variant; and whether a finished twin may answer
         canonical: typeof body.canonical === 'string' ? body.canonical : undefined,

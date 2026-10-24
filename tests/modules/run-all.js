@@ -535,6 +535,7 @@ const SUITES = [
   'test-capability-registry.js',
   'test-raid-router.js',
   'test-snr-filter.js',
+  'test-agent-confidence-gate.test.js', // 0.60.238 CG1 — before an agent acts, <75% confidence obtains context (worksurface, deps, find, ask-user LAST)
   'test-ui-registry.js',
   // Added 2026-07-06 — built alongside cortex/core/raid/snr-filter.js and
   // the real roleConfidence/topologicalProximity fitness terms this pass.

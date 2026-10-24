@@ -99,21 +99,24 @@ class CoPilotBridge {
   // §BUILT 2026-09-26 — per-call route (backend/agent/hat) from the CLI or
   // settings; see src/copilot/hat.js for why the hat is composed per call
   // instead of switching copilot's global agent.
-  _route({ backend, agent, hat } = {}) {
+  _route({ backend, agent, hat, model } = {}) {
     const s = this.settings.get();
     const b = ['ollama', 'copilot', 'guardian', 'claude-code'].includes(backend) ? backend : (s.copilotBackend || 'copilot');   // 0.59.14 claude-code
     return { backend: b, agent: b === 'guardian' ? (agent || s.copilotAgent || 'claude') : undefined,
+      // §0.60.231 CL3 — an Ollama model he picked (/copilot ollama:<model>); and strict: every pick but 'copilot' answers or says why (CL2)
+      ...(b === 'ollama' && typeof model === 'string' && model.trim() ? { model: model.trim() } : {}),
+      strict: b !== 'copilot',
       hat: typeof hat === 'boolean' ? hat : s.copilotWearHat !== false };
   }
 
-  async send({ message, agentId = 'default', domContext, systemExtra, requestId, backend, agent, hat, noDom, autoContext = false, picks = [], pickedAt = 0, force = {}, pageUrl = '', partition = '' }) {
+  async send({ message, agentId = 'default', domContext, systemExtra, requestId, backend, agent, hat, model, noDom, autoContext = false, picks = [], pickedAt = 0, force = {}, pageUrl = '', partition = '' }) {
     const msgId = requestId || randomUUID();
     // §0.60.216 SP2 — the page's site: its own Co-pilot agent when none was picked; mesh off there → Co-pilot answers without the page
     let siteNote = null;
     const site = pageUrl ? require('../site-settings/readers').meshAgent(pageUrl) : null;
     if (site && !site.enabled) { noDom = true; autoContext = false; domContext = null; picks = []; siteNote = `Co-pilot does not read ${new URL(pageUrl).origin}: its site settings turn the agent mesh off there (mesh.enabled)`; }
     else if (site && site.agent && !agent && !backend) agent = site.agent;
-    const route = this._route({ backend, agent, hat });
+    const route = this._route({ backend, agent, hat, model });
     this.sse.emit('copilot.thinking', { msgId, agentId, route, ts: Date.now() });
 
     // BS12 (0.60.182) — James: "migrated into copilot so he does it automatically when he needs it". With autoContext the caller sends
@@ -216,6 +219,10 @@ class CoPilotBridge {
     }
 
     const result = await this._ask({ message, agentId, domContext, systemExtra, msgId, route });
+    if (result.failed) {   // §0.60.231 CL2 — said as a failure, with who was asked and why
+      this.sse.emit('copilot.response', { msgId, agentId, text: '', error: result.error, modelUsed: result.modelUsed || null, ts: Date.now() });
+      return { ok: false, error: result.error, text: '', commands: [], results: [], executed: false, msgId, route: { ...route, modelUsed: result.modelUsed || null } };
+    }
 
     let text       = result.text || '';
     let commands   = this._parseCommands(text);
@@ -629,8 +636,13 @@ ${toolsPrompt}${domSection}`;
       backend:     route.backend,
       provider:    route.backend === 'guardian' ? route.agent : route.backend,
       agent:       route.agent,
-    }, Number(s.copilotTimeoutMs) || 60000);
+      ...(route.model ? { model: route.model } : {}),   // §0.60.231 CL3
+      // §0.60.231 CL1 — a Guardian pick may have to open its tab first (spawn, sign-in restored, then the reply): it gets 3 minutes
+      ...(route.backend === 'guardian' ? { timeoutMs: Math.max(Number(s.copilotTimeoutMs) || 60000, 180000) - 5000 } : {}),
+    }, route.backend === 'guardian' ? Math.max(Number(s.copilotTimeoutMs) || 60000, 180000) : (Number(s.copilotTimeoutMs) || 60000));
     const data = result?.response || result || {};
+    // §0.60.231 CL2 — a pick that could not answer comes back as copilot's failure with its reason; it was read as an empty reply
+    if (data.ok === false && !String(data.text || '').trim()) return { text: '', failed: true, error: data.error || data.reason || 'no answer', modelUsed: data.modelUsed || null };
     return {
       text:          data.text || data.response || '',
       modelUsed:     data.modelUsed || data.provider_used || 'nexus',
@@ -649,20 +661,22 @@ ${toolsPrompt}${domSection}`;
     if (!direct && s.useCortex !== false) {
       try {
         const r = await this._callNexusCopilot({ message, agentId, domContext, systemExtra, msgId, route, followUp });
-        return { ...r, via: 'copilot' };
+        return { ...r, via: r.failed ? 'none' : 'copilot' };   // §0.60.231 CL2 — copilot answered for the pick: its failure is the answer, not a cue to ask another model
       } catch (err) {
         tried.push(`copilot :${s.copilotPort || 3750} — ${err.message}`);
         console.warn(`[${new Date().toISOString()}] [clear-glass/src/copilot/bridge.js] [CoPilot] copilot unreachable, going direct:`, err.message);
       }
     }
     // a follow-up round (tool results) stays on the backend that answered the first round
-    const order = direct ? [direct] : (route.backend === 'guardian' ? ['guardian', 'ollama'] : ['ollama', 'guardian']);
+    // §0.60.231 CL2 — a pick stays on its own backend when copilot is down too; only 'copilot' (copilot decides) tries one then the other
+    const order = direct ? [direct] : route.strict && route.backend !== 'claude-code' ? [route.backend === 'guardian' ? 'guardian' : 'ollama']
+      : (route.backend === 'guardian' ? ['guardian', 'ollama'] : ['ollama', 'guardian']);
     const system = (await this._buildCgContext(agentId, followUp ? null : domContext)) + (systemExtra ? '\n\n' + systemExtra : '');
     for (const b of order) {
       try {
         const r = b === 'ollama'
-          ? await this._callOllamaDirect({ system, message, timeoutMs: Number(s.copilotTimeoutMs) || 60000 })
-          : await this._callGuardianDirect({ system, message, agent: route.agent || s.copilotAgent || 'claude', sessionId: agentId, timeoutMs: Number(s.copilotTimeoutMs) || 60000 });
+          ? await this._callOllamaDirect({ system, message, timeoutMs: Number(s.copilotTimeoutMs) || 60000, model: route.model || null })
+          : await this._callGuardianDirect({ system, message, agent: route.agent || s.copilotAgent || 'claude', sessionId: agentId, timeoutMs: route.strict ? Math.max(Number(s.copilotTimeoutMs) || 60000, 180000) : (Number(s.copilotTimeoutMs) || 60000) });   // CL1 — time for its tab to open
         return { ...r, via: b, direct: b };
       } catch (err) { tried.push(`${b === 'ollama' ? 'ollama' : `guardian :${s.guardianPort || 7820} (${route.agent || s.copilotAgent || 'claude'})`} — ${err.message}`); }
     }
@@ -692,9 +706,9 @@ ${toolsPrompt}${domSection}`;
 
   // Ollama directly — the shared runtime every NEXUS system uses (ollama/ollama-runtime.js), model from the
   // Clear Glass setting copilotOllamaModel or ollama/config.js's DEFAULT_MODEL.
-  _callOllamaDirect({ system, message, timeoutMs = 60000 }) {
+  _callOllamaDirect({ system, message, timeoutMs = 60000, model: picked = null }) {
     const rt = require('../../../ollama/ollama-runtime.js');
-    const model = this.settings.get().copilotOllamaModel || rt.DEFAULT_MODEL;
+    const model = picked || this.settings.get().copilotOllamaModel || rt.DEFAULT_MODEL;   // §0.60.231 CL3 — the model he picked first
     return new Promise((resolve, reject) => {
       let text = '', done = false;
       const timer = setTimeout(() => { if (!done) { done = true; reject(new Error(`no reply in ${Math.round(timeoutMs / 1000)}s`)); } }, timeoutMs);
