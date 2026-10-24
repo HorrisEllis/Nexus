@@ -81,7 +81,7 @@ function startService() {
   if (replayed.length) console.log(`[idearium-service] replayed ${replayed.length} queue items`);
 
   ico.ledger.append('boot', { type: 'service.start', pid: process.pid, ts: Date.now() });
-  require('../idearium/api/index.js');
+  require('./api/index.js');
 
   setInterval(() => {
     baseline.observe({ type: 'heartbeat', latencyMs: 0, error: false });
