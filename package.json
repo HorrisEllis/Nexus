@@ -13,7 +13,7 @@
     "emerge",
     "idearium",
     "siso",
-    "erosmancer/erosmancer-os"
+    "clear-glass/erosmancer/erosmancer-os"
   ],
   "scripts": {
     "test": "node tests/brutal.test.js",

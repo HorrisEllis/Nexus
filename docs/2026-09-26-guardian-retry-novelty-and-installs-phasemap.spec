@@ -76,7 +76,7 @@ spec:
     - id: E1
       name: ErosmancerOS humanType — profile-timed keystrokes, Shift+Enter for newlines, long text in paced
             bursts; Clear Glass wire POST /eros/provider-type (host-matched tab, selector list, type, send)
-      files: [erosmancer/erosmancer-os/src/api/server.ts, clear-glass/src/main/index.js, erosmancer-os /api/human-type (proxied by the wire)]
+      files: [clear-glass/erosmancer/erosmancer-os/src/api/server.ts, clear-glass/src/main/index.js, erosmancer-os /api/human-type (proxied by the wire)]
       closes: [M6]
     - id: I1
       name: cos/testenv/installer.js + POST /api/cos/install + Run menu prompt ("not installed — install it?")
