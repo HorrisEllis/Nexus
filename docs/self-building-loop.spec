@@ -365,3 +365,11 @@ spec:
 # - The CloseRecord lives in idearium_phase_closes (append-only; a reopen is a newer row with reopenedAt), not as a run state.
 # - closeIfLanded also takes `closes` (the records, for "closing twice is a no-op"); a run that changed nothing closes, said; a rejected
 #   change blocks the close as a revert does. Details and the axioms: docs/2026-10-23-self-building-loop-phasemap.spec, its SL1 addendum.
+
+# ADDENDUM 2026-10-24 (0.60.225) — MOD-SL-TRUST and MOD-SL-LOOP as built
+# James, 2026-10-24: "yes do it." (read as B; to confirm — the map's 2026-10-24 addendum has the context and both readings)
+# - MOD-SL-TRUST: get / set / allows as specced, plus DECIDED (his rule B with his words, the default while the store holds none) and
+#   setStore (the store is passed in: Idearium keeps it in idearium_trust_rules). allows also refuses a change whose evidence shows a
+#   regressed test (repo-inject attachEvidence's `regressions`).
+# - MOD-SL-LOOP: start / stop / status / step as specced; deps passed in (load, save, queue, build, runState, land, close, now, emit).
+#   Stop rule: MISSES_MAX (3) phases in a row that did not close (FR10 itself is not wired). Default budget 5 phases, 240 minutes.

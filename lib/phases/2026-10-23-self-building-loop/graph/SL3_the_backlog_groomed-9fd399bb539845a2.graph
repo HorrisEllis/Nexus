@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792775550205
+exported_at: 1792828414785
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550205
-lastSeenAt: 1792775550205
+firstSeenAt: 1792828414785
+lastSeenAt: 1792828414785
 fingerprint: null
 payload:
   for: SL3_the_backlog_groomed
@@ -111,7 +111,7 @@ payload:
       known: false
   ready: true
   dag:
-    dagHash: 6577681f08a50367
+    dagHash: 746f60cbfacbcde1
     layer: 1
     deps:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
@@ -124,6 +124,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 6577681f08a50367 · layer 1 · ready
+      - DAG 746f60cbfacbcde1 · layer 1 · ready
       - 'depends on (1): SL0_what_can_be_built_now'
       - 'needed by (0): —'

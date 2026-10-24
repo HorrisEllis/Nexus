@@ -4,28 +4,33 @@ type: phase
 id: docs_2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
 context: pipeline phase SL2_done_by_evidence of docs/2026-10-23-self-building-loop-phasemap.spec
 intent: null
-summary: SL2_done_by_evidence (library) — 3 file(s)
+summary: SL2_done_by_evidence (library) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792775550204
+exported_at: 1792828414784
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550204
-lastSeenAt: 1792775550204
+firstSeenAt: 1792828414784
+lastSeenAt: 1792828414784
 fingerprint: null
 payload:
   id: SL2_done_by_evidence
   map: docs/2026-10-23-self-building-loop-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: >-
+    DONE 0.60.224 — test-evidence-close 5/5 (EC-04 the real API, EC-05 in Clear Glass); the Nexus
+    dry run in CHANGELOG-0.60.224.md
   files:
     - lib/phase-close.js
-    - lib/phase-census.js
-    - lib/verify-first.js
+    - lib/test-map.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/phases.js
+    - tests/modules/test-evidence-close.test.js
   depends_on:
     - SL0_what_can_be_built_now
   blocks:
     - MOD-SL-EVIDENCE-CLOSE
   spec: docs/self-building-loop.spec
-  graph: a5f720db904d7f54
+  graph: 7bb9c1e91cb43b0f

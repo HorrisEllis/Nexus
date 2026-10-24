@@ -291,6 +291,8 @@ spec:
 
     # Tier 1 — the graph
     - id: G0
+      # roadmap edit 2026-10-24: (no status) -> DONE 2026-10-24. by evidence — test-repo-graph.js (its own) (dry run 2026-10-23; James 2026-10-24: yes do it. )
+      status: "DONE 2026-10-24. by evidence — test-repo-graph.js (its own) (dry run 2026-10-23; James 2026-10-24: yes do it. )"
       name: global-symbol + declared-load-order pass
       files: [idearium/repo/graph.js, idearium/spec/idearium.repo-graph.spec, tests/modules/test-repo-graph.js]
       closes: [G-1, F-3]

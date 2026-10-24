@@ -40,7 +40,7 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   if (!el || !repo) return;
   const forUuid = repo.uuid;
   if (PHASES.uuid !== forUuid) {
-    Object.assign(PHASES, { uuid: forUuid, data: null, open: null, adding: false, specs: null, spec: null, thread: null, threadErr: null, plan: null, roadmaps: [], evidence: null });
+    Object.assign(PHASES, { uuid: forUuid, data: null, open: null, adding: false, specs: null, spec: null, thread: null, threadErr: null, plan: null, roadmaps: [], evidence: null, loop: null });
     PHASES.filter = { q: '', status: 'all', map: 'all', mine: true, ready: false };
   }
   // §RS11 — handed a spec (and a phase) from a workshop section: applied after any reset for a new repo, not wiped by it
@@ -50,7 +50,7 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   if (!PHASES.data) el.innerHTML = `<div class="detail-empty">reading phasemaps…</div>`;
   let d;
   // the phases (every map), the thread's specs, the plan's gates — read together; only the first is required
-  const [pr, sr, gr, rr, lr, nr, cr] = await Promise.allSettled([
+  const [pr, sr, gr, rr, lr, nr, cr, br] = await Promise.allSettled([
     api(`/api/repos/${forUuid}/phases`, {}, 30000),
     api(`/api/repos/${forUuid}/thread`, {}, 30000),
     api(`/api/repos/${forUuid}/plan`, {}, 30000),
@@ -58,6 +58,7 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
     api(`/api/repos/${forUuid}/lift-root`, {}, 30000),  // 0.60.206 SD22 — is the project inside one folder?
     api(`/api/repos/${forUuid}/phases/next?limit=8`, {}, 30000),   // 0.60.222 SL0 — what can be built now, and why the rest cannot
     api(`/api/repos/${forUuid}/phases/closes`, {}, 30000),          // 0.60.223 SL1 — the phases its runs closed by themselves
+    api(`/api/repos/${forUuid}/loop`, {}, 30000),                   // 0.60.225 SL4 — the loop, and his rule for what lands (SL5)
   ]);
   if (CURRENT_API_REPO?.uuid !== forUuid || CURRENT_REPO_SUBTAB !== 'phases') return;
   if (pr.status !== 'fulfilled') {
@@ -72,6 +73,7 @@ async function renderRepoPhases(repo, { keepScroll = false } = {}) {
   PHASES.lift = lr.status === 'fulfilled' && lr.value.wrapper ? lr.value : null;
   PHASES.next = nr && nr.status === 'fulfilled' ? nr.value : null;
   PHASES.closes = cr && cr.status === 'fulfilled' ? (cr.value.closes || []) : [];
+  PHASES.loop = br && br.status === 'fulfilled' ? br.value : null;
   if (PHASES.spec) await _phLoadThread(PHASES.spec, { paint: false });
   // §RS11 — opened from a workshop section: its phase opened
   if (PHASES.wantKey) { const w = d.phases.find(p => p.phase_key === PHASES.wantKey); if (w) PHASES.open = w.uuid; PHASES.wantKey = null; }
@@ -144,7 +146,31 @@ function _phNextRail() {
   return `<div class="ph2-rail-head">can be built now · ${n.counts.queue} of ${n.counts.open} open</div>
     ${(n.queue || []).map(q => `<div class="ph2-spec" title="${escapeHtml(q.why)} — ${escapeHtml(q.map)}"><span class="ph2-spec-name">${escapeHtml(q.id)}</span><span class="ph2-dim">unlocks ${q.unlocks}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phasesBuild('${_phq(q.map)}','${_phq(q.id)}')" title="build it now (the same route as its own Build button)">▶ build</button></div>`).join('') || '<div class="ph2-dim ph2-pad">nothing can be built now</div>'}
     ${why ? `<div class="ph2-dim ph2-pad" title="every other open phase is in one group, with what would unblock it (phases next --group …)">waiting: ${escapeHtml(why)}</div>` : ''}
-    ${_phEvidenceRail()}`;
+    ${_phEvidenceRail()}
+    ${_phLoopRail()}`;
+}
+
+// 0.60.225 SL4/SL5 — the loop on this repo (start / stop, what it built, closed, skipped) and his rule for what lands without him
+function _phLoopRail() {
+  const d = PHASES.loop; if (!d) return '';
+  const l = d.loop, t = d.trust;
+  const rule = t ? `<div class="ph2-dim ph2-pad" title="${escapeHtml(t.context || '')}">lands by itself: rule ${escapeHtml(t.rule)}${t.words ? ` — his words: "${escapeHtml(t.words)}"` : ''}</div>` : '';
+  const running = l && l.state === 'running';
+  return `<div class="ph2-rail-head">self-building loop${l ? ` · ${escapeHtml(l.state)}` : ''}</div>
+    ${l ? `<div class="ph2-dim ph2-pad">built ${l.built.length}/${l.budget.phases} · closed ${l.closed.length} · skipped ${l.skipped.length}${l.current ? ` · building <b>${escapeHtml(l.current.phase)}</b>` : ''}${l.stopWhy ? `<br>stopped: ${escapeHtml(l.stopWhy)}` : ''}</div>
+      ${l.skipped.slice(-3).map(k => `<div class="ph2-dim ph2-pad" title="${escapeHtml(k.why)}">– ${escapeHtml(k.key.split('::').pop())}</div>`).join('')}` : ''}
+    ${rule}
+    <div class="ph2-pad">${running ? `<button class="ph2-mini-btn" onclick="phLoop('stop')">■ stop the loop</button>` : `<button class="ph2-mini-btn" onclick="phLoop('start')" title="build what can be built now, one phase after another, closing each proven, landed one">⟳ start the loop</button>`}</div>`;
+}
+async function phLoop(verb) {
+  const uuid = PHASES.uuid || (CURRENT_API_REPO && CURRENT_API_REPO.uuid);
+  if (verb === 'start' && !confirm('Start the self-building loop on this repo? It builds what can be built now, one phase after another (up to 5 phases or 4 hours), and stops on three misses in a row.')) return;
+  try {
+    const r = await api(`/api/repos/${uuid}/loop/${verb}`, { method: 'POST', body: JSON.stringify({}) }, 120000);
+    PHASES.loop = { ...(PHASES.loop || {}), loop: r.loop, ...(r.trust ? { trust: r.trust } : {}) };
+    toast(verb === 'start' ? `loop started — ${r.first ? `${r.first.outcome}: ${r.first.why}` : ''}` : 'loop stopped', 'ok');
+  } catch (e) { toast(`loop: ${e.message}`, 'err'); }
+  _phPaint();
 }
 
 // 0.60.224 SL2 — done by evidence: a dry run first (its own tests run, nothing written); Close them asks, then writes through the writer

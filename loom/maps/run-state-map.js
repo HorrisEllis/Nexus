@@ -111,7 +111,9 @@ const FILES = [
   ['lib/safe-watch.js', I('lib/safe-watch.js'), []],   // §0.60.170 RC1: an fs.watch whose async EPERM cannot take the process down; re-arms
   ['lib/phase-census.js', I('lib/phase-census.js'), [I('lib/phase-dag.js')]],
   ['lib/build-queue.js', I('lib/build-queue.js'), [I('lib/phase-dag.js')]],
-  ['lib/phase-close.js', I('lib/phase-close.js'), [I('lib/test-map.js')]],   // 0.60.223 SL1 closes a proven, landed phase; 0.60.224 SL2 byEvidence (its own tests, through lib/test-map.js)   // 0.60.223 SL1 a proven, landed phase closes itself; a revert reopens it (the writer is passed in)   // 0.60.222 SL0 what can be built now, and why every other open phase cannot
+  ['lib/phase-close.js', I('lib/phase-close.js'), [I('lib/test-map.js')]],
+  ['lib/trust-rule.js', I('lib/trust-rule.js'), []],   // 0.60.225 SL5 his rule for what lands without him (B, his words: "yes do it.")
+  ['idearium/lib/autobuild.js', I('idearium/lib/autobuild.js'), []],   // 0.60.225 SL4 the loop: a state machine, every effect a dep   // 0.60.223 SL1 closes a proven, landed phase; 0.60.224 SL2 byEvidence (its own tests, through lib/test-map.js)   // 0.60.223 SL1 a proven, landed phase closes itself; a revert reopens it (the writer is passed in)   // 0.60.222 SL0 what can be built now, and why every other open phase cannot
   ['lib/change-entry.js', I('lib/change-entry.js'), [I('lib/nexus-self/inject-gate.js')]],
   ['lib/chat-ledger-client.js', I('lib/chat-ledger-client.js'), []],   // 0.60.192 Clear Glass's live chat ledgers read through its routes (:7702), never its code   // 0.60.190 APV1 an approved change's change-log entry (it rides on its Versionium commit)   // 0.60.188 CNS1 every phase judged against its evidence (commits, releases, files, proof)
   ['lib/path-guard.js', I('lib/path-guard.js'), []],   // §0.60.170 RC4: a file name from an agent's reply is checked (chat label, cut short, prose) before it is written
@@ -151,6 +153,12 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('idearium/repo/roadmap.js'), '0.60.223 SL1 setPhaseStatus note: "DONE <date>. <version> — proven by run <id>, on snapshot <s>"'],
   [I('idearium/api/index.js'), I('lib/phase-dag.js'), '0.60.224 SL2 repo.phases.evidence: the open phases of the repo\'s maps'],
   [I('idearium/ui/js/phases.js'), I('idearium/api/index.js'), '0.60.224 SL2 the rail\'s "done by evidence?" → POST …/phases/evidence (dry run; close asks first)'],
+  [I('idearium/api/index.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 _loopDeps (queue, _phaseBuild, _loopRunState, _landByRule, _closeRun), _loopTick on the watchdog minute, repo.loop routes'],
+  [I('idearium/api/index.js'), I('lib/trust-rule.js'), '0.60.225 SL5 _landByRule: a proven run\'s proposals applied when his rule allows; trust.get / trust.set'],
+  [I('idearium/api/index.js'), I('lib/build-queue.js'), '0.60.225 _queueFor: shared by …/phases/next and the loop'],
+  [I('idearium/cli/route-commands.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 `repo loop <repo> [start|stop|step]`'],
+  [I('idearium/cli/route-commands.js'), I('lib/trust-rule.js'), '0.60.225 SL5 `trust`'],
+  [I('idearium/ui/js/phases.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 the rail\'s loop: start (asks) / stop, built, closed, skipped; his rule in his words'],
   [I('idearium/cli/route-commands.js'), I('lib/phase-close.js'), '0.60.223 SL1 `repo close <repo> <runId>` and `repo closes <repo>` through the route'],
   [I('idearium/ui/js/phases.js'), I('lib/phase-close.js'), '0.60.223 SL1 the phase panel\'s "closed by" / "reopened" through GET …/phases/closes'],
   [I('idearium/ui/js/phases.js'), I('lib/build-queue.js'), '0.60.222 SL0 the rail\'s "can be built now" through GET …/phases/next'],

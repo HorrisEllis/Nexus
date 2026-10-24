@@ -9,18 +9,20 @@ intent: null
 summary: SL5_when_a_proven_change_lands_alone (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792775550208
+exported_at: 1792828414789
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550208
-lastSeenAt: 1792775550208
+firstSeenAt: 1792828414789
+lastSeenAt: 1792828414789
 fingerprint: null
 payload:
   id: SL5_when_a_proven_change_lands_alone
   map: docs/2026-10-23-self-building-loop-phasemap.spec
   repo: null
   layer: null
-  status: OPEN-DECISION
+  status: >-
+    DONE 0.60.225 — DECIDED B (James, 2026-10-24, "yes do it."; read as B, to confirm);
+    lib/trust-rule.js
   files:
     - lib/repo-inject.js
     - lib/trust-rule.js
@@ -29,4 +31,4 @@ payload:
   blocks:
     - MOD-SL-TRUST
   spec: docs/self-building-loop.spec
-  graph: 379b566ca6597dd5
+  graph: 03046f86ef245634

@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792775550200
+exported_at: 1792828414779
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550200
-lastSeenAt: 1792775550200
+firstSeenAt: 1792828414779
+lastSeenAt: 1792828414779
 fingerprint: null
 payload:
   for: SL0_what_can_be_built_now
@@ -223,7 +223,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 6577681f08a50367
+    dagHash: 746f60cbfacbcde1
     layer: 0
     deps: []
     dependents:
@@ -249,7 +249,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 6577681f08a50367 · layer 0
+      - DAG 746f60cbfacbcde1 · layer 0
       - 'depends on (0): —'
       - >-
         needed by (5): SL1_a_proven_phase_closes_itself, SL2_done_by_evidence,

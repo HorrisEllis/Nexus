@@ -306,7 +306,9 @@ phases:
 
   PS1_phase_specs:
     layer: library
-    status: OPEN
+    # roadmap edit 2026-10-24: OPEN -> DONE 2026-10-24. by evidence — test-phase-specs.test.js (its own), test-pipeline-nodes.test.js (linked), test-pipeline-root-causes.test.js (linked) (dry run 2026-10-23; James 2026-10-24: yes do it. )
+    status_previous: "OPEN"
+    status: "DONE 2026-10-24. by evidence — test-phase-specs.test.js (its own), test-pipeline-nodes.test.js (linked), test-pipeline-root-causes.test.js (linked) (dry run 2026-10-23; James 2026-10-24: yes do it. )"
     depends_on: []
     files: [emerge/compiler/phase-specs.js, lib/pipeline-nodes.js, lib/node-schemas/schema.graph, tests/modules/test-phase-specs.test.js]
     spec: docs/substrate.spec

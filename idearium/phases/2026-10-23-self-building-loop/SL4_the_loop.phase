@@ -4,31 +4,36 @@ type: phase
 id: docs_2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
 context: pipeline phase SL4_the_loop of docs/2026-10-23-self-building-loop-phasemap.spec
 intent: null
-summary: SL4_the_loop (integration) — 3 file(s)
+summary: SL4_the_loop (integration) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792775550207
+exported_at: 1792828414786
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550207
-lastSeenAt: 1792775550207
+firstSeenAt: 1792828414786
+lastSeenAt: 1792828414786
 fingerprint: null
 payload:
   id: SL4_the_loop
   map: docs/2026-10-23-self-building-loop-phasemap.spec
   repo: null
   layer: integration
-  status: OPEN
+  status: >-
+    DONE 0.60.225 — test-self-building-loop 5/5 (LP-02 three chained phases in order; LP-05 in Clear
+    Glass)
   files:
     - idearium/lib/autobuild.js
     - idearium/api/index.js
     - idearium/cli/route-commands.js
+    - idearium/ui/js/phases.js
+    - tests/modules/test-self-building-loop.test.js
   depends_on:
     - SL1_a_proven_phase_closes_itself
     - SL0_what_can_be_built_now
     - AB1_autobuild_loop_and_resume
     - FR10_stop_the_ladder
+    - SL5_when_a_proven_change_lands_alone
   blocks:
     - MOD-SL-LOOP
   spec: docs/self-building-loop.spec
-  graph: 3dcb223b8d82e43d
+  graph: 58cb1a8a3ad63afb
