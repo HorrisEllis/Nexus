@@ -193,22 +193,33 @@ test('C2', 'the same event pair is never double-counted across overlapping windo
     `re-scanning with zero new events changed count from ${countAfter1} to ${rows[0].count} — same-pair double-count bug`);
 });
 
-// ── §D: monotonic crystallised latch ─────────────────────────────────────────
+// ── §D: monotonic crystallised latch + the base-rate gate (§2026-10-24) ───────
+// NOTE (2026-10-24, James: "b, tighten the crystallizer threshold"): a pair of
+// heartbeat ticks that only ever fire TOGETHER, with no spread and nothing
+// distinguishing them from a shared clock, is exactly the "coincidence, not an
+// invariant" case the framework (docs/innovation-toolkit.framework) says
+// intuition must be regulated against. The crystallizer now holds such a pair
+// as a HYPOTHESIS (crystallised:false, status:'hypothesis') — kept and counted,
+// never announced as settled — until it beats base rate. D1/D2 below previously
+// asserted that heartbeat pairs crystallise; that was the OLD, un-regulated
+// policy. They now assert the latch mechanic the correct way round: the noise
+// pair is held, and it is held QUIETLY (no re-announcement churn). The positive
+// side — a pair that genuinely beats chance DOES crystallise, and the latch is
+// monotonic — is proven deterministically in §F against the pure gate.
 
-test('D1', 'crystallised announces exactly once across many scans that hover at the threshold', async () => {
+test('D1', 'a heartbeat co-occurrence that cannot beat base rate is held as a hypothesis, never announced', async () => {
   resetAll();
   const logs = [];
   const origLog = console.log;
   console.log = (...args) => { logs.push(args.join(' ')); };
 
   try {
-    // Run several scans, each contributing a SMALL new batch — designed so
-    // the cumulative count crosses 10 partway through, then keeps growing
-    // past it. Old code: re-announces every scan once the windowed count
-    // snapshot >= 10 AND oscillates. New code: announce should appear
-    // exactly once, the scan where cumulative count first reaches 10.
+    // Many scans of x.tick/y.tick firing only together, amid unrelated filler.
+    // Old code: crystallised at cumulative count 10 and announced. New code:
+    // base-rate lift ≈ 1 (every x has a y, nothing else distinguishes them),
+    // below CRYSTALLIZE_LIFT_MIN — so it is held, not latched, and silent.
     for (let i = 0; i < 8; i++) {
-      feedHeartbeatBurst('x.tick', 'y.tick', 3); // 3 pairs per scan
+      feedHeartbeatBurst('x.tick', 'y.tick', 3);
       feedFiller(14);
       await intel._scanPatterns();
       await advance();
@@ -217,38 +228,44 @@ test('D1', 'crystallised announces exactly once across many scans that hover at 
     console.log = origLog;
   }
 
-  // _label() renders 'x.tick' as '"x: tick"' (dot → ': ') — match the exact
-  // cross-pair phrase, not just any line containing the substring (a broad
-  // substring also matches the separate, independently-legitimate
-  // same-type "x: tick fires in bursts" announcement).
+  const sig = ['x.tick', 'y.tick'].sort().join('::');
+  const row = intel.getPatterns().find(p => p.signature === sig);
+  assert(row, 'the pair is still tracked as a row (lose nothing, §0.3)');
+  assert(row.count >= 10, `count still accumulates past the old threshold (got ${row.count})`);
+  assert.strictEqual(row.crystallised, false, 'a base-rate-noise pair must NOT latch crystallised');
+  assert.strictEqual(row.status, 'hypothesis', 'it is explicitly held as a hypothesis');
+  // _label() renders 'x.tick' as '"x: tick"' — the cross-pair announce phrase.
   const crystalliseLines = logs.filter(l =>
     l.includes('pattern crystallised') && l.includes('"x: tick" always fires alongside "y: tick"'));
-  assert.strictEqual(crystalliseLines.length, 1,
-    `expected exactly 1 "pattern crystallised" announce for this pair across 8 scans, got ${crystalliseLines.length}:\n${crystalliseLines.join('\n')}`);
+  assert.strictEqual(crystalliseLines.length, 0,
+    `a held hypothesis must never announce as crystallised, got ${crystalliseLines.length}:\n${crystalliseLines.join('\n')}`);
 });
 
-test('D2', 'crystallised stays true even if a later scan contributes zero new co-occurrences for that pair', async () => {
+test('D2', 'a held hypothesis keeps accumulating count without flipping its status on boundary noise', async () => {
   resetAll();
-  feedHeartbeatBurst('p.tick', 'q.tick', 4); // 4 pairs
+  feedHeartbeatBurst('p.tick', 'q.tick', 4);
   feedFiller(14);
   await intel._scanPatterns();
 
   await advance();
-  feedHeartbeatBurst('p.tick', 'q.tick', 8); // pushes cumulative count >= 10
+  feedHeartbeatBurst('p.tick', 'q.tick', 8); // cumulative count well past the old 10 bar
   feedFiller(14);
   await intel._scanPatterns();
 
   const sig = ['p.tick', 'q.tick'].sort().join('::');
-  const crystallisedAfterCross = intel.getPatterns().find(p => p.signature === sig)?.crystallised;
-  assert.strictEqual(crystallisedAfterCross, true, 'should be crystallised once cumulative count >= 10');
+  const afterCross = intel.getPatterns().find(p => p.signature === sig);
+  assert.strictEqual(afterCross.crystallised, false, 'cumulative count alone no longer crystallises — base rate must be beaten');
+  assert.strictEqual(afterCross.status, 'hypothesis', 'still a hypothesis');
+  const countAtCross = afterCross.count;
 
-  // Next scan: only noise, no new p.tick/q.tick pairs at all.
+  // Next scan: only noise, no new p.tick/q.tick pairs. Status must not churn.
   await advance();
   feedFiller(25);
   await intel._scanPatterns();
 
-  const stillCrystallised = intel.getPatterns().find(p => p.signature === sig)?.crystallised;
-  assert.strictEqual(stillCrystallised, true, 'crystallised must not un-latch just because a later scan saw no new occurrences');
+  const after = intel.getPatterns().find(p => p.signature === sig);
+  assert.strictEqual(after.status, 'hypothesis', 'status must not oscillate when a later scan sees no new occurrences');
+  assert.strictEqual(after.count, countAtCross, 'count holds when no new occurrences arrive');
 });
 
 // ── §E: bottleneck keeps snapshot semantics ──────────────────────────────────
@@ -300,6 +317,54 @@ test('E2', 'bottleneck un-crystallises only once fully cleared (count hits 0), n
   // crystallised:true forever from a stale row.
   assert(!afterClear || afterClear.crystallised === true,
     'either the row is untouched (last known state) or explicitly still latched — never silently flipped false by boundary noise');
+});
+
+// ── §F: the base-rate crystallisation gate, pure & deterministic (§2026-10-24) ─
+// James: "b, tighten the crystallizer threshold." _coOccurrenceLift is pure, so
+// the positive side (a pair that genuinely beats chance) is proven here without
+// fighting the event-feeding timing the integration tests above are coupled to.
+
+test('F0', 'exports _coOccurrenceLift', () => {
+  assert.strictEqual(typeof intel._coOccurrenceLift, 'function');
+});
+
+test('F1', 'two rare types that co-occur over a real time span beat base rate (would crystallise)', () => {
+  // 10 observed co-occurrences of two types that each fire 12× across a 10-min
+  // window (600000ms), 5s co-occurrence window. Chance expectation is tiny.
+  const lift = intel._coOccurrenceLift({ freqA: 12, freqB: 12, observed: 10, spanMs: 600000, windowMs: 5000 });
+  // expected = 12*12*(5000/600000) = 1.2 ; lift = 10/1.2 ≈ 8.3
+  assert(lift >= 1.5, `rare exclusive pair should clear the 1.5 bar, got lift=${lift}`);
+});
+
+test('F2', 'two LOUD types co-occurring at chance rate do NOT beat base rate (held as hypothesis)', () => {
+  // Each type fires 200× across the same 10-min window; 40 co-occurrences is
+  // roughly what chance alone produces, so lift sits near 1.
+  const lift = intel._coOccurrenceLift({ freqA: 200, freqB: 200, observed: 40, spanMs: 600000, windowMs: 5000 });
+  // expected = 200*200*(5000/600000) ≈ 333 ; lift = 40/333 ≈ 0.12
+  assert(lift < 1.5, `loud chance-rate pair must fall below the bar, got lift=${lift}`);
+});
+
+test('F3', 'a burst (whole stream inside one window) cannot be called an invariant', () => {
+  // 500 events in 2s (span < windowMs): every pair is trivially in-window, so
+  // timing carries no information and lift collapses toward ~1, below the bar.
+  const lift = intel._coOccurrenceLift({ freqA: 30, freqB: 30, observed: 30, spanMs: 2000, windowMs: 5000 });
+  // fraction capped at 1 → expected = 30*30 = 900 ; lift = 30/900 ≈ 0.03
+  assert(lift < 1.5, `a burst must not crystallise on timing, got lift=${lift}`);
+});
+
+test('F4', 'degenerate / missing inputs return 0 (held), never a false positive', () => {
+  assert.strictEqual(intel._coOccurrenceLift({ freqA: 0, freqB: 5, observed: 3, spanMs: 100000, windowMs: 5000 }), 0);
+  assert.strictEqual(intel._coOccurrenceLift({ freqA: 5, freqB: 5, observed: 0, spanMs: 100000, windowMs: 5000 }), 0);
+  // zero span → fraction 1 → expected = freqA*freqB, a real (low) lift, not a pass
+  const z = intel._coOccurrenceLift({ freqA: 5, freqB: 5, observed: 3, spanMs: 0, windowMs: 5000 });
+  assert(z < 1.5, `zero span must not auto-pass, got ${z}`);
+});
+
+test('F5', 'lift rises monotonically with observed co-occurrences, all else equal', () => {
+  const base = { freqA: 20, freqB: 20, spanMs: 600000, windowMs: 5000 };
+  const a = intel._coOccurrenceLift({ ...base, observed: 5 });
+  const b = intel._coOccurrenceLift({ ...base, observed: 15 });
+  assert(b > a, `more real co-occurrences must mean more lift (got ${a} then ${b})`);
 });
 
 // ── RUN ───────────────────────────────────────────────────────────────────────

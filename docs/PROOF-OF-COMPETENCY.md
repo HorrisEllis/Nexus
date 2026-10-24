@@ -1112,3 +1112,29 @@ plus a 26-spec rebuild corpus, across **31 repositories**.
 | Test suites | 482 | `ls tests/modules/*.test.js \| wc -l` |
 | Phases decomposed to `.phase` nodes with their graphs | 1959 | `find . -name '*.phase' -not -path './node_modules/*' \| wc -l` |
 | Full-system specs that compile at depth (no BLACK node) | 18 | `node tests/modules/test-substrate-spec.test.js` |
+
+## 2026-10-24 — The crystallizer gate: his framework used to find and fix a flaw in his own system
+
+**His words:** "look at raid and the signal to noise section of the framework. look at the intelligence system. rfr2, my
+system hinking and my strcutrure intuition and analsys" · (then) "b, tighten the crystallizer threshold."
+
+**What was established:** the INNOVATION TOOLKIT framework (`docs/innovation-toolkit.framework`) is not decoration — it
+predicted, and then located, a real defect in the running intelligence system. The framework says *"intuition must be
+regulated and grounded"*; the crystallizer (`intelligence/index.js`) latched a co-occurrence as `crystallised` at count 3
+(15% confidence) and only applied the lift/noise regulator 3 minutes later, downstream. The fix moved the regulator
+upstream to the gate: a pattern is now **held as a hypothesis** until an event-level base-rate lift shows it beats chance.
+
+| Claim | Evidence a stranger can check |
+|---|---|
+| The framework named the flaw before the code was read | `docs/innovation-toolkit.framework` ("intuition must be regulated and grounded"; "analytical must have strict weighting") vs. the boot log's `135 co-patterns, 10 lift-confirmed signal` |
+| The fix is real and gated upstream | `intelligence/index.js` `_coOccurrenceLift` / `_groundedCrystallise`; `CHANGELOG-0.60.231.md`; `intelligence/spec/intelligence.spec` ADDENDUM 2026-10-24 |
+| It is proven, including the pure gate in isolation | `tests/modules/intelligence.test.js` **15/15** (D1/D2 hold a heartbeat pair as a hypothesis; F0–F5 prove the lift directly) |
+| A drift bug in the first cut was caught and fixed, not hidden | `CHANGELOG-0.60.231.md` "Drift found and fixed" (cumulative count ÷ windowed frequency → unbounded inflation; now a full-window ratio) |
+
+- **The skill this shows:** *using his own framework as a diagnostic instrument* — turning a philosophy of signal vs.
+  noise into a base-rate test in code — and **hostile verification applied to the coder's own fix** (the first
+  implementation reintroduced the very inflation it was meant to stop; it was found by its own test and corrected before
+  commit). Both are named skills in the framework (Maxim: "the more uncomfortable the truth, the bigger the gain").
+- **His part / the coder's part:** the framework, the signal-to-noise thesis, the structure/intuition/analysis model, and
+  the call to tighten the threshold are his. The base-rate derivation, the drift-bug catch, the tests, and the code are
+  the coder's.
