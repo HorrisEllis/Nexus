@@ -1,23 +1,23 @@
 envelope: 1
-uuid: nexus-export-graph-phase:TX9_build_contract_file_dir:48550b9ad89cc05c
+uuid: nexus-export-graph-phase:TX9_build_contract_file_dir:b691dcba45292115
 type: graph
-id: phase:TX9_build_contract_file_dir:48550b9ad89cc05c
+id: phase:TX9_build_contract_file_dir:b691dcba45292115
 context: dependency graph of phase TX9_build_contract_file_dir
 intent: null
-summary: 32 node(s), 3 crossing(s)
+summary: 31 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877952685
+exported_at: 1792878423820
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877952685
-lastSeenAt: 1792877952685
+firstSeenAt: 1792878423820
+lastSeenAt: 1792878423820
 fingerprint: null
 payload:
   for: TX9_build_contract_file_dir
   kind: phase
   repo: null
-  hash: 48550b9ad89cc05c
+  hash: b691dcba45292115
   nodes:
     - path: clear-glass/renderer/copilot-cli.js
       role: changes
@@ -35,10 +35,6 @@ payload:
       role: changes
       exists: true
       system: copilot
-    - path: emerge/consumer.js
-      role: changes
-      exists: false
-      system: emerge
     - path: intelligence/rfr2/context/index.js
       role: changes
       exists: true

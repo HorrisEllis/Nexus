@@ -502,3 +502,118 @@ spec:
       does: "A view built only from the registry walk and the event ledger: every level, its state, its verbs. It shakes hands first (DB12)."
       proof: "driven in Clear Glass: the tree shows; a verb runs and its ledger row appears; an undeclared call is refused and shown"
   build_order_g: [DB23, DB21, DB22, DB24, DB25, DB26]
+
+# ── The addenda below were written on brave-cori (claude/brave-cori-eczug1) and ported to main at 0.60.247 (BCR2, his "Port it
+# phase-by-phase"), unchanged (§0.3). Their version numbers are that line's. RF2 on main did its own folds, so where they describe folds,
+# docs/2026-10-24-fifteen-systems-migration-phasemap.spec says what main did. Their DB16 drafts arrive with the DB16 port.
+## ADDENDUM 2026-10-24 (0.60.229) — DB16 drafted; the way to sovereign, measured
+James, 2026-10-24: "then we need to resume the component registery for each system, get the mall sovereign, then cos phases to migrate." · to
+the choice "1 registries per system (DB16), COS first … 2 specs via local models": "1"
+- **Built:** lib/registry-draft.js draft / missing / text. Each draft comes from the tree only: the routes its interaction-contract.json
+  declares (lib/route-contract-check.js holds those to the code), its event-taxonomy.js pointed at (the one truth for its event names, ET1),
+  the literal event names it emits and handles, the files other systems reach into today (DB1: each is a capability that needs a route,
+  DB6), and its own way out by blocker (data, primitive, capability). Written for all 16 systems with none as
+  <system>/registry-components.draft.json. GET /api/system/registry-drafts, GET /api/system/registry/:system/draft, `system drafts`.
+- **Decided by the axioms (REVERSIBILITY, USER_AUTONOMY: drafts are his to accept):** a draft is JSON under its own name. lib/system-registry.js,
+  lib/system-nodes.js and others take any <system>/registry-components.js as declared, so a draft under that name would have been in force
+  before he accepted it (the first try did that, caught before commit). JSON because siso is an ES module package and a CommonJS draft broke
+  there. Accepting one: it becomes the system's registry-components.js and the system goes onto loom's SYSTEMS list.
+- **Measured (sovereignty census, lib/system-boundary.js):** no system is sovereign today. With no way out at all (their own registry, bus,
+  handshake and compartment are what is left): auth, erosmancer, jaa, mesh, remote-desktop, security, sentinel, siso. COS: 5 ways out (1 data,
+  cos/manager.js → cortex/memory/jaa-db.js; 4 primitives into siso/warp), 39 of its files reached into by others (cos/host/index.js by four
+  systems). Orchestrator 38 ways out, cli 20, meta 12, emergence 9, nexus 8.
+- **No screen yet:** the drafts are on a route and a command; the UI is deferred, said.
+- **Found, not this change's:** test-system-boundary SB-06/SB-08 fail on the committed tree too — three crossings not in the baseline
+  (idearium/repo/roadmap-import.js → loom/scanners/phasemap-map.js since 0.60.199; lib/phase-dag.js → the same; lib/verify-first.js →
+  cos/testenv/run-target.js). Reported.
+
+## ADDENDUM 2026-10-24 (0.60.230) — his decision: eight folders are not systems
+James, 2026-10-24, reading the coder's "auth, erosmancer, jaa, mesh, remote-desktop, security, sentinel and siso already reach into no other
+system" (0.60.229's report, which counted them as the systems closest to sovereign): "Aren't systems. They should have been dealt with already"
+- **His decision:** those eight are not systems. His axiom §5.9 already said so ("a primitive with none of these [state, lifecycle,
+  persistence, execution] is not a system", docs/2026-10-17-decisions-by-the-axioms.spec); the census (lib/system-boundary.js) never
+  applied it, and DB16 drafted registries for them. That cost: eight drafts and a wrong "closest to sovereign" list in 0.60.229.
+- **What it changed:** lib/system-boundary.js FOLDED, each one's home read from who uses it — auth → orchestrator (its only user,
+  orchestrator/orchestrator.js), mesh → guardian (guardian/routes/mesh.js), jaa → guardian (its schema is "Guardian v8 — Schema"), siso → the
+  kernel (a primitive cos, emerge and idearium use; PRIMITIVES already said so); erosmancer, remote-desktop, security, sentinel → parked
+  (nothing requires them; a use of one is reported as parkedUses, never hidden). Their files count as their home's; they are never listed
+  as systems; their eight drafts were withdrawn (generated output, regenerable: nothing lost).
+- **The same mistake one level down, decided by the axioms (§5.9; DB16's open question, the coder's reading, to confirm):** the parts of
+  other systems (contracts, hooks, service, components, architecture-spec, seams) and the faces (ui, tablet) were listed as "sovereign".
+  lib/system-boundary.js PARTS: still scanned (crossings into hooks/ are real edges), never in the sovereignty list. lib/registry-draft.js
+  reads the same lists (one truth).
+- **"They should have been dealt with already" — what is left, to confirm:** the table only counts them right. Dealing with them means
+  moving each into its home (DB17: auth/ into orchestrator/, mesh/ and jaa/ into guardian/, siso/ beside the kernel) and archiving the parked
+  four (§0.3: archive, not delete). The coder's reading is that he wants that done; erosmancer (231 files, its own OS spec) may be his own
+  project rather than parked code — his to say.
+- **Found and fixed on the way:** 0.60.229 put the drafts' route case between `case 'system.registry':` and `case 'system.registry.one':`,
+  so GET /api/system/registry answered with the drafts instead of the dependency graph (test-drawbridge-registry SR-07). Moved; guarded.
+- **Measured now:** 20 systems; none sovereign. Fewest ways out: cockpit 1 (data), warp 1, emerge 4, cos 4 (1 data, 3 primitive into warp/core).
+
+## ADDENDUM 2026-10-24 (0.60.231) — the systems are Idearium's 15
+James, 2026-10-24, after 0.60.230 counted 20 systems: "15 systems. only the ones with a .spec in the directory. all the systems in idearium"
+- **His decision:** the systems are exactly Idearium's list, lib/nexus-self/systems.js SYSTEMS: orchestrator, cortex, guardian, idearium,
+  architect, diagnostic, intelligence, ollama-bridge (ollama/), versionium, copilot, loom, clear-glass, components, cos, core (the kernel,
+  lib/). It supersedes 0.60.230's count of 20, and the coder's reading that put components among the parts (both kept here, §0.3).
+- **What it changed:** lib/system-boundary.js realSystems() reads that list; the sovereignty census lists only those 14 folders (core is the
+  kernel) and names every other folder with code as unhomed, with who uses it: warp, nexus, meta, emerge, hooks, cockpit, cli,
+  architecture-spec, contracts, emergence, seams, service, tablet, ui. The scan itself is unchanged (a require into warp/ is still a real edge,
+  and the ratchet's baseline still holds it). lib/registry-draft.js drafts only for those 15: orchestrator, cos, components; the six drafts
+  for cli, cockpit, emergence, meta, nexus, warp withdrawn (generated, regenerable).
+- **His ".spec in the directory", checked:** 13 of the 15 have one in their folder (<system>/spec/*.spec). components has none; core has no
+  folder of its own (lib/; docs/lib.spec exists). Said, not decided: components is on his list without a spec.
+- **What is left for the unhomed:** each needs a home (moved into the system that uses it, DB17) or to be archived; the census lists their
+  users, so the home is read from the evidence, as 0.60.230 did for the eight. warp is used by ten folders (it is the primitive the
+  census's PRIMITIVES already names), nexus by eleven.
+
+## ADDENDUM 2026-10-24 (0.60.232) — "Archive."
+James, 2026-10-24: "Archive." — his answer to the coder's "1. Home or archive the unhomed folders … Your erosmancer question is still open."
+- **The coder's reading (to confirm):** archive what is not a system and is not needed. By the axioms (REVERSIBILITY, §1.2 nothing fails
+  silently), a folder that live code still uses cannot be archived without breaking it; it needs a home instead. Each candidate was checked
+  for requires, paths named by name (spawned, served, read), workspaces and tests.
+- **Archived** to _archive/2026-10-24-not-systems/ (git mv; a README says why and how to restore): remote-desktop, security (the top-level
+  e2e-channel and signaling-envelope), emergence (with its own suites; tests/modules/test-emergence-and-warp-suites.test.js keeps WARP's).
+- **Not archived, his to decide:** erosmancer (Clear Glass starts ErosmancerOS from erosmancer/erosmancer-os, his "erosmanceros to start
+  with clearglass"; an npm workspace) and sentinel (cli/sentinel.js and two tests use it). **Kept, live:** service (the Idearium UI tells him
+  to start node service/idearium-service.js), tablet (two tests read its pages), seams (tests/brutal.test.js requires it), ui (served), and
+  the used unhomed folders (warp, nexus, meta, emerge, cli, cockpit, hooks, contracts, architecture-spec): each needs a home, not the archive.
+- **A regression of 0.60.230, found and fixed:** test-cos-compartment-template CT-03/CT-04 used sentinel as the sovereign example; 0.60.230
+  made sentinel not a system and the test was not run then (it passed at 0.60.229). The example is now components (of his 15, the one that
+  requires nothing in another system). CT-07 fails as it did at 0.60.229 (the ratchet's three crossings).
+
+## ADDENDUM 2026-10-24 (0.60.233) — erosmancer moved into Clear Glass
+James, 2026-10-24: "move erosmancer to either clearglass or guardian"
+- **Which, decided by the evidence (§0.1):** Clear Glass. It starts ErosmancerOS (clear-glass/src/eros/supervisor.js), wires it
+  (clear-glass/wire/nexus-wire.js), drives its input and runs its workbench; no Guardian file uses it.
+- **Moved (git mv):** erosmancer/erosmancer-os → clear-glass/erosmancer-os; erosmancer/spec/erosmancer.spec → clear-glass/erosmancer-os/spec/.
+  Every live path updated (the supervisor, the wire, the macro tool, five tests, two loom maps, the npm workspace and lock, the README,
+  the atlases, the spec registry); history (CHANGELOGs, version lines, older maps) left as written. lib/system-boundary.js FOLDED no longer
+  needs an entry for it. Clear Glass's electron-builder config excludes it from the app.
+- **Left:** sentinel, still parked (its CLI and two tests).
+
+## ADDENDUM 2026-10-24 (0.60.234) — Sentinel archived
+James, 2026-10-24: "I'm not sure what Sentinel is, dude. Is that, like, tell me, I don't think that got mixed in to this project." The coder
+read docs/nexus-sentinel.spec and its history: his 2026-07-24 plan (quoted three times in it) to merge four diagnostic surfaces into one
+diagnostic-and-repair authority; only S1 was built (a contract whose routes were declared and never served, and cli/sentinel.js); its job is
+the diagnostic system's now (one of his 15; the healer joined it in 0.60.136). The coder recommended archiving it. He: "Yeah archive it."
+- Archived (git mv) to _archive/2026-10-24-not-systems/sentinel/: the folder, cli/sentinel.js, tests/modules/test-sentinel-cli.js (out of
+  both run-all lists, said there), and test-adversarial-sim's AS-004..AS-006 (they tested that CLI). The spec stays in docs/, addended.
+- Found: test-sovereign-systems SV-08 used sentinel as its sovereign example; 0.60.230 broke it and it was not run then (the second test
+  that change broke, after CT-03/04). Now components. Every test touching the census is being run (CHANGELOG-0.60.234.md).
+
+## ADDENDUM 2026-10-24 (0.60.236) — sovereign: components, ollama, cos (DB6 begun)
+James, 2026-10-24: "We need the systems sovereign."
+- **warp counts with the kernel** (lib/system-boundary.js FOLDED warp: 'lib'), as siso does: nine systems use warp/core, so inside idearium or
+  guardian (his earlier "warp would probably be idearium or guardian") every one would depend on that system and none could be sovereign.
+  Decided by his axioms for his goal; to confirm. The folder has not moved.
+- **The pulse moved to the kernel** (DB17): orchestrator/lib/pulse.js → lib/pulse.js (node built-ins only), the old path a one-line
+  re-export; cortex/boot.js, idearium/api, clear-glass/wire/nexus-wire.js, nexus/nexus-connect.js and orchestrator.js require lib/pulse.js.
+  Cortex, idearium and Clear Glass no longer reach into orchestrator for a heartbeat.
+- **ollama sovereign:** its one way out was nexus/nexus-connect.js startHeartbeat, which only handed off to the pulse; it takes the pulse
+  from the kernel.
+- **cos sovereign:** its one way out was cortex/memory/jaa-db.js's JaaDB class (a compartment's own store). CompartmentManager takes
+  openStore(dir) from whoever boots it, as it already takes jaaDB; without one it says so and uses the shared store (it fell back silently).
+- **Measured now:** sovereign components, ollama, cos. Next fewest ways out: loom 5 (3 data — cortex's jaa-db; 1 primitive — nexus-connect;
+  1 capability — ollama-client), architect 6, clear-glass 9. The two files most systems still reach for: cortex/memory/jaa-db.js (data) and
+  nexus/nexus-connect.js (it is not a pure primitive: it lazily requires intelligence/lattice; moving it into the kernel as it stands would
+  be an upward crossing, so it needs its lattice use cut first).

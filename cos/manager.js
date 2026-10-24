@@ -10,9 +10,12 @@ const { Compartment, STATE, BIRTH_GATES } = require('./kernel');
 const { BusKernel } = require('../lib/siso');
 
 class CompartmentManager {
-  constructor({ kernel, jaaDB }) {
+  // 0.60.236 — James: "We need the systems sovereign." openStore(dir) → an opened store for one compartment, given by whoever boots COS
+  // (as jaaDB already is). cos required cortex/memory/jaa-db.js's JaaDB class for it: its one way out of its own folder.
+  constructor({ kernel, jaaDB, openStore = null }) {
     this._kernel      = kernel;
     this._jaaDB       = jaaDB;
+    this._openStore   = typeof openStore === 'function' ? openStore : null;
     this._compartments = new Map();  // id → Compartment
     this._buses        = new Map();  // busId → BusKernel
     this._gateQueue    = [];         // pending gate runs
@@ -42,12 +45,10 @@ class CompartmentManager {
     // Each compartment gets its own JaaDB instance (sovereign memory)
     let ownJaaDB = this._jaaDB;
     if (jaaDbPath) {
-      try {
-        const { JaaDB } = require('../cortex/memory/jaa-db');
-        ownJaaDB = new JaaDB({ root: jaaDbPath });
-        await ownJaaDB.open();
-      } catch {
-        ownJaaDB = this._jaaDB; // fallback to shared
+      if (!this._openStore) console.warn(`[cos] compartment ${id || name}: a store of its own was asked for (${jaaDbPath}) but no openStore was given — using the shared one`);   // §1.2 said
+      else {
+        try { ownJaaDB = await this._openStore(jaaDbPath); }
+        catch (e) { console.warn(`[cos] compartment ${id || name}: its own store did not open (${e.message}) — using the shared one`); ownJaaDB = this._jaaDB; }
       }
     }
 

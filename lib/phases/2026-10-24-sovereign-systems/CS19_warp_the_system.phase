@@ -7,11 +7,11 @@ intent: null
 summary: CS19_warp_the_system (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792877682568
+exported_at: 1792878423750
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682568
-lastSeenAt: 1792877682568
+firstSeenAt: 1792878423750
+lastSeenAt: 1792878423750
 fingerprint: null
 payload:
   id: CS19_warp_the_system
@@ -29,4 +29,4 @@ payload:
     - CS_D11_warp_is_a_system
   blocks: []
   spec: null
-  graph: 644b30504d95b92b
+  graph: 20ace669b6d2996e

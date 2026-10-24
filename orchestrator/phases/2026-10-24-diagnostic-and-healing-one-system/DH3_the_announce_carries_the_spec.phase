@@ -9,11 +9,11 @@ intent: null
 summary: DH3_the_announce_carries_the_spec (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792841756247
+exported_at: 1792878423676
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841756247
-lastSeenAt: 1792841756247
+firstSeenAt: 1792878423676
+lastSeenAt: 1792878423676
 fingerprint: null
 payload:
   id: DH3_the_announce_carries_the_spec
@@ -32,4 +32,4 @@ payload:
     - DH2_every_system_states_its_expectations
   blocks: []
   spec: null
-  graph: e2d5283920cba159
+  graph: 21253d84316bdf6c

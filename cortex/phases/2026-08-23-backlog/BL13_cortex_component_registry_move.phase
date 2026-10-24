@@ -7,11 +7,11 @@ intent: null
 summary: BL13_cortex_component_registry_move (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792841753347
+exported_at: 1792878419781
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841753347
-lastSeenAt: 1792841753347
+firstSeenAt: 1792878419781
+lastSeenAt: 1792878419781
 fingerprint: null
 payload:
   id: BL13_cortex_component_registry_move
@@ -28,4 +28,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 805fd32c1fb017b3
+  graph: 69352d02760cb12f

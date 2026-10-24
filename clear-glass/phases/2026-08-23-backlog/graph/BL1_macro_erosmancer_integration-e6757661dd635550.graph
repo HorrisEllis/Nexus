@@ -1,0 +1,74 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL1_macro_erosmancer_integration:e6757661dd635550
+type: graph
+id: phase:BL1_macro_erosmancer_integration:e6757661dd635550
+context: dependency graph of phase BL1_macro_erosmancer_integration
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878419749
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878419749
+lastSeenAt: 1792878419749
+fingerprint: null
+payload:
+  for: BL1_macro_erosmancer_integration
+  kind: phase
+  repo: null
+  hash: e6757661dd635550
+  nodes:
+    - path: clear-glass/wire/nexus-wire.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/wire/eros-registry-components.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/wire/nexus-wire.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/wire/nexus-wire.js
+      to: clear-glass/wire/eros-registry-components.js
+      kind: requires
+    - from: clear-glass/wire/nexus-wire.js
+      to: lib/pulse.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
+      - docs/2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): BL0_macro_system'
+      - >-
+        needed by (1): BL23_ncp_providers_start_verification · all downstream 2 · finishing it
+        unlocks BL23_ncp_providers_start_verification
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+        kind: declared

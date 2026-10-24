@@ -9,11 +9,11 @@ intent: null
 summary: EW3_the_spec_compiler_into_idearium (backend) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1792877952540
+exported_at: 1792878423685
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877952540
-lastSeenAt: 1792877952540
+firstSeenAt: 1792878423685
+lastSeenAt: 1792878423685
 fingerprint: null
 payload:
   id: EW3_the_spec_compiler_into_idearium
@@ -37,4 +37,4 @@ payload:
     - EW2_the_callers_outside_idearium
   blocks: []
   spec: emerge/SPEC_COMPILER.spec
-  graph: c68d7031c61ed393
+  graph: ffc17897026a22ad
