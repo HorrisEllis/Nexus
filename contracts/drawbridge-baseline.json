@@ -177,7 +177,7 @@
   "idearium/index.js -> siso/core/index.js",
   "idearium/lib/chunk-nodes.js -> cortex/memory/jaa-db.js",
   "idearium/lib/db.js -> cortex/memory/jaa-db.js",
-  "idearium/repo/nexus-self.js -> architecture-spec/registry/nexus-atlas-aggregate.js",
+  "idearium/repo/nexus-self.js -> idearium/architecture-spec/registry/nexus-atlas-aggregate.js",
   "idearium/repo/nexus-self.js -> loom/scanners/phasemap-map.js",
   "idearium/repo/phases.js -> loom/scanners/phasemap-map.js",
   "idearium/repo/roadmap.js -> loom/scanners/phasemap-map.js",

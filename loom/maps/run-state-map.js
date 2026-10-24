@@ -192,7 +192,7 @@ const CONSUMERS = [
   [I('lib/queue.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the input folder watcher'],
   [I('lib/ico.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('orchestrator/auth/index.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 policy and client-key watchers'],
-  [I('architecture-spec/registry/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
+  [I('idearium/architecture-spec/registry/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('cos/foundation/file-browser.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('diagnostic/nexus-diagnostic.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the ledger folder watcher'],
   [I('emerge/emerge-kernel.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],

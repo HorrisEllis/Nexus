@@ -72,7 +72,7 @@ const tmp = (n) => fs.mkdtempSync(path.join(os.tmpdir(), `rc-${n}-`));
 
   await test('RC-02', 'no long-running kernel file uses a bare fs.watch', async () => {
     const files = ['orchestrator/orchestrator.js', 'guardian/lib/node-registry.js', 'lib/node-registry.js', 'lib/node-index-watcher.js',
-      'lib/queue.js', 'orchestrator/auth/index.js', 'architecture-spec/registry/watcher.js', 'cos/foundation/file-browser.js',
+      'lib/queue.js', 'orchestrator/auth/index.js', 'idearium/architecture-spec/registry/watcher.js', 'cos/foundation/file-browser.js',
       'diagnostic/nexus-diagnostic.js', 'emerge/emerge-kernel.js', 'idearium/repo/watcher.js'];
     for (const f of files) {
       const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
