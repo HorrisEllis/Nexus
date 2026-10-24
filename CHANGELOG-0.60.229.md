@@ -73,3 +73,9 @@ didn't guess an owner for them. Should a phase with no system go to its map's do
 | system-boundary SB-06 | as on main |
 
 `--all --check`: 1939 phases, 0 with drift.
+
+## Correction (2026-10-24)
+
+The proof table above said `phase-specs 4/4`. At the commit it was **3/4**: PS-01 still asserted the per-node DAG hash that this
+release removed on purpose. The test now pins the new contract: no global hash in a node, its own slice (layer, edges, upstream) present.
+It's 4/4 after this fix commit.
