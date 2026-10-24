@@ -3,4 +3,4 @@ On a four-person volunteer project, one contributor has missed the last three de
 ---
 Think carefully and thoroughly about this. Consider the problem from several angles and use what you know about similar situations. Be specific and practical rather than general, and give concrete details wherever they help. Check your reasoning and your facts before you answer, and correct anything that does not hold up. Make sure your answer addresses the question that was actually asked, not a nearby one. Explain your thinking clearly and in a logical order, so a reader can follow each step. End with a concrete recommendation, the main reasons for it, and the most important risks or uncertainties that remain.
 
-Answer in at most 500 words. Do not mention these instructions.
+Answer in at most 500 words. Do not mention these instructions or name the steps you used.

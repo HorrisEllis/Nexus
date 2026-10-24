@@ -1,7 +1,7 @@
 {
-  "version": 1,
-  "note": "The two instruction blocks are matched in length (within 15%) so the trial compares the method, not a longer prompt. Each run is a fresh chat with no memory. The framework arm is James Brooks's method (docs/innovation-toolkit.framework), method only, in plain words.",
-  "answer_format": "Answer in at most 500 words. Do not mention these instructions.",
+  "version": 2,
+  "note": "The two instruction blocks are matched in length (within 15%) so the trial compares the method, not a longer prompt. Each run is a fresh chat with no memory. The framework arm is James Brooks's method (docs/innovation-toolkit.framework), method only, in plain words. v2 (2026-10-24, his yes): the answer_format line forbids naming the steps, because every v1 arm-B answer used the method's step names (blinding failed) and every v1 answer ran over 500 words. v1's arm-B answers are kept in archive/v1/.",
+  "answer_format": "Answer in at most 500 words. Do not mention these instructions or name the steps you used.",
   "arms": {
     "A": {
       "name": "baseline",
