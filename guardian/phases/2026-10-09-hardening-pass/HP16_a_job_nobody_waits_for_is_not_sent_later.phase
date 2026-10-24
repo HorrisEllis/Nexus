@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
+context: >-
+  pipeline phase HP16_a_job_nobody_waits_for_is_not_sent_later of
+  docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP16_a_job_nobody_waits_for_is_not_sent_later (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677146
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677146
+lastSeenAt: 1792787677146
+fingerprint: null
+payload:
+  id: HP16_a_job_nobody_waits_for_is_not_sent_later
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/ask.js
+    - guardian/lib/dispatcher.js
+    - guardian/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2655911d9edadb7f

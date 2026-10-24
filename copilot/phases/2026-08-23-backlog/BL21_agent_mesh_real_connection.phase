@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL21_agent_mesh_real_connection
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL21_agent_mesh_real_connection
+context: pipeline phase BL21_agent_mesh_real_connection of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL21_agent_mesh_real_connection (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675431
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675431
+lastSeenAt: 1792787675431
+fingerprint: null
+payload:
+  id: BL21_agent_mesh_real_connection
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/self-model.js
+    - lib/self-model.js
+    - copilot/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 82582a994731b7ce

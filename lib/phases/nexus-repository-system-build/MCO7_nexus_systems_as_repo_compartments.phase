@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repository-system-build-phasemap.spec::MCO7_nexus_systems_as_repo_compartments
+type: phase
+id: docs_nexus-repository-system-build-phasemap.spec::MCO7_nexus_systems_as_repo_compartments
+context: >-
+  pipeline phase MCO7_nexus_systems_as_repo_compartments of
+  docs/nexus-repository-system-build-phasemap.spec
+intent: null
+summary: MCO7_nexus_systems_as_repo_compartments (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678289
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678289
+lastSeenAt: 1792787678289
+fingerprint: null
+payload:
+  id: MCO7_nexus_systems_as_repo_compartments
+  map: docs/nexus-repository-system-build-phasemap.spec
+  repo: null
+  layer: null
+  status: '"PARTIAL 2026-09-19. 7a (audit) and 7b (manifests) DONE - commit 4890f29. 7c-7h NOT STARTED."'
+  files:
+    - cos/kernel.js
+    - lib/system-registry.js
+    - lib/version.js
+    - cli/compartments.js
+  depends_on:
+    - MCO0_audit_real_coverage
+    - MCO6_compartment_ownership
+  blocks: []
+  spec: null
+  graph: b9b0a420afcc0424

@@ -134,7 +134,14 @@ function parsePhasemapText(text, name) {
       const top = lines[i].match(/^([A-Za-z_][\w-]*):/) || lines[i].match(/^ {2}([a-z_][\w-]*):\s*$/); if (top) section = top[1];
       const m = lines[i].match(PHASE_RE);
       if (!m) continue;
-      const isDecision = section === 'open_decisions' || section === 'decisions';
+      // §0.60.227 SL3 — measured: decisions also sit under decisions_needed:, decisions_recorded:, open_decision:, his_decisions:,
+      // decisions_added:, decisions_applied_by_default_his_to_change: (12 entries) and were offered as buildable phases. Any section
+      // whose name says decision holds decisions.
+      const isDecision = !!section && /decision/.test(section);
+      // §0.60.225 NF1 — an entry under `root_findings:` is a FINDING the phases cite, not a phase (the 09-05 map says so: "Not
+      // phases"). RF2 was offered as a phase and sent to Gemini, which had nothing to build and wrote a spec instead. Still
+      // returned (no count changes), marked kind: 'finding'; the build refuses it (idearium _phaseBuild NOT_A_PHASE).
+      const isFinding = section === 'root_findings';
       const id = m[1];
       const rest = m[2] || '';
       // §FIXED 2026-09-19 (same pass as the two inversions below) — `near`
@@ -157,9 +164,14 @@ function parsePhasemapText(text, name) {
       while (bodyEnd < lines.length && bodyEnd < i + 60 && !PHASE_RE.test(lines[bodyEnd])) bodyEnd++;
       const phaseLines = lines.slice(i, bodyEnd);
       const sIdx = phaseLines.findIndex(l => /^\s+status:/.test(l));
+      // §0.60.227 SL3 — the status VALUE only: its key line and the lines indented under it (a block scalar). A fixed 4-line window
+      // read a sibling key as part of it: MCO4's `status_before: "NOT STARTED"` sat right under `status:`, so the 'active' the build
+      // writes read back as pending and the writer refused it (ROUNDTRIP_FAILED; test-moce-roadmap, red on main).
+      let sEnd = sIdx + 1;
+      if (sIdx !== -1) { const si = _indent(phaseLines[sIdx]); while (sEnd < phaseLines.length && sEnd < sIdx + 12 && (!phaseLines[sEnd].trim() || _indent(phaseLines[sEnd]) > si)) sEnd++; }
       const near = sIdx === -1
         ? [rest, lines[i + 1] || '', lines[i + 2] || ''].join(' ')   // no status: key — fall back
-        : phaseLines.slice(sIdx, sIdx + 4).join(' ');
+        : phaseLines.slice(sIdx, sEnd).join(' ');
       // §FIXED 2026-09-19 — TWO measured inversions, both of which pointed
       // the wrong way for deciding what to work on. Counted across all 528
       // real phases in docs/*phasemap*.spec before touching this:
@@ -241,7 +253,7 @@ function parsePhasemapText(text, name) {
       const f = _fields(phaseLines.slice(1), _indent(lines[i]) + 2);
       const sys = _systemsOf(f, body);
       out.push({
-        id, map: name, ...(isDecision ? { kind: 'decision' } : {}),
+        id, map: name, ...(isDecision ? { kind: 'decision' } : isFinding ? { kind: 'finding' } : {}),
         title: id.replace(/_/g, ' '),
         status, ...(ans && ans.closedAs ? { closedAs: ans.closedAs } : {}), ...(ans && ans.shelf ? { shelf: true } : {}),
         systems: sys.systems, tags: sys.tags, systemsFrom: sys.systemsFrom, ...(sys.systemsFromFiles ? { systemsFromFiles: sys.systemsFromFiles } : {}),
@@ -401,7 +413,7 @@ function loadAll() {
     try { text = fs.readFileSync(file, 'utf8'); } catch (_) { continue; }
     for (const p of parsePhasemapText(text, name)) {
       phases.push({ id: p.id, map: p.map, title: p.title, status: p.status, systems: p.systems, tags: p.tags, systemsFrom: p.systemsFrom, dependsOn: p.dependsOn,
-        ...(p.shelf ? { shelf: true } : {}), ...(p.closedAs ? { closedAs: p.closedAs } : {}), ...(p.foldedInto ? { foldedInto: p.foldedInto } : {}) });   // §OR1 — were dropped here
+        ...(p.shelf ? { shelf: true } : {}), ...(p.closedAs ? { closedAs: p.closedAs } : {}), ...(p.foldedInto ? { foldedInto: p.foldedInto } : {}), ...(p.kind ? { kind: p.kind } : {}) });   // §OR1 — were dropped here · §0.60.227 kind (decision, finding)
     }
   }
   // group by system (LP2 — split by system).

@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FR10_stop_the_ladder:fdadb47c70248a9e
+type: graph
+id: phase:FR10_stop_the_ladder:fdadb47c70248a9e
+context: dependency graph of phase FR10_stop_the_ladder
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677754
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677754
+lastSeenAt: 1792787677754
+fingerprint: null
+payload:
+  for: FR10_stop_the_ladder
+  kind: phase
+  repo: null
+  hash: fdadb47c70248a9e
+  nodes:
+    - path: docs/2026-10-17-debugging-product-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR6_flight_data
+    dependents:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
+    upstream:
+      - docs/2026-10-16-repo-carve-phasemap.spec::CV1_carve_backend_route_command_ui
+      - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR1_one_record_per_change
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR2_tested_before_it_lands
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR3_undo_any_change
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR5_the_demo
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR6_flight_data
+    downstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
+    conflicts:
+      - with: docs/2026-10-16-repo-carve-phasemap.spec::FR7_the_causal_record
+        files:
+          - docs/2026-10-17-debugging-product-phasemap.spec
+    dangling: []
+    lines:
+      - layer 6 · ready
+      - 'depends on (1): FR6_flight_data · all upstream 7'
+      - 'needed by (1): SL4_the_loop · finishing it unlocks SL4_the_loop'
+      - >-
+        same files as FR7_the_causal_record with no order between them:
+        docs/2026-10-17-debugging-product-phasemap.spec
+    edges:
+      - from: docs/2026-10-16-repo-carve-phasemap.spec::FR6_flight_data
+        kind: declared

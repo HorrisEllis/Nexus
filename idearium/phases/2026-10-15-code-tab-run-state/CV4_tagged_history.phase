@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CV4_tagged_history
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CV4_tagged_history
+context: pipeline phase CV4_tagged_history of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CV4_tagged_history (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677517
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677517
+lastSeenAt: 1792787677517
+fingerprint: null
+payload:
+  id: CV4_tagged_history
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.81 (test-code-tab-expand CX-06, CX-08)
+  files:
+    - versionium/lib/files.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - CV2_a_version_per_diff
+  blocks: []
+  spec: null
+  graph: bf93d47b9e08cca2

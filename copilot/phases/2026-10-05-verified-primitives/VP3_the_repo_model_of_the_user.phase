@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-verified-primitives-phasemap.spec::VP3_the_repo_model_of_the_user
+type: phase
+id: docs_2026-10-05-verified-primitives-phasemap.spec::VP3_the_repo_model_of_the_user
+context: pipeline phase VP3_the_repo_model_of_the_user of docs/2026-10-05-verified-primitives-phasemap.spec
+intent: null
+summary: VP3_the_repo_model_of_the_user (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677056
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677056
+lastSeenAt: 1792787677056
+fingerprint: null
+payload:
+  id: VP3_the_repo_model_of_the_user
+  map: docs/2026-10-05-verified-primitives-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/person-model/index.js
+    - copilot/lib/user-model.js
+    - lib/repo-hat-memory.js
+    - intelligence/gap/hunter.js
+  depends_on:
+    - VP0_map_and_atlas
+  blocks: []
+  spec: null
+  graph: 92bc2dd650ca2e8f

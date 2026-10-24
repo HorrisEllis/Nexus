@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456416766
+exported_at: 1792787677987
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416766
-lastSeenAt: 1792456416766
+firstSeenAt: 1792787677987
+lastSeenAt: 1792787677987
 fingerprint: null
 payload:
   for: TV3_traversal_as_context
@@ -70,7 +70,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 6
     deps:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
@@ -97,10 +96,13 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - >-
-        DAG 7583ffef0c495b95 · layer 6 · blocked by TV1_traversal_primitive,
-        CH1_strategies_behind_the_contract
+      - layer 6 · blocked by TV1_traversal_primitive, CH1_strategies_behind_the_contract
       - >-
         depends on (2): TV1_traversal_primitive, CH1_strategies_behind_the_contract · all upstream
         10
       - 'needed by (1): TV2_invariant_guided_traversal'
+    edges:
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+        kind: declared
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+        kind: declared

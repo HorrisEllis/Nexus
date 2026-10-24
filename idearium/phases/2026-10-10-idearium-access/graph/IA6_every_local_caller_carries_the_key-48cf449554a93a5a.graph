@@ -1,0 +1,186 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IA6_every_local_caller_carries_the_key:48cf449554a93a5a
+type: graph
+id: phase:IA6_every_local_caller_carries_the_key:48cf449554a93a5a
+context: dependency graph of phase IA6_every_local_caller_carries_the_key
+intent: null
+summary: 20 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677210
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677210
+lastSeenAt: 1792787677210
+fingerprint: null
+payload:
+  for: IA6_every_local_caller_carries_the_key
+  kind: phase
+  repo: null
+  hash: 48cf449554a93a5a
+  nodes:
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/cli/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: service/guardian-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/intuition.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/copilot-context.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/expectation-watcher.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/inject-config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/config.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/inject-config.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/copilot-context.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/recursive-diagnose.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/expectation-watcher.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intuition.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: service/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+  crossings:
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: service/guardian-service.js
+      to: guardian/server.js
+      fromSystem: service
+      toSystem: guardian
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-10-idearium-access-phasemap.spec::IA0_the_door_checks_who_is_asking
+    dependents: []
+    upstream:
+      - docs/2026-10-10-idearium-access-phasemap.spec::IA0_the_door_checks_who_is_asking
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): IA0_the_door_checks_who_is_asking'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-10-idearium-access-phasemap.spec::IA0_the_door_checks_who_is_asking
+        kind: declared

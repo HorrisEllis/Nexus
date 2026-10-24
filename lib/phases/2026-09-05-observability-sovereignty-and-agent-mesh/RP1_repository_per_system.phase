@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RP1_repository_per_system
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RP1_repository_per_system
+context: >-
+  pipeline phase RP1_repository_per_system of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: RP1_repository_per_system (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675814
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675814
+lastSeenAt: 1792787675814
+fingerprint: null
+payload:
+  id: RP1_repository_per_system
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/AXIOMS-v3.1.md
+    - contracts/SYSTEM-CONTRACTS.js
+    - ui/tv-shell/index.html
+    - ui/home/areas/bridge.js
+  depends_on:
+    - DF1_guardian_own_data_folder
+    - DF2_cortex_and_versionium_off_root_data
+  blocks: []
+  spec: null
+  graph: 95bead78e697c269

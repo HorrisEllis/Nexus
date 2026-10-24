@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P25_universal_per_system_queue
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P25_universal_per_system_queue
+context: >-
+  pipeline phase P25_universal_per_system_queue of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P25_universal_per_system_queue (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675916
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675916
+lastSeenAt: 1792787675916
+fingerprint: null
+payload:
+  id: P25_universal_per_system_queue
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/queue.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 624624c871ccb0f6

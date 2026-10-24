@@ -1,0 +1,264 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TL4_rewind_to_a_gate:1b73172e3db632d6
+type: graph
+id: phase:TL4_rewind_to_a_gate:1b73172e3db632d6
+context: dependency graph of phase TL4_rewind_to_a_gate
+intent: null
+summary: 30 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677694
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677694
+lastSeenAt: 1792787677694
+fingerprint: null
+payload:
+  for: TL4_rewind_to_a_gate
+  kind: phase
+  repo: null
+  hash: 1b73172e3db632d6
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/repo-run-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/work-timeline.js
+      role: changes
+      exists: false
+      system: lib
+    - path: versionium/lib/files.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/versions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: versionium/routes/files.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/data-dir.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/config.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/text-diff.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: lib/repo-run-state.js
+      to: idearium/lib/data-dir.cjs
+      kind: requires
+    - from: versionium/lib/files.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: versionium/lib/files.js
+      to: versionium/config.js
+      kind: requires
+    - from: versionium/lib/files.js
+      to: versionium/lib/text-diff.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-run-state.js
+      kind: requires
+    - from: products/flight-recorder/lib/versions.js
+      to: versionium/lib/files.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: versionium/lib/files.js
+      kind: requires
+    - from: versionium/routes/files.js
+      to: versionium/lib/files.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: lib/repo-run-state.js
+      to: idearium/lib/data-dir.cjs
+      fromSystem: lib
+      toSystem: idearium
+      kind: upward
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      fromSystem: service
+      toSystem: idearium
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL3_the_timeline
+    dependents:
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL5_the_code_tab_timeline
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG5_rewind_from_a_case
+    upstream:
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL0_find_the_loss
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL1_chunks_land_as_they_arrive
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL3_the_timeline
+    downstream:
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL5_the_code_tab_timeline
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG5_rewind_from_a_case
+    blockedBy:
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL3_the_timeline
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-16-durable-work-timeline-phasemap.spec::TL2_resume_at_boot
+        files:
+          - idearium/api/index.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by TL3_the_timeline
+      - 'depends on (1): TL3_the_timeline · all upstream 3'
+      - 'needed by (2): TL5_the_code_tab_timeline, DBG5_rewind_from_a_case'
+      - 'same files as TL2_resume_at_boot with no order between them: idearium/api/index.js'
+    edges:
+      - from: docs/2026-10-16-durable-work-timeline-phasemap.spec::TL3_the_timeline
+        kind: declared

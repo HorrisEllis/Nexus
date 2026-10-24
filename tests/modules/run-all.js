@@ -464,6 +464,10 @@ const SUITES = [
   'test-pipeline-root-causes.test.js',  // 0.60.170 RC1-RC4 — watcher EPERM never kills a kernel; linear node scan; Windows-safe node names; agent file names guarded
   'test-verify-first.test.js',          // 0.60.171 VF1 CB1 CB2 SM1 RC4b — check as it is before any agent; Gemini's five-part brief with the axioms; gemini first; agent self-models; labelled files archived
   'test-phase-dag.test.js',             // 0.60.172 DG3 — every phase of every phasemap in one DAG: cycles, dangling, undeclared, layers, critical path, conflicts; the build refuses an invalid DAG
+  'test-root-findings-not-phases.test.js',  // 0.60.225 NF1 — a root_findings entry is a finding, not a phase: loom marks it, the DAG closes it, the build refuses NOT_A_PHASE
+  'test-phase-groom.test.js',  // 0.60.227 SL3 — the DAG groomed: one depends_on reader, MP1's inferred edges, no cycle, DG1 checks every phase, the route
+  'test-agent-maps-phase.test.js',  // 0.60.228 SL8 — the agent maps one phase Nexus cannot place: checked by code, kept per phase text, past DG2; the run says so
+  'test-phase-nodes-all.test.js',  // 0.60.229 SL9 — every phase a .phase with its .graph beside its owner system; deterministic; the route reads what is written
   'test-upload-placement.test.js',      // 0.60.173 UP1-UP4 — a zip with an intent placed against the repo, waits for his answer, only his answer writes; his moves learned; the panel in Clear Glass
   'clear-glass-page-map.test.js',       // 0.60.174 PM1-PM4 — the page as blocks → index + chunks → a synthesized map that learns per site → intent → targets (layout in Clear Glass)
   'clear-glass-page-session.test.js',   // 0.60.175 PM5-PM8 — the page map as driver actions, co-pilot tools and commands; attention → Nerve → Ollama feel; live re-map; the panel in Clear Glass

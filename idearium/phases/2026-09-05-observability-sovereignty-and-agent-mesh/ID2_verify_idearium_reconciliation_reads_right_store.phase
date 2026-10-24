@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+context: >-
+  pipeline phase ID2_verify_idearium_reconciliation_reads_right_store of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: ID2_verify_idearium_reconciliation_reads_right_store (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675786
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675786
+lastSeenAt: 1792787675786
+fingerprint: null
+payload:
+  id: ID2_verify_idearium_reconciliation_reads_right_store
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/guardian-stream.cjs
+  depends_on:
+    - VSB1_fix_versionium_split_brain
+  blocks: []
+  spec: null
+  graph: 3298f9ee81c629d7

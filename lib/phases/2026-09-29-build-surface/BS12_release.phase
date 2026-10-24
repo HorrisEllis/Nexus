@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS12_release
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS12_release
+context: pipeline phase BS12_release of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS12_release (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676222
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676222
+lastSeenAt: 1792787676222
+fingerprint: null
+payload:
+  id: BS12_release
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/version.js
+    - CHANGELOG-0.39.280.md
+    - tests/run-all.js
+  depends_on:
+    - BS8_files_ui
+    - BS9_spec_and_phase_build_ui
+    - BS10_settings_and_environment_ui
+    - BS11_plan_panel
+    - BS13_provider_sovereignty
+    - BS14_branch_git_honest
+    - BS15_code_repo_delete
+    - BS16_provider_login_wall
+    - BS17_copilot_browser_verbs
+    - BS18_sync_ci_theme
+    - BS19_copilot_atlas_guide
+  blocks: []
+  spec: null
+  graph: 8f67d5e56dcc7344

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC7_router_in_builds
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC7_router_in_builds
+context: pipeline phase EC7_router_in_builds of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC7_router_in_builds (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676317
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676317
+lastSeenAt: 1792787676317
+fingerprint: null
+payload:
+  id: EC7_router_in_builds
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/seam/adapters/warp-cascade.js
+  depends_on:
+    - EC4_learning_router
+  blocks: []
+  spec: null
+  graph: e6f92fef8dfca5e3

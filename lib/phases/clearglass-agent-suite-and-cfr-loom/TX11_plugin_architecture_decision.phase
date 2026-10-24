@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX11_plugin_architecture_decision
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX11_plugin_architecture_decision
+context: >-
+  pipeline phase TX11_plugin_architecture_decision of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX11_plugin_architecture_decision (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678134
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678134
+lastSeenAt: 1792787678134
+fingerprint: null
+payload:
+  id: TX11_plugin_architecture_decision
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/tool-config.js
+    - copilot/bridge.js
+    - lib/agent-tools/tools/governance/tool-config.js
+    - lib/agent-tools/tools/clear-glass/dom-archaeology.js
+    - lib/agent-tools/tools/clear-glass/tab-visibility.js
+    - lib/agent-tools/tools/clear-glass/provider-deploy.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6659d1b03d369470

@@ -1,0 +1,182 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FM3_run_it_in_cos:9c26dcce49a297be
+type: graph
+id: phase:FM3_run_it_in_cos:9c26dcce49a297be
+context: dependency graph of phase FM3_run_it_in_cos
+intent: null
+summary: 17 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677029
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677029
+lastSeenAt: 1792787677029
+fingerprint: null
+payload:
+  for: FM3_run_it_in_cos
+  kind: phase
+  repo: null
+  hash: 9c26dcce49a297be
+  nodes:
+    - path: cos/testenv/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/failure-macro.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/shadow-space.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/run-target.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-shadow-space.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/playground/sandbox.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/tar.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+    - from: lib/shadow-space.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: lib/shadow-space.js
+      to: lib/shadow.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/run-target.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: tests/modules/test-shadow-space.test.js
+      to: lib/shadow-space.js
+      kind: requires
+  crossings:
+    - from: lib/shadow-space.js
+      to: cos/workspace/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM2_a_failure_is_a_clip
+    dependents:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM4_the_report
+    upstream:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM1_every_ledger_into_rfr2
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM2_a_failure_is_a_clip
+    downstream:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM4_the_report
+    blockedBy:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM2_a_failure_is_a_clip
+    unlocks:
+      - docs/2026-10-05-failure-reproduction-phasemap.spec::FM4_the_report
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by FM2_a_failure_is_a_clip
+      - 'depends on (1): FM2_a_failure_is_a_clip · all upstream 2'
+      - 'needed by (1): FM4_the_report · finishing it unlocks FM4_the_report'
+    edges:
+      - from: docs/2026-10-05-failure-reproduction-phasemap.spec::FM2_a_failure_is_a_clip
+        kind: declared

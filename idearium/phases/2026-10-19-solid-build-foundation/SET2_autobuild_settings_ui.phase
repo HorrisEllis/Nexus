@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-solid-build-foundation-phasemap.spec::SET2_autobuild_settings_ui
+type: phase
+id: docs_2026-10-19-solid-build-foundation-phasemap.spec::SET2_autobuild_settings_ui
+context: pipeline phase SET2_autobuild_settings_ui of docs/2026-10-19-solid-build-foundation-phasemap.spec
+intent: null
+summary: SET2_autobuild_settings_ui (ui) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677949
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677949
+lastSeenAt: 1792787677949
+fingerprint: null
+payload:
+  id: SET2_autobuild_settings_ui
+  map: docs/2026-10-19-solid-build-foundation-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - idearium/ui/settings.html
+    - idearium/ui/js/settings.js
+  depends_on:
+    - SET1_autobuild_config_and_command
+  blocks:
+    - '"autobuild_ui"'
+  spec: null
+  graph: c78e2af0f32b3534

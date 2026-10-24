@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::PL2_history_kept
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::PL2_history_kept
+context: pipeline phase PL2_history_kept of docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: PL2_history_kept (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677432
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677432
+lastSeenAt: 1792787677432
+fingerprint: null
+payload:
+  id: PL2_history_kept
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/zip-ingest.js
+    - lib/project-container.js
+    - versionium/lib/engine.js
+    - lib/history-import-job.js
+  depends_on:
+    - PL0_his_projects_imported_for_real
+  blocks: []
+  spec: null
+  graph: 5b4cd0e60f00b85b

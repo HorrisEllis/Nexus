@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CT2_the_code_tab:4c5f7f3919966700
+type: graph
+id: phase:CT2_the_code_tab:4c5f7f3919966700
+context: dependency graph of phase CT2_the_code_tab
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676976
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676976
+lastSeenAt: 1792787676976
+fingerprint: null
+payload:
+  for: CT2_the_code_tab
+  kind: phase
+  repo: null
+  hash: 4c5f7f3919966700
+  nodes:
+    - path: idearium/ui/js/code-tab.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/ui/js/work-surface.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::CT1_one_pending_change_path
+    dependents: []
+    upstream:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::CT1_one_pending_change_path
+    downstream: []
+    blockedBy:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::CT1_one_pending_change_path
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CT1_one_pending_change_path
+      - 'depends on (1): CT1_one_pending_change_path'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-cli-data-code-phasemap.spec::CT1_one_pending_change_path
+        kind: declared

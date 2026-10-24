@@ -98,7 +98,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   const db = await import(path.join(ROOT, 'idearium/lib/db.js'));
   const runRows = (runId) => db.loadTable('idearium_phase_runs').filter(r => r.runId === runId || r.buildRunId === runId);
   const settle = async (runId) => { for (let i = 0; i < 120; i++) { const rs = runRows(runId); if (rs.some(r => /^contract-(complete|incomplete)$/.test(r.state)) || rs.some(r => ['failed', 'plan-failed'].includes(r.state) && !r.chunk)) return rs; await wait(150); } return runRows(runId); };
-  const build = async (extra = {}) => { const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama', ...extra }); assert.strictEqual(b.status, 200, JSON.stringify(b.json).slice(0, 400)); return settle((b.json.data || b.json).runId); };
+  const build = async (extra = {}) => { const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama', rebuild: true, ...extra }); assert.strictEqual(b.status, 200, JSON.stringify(b.json).slice(0, 400)); return settle((b.json.data || b.json).runId); };
   const states = (rs) => rs.map(r => `${r.state}${r.error ? `(${String(r.error).slice(0, 120)})` : ''}`).join(', ');
 
   let rows = [];
@@ -286,7 +286,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
     readyAnswer = { claude: { ready: false, why: 'claude needs a sign-in in its Clear Glass tab (test)' }, deepseek: { ready: false, why: 'every deepseek account is resting at its limit' } };
     await R('POST', '/api/config', { key: 'routing.escalation', value: 'claude,deepseek' });
     const before = dispatchedTotal;
-    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key });
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, rebuild: true });
     await R('POST', '/api/config', { key: 'routing.escalation', value: '' });
     assert.strictEqual(b.status, 409, JSON.stringify(b.json).slice(0, 400));
     assert.ok(/no agent on the ladder can take a job now/.test(JSON.stringify(b.json)) && /sign-in/.test(JSON.stringify(b.json)) && /resting/.test(JSON.stringify(b.json)), JSON.stringify(b.json).slice(0, 500));
@@ -310,7 +310,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   await test('CP-11', 'BR1: routing.contract_build: off keeps the old path (no contract, no RAID row)', async () => {
     await R('POST', '/api/config', { key: 'routing.plan_code', value: 'never' });
     await R('POST', '/api/config', { key: 'routing.contract_build', value: 'off' });
-    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama' });
+    const b = await R('POST', `/api/repos/${repoUuid}/phases/build`, { map, phase: ph.key, backend: 'ollama', rebuild: true });
     const runId = (b.json.data || b.json).runId;
     let rs = [];
     for (let i = 0; i < 120; i++) { rs = runRows(runId); if (rs.some(r => ['proven', 'unproven', 'no-proof', 'failed'].includes(r.state))) break; await wait(100); }

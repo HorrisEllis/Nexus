@@ -1,0 +1,240 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PV3_input_nodes:73528fe4f1a5e74b
+type: graph
+id: phase:PV3_input_nodes:73528fe4f1a5e74b
+context: dependency graph of phase PV3_input_nodes
+intent: null
+summary: 27 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677302
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677302
+lastSeenAt: 1792787677302
+fingerprint: null
+payload:
+  for: PV3_input_nodes
+  kind: phase
+  repo: null
+  hash: 73528fe4f1a5e74b
+  nodes:
+    - path: copilot/cli.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: guardian/cli.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/jobs.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/node-registry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/cli/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/command.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cli/nexus-cli.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: copilot/lib/nexus-ask.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/listener-commands.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/mcp-server.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: test-node-index.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/guardian-job-persistence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/grammar-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intent-hat-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-schemas.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/safe-watch.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/jobs.js
+      to: lib/intent-hat-router.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-index.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/safe-watch.js
+      kind: requires
+    - from: guardian/cli.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: guardian/cli.js
+      to: cos/host/index.js
+      kind: requires
+    - from: copilot/cli.js
+      to: lib/grammar-engine.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/jobs.js
+      kind: requires
+    - from: tests/modules/guardian-job-persistence.test.js
+      to: guardian/lib/jobs.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: guardian/lib/jobs.js
+      kind: requires
+    - from: test-node-index.js
+      to: guardian/lib/node-registry.js
+      kind: requires
+    - from: cli/nexus-cli.js
+      to: copilot/cli.js
+      kind: requires
+    - from: copilot/lib/nexus-ask.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: lib/listener-commands.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: orchestrator/lib/mcp-server.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+  crossings:
+    - from: guardian/cli.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: guardian
+      toSystem: clear-glass
+      kind: system
+      known: true
+    - from: guardian/cli.js
+      to: cos/host/index.js
+      fromSystem: guardian
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cli/nexus-cli.js
+      to: copilot/cli.js
+      fromSystem: cli
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV2_hats_are_nodes
+    dependents:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV4_inputs_are_history
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX4_one_system_digest
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV2_hats_are_nodes
+    downstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX4_one_system_digest
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV4_inputs_are_history
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV2_hats_are_nodes
+    unlocks:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV4_inputs_are_history
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by PV2_hats_are_nodes
+      - 'depends on (1): PV2_hats_are_nodes'
+      - >-
+        needed by (2): PV4_inputs_are_history, MX4_one_system_digest · finishing it unlocks
+        PV4_inputs_are_history
+    edges:
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV2_hats_are_nodes
+        kind: declared

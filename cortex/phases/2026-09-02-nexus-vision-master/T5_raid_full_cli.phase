@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::T5_raid_full_cli
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::T5_raid_full_cli
+context: pipeline phase T5_raid_full_cli of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: T5_raid_full_cli (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675604
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675604
+lastSeenAt: 1792787675604
+fingerprint: null
+payload:
+  id: T5_raid_full_cli
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-intake.js
+    - clear-glass/src/mesh/agent-mesh.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0ea6cdd19666fd57

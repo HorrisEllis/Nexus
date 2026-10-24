@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P7_copilot_ticket_queue
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P7_copilot_ticket_queue
+context: >-
+  pipeline phase P7_copilot_ticket_queue of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P7_copilot_ticket_queue (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675885
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675885
+lastSeenAt: 1792787675885
+fingerprint: null
+payload:
+  id: P7_copilot_ticket_queue
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/routes/person-model.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b589a19081663f16

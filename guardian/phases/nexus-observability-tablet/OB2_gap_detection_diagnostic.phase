@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-observability-tablet-phasemap.spec::OB2_gap_detection_diagnostic
+type: phase
+id: docs_nexus-observability-tablet-phasemap.spec::OB2_gap_detection_diagnostic
+context: pipeline phase OB2_gap_detection_diagnostic of docs/nexus-observability-tablet-phasemap.spec
+intent: null
+summary: OB2_gap_detection_diagnostic (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678266
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678266
+lastSeenAt: 1792787678266
+fingerprint: null
+payload:
+  id: OB2_gap_detection_diagnostic
+  map: docs/nexus-observability-tablet-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/gap-hunter.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 94d6f60ae9374459

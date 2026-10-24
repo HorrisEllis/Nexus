@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-fiverr-guide-phasemap.spec::FR2_show_me_on_the_page
+type: phase
+id: docs_2026-10-05-fiverr-guide-phasemap.spec::FR2_show_me_on_the_page
+context: pipeline phase FR2_show_me_on_the_page of docs/2026-10-05-fiverr-guide-phasemap.spec
+intent: null
+summary: FR2_show_me_on_the_page (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677032
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677032
+lastSeenAt: 1792787677032
+fingerprint: null
+payload:
+  id: FR2_show_me_on_the_page
+  map: docs/2026-10-05-fiverr-guide-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/dom/archaeology.js
+    - clear-glass/src/driver/index.js
+    - clear-glass/src/page/field.js
+  depends_on:
+    - FR1_the_guide
+  blocks: []
+  spec: null
+  graph: b6e7861ffe663d01

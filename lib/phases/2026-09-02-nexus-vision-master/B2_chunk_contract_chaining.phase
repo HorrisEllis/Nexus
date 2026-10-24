@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::B2_chunk_contract_chaining
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::B2_chunk_contract_chaining
+context: pipeline phase B2_chunk_contract_chaining of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: B2_chunk_contract_chaining (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675611
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675611
+lastSeenAt: 1792787675611
+fingerprint: null
+payload:
+  id: B2_chunk_contract_chaining
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/end-state.js
+  depends_on:
+    - B1_full_build_contract_schema
+  blocks: []
+  spec: null
+  graph: 4b6fdc464e5dc7fe

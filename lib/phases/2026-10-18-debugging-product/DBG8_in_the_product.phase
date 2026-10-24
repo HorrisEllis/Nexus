@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-debugging-product-phasemap.spec::DBG8_in_the_product
+type: phase
+id: docs_2026-10-18-debugging-product-phasemap.spec::DBG8_in_the_product
+context: pipeline phase DBG8_in_the_product of docs/2026-10-18-debugging-product-phasemap.spec
+intent: null
+summary: DBG8_in_the_product (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677863
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677863
+lastSeenAt: 1792787677863
+fingerprint: null
+payload:
+  id: DBG8_in_the_product
+  map: docs/2026-10-18-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - products/flight-recorder/product.json
+    - products/flight-recorder/bin/flight-recorder.js
+    - products/flight-recorder/README.md
+  depends_on:
+    - DBG2_the_case
+    - DBG0c_which_product
+  blocks: []
+  spec: null
+  graph: fb23f2c646765085

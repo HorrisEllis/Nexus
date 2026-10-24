@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-omniscience-phasemap.spec::P6_every_system_reachable
+type: phase
+id: docs_copilot-omniscience-phasemap.spec::P6_every_system_reachable
+context: pipeline phase P6_every_system_reachable of docs/copilot-omniscience-phasemap.spec
+intent: null
+summary: P6_every_system_reachable (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678186
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678186
+lastSeenAt: 1792787678186
+fingerprint: null
+payload:
+  id: P6_every_system_reachable
+  map: docs/copilot-omniscience-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/self-register.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7d719f5d40d918b1

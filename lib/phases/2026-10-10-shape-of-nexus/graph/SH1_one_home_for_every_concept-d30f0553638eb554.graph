@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SH1_one_home_for_every_concept:d30f0553638eb554
+type: graph
+id: phase:SH1_one_home_for_every_concept:d30f0553638eb554
+context: dependency graph of phase SH1_one_home_for_every_concept
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677275
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677275
+lastSeenAt: 1792787677275
+fingerprint: null
+payload:
+  for: SH1_one_home_for_every_concept
+  kind: phase
+  repo: null
+  hash: d30f0553638eb554
+  nodes:
+    - path: docs/sources-of-truth.yaml
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

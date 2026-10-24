@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::CS1_every_brick_a_component
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::CS1_every_brick_a_component
+context: pipeline phase CS1_every_brick_a_component of docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: CS1_every_brick_a_component (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677463
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677463
+lastSeenAt: 1792787677463
+fingerprint: null
+payload:
+  id: CS1_every_brick_a_component
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-store.js
+    - cortex/core/raid/contract-adapters.js
+  depends_on:
+    - GT2_each_gate_tags_and_reports
+  blocks: []
+  spec: null
+  graph: 7d658969a189e1e4

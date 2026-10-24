@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::P33a_a_registry_for_any_system
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::P33a_a_registry_for_any_system
+context: pipeline phase P33a_a_registry_for_any_system of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: P33a_a_registry_for_any_system (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677840
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677840
+lastSeenAt: 1792787677840
+fingerprint: null
+payload:
+  id: P33a_a_registry_for_any_system
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/node-registry.js
+    - lib/jaa-store.js
+    - lib/system-nodes.js
+    - remote-desktop/bridge-os-core/bridge-core/registry/index.js
+    - guardian/lib/node-registry.js
+    - cos/archetype/nexus-system/lib/node-index.js
+    - lib/node-index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 973379dc15f50e89

@@ -1,0 +1,225 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MCO16_component_projections_retracted:4e9c11ff0b4b91af
+type: graph
+id: phase:MCO16_component_projections_retracted:4e9c11ff0b4b91af
+context: dependency graph of phase MCO16_component_projections_retracted
+intent: null
+summary: 27 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675944
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675944
+lastSeenAt: 1792787675944
+fingerprint: null
+payload:
+  for: MCO16_component_projections_retracted
+  kind: phase
+  repo: null
+  hash: 4e9c11ff0b4b91af
+  nodes:
+    - path: contracts/SYSTEM-CONTRACTS.js
+      role: changes
+      exists: true
+      system: contracts
+    - path: cortex/memory/jaa-db.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/module-builder.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/grammar-fallback.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cli-map.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/self-register.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/mutation-contract.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: contracts/nodes/axioms.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/events.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/faults.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/gaps.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/systems.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: copilot/lib/descriptor-projector.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/tiers.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/component-registry.js
+      to: copilot/lib/descriptor-projector.js
+      kind: requires
+    - from: lib/component-registry.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/axioms.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/systems.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/events.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/gaps.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/faults.node.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: guardian/lib/grammar-fallback.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/cli-map.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/self-register.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/system-registry.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: orchestrator/lib/mutation-contract.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/component-registry.js
+      kind: requires
+  crossings:
+    - from: lib/component-registry.js
+      to: copilot/lib/descriptor-projector.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL6_captcha_detection:acc28d69b4475ef7
+type: graph
+id: phase:BL6_captcha_detection:acc28d69b4475ef7
+context: dependency graph of phase BL6_captcha_detection
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675404
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675404
+lastSeenAt: 1792787675404
+fingerprint: null
+payload:
+  for: BL6_captcha_detection
+  kind: phase
+  repo: null
+  hash: acc28d69b4475ef7
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+    dependents: []
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): BL0_macro_system'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+        kind: declared

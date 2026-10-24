@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::RT2_routed_by_intent_account_and_fallback
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::RT2_routed_by_intent_account_and_fallback
+context: >-
+  pipeline phase RT2_routed_by_intent_account_and_fallback of
+  docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: RT2_routed_by_intent_account_and_fallback (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677464
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677464
+lastSeenAt: 1792787677464
+fingerprint: null
+payload:
+  id: RT2_routed_by_intent_account_and_fallback
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-adapters.js
+    - lib/model-door.js
+  depends_on:
+    - CX1_context_from_the_dependencies
+  blocks: []
+  spec: null
+  graph: e032f09d67bd248e

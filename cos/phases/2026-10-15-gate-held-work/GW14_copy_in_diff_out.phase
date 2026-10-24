@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+context: pipeline phase GW14_copy_in_diff_out of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW14_copy_in_diff_out (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677570
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677570
+lastSeenAt: 1792787677570
+fingerprint: null
+payload:
+  id: GW14_copy_in_diff_out
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/tar.js
+    - lib/repo-inject.js
+    - lib/repo-versions.js
+    - cos/testenv/provision.js
+  depends_on:
+    - GW13_the_sandbox_door
+  blocks: []
+  spec: null
+  graph: 581149a84eca7d04

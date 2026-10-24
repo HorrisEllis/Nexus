@@ -1,0 +1,245 @@
+envelope: 1
+uuid: nexus-export-graph-phase:C1_cli_per_system_split:7b2166b145a6e248
+type: graph
+id: phase:C1_cli_per_system_split:7b2166b145a6e248
+context: dependency graph of phase C1_cli_per_system_split
+intent: null
+summary: 24 node(s), 10 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675840
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675840
+lastSeenAt: 1792787675840
+fingerprint: null
+payload:
+  for: C1_cli_per_system_split
+  kind: phase
+  repo: null
+  hash: 7b2166b145a6e248
+  nodes:
+    - path: cli/boot-systems.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/cfr-debug.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/copilot-window.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/nexus-cli.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/nexus-movement.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/nexus-repl-descriptors.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/nexus-repl.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/run-supervised.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/sentinel.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/nexus.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/cli-copilot-fallback.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/nexus-repl-descriptors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/cli.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/delta.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/sigma.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/context-builder.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/grammar-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-connect.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: orchestrator/orchestrator.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/delta.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: cli/nexus-cli.js
+      to: copilot/cli.js
+      kind: requires
+    - from: cli/boot-systems.js
+      to: nexus/nexus-connect.js
+      kind: requires
+    - from: cli/nexus-repl.js
+      to: lib/grammar-engine.js
+      kind: requires
+    - from: cli/nexus-repl.js
+      to: ollama/config.js
+      kind: requires
+    - from: cli/nexus-repl.js
+      to: lib/context-builder.js
+      kind: requires
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+    - from: cli/nexus.js
+      to: cli/copilot-window.js
+      kind: requires
+    - from: tests/modules/cli-copilot-fallback.test.js
+      to: cli/nexus-cli.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cli/boot-systems.js
+      kind: requires
+    - from: tests/modules/nexus-repl-descriptors.test.js
+      to: cli/nexus-repl-descriptors.js
+      kind: requires
+  crossings:
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/sigma.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/delta.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/graph.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/nexus-cli.js
+      to: copilot/cli.js
+      fromSystem: cli
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: cli/boot-systems.js
+      to: nexus/nexus-connect.js
+      fromSystem: cli
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cli/nexus-repl.js
+      to: ollama/config.js
+      fromSystem: cli
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: cli
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: cli/boot-systems.js
+      fromSystem: orchestrator
+      toSystem: cli
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+    dependents: []
+    upstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+    downstream: []
+    blockedBy:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by T3_warp_replaces_siso
+      - 'depends on (1): T3_warp_replaces_siso'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+        kind: inferred

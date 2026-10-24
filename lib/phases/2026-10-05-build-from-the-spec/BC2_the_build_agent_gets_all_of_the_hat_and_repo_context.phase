@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::BC2_the_build_agent_gets_all_of_the_hat_and_repo_context
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::BC2_the_build_agent_gets_all_of_the_hat_and_repo_context
+context: >-
+  pipeline phase BC2_the_build_agent_gets_all_of_the_hat_and_repo_context of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: BC2_the_build_agent_gets_all_of_the_hat_and_repo_context (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676852
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676852
+lastSeenAt: 1792787676852
+fingerprint: null
+payload:
+  id: BC2_the_build_agent_gets_all_of_the_hat_and_repo_context
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-prompt-blocks.js
+    - idearium/api/index.js
+    - lib/build-context.js
+    - idearium/event-taxonomy.cjs
+  depends_on:
+    - BC1_build_context
+  blocks: []
+  spec: null
+  graph: 32034bedc3229b78

@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE11_contract_panel_and_context:1c20d408c33edd4a
+type: graph
+id: phase:CE11_contract_panel_and_context:1c20d408c33edd4a
+context: dependency graph of phase CE11_contract_panel_and_context
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677512
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677512
+lastSeenAt: 1792787677512
+fingerprint: null
+payload:
+  for: CE11_contract_panel_and_context
+  kind: phase
+  repo: null
+  hash: 1c20d408c33edd4a
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+    dependents: []
+    upstream:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): CE1_the_run_state'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+        kind: declared

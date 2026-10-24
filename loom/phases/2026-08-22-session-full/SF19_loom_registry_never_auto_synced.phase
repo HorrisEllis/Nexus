@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF19_loom_registry_never_auto_synced
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF19_loom_registry_never_auto_synced
+context: pipeline phase SF19_loom_registry_never_auto_synced of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF19_loom_registry_never_auto_synced (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675382
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675382
+lastSeenAt: 1792787675382
+fingerprint: null
+payload:
+  id: SF19_loom_registry_never_auto_synced
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/loom-map.js
+    - loom/data/registry.json
+    - loom/bootstrap.js
+    - loom/server.js
+  depends_on:
+    - SF18_intelligence_becomes_a_real_system
+  blocks: []
+  spec: null
+  graph: 73c7fd75c8376239

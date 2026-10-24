@@ -1,0 +1,118 @@
+envelope: 1
+uuid: nexus-export-graph-phase:COSA2_runtime_and_dependencies:df3ed9356c77d331
+type: graph
+id: phase:COSA2_runtime_and_dependencies:df3ed9356c77d331
+context: dependency graph of phase COSA2_runtime_and_dependencies
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677524
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677524
+lastSeenAt: 1792787677524
+fingerprint: null
+payload:
+  for: COSA2_runtime_and_dependencies
+  kind: phase
+  repo: null
+  hash: df3ed9356c77d331
+  nodes:
+    - path: cos/app/runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/switch.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-app-runtime.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-switch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-ui.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: cos/app/cli.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/shell.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/switch.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-runtime.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-switch.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-ui.test.js
+      to: cos/app/runtime.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+    dependents:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+    downstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA4_switch_and_rollback
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA8_other_projects
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
+      - docs/2026-10-16-cos-console-phasemap.spec::CON3_system_controls
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): COSA1_version_store_and_import'
+      - >-
+        needed by (1): COSA3_run_and_supervise · all downstream 18 · finishing it unlocks
+        COSA3_run_and_supervise
+    edges:
+      - from: docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+        kind: declared

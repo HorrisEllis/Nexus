@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DS7_tools_are_mods:95b991d2ba973682
+type: graph
+id: phase:DS7_tools_are_mods:95b991d2ba973682
+context: dependency graph of phase DS7_tools_are_mods
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677202
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677202
+lastSeenAt: 1792787677202
+fingerprint: null
+payload:
+  for: DS7_tools_are_mods
+  kind: phase
+  repo: null
+  hash: 95b991d2ba973682
+  nodes:
+    - path: eravos/ui/runtime/mod-factory.js
+      role: changes
+      exists: false
+      system: null
+    - path: eravos/ui/runtime/wire-system.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+    dependents:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS8_the_registry_routes_the_ui_reflects
+    upstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      - docs/2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+      - docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+    downstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS8_the_registry_routes_the_ui_reflects
+    blockedBy:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+    unlocks:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS8_the_registry_routes_the_ui_reflects
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by DS6_one_module_contract_nested
+      - 'depends on (1): DS6_one_module_contract_nested · all upstream 3'
+      - >-
+        needed by (1): DS8_the_registry_routes_the_ui_reflects · finishing it unlocks
+        DS8_the_registry_routes_the_ui_reflects
+    edges:
+      - from: docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+        kind: declared

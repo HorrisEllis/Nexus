@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM13_guardian_agents_folder_refactor:6ec05f2ae6a14f52
+type: graph
+id: phase:LM13_guardian_agents_folder_refactor:6ec05f2ae6a14f52
+context: dependency graph of phase LM13_guardian_agents_folder_refactor
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675549
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675549
+lastSeenAt: 1792787675549
+fingerprint: null
+payload:
+  for: LM13_guardian_agents_folder_refactor
+  kind: phase
+  repo: null
+  hash: 6ec05f2ae6a14f52
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+    dependents: []
+    upstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+    downstream: []
+    blockedBy:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by LM1_spec_as_living_model
+      - 'depends on (1): LM1_spec_as_living_model'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+        kind: declared

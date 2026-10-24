@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-awareness-routing-phasemap.spec::CA4_capability_extend
+type: phase
+id: docs_copilot-awareness-routing-phasemap.spec::CA4_capability_extend
+context: pipeline phase CA4_capability_extend of docs/copilot-awareness-routing-phasemap.spec
+intent: null
+summary: CA4_capability_extend (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678151
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678151
+lastSeenAt: 1792787678151
+fingerprint: null
+payload:
+  id: CA4_capability_extend
+  map: docs/copilot-awareness-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7ebf1286b0abb9d9

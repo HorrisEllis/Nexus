@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::M3
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::M3
+context: pipeline phase M3 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: M3 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676141
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676141
+lastSeenAt: 1792787676141
+fingerprint: null
+payload:
+  id: M3
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/memory/jaa-db.js
+    - guardian/jaa-store.js
+    - cortex/boot.js
+  depends_on:
+    - M2
+  blocks: []
+  spec: null
+  graph: bad6fa3cd17bd889

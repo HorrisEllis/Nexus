@@ -7,11 +7,11 @@ intent: null
 summary: BS12_context_automatic (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792502099142
+exported_at: 1792787678025
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502099142
-lastSeenAt: 1792502099142
+firstSeenAt: 1792787678025
+lastSeenAt: 1792787678025
 fingerprint: null
 payload:
   id: BS12_context_automatic
@@ -28,4 +28,4 @@ payload:
   blocks:
     - MOD-BSH-AUTO-CONTEXT
   spec: clear-glass/spec/browser-shell.spec
-  graph: 0ff3ebe721017029
+  graph: bf412d88e3d0cd2a

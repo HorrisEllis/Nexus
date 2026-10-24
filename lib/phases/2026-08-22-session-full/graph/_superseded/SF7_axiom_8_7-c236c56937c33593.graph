@@ -1,0 +1,224 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF7_axiom_8_7:c236c56937c33593
+type: graph
+id: phase:SF7_axiom_8_7:c236c56937c33593
+context: dependency graph of phase SF7_axiom_8_7
+intent: null
+summary: 17 node(s), 12 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675358
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675358
+lastSeenAt: 1792787675358
+fingerprint: null
+payload:
+  for: SF7_axiom_8_7
+  kind: phase
+  repo: null
+  hash: c236c56937c33593
+  nodes:
+    - path: docs/AXIOMS-v3.1.md
+      role: changes
+      exists: true
+      system: null
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap-import.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/phase-dag.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-deps-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-deps-gate.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+  crossings:
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: loom
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: emerge/compiler/phase-specs.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: emerge
+      toSystem: loom
+      kind: system
+      known: false
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: false
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: false
+    - from: lib/phase-deps-gate.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: false
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

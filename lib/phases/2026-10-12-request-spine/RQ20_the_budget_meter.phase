@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
+context: pipeline phase RQ20_the_budget_meter of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ20_the_budget_meter (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677376
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677376
+lastSeenAt: 1792787677376
+fingerprint: null
+payload:
+  id: RQ20_the_budget_meter
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-09-one-model-engine-phasemap.spec
+    - lib/pipeline-routing.js
+  depends_on:
+    - RQ14_the_spine_end_to_end
+  blocks: []
+  spec: null
+  graph: 9d7db0cfde669293

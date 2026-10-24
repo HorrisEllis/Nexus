@@ -1,0 +1,280 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DS1_cortex_the_catalog:9b630dee8890208b
+type: graph
+id: phase:DS1_cortex_the_catalog:9b630dee8890208b
+context: dependency graph of phase DS1_cortex_the_catalog
+intent: null
+summary: 25 node(s), 12 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676972
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676972
+lastSeenAt: 1792787676972
+fingerprint: null
+payload:
+  for: DS1_cortex_the_catalog
+  kind: phase
+  repo: null
+  hash: 9b630dee8890208b
+  nodes:
+    - path: cortex/memory/jaa-db.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: intelligence/lattice/associative-lattice.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/context-atlas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/test/copilot-cli.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cli/compact.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cli/dedup.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cli/opportunity.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cli/semantic-dedup.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cockpit/live.js
+      role: used-by
+      exists: true
+      system: cockpit
+    - path: copilot/axiom-manager.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/diagnostics.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/activity-recall.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/grammar-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/intent-learning.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/memory/tiers.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/memory/jaa-db.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: intelligence/lattice/associative-lattice.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/lattice/associative-lattice.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: clear-glass/test/copilot-cli.test.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cli/compact.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cli/dedup.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cli/opportunity.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cli/semantic-dedup.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cockpit/live.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/axiom-manager.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/diagnostics.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/activity-recall.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/grammar-router.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/intent-learning.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+  crossings:
+    - from: lib/context-atlas.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cli/compact.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: cli
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cli/dedup.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: cli
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cli/opportunity.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: cli
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cli/semantic-dedup.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: cli
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: cockpit/live.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: cockpit
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/axiom-manager.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/diagnostics.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/activity-recall.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/grammar-router.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/intent-learning.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::DS2_one_system_moves_home
+    upstream: []
+    downstream:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::DS2_one_system_moves_home
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::DS2_one_system_moves_home
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): DS2_one_system_moves_home · finishing it unlocks DS2_one_system_moves_home'
+    edges: []

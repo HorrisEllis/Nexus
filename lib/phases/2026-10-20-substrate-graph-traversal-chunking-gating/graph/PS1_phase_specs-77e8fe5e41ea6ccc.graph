@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456416777
+exported_at: 1792787921001
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416777
-lastSeenAt: 1792456416777
+firstSeenAt: 1792787921001
+lastSeenAt: 1792787921001
 fingerprint: null
 payload:
   for: PS1_phase_specs
@@ -112,17 +112,20 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL9_every_phase_a_node
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL9_every_phase_a_node
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL9_every_phase_a_node
     conflicts: []
     dangling: []
     lines:
-      - DAG 7583ffef0c495b95 · layer 0 · ready
+      - layer 0 · ready
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - 'needed by (1): SL9_every_phase_a_node · finishing it unlocks SL9_every_phase_a_node'
+    edges: []

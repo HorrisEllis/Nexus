@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
+context: >-
+  pipeline phase SB36_every_agent_can_use_the_tools of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB36_every_agent_can_use_the_tools (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676916
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676916
+lastSeenAt: 1792787676916
+fingerprint: null
+payload:
+  id: SB36_every_agent_can_use_the_tools
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-prompt-blocks.js
+    - copilot/tool-runtime.js
+    - idearium/api/index.js
+  depends_on:
+    - SB35_the_index_is_there_when_the_agent_asks
+  blocks: []
+  spec: null
+  graph: dccbe766f7ed1fa8

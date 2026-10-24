@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NP15_kill_switch:bf2c7c8a892bc080
+type: graph
+id: phase:NP15_kill_switch:bf2c7c8a892bc080
+context: dependency graph of phase NP15_kill_switch
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677489
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677489
+lastSeenAt: 1792787677489
+fingerprint: null
+payload:
+  for: NP15_kill_switch
+  kind: phase
+  repo: null
+  hash: bf2c7c8a892bc080
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP3_apply_to_electron
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP5_leak_test
+    dependents:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primitive
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP16_quarantine_pipeline
+    upstream:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP3_apply_to_electron
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP5_leak_test
+    downstream:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP16_quarantine_pipeline
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primitive
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP18_freeze_plugin
+    blockedBy:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP3_apply_to_electron
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP5_leak_test
+    unlocks:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primitive
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by NP1_compartment, NP3_apply_to_electron, NP5_leak_test
+      - 'depends on (3): NP1_compartment, NP3_apply_to_electron, NP5_leak_test'
+      - >-
+        needed by (2): NP17_hold_primitive, NP16_quarantine_pipeline · all downstream 3 · finishing
+        it unlocks NP17_hold_primitive
+    edges:
+      - from: docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+        kind: declared
+      - from: docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP3_apply_to_electron
+        kind: declared
+      - from: docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP5_leak_test
+        kind: declared

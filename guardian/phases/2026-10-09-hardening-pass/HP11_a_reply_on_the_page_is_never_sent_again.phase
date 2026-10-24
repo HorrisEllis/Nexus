@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP11_a_reply_on_the_page_is_never_sent_again
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP11_a_reply_on_the_page_is_never_sent_again
+context: >-
+  pipeline phase HP11_a_reply_on_the_page_is_never_sent_again of
+  docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP11_a_reply_on_the_page_is_never_sent_again (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677141
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677141
+lastSeenAt: 1792787677141
+fingerprint: null
+payload:
+  id: HP11_a_reply_on_the_page_is_never_sent_again
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/job-retry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fefc2312b6a59efa

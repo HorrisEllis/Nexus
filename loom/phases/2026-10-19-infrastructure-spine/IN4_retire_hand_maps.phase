@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::IN4_retire_hand_maps
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN4_retire_hand_maps
+context: pipeline phase IN4_retire_hand_maps of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: IN4_retire_hand_maps (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677902
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677902
+lastSeenAt: 1792787677902
+fingerprint: null
+payload:
+  id: IN4_retire_hand_maps
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - loom/bootstrap.js
+  depends_on:
+    - IN3_registry_is_the_spine
+  blocks: []
+  spec: null
+  graph: b5cba90de8bdff76

@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DBG5_rewind_from_a_case:cfffc4ab781d68ec
+type: graph
+id: phase:DBG5_rewind_from_a_case:cfffc4ab781d68ec
+context: dependency graph of phase DBG5_rewind_from_a_case
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677860
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677860
+lastSeenAt: 1792787677860
+fingerprint: null
+payload:
+  for: DBG5_rewind_from_a_case
+  kind: phase
+  repo: null
+  hash: cfffc4ab781d68ec
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL4_rewind_to_a_gate
+    dependents: []
+    upstream:
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL0_find_the_loss
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL1_chunks_land_as_they_arrive
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL3_the_timeline
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL4_rewind_to_a_gate
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG0a_synchronized_ids
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG1_the_key
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+    downstream: []
+    blockedBy:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+      - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL4_rewind_to_a_gate
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by DBG2_the_case, TL4_rewind_to_a_gate
+      - 'depends on (2): DBG2_the_case, TL4_rewind_to_a_gate · all upstream 7'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+        kind: declared
+      - from: docs/2026-10-16-durable-work-timeline-phasemap.spec::TL4_rewind_to_a_gate
+        kind: declared

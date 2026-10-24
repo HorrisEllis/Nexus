@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB7d_node_controls
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB7d_node_controls
+context: pipeline phase TB7d_node_controls of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB7d_node_controls (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677669
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677669
+lastSeenAt: 1792787677669
+fingerprint: null
+payload:
+  id: TB7d_node_controls
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/index.js
+    - lib/agent-tools/tool-call-listener.js
+    - lib/run-state.js
+    - lib/compartment-engine.js
+  depends_on:
+    - TB7c_graph_and_zoom
+  blocks: []
+  spec: null
+  graph: 4f2be3f82aed75ef

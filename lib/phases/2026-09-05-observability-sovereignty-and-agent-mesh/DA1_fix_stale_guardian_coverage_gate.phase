@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+context: >-
+  pipeline phase DA1_fix_stale_guardian_coverage_gate of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: DA1_fix_stale_guardian_coverage_gate (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675763
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675763
+lastSeenAt: 1792787675763
+fingerprint: null
+payload:
+  id: DA1_fix_stale_guardian_coverage_gate
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/guardian.spec
+    - guardian/userscripts.yaml
+    - tests/modules/test-agent-mesh-guardian-coverage.js
+    - clear-glass/src/mesh/agent-mesh.js
+    - run-all.js
+    - scripts/precommit-check.js
+    - orchestrator/lib/spec-drift.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f96bc8899f2f2334

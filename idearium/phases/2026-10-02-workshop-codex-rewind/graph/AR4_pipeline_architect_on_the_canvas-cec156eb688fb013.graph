@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AR4_pipeline_architect_on_the_canvas:cec156eb688fb013
+type: graph
+id: phase:AR4_pipeline_architect_on_the_canvas:cec156eb688fb013
+context: dependency graph of phase AR4_pipeline_architect_on_the_canvas
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676765
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676765
+lastSeenAt: 1792787676765
+fingerprint: null
+payload:
+  for: AR4_pipeline_architect_on_the_canvas
+  kind: phase
+  repo: null
+  hash: cec156eb688fb013
+  nodes:
+    - path: idearium/lib/architect.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/architect.html
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/lib/architect.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+    dependents: []
+    upstream:
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR2_architect_in_the_workshop
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW1_spec_workshop
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): AR3_one_architect_canvas · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+        kind: declared

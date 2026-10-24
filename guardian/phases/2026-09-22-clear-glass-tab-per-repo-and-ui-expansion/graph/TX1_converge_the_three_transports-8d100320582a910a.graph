@@ -1,0 +1,122 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TX1_converge_the_three_transports:8d100320582a910a
+type: graph
+id: phase:TX1_converge_the_three_transports:8d100320582a910a
+context: dependency graph of phase TX1_converge_the_three_transports
+intent: null
+summary: 11 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675991
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675991
+lastSeenAt: 1792787675991
+fingerprint: null
+payload:
+  for: TX1_converge_the_three_transports
+  kind: phase
+  repo: null
+  hash: 8d100320582a910a
+  nodes:
+    - path: clear-glass/src/mesh/dom-transport.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/page/agent-page.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/cli.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/mesh-client.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-mesh-chat-reload.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-mesh-dom-transport.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: guardian/cli.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: guardian/cli.js
+      to: cos/host/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/dom-transport.js
+      kind: requires
+    - from: tests/modules/test-mesh-chat-reload.test.js
+      to: clear-glass/src/mesh/dom-transport.js
+      kind: requires
+    - from: tests/modules/test-mesh-dom-transport.js
+      to: clear-glass/src/mesh/dom-transport.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/mesh-client.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/mesh-client.js
+      kind: requires
+  crossings:
+    - from: guardian/cli.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: guardian
+      toSystem: clear-glass
+      kind: system
+      known: true
+    - from: guardian/cli.js
+      to: cos/host/index.js
+      fromSystem: guardian
+      toSystem: cos
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::CLI1_headless_dispatch_via_mesh
+    dependents: []
+    upstream:
+      - docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::CLI1_headless_dispatch_via_mesh
+    downstream: []
+    blockedBy:
+      - docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::CLI1_headless_dispatch_via_mesh
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CLI1_headless_dispatch_via_mesh
+      - 'depends on (1): CLI1_headless_dispatch_via_mesh'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::CLI1_headless_dispatch_via_mesh
+        kind: inferred

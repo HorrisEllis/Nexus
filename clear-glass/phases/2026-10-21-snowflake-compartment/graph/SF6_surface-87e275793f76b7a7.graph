@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792502100076
+exported_at: 1792787678054
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502100076
-lastSeenAt: 1792502100076
+firstSeenAt: 1792787678054
+lastSeenAt: 1792787678054
 fingerprint: null
 payload:
   for: SF6_surface
@@ -203,7 +203,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 2527b07c5dc17a5a
     layer: 3
     deps:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
@@ -231,10 +230,21 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 2527b07c5dc17a5a · layer 3
+      - layer 3
       - >-
         depends on (5): SF1_honest_detection, SF2_bridge_sources, SF3_page_in_the_compartment,
         SF4_https_only, SF5_circuit_check
       - >-
         needed by (2): SF7_bridge_automatic, SF8_host_import · all downstream 3 · finishing it
         unlocks SF7_bridge_automatic, SF8_host_import
+    edges:
+      - from: docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
+        kind: declared
+      - from: docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
+        kind: declared
+      - from: docs/2026-10-21-snowflake-compartment-phasemap.spec::SF3_page_in_the_compartment
+        kind: declared
+      - from: docs/2026-10-21-snowflake-compartment-phasemap.spec::SF4_https_only
+        kind: declared
+      - from: docs/2026-10-21-snowflake-compartment-phasemap.spec::SF5_circuit_check
+        kind: declared

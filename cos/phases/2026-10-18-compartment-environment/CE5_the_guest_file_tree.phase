@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+type: phase
+id: docs_2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+context: pipeline phase CE5_the_guest_file_tree of docs/2026-10-18-compartment-environment-phasemap.spec
+intent: null
+summary: CE5_the_guest_file_tree (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677851
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677851
+lastSeenAt: 1792787677851
+fingerprint: null
+payload:
+  id: CE5_the_guest_file_tree
+  map: docs/2026-10-18-compartment-environment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/compartment/guest-files.js
+    - cos/compartment/guest-agent.js
+    - cos/server.js
+    - idearium/api/index.js
+  depends_on:
+    - CE3_the_handshake
+  blocks: []
+  spec: null
+  graph: 828a2472ed4dff16

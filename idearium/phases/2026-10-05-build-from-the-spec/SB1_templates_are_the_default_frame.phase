@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+context: >-
+  pipeline phase SB1_templates_are_the_default_frame of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB1_templates_are_the_default_frame (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676793
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676793
+lastSeenAt: 1792787676793
+fingerprint: null
+payload:
+  id: SB1_templates_are_the_default_frame
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - idearium/lib/config-core.cjs
+  depends_on:
+    - SB0_map
+  blocks: []
+  spec: null
+  graph: 90e92a3e0e88e5e1

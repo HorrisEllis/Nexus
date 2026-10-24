@@ -1,0 +1,116 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CA7_clearglass_multi_account:efcdff2b11c0d466
+type: graph
+id: phase:CA7_clearglass_multi_account:efcdff2b11c0d466
+context: dependency graph of phase CA7_clearglass_multi_account
+intent: null
+summary: 9 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678153
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678153
+lastSeenAt: 1792787678153
+fingerprint: null
+payload:
+  for: CA7_clearglass_multi_account
+  kind: phase
+  repo: null
+  hash: efcdff2b11c0d466
+  nodes:
+    - path: clear-glass/renderer/settings.html
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/routing-ir.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/account-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-router.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: lib/account-registry.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/routing-ir.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/account-registry.js
+      kind: requires
+    - from: lib/agent-router.js
+      to: lib/account-registry.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: cortex/core/raid/routing-ir.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/routing-ir.js
+      kind: requires
+  crossings:
+    - from: lib/account-registry.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: copilot/lifeline.js
+      to: cortex/core/raid/routing-ir.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/routing-ir.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/copilot-awareness-routing-phasemap.spec::CA5_intent_routing
+    dependents: []
+    upstream:
+      - docs/copilot-awareness-routing-phasemap.spec::CA5_intent_routing
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): CA5_intent_routing'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/copilot-awareness-routing-phasemap.spec::CA5_intent_routing
+        kind: inferred

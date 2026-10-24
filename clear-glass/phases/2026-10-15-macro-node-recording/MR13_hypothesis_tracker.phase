@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR13_hypothesis_tracker
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR13_hypothesis_tracker
+context: pipeline phase MR13_hypothesis_tracker of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR13_hypothesis_tracker (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677596
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677596
+lastSeenAt: 1792787677596
+fingerprint: null
+payload:
+  id: MR13_hypothesis_tracker
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: BLOCKED-ON-MR13_finance_field
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9895d3d7a9960edd

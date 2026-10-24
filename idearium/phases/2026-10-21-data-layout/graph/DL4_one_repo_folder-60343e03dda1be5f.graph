@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792478240947
+exported_at: 1792787678041
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792478240947
-lastSeenAt: 1792478240947
+firstSeenAt: 1792787678041
+lastSeenAt: 1792787678041
 fingerprint: null
 payload:
   for: DL4_one_repo_folder
@@ -136,7 +136,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 9d788036d22d64e6
     layer: 3
     deps:
       - docs/2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
@@ -146,12 +145,14 @@ payload:
       - docs/2026-10-21-data-layout-phasemap.spec::DL1_clearup_tool
       - docs/2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
     downstream: []
-    blockedBy:
-      - docs/2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - DAG 9d788036d22d64e6 · layer 3 · blocked by DL2_one_resolver
+      - layer 3 · ready
       - 'depends on (1): DL2_one_resolver · all upstream 3'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
+        kind: declared

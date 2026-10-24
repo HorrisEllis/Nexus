@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD22_a_wrapped_repo_lifts_to_its_root
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD22_a_wrapped_repo_lifts_to_its_root
+context: >-
+  pipeline phase SD22_a_wrapped_repo_lifts_to_its_root of
+  docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD22_a_wrapped_repo_lifts_to_its_root (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677252
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677252
+lastSeenAt: 1792787677252
+fingerprint: null
+payload:
+  id: SD22_a_wrapped_repo_lifts_to_its_root
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/lift-root.js
+    - idearium/repo/index.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/phases.js
+    - idearium/ui/js/repo-environment.js
+  depends_on:
+    - SD18_mastermind_ready
+    - SD21_what_his_run_log_showed
+  blocks: []
+  spec: null
+  graph: 790d3ecb08212ea7

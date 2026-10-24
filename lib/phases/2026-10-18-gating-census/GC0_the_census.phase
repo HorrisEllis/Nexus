@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gating-census-phasemap.spec::GC0_the_census
+type: phase
+id: docs_2026-10-18-gating-census-phasemap.spec::GC0_the_census
+context: pipeline phase GC0_the_census of docs/2026-10-18-gating-census-phasemap.spec
+intent: null
+summary: GC0_the_census (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787920857
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787920857
+lastSeenAt: 1792787920857
+fingerprint: null
+payload:
+  id: GC0_the_census
+  map: docs/2026-10-18-gating-census-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+    - tests/modules/test-loom-phasemap.js
+    - docs/2026-10-18-gating-census-phasemap.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 46d5041e29861a47

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC5_staging_by_economy
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC5_staging_by_economy
+context: pipeline phase EC5_staging_by_economy of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC5_staging_by_economy (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676314
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676314
+lastSeenAt: 1792787676314
+fingerprint: null
+payload:
+  id: EC5_staging_by_economy
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-inject.js
+    - lib/repo-agent.js
+  depends_on:
+    - EC0_policy_model
+  blocks: []
+  spec: null
+  graph: a13ffbca0770c51b

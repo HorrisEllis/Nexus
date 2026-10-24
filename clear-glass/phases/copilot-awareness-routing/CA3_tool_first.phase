@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-awareness-routing-phasemap.spec::CA3_tool_first
+type: phase
+id: docs_copilot-awareness-routing-phasemap.spec::CA3_tool_first
+context: pipeline phase CA3_tool_first of docs/copilot-awareness-routing-phasemap.spec
+intent: null
+summary: CA3_tool_first (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678150
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678150
+lastSeenAt: 1792787678150
+fingerprint: null
+payload:
+  id: CA3_tool_first
+  map: docs/copilot-awareness-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 913f66ec208c6737

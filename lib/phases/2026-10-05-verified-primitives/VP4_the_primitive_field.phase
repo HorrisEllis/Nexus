@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-verified-primitives-phasemap.spec::VP4_the_primitive_field
+type: phase
+id: docs_2026-10-05-verified-primitives-phasemap.spec::VP4_the_primitive_field
+context: pipeline phase VP4_the_primitive_field of docs/2026-10-05-verified-primitives-phasemap.spec
+intent: null
+summary: VP4_the_primitive_field (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677057
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677057
+lastSeenAt: 1792787677057
+fingerprint: null
+payload:
+  id: VP4_the_primitive_field
+  map: docs/2026-10-05-verified-primitives-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-store.js
+  depends_on:
+    - VP1_confidence_from_evidence
+    - VP2_adversarial_review
+  blocks: []
+  spec: null
+  graph: e222cd9217f780b8

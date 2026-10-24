@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::AM8_element_picker_agent_wiring
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::AM8_element_picker_agent_wiring
+context: >-
+  pipeline phase AM8_element_picker_agent_wiring of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: AM8_element_picker_agent_wiring (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675639
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675639
+lastSeenAt: 1792787675639
+fingerprint: null
+payload:
+  id: AM8_element_picker_agent_wiring
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1e65be4bd0ebc982

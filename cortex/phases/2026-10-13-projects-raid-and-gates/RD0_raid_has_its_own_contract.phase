@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
+context: >-
+  pipeline phase RD0_raid_has_its_own_contract of
+  docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: RD0_raid_has_its_own_contract (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677445
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677445
+lastSeenAt: 1792787677445
+fingerprint: null
+payload:
+  id: RD0_raid_has_its_own_contract
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/interaction-contract.json
+    - cortex/registry-components.js
+    - cortex/event-taxonomy.js
+    - cortex/core/raid/contract-intake.js
+    - cortex/boot.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3b0ad3c04c18a6bb

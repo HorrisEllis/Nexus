@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+type: phase
+id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+context: pipeline phase FMR5_replay_routes of docs/2026-10-17-failure-mode-report-phasemap.spec
+intent: null
+summary: FMR5_replay_routes (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677782
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677782
+lastSeenAt: 1792787677782
+fingerprint: null
+payload:
+  id: FMR5_replay_routes
+  map: docs/2026-10-17-failure-mode-report-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/server.js
+    - guardian/lib/replay-mode.js
+    - versionium/server.js
+    - versionium/routes/system.js
+  depends_on:
+    - FMR4_the_macro_bundle
+  blocks: []
+  spec: null
+  graph: fbcdf4cf365d0b2c

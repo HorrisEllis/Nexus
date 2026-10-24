@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500829717
+exported_at: 1792787677996
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500829717
-lastSeenAt: 1792500829717
+firstSeenAt: 1792787677996
+lastSeenAt: 1792787677996
 fingerprint: null
 payload:
   for: AB1_engine
@@ -48,7 +48,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
     layer: 1
     deps:
       - docs/2026-10-21-adblock-phasemap.spec::AB0_engine_in_core
@@ -67,6 +66,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 1
+      - layer 1
       - 'depends on (1): AB0_engine_in_core'
       - 'needed by (1): AB2_lists · all downstream 4 · finishing it unlocks AB2_lists'
+    edges:
+      - from: docs/2026-10-21-adblock-phasemap.spec::AB0_engine_in_core
+        kind: declared

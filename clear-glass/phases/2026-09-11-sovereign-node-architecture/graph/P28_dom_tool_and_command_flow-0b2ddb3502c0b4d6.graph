@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P28_dom_tool_and_command_flow:0b2ddb3502c0b4d6
+type: graph
+id: phase:P28_dom_tool_and_command_flow:0b2ddb3502c0b4d6
+context: dependency graph of phase P28_dom_tool_and_command_flow
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675924
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675924
+lastSeenAt: 1792787675924
+fingerprint: null
+payload:
+  for: P28_dom_tool_and_command_flow
+  kind: phase
+  repo: null
+  hash: 0b2ddb3502c0b4d6
+  nodes:
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P27_guardian_picker_userscript_manager
+    dependents: []
+    upstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P27_guardian_picker_userscript_manager
+    downstream: []
+    blockedBy:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P27_guardian_picker_userscript_manager
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by P27_guardian_picker_userscript_manager
+      - 'depends on (1): P27_guardian_picker_userscript_manager'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P27_guardian_picker_userscript_manager
+        kind: inferred

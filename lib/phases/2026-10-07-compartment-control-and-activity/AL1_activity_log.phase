@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
+type: phase
+id: docs_2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
+context: pipeline phase AL1_activity_log of docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+intent: null
+summary: AL1_activity_log (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677063
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677063
+lastSeenAt: 1792787677063
+fingerprint: null
+payload:
+  id: AL1_activity_log
+  map: docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/activity-log/compartment.js
+    - lib/repo-activity.js
+    - idearium/api/index.js
+    - docs/nexstore-writers.yaml
+  depends_on:
+    - CC1_claude_code_lands_like_every_agent
+  blocks: []
+  spec: null
+  graph: f60e21ab10d46017

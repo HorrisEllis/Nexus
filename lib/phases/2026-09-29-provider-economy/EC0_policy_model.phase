@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC0_policy_model
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC0_policy_model
+context: pipeline phase EC0_policy_model of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC0_policy_model (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676307
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676307
+lastSeenAt: 1792787676307
+fingerprint: null
+payload:
+  id: EC0_policy_model
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/economy/policy.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f08917980459b73a

@@ -1,0 +1,145 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SBP7_agent_suite_lives_in_clearglass:48087c2a9f893bf5
+type: graph
+id: phase:SBP7_agent_suite_lives_in_clearglass:48087c2a9f893bf5
+context: dependency graph of phase SBP7_agent_suite_lives_in_clearglass
+intent: null
+summary: 14 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675478
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675478
+lastSeenAt: 1792787675478
+fingerprint: null
+payload:
+  for: SBP7_agent_suite_lives_in_clearglass
+  kind: phase
+  repo: null
+  hash: 48087c2a9f893bf5
+  nodes:
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/agent-mesh-drainer.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/agent-mesh-hostile.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/dom-transport.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/route-graph.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/network/install.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/route-graph.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/automation-engine.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/network/install.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/dom-transport.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-drainer.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-hostile.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP7_DESIGN_PRINCIPLE_automation_over_code
+    upstream: []
+    downstream:
+      - docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP7_DESIGN_PRINCIPLE_automation_over_code
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP7_DESIGN_PRINCIPLE_automation_over_code
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): SBP7_DESIGN_PRINCIPLE_automation_over_code · finishing it unlocks
+        SBP7_DESIGN_PRINCIPLE_automation_over_code
+    edges: []

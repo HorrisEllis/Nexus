@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM5_copilot_capability_zoom
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM5_copilot_capability_zoom
+context: >-
+  pipeline phase LM5_copilot_capability_zoom of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM5_copilot_capability_zoom (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675537
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675537
+lastSeenAt: 1792787675537
+fingerprint: null
+payload:
+  id: LM5_copilot_capability_zoom
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - LM4_per_system_tool_index
+  blocks: []
+  spec: null
+  graph: 9f3676d4351df0b6

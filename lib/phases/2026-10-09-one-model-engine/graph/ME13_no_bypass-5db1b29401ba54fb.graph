@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ME13_no_bypass:5db1b29401ba54fb
+type: graph
+id: phase:ME13_no_bypass:5db1b29401ba54fb
+context: dependency graph of phase ME13_no_bypass
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677175
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677175
+lastSeenAt: 1792787677175
+fingerprint: null
+payload:
+  for: ME13_no_bypass
+  kind: phase
+  repo: null
+  hash: 5db1b29401ba54fb
+  nodes:
+    - path: tests/modules/test-one-model-engine.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+    dependents: []
+    upstream:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME0_the_inventory_proved
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME11_old_settings_translated
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME2_caller_policy
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME4_one_attempt_record
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME5_one_chooser
+    downstream: []
+    blockedBy:
+      - docs/2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-09-one-model-engine-phasemap.spec::ME14_across_callers
+        files:
+          - tests/modules/test-one-model-engine.test.js
+    dangling: []
+    lines:
+      - layer 7 · blocked by ME12_callers_moved
+      - 'depends on (1): ME12_callers_moved · all upstream 8'
+      - 'needed by (0): —'
+      - >-
+        same files as ME14_across_callers with no order between them:
+        tests/modules/test-one-model-engine.test.js
+    edges:
+      - from: docs/2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+        kind: declared

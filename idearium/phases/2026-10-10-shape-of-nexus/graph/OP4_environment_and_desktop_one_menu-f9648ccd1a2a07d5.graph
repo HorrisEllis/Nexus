@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OP4_environment_and_desktop_one_menu:f9648ccd1a2a07d5
+type: graph
+id: phase:OP4_environment_and_desktop_one_menu:f9648ccd1a2a07d5
+context: dependency graph of phase OP4_environment_and_desktop_one_menu
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677264
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677264
+lastSeenAt: 1792787677264
+fingerprint: null
+payload:
+  for: OP4_environment_and_desktop_one_menu
+  kind: phase
+  repo: null
+  hash: f9648ccd1a2a07d5
+  nodes:
+    - path: idearium/ui/js/repo-settings.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

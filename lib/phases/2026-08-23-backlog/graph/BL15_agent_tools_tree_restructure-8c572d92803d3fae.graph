@@ -1,0 +1,209 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL15_agent_tools_tree_restructure:8c572d92803d3fae
+type: graph
+id: phase:BL15_agent_tools_tree_restructure:8c572d92803d3fae
+context: dependency graph of phase BL15_agent_tools_tree_restructure
+intent: null
+summary: 25 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675422
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675422
+lastSeenAt: 1792787675422
+fingerprint: null
+payload:
+  for: BL15_agent_tools_tree_restructure
+  kind: phase
+  repo: null
+  hash: 8c572d92803d3fae
+  nodes:
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/governance/tool-config.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/rewind-replay.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hat-seed.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-config.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/copilot/hat.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/jobs.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-intent-contract.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/hat-seed-ollama-personalities.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/intent-hat-router.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/hat-forge.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/hat-seed.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/hat-seed.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/identity/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/copilot/hat.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/agent-intent-contract.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/hat-seed-ollama-personalities.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/intent-hat-router.js
+      to: lib/hat-forge.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/hat-seed.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+    dependents: []
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-08-23-backlog-phasemap.spec::BL4_port_element_picker_ux
+        files:
+          - lib/agent-tools/tools/browser/browser-action.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): BL0_macro_system'
+      - 'needed by (0): —'
+      - >-
+        same files as BL4_port_element_picker_ux with no order between them:
+        lib/agent-tools/tools/browser/browser-action.js
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+        kind: declared

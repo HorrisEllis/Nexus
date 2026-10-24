@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TX16_persistent_listener_registry_and_callable_elements:22078f9597907db9
+type: graph
+id: phase:TX16_persistent_listener_registry_and_callable_elements:22078f9597907db9
+context: dependency graph of phase TX16_persistent_listener_registry_and_callable_elements
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678139
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678139
+lastSeenAt: 1792787678139
+fingerprint: null
+payload:
+  for: TX16_persistent_listener_registry_and_callable_elements
+  kind: phase
+  repo: null
+  hash: 22078f9597907db9
+  nodes:
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+      - docs/2026-08-23-backlog-phasemap.spec::BL21_agent_mesh_real_connection
+      - docs/2026-08-23-backlog-phasemap.spec::BL28_background_tabs_setting
+    dependents:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR8_clearglass_full_agent_tool_parity
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL21_agent_mesh_real_connection
+      - docs/2026-08-23-backlog-phasemap.spec::BL24_userscript_suite_enterprise_grade
+      - docs/2026-08-23-backlog-phasemap.spec::BL28_background_tabs_setting
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX11_plugin_architecture_decision
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX3_talk_to_agent_launcher
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX4_provider_tab_tool_loop
+    downstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR8_clearglass_full_agent_tool_parity
+    blockedBy:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+      - docs/2026-08-23-backlog-phasemap.spec::BL28_background_tabs_setting
+    unlocks:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR8_clearglass_full_agent_tool_parity
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by TX14_plugin_system_v1_build, BL28_background_tabs_setting
+      - >-
+        depends on (3): TX14_plugin_system_v1_build, BL21_agent_mesh_real_connection,
+        BL28_background_tabs_setting · all upstream 7
+      - >-
+        needed by (1): BR8_clearglass_full_agent_tool_parity · finishing it unlocks
+        BR8_clearglass_full_agent_tool_parity
+    edges:
+      - from: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+        kind: declared
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL21_agent_mesh_real_connection
+        kind: declared
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL28_background_tabs_setting
+        kind: declared

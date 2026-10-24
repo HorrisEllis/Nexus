@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-omniscience-phasemap.spec::P4_gate_never_actually_verified
+type: phase
+id: docs_copilot-omniscience-phasemap.spec::P4_gate_never_actually_verified
+context: pipeline phase P4_gate_never_actually_verified of docs/copilot-omniscience-phasemap.spec
+intent: null
+summary: P4_gate_never_actually_verified (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678187
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678187
+lastSeenAt: 1792787678187
+fingerprint: null
+payload:
+  id: P4_gate_never_actually_verified
+  map: docs/copilot-omniscience-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/tool-runtime.js
+    - guardian/server.js
+    - lib/agent-tools/tools/query/file-tree.js
+    - docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+    - lib/compartment-engine.js
+    - copilot/server.js
+    - copilot/tool-runtime.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c081947773f7a8cc

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB2_raid_bricks_and_officiator_through_warp
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB2_raid_bricks_and_officiator_through_warp
+context: >-
+  pipeline phase WB2_raid_bricks_and_officiator_through_warp of
+  docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: WB2_raid_bricks_and_officiator_through_warp (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677630
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677630
+lastSeenAt: 1792787677630
+fingerprint: null
+payload:
+  id: WB2_raid_bricks_and_officiator_through_warp
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE (0.60.73) — CK-255 green on Nexus"'
+  files:
+    - cortex/core/raid/contract-intake.js
+    - cortex/core/raid/officiator.js
+    - copilot/lifeline.js
+    - lib/warp-rung.js
+    - tests/modules/test-raid-officiator.js
+    - tests/modules/test-lifeline-ollama-dispatch.test.js
+  depends_on:
+    - WB1_warp_at_the_rung
+  blocks: []
+  spec: null
+  graph: c5988e845eadf750

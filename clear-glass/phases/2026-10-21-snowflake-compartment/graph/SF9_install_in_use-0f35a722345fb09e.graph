@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792502100082
+exported_at: 1792787678056
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502100082
-lastSeenAt: 1792502100082
+firstSeenAt: 1792787678056
+lastSeenAt: 1792787678056
 fingerprint: null
 payload:
   for: SF9_install_in_use
@@ -48,7 +48,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 2527b07c5dc17a5a
     layer: 5
     deps:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
@@ -67,6 +66,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 2527b07c5dc17a5a · layer 5
+      - layer 5
       - 'depends on (1): SF7_bridge_automatic · all upstream 7'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
+        kind: declared

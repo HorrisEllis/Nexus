@@ -1,0 +1,67 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SL10_the_pipeline_simulated:fdc2918297e903cc
+type: graph
+id: phase:SL10_the_pipeline_simulated:fdc2918297e903cc
+context: dependency graph of phase SL10_the_pipeline_simulated
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678089
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678089
+lastSeenAt: 1792787678089
+fingerprint: null
+payload:
+  for: SL10_the_pipeline_simulated
+  kind: phase
+  repo: null
+  hash: fdc2918297e903cc
+  nodes:
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-pipeline-sim.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/run-all.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL7_build_again_is_asked_for
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL8_the_agent_maps_what_nexus_cannot
+    dependents: []
+    upstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL7_build_again_is_asked_for
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL8_the_agent_maps_what_nexus_cannot
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · ready
+      - >-
+        depends on (2): SL7_build_again_is_asked_for, SL8_the_agent_maps_what_nexus_cannot · all
+        upstream 5
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL7_build_again_is_asked_for
+        kind: declared
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL8_the_agent_maps_what_nexus_cannot
+        kind: declared

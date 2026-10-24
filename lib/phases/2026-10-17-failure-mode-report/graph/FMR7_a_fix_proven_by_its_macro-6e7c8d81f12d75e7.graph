@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FMR7_a_fix_proven_by_its_macro:6e7c8d81f12d75e7
+type: graph
+id: phase:FMR7_a_fix_proven_by_its_macro:6e7c8d81f12d75e7
+context: dependency graph of phase FMR7_a_fix_proven_by_its_macro
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677784
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677784
+lastSeenAt: 1792787677784
+fingerprint: null
+payload:
+  for: FMR7_a_fix_proven_by_its_macro
+  kind: phase
+  repo: null
+  hash: 6e7c8d81f12d75e7
+  nodes:
+    - path: docs/2026-10-07-heal-nodes-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: run-all.js
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+    dependents:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR10_it_compounds
+    upstream:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR1_every_ledger_into_rfr2
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR2_every_failure_reaches_the_record
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR3_the_report
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR4_the_macro_bundle
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+    downstream:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR10_it_compounds
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM6_crystallized_from_what_was_approved
+    blockedBy:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+    unlocks:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR10_it_compounds
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by FMR6_run_it_in_cos
+      - 'depends on (1): FMR6_run_it_in_cos · all upstream 8'
+      - >-
+        needed by (1): FMR10_it_compounds · all downstream 2 · finishing it unlocks
+        FMR10_it_compounds
+    edges:
+      - from: docs/2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+        kind: declared

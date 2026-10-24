@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR2_richer_events
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR2_richer_events
+context: pipeline phase MR2_richer_events of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR2_richer_events (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677587
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677587
+lastSeenAt: 1792787677587
+fingerprint: null
+payload:
+  id: MR2_richer_events
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT-0.60.57
+  files:
+    - clear-glass/src/macros/recording.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 210b0c392ca052ce

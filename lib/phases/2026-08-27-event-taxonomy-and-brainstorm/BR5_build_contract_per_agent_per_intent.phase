@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR5_build_contract_per_agent_per_intent
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR5_build_contract_per_agent_per_intent
+context: >-
+  pipeline phase BR5_build_contract_per_agent_per_intent of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: BR5_build_contract_per_agent_per_intent (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675461
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675461
+lastSeenAt: 1792787675461
+fingerprint: null
+payload:
+  id: BR5_build_contract_per_agent_per_intent
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-router.js
+    - lib/seam/build-contract.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 36bf07b27fc48bd7

@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW10_the_listener_knows_what_to_hear:539f9afb9e5ba54e
+type: graph
+id: phase:GW10_the_listener_knows_what_to_hear:539f9afb9e5ba54e
+context: dependency graph of phase GW10_the_listener_knows_what_to_hear
+intent: null
+summary: 17 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677561
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677561
+lastSeenAt: 1792787677561
+fingerprint: null
+payload:
+  for: GW10_the_listener_knows_what_to_hear
+  kind: phase
+  repo: null
+  hash: 539f9afb9e5ba54e
+  nodes:
+    - path: lib/listener-commands.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/spec-reply.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/step-gate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/nexus-chat.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/reply-kind.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-language-checks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/agent-tools/tools/nexus/command.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/checks/ck-248-toolchain.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/listener-commands.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/listener-commands.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/listener-commands.js
+      kind: requires
+    - from: clear-glass/src/page/nexus-chat.js
+      to: lib/listener-commands.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/reply-kind.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: tests/modules/test-language-checks.test.js
+      to: lib/step-gate.js
+      kind: requires
+  crossings:
+    - from: lib/step-gate.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0d_listener_question
+    dependents: []
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0d_listener_question
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0d_listener_question
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by GW0d_listener_question
+      - 'depends on (1): GW0d_listener_question'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW0d_listener_question
+        kind: declared

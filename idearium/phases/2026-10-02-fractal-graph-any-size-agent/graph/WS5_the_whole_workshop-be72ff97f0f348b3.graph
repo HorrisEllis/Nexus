@@ -1,0 +1,69 @@
+envelope: 1
+uuid: nexus-export-graph-phase:WS5_the_whole_workshop:be72ff97f0f348b3
+type: graph
+id: phase:WS5_the_whole_workshop:be72ff97f0f348b3
+context: dependency graph of phase WS5_the_whole_workshop
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676741
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676741
+lastSeenAt: 1792787676741
+fingerprint: null
+payload:
+  for: WS5_the_whole_workshop
+  kind: phase
+  repo: null
+  hash: be72ff97f0f348b3
+  nodes:
+    - path: idearium/lib/workshop.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/workshop.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/void.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/lib/workshop.js
+      kind: requires
+    - from: idearium/lib/void.js
+      to: idearium/lib/workshop.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+    dependents: []
+    upstream:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG2_token_budget_chunking
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG3_summaries_up_the_tree
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+    downstream: []
+    blockedBy:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by FG4_context_for_any_agent
+      - 'depends on (1): FG4_context_for_any_agent · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303355
+exported_at: 1792787677974
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303355
-lastSeenAt: 1792456303355
+firstSeenAt: 1792787677974
+lastSeenAt: 1792787677974
 fingerprint: null
 payload:
   for: RA1_root_cause_through_provenance
@@ -143,7 +143,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 6
     deps:
       - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
@@ -182,11 +181,20 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 7583ffef0c495b95 · layer 6 · blocked by PV1_provenance_on_every_claim,
-        TV1_traversal_primitive, EW1_evidence_record_and_weights, RA0_rca_says_what_it_does
+        layer 6 · blocked by PV1_provenance_on_every_claim, TV1_traversal_primitive,
+        EW1_evidence_record_and_weights, RA0_rca_says_what_it_does
       - >-
         depends on (4): PV1_provenance_on_every_claim, TV1_traversal_primitive,
         EW1_evidence_record_and_weights, RA0_rca_says_what_it_does · all upstream 14
       - >-
         needed by (2): RA2_learned_source_trust, CY3_belief_panel · finishing it unlocks
         RA2_learned_source_trust
+    edges:
+      - from: docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+        kind: declared
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+        kind: declared
+      - from: docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+        kind: declared
+      - from: docs/2026-10-20-belief-loop-phasemap.spec::RA0_rca_says_what_it_does
+        kind: declared

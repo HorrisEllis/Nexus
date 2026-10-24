@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+context: pipeline phase RQ15_cells_in_parallel of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ15_cells_in_parallel (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677368
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677368
+lastSeenAt: 1792787677368
+fingerprint: null
+payload:
+  id: RQ15_cells_in_parallel
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/playground/branch.js
+    - cos/spec/torture-chamber.spec
+    - docs/2026-10-10-snapshot-compartments-phasemap.spec
+    - cos/event-taxonomy.js
+  depends_on:
+    - RQ14_the_spine_end_to_end
+  blocks: []
+  spec: null
+  graph: 9586f7906829df41

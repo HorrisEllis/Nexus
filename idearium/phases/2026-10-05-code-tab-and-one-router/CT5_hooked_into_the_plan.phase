@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT5_hooked_into_the_plan
+type: phase
+id: docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT5_hooked_into_the_plan
+context: pipeline phase CT5_hooked_into_the_plan of docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+intent: null
+summary: CT5_hooked_into_the_plan (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677011
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677011
+lastSeenAt: 1792787677011
+fingerprint: null
+payload:
+  id: CT5_hooked_into_the_plan
+  map: docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/code-surface.js
+    - idearium/ui/js/plan-panel.js
+    - idearium/ui/js/work-surface.js
+    - idearium/ui/js/app.js
+    - idearium/api/build-surface.js
+  depends_on:
+    - CT3_the_code_tab_is_the_work_surface
+  blocks: []
+  spec: null
+  graph: d3f933a20724f93e

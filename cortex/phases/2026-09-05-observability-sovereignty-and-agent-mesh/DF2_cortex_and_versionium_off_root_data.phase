@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
+context: >-
+  pipeline phase DF2_cortex_and_versionium_off_root_data of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: DF2_cortex_and_versionium_off_root_data (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675789
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675789
+lastSeenAt: 1792787675789
+fingerprint: null
+payload:
+  id: DF2_cortex_and_versionium_off_root_data
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/memory/jaa-db.js
+    - warp/core/StreamLog.js
+  depends_on:
+    - VSB1_fix_versionium_split_brain
+  blocks: []
+  spec: null
+  graph: 878b01658023f007

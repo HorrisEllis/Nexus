@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK0_pop_out_windows_borderless
+type: phase
+id: docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK0_pop_out_windows_borderless
+context: >-
+  pipeline phase WK0_pop_out_windows_borderless of
+  docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+intent: null
+summary: WK0_pop_out_windows_borderless (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677034
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677034
+lastSeenAt: 1792787677034
+fingerprint: null
+payload:
+  id: WK0_pop_out_windows_borderless
+  map: docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/main/compartment-window.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 460dfe0e0222e3da

@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ID4_incognito:4d6262129208311e
+type: graph
+id: phase:ID4_incognito:4d6262129208311e
+context: dependency graph of phase ID4_incognito
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677403
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677403
+lastSeenAt: 1792787677403
+fingerprint: null
+payload:
+  for: ID4_incognito
+  kind: phase
+  repo: null
+  hash: 4d6262129208311e
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+    dependents: []
+    upstream:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID0_signed_in_where_he_signs_in
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+    downstream: []
+    blockedBy:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by TB1_tab_is_a_view
+      - 'depends on (1): TB1_tab_is_a_view · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+        kind: declared

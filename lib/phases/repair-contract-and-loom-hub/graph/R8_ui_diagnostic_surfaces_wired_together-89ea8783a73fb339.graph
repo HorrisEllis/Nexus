@@ -1,0 +1,267 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R8_ui_diagnostic_surfaces_wired_together:89ea8783a73fb339
+type: graph
+id: phase:R8_ui_diagnostic_surfaces_wired_together:89ea8783a73fb339
+context: dependency graph of phase R8_ui_diagnostic_surfaces_wired_together
+intent: null
+summary: 33 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678342
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678342
+lastSeenAt: 1792787678342
+fingerprint: null
+payload:
+  for: R8_ui_diagnostic_surfaces_wired_together
+  kind: phase
+  repo: null
+  hash: 89ea8783a73fb339
+  nodes:
+    - path: clear-glass/src/diagnostic/error-capture.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/autonomy-router.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nerve-gap-bridge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-config.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ui/tv-shell/nerve/nerve.js
+      role: changes
+      exists: true
+      system: ui
+    - path: ui/tv-shell/spotlight/spotlight.js
+      role: changes
+      exists: true
+      system: ui
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/lib/heal-loop.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nerve-ollama-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-manifest.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/error-capture.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/capabilities.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/intent-learning.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: hooks/index.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/idea-provenance.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/scheduler.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nerve/index.js
+      to: hooks/index.js
+      kind: requires
+    - from: lib/repo-activity.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/intent-learning.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/capabilities.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/scheduler.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/idea-provenance.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: lib/nerve-ollama-bridge.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/diagnostic/error-capture.js
+      kind: requires
+    - from: tests/modules/error-capture.test.js
+      to: clear-glass/src/diagnostic/error-capture.js
+      kind: requires
+    - from: diagnostic/lib/heal-loop.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/system-manifest.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-activity.js
+      kind: requires
+  crossings:
+    - from: lib/nerve/index.js
+      to: hooks/index.js
+      fromSystem: lib
+      toSystem: hooks
+      kind: upward
+      known: true
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R1_repair_contract_schema
+    dependents:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R9_ui_design_philosophy
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+    upstream:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R1_repair_contract_schema
+    downstream:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R9_ui_design_philosophy
+    blockedBy: []
+    unlocks:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R9_ui_design_philosophy
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): R1_repair_contract_schema · all upstream 2'
+      - >-
+        needed by (2): R9_ui_design_philosophy, R10_relational_context_and_reuse · finishing it
+        unlocks R9_ui_design_philosophy
+    edges:
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R1_repair_contract_schema
+        kind: declared

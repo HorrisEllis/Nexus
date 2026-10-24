@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+context: >-
+  pipeline phase DB5_the_handshake_for_every_system of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB5_the_handshake_for_every_system (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677812
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677812
+lastSeenAt: 1792787677812
+fingerprint: null
+payload:
+  id: DB5_the_handshake_for_every_system
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/lib/contract-handshake.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 78b6fef273ac958e

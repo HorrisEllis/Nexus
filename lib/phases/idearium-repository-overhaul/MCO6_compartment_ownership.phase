@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-repository-overhaul-phasemap.spec::MCO6_compartment_ownership
+type: phase
+id: docs_idearium-repository-overhaul-phasemap.spec::MCO6_compartment_ownership
+context: pipeline phase MCO6_compartment_ownership of docs/idearium-repository-overhaul-phasemap.spec
+intent: null
+summary: MCO6_compartment_ownership (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678226
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678226
+lastSeenAt: 1792787678226
+fingerprint: null
+payload:
+  id: MCO6_compartment_ownership
+  map: docs/idearium-repository-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: '>'
+  files:
+    - idearium/api/index.js
+    - lib/compartment-engine.js
+    - lib/cos-bridge.js
+    - tests/modules/test-mco6-repo-compartment.js
+    - cos/cli/commands/create.js
+    - lib/agent-tools/tools/sandbox/self-repair.js
+    - cortex/core/raid/contract-intake.js
+    - meta/adversary-suite.js
+    - lib/case-library.js
+    - lib/end-state.js
+    - lib/project-container.js
+  depends_on:
+    - MCO0_audit_real_coverage
+  blocks: []
+  spec: null
+  graph: ccbefa5d407a1b18

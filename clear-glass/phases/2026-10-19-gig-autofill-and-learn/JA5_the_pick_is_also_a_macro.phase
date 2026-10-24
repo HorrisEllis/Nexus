@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::JA5_the_pick_is_also_a_macro
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::JA5_the_pick_is_also_a_macro
+context: >-
+  pipeline phase JA5_the_pick_is_also_a_macro of
+  docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: JA5_the_pick_is_also_a_macro (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792814522034
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792814522034
+lastSeenAt: 1792814522034
+fingerprint: null
+payload:
+  id: JA5_the_pick_is_also_a_macro
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/learn-pick.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/renderer/settings/sections/autofill.js
+  depends_on:
+    - JA4_the_learn_loop_ui
+    - GA0b_where_a_pick_is_kept
+  blocks: []
+  spec: null
+  graph: 66ae4523314f8948

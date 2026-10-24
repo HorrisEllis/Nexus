@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456416772
+exported_at: 1792787677991
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416772
-lastSeenAt: 1792456416772
+firstSeenAt: 1792787677991
+lastSeenAt: 1792787677991
 fingerprint: null
 payload:
   for: DK2_learned_granularity
@@ -27,7 +27,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 7
     deps:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
@@ -52,6 +51,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 7583ffef0c495b95 · layer 7 · blocked by DK1_dynamic_chunking
+      - layer 7 · blocked by DK1_dynamic_chunking
       - 'depends on (1): DK1_dynamic_chunking · all upstream 12'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+        kind: declared

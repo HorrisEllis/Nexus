@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+context: >-
+  pipeline phase P1_characterization of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: P1_characterization (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675963
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675963
+lastSeenAt: 1792787675963
+fingerprint: null
+payload:
+  id: P1_characterization
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P0_map
+  blocks: []
+  spec: null
+  graph: 47dc454012e2d666

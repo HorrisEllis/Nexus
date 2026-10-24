@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+type: phase
+id: docs_agent-model-and-user-continuity-phasemap.spec::AM2_incident_debrief
+context: pipeline phase AM2_incident_debrief of docs/agent-model-and-user-continuity-phasemap.spec
+intent: null
+summary: AM2_incident_debrief (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678104
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678104
+lastSeenAt: 1792787678104
+fingerprint: null
+payload:
+  id: AM2_incident_debrief
+  map: docs/agent-model-and-user-continuity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-system/submit.js
+    - lib/gap-field.js
+    - copilot/tool-runtime.js
+    - idearium/api/index.js
+    - idearium/spec-engine/warp-build-dispatch.js
+    - cortex/self-heal/fault-taxonomy.js
+    - lib/loom-map.js
+  depends_on:
+    - AM1_per_agent_learned_model
+  blocks: []
+  spec: null
+  graph: 04a4544016b9bb00

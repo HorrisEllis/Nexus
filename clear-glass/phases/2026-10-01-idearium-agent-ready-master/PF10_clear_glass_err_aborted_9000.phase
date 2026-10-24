@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF10_clear_glass_err_aborted_9000
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF10_clear_glass_err_aborted_9000
+context: >-
+  pipeline phase PF10_clear_glass_err_aborted_9000 of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PF10_clear_glass_err_aborted_9000 (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676385
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676385
+lastSeenAt: 1792787676385
+fingerprint: null
+payload:
+  id: PF10_clear_glass_err_aborted_9000
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8f9d250d6b6fb2ea

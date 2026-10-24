@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-warp-verification-phasemap.spec::P8_ui_as_copilot_tools
+type: phase
+id: docs_raid-warp-verification-phasemap.spec::P8_ui_as_copilot_tools
+context: pipeline phase P8_ui_as_copilot_tools of docs/raid-warp-verification-phasemap.spec
+intent: null
+summary: P8_ui_as_copilot_tools (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678328
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678328
+lastSeenAt: 1792787678328
+fingerprint: null
+payload:
+  id: P8_ui_as_copilot_tools
+  map: docs/raid-warp-verification-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 34bbffc617747a9c

@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL30_registry_components_drift_audit:eac106116feaaa9a
+type: graph
+id: phase:BL30_registry_components_drift_audit:eac106116feaaa9a
+context: dependency graph of phase BL30_registry_components_drift_audit
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675443
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675443
+lastSeenAt: 1792787675443
+fingerprint: null
+payload:
+  for: BL30_registry_components_drift_audit
+  kind: phase
+  repo: null
+  hash: eac106116feaaa9a
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL31_architect_block_canvas_component_swap
+    upstream: []
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL31_architect_block_canvas_component_swap
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL31_architect_block_canvas_component_swap
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): BL31_architect_block_canvas_component_swap · finishing it unlocks
+        BL31_architect_block_canvas_component_swap
+    edges: []

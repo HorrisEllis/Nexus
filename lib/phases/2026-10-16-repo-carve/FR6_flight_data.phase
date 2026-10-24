@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::FR6_flight_data
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::FR6_flight_data
+context: pipeline phase FR6_flight_data of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: FR6_flight_data (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677750
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677750
+lastSeenAt: 1792787677750
+fingerprint: null
+payload:
+  id: FR6_flight_data
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.144 — test-flight-data 7/7 (FD-07 the panel in Clear Glass)"'
+  files:
+    - lib/run-watch.js
+    - lib/phase-cost.js
+    - lib/phase-faults.js
+    - intelligence/cfr/delta.js
+    - lib/flight-data.js
+    - idearium/ui/js/code-tab-flight.js
+    - products/flight-recorder/bin/flight-recorder.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 05ad1f0362cc7289

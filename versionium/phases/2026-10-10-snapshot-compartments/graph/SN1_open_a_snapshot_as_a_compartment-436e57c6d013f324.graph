@@ -1,0 +1,218 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SN1_open_a_snapshot_as_a_compartment:436e57c6d013f324
+type: graph
+id: phase:SN1_open_a_snapshot_as_a_compartment:436e57c6d013f324
+context: dependency graph of phase SN1_open_a_snapshot_as_a_compartment
+intent: null
+summary: 23 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677280
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677280
+lastSeenAt: 1792787677280
+fingerprint: null
+payload:
+  for: SN1_open_a_snapshot_as_a_compartment
+  kind: phase
+  repo: null
+  hash: 436e57c6d013f324
+  nodes:
+    - path: cos/workspace/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/repo/snapshot.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: versionium/lib/files.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: cos/workspace/vm-control.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cos-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/shadow-space.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/versions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: versionium/routes/files.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/tar.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/repo/architecture.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/code-intel/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/config.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/text-diff.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: versionium/lib/files.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: versionium/lib/files.js
+      to: versionium/config.js
+      kind: requires
+    - from: versionium/lib/files.js
+      to: versionium/lib/text-diff.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/verify-lazy.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/snapshot-files.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/architecture.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: products/flight-recorder/lib/versions.js
+      to: versionium/lib/files.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: versionium/lib/files.js
+      kind: requires
+    - from: versionium/routes/files.js
+      to: versionium/lib/files.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: lib/shadow-space.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/index.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+  crossings:
+    - from: lib/cos-bridge.js
+      to: cos/workspace/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/shadow-space.js
+      to: cos/workspace/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+    dependents:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN2_run_in_parallel
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
+    upstream:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+    downstream:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN2_run_in_parallel
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN3_measured_by_rfr2
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN4_benchmarks_teach
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS2_test_every_version
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+    blockedBy:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+    unlocks:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN2_run_in_parallel
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by SN0_one_branch
+      - 'depends on (1): SN0_one_branch'
+      - >-
+        needed by (2): SN2_run_in_parallel, CS2_test_every_version · all downstream 5 · finishing it
+        unlocks SN2_run_in_parallel
+    edges:
+      - from: docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+        kind: declared

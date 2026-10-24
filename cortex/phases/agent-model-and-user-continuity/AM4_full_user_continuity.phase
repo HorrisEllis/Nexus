@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-model-and-user-continuity-phasemap.spec::AM4_full_user_continuity
+type: phase
+id: docs_agent-model-and-user-continuity-phasemap.spec::AM4_full_user_continuity
+context: pipeline phase AM4_full_user_continuity of docs/agent-model-and-user-continuity-phasemap.spec
+intent: null
+summary: AM4_full_user_continuity (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678107
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678107
+lastSeenAt: 1792787678107
+fingerprint: null
+payload:
+  id: AM4_full_user_continuity
+  map: docs/agent-model-and-user-continuity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/push-recall.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3a71daf44b278748

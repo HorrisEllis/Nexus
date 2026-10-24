@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P4_phases_ui:35f5c870235cabfb
+type: graph
+id: phase:P4_phases_ui:35f5c870235cabfb
+context: dependency graph of phase P4_phases_ui
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676055
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676055
+lastSeenAt: 1792787676055
+fingerprint: null
+payload:
+  for: P4_phases_ui
+  kind: phase
+  repo: null
+  hash: 35f5c870235cabfb
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P2_phases_model
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P3_phase_build
+    dependents:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    upstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P1_phasemap_list_form
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P2_phases_model
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P3_phase_build
+    downstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (2): P2_phases_model, P3_phase_build · all upstream 3'
+      - 'needed by (1): Z1_release · finishing it unlocks Z1_release'
+    edges:
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P2_phases_model
+        kind: declared
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P3_phase_build
+        kind: declared

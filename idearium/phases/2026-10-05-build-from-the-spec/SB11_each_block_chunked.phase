@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB11_each_block_chunked
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB11_each_block_chunked
+context: pipeline phase SB11_each_block_chunked of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB11_each_block_chunked (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676832
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676832
+lastSeenAt: 1792787676832
+fingerprint: null
+payload:
+  id: SB11_each_block_chunked
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - lib/chunker/index.js
+  depends_on:
+    - SB10_reuse_first_keyed_on_the_contract
+  blocks: []
+  spec: null
+  graph: c80702c27e56d8d4

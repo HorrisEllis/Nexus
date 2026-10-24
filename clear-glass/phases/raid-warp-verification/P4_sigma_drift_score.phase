@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-warp-verification-phasemap.spec::P4_sigma_drift_score
+type: phase
+id: docs_raid-warp-verification-phasemap.spec::P4_sigma_drift_score
+context: pipeline phase P4_sigma_drift_score of docs/raid-warp-verification-phasemap.spec
+intent: null
+summary: P4_sigma_drift_score (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678325
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678325
+lastSeenAt: 1792787678325
+fingerprint: null
+payload:
+  id: P4_sigma_drift_score
+  map: docs/raid-warp-verification-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f97bb1eb7af72c05

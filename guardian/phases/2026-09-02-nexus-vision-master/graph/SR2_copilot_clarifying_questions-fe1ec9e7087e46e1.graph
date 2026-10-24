@@ -1,0 +1,190 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR2_copilot_clarifying_questions:fe1ec9e7087e46e1
+type: graph
+id: phase:SR2_copilot_clarifying_questions:fe1ec9e7087e46e1
+context: dependency graph of phase SR2_copilot_clarifying_questions
+intent: null
+summary: 22 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675709
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675709
+lastSeenAt: 1792787675709
+fingerprint: null
+payload:
+  for: SR2_copilot_clarifying_questions
+  kind: phase
+  repo: null
+  hash: fe1ec9e7087e46e1
+  nodes:
+    - path: guardian/ask.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/jobs.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/intent-hat-router.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/tools/identity/intent-hat.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/guardian-job-persistence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: guardian/lib/account-routing.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-attention.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intent-classifier.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/ask.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/lib/account-routing.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/lib/provider-attention.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: lib/intent-hat-router.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/intent-hat-router.js
+      to: lib/intent-classifier.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: guardian/ask.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/ask.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/ask.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/jobs.js
+      kind: requires
+    - from: tests/modules/guardian-job-persistence.test.js
+      to: guardian/lib/jobs.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: guardian/lib/jobs.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/intent-hat.js
+      to: lib/intent-hat-router.js
+      kind: requires
+  crossings:
+    - from: lib/intent-hat-router.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

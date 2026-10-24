@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-canvas-compartments-phasemap.spec::CN6_canvas_screen
+type: phase
+id: docs_2026-10-16-canvas-compartments-phasemap.spec::CN6_canvas_screen
+context: pipeline phase CN6_canvas_screen of docs/2026-10-16-canvas-compartments-phasemap.spec
+intent: null
+summary: CN6_canvas_screen (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677652
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677652
+lastSeenAt: 1792787677652
+fingerprint: null
+payload:
+  id: CN6_canvas_screen
+  map: docs/2026-10-16-canvas-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/canvas-compartments.js
+    - tests/run.html
+    - cos/archetype/eravos.js
+    - cos/archetype/eravos-domains/music/core/sdk-music.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a122a921c355bbd5

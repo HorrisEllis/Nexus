@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+type: phase
+id: docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+context: >-
+  pipeline phase T3_debug_report of
+  docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+intent: null
+summary: T3_debug_report (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676061
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676061
+lastSeenAt: 1792787676061
+fingerprint: null
+payload:
+  id: T3_debug_report
+  map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/cos-debug-report.js
+    - lib/cos-run.js
+    - idearium/api/index.js
+    - idearium/ui/js/app.js
+  depends_on:
+    - T1_suite_process
+    - T2
+  blocks: []
+  spec: null
+  graph: 7765b07df0393f7b

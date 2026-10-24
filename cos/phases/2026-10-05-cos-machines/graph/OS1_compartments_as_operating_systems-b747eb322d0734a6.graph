@@ -1,0 +1,140 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS1_compartments_as_operating_systems:b747eb322d0734a6
+type: graph
+id: phase:OS1_compartments_as_operating_systems:b747eb322d0734a6
+context: dependency graph of phase OS1_compartments_as_operating_systems
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677018
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677018
+lastSeenAt: 1792787677018
+fingerprint: null
+payload:
+  for: OS1_compartments_as_operating_systems
+  kind: phase
+  repo: null
+  hash: b747eb322d0734a6
+  nodes:
+    - path: cos/compartment/guest-agent.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/helpers/cos-mini-guest.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-vm-shell.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/testenv/provision.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/helpers/cos-mini-guest.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-vm-shell.test.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
+    dependents:
+      - docs/2026-10-05-cos-machines-phasemap.spec::OS2_images_downloaded_and_kept_current
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP2_test_on_the_android_compartment
+      - docs/2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
+    upstream:
+      - docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
+    downstream:
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP1_android_build_compartment
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP2_test_on_the_android_compartment
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP3_release_like_an_enterprise
+      - docs/2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
+      - docs/2026-10-05-cos-machines-phasemap.spec::OS2_images_downloaded_and_kept_current
+      - docs/2026-10-05-cos-machines-phasemap.spec::SU1_the_setup_asks_the_os_and_its_version
+      - docs/2026-10-05-cos-machines-phasemap.spec::SU2_every_language_and_the_repos_own_dependencies
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-cos-machines-phasemap.spec::OS2_images_downloaded_and_kept_current
+      - docs/2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): VM1_control_like_vmware'
+      - >-
+        needed by (3): OS2_images_downloaded_and_kept_current, AP2_test_on_the_android_compartment,
+        EL1_electron_compiler · all downstream 7 · finishing it unlocks
+        OS2_images_downloaded_and_kept_current, EL1_electron_compiler
+    edges:
+      - from: docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
+        kind: declared

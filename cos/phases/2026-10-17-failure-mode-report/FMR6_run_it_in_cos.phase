@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+type: phase
+id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+context: pipeline phase FMR6_run_it_in_cos of docs/2026-10-17-failure-mode-report-phasemap.spec
+intent: null
+summary: FMR6_run_it_in_cos (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677783
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677783
+lastSeenAt: 1792787677783
+fingerprint: null
+payload:
+  id: FMR6_run_it_in_cos
+  map: docs/2026-10-17-failure-mode-report-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/index.js
+    - cos/testenv/replay.js
+  depends_on:
+    - FMR5_replay_routes
+    - SN0_one_branch
+  blocks: []
+  spec: null
+  graph: c179a8fd6c6b4eb5

@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792775550207
+exported_at: 1792787678083
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550207
-lastSeenAt: 1792775550207
+firstSeenAt: 1792787678083
+lastSeenAt: 1792787678083
 fingerprint: null
 payload:
   for: SL4_the_loop
@@ -215,8 +215,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 6577681f08a50367
-    layer: 5
+    layer: 7
     deps:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
@@ -224,7 +223,13 @@ payload:
       - docs/2026-10-16-repo-carve-phasemap.spec::FR10_stop_the_ladder
     dependents: []
     upstream:
+      - docs/2026-10-16-repo-carve-phasemap.spec::CV1_carve_backend_route_command_ui
+      - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
       - docs/2026-10-16-repo-carve-phasemap.spec::FR10_stop_the_ladder
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR1_one_record_per_change
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR2_tested_before_it_lands
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR3_undo_any_change
+      - docs/2026-10-16-repo-carve-phasemap.spec::FR5_the_demo
       - docs/2026-10-16-repo-carve-phasemap.spec::FR6_flight_data
       - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB1_autobuild_loop_and_resume
       - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
@@ -243,8 +248,17 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 6577681f08a50367 · layer 5 · blocked by FR10_stop_the_ladder
+      - layer 7 · blocked by FR10_stop_the_ladder
       - >-
         depends on (4): SL1_a_proven_phase_closes_itself, SL0_what_can_be_built_now,
-        AB1_autobuild_loop_and_resume, FR10_stop_the_ladder · all upstream 12
+        AB1_autobuild_loop_and_resume, FR10_stop_the_ladder · all upstream 18
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
+        kind: declared
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+        kind: declared
+      - from: docs/2026-10-19-solid-build-foundation-phasemap.spec::AB1_autobuild_loop_and_resume
+        kind: declared
+      - from: docs/2026-10-16-repo-carve-phasemap.spec::FR10_stop_the_ladder
+        kind: declared

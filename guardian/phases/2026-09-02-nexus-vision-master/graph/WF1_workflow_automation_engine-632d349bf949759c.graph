@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-graph-phase:WF1_workflow_automation_engine:632d349bf949759c
+type: graph
+id: phase:WF1_workflow_automation_engine:632d349bf949759c
+context: dependency graph of phase WF1_workflow_automation_engine
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675651
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675651
+lastSeenAt: 1792787675651
+fingerprint: null
+payload:
+  for: WF1_workflow_automation_engine
+  kind: phase
+  repo: null
+  hash: 632d349bf949759c
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM7_agent_suite_welcome_ui
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T5_raid_full_cli
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by AM11_per_agent_tasks_automation
+      - 'depends on (1): AM11_per_agent_tasks_automation · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
+        kind: declared

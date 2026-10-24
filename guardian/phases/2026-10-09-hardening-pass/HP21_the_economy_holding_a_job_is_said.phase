@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP21_the_economy_holding_a_job_is_said
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP21_the_economy_holding_a_job_is_said
+context: >-
+  pipeline phase HP21_the_economy_holding_a_job_is_said of
+  docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP21_the_economy_holding_a_job_is_said (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677154
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677154
+lastSeenAt: 1792787677154
+fingerprint: null
+payload:
+  id: HP21_the_economy_holding_a_job_is_said
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/dispatcher.js
+    - guardian/lib/gate-trail.js
+    - guardian/ask.js
+  depends_on:
+    - HP16_a_job_nobody_waits_for_is_not_sent_later
+  blocks: []
+  spec: null
+  graph: 987bfbb18c496d42

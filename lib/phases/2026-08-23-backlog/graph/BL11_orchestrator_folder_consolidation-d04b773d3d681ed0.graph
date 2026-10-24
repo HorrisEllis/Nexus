@@ -1,0 +1,316 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL11_orchestrator_folder_consolidation:d04b773d3d681ed0
+type: graph
+id: phase:BL11_orchestrator_folder_consolidation:d04b773d3d681ed0
+context: dependency graph of phase BL11_orchestrator_folder_consolidation
+intent: null
+summary: 45 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675415
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675415
+lastSeenAt: 1792787675415
+fingerprint: null
+payload:
+  for: BL11_orchestrator_folder_consolidation
+  kind: phase
+  repo: null
+  hash: d04b773d3d681ed0
+  nodes:
+    - path: clear-glass/fix-orchestrator.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/page-resolver.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/policy.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cli/diagnose.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/nexus-repl.js
+      role: changes
+      exists: true
+      system: cli
+    - path: contracts/SYSTEM-CONTRACTS.js
+      role: changes
+      exists: true
+      system: contracts
+    - path: cos/archetype/components/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/runtime/syntax-check.cjs
+      role: changes
+      exists: true
+      system: cos
+    - path: data/registry.json
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: intelligence/cfr/contract-verifier.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/file-integrity.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-config.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-check.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/uid/component-map.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: scripts/verify-boot.js
+      role: changes
+      exists: true
+      system: null
+    - path: scripts/verify-wires.js
+      role: changes
+      exists: true
+      system: null
+    - path: service/nexus-diagnostic.js
+      role: changes
+      exists: false
+      system: service
+    - path: tests/diagnostic-fixes.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/nexus-full-audit.js
+      role: changes
+      exists: true
+      system: null
+    - path: cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: diagnostic/lib/heal-loop.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/diagnostic/system-priority.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/integrity-revert.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-manifest.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/uid/config-schema.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/uid/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/uid/normalize.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/intent-map.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: contracts/nodes/axioms.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/deltas.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/divergent.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/edges.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/events.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/faults.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/gaps.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: contracts/nodes/systems.node.js
+      role: uses
+      exists: true
+      system: contracts
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-connect.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: cli/diagnose.js
+      to: nexus/nexus-connect.js
+      kind: requires
+    - from: lib/system-check.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/system-check.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/system-check.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/axioms.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/systems.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/events.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/gaps.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/faults.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/edges.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/deltas.node.js
+      kind: requires
+    - from: contracts/SYSTEM-CONTRACTS.js
+      to: contracts/nodes/divergent.node.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/system-priority.js
+      to: lib/system-check.js
+      kind: requires
+    - from: lib/integrity-revert.js
+      to: lib/file-integrity.js
+      kind: requires
+    - from: lib/uid/config-schema.js
+      to: lib/uid/component-map.js
+      kind: requires
+    - from: lib/uid/index.js
+      to: lib/uid/component-map.js
+      kind: requires
+    - from: lib/uid/normalize.js
+      to: lib/uid/component-map.js
+      kind: requires
+    - from: orchestrator/lib/intent-map.js
+      to: lib/uid/component-map.js
+      kind: requires
+    - from: diagnostic/lib/heal-loop.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/system-manifest.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+  crossings:
+    - from: cli/diagnose.js
+      to: nexus/nexus-connect.js
+      fromSystem: cli
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: cli
+      toSystem: orchestrator
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL7_emerge_files_to_emerge_folder
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL12_nexus_heal_loop_to_diagnostic
+      - docs/2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL7_emerge_files_to_emerge_folder
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL12_nexus_heal_loop_to_diagnostic
+      - docs/2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL12_nexus_heal_loop_to_diagnostic
+      - docs/2026-08-23-backlog-phasemap.spec::BL16_per_server_configs
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): BL7_emerge_files_to_emerge_folder'
+      - >-
+        needed by (2): BL12_nexus_heal_loop_to_diagnostic, BL16_per_server_configs · finishing it
+        unlocks BL12_nexus_heal_loop_to_diagnostic, BL16_per_server_configs
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL7_emerge_files_to_emerge_folder
+        kind: inferred

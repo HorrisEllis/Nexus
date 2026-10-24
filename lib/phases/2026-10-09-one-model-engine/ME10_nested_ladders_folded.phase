@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME10_nested_ladders_folded
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME10_nested_ladders_folded
+context: pipeline phase ME10_nested_ladders_folded of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME10_nested_ladders_folded (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677171
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677171
+lastSeenAt: 1792787677171
+fingerprint: null
+payload:
+  id: ME10_nested_ladders_folded
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/chunk-dispatch.js
+    - idearium/spec-engine/warp-build-dispatch.js
+    - lib/seam/adapters/warp-cascade.js
+    - lib/seam/queue.js
+    - lib/chunk-build-orchestrator.js
+    - copilot/lifeline.js
+    - copilot/adaptive-fulfillment.js
+  depends_on:
+    - ME3_one_engine_one_budget
+    - ME5_one_chooser
+    - ME9_the_layers_below_report
+  blocks: []
+  spec: null
+  graph: 4010d5284074ac51

@@ -1,0 +1,245 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RS9_the_thread:f06ed39fcd8adc6f
+type: graph
+id: phase:RS9_the_thread:f06ed39fcd8adc6f
+context: dependency graph of phase RS9_the_thread
+intent: null
+summary: 28 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677049
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677049
+lastSeenAt: 1792787677049
+fingerprint: null
+payload:
+  for: RS9_the_thread
+  kind: phase
+  repo: null
+  hash: f06ed39fcd8adc6f
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/thread.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-pipeline-nodes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-document.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: lib/spec-document.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+    - from: tests/modules/test-pipeline-nodes.test.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      fromSystem: service
+      toSystem: idearium
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+    dependents:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS10_the_phases_tab_rebuilt
+    upstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+    downstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS10_the_phases_tab_rebuilt
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS11_workshop_and_phases_one_surface
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS10_the_phases_tab_rebuilt
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): RS3_the_spec_document'
+      - >-
+        needed by (1): RS10_the_phases_tab_rebuilt · all downstream 2 · finishing it unlocks
+        RS10_the_phases_tab_rebuilt
+    edges:
+      - from: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+        kind: declared

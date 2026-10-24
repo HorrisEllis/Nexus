@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::FN1_the_field_as_commands
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::FN1_the_field_as_commands
+context: pipeline phase FN1_the_field_as_commands of docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: FN1_the_field_as_commands (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677269
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677269
+lastSeenAt: 1792787677269
+fingerprint: null
+payload:
+  id: FN1_the_field_as_commands
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 97a9854ac7d50136

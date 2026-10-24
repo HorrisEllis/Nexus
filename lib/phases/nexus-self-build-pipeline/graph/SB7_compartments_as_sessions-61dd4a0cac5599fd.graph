@@ -1,0 +1,336 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB7_compartments_as_sessions:61dd4a0cac5599fd
+type: graph
+id: phase:SB7_compartments_as_sessions:61dd4a0cac5599fd
+context: dependency graph of phase SB7_compartments_as_sessions
+intent: null
+summary: 39 node(s), 9 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678301
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678301
+lastSeenAt: 1792787678301
+fingerprint: null
+payload:
+  for: SB7_compartments_as_sessions
+  kind: phase
+  repo: null
+  hash: 61dd4a0cac5599fd
+  nodes:
+    - path: cli/clear-idearium.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cos/cli/commands/create.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/cli/commands/destroy.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/cli/commands/list.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/agent-tools/tools/cos-compartment.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-compartment.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/cos-bridge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/emergence.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/end-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/scheduler.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/uid/normalize.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: changes
+      exists: true
+      system: loom
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/ci/keys.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/cli.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/tools/execution/safe-apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-archetype.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-playground.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-plugin.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/event-bus.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/archetype.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/blueprint.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/compartment.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/playgrounds.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/plugin.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/gates/process.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/state-store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/system-map.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Event.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/host/index.js
+      to: cos/host/state-store.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/event-bus.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/system-map.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/siso/Event.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/compartment.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/process.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/archetype.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/blueprint.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/playgrounds.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/plugin.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cos/ci/keys.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cos/cli/index.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cos/test/test.js
+      to: cos/host/index.js
+      kind: requires
+    - from: guardian/cli.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/safe-apply.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/cos-archetype.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/cos-blueprint.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/cos-playground.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/cos-plugin.js
+      to: cos/host/index.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/host/index.js
+      fromSystem: clear-glass
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: guardian/cli.js
+      to: cos/host/index.js
+      fromSystem: guardian
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/execution/safe-apply.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/sandbox/cos-archetype.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/sandbox/cos-blueprint.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/sandbox/cos-playground.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/sandbox/cos-plugin.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+    dependents: []
+    upstream:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+        files:
+          - lib/loom-map.js
+      - with: docs/nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
+        files:
+          - lib/emergence.js
+          - lib/component-ledger.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): SB1_schema_extension'
+      - 'needed by (0): —'
+      - 'same files as SB2_universal_file_parse with no order between them: lib/loom-map.js'
+      - >-
+        same files as SB3_guided_build_loop with no order between them: lib/emergence.js,
+        lib/component-ledger.js
+    edges:
+      - from: docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+        kind: declared

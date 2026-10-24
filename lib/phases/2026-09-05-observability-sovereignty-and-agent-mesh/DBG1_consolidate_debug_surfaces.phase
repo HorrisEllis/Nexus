@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DBG1_consolidate_debug_surfaces
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DBG1_consolidate_debug_surfaces
+context: >-
+  pipeline phase DBG1_consolidate_debug_surfaces of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: DBG1_consolidate_debug_surfaces (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675779
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675779
+lastSeenAt: 1792787675779
+fingerprint: null
+payload:
+  id: DBG1_consolidate_debug_surfaces
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cli/cfr-debug.js
+    - cli/diagnose.js
+    - cli/sentinel.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 251300f01adf0239

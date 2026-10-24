@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::CK0_the_catalogue_written
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::CK0_the_catalogue_written
+context: pipeline phase CK0_the_catalogue_written of docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: CK0_the_catalogue_written (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677451
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677451
+lastSeenAt: 1792787677451
+fingerprint: null
+payload:
+  id: CK0_the_catalogue_written
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/spec/check-catalogue.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 79d0db81c79ea43f

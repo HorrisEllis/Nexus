@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-one-contract-raid-releases-phasemap.spec::ST1_stability_checks
+type: phase
+id: docs_2026-10-15-one-contract-raid-releases-phasemap.spec::ST1_stability_checks
+context: pipeline phase ST1_stability_checks of docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+intent: null
+summary: ST1_stability_checks (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677611
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677611
+lastSeenAt: 1792787677611
+fingerprint: null
+payload:
+  id: ST1_stability_checks
+  map: docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/checks/
+    - cortex/contract/index.js
+    - lib/repo-versions.js
+    - lib/repo-history.js
+    - lib/repo-inject.js
+    - lib/replay-engine.js
+    - cortex/core/raid/contract-intake.js
+    - cortex/core/raid/contract-gates.js
+    - idearium/ui/js/repo-versions.js
+  depends_on:
+    - FR1_failure_reports
+  blocks: []
+  spec: null
+  graph: 73c9424926bf802e

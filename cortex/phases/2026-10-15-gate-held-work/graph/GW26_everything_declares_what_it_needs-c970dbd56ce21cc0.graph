@@ -1,0 +1,261 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW26_everything_declares_what_it_needs:c970dbd56ce21cc0
+type: graph
+id: phase:GW26_everything_declares_what_it_needs:c970dbd56ce21cc0
+context: dependency graph of phase GW26_everything_declares_what_it_needs
+intent: null
+summary: 23 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677584
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677584
+lastSeenAt: 1792787677584
+fingerprint: null
+payload:
+  for: GW26_everything_declares_what_it_needs
+  kind: phase
+  repo: null
+  hash: c970dbd56ce21cc0
+  nodes:
+    - path: cortex/core/raid/contract-adapters.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/capability-spec.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/lib/spec-drift.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phase-mapping.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/checks/ck-254-surface.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-groom.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/work-funnel.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/code-intel/chunker.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/phase-map-auto.js
+      to: lib/phase-files.js
+      kind: requires
+    - from: lib/phase-map-auto.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/phase-map-auto.js
+      to: lib/code-intel/chunker.js
+      kind: requires
+    - from: lib/capability-spec.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/repo/phase-mapping.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: lib/phase-groom.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: lib/checks/ck-254-surface.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+  crossings:
+    - from: orchestrator/lib/spec-drift.js
+      to: intelligence/gap/predicate.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+    dependents: []
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+        files:
+          - cortex/core/raid/contract-gates.js
+          - cortex/core/raid/contract-adapters.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+        files:
+          - cortex/core/raid/contract-gates.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+        files:
+          - cortex/core/raid/contract-gates.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+        files:
+          - cortex/core/raid/contract-gates.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+        files:
+          - cortex/core/raid/contract-adapters.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+        files:
+          - cortex/core/raid/contract-gates.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW25_the_systems_at_the_gate_moments
+        files:
+          - cortex/core/raid/contract-gates.js
+          - lib/phase-map-auto.js
+          - orchestrator/lib/spec-drift.js
+          - cortex/core/raid/contract-adapters.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by GW1_the_baton
+      - 'depends on (1): GW1_the_baton'
+      - 'needed by (0): —'
+      - >-
+        same files as GW2_the_run_follows_the_gate with no order between them:
+        cortex/core/raid/contract-gates.js, cortex/core/raid/contract-adapters.js
+      - >-
+        same files as GW3_a_contract_is_traced with no order between them:
+        cortex/core/raid/contract-gates.js
+      - >-
+        same files as GW7_failure_macro_and_rewind with no order between them:
+        cortex/core/raid/contract-gates.js
+      - >-
+        same files as GW11_a_snapshot_per_gate with no order between them:
+        cortex/core/raid/contract-gates.js
+      - >-
+        same files as GW16_parallel_branches_benchmark with no order between them:
+        cortex/core/raid/contract-adapters.js
+      - … and 2 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+        kind: declared

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+context: pipeline phase TB1_tab_is_a_view of docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: TB1_tab_is_a_view (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677404
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677404
+lastSeenAt: 1792787677404
+fingerprint: null
+payload:
+  id: TB1_tab_is_a_view
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/main/index.js
+    - clear-glass/src/tabs/views.js
+    - clear-glass/src/driver/page-resolver.js
+  depends_on:
+    - ID1_identities
+  blocks: []
+  spec: null
+  graph: ee8c681d5d8a4bf4

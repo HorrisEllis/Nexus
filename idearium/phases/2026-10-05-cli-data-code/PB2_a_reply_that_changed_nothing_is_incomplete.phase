@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::PB2_a_reply_that_changed_nothing_is_incomplete
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::PB2_a_reply_that_changed_nothing_is_incomplete
+context: >-
+  pipeline phase PB2_a_reply_that_changed_nothing_is_incomplete of
+  docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: PB2_a_reply_that_changed_nothing_is_incomplete (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676995
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676995
+lastSeenAt: 1792787676995
+fingerprint: null
+payload:
+  id: PB2_a_reply_that_changed_nothing_is_incomplete
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cd4f2e31ab5e8a36

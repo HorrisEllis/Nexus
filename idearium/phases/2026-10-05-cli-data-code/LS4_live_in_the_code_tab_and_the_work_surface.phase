@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::LS4_live_in_the_code_tab_and_the_work_surface
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::LS4_live_in_the_code_tab_and_the_work_surface
+context: >-
+  pipeline phase LS4_live_in_the_code_tab_and_the_work_surface of
+  docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: LS4_live_in_the_code_tab_and_the_work_surface (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677004
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677004
+lastSeenAt: 1792787677004
+fingerprint: null
+payload:
+  id: LS4_live_in_the_code_tab_and_the_work_surface
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - idearium/ui/js/code-surface.js
+    - idearium/ui/js/plan-panel.js
+  depends_on:
+    - LS3_one_feed_for_every_agent
+  blocks: []
+  spec: null
+  graph: 02a22b8ffa0fbdc1

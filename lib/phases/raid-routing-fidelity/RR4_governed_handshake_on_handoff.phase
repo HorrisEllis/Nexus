@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+type: phase
+id: docs_raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+context: pipeline phase RR4_governed_handshake_on_handoff of docs/raid-routing-fidelity-phasemap.spec
+intent: null
+summary: RR4_governed_handshake_on_handoff (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678314
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678314
+lastSeenAt: 1792787678314
+fingerprint: null
+payload:
+  id: RR4_governed_handshake_on_handoff
+  map: docs/raid-routing-fidelity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-intake.js
+    - lib/end-state.js
+    - lib/agent-tools/tools/clear-glass/command-index.js
+    - ollama/lib/command-index.js
+    - guardian/clear-glass-bridge.js
+    - guardian/api-dispatch.js
+  depends_on:
+    - RR1_verify_and_wire_the_snr_fidelity_gate
+    - RR2_contract_based_chunking
+  blocks: []
+  spec: null
+  graph: b031ed28511d3eae

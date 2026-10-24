@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+context: >-
+  pipeline phase LM9_deterministic_agent_switch_cli of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM9_deterministic_agent_switch_cli (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675543
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675543
+lastSeenAt: 1792787675543
+fingerprint: null
+payload:
+  id: LM9_deterministic_agent_switch_cli
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e66e4bcde0f0b933

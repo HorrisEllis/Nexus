@@ -4,28 +4,38 @@ type: phase
 id: docs_2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
 context: pipeline phase SL3_the_backlog_groomed of docs/2026-10-23-self-building-loop-phasemap.spec
 intent: null
-summary: SL3_the_backlog_groomed (library) — 3 file(s)
+summary: SL3_the_backlog_groomed (library) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1792775550205
+exported_at: 1792787678083
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550205
-lastSeenAt: 1792775550205
+firstSeenAt: 1792787678083
+lastSeenAt: 1792787678083
 fingerprint: null
 payload:
   id: SL3_the_backlog_groomed
   map: docs/2026-10-23-self-building-loop-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: >-
+    DONE 0.60.227 — test-phase-groom 6/6; over Nexus 0 cycles, 2 dangling (both real), DG1 checks
+    1156 of 1156 open phases
   files:
     - lib/phase-groom.js
     - lib/phase-map-auto.js
     - lib/phase-dag.js
+    - lib/phase-deps-gate.js
+    - lib/phase-graph.js
+    - loom/scanners/phasemap-map.js
+    - idearium/repo/phase-mapping.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/phases.js
+    - tests/modules/test-phase-groom.test.js
   depends_on:
     - SL0_what_can_be_built_now
   blocks:
     - MOD-SL-GROOM
   spec: docs/self-building-loop.spec
-  graph: 9fd399bb539845a2
+  graph: d984c6d6901fa316

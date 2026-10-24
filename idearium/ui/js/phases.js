@@ -144,7 +144,9 @@ function _phNextRail() {
   return `<div class="ph2-rail-head">can be built now · ${n.counts.queue} of ${n.counts.open} open</div>
     ${(n.queue || []).map(q => `<div class="ph2-spec" title="${escapeHtml(q.why)} — ${escapeHtml(q.map)}"><span class="ph2-spec-name">${escapeHtml(q.id)}</span><span class="ph2-dim">unlocks ${q.unlocks}</span><button class="ph2-mini-btn" onclick="event.stopPropagation();phasesBuild('${_phq(q.map)}','${_phq(q.id)}')" title="build it now (the same route as its own Build button)">▶ build</button></div>`).join('') || '<div class="ph2-dim ph2-pad">nothing can be built now</div>'}
     ${why ? `<div class="ph2-dim ph2-pad" title="every other open phase is in one group, with what would unblock it (phases next --group …)">waiting: ${escapeHtml(why)}</div>` : ''}
-    ${_phEvidenceRail()}`;
+    ${_phEvidenceRail()}
+    ${_phGroomRail()}
+    ${_phNodesRail()}`;
 }
 
 // 0.60.224 SL2 — done by evidence: a dry run first (its own tests run, nothing written); Close them asks, then writes through the writer
@@ -169,6 +171,48 @@ async function phEvidence(apply) {
     toast(r.dryRun ? `${r.wouldClose.length} of ${r.checked} would close by their tests` : `${r.closed.length} closed by their tests`, 'ok');
     if (!r.dryRun && typeof renderPhasesRefresh === 'function') renderPhasesRefresh();
   } catch (e) { PHASES.evidence = null; toast(`done by evidence: ${e.message}`, 'err'); }
+  _phPaint();
+}
+
+// 0.60.227 SL3 — James: "need to do something about the dependancy graph." The DAG groomed: a dry run lists what would be added to the
+// maps (files from each phase's own words, depends_on from shared files and same-file order) and what a person must answer; apply asks.
+function _phGroomRail() {
+  const g = PHASES.groom;
+  const btn = `<button class="ph2-mini-btn" ${g && g.busy ? 'disabled' : ''} onclick="phGroom(false)" title="files from each phase's own words, depends_on from shared files and same-file order, never closing a cycle — a dry run: nothing is written">${g && g.busy ? 'grooming…' : '⛓ groom the graph'}</button>`;
+  if (!g || !g.result) return `<div class="ph2-pad">${btn}</div>`;
+  const r = g.result, st = r.stats;
+  const ask = (r.forAPerson || []).filter(x => x.kind !== 'order');
+  return `<div class="ph2-rail-head">the graph · ${st.proposals} proposal${st.proposals === 1 ? '' : 's'}${r.written ? ' written' : ''}</div>
+    ${(r.lines || []).map(l => `<div class="ph2-dim ph2-pad">${escapeHtml(l)}</div>`).join('')}
+    ${ask.slice(0, 8).map(x => `<div class="ph2-spec" title="${escapeHtml(x.why)}"><span class="ph2-spec-name">${escapeHtml(x.key.split('::').pop())}</span><span class="ph2-dim">${escapeHtml(x.kind)}</span></div>`).join('')}
+    <div class="ph2-pad">${btn}${r.dryRun && r.pending && r.pending.maps ? ` <button class="ph2-mini-btn" onclick="phGroom(true)" title="write the additions into ${r.pending.maps} map(s): only keys a phase lacks; through the apply gate">write to ${r.pending.maps} map${r.pending.maps === 1 ? '' : 's'}</button>` : ''}</div>`;
+}
+// 0.60.229 SL9 — every phase a .phase node with its graph, beside its owner system: how many, where, and what is missing or stale
+function _phNodesRail() {
+  const n = PHASES.nodes;
+  const btn = `<button class="ph2-mini-btn" onclick="phNodes()" title="every phase's .phase node and its dependency graph, per owner system — read only; they are written by node emerge/compiler/phase-specs.js --all">◇ phase nodes</button>`;
+  if (!n) return `<div class="ph2-pad">${btn}</div>`;
+  return `<div class="ph2-rail-head">phase nodes · ${n.nodes} for ${n.phases} phases</div>
+    <div class="ph2-dim ph2-pad">${escapeHtml(Object.entries(n.bySystem || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(' · '))}</div>
+    ${n.missingCount ? `<div class="ph2-dim ph2-pad" style="color:var(--amber)">${n.missingCount} phase(s) with no node yet</div>` : ''}
+    ${n.staleCount ? `<div class="ph2-dim ph2-pad" style="color:var(--amber)">${n.staleCount} node(s) whose phase is in no map</div>` : ''}
+    ${n.remedy ? `<div class="ph2-dim ph2-pad">${escapeHtml(n.remedy)}</div>` : ''}<div class="ph2-pad">${btn}</div>`;
+}
+async function phNodes() {
+  const uuid = PHASES.uuid || (CURRENT_API_REPO && CURRENT_API_REPO.uuid);
+  try { PHASES.nodes = await api(`/api/repos/${uuid}/phases/nodes`); } catch (e) { toast(`phase nodes: ${e.message}`, 'err'); }
+  _phPaint();
+}
+async function phGroom(apply) {
+  const uuid = PHASES.uuid || (CURRENT_API_REPO && CURRENT_API_REPO.uuid);
+  if (apply && !confirm('Write the proposed files and depends_on into the maps? Only keys a phase lacks are added; the write goes through the apply gate and can be undone.')) return;
+  PHASES.groom = { ...(PHASES.groom || {}), busy: true }; _phPaint();
+  try {
+    const r = await api(`/api/repos/${uuid}/phases/groom`, { method: 'POST', body: JSON.stringify({ apply: !!apply }) }, 300000);
+    PHASES.groom = { result: r };
+    toast(r.written ? `the graph: ${r.written.files} files, ${r.written.deps} depends_on written` : `the graph: ${r.stats.proposals} proposals, ${r.stats.forAPerson} for you`, 'ok');
+    if (r.written && typeof renderPhasesRefresh === 'function') renderPhasesRefresh();
+  } catch (e) { PHASES.groom = null; toast(`groom: ${e.message}`, 'err'); }
   _phPaint();
 }
 
@@ -260,7 +304,7 @@ function _phCard(p) {
   return `<div class="ph-card ph2-card st-${escapeHtml(p.status)} ${PHASES.open === p.uuid ? 'open' : ''} ${stale.length || (th && (th.specMoved || th.staleVia)) ? 'stale' : ''}" onclick="phasesOpen('${escapeHtml(p.uuid)}')" data-key="${escapeHtml(p.phase_key)}" title="${escapeHtml(p.map)}:${p.line}">
     <div class="ph-card-top"><span class="ph-key" style="color:${_PH_STATUS_COLOR[p.status]}">${escapeHtml(_phKey(p))}</span>${PHASES.spec ? '' : `<span class="ph-map">${escapeHtml(_phShortMap(p.map))}</span>`}${(p.systems || []).length ? `<span class="ph-map" title="the systems (nested repos) this phase belongs to — declared, plus the owner of every file it names">${escapeHtml(p.systems.join(' · '))}</span>` : ''}
       ${p.status !== 'complete' ? `<button class="ph-quick" title="snapshot, then the agent builds it (climbing the ladder)" ${PHASES.busy ? 'disabled' : ''} onclick="event.stopPropagation();phasesBuildQuick('${_phq(p.map)}','${_phq(p.phase_key)}')">▶</button>` : ''}</div>
-    <div class="ph-card-title">${p.kind === 'decision' ? '<span class="ph-decision" title="a decision recorded in the map, not a phase to build (CV6)">decision</span> ' : ''}${escapeHtml(p.name || p.title)}</div>
+    <div class="ph-card-title">${p.kind === 'decision' ? '<span class="ph-decision" title="a decision recorded in the map, not a phase to build (CV6)">decision</span> ' : p.kind === 'finding' ? '<span class="ph-decision" title="a root finding the phases cite, not a phase to build (NF1)">finding</span> ' : ''}${escapeHtml(p.name || p.title)}</div>
     ${blocks.length ? `<div class="ph2-blocks">${chips}</div>` : (PHASES.spec ? '<div class="ph2-dim">no link to its spec</div>' : '')}
     ${th && th.staleVia ? `<div class="ph2-warn" title="it depends on a phase whose block moved since it was planned">↻ via ${escapeHtml(String(th.staleVia).split('_')[0])}</div>` : ''}
     <div class="ph-card-foot">

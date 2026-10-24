@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792754193313
+exported_at: 1792787678093
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792754193313
-lastSeenAt: 1792754193313
+firstSeenAt: 1792787678093
+lastSeenAt: 1792787678093
 fingerprint: null
 payload:
   for: SP3_the_site_settings_screen
@@ -47,7 +47,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: dbdd2256c2bfe7c4
     layer: 3
     deps:
       - docs/2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
@@ -63,6 +62,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG dbdd2256c2bfe7c4 · layer 3
+      - layer 3
       - 'depends on (1): SP2_each_feature_reads_its_site_value · all upstream 4'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
+        kind: declared

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N2_types_and_gates
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N2_types_and_gates
+context: pipeline phase N2_types_and_gates of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N2_types_and_gates (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676236
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676236
+lastSeenAt: 1792787676236
+fingerprint: null
+payload:
+  id: N2_types_and_gates
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/types.js
+  depends_on:
+    - N0_census
+  blocks: []
+  spec: null
+  graph: 5e4c8e5f9b3fa871

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M3
+type: phase
+id: docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M3
+context: pipeline phase M3 of docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+intent: null
+summary: M3 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676036
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676036
+lastSeenAt: 1792787676036
+fingerprint: null
+payload:
+  id: M3
+  map: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lifeline.js
+    - copilot/analysis.js
+    - copilot/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9ca7b4fc793e42a3

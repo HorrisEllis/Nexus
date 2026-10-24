@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::IR0_intent_routing_for_reasoning
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::IR0_intent_routing_for_reasoning
+context: >-
+  pipeline phase IR0_intent_routing_for_reasoning of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: IR0_intent_routing_for_reasoning (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677409
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677409
+lastSeenAt: 1792787677409
+fingerprint: null
+payload:
+  id: IR0_intent_routing_for_reasoning
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/reasoning-route.js
+    - lib/repo-agent.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/code-surface.js
+    - idearium/ui/js/app.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d117c137eb21d499

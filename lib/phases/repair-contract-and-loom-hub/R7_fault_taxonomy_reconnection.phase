@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
+context: pipeline phase R7_fault_taxonomy_reconnection of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R7_fault_taxonomy_reconnection (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678340
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678340
+lastSeenAt: 1792787678340
+fingerprint: null
+payload:
+  id: R7_fault_taxonomy_reconnection
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/self-heal/fault-taxonomy.js
+    - service/nexus-diagnostic.js
+    - docs/self-heal.spec
+    - docs/escalation.spec
+    - diagnostic/nexus-diagnostic.js
+    - cortex/core/raid/snr-filter.js
+    - orchestrator/lib/request-handler.js
+    - lib/constitutional-ai.js
+    - lib/replay-engine.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3fb547b4cfbe5881

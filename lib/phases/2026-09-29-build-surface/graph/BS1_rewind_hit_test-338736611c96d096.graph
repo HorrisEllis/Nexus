@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS1_rewind_hit_test:338736611c96d096
+type: graph
+id: phase:BS1_rewind_hit_test:338736611c96d096
+context: dependency graph of phase BS1_rewind_hit_test
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676192
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676192
+lastSeenAt: 1792787676192
+fingerprint: null
+payload:
+  for: BS1_rewind_hit_test
+  kind: phase
+  repo: null
+  hash: 338736611c96d096
+  nodes:
+    - path: tests/probe/menu-overlay-hit-chromium.js
+      role: changes
+      exists: true
+      system: null
+    - path: ui/home/areas/shell.css
+      role: changes
+      exists: true
+      system: ui
+    - path: ui/tv-shell/tv-shell.css
+      role: changes
+      exists: true
+      system: ui
+    - path: tests/probe/_glass-probe.js
+      role: uses
+      exists: true
+      system: null
+  edges:
+    - from: tests/probe/menu-overlay-hit-chromium.js
+      to: tests/probe/_glass-probe.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

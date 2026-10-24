@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-one-contract-raid-releases-phasemap.spec::RN2_changelog_from_the_commits
+type: phase
+id: docs_2026-10-15-one-contract-raid-releases-phasemap.spec::RN2_changelog_from_the_commits
+context: >-
+  pipeline phase RN2_changelog_from_the_commits of
+  docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+intent: null
+summary: RN2_changelog_from_the_commits (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677607
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677607
+lastSeenAt: 1792787677607
+fingerprint: null
+payload:
+  id: RN2_changelog_from_the_commits
+  map: docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/release-notes.js
+  depends_on:
+    - RN1_versionium_tags_and_releases
+  blocks: []
+  spec: null
+  graph: 1e0e93783f21a1c4

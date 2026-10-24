@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_snapshot-trigger-phasemap.spec::SS2_snapshot_in_diagnostics
+type: phase
+id: docs_snapshot-trigger-phasemap.spec::SS2_snapshot_in_diagnostics
+context: pipeline phase SS2_snapshot_in_diagnostics of docs/snapshot-trigger-phasemap.spec
+intent: null
+summary: SS2_snapshot_in_diagnostics (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678347
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678347
+lastSeenAt: 1792787678347
+fingerprint: null
+payload:
+  id: SS2_snapshot_in_diagnostics
+  map: docs/snapshot-trigger-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a6929e53be935126

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM25_atlas_living_update
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM25_atlas_living_update
+context: >-
+  pipeline phase LM25_atlas_living_update of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM25_atlas_living_update (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675568
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675568
+lastSeenAt: 1792787675568
+fingerprint: null
+payload:
+  id: LM25_atlas_living_update
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - scripts/precommit-check.js
+    - loom/lib/changelog.js
+  depends_on:
+    - LM2_registry_as_hub_with_watchdog
+    - LM21_atlas_fact_extractors
+    - LM23_atlas_history_versions_calendar
+    - LM24_atlas_prose_layer
+  blocks: []
+  spec: null
+  graph: fffff5497b586859

@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792650734507
+exported_at: 1792787678061
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792650734507
-lastSeenAt: 1792650734507
+firstSeenAt: 1792787678061
+lastSeenAt: 1792787678061
 fingerprint: null
 payload:
   for: ND4_commands_and_capabilities_from_the_schemas
@@ -168,14 +168,25 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 4470939bf8678599
-    layer: 4
+    layer: 12
     deps:
       - docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
       - docs/2026-10-22-system-node-db-phasemap.spec::ND_D4_schema_driven_commands
     dependents:
       - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
     upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB18_nodes_in_relation_to_their_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB3_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
       - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
       - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
       - docs/2026-10-22-system-node-db-phasemap.spec::ND2_one_node_route_for_every_system
@@ -195,9 +206,14 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 4470939bf8678599 · layer 4 · blocked by ND3_each_server_serves_its_nodes,
+        layer 12 · ON THE CRITICAL PATH · blocked by ND3_each_server_serves_its_nodes,
         ND_D4_schema_driven_commands
       - >-
         depends on (2): ND3_each_server_serves_its_nodes, ND_D4_schema_driven_commands · all
-        upstream 8
+        upstream 20
       - 'needed by (1): ND5_every_agent_reaches_every_system · all downstream 2'
+    edges:
+      - from: docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+        kind: declared
+      - from: docs/2026-10-22-system-node-db-phasemap.spec::ND_D4_schema_driven_commands
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792502100080
+exported_at: 1792787678056
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502100080
-lastSeenAt: 1792502100080
+firstSeenAt: 1792787678056
+lastSeenAt: 1792787678056
 fingerprint: null
 payload:
   for: SF8_host_import
@@ -215,7 +215,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 2527b07c5dc17a5a
     layer: 4
     deps:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
@@ -238,6 +237,11 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 2527b07c5dc17a5a · layer 4
+      - layer 4
       - 'depends on (2): SF6_surface, BS16_import_fields · all upstream 10'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
+        kind: declared
+      - from: docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+        kind: declared

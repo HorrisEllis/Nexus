@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB4_template_fidelity
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB4_template_fidelity
+context: pipeline phase SB4_template_fidelity of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB4_template_fidelity (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676804
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676804
+lastSeenAt: 1792787676804
+fingerprint: null
+payload:
+  id: SB4_template_fidelity
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates/genesis.spec
+    - idearium/spec-engine/templates/architecture-spec.template.yaml
+    - lib/nexus-self/systems.js
+  depends_on:
+    - SB17_the_system_template_is_complete
+  blocks: []
+  spec: null
+  graph: b5cd3fe3d598abc0

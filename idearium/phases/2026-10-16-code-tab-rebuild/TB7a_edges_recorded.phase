@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB7a_edges_recorded
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB7a_edges_recorded
+context: pipeline phase TB7a_edges_recorded of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB7a_edges_recorded (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677667
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677667
+lastSeenAt: 1792787677667
+fingerprint: null
+payload:
+  id: TB7a_edges_recorded
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TB2_persistence_audit
+  blocks: []
+  spec: null
+  graph: 69330154410e55a9

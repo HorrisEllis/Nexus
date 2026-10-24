@@ -1,0 +1,159 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC2_any_order:6bc0af47ff8e008b
+type: graph
+id: phase:PC2_any_order:6bc0af47ff8e008b
+context: dependency graph of phase PC2_any_order
+intent: null
+summary: 13 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677798
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677798
+lastSeenAt: 1792787677798
+fingerprint: null
+payload:
+  for: PC2_any_order
+  kind: phase
+  repo: null
+  hash: 6bc0af47ff8e008b
+  nodes:
+    - path: cortex/core/raid/contract-adapters.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/phase-plan.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/capability-spec.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/verify-first.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/work-funnel.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-expectation-tests.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/capability-spec.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/verify-first.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: tests/modules/test-expectation-tests.test.js
+      to: lib/phase-plan.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC0a_what_a_piece_depends_on
+    dependents:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC6_assembled_and_checked_whole
+    upstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC0a_what_a_piece_depends_on
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC0b_first_kinds
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC0c_who_cuts
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
+    downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC6_assembled_and_checked_whole
+    blockedBy:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::PC3_verified_alone_resumed_by_recheck
+        files:
+          - cortex/core/raid/contract-adapters.js
+          - cortex/core/raid/contract-gates.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by PC1_the_point_first
+      - 'depends on (2): PC1_the_point_first, PC0a_what_a_piece_depends_on · all upstream 4'
+      - 'needed by (1): PC6_assembled_and_checked_whole'
+      - >-
+        same files as PC3_verified_alone_resumed_by_recheck with no order between them:
+        cortex/core/raid/contract-adapters.js, cortex/core/raid/contract-gates.js
+    edges:
+      - from: docs/2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
+        kind: declared
+      - from: docs/2026-10-17-pieces-not-order-phasemap.spec::PC0a_what_a_piece_depends_on
+        kind: declared

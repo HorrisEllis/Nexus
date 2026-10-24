@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P4_forge_shell_rebuild
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P4_forge_shell_rebuild
+context: pipeline phase P4_forge_shell_rebuild of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P4_forge_shell_rebuild (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787921237
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787921237
+lastSeenAt: 1792787921237
+fingerprint: null
+payload:
+  id: P4_forge_shell_rebuild
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/server.js
+    - loom/test/phasemap-map.test.js
+    - architect/schemas/index.js
+    - clear-glass/schemas/index.js
+    - copilot/schemas/index.js
+    - loom/scanners/phasemap-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 40a2f883e2298610

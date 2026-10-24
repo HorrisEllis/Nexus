@@ -1,0 +1,254 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N3_stray_root_files_found_after_N1:46553cc0a1125676
+type: graph
+id: phase:N3_stray_root_files_found_after_N1:46553cc0a1125676
+context: dependency graph of phase N3_stray_root_files_found_after_N1
+intent: null
+summary: 28 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675851
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675851
+lastSeenAt: 1792787675851
+fingerprint: null
+payload:
+  for: N3_stray_root_files_found_after_N1
+  kind: phase
+  repo: null
+  hash: 46553cc0a1125676
+  nodes:
+    - path: emerge/cortex-query/writeback.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge-ide.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: lib/blueprint-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/ollama-runtime.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: orchestrator/lib/autonomous-loop.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: tests/modules/ollama-runtime.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: ui/home/areas/agent-suite.js
+      role: changes
+      exists: true
+      system: ui
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cli/nexus-repl.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/vector-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: ollama/lib/dispatch.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/lib/model-inventory.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/jobs.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/models.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/autonomous-loop.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/snapshot/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: emerge/config.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/registry-components.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/siso/index.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ollama-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/lib/tape.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: ollama/ollama-runtime.js
+      to: lib/ollama-activity.js
+      kind: requires
+    - from: ollama/ollama-runtime.js
+      to: ollama/lib/tape.js
+      kind: requires
+    - from: orchestrator/lib/autonomous-loop.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: orchestrator/lib/autonomous-loop.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: emerge/emerge-ide.js
+      to: emerge/siso/index.js
+      kind: requires
+    - from: emerge/emerge-ide.js
+      to: emerge/config.js
+      kind: requires
+    - from: emerge/emerge-ide.js
+      to: emerge/registry-components.js
+      kind: requires
+    - from: ollama/config.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: ollama/ollama-runtime.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: ollama/ollama-runtime.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/autonomous-loop.js
+      kind: requires
+    - from: tests/modules/autonomous-loop.test.js
+      to: orchestrator/lib/autonomous-loop.js
+      kind: requires
+    - from: cli/nexus-repl.js
+      to: ollama/config.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/model-inventory.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/ollama-client.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/state.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/jobs.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/models.js
+      to: ollama/config.js
+      kind: requires
+  crossings:
+    - from: orchestrator/lib/autonomous-loop.js
+      to: cortex/snapshot/index.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: orchestrator/lib/autonomous-loop.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: clear-glass/src/copilot/bridge.js
+      to: ollama/ollama-runtime.js
+      fromSystem: clear-glass
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: idearium/agent-suite/index.js
+      to: ollama/ollama-runtime.js
+      fromSystem: idearium
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: cli/nexus-repl.js
+      to: ollama/config.js
+      fromSystem: cli
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+    dependents: []
+    upstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T4_cos_role_confirmed
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): N2_root_nexus_js_to_nexus_folder · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+        kind: inferred

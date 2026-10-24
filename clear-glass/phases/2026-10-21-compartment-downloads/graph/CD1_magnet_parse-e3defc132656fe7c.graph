@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792481794288
+exported_at: 1792787678033
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792481794288
-lastSeenAt: 1792481794288
+firstSeenAt: 1792787678033
+lastSeenAt: 1792787678033
 fingerprint: null
 payload:
   for: CD1_magnet_parse
@@ -34,7 +34,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 0c4fb6c30abee07a
     layer: 0
     deps: []
     dependents:
@@ -54,8 +53,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 0c4fb6c30abee07a · layer 0
+      - layer 0
       - 'depends on (0): —'
       - >-
         needed by (2): CD2_quarantine_downloads, CD3_verified_handoff · all downstream 5 · finishing
         it unlocks CD2_quarantine_downloads, CD3_verified_handoff
+    edges: []

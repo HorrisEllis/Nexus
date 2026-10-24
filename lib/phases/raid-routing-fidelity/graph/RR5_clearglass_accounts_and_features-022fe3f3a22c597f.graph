@@ -1,0 +1,79 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RR5_clearglass_accounts_and_features:022fe3f3a22c597f
+type: graph
+id: phase:RR5_clearglass_accounts_and_features:022fe3f3a22c597f
+context: dependency graph of phase RR5_clearglass_accounts_and_features
+intent: null
+summary: 5 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678315
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678315
+lastSeenAt: 1792787678315
+fingerprint: null
+payload:
+  for: RR5_clearglass_accounts_and_features
+  kind: phase
+  repo: null
+  hash: 022fe3f3a22c597f
+  nodes:
+    - path: docs/copilot-awareness-routing-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/account-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-router.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: lib/account-registry.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/account-registry.js
+      kind: requires
+    - from: lib/agent-router.js
+      to: lib/account-registry.js
+      kind: requires
+  crossings:
+    - from: lib/account-registry.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/raid-routing-fidelity-phasemap.spec::RR3_per_agent_config_in_cortex
+    dependents: []
+    upstream:
+      - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+      - docs/raid-routing-fidelity-phasemap.spec::RR3_per_agent_config_in_cortex
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): RR3_per_agent_config_in_cortex · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/raid-routing-fidelity-phasemap.spec::RR3_per_agent_config_in_cortex
+        kind: declared

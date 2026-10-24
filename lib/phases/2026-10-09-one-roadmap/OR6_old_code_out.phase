@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-roadmap-phasemap.spec::OR6_old_code_out
+type: phase
+id: docs_2026-10-09-one-roadmap-phasemap.spec::OR6_old_code_out
+context: pipeline phase OR6_old_code_out of docs/2026-10-09-one-roadmap-phasemap.spec
+intent: null
+summary: OR6_old_code_out (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677184
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677184
+lastSeenAt: 1792787677184
+fingerprint: null
+payload:
+  id: OR6_old_code_out
+  map: docs/2026-10-09-one-roadmap-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - _archive/2026-10-09-declutter/
+    - ui/ui-pulse.js
+    - ui/pulse.js
+    - ui/pipeline-tutorial.js
+    - scripts/_register-session-hooks.js
+    - security/e2e-channel.js
+    - guardian/lib/command-registry.js
+    - ui/consent/consent-gate.js
+    - cos/archetype/genesis-catalog.js
+    - clear-glass/seam/watchdog-gates.js
+    - run-all.js
+  depends_on:
+    - OR0_the_census
+  blocks: []
+  spec: null
+  graph: 6af214e0e32a3243

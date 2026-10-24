@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+context: >-
+  pipeline phase N2_root_nexus_js_to_nexus_folder of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: N2_root_nexus_js_to_nexus_folder (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675844
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675844
+lastSeenAt: 1792787675844
+fingerprint: null
+payload:
+  id: N2_root_nexus_js_to_nexus_folder
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - nexus/nexus-bus.js
+    - nexus/nexus-connect.js
+    - nexus/nexus-query.js
+    - nexus/nexus-knowledge.js
+    - nexus/nexus-cfr-influence.js
+    - ollama/ollama-runtime.js
+    - loom/templates/system-scaffold.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6088de94a4c19d4b

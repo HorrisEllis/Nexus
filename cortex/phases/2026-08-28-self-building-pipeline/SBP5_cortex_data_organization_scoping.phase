@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP5_cortex_data_organization_scoping
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP5_cortex_data_organization_scoping
+context: >-
+  pipeline phase SBP5_cortex_data_organization_scoping of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP5_cortex_data_organization_scoping (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675487
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675487
+lastSeenAt: 1792787675487
+fingerprint: null
+payload:
+  id: SBP5_cortex_data_organization_scoping
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6d939bafad4b1587

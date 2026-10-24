@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ST1_schema_for_everything_reusable:7d79572c6ac4587e
+type: graph
+id: phase:ST1_schema_for_everything_reusable:7d79572c6ac4587e
+context: dependency graph of phase ST1_schema_for_everything_reusable
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677911
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677911
+lastSeenAt: 1792787677911
+fingerprint: null
+payload:
+  for: ST1_schema_for_everything_reusable
+  kind: phase
+  repo: null
+  hash: 7d79572c6ac4587e
+  nodes:
+    - path: idearium/spec-engine/templates/genesis.spec
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+    dependents:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+    upstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+    downstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN3_maps_rendered_from_nodes
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+    blockedBy:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+    unlocks:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by IN0_baseline
+      - 'depends on (1): IN0_baseline'
+      - >-
+        needed by (1): PN1_phases_to_nodes · all downstream 6 · finishing it unlocks
+        PN1_phases_to_nodes
+    edges:
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+        kind: declared

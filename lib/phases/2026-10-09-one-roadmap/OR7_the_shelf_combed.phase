@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-roadmap-phasemap.spec::OR7_the_shelf_combed
+type: phase
+id: docs_2026-10-09-one-roadmap-phasemap.spec::OR7_the_shelf_combed
+context: pipeline phase OR7_the_shelf_combed of docs/2026-10-09-one-roadmap-phasemap.spec
+intent: null
+summary: OR7_the_shelf_combed (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677185
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677185
+lastSeenAt: 1792787677185
+fingerprint: null
+payload:
+  id: OR7_the_shelf_combed
+  map: docs/2026-10-09-one-roadmap-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/the-path.md
+  depends_on:
+    - OR3_his_decisions_applied
+  blocks: []
+  spec: null
+  graph: 5e186047ef132114

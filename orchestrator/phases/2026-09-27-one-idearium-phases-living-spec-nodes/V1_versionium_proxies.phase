@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V1_versionium_proxies
+type: phase
+id: docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V1_versionium_proxies
+context: >-
+  pipeline phase V1_versionium_proxies of
+  docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+intent: null
+summary: V1_versionium_proxies (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676050
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676050
+lastSeenAt: 1792787676050
+fingerprint: null
+payload:
+  id: V1_versionium_proxies
+  map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+    - cortex/registry-components.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2086de738783e68e

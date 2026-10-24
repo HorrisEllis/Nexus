@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792653394700
+exported_at: 1792787677927
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394700
-lastSeenAt: 1792653394700
+firstSeenAt: 1792787677927
+lastSeenAt: 1792787677927
 fingerprint: null
 payload:
   for: VF5_verdict_cache
@@ -61,7 +61,6 @@ payload:
       known: false
   ready: true
   dag:
-    dagHash: 4470939bf8678599
     layer: 2
     deps:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
@@ -81,8 +80,11 @@ payload:
           - lib/verify-first.js
     dangling: []
     lines:
-      - DAG 4470939bf8678599 · layer 2 · ready
+      - layer 2 · ready
       - 'depends on (1): VF1_verify_first · all upstream 2'
       - 'needed by (0): —'
       - 'same files as VF2_one_response_bundle with no order between them: lib/verify-first.js'
       - 'same files as VF4_second_opinion_on_need with no order between them: lib/verify-first.js'
+    edges:
+      - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+        kind: declared

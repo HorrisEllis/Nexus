@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P3_architect_canvas_onto_loom_registry
+type: phase
+id: docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P3_architect_canvas_onto_loom_registry
+context: >-
+  pipeline phase P3_architect_canvas_onto_loom_registry of
+  docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+intent: null
+summary: P3_architect_canvas_onto_loom_registry (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675950
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675950
+lastSeenAt: 1792787675950
+fingerprint: null
+payload:
+  id: P3_architect_canvas_onto_loom_registry
+  map: docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/data/registry.json
+  depends_on:
+    - P2_decide_D1_D2_D3
+  blocks: []
+  spec: null
+  graph: 0b52d656863e5839

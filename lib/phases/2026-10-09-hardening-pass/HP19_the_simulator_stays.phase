@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+context: pipeline phase HP19_the_simulator_stays of docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP19_the_simulator_stays (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677151
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677151
+lastSeenAt: 1792787677151
+fingerprint: null
+payload:
+  id: HP19_the_simulator_stays
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/sim/fake-tab.js
+    - tests/modules/test-guardian-stack-sim.test.js
+  depends_on:
+    - HP13_the_failure_is_put_at_the_right_gate
+    - HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+    - HP15_a_typed_prompt_is_never_sent_again
+    - HP16_a_job_nobody_waits_for_is_not_sent_later
+    - HP17_no_tab_is_said_in_seconds
+    - HP18_auto_tries_agents_with_a_tab_first
+  blocks: []
+  spec: null
+  graph: 68d2133829f37a8f

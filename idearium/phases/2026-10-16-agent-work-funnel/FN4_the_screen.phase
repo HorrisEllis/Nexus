@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-agent-work-funnel-phasemap.spec::FN4_the_screen
+type: phase
+id: docs_2026-10-16-agent-work-funnel-phasemap.spec::FN4_the_screen
+context: pipeline phase FN4_the_screen of docs/2026-10-16-agent-work-funnel-phasemap.spec
+intent: null
+summary: FN4_the_screen (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677647
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677647
+lastSeenAt: 1792787677647
+fingerprint: null
+payload:
+  id: FN4_the_screen
+  map: docs/2026-10-16-agent-work-funnel-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "PARTLY BUILT 0.60.95 — the Code tab's work panel (code-tab-panels.js), driven in Clear Glass
+    (MG-16); the Agent tab and the Plan's run row remain"
+  files:
+    - idearium/ui/js/app.js
+    - idearium/ui/js/plan-panel.js
+  depends_on:
+    - FN1_every_door_goes_through_it
+  blocks: []
+  spec: null
+  graph: ebe40a77dd865050

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P15_redundant_file_purge
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P15_redundant_file_purge
+context: >-
+  pipeline phase P15_redundant_file_purge of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P15_redundant_file_purge (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675904
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675904
+lastSeenAt: 1792787675904
+fingerprint: null
+payload:
+  id: P15_redundant_file_purge
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/diagnostics.js
+    - copilot/diagnostic-sweep.js
+    - lib/require-graph.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 879b6ff1790cef09

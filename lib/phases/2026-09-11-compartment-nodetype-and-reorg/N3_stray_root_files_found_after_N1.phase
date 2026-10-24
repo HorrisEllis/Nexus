@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N3_stray_root_files_found_after_N1
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N3_stray_root_files_found_after_N1
+context: >-
+  pipeline phase N3_stray_root_files_found_after_N1 of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: N3_stray_root_files_found_after_N1 (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675851
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675851
+lastSeenAt: 1792787675851
+fingerprint: null
+payload:
+  id: N3_stray_root_files_found_after_N1
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ollama/ollama-runtime.js
+    - orchestrator/lib/autonomous-loop.js
+    - emerge/emerge-ide.js
+    - tests/modules/ollama-runtime.test.js
+    - ollama/config.js
+    - lib/blueprint-index.js
+    - emerge/cortex-query/writeback.js
+    - ui/home/areas/agent-suite.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 46553cc0a1125676

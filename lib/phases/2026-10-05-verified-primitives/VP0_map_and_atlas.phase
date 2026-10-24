@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-verified-primitives-phasemap.spec::VP0_map_and_atlas
+type: phase
+id: docs_2026-10-05-verified-primitives-phasemap.spec::VP0_map_and_atlas
+context: pipeline phase VP0_map_and_atlas of docs/2026-10-05-verified-primitives-phasemap.spec
+intent: null
+summary: VP0_map_and_atlas (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677053
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677053
+lastSeenAt: 1792787677053
+fingerprint: null
+payload:
+  id: VP0_map_and_atlas
+  map: docs/2026-10-05-verified-primitives-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-05-verified-primitives-phasemap.spec
+    - docs/atlases/idearium-atlas.md
+    - docs/SPEC-REGISTRY.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0153feef7a3d9938

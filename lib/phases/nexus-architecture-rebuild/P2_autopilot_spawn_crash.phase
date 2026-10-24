@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P2_autopilot_spawn_crash
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P2_autopilot_spawn_crash
+context: pipeline phase P2_autopilot_spawn_crash of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P2_autopilot_spawn_crash (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678236
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678236
+lastSeenAt: 1792787678236
+fingerprint: null
+payload:
+  id: P2_autopilot_spawn_crash
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - nexus/autopilot.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7b3595f0354c6063

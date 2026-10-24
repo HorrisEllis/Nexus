@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DP6_reproduce_in_cos:c5f5f220559d416e
+type: graph
+id: phase:DP6_reproduce_in_cos:c5f5f220559d416e
+context: dependency graph of phase DP6_reproduce_in_cos
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677767
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677767
+lastSeenAt: 1792787677767
+fingerprint: null
+payload:
+  for: DP6_reproduce_in_cos
+  kind: phase
+  repo: null
+  hash: c5f5f220559d416e
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP4_every_ledger_into_rfr2
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+    dependents:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+    upstream:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP0d_one_gap_door
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP2_one_gap_door
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP4_every_ledger_into_rfr2
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+    downstream:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP9_crystallize_the_fix
+    blockedBy:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP4_every_ledger_into_rfr2
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+    unlocks:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by DP4_every_ledger_into_rfr2, DP5_the_case
+      - 'depends on (2): DP4_every_ledger_into_rfr2, DP5_the_case · all upstream 4'
+      - 'needed by (1): DP8_a_proven_fix · all downstream 2 · finishing it unlocks DP8_a_proven_fix'
+    edges:
+      - from: docs/2026-10-17-debugging-product-phasemap.spec::DP4_every_ledger_into_rfr2
+        kind: declared
+      - from: docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+        kind: declared

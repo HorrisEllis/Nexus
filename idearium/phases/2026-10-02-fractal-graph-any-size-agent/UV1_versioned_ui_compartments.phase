@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::UV1_versioned_ui_compartments
+type: phase
+id: docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::UV1_versioned_ui_compartments
+context: >-
+  pipeline phase UV1_versioned_ui_compartments of
+  docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+intent: null
+summary: UV1_versioned_ui_compartments (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676742
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676742
+lastSeenAt: 1792787676742
+fingerprint: null
+payload:
+  id: UV1_versioned_ui_compartments
+  map: docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - cos/host/gates/compartment.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6876460bb288b810

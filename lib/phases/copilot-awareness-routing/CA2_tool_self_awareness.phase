@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-awareness-routing-phasemap.spec::CA2_tool_self_awareness
+type: phase
+id: docs_copilot-awareness-routing-phasemap.spec::CA2_tool_self_awareness
+context: pipeline phase CA2_tool_self_awareness of docs/copilot-awareness-routing-phasemap.spec
+intent: null
+summary: CA2_tool_self_awareness (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678149
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678149
+lastSeenAt: 1792787678149
+fingerprint: null
+payload:
+  id: CA2_tool_self_awareness
+  map: docs/copilot-awareness-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 27716cb40c8eca89

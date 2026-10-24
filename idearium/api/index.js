@@ -888,12 +888,19 @@ function _underMapRoot(mapPath, expected, delivered) {
     return want.has(rest) && (p.startsWith(root || '\0') || rest.includes('/')) ? rest : p;
   });
 }
-async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, startedBy = null }) {
+async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null }) {
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
   const node = view.phases.find(p => p.map === map && p.phase_key === phase);
   if (!node) return { ok: false, status: 404, error: `no phase ${phase} in ${map}` };
-  if (node.status === 'complete') return { ok: false, status: 409, error: `${phase} is already complete`, extra: { code: 'ALREADY_COMPLETE' } };
+  // §0.60.226 SL7 — SL1 closes a proven phase, so every later build of it (resume, replan, retry) was refused here and the pipeline's own
+  // suites went red. Building a complete phase again is allowed only when asked for (rebuild: true), said on every row of the run.
+  const rebuilding = node.status === 'complete' && rebuild === true;
+  if (node.status === 'complete' && !rebuilding) return { ok: false, status: 409, error: `${phase} is already complete — to build it again, ask for it (rebuild: true, \`--rebuild\`)`, extra: { code: 'ALREADY_COMPLETE', remedy: 'rebuild: true' } };
+  // §0.60.225 NF1 — his run, 2026-10-23: RF2 (a root finding, "Not phases" in its own map) was sent to Gemini as a phase; it
+  // read guardian/config.js and lib/data-home.js (already fixed by DF1/DL3), changed nothing, and wrote a spec. A decision or a
+  // finding has nothing to build; anyway does not override this (it overrides an open dependency, not what the entry is).
+  if (node.kind === 'decision' || node.kind === 'finding') return { ok: false, status: 409, error: `not built: ${phase} is a ${node.kind} recorded in ${map}, not a phase to build`, extra: { code: 'NOT_A_PHASE', kind: node.kind } };
   const { maps, scope } = PH.mapsFor({ repo, repoDir: dir });
   const mapText = (maps.find(m => m.path === map) || {}).text || '';
   // §0.60.125 DG1 — James chose "Refuse, say why": a phase whose depends_on are still open (a decision not taken, a phase
@@ -921,6 +928,36 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // is assembled from the phase's mapping (MP1), DG1's view of its depends_on and the boundary census's systems; with none, the
   // phase is not built (no override: his "has to have"), and the refusal says how to give it one. With one, it is written as a
   // file before anything runs, and its hash goes on every row of the run.
+  // §0.60.228 SL8 — James, 2026-10-23: "agent needs to map dependancies if nexus cant map one." A phase MP1 could not place (no declared
+  // files, nothing in its words) is mapped by the repo's agent before DG2 would refuse it: one phase, MP4's brief, every file and edge
+  // checked by code (inside the repo, existing or in an existing folder; a depends_on that resolves and closes no cycle), kept per phase
+  // text so the next build asks nothing. Its depends_on are claims (agent:<by>, NC0): on the graph and the run, not a refusal (DG1 gates
+  // what the map declares). Nothing that fails the checks is used: then DG2 refuses NO_GRAPH, with what the agent answered.
+  let agentMap = null;
+  if (!(node.mapped && (node.mapped.files || []).length)) {
+    try {
+      const PMx = await import('../repo/phase-mapping.js');
+      const PFx = _require('../../lib/phase-files.js'), PDx = _require('../../lib/phase-dag.js');
+      const nexusScope = scope.source === 'nexus';
+      const aroot = nexusScope ? _require('../../lib/nexus-self/systems.js').ROOT : dir;
+      const isFile = (p) => { try { return !!aroot && fs.statSync(path.join(aroot, p)).isFile(); } catch (_) { return false; } };
+      const isDir = (p) => { try { return !!aroot && fs.statSync(path.join(aroot, p)).isDirectory(); } catch (_) { return false; } };
+      const ph = PFx.phasesOf(mapText, map).find(p => p.id === phase);
+      const ids = new Map(); for (const p of view.phases) { const k = `${p.map}::${p.phase_key}`; if (!ids.has(p.phase_key)) ids.set(p.phase_key, []); ids.get(p.phase_key).push(k); }
+      const resolveDep = (d) => { const id = PDx.refKey(d, (t) => ids.has(t)); const ks = id ? ids.get(id) || [] : []; return ks.find(k => k.startsWith(`${map}::`)) || (ks.length === 1 ? ks[0] : null); };
+      const down = new Set((dagSlice && dagSlice.downstream) || []);
+      const depChoices = view.phases.filter(p => p.map === map && p.phase_key !== phase && !p.kind).map(p => ({ id: p.phase_key, does: p.name || p.title })).slice(0, 60);
+      let folders = []; try { folders = fs.readdirSync(aroot, { withFileTypes: true }).filter(d => d.isDirectory() && !/^(\.|node_modules$|data$)/.test(d.name)).map(d => d.name); } catch (_) {}
+      const store = PMx.fileStore(path.join(IDEARIUM_DATA_DIR, 'phase-mapping', `${repo.uuid}.agent-maps.json`));
+      const r = ph ? await PMx.mapOne({ phase: ph, store, repoName: repo.name, folders, depChoices, exists: isFile, dirExists: isDir, resolveDep, wouldCycle: (k) => down.has(k),
+        ask: (prompt) => _agentAsk(prompt, { channel: 'idearium-phase-map', sessionId: `phase-map-${repo.uuid}`, kind: 'map:phase-files' }) }) : { ok: false, why: `${phase} not found in its map text` };
+      agentMap = { ok: !!r.ok, asked: !!r.asked, why: r.why, by: r.mapping ? r.mapping.by : null, files: r.mapping ? r.mapping.files.map(f => f.path) : [], dependsOn: r.mapping ? r.mapping.dependsOn : [], refused: r.mapping ? r.mapping.refused : [] };
+      if (r.ok) {
+        let env = null; try { if (aroot) env = _require('../../lib/phase-map-auto.js').envFromTree(aroot); } catch (_) { env = null; }
+        node.mapped = PMx.mapped(r.mapping, { phase: ph, env });
+      }
+    } catch (e) { agentMap = { ok: false, asked: false, why: `the agent mapping could not run: ${e.message}` }; }
+  }
   let phaseGraph = null;
   try {
     const PG = _require('../../lib/phase-graph.js');
@@ -930,7 +967,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   } catch (e) { phaseGraph = { ready: false, missing: [`the graph could not be built: ${e.message}`], remedy: null }; }
   if (phaseGraph && dagSlice) phaseGraph.dag = dagSlice;   // §0.60.172 DG3 — the phase's place in the whole
   if (!phaseGraph.ready) {
-    return { ok: false, status: 409, error: `not built: ${phase} has no dependency graph — ${phaseGraph.missing.join('; ')}${phaseGraph.remedy ? `. ${phaseGraph.remedy}` : ''}`, extra: { code: 'NO_GRAPH', missing: phaseGraph.missing, remedy: phaseGraph.remedy } };
+    const am = agentMap && !agentMap.ok ? [`the agent could not map it: ${agentMap.why}`] : [];   // §0.60.228 SL8 — what the agent answered, said
+    return { ok: false, status: 409, error: `not built: ${phase} has no dependency graph — ${[...phaseGraph.missing, ...am].join('; ')}${phaseGraph.remedy ? `. ${phaseGraph.remedy}` : ''}`, extra: { code: 'NO_GRAPH', missing: [...phaseGraph.missing, ...am], remedy: phaseGraph.remedy, ...(agentMap ? { agentMap } : {}) } };
   }
   let phaseGraphFile = null;
   try {
@@ -974,6 +1012,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const runStartTs = Date.now();
   const runId = `phrun-${runStartTs.toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
   const base = { runId, repoUuid: repo.uuid, targetRepo: target.uuid, map, phase, phaseUuid: node.uuid, title: node.title,
+    ...(rebuilding ? { rebuild: true } : {}),   // §0.60.226 SL7 — a complete phase built again, on request
+    ...(agentMap && agentMap.ok ? { mappedBy: { by: agentMap.by, asked: agentMap.asked, files: agentMap.files, dependsOn: agentMap.dependsOn } } : {}),   // §0.60.228 SL8 — the graph came from the agent's checked mapping
     startedBy: startedBy || { who: 'unknown', whence: 'unknown' },   // 0.60.188 RC7 — who started this run, on every row
     ...(depsGate && depsGate.open.length ? { depsOverride: depsGate.open.map(o => o.key) } : {}),   // §0.60.125 DG1 — built anyway: what was still open, on every row
     graphHash: phaseGraph.hash, graphFile: phaseGraphFile ? path.relative(IDEARIUM_DATA_DIR, phaseGraphFile).replace(/\\/g, '/') : null };   // §0.60.147 DG2 — the graph it was built against
@@ -1027,7 +1067,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // (2) active (a map that will not take the edit is reported, not fatal)
   let statusNote = null;
   if (node.status !== 'active') {
-    const st = await _phaseSetStatus(repo, { map, phase, status: 'active', force: true, reason: `phase ${phase} build started (${runId})` });
+    const st = await _phaseSetStatus(repo, { map, phase, status: 'active', force: true, reason: `phase ${phase} build started (${runId})${rebuilding ? ' — built again on request' : ''}` });
     if (!st.ok) statusNote = st.error;
   }
   const depsDone = view.phases.filter(p => node.depends_on.includes(p.uuid) && p.status === 'complete').map(p => p.phase_key);
@@ -1612,7 +1652,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const mapBase = map.split('/').pop().replace(/\.spec$/, '');
     const file = contractFile;
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    const inputs = root && fs.existsSync(path.join(root, map)) ? [{ id: 'phasemap', path: map, note: 'the phase as its map writes it' }] : [];
+    const inputs = root && fs.existsSync(path.join(root, map)) ? [{ id: 'phasemap', path: map, phase, note: 'the phase as its map writes it (its own block, its status lines left out: SL7)' }] : [];
     let onDisk = false; try { onDisk = _require('../../lib/repo-inject.js').getMode(target.uuid) !== 'review'; } catch (_) {}
     const built = whole ? CA.fromWholePhase({ id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || '', inputs, message })   // §BR1 — no file named: the whole phase, one brick
       : CA.fromPhasePlan(plan, { id: `${mapBase}.${phase}`, phaseKey: phase, title: node.title, intent: note || plan.intent || '', inputs, onDisk, root, phaseHash });
@@ -3623,6 +3663,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','phases','closes'],       'repo.phases.closes'],   // §SL1 0.60.223 the phases its runs closed (and reopened)
     ['POST',   ['api','repos',    ':uuid','phases','close'],        'repo.phases.close'],    // §SL1 0.60.223 check one run again: closes its phase if proven and landed
     ['POST',   ['api','repos',    ':uuid','phases','evidence'],     'repo.phases.evidence'], // §SL2 0.60.224 done by evidence: its own tests run; dry run unless apply
+    ['POST',   ['api','repos',    ':uuid','phases','groom'],        'repo.phases.groom'],    // §SL3 0.60.227 the DAG groomed: proposals from MP1 + DG3; dry run unless apply
+    ['GET',    ['api','repos',    ':uuid','phases','nodes'],        'repo.phases.nodes'],    // §SL9 0.60.229 every phase's .phase node, per owner system: written, missing, stale
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
     ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
@@ -9075,6 +9117,61 @@ async function handle(req, res, route, query, body) {
       }
       return ok(res, { ...r, ran: r.ran.map(x => ({ file: x.file, passed: x.passed, timedOut: !!x.timedOut, ms: x.ms, tail: x.passed ? undefined : x.tail })) });
     }
+    case 'repo.phases.nodes': {
+      // 0.60.229 SL9 — James, 2026-10-23: "decompose the phases into .phase with the dependancy graph per phase node. then move them into the
+      // repsective systems". The nodes are written by the compile step (node emerge/compiler/phase-specs.js --all), committed with the code;
+      // this reads what is written, through lib only (idearium → emerge would be a new crossing, DG2): the nodes per owner system, the
+      // phases of the maps with no node yet, and nodes whose phase is in no map any more.
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const PH = await import('../repo/phases.js');
+      const NEx = _require('../../lib/node-export.js'), PDx = _require('../../lib/phase-dag.js');
+      const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
+      const root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);
+      const want = new Set(); const dag = PDx.build((m.maps || []).map(x => ({ path: x.path, text: x.text || '' })));
+      for (const n of Object.values(dag.nodes)) if (!n.decision && !n.finding) want.add(n.key);
+      const have = new Map(), bySystem = {};
+      let tops = []; try { tops = fs.readdirSync(root, { withFileTypes: true }).filter(d => d.isDirectory() && !/^(\.|node_modules$|_archive$|data$)/.test(d.name)).map(d => d.name); } catch (_) {}
+      for (const t of tops) {
+        const pd = path.join(root, t, 'phases'); if (!fs.existsSync(pd)) continue;
+        for (const md of fs.readdirSync(pd, { withFileTypes: true })) {
+          if (!md.isDirectory() || md.name.startsWith('_')) continue;
+          for (const f of fs.readdirSync(path.join(pd, md.name)).filter(x => x.endsWith('.phase'))) {
+            let pl = null; try { pl = NEx.fromYaml(fs.readFileSync(path.join(pd, md.name, f), 'utf8')).payload; } catch (_) { continue; }
+            have.set(`${pl.map}::${pl.id}`, `${t}/phases/${md.name}/${f}`); bySystem[t] = (bySystem[t] || 0) + 1;
+          }
+        }
+      }
+      const missing = [...want].filter(k => !have.has(k)).sort(), stale = [...have.keys()].filter(k => !want.has(k)).sort();
+      return ok(res, { nodes: have.size, phases: want.size, bySystem, missing: missing.slice(0, 200), missingCount: missing.length, stale: stale.map(k => ({ key: k, file: have.get(k) })).slice(0, 200), staleCount: stale.length,
+        remedy: missing.length || stale.length ? 'write them: node emerge/compiler/phase-specs.js --all (the compile step; the nodes are committed with the code)' : null });
+    }
+    case 'repo.phases.groom': {
+      // 0.60.227 SL3 — James, 2026-10-23: "need to do something about the dependancy graph." lib/phase-groom.js: files from a phase's own
+      // words, depends_on from shared files and same-file order (never closing a cycle), and what needs a person. A dry run unless
+      // { apply: true }; applied, the map edits go through the one map writer (_phaseWriteMany: the apply gate for Nexus, a repo version
+      // for a project), only keys a phase lacks are added (lib/phase-files.js applyTo).
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const G = _require('../../lib/phase-groom.js');
+      const PH = await import('../repo/phases.js');
+      const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
+      const root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);
+      const b = body || {};
+      const maps = (m.maps || []).filter(x => !b.map || x.path === b.map).map(x => ({ path: x.path, text: x.text || '' }));
+      if (!maps.length) return err(res, 404, 'this repo has no phasemaps');
+      const r = G.groom({ maps, root });
+      const a = G.apply({ maps, proposals: r.proposals });
+      let written = null;
+      if (b.apply === true && a.changes.length) {
+        const w = await _phaseWriteMany(repo, m.scope, a.changes.map(c => ({ path: c.path, content: c.content })), m.snapshot, `phases groomed (SL3): ${r.stats.files} given files from their own words, ${r.stats.deps} a depends_on`);
+        if (!w || !w.ok) return err(res, (w && w.status) || 500, `not written: ${(w && w.error) || 'the write failed'}`);
+        written = { maps: a.changes.length, files: a.changes.reduce((x, c) => x + c.files, 0), deps: a.changes.reduce((x, c) => x + c.deps, 0), via: w.via || null };
+        getIdeaOS().emit('idearium.repo.phases.groomed', { repoUuid: repo.uuid, ...written });
+      }
+      return ok(res, { dryRun: !written, stats: r.stats, lines: G.lines(r), proposals: r.proposals.slice(0, parseInt(b.limit, 10) || 200),
+        forAPerson: r.forAPerson.filter(x => b.all || x.kind !== 'unplaced').slice(0, 300), pending: { maps: a.changes.length }, refused: a.refused, written });
+    }
     case 'repo.phases.close': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -9332,7 +9429,7 @@ async function handle(req, res, route, query, body) {
         if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
         map = hits[0].map;
       }
-      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true, anyway: body.anyway === true });
+      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true, anyway: body.anyway === true, rebuild: body.rebuild === true });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
     }

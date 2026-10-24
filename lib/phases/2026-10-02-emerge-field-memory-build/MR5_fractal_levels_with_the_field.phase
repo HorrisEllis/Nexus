@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
+context: >-
+  pipeline phase MR5_fractal_levels_with_the_field of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR5_fractal_levels_with_the_field (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676629
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676629
+lastSeenAt: 1792787676629
+fingerprint: null
+payload:
+  id: MR5_fractal_levels_with_the_field
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+  depends_on:
+    - RF1_relational_field
+  blocks: []
+  spec: null
+  graph: b0db8d29198ad6c3

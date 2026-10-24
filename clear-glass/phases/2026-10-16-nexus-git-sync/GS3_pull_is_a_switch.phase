@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-nexus-git-sync-phasemap.spec::GS3_pull_is_a_switch
+type: phase
+id: docs_2026-10-16-nexus-git-sync-phasemap.spec::GS3_pull_is_a_switch
+context: pipeline phase GS3_pull_is_a_switch of docs/2026-10-16-nexus-git-sync-phasemap.spec
+intent: null
+summary: GS3_pull_is_a_switch (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677723
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677723
+lastSeenAt: 1792787677723
+fingerprint: null
+payload:
+  id: GS3_pull_is_a_switch
+  map: docs/2026-10-16-nexus-git-sync-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - GS2_nexus_as_a_repo
+  blocks: []
+  spec: null
+  graph: 39af288a02e05a34

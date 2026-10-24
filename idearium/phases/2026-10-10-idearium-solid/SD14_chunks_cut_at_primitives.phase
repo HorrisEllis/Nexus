@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD14_chunks_cut_at_primitives
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD14_chunks_cut_at_primitives
+context: pipeline phase SD14_chunks_cut_at_primitives of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD14_chunks_cut_at_primitives (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677240
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677240
+lastSeenAt: 1792787677240
+fingerprint: null
+payload:
+  id: SD14_chunks_cut_at_primitives
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chunker/index.js
+    - idearium/spec-engine/index.js
+    - idearium/spec-engine/chunk-dispatch.js
+  depends_on:
+    - SD12_a_spec_starts_from_its_primitives
+  blocks: []
+  spec: null
+  graph: 9c0e825565000d6e

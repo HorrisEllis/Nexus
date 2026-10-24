@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BR8_clearglass_full_agent_tool_parity:62e54d03c6ab830a
+type: graph
+id: phase:BR8_clearglass_full_agent_tool_parity:62e54d03c6ab830a
+context: dependency graph of phase BR8_clearglass_full_agent_tool_parity
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787675464
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675464
+lastSeenAt: 1792787675464
+fingerprint: null
+payload:
+  for: BR8_clearglass_full_agent_tool_parity
+  kind: phase
+  repo: null
+  hash: 62e54d03c6ab830a
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 5
+    deps:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX16_persistent_listener_registry_and_callable_elements
+    dependents: []
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL21_agent_mesh_real_connection
+      - docs/2026-08-23-backlog-phasemap.spec::BL24_userscript_suite_enterprise_grade
+      - docs/2026-08-23-backlog-phasemap.spec::BL28_background_tabs_setting
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX11_plugin_architecture_decision
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX16_persistent_listener_registry_and_callable_elements
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX3_talk_to_agent_launcher
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX4_provider_tab_tool_loop
+    downstream: []
+    blockedBy:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX16_persistent_listener_registry_and_callable_elements
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by TX16_persistent_listener_registry_and_callable_elements
+      - 'depends on (1): TX16_persistent_listener_registry_and_callable_elements · all upstream 8'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX16_persistent_listener_registry_and_callable_elements
+        kind: declared

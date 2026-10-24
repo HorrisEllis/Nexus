@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR6_per_output_build_surface:67b0a4481b1bbd4f
+type: graph
+id: phase:SR6_per_output_build_surface:67b0a4481b1bbd4f
+context: dependency graph of phase SR6_per_output_build_surface
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675716
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675716
+lastSeenAt: 1792787675716
+fingerprint: null
+payload:
+  for: SR6_per_output_build_surface
+  kind: phase
+  repo: null
+  hash: 67b0a4481b1bbd4f
+  nodes:
+    - path: guardian/artifact-upload.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/artifact-upload.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/artifact-upload.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::C3_component_import_decomposition
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::C3_component_import_decomposition
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::C3_component_import_decomposition
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by C3_component_import_decomposition
+      - 'depends on (1): C3_component_import_decomposition'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::C3_component_import_decomposition
+        kind: declared

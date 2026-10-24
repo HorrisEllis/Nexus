@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-design-surface-phasemap.spec::DS8_the_registry_routes_the_ui_reflects
+type: phase
+id: docs_2026-10-10-design-surface-phasemap.spec::DS8_the_registry_routes_the_ui_reflects
+context: >-
+  pipeline phase DS8_the_registry_routes_the_ui_reflects of
+  docs/2026-10-10-design-surface-phasemap.spec
+intent: null
+summary: DS8_the_registry_routes_the_ui_reflects (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677203
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677203
+lastSeenAt: 1792787677203
+fingerprint: null
+payload:
+  id: DS8_the_registry_routes_the_ui_reflects
+  map: docs/2026-10-10-design-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - eravos/ui/kernel/kernel.js
+    - eravos/ui/runtime/wire-system.js
+    - loom/driver.js
+    - nexus/nexus-bus.js
+  depends_on:
+    - DS7_tools_are_mods
+  blocks: []
+  spec: null
+  graph: 9db061f88abf55a1

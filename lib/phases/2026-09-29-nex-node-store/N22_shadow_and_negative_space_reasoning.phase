@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N22_shadow_and_negative_space_reasoning
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N22_shadow_and_negative_space_reasoning
+context: >-
+  pipeline phase N22_shadow_and_negative_space_reasoning of
+  docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N22_shadow_and_negative_space_reasoning (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676283
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676283
+lastSeenAt: 1792787676283
+fingerprint: null
+payload:
+  id: N22_shadow_and_negative_space_reasoning
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/step-gate.js
+  depends_on:
+    - N21_no_empty_generation_event_gates
+    - N14_failure_mode_field
+  blocks: []
+  spec: null
+  graph: 4843bec3597696fa

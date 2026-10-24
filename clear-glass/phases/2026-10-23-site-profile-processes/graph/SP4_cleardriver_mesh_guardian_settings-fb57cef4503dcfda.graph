@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792754193314
+exported_at: 1792787678094
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792754193314
-lastSeenAt: 1792754193314
+firstSeenAt: 1792787678094
+lastSeenAt: 1792787678094
 fingerprint: null
 payload:
   for: SP4_cleardriver_mesh_guardian_settings
@@ -187,7 +187,6 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: dbdd2256c2bfe7c4
     layer: 2
     deps:
       - docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
@@ -202,6 +201,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG dbdd2256c2bfe7c4 · layer 2
+      - layer 2
       - 'depends on (1): SP1_one_resolver_for_every_feature · all upstream 3'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
+        kind: declared

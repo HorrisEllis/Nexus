@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
 context: pipeline phase BW1_borrowing of docs/2026-10-20-belief-loop-phasemap.spec
 intent: null
-summary: BW1_borrowing (library) — 2 file(s)
+summary: BW1_borrowing (library) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792456303358
+exported_at: 1792787677976
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303358
-lastSeenAt: 1792456303358
+firstSeenAt: 1792787677976
+lastSeenAt: 1792787677976
 fingerprint: null
 payload:
   id: BW1_borrowing
@@ -21,7 +21,6 @@ payload:
   status: OPEN
   files:
     - lib/borrowing.js
-    - lib/node-schemas/schema.correspondence
   depends_on:
     - XD1_cross_domain_verification
     - CY2_invariants_are_crystals

@@ -7,11 +7,11 @@ intent: null
 summary: 10 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792653394709
+exported_at: 1792787677931
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394709
-lastSeenAt: 1792653394709
+firstSeenAt: 1792787677931
+lastSeenAt: 1792787677931
 fingerprint: null
 payload:
   for: UI3_ideas_and_notes_as_one
@@ -90,7 +90,6 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 4470939bf8678599
     layer: 2
     deps:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
@@ -101,9 +100,16 @@ payload:
     downstream: []
     blockedBy: []
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-10-19-pipeline-root-causes-phasemap.spec::ID1_ideas_wired_through
+        files:
+          - lib/work-funnel.js
     dangling: []
     lines:
-      - DAG 4470939bf8678599 · layer 2 · ready
+      - layer 2 · ready
       - 'depends on (1): VF1_verify_first · all upstream 2'
       - 'needed by (0): —'
+      - 'same files as ID1_ideas_wired_through with no order between them: lib/work-funnel.js'
+    edges:
+      - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+        kind: declared

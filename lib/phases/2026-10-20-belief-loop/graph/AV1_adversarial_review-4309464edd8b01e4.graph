@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 6 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303353
+exported_at: 1792787677973
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303353
-lastSeenAt: 1792456303353
+firstSeenAt: 1792787677973
+lastSeenAt: 1792787677973
 fingerprint: null
 payload:
   for: AV1_adversarial_review
@@ -236,7 +236,6 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
     layer: 7
     deps:
       - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
@@ -264,6 +263,11 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 7583ffef0c495b95 · layer 7 · blocked by CF1_confidence_from_evidence, GW1_gate_primitive
+      - layer 7 · blocked by CF1_confidence_from_evidence, GW1_gate_primitive
       - 'depends on (2): CF1_confidence_from_evidence, GW1_gate_primitive · all upstream 13'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+        kind: declared
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+        kind: declared

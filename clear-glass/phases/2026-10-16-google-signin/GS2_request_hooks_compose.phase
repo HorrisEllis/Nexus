@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-google-signin-phasemap.spec::GS2_request_hooks_compose
+type: phase
+id: docs_2026-10-16-google-signin-phasemap.spec::GS2_request_hooks_compose
+context: pipeline phase GS2_request_hooks_compose of docs/2026-10-16-google-signin-phasemap.spec
+intent: null
+summary: GS2_request_hooks_compose (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677703
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677703
+lastSeenAt: 1792787677703
+fingerprint: null
+payload:
+  id: GS2_request_hooks_compose
+  map: docs/2026-10-16-google-signin-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.106
+  files:
+    - clear-glass/src/contexts/session-headers.js
+    - clear-glass/src/contexts/manager.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0889c4dbc2a8419e

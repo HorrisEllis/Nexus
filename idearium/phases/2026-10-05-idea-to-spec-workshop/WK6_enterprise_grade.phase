@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK6_enterprise_grade
+type: phase
+id: docs_2026-10-05-idea-to-spec-workshop-phasemap.spec::WK6_enterprise_grade
+context: pipeline phase WK6_enterprise_grade of docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+intent: null
+summary: WK6_enterprise_grade (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677039
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677039
+lastSeenAt: 1792787677039
+fingerprint: null
+payload:
+  id: WK6_enterprise_grade
+  map: docs/2026-10-05-idea-to-spec-workshop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/workshop.html
+    - idearium/ui/css/void-theme.css
+  depends_on:
+    - WK3_the_agent_drafts_every_block
+  blocks: []
+  spec: null
+  graph: 0d8254a618965546

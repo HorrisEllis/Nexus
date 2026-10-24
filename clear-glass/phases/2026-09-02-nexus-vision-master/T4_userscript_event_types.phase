@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::T4_userscript_event_types
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::T4_userscript_event_types
+context: pipeline phase T4_userscript_event_types of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: T4_userscript_event_types (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675600
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675600
+lastSeenAt: 1792787675600
+fingerprint: null
+payload:
+  id: T4_userscript_event_types
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lifeline.js
+    - clear-glass/renderer/guardian-picker.js
+    - clear-glass/src/core/bus.js
+    - clear-glass/test/session-hub.test.js
+  depends_on:
+    - T2_event_taxonomy_per_system
+  blocks: []
+  spec: null
+  graph: 921142887d6d72f5

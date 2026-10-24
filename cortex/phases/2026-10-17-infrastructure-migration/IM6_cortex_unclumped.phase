@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-infrastructure-migration-phasemap.spec::IM6_cortex_unclumped
+type: phase
+id: docs_2026-10-17-infrastructure-migration-phasemap.spec::IM6_cortex_unclumped
+context: pipeline phase IM6_cortex_unclumped of docs/2026-10-17-infrastructure-migration-phasemap.spec
+intent: null
+summary: IM6_cortex_unclumped (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677794
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677794
+lastSeenAt: 1792787677794
+fingerprint: null
+payload:
+  id: IM6_cortex_unclumped
+  map: docs/2026-10-17-infrastructure-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fd9d4833cc2172df

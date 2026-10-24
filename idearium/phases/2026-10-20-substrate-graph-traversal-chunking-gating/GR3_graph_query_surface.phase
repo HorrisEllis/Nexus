@@ -9,11 +9,11 @@ intent: null
 summary: GR3_graph_query_surface (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792456416763
+exported_at: 1792787677985
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416763
-lastSeenAt: 1792456416763
+firstSeenAt: 1792787677985
+lastSeenAt: 1792787677985
 fingerprint: null
 payload:
   id: GR3_graph_query_surface
@@ -32,4 +32,4 @@ payload:
   blocks:
     - MOD-GRAPH-QUERY
   spec: docs/substrate.spec
-  graph: d0e57a5baa382165
+  graph: 270c359dad6ee6b9

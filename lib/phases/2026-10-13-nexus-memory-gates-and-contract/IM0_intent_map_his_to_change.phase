@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::IM0_intent_map_his_to_change
+type: phase
+id: docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::IM0_intent_map_his_to_change
+context: >-
+  pipeline phase IM0_intent_map_his_to_change of
+  docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+intent: null
+summary: IM0_intent_map_his_to_change (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677417
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677417
+lastSeenAt: 1792787677417
+fingerprint: null
+payload:
+  id: IM0_intent_map_his_to_change
+  map: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/reasoning-route.js
+    - lib/pipeline-routing.js
+    - idearium/ui/settings.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6349e71baccd8530

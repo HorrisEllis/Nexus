@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P4_blueprint_as_canvas_mode
+type: phase
+id: docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P4_blueprint_as_canvas_mode
+context: >-
+  pipeline phase P4_blueprint_as_canvas_mode of
+  docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+intent: null
+summary: P4_blueprint_as_canvas_mode (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675950
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675950
+lastSeenAt: 1792787675950
+fingerprint: null
+payload:
+  id: P4_blueprint_as_canvas_mode
+  map: docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P3_architect_canvas_onto_loom_registry
+  blocks: []
+  spec: null
+  graph: 03cf72ff64e11941

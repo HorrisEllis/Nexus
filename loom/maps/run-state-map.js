@@ -111,6 +111,7 @@ const FILES = [
   ['lib/safe-watch.js', I('lib/safe-watch.js'), []],   // §0.60.170 RC1: an fs.watch whose async EPERM cannot take the process down; re-arms
   ['lib/phase-census.js', I('lib/phase-census.js'), [I('lib/phase-dag.js')]],
   ['lib/build-queue.js', I('lib/build-queue.js'), [I('lib/phase-dag.js')]],
+  ['lib/phase-groom.js', I('lib/phase-groom.js'), [I('lib/phase-dag.js'), I('lib/phase-files.js'), I('lib/phase-map-auto.js')]],   // 0.60.227 SL3 the DAG groomed: proposals from MP1 + DG3, for a person what needs a choice
   ['lib/phase-close.js', I('lib/phase-close.js'), [I('lib/test-map.js')]],   // 0.60.223 SL1 closes a proven, landed phase; 0.60.224 SL2 byEvidence (its own tests, through lib/test-map.js)   // 0.60.223 SL1 a proven, landed phase closes itself; a revert reopens it (the writer is passed in)   // 0.60.222 SL0 what can be built now, and why every other open phase cannot
   ['lib/change-entry.js', I('lib/change-entry.js'), [I('lib/nexus-self/inject-gate.js')]],
   ['lib/chat-ledger-client.js', I('lib/chat-ledger-client.js'), []],   // 0.60.192 Clear Glass's live chat ledgers read through its routes (:7702), never its code   // 0.60.190 APV1 an approved change's change-log entry (it rides on its Versionium commit)   // 0.60.188 CNS1 every phase judged against its evidence (commits, releases, files, proof)
@@ -154,6 +155,22 @@ const CONSUMERS = [
   [I('idearium/cli/route-commands.js'), I('lib/phase-close.js'), '0.60.223 SL1 `repo close <repo> <runId>` and `repo closes <repo>` through the route'],
   [I('idearium/ui/js/phases.js'), I('lib/phase-close.js'), '0.60.223 SL1 the phase panel\'s "closed by" / "reopened" through GET …/phases/closes'],
   [I('idearium/ui/js/phases.js'), I('lib/build-queue.js'), '0.60.222 SL0 the rail\'s "can be built now" through GET …/phases/next'],
+  [I('idearium/api/index.js'), I('lib/phase-groom.js'), '0.60.227 SL3 repo.phases.groom: a dry run, apply through _phaseWriteMany'],
+  [I('idearium/api/index.js'), I('idearium/repo/phase-mapping.js'), '0.60.228 SL8 _phaseBuild: mapOne when MP1 placed nothing (before DG2), mapped() into the graph; the kept mappings per repo'],
+  [I('idearium/repo/phase-mapping.js'), I('lib/phase-files.js'), '0.60.228 SL8 brief({ deps }) and parseAnswer (files and depends_on) for one phase'],
+  [I('idearium/repo/phase-mapping.js'), I('lib/phase-map-auto.js'), '0.60.228 SL8 mapped(): the agent\'s existing files get their requires and consumers through mapPhase'],
+  [I('idearium/ui/js/plan-panel.js'), I('idearium/repo/build-plan.js'), '0.60.228 SL8/SL7 a run\'s "mapped by" and "built again on request" through historyOf'],
+  [I('idearium/cli/route-commands.js'), I('lib/phase-groom.js'), '0.60.227 SL3 `repo groom <repo> [--apply]` through the route'],
+  [I('idearium/ui/js/phases.js'), I('lib/phase-groom.js'), '0.60.227 SL3 the rail\'s "groom the graph" through POST …/phases/groom'],
+  [I('lib/phase-deps-gate.js'), I('lib/phase-dag.js'), '0.60.227 SL3 refKey/items/decisionsOf: one depends_on reader; DG1 reads every phase as the DAG does'],
+  [I('emerge/compiler/phase-specs.js'), I('lib/phase-dag.js'), '0.60.229 SL9 writeAll/checkAll: one DAG, parsePhasemap through lib (no emerge → loom crossing)'],
+  [I('lib/phase-deps-gate.js'), I('lib/phase-dag.js'), '0.60.229 parsePhasemap: DG1 reads loom\'s parser through the DAG (the SL3 lib → loom crossing designed out)'],
+  [I('idearium/api/index.js'), I('lib/node-export.js'), '0.60.229 SL9 repo.phases.nodes reads the written .phase nodes (no idearium → emerge crossing)'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '0.60.229 SL9 `repo nodes <repo>` through GET …/phases/nodes'],
+  [I('idearium/ui/js/phases.js'), I('idearium/api/index.js'), '0.60.229 SL9 the rail\'s "phase nodes" through GET …/phases/nodes'],
+  [I('lib/phase-graph.js'), I('lib/phase-dag.js'), '0.60.227 SL3 refKey: a depends_on item read as its phase id'],
+  [I('idearium/repo/phase-mapping.js'), I('lib/phase-dag.js'), '0.60.227 SL3 no inferred depends_on is written that would close a cycle'],
+  [I('idearium/api/index.js'), I('cortex/core/raid/contract-gates.js'), '0.60.226 SL7 a phase\'s contract input is its own block (phaseBlock): status writes do not stale its bricks'],
   [I('lib/work-journal.js'), I('lib/chat-ledger-client.js'), '0.60.192 _chat(): the contract ledger\'s reply text from the chat ledger (it pointed at :7701, the SSE port)'],
   [I('guardian/lib/chat-transcripts.js'), I('lib/chat-ledger-client.js'), '0.60.192 ledgerReplyFor(): the reply recovery\'s last source — his download manager\'s live chat ledger'],
   [I('lib/repo-inject.js'), I('lib/change-entry.js'), '0.60.190 APV2 an approved/reverted inject\'s entry, noted on its commit or queued for the gate\'s sync commit'],

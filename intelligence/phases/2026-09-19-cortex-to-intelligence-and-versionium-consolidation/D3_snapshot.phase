@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D3_snapshot
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D3_snapshot
+context: >-
+  pipeline phase D3_snapshot of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: D3_snapshot (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675972
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675972
+lastSeenAt: 1792787675972
+fingerprint: null
+payload:
+  id: D3_snapshot
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/server.js
+    - intelligence/index.js
+    - docs/SPEC-REGISTRY.spec
+    - intelligence/relational-field.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e5fca670ff95bc86

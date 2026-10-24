@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP9_the_plan_is_current_work
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP9_the_plan_is_current_work
+context: pipeline phase HP9_the_plan_is_current_work of docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP9_the_plan_is_current_work (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677137
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677137
+lastSeenAt: 1792787677137
+fingerprint: null
+payload:
+  id: HP9_the_plan_is_current_work
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/roadmap.js
+    - idearium/repo/build-plan.js
+    - idearium/ui/js/plan-panel.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f627db089c793902

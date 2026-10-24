@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::VC2_changelogs_rendered
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::VC2_changelogs_rendered
+context: pipeline phase VC2_changelogs_rendered of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: VC2_changelogs_rendered (interface) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677914
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677914
+lastSeenAt: 1792787677914
+fingerprint: null
+payload:
+  id: VC2_changelogs_rendered
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - scripts/render-changelog.js
+    - idearium/ui/js/repo-versions.js
+  depends_on:
+    - VC1_a_change_entry_for_every_event
+    - IN2_quotes_ledger
+  blocks: []
+  spec: null
+  graph: 991430c3f767143b

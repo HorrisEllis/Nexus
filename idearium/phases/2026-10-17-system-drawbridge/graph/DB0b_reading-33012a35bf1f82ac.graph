@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB0b_reading:33012a35bf1f82ac
+type: graph
+id: phase:DB0b_reading:33012a35bf1f82ac
+context: dependency graph of phase DB0b_reading
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677816
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677816
+lastSeenAt: 1792787677816
+fingerprint: null
+payload:
+  for: DB0b_reading
+  kind: phase
+  repo: null
+  hash: 33012a35bf1f82ac
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

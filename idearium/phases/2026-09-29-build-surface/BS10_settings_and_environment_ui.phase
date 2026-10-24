@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+context: pipeline phase BS10_settings_and_environment_ui of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS10_settings_and_environment_ui (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676205
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676205
+lastSeenAt: 1792787676205
+fingerprint: null
+payload:
+  id: BS10_settings_and_environment_ui
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/repo-environment.js
+    - idearium/ui/js/app.js
+    - idearium/ui/settings.html
+  depends_on:
+    - BS7_api
+  blocks: []
+  spec: null
+  graph: e7b1f0a8ff8eb8f9

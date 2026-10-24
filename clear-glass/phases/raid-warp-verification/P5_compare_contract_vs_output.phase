@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-warp-verification-phasemap.spec::P5_compare_contract_vs_output
+type: phase
+id: docs_raid-warp-verification-phasemap.spec::P5_compare_contract_vs_output
+context: pipeline phase P5_compare_contract_vs_output of docs/raid-warp-verification-phasemap.spec
+intent: null
+summary: P5_compare_contract_vs_output (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678326
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678326
+lastSeenAt: 1792787678326
+fingerprint: null
+payload:
+  id: P5_compare_contract_vs_output
+  map: docs/raid-warp-verification-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: aee6030d764aba5b

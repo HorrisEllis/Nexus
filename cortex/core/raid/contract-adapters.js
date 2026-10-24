@@ -106,7 +106,7 @@ function fromPhasePlan(plan, { id = null, phaseKey = 'phase', title = '', intent
   const brickOf = new Map((plan.order || plan.files.map(f => f.path)).map((p, i) => [p, `b${i + 1}.${_id(p.split('/').pop())}`]));
   for (const f of plan.files) if (!brickOf.has(f.path)) brickOf.set(f.path, `b${brickOf.size + 1}.${_id(f.path.split('/').pop())}`);
   const refs = {};
-  for (const inp of inputs) if (inp && inp.id && inp.path) refs[_id(inp.id)] = { path: inp.path, ...(inp.lines ? { lines: inp.lines } : {}), note: inp.note || 'an input of the phase' };
+  for (const inp of inputs) if (inp && inp.id && inp.path) refs[_id(inp.id)] = { path: inp.path, ...(inp.lines ? { lines: inp.lines } : {}), ...(inp.phase ? { phase: inp.phase } : {}), note: inp.note || 'an input of the phase' };
   const shared = Object.keys(refs);
   const gates = [];
   for (const p of brickOf.keys()) {
@@ -146,7 +146,7 @@ function fromPhasePlan(plan, { id = null, phaseKey = 'phase', title = '', intent
  */
 function fromWholePhase({ id = null, phaseKey = 'phase', title = '', intent = '', inputs = [], message = '' } = {}) {
   const refs = {};
-  for (const inp of inputs) if (inp && inp.id && inp.path) refs[_id(inp.id)] = { path: inp.path, ...(inp.lines ? { lines: inp.lines } : {}), note: inp.note || 'an input of the phase' };
+  for (const inp of inputs) if (inp && inp.id && inp.path) refs[_id(inp.id)] = { path: inp.path, ...(inp.lines ? { lines: inp.lines } : {}), ...(inp.phase ? { phase: inp.phase } : {}), note: inp.note || 'an input of the phase' };
   const shared = Object.keys(refs);
   const gates = [
     { id: 'work', type: 'task', kind: 'agent:build', requirement: { phase: phaseKey, title, intent: intent || null, whole: true },

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+type: phase
+id: docs_2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+context: pipeline phase PI1_the_importer of docs/2026-10-15-personal-chat-import-phasemap.spec
+intent: null
+summary: PI1_the_importer (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677615
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677615
+lastSeenAt: 1792787677615
+fingerprint: null
+payload:
+  id: PI1_the_importer
+  map: docs/2026-10-15-personal-chat-import-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chat-import/chatgpt.js
+    - lib/chat-import/index.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - PI0_where_it_is_read
+  blocks: []
+  spec: null
+  graph: 4811bb5810fcbe4d

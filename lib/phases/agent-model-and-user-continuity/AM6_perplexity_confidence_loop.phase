@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+type: phase
+id: docs_agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+context: >-
+  pipeline phase AM6_perplexity_confidence_loop of
+  docs/agent-model-and-user-continuity-phasemap.spec
+intent: null
+summary: AM6_perplexity_confidence_loop (?) — 21 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678111
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678111
+lastSeenAt: 1792787678111
+fingerprint: null
+payload:
+  id: AM6_perplexity_confidence_loop
+  map: docs/agent-model-and-user-continuity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-system/contracts.js
+    - lib/emergence.js
+    - lib/safe-apply.js
+    - lib/fault-log.js
+    - meta/adversary-suite.js
+    - cortex/push-recall.js
+    - guardian/lib/dispatch-ladder.js
+    - idearium/ui/js/app.js
+    - lib/agent-build-loop.js
+    - clear-glass/renderer/selector-check.js
+    - clear-glass/src/macros/recorder-script.js
+    - clear-glass/src/processes/index.js
+    - cortex/core/raid/contract-gates.js
+    - diagnostic/lib/causality.js
+    - idearium/repo/deviation.js
+    - lib/gap-field.js
+    - lib/agent-tools/tools/execution/safe-apply.js
+    - lib/agent-tools/tools/sandbox/cos-simulate.js
+    - lib/agent-tools/tools/sandbox/cos-compartment.js
+    - loom/templates/cos-compartment.js
+    - lib/agent-tools/tools/query/fault-log.js
+  depends_on:
+    - AM1_per_agent_learned_model
+    - AM5_ambiguity_triggered_pull
+  blocks: []
+  spec: null
+  graph: 200f6a2a6a5cf5dd

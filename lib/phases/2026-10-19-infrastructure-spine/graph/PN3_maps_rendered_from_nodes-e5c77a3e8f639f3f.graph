@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PN3_maps_rendered_from_nodes:e5c77a3e8f639f3f
+type: graph
+id: phase:PN3_maps_rendered_from_nodes:e5c77a3e8f639f3f
+context: dependency graph of phase PN3_maps_rendered_from_nodes
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677913
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677913
+lastSeenAt: 1792787677913
+fingerprint: null
+payload:
+  for: PN3_maps_rendered_from_nodes
+  kind: phase
+  repo: null
+  hash: e5c77a3e8f639f3f
+  nodes:
+    - path: scripts/render-phasemaps.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+    dependents: []
+    upstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::ST1_schema_for_everything_reusable
+    downstream: []
+    blockedBy:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+        files:
+          - idearium/spec-engine/
+    dangling: []
+    lines:
+      - layer 4 · blocked by PN2_dual_read
+      - 'depends on (1): PN2_dual_read · all upstream 4'
+      - 'needed by (0): —'
+      - >-
+        same files as IN7_every_phase_and_spec_on_the_spine with no order between them:
+        idearium/spec-engine/
+    edges:
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+        kind: declared

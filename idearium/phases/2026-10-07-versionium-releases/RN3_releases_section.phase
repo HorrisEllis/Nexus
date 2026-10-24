@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-versionium-releases-phasemap.spec::RN3_releases_section
+type: phase
+id: docs_2026-10-07-versionium-releases-phasemap.spec::RN3_releases_section
+context: pipeline phase RN3_releases_section of docs/2026-10-07-versionium-releases-phasemap.spec
+intent: null
+summary: RN3_releases_section (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677118
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677118
+lastSeenAt: 1792787677118
+fingerprint: null
+payload:
+  id: RN3_releases_section
+  map: docs/2026-10-07-versionium-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - RN2_cortex_is_the_bookkeeper
+    - VR2_history_and_diff
+  blocks: []
+  spec: null
+  graph: 4141ba7fc63cd48b

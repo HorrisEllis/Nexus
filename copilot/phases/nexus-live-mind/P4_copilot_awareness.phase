@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-live-mind-phasemap.spec::P4_copilot_awareness
+type: phase
+id: docs_nexus-live-mind-phasemap.spec::P4_copilot_awareness
+context: pipeline phase P4_copilot_awareness of docs/nexus-live-mind-phasemap.spec
+intent: null
+summary: P4_copilot_awareness (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678262
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678262
+lastSeenAt: 1792787678262
+fingerprint: null
+payload:
+  id: P4_copilot_awareness
+  map: docs/nexus-live-mind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/nexus-awareness.js
+    - loom/scanners/capability-map.js
+    - copilot/lib/user-model.js
+  depends_on:
+    - P1_nervous_system_live
+    - P3_diagnostic_kernel
+  blocks: []
+  spec: null
+  graph: ccacba0791d50925

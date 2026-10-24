@@ -1,0 +1,56 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FN3_the_nerve_shows_it_and_the_field_sees_the_nerve:5a5715d4e3cba86c
+type: graph
+id: phase:FN3_the_nerve_shows_it_and_the_field_sees_the_nerve:5a5715d4e3cba86c
+context: dependency graph of phase FN3_the_nerve_shows_it_and_the_field_sees_the_nerve
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677271
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677271
+lastSeenAt: 1792787677271
+fingerprint: null
+payload:
+  for: FN3_the_nerve_shows_it_and_the_field_sees_the_nerve
+  kind: phase
+  repo: null
+  hash: 5a5715d4e3cba86c
+  nodes:
+    - path: ui/tv-shell/nerve/nerve.css
+      role: changes
+      exists: true
+      system: ui
+    - path: ui/tv-shell/nerve/nerve.html
+      role: changes
+      exists: true
+      system: ui
+    - path: ui/tv-shell/nerve/nerve.js
+      role: changes
+      exists: true
+      system: ui
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::FN2_nerve_sees_the_field
+    dependents: []
+    upstream:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::FN1_the_field_as_commands
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::FN2_nerve_sees_the_field
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): FN2_nerve_sees_the_field · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-10-shape-of-nexus-phasemap.spec::FN2_nerve_sees_the_field
+        kind: declared

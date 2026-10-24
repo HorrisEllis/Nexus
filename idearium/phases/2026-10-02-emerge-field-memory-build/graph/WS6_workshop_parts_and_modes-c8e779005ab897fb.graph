@@ -1,0 +1,80 @@
+envelope: 1
+uuid: nexus-export-graph-phase:WS6_workshop_parts_and_modes:c8e779005ab897fb
+type: graph
+id: phase:WS6_workshop_parts_and_modes:c8e779005ab897fb
+context: dependency graph of phase WS6_workshop_parts_and_modes
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676662
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676662
+lastSeenAt: 1792787676662
+fingerprint: null
+payload:
+  for: WS6_workshop_parts_and_modes
+  kind: phase
+  repo: null
+  hash: c8e779005ab897fb
+  nodes:
+    - path: idearium/lib/workshop.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/blocks.yaml
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/workshop.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/void.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/lib/workshop.js
+      kind: requires
+    - from: idearium/lib/void.js
+      to: idearium/lib/workshop.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream: []
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::UI0_the_stations_agree
+        files:
+          - idearium/ui/workshop.html
+    dangling: []
+    lines:
+      - layer 6 · blocked by CB3_the_causal_spec_block
+      - 'depends on (1): CB3_the_causal_spec_block · all upstream 7'
+      - 'needed by (0): —'
+      - 'same files as UI0_the_stations_agree with no order between them: idearium/ui/workshop.html'
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+        kind: declared

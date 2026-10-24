@@ -1,0 +1,80 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PL3_versions_become_history:0044abaf283377f6
+type: graph
+id: phase:PL3_versions_become_history:0044abaf283377f6
+context: dependency graph of phase PL3_versions_become_history
+intent: null
+summary: 5 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677435
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677435
+lastSeenAt: 1792787677435
+fingerprint: null
+payload:
+  for: PL3_versions_become_history
+  kind: phase
+  repo: null
+  hash: 0044abaf283377f6
+  nodes:
+    - path: cli/import-history.js
+      role: changes
+      exists: true
+      system: cli
+    - path: lib/history-import-job.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/repo-history.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/zip.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cli/import-history.js
+      to: lib/zip.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/history-import-job.js
+      kind: requires
+    - from: lib/repo-history.js
+      to: cli/import-history.js
+      kind: requires
+  crossings:
+    - from: lib/repo-history.js
+      to: cli/import-history.js
+      fromSystem: lib
+      toSystem: cli
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL2_history_kept
+    dependents: []
+    upstream:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL0_his_projects_imported_for_real
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL2_history_kept
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): PL2_history_kept · all upstream 2'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL2_history_kept
+        kind: inferred

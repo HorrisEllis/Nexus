@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P22_scanner_hand_map_id_drift
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P22_scanner_hand_map_id_drift
+context: pipeline phase P22_scanner_hand_map_id_drift of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P22_scanner_hand_map_id_drift (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792787678258
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678258
+lastSeenAt: 1792787678258
+fingerprint: null
+payload:
+  id: P22_scanner_hand_map_id_drift
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/index.js
+    - copilot/server.js
+    - clear-glass/src/diagnostic/error-capture.js
+    - loom/bootstrap.js
+    - loom/maps/copilot-capability-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: dded8b9e97b3ca01

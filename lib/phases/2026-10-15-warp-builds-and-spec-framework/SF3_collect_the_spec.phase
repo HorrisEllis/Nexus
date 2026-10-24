@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF3_collect_the_spec
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF3_collect_the_spec
+context: >-
+  pipeline phase SF3_collect_the_spec of
+  docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: SF3_collect_the_spec (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677633
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677633
+lastSeenAt: 1792787677633
+fingerprint: null
+payload:
+  id: SF3_collect_the_spec
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    DONE (0.60.66 — gate + collect + phase tag; registering in the spec engine is not built, see
+    addendum)
+  files:
+    - lib/repo-inject.js
+    - lib/spec-collect.js
+    - lib/step-gate.js
+    - lib/repo-agent.js
+    - idearium/api/index.js
+    - tests/modules/test-spec-pipeline.test.js
+  depends_on:
+    - SF2_spec_framework_block
+  blocks: []
+  spec: null
+  graph: 2752c0d140f6df49

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC7_drift_and_comparison_tracking_in_the_pipeline
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC7_drift_and_comparison_tracking_in_the_pipeline
+context: >-
+  pipeline phase IC7_drift_and_comparison_tracking_in_the_pipeline of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC7_drift_and_comparison_tracking_in_the_pipeline (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675515
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675515
+lastSeenAt: 1792787675515
+fingerprint: null
+payload:
+  id: IC7_drift_and_comparison_tracking_in_the_pipeline
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/seam/spec-parser.js
+  depends_on:
+    - IC5_full_input_queue_output_qc_lifecycle
+  blocks: []
+  spec: null
+  graph: 57b2a934eab904b3

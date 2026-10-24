@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792595037307
+exported_at: 1792787678003
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792595037307
-lastSeenAt: 1792595037307
+firstSeenAt: 1792787678003
+lastSeenAt: 1792787678003
 fingerprint: null
 payload:
   for: APV5_wired_in_loom
@@ -48,7 +48,6 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 035c035515349513
     layer: 2
     deps:
       - docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
@@ -62,6 +61,9 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 035c035515349513 · layer 2
+      - layer 2
       - 'depends on (1): APV1_change_entry · all upstream 2'
       - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
+        kind: declared

@@ -1,0 +1,113 @@
+envelope: 1
+uuid: nexus-export-graph-phase:G0:a214982f7f87efc5
+type: graph
+id: phase:G0:a214982f7f87efc5
+context: dependency graph of phase G0
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676091
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676091
+lastSeenAt: 1792787676091
+fingerprint: null
+payload:
+  for: G0
+  kind: phase
+  repo: null
+  hash: a214982f7f87efc5
+  nodes:
+    - path: idearium/repo/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec/idearium.repo-graph.spec
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-repo-graph.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/scan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: uses
+      exists: true
+      system: idearium
+  edges:
+    - from: tests/modules/test-repo-graph.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/scan.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/verify-lazy.js
+      to: idearium/repo/graph.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G1
+    upstream: []
+    downstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B1
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B3
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B4
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G1
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G3
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M3
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV1
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV3
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G1
+    conflicts:
+      - with: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::A1
+        files:
+          - idearium/spec/idearium.repo-graph.spec
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): G1 · all downstream 13 · finishing it unlocks G1'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+      - 'same files as A1 with no order between them: idearium/spec/idearium.repo-graph.spec'
+    edges: []

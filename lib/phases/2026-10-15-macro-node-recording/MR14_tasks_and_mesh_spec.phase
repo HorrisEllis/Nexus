@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR14_tasks_and_mesh_spec
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR14_tasks_and_mesh_spec
+context: pipeline phase MR14_tasks_and_mesh_spec of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR14_tasks_and_mesh_spec (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677597
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677597
+lastSeenAt: 1792787677597
+fingerprint: null
+payload:
+  id: MR14_tasks_and_mesh_spec
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/nexus-uri-clearglass-mesh-integration.spec
+    - docs/clear-glass.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4cb900f7984eca36

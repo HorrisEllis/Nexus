@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS9_the_thread
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS9_the_thread
+context: pipeline phase RS9_the_thread of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS9_the_thread (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677049
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677049
+lastSeenAt: 1792787677049
+fingerprint: null
+payload:
+  id: RS9_the_thread
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/thread.js
+    - idearium/repo/spec-plan.js
+    - idearium/repo/phases.js
+    - idearium/api/index.js
+  depends_on:
+    - RS3_the_spec_document
+  blocks: []
+  spec: null
+  graph: f06ed39fcd8adc6f

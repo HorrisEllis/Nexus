@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+context: pipeline phase CX1_context_cascade of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: CX1_context_cascade (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676482
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676482
+lastSeenAt: 1792787676482
+fingerprint: null
+payload:
+  id: CX1_context_cascade
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-context.js
+    - lib/agent-memory.js
+    - lib/agent-tools/tools/clear-glass/search-engine.js
+  depends_on:
+    - DT3_failure_modes_routes_and_preflight
+  blocks: []
+  spec: null
+  graph: ca712cb3559b1665

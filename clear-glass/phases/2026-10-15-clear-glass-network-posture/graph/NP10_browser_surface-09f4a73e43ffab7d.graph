@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NP10_browser_surface:09f4a73e43ffab7d
+type: graph
+id: phase:NP10_browser_surface:09f4a73e43ffab7d
+context: dependency graph of phase NP10_browser_surface
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792787677485
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677485
+lastSeenAt: 1792787677485
+fingerprint: null
+payload:
+  for: NP10_browser_surface
+  kind: phase
+  repo: null
+  hash: 09f4a73e43ffab7d
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+    dependents:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP13_settings_html
+    upstream:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+    downstream:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP13_settings_html
+    blockedBy:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by NP9_cli_first
+      - 'depends on (1): NP9_cli_first'
+      - 'needed by (1): NP13_settings_html'
+    edges:
+      - from: docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+        kind: declared

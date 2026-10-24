@@ -1,0 +1,190 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GA1a_a_written_gig_is_remembered:f600c0df5b9c0f5c
+type: graph
+id: phase:GA1a_a_written_gig_is_remembered:f600c0df5b9c0f5c
+context: dependency graph of phase GA1a_a_written_gig_is_remembered
+intent: null
+summary: 20 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677884
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677884
+lastSeenAt: 1792787677884
+fingerprint: null
+payload:
+  for: GA1a_a_written_gig_is_remembered
+  kind: phase
+  repo: null
+  hash: f600c0df5b9c0f5c
+  nodes:
+    - path: clear-glass/src/autofill/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/clear-glass-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-screen-qa.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/adblock/lists.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/handler-registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/bridge-sources.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/kill-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/autofill/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/ipc/handler-registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/bridge-sources.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/kill-switch.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-autofill.test.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-screen-qa.test.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1_copilot_fills_the_gig
+    dependents: []
+    upstream:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1_copilot_fills_the_gig
+    downstream: []
+    blockedBy:
+      - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1_copilot_fills_the_gig
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA2_a_missed_field_asks_the_picker
+        files:
+          - clear-glass/src/ipc/bridge.js
+      - with: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA3_the_pick_is_saved_three_ways
+        files:
+          - clear-glass/src/ipc/bridge.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by GA1_copilot_fills_the_gig
+      - 'depends on (1): GA1_copilot_fills_the_gig'
+      - 'needed by (0): —'
+      - >-
+        same files as GA2_a_missed_field_asks_the_picker with no order between them:
+        clear-glass/src/ipc/bridge.js
+      - >-
+        same files as GA3_the_pick_is_saved_three_ways with no order between them:
+        clear-glass/src/ipc/bridge.js
+    edges:
+      - from: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1_copilot_fills_the_gig
+        kind: inferred

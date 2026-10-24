@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-staging-self-heal-phasemap.spec::S4
+type: phase
+id: docs_2026-09-28-staging-self-heal-phasemap.spec::S4
+context: pipeline phase S4 of docs/2026-09-28-staging-self-heal-phasemap.spec
+intent: null
+summary: S4 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676172
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676172
+lastSeenAt: 1792787676172
+fingerprint: null
+payload:
+  id: S4
+  map: docs/2026-09-28-staging-self-heal-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/causal/compound.js
+    - intelligence/cfr/delta.js
+    - diagnostic/nexus-diagnostic.js
+  depends_on:
+    - S3
+    - C1
+  blocks: []
+  spec: null
+  graph: b1f73dc53cc4c0b2

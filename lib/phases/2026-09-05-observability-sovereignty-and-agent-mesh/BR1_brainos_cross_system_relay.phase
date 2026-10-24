@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR1_brainos_cross_system_relay
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR1_brainos_cross_system_relay
+context: >-
+  pipeline phase BR1_brainos_cross_system_relay of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: BR1_brainos_cross_system_relay (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787675768
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675768
+lastSeenAt: 1792787675768
+fingerprint: null
+payload:
+  id: BR1_brainos_cross_system_relay
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ui/brainos/brainos-canvas.js
+  depends_on:
+    - CG3_relay_into_cortex_sse
+  blocks: []
+  spec: null
+  graph: 74f187aeb527e717

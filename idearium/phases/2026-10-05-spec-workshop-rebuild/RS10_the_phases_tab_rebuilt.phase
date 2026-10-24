@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS10_the_phases_tab_rebuilt
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS10_the_phases_tab_rebuilt
+context: pipeline phase RS10_the_phases_tab_rebuilt of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS10_the_phases_tab_rebuilt (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677050
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677050
+lastSeenAt: 1792787677050
+fingerprint: null
+payload:
+  id: RS10_the_phases_tab_rebuilt
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/phases.js
+    - idearium/ui/css/phases.css
+  depends_on:
+    - RS9_the_thread
+  blocks: []
+  spec: null
+  graph: 2b8342c245cb1a43

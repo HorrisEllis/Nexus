@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FMR8_the_report_on_screen:36b40641e24aae8e
+type: graph
+id: phase:FMR8_the_report_on_screen:36b40641e24aae8e
+context: dependency graph of phase FMR8_the_report_on_screen
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677785
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677785
+lastSeenAt: 1792787677785
+fingerprint: null
+payload:
+  for: FMR8_the_report_on_screen
+  kind: phase
+  repo: null
+  hash: 36b40641e24aae8e
+  nodes:
+    - path: idearium/ui/js/debug-failures.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR3_the_report
+    dependents: []
+    upstream:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR2_every_failure_reaches_the_record
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR3_the_report
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - 'depends on (1): FMR3_the_report · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-17-failure-mode-report-phasemap.spec::FMR3_the_report
+        kind: declared

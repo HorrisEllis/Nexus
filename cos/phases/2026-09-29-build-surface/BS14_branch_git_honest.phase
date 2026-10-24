@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS14_branch_git_honest
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS14_branch_git_honest
+context: pipeline phase BS14_branch_git_honest of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS14_branch_git_honest (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676210
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676210
+lastSeenAt: 1792787676210
+fingerprint: null
+payload:
+  id: BS14_branch_git_honest
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/workspace/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3478da45faa77597

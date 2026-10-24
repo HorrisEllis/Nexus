@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+context: pipeline phase GW11_a_snapshot_per_gate of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW11_a_snapshot_per_gate (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677564
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677564
+lastSeenAt: 1792787677564
+fingerprint: null
+payload:
+  id: GW11_a_snapshot_per_gate
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/compartment/qemu-runtime.js
+    - cos/workspace/vm-control.js
+    - cortex/core/raid/contract-gates.js
+    - versionium/lib/releases.js
+  depends_on:
+    - GW3_a_contract_is_traced
+    - GW14_copy_in_diff_out
+  blocks: []
+  spec: null
+  graph: c999f94ef6a49515

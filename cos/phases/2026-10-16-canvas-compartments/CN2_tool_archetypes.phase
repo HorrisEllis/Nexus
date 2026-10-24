@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-canvas-compartments-phasemap.spec::CN2_tool_archetypes
+type: phase
+id: docs_2026-10-16-canvas-compartments-phasemap.spec::CN2_tool_archetypes
+context: pipeline phase CN2_tool_archetypes of docs/2026-10-16-canvas-compartments-phasemap.spec
+intent: null
+summary: CN2_tool_archetypes (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677650
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677650
+lastSeenAt: 1792787677650
+fingerprint: null
+payload:
+  id: CN2_tool_archetypes
+  map: docs/2026-10-16-canvas-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.104 (CC-01, CC-02)
+  files:
+    - cos/archetype/eravos-tool.js
+    - cos/archetype/registry.js
+    - lib/file-tree-plan.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9e4df65ef5b2a643

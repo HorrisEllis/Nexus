@@ -1,0 +1,153 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T2_event_taxonomy_per_system:d01cf8ce65fbb403
+type: graph
+id: phase:T2_event_taxonomy_per_system:d01cf8ce65fbb403
+context: dependency graph of phase T2_event_taxonomy_per_system
+intent: null
+summary: 17 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787675593
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787675593
+lastSeenAt: 1792787675593
+fingerprint: null
+payload:
+  for: T2_event_taxonomy_per_system
+  kind: phase
+  repo: null
+  hash: d01cf8ce65fbb403
+  nodes:
+    - path: lib/event-taxonomy-pattern.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/grammar-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/ledger-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/event-taxonomy.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cli/nexus-repl.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: copilot/cli.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/grammar-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/tests/shape.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/grammar-fallback.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/event-taxonomy.cjs
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/scanners/event-taxonomy-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/clear-glass-gig.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/ledger-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: diagnostic/tests/shape.test.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: idearium/event-taxonomy.cjs
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: loom/scanners/event-taxonomy-map.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: tests/modules/clear-glass-gig.test.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: cli/nexus-repl.js
+      to: lib/grammar-engine.js
+      kind: requires
+    - from: copilot/cli.js
+      to: lib/grammar-engine.js
+      kind: requires
+    - from: copilot/lib/grammar-router.js
+      to: lib/grammar-engine.js
+      kind: requires
+    - from: guardian/lib/grammar-fallback.js
+      to: lib/grammar-engine.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: lib/grammar-engine.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T3_tool_to_event_mapping
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T4_userscript_event_types
+    upstream: []
+    downstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T3_tool_to_event_mapping
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T4_userscript_event_types
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T4_userscript_event_types
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): T3_tool_to_event_mapping, T4_userscript_event_types · finishing it unlocks
+        T4_userscript_event_types
+    edges: []

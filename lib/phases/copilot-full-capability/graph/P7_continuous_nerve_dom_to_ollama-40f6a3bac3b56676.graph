@@ -1,0 +1,162 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P7_continuous_nerve_dom_to_ollama:40f6a3bac3b56676
+type: graph
+id: phase:P7_continuous_nerve_dom_to_ollama:40f6a3bac3b56676
+context: dependency graph of phase P7_continuous_nerve_dom_to_ollama
+intent: null
+summary: 17 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678164
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678164
+lastSeenAt: 1792787678164
+fingerprint: null
+payload:
+  for: P7_continuous_nerve_dom_to_ollama
+  kind: phase
+  repo: null
+  hash: 40f6a3bac3b56676
+  nodes:
+    - path: lib/nerve/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ollama/server.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/nerve-gap-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nerve-ollama-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: hooks/index.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/dispatch.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/http-utils.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/jobs.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/queue.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/stream.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/system.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/uploads.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: lib/nerve/index.js
+      to: hooks/index.js
+      kind: requires
+    - from: ollama/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/state.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/dispatch.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/http-utils.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/system.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/uploads.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/stream.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/jobs.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/queue.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: lib/nerve-gap-bridge.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: lib/nerve-ollama-bridge.js
+      to: lib/nerve/index.js
+      kind: requires
+  crossings:
+    - from: lib/nerve/index.js
+      to: hooks/index.js
+      fromSystem: lib
+      toSystem: hooks
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/copilot-full-capability-phasemap.spec::P10_load_balancer
+    upstream: []
+    downstream:
+      - docs/copilot-full-capability-phasemap.spec::P10_load_balancer
+    blockedBy: []
+    unlocks:
+      - docs/copilot-full-capability-phasemap.spec::P10_load_balancer
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): P10_load_balancer · finishing it unlocks P10_load_balancer'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

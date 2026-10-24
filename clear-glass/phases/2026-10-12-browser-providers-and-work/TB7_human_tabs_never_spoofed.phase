@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::TB7_human_tabs_never_spoofed
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::TB7_human_tabs_never_spoofed
+context: >-
+  pipeline phase TB7_human_tabs_never_spoofed of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: TB7_human_tabs_never_spoofed (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677296
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677296
+lastSeenAt: 1792787677296
+fingerprint: null
+payload:
+  id: TB7_human_tabs_never_spoofed
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/contexts/manager.js
+    - clear-glass/src/fingerprint/engine.js
+    - clear-glass/src/contexts/session-headers.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4e31472027e2ef56

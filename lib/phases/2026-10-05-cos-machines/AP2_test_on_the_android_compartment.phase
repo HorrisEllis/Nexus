@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cos-machines-phasemap.spec::AP2_test_on_the_android_compartment
+type: phase
+id: docs_2026-10-05-cos-machines-phasemap.spec::AP2_test_on_the_android_compartment
+context: pipeline phase AP2_test_on_the_android_compartment of docs/2026-10-05-cos-machines-phasemap.spec
+intent: null
+summary: AP2_test_on_the_android_compartment (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677022
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677022
+lastSeenAt: 1792787677022
+fingerprint: null
+payload:
+  id: AP2_test_on_the_android_compartment
+  map: docs/2026-10-05-cos-machines-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/cos-run.js
+    - idearium/repo/proof-run.js
+  depends_on:
+    - AP1_android_build_compartment
+    - OS1_compartments_as_operating_systems
+  blocks: []
+  spec: null
+  graph: 1a8e2550e9c6190b

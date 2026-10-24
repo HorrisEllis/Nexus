@@ -9,11 +9,11 @@ intent: null
 summary: ND5_every_agent_reaches_every_system (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792650734508
+exported_at: 1792787678061
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792650734508
-lastSeenAt: 1792650734508
+firstSeenAt: 1792787678061
+lastSeenAt: 1792787678061
 fingerprint: null
 payload:
   id: ND5_every_agent_reaches_every_system
@@ -32,4 +32,4 @@ payload:
     - MOD-ND-CLI
     - MOD-ND-COPILOT
   spec: docs/system-node-db.spec
-  graph: f07c86902defd601
+  graph: 85c309ce09d5a7d5

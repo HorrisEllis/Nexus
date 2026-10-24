@@ -1,0 +1,250 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB3_guided_build_loop:43e53ddad29a7b4a
+type: graph
+id: phase:SB3_guided_build_loop:43e53ddad29a7b4a
+context: dependency graph of phase SB3_guided_build_loop
+intent: null
+summary: 26 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787678295
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787678295
+lastSeenAt: 1792787678295
+fingerprint: null
+payload:
+  for: SB3_guided_build_loop
+  kind: phase
+  repo: null
+  hash: 43e53ddad29a7b4a
+  nodes:
+    - path: lib/component-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/emergence.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/contracts/index.js
+      role: changes
+      exists: true
+      system: loom
+    - path: copilot/lib/person-model/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cos/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/lib/diagnostic-contract.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/sigma.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/execution/emergence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/test/contracts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: loom/contracts/index.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-store.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/contracts/index.js
+      kind: requires
+    - from: loom/test/contracts.test.js
+      to: loom/contracts/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/emergence.js
+      to: lib/emergence.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: cos/kernel.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/lib/diagnostic-contract.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/cfr/sigma.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/component-ledger.js
+      kind: requires
+  crossings:
+    - from: lib/component-ledger.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/component-ledger.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+    dependents:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB4_decision_lattice_wiring
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB5_self_modification_from_inside
+    upstream:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+    downstream:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB4_decision_lattice_wiring
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB5_self_modification_from_inside
+    blockedBy:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+    unlocks:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB4_decision_lattice_wiring
+    conflicts:
+      - with: docs/nexus-self-build-pipeline-phasemap.spec::SB6_contract_type_schemas_and_toolbox_directory
+        files:
+          - lib/gap-field.js
+      - with: docs/nexus-self-build-pipeline-phasemap.spec::SB7_compartments_as_sessions
+        files:
+          - lib/emergence.js
+          - lib/component-ledger.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by SB2_universal_file_parse
+      - 'depends on (2): SB1_schema_extension, SB2_universal_file_parse'
+      - >-
+        needed by (2): SB4_decision_lattice_wiring, SB5_self_modification_from_inside · finishing it
+        unlocks SB4_decision_lattice_wiring
+      - >-
+        same files as SB6_contract_type_schemas_and_toolbox_directory with no order between them:
+        lib/gap-field.js
+      - >-
+        same files as SB7_compartments_as_sessions with no order between them: lib/emergence.js,
+        lib/component-ledger.js
+    edges:
+      - from: docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+        kind: declared
+      - from: docs/nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+        kind: declared

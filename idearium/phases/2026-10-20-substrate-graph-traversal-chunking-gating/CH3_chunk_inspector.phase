@@ -9,11 +9,11 @@ intent: null
 summary: CH3_chunk_inspector (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792456416770
+exported_at: 1792787677989
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416770
-lastSeenAt: 1792456416770
+firstSeenAt: 1792787677989
+lastSeenAt: 1792787677989
 fingerprint: null
 payload:
   id: CH3_chunk_inspector
@@ -32,4 +32,4 @@ payload:
   blocks:
     - MOD-CHUNK-INSPECTOR
   spec: docs/substrate.spec
-  graph: 99f25ae95f99935d
+  graph: c8566fe9a29a7307

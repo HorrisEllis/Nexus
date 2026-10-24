@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-heal-nodes-phasemap.spec::HL1_the_heal_node
+type: phase
+id: docs_2026-10-07-heal-nodes-phasemap.spec::HL1_the_heal_node
+context: pipeline phase HL1_the_heal_node of docs/2026-10-07-heal-nodes-phasemap.spec
+intent: null
+summary: HL1_the_heal_node (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677082
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677082
+lastSeenAt: 1792787677082
+fingerprint: null
+payload:
+  id: HL1_the_heal_node
+  map: docs/2026-10-07-heal-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/self-heal/heal.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 15acb9f6783aa960

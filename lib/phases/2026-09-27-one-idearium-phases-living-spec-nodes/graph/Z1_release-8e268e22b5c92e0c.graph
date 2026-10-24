@@ -1,0 +1,208 @@
+envelope: 1
+uuid: nexus-export-graph-phase:Z1_release:8e268e22b5c92e0c
+type: graph
+id: phase:Z1_release:8e268e22b5c92e0c
+context: dependency graph of phase Z1_release
+intent: null
+summary: 18 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676068
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676068
+lastSeenAt: 1792787676068
+fingerprint: null
+payload:
+  for: Z1_release
+  kind: phase
+  repo: null
+  hash: 8e268e22b5c92e0c
+  nodes:
+    - path: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/repo/roadmap.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/repo/source-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/repo/roadmap.js
+      to: idearium/repo/source-files.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::R1_ui_dir_redirect
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V1_versionium_proxies
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V2_nexus_versionium_view
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::N1_one_idearium
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P4_phases_ui
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::S2_spec_tab
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T3
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::C1_copilot_contract
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X3_nodes_route
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X4_command_index_spec
+    dependents: []
+    upstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T3
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::C1_copilot_contract
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::N1_one_idearium
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P1_phasemap_list_form
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P2_phases_model
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P3_phase_build
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P4_phases_ui
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::R1_ui_dir_redirect
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::S1_living_spec
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::S2_spec_tab
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V1_versionium_proxies
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V2_nexus_versionium_view
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X2_guardian_hat_agent
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X3_nodes_route
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X4_command_index_spec
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4
+      - >-
+        depends on (10): R1_ui_dir_redirect, V1_versionium_proxies, V2_nexus_versionium_view,
+        N1_one_idearium, P4_phases_ui, S2_spec_tab, T3, C1_copilot_contract, X3_nodes_route,
+        X4_command_index_spec · all upstream 16
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::R1_ui_dir_redirect
+        kind: declared
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V1_versionium_proxies
+        kind: declared
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::V2_nexus_versionium_view
+        kind: declared
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::N1_one_idearium
+        kind: declared
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P4_phases_ui
+        kind: declared
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::S2_spec_tab
+        kind: declared
+      - from: docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T3
+        kind: declared
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::C1_copilot_contract
+        kind: declared
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X3_nodes_route
+        kind: declared
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X4_command_index_spec
+        kind: declared

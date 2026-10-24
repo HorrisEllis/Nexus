@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+type: phase
+id: docs_2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+context: >-
+  pipeline phase IH1_intent_nodes_point_at_hats of
+  docs/2026-10-16-intent-hat-agent-chain-phasemap.spec
+intent: null
+summary: IH1_intent_nodes_point_at_hats (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677711
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677711
+lastSeenAt: 1792787677711
+fingerprint: null
+payload:
+  id: IH1_intent_nodes_point_at_hats
+  map: docs/2026-10-16-intent-hat-agent-chain-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/intent-chain.js
+    - lib/intent-hat-router.js
+    - lib/hat-seed.js
+  depends_on:
+    - IH0a_one_vocabulary
+  blocks: []
+  spec: null
+  graph: 7a8dccf49acfd507

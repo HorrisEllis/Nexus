@@ -1,0 +1,77 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB7c_graph_and_zoom:78e30e5a8955bb39
+type: graph
+id: phase:TB7c_graph_and_zoom:78e30e5a8955bb39
+context: dependency graph of phase TB7c_graph_and_zoom
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677668
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677668
+lastSeenAt: 1792787677668
+fingerprint: null
+payload:
+  for: TB7c_graph_and_zoom
+  kind: phase
+  repo: null
+  hash: 78e30e5a8955bb39
+  nodes:
+    - path: clear-glass/src/mesh/route-graph.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/route-graph.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/route-graph.js
+      kind: requires
+    - from: tests/modules/route-graph.test.js
+      to: clear-glass/src/mesh/route-graph.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7a_edges_recorded
+    dependents:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7d_node_controls
+    upstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7a_edges_recorded
+    downstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7d_node_controls
+    blockedBy:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7a_edges_recorded
+    unlocks:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7d_node_controls
+    conflicts:
+      - with: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7_runs_tab
+        files:
+          - clear-glass/src/mesh/route-graph.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by TB5_tab_shell, TB7a_edges_recorded
+      - 'depends on (2): TB5_tab_shell, TB7a_edges_recorded · all upstream 5'
+      - 'needed by (1): TB7d_node_controls · finishing it unlocks TB7d_node_controls'
+      - 'same files as TB7_runs_tab with no order between them: clear-glass/src/mesh/route-graph.js'
+    edges:
+      - from: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB5_tab_shell
+        kind: declared
+      - from: docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB7a_edges_recorded
+        kind: declared

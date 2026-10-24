@@ -1,0 +1,145 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DS2_pick_and_edit_any_page:47581699d0b5073d
+type: graph
+id: phase:DS2_pick_and_edit_any_page:47581699d0b5073d
+context: dependency graph of phase DS2_pick_and_edit_any_page
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677196
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677196
+lastSeenAt: 1792787677196
+fingerprint: null
+payload:
+  for: DS2_pick_and_edit_any_page
+  kind: phase
+  repo: null
+  hash: 47581699d0b5073d
+  nodes:
+    - path: clear-glass/src/driver/glass.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/selector-map.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: tests/modules/test-agent-live.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-canvas-compartments.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-code-dock.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-code-surface-state.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-code-tab-merge.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-code-tab.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-desktop-setup-popup.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-atlas-and-glass.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-ollama-check.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: tests/modules/test-agent-live.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-canvas-compartments.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-code-dock.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-code-surface-state.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-code-tab-merge.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-code-tab.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-desktop-setup-popup.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-nexus-atlas-and-glass.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+    - from: tests/modules/test-ollama-check.test.js
+      to: clear-glass/src/driver/glass.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS1_tokens_edited_live
+    dependents:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS4_interface_types_by_adapter
+      - docs/2026-10-10-design-surface-phasemap.spec::DS5_the_agents_design_too
+    upstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      - docs/2026-10-10-design-surface-phasemap.spec::DS1_tokens_edited_live
+    downstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS4_interface_types_by_adapter
+      - docs/2026-10-10-design-surface-phasemap.spec::DS5_the_agents_design_too
+    blockedBy:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS1_tokens_edited_live
+    unlocks:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS4_interface_types_by_adapter
+      - docs/2026-10-10-design-surface-phasemap.spec::DS5_the_agents_design_too
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by DS1_tokens_edited_live
+      - 'depends on (1): DS1_tokens_edited_live · all upstream 2'
+      - >-
+        needed by (2): DS4_interface_types_by_adapter, DS5_the_agents_design_too · finishing it
+        unlocks DS4_interface_types_by_adapter, DS5_the_agents_design_too
+    edges:
+      - from: docs/2026-10-10-design-surface-phasemap.spec::DS1_tokens_edited_live
+        kind: declared

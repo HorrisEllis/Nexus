@@ -1,0 +1,257 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW15_every_file_tested:01a6f0bce2e5893d
+type: graph
+id: phase:GW15_every_file_tested:01a6f0bce2e5893d
+context: dependency graph of phase GW15_every_file_tested
+intent: null
+summary: 27 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787677572
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677572
+lastSeenAt: 1792787677572
+fingerprint: null
+payload:
+  for: GW15_every_file_tested
+  kind: phase
+  repo: null
+  hash: 01a6f0bce2e5893d
+  nodes:
+    - path: cos/testenv/detect.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/lifeline-contracts.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/gap-finder/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/testenv/environment.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: cos/testenv/environment.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: copilot/lib/lifeline-contracts.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/gap-finder/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/gap-field.js
+      kind: requires
+  crossings:
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0f_mutation_testing
+    dependents:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0_what_is_a_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0e_sandbox_egress
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0f_mutation_testing
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+    downstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+    blockedBy:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW12_desktop_is_optional
+        files:
+          - cos/testenv/detect.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+        files:
+          - idearium/api/index.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by GW13_the_sandbox_door
+      - 'depends on (2): GW13_the_sandbox_door, GW0f_mutation_testing · all upstream 7'
+      - 'needed by (1): GW16_parallel_branches_benchmark'
+      - 'same files as GW12_desktop_is_optional with no order between them: cos/testenv/detect.js'
+      - >-
+        same files as GW24_the_gate_holds_the_agent_gets_a_projection with no order between them:
+        idearium/api/index.js
+    edges:
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+        kind: declared
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW0f_mutation_testing
+        kind: declared

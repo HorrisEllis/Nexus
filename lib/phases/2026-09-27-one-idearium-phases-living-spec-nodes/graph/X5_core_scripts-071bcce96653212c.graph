@@ -1,0 +1,185 @@
+envelope: 1
+uuid: nexus-export-graph-phase:X5_core_scripts:071bcce96653212c
+type: graph
+id: phase:X5_core_scripts:071bcce96653212c
+context: dependency graph of phase X5_core_scripts
+intent: null
+summary: 16 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792787676067
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676067
+lastSeenAt: 1792787676067
+fingerprint: null
+payload:
+  for: X5_core_scripts
+  kind: phase
+  repo: null
+  hash: 071bcce96653212c
+  nodes:
+    - path: lib/cos-run.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-verify.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/playground/branch.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/runtime/run.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/detect.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/installer.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/cos-debug-report.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/failure-post.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/cos-run.js
+      to: cos/runtime/run.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/branch.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/cos-debug-report.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/failure-post.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: lib/build-verify.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: lib/cos-run.js
+      kind: requires
+  crossings:
+    - from: lib/cos-run.js
+      to: cos/runtime/run.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/installer.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+    dependents: []
+    upstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T2
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T1_suite_process
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): T3_debug_report · all upstream 3'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+        kind: inferred

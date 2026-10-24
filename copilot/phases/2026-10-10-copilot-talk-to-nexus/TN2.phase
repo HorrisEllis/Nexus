@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN2
+type: phase
+id: docs_2026-10-10-copilot-talk-to-nexus-phasemap.spec::TN2
+context: pipeline phase TN2 of docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec
+intent: null
+summary: TN2 (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677189
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677189
+lastSeenAt: 1792787677189
+fingerprint: null
+payload:
+  id: TN2
+  map: docs/2026-10-10-copilot-talk-to-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/nexus-ask.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 55fe5df0d8b17a28

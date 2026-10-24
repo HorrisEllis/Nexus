@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+type: phase
+id: docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+context: pipeline phase Z1_release of docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+intent: null
+summary: Z1_release (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676068
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676068
+lastSeenAt: 1792787676068
+fingerprint: null
+payload:
+  id: Z1_release
+  map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/version.js
+    - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+    - idearium/repo/roadmap.js
+    - run-all.js
+  depends_on:
+    - R1_ui_dir_redirect
+    - V1_versionium_proxies
+    - V2_nexus_versionium_view
+    - N1_one_idearium
+    - P4_phases_ui
+    - S2_spec_tab
+    - T3
+    - C1_copilot_contract
+    - X3_nodes_route
+    - X4_command_index_spec
+  blocks: []
+  spec: null
+  graph: 8e268e22b5c92e0c

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-compartment-control-and-activity-phasemap.spec::DC1_a_click_that_did_nothing
+type: phase
+id: docs_2026-10-07-compartment-control-and-activity-phasemap.spec::DC1_a_click_that_did_nothing
+context: >-
+  pipeline phase DC1_a_click_that_did_nothing of
+  docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+intent: null
+summary: DC1_a_click_that_did_nothing (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677078
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677078
+lastSeenAt: 1792787677078
+fingerprint: null
+payload:
+  id: DC1_a_click_that_did_nothing
+  map: docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/page/field.js
+    - clear-glass/src/diagnostic/error-capture.js
+    - lib/activity-log/compartment.js
+  depends_on:
+    - UN1_nexus_surfaces_in_the_field
+  blocks: []
+  spec: null
+  graph: 58a4e2e09bd4dc9c

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP2_semantic_addresses_for_the_field_map
+type: phase
+id: docs_2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP2_semantic_addresses_for_the_field_map
+context: >-
+  pipeline phase SP2_semantic_addresses_for_the_field_map of
+  docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec
+intent: null
+summary: SP2_semantic_addresses_for_the_field_map (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792787677470
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787677470
+lastSeenAt: 1792787677470
+fingerprint: null
+payload:
+  id: SP2_semantic_addresses_for_the_field_map
+  map: docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE (0.60.70; tested in jsdom, a live pick awaits his run)
+  files: []
+  depends_on:
+    - SP1_semantic_page_tree
+  blocks: []
+  spec: null
+  graph: e4824b3db829762f

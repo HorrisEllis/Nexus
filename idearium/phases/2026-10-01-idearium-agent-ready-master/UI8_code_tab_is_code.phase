@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
+context: pipeline phase UI8_code_tab_is_code of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: UI8_code_tab_is_code (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792787676473
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792787676473
+lastSeenAt: 1792787676473
+fingerprint: null
+payload:
+  id: UI8_code_tab_is_code
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - idearium/ui/js/file-manage.js
+  depends_on:
+    - UI1_history_and_save_in_manage
+  blocks: []
+  spec: null
+  graph: cfa6aff53868c372
