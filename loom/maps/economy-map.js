@@ -69,7 +69,11 @@ const CONSUMERS = [
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.230 autofill pick|learn rows -> HTTP :7702 /cli/autofill/pick|learn'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/learn-pick.js'), '_autofillPick -> pickAndLearn; /cli/autofill/learn -> saveLearned (one save path)'],
   [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/renderer/guardian-picker.js'), 'pickScript: the Guardian picker source run in the tab, field mode (pickField)'],
-  [I('clear-glass/src/autofill/matcher.js'), I('clear-glass/src/autofill/learn-pick.js'), 'fillFields -> needsPick (lazy require: learn-pick requires matcher)'],
+  [I('clear-glass/src/autofill/matcher.js'), I('clear-glass/src/autofill/learn-pick.js'), 'fillFields/detectFields -> needsPick (lazy require: learn-pick requires matcher)'],
+  // §JA4 0.60.231 — the learn-loop on screen: the panel → preload → IPC → learn-pick
+  [I('clear-glass/renderer/settings/sections/autofill.js'), I('clear-glass/src/preload/index.js'), '0.60.231 cg.autofill.pick / learned / forget (Pick buttons; Fields it learned, Forget)'],
+  [I('clear-glass/src/preload/index.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.231 IPC autofill:pick | autofill:learned | autofill:forget'],
+  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.231 autofill.learned -> GET /cli/autofill/learned; autofill.forget -> POST /cli/autofill/forget'],
 ];
 
 function mapEconomy(driver) {

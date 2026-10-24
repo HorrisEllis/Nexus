@@ -339,6 +339,8 @@ class CoPilotBridge {
     // §GA1 0.60.161 — "fill this in for me" on a Fiverr gig page: run the engine, do not chat
     if (action === 'autofill.gig') return this._ipcPost('/cli/autofill/gig/autofill', { agentId: aid, offer: cmd.offer || '', profileId: cmd.profileId || null, minConfidence: cmd.minConfidence || 'medium' });
     if (action === 'autofill.pick') return this._ipcPost('/cli/autofill/pick', { agentId: aid, fieldType: cmd.fieldType || '', profileId: cmd.profileId || null, label: cmd.label || null }, 5 * 60000);
+    if (action === 'autofill.learned') return this._ipcGet(`/cli/autofill/learned${cmd.url ? `?url=${encodeURIComponent(cmd.url)}` : ''}`);
+    if (action === 'autofill.forget') return this._ipcPost('/cli/autofill/forget', { url: cmd.url || '', fieldKey: cmd.fieldKey || '' });
     if (action === 'autofill.learn') return this._ipcPost('/cli/autofill/learn', { agentId: aid, fieldKey: cmd.fieldKey || '', fieldType: cmd.fieldType || '', url: cmd.url || null });
     if (action === 'invoke' || action === 'ipc') return this._ipcPost('/cli/invoke', { channel: cmd.channel, args: cmd.args, agentId: aid });
     if (action === 'channels') return this._ipcGet(`/cli/invoke${cmd.query ? `?q=${encodeURIComponent(cmd.query)}` : ''}`);

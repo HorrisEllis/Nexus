@@ -983,6 +983,14 @@ export const SPEC = [
     need: (a) => (a.args.length < 2 ? '<fieldKey> <fieldType>' : null),
     req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/learn', body: { fieldKey: a.args.slice(0, -1).join(' '), fieldType: a.args[a.args.length - 1], agentId: a.flags.agent || 'default', ...(a.flags.url ? { url: a.flags.url } : {}) } }),
     print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.origin}: "${d.fieldKey}" → ${d.fieldType}`) : h.c.amber(`  ${d.error}`)) },
+  // §JA4 0.60.231 — what the autofill was taught, per site, and its undo (§0.3 reversible)
+  { key: 'autofill.learned', repo: false, usage: 'autofill learned [<url>]', about: 'the fields the autofill was taught, per site (by the picker or by name): field → what goes there',
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/cli/autofill/learned${a.args[0] ? `?url=${encodeURIComponent(/^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}/`)}` : ''}` }),
+    print: (d, a, h) => { const l = d.learned || []; if (!l.length) return console.log(h.c.dim('  nothing learned yet')); let o = null; for (const r of l) { if (r.origin !== o) { o = r.origin; console.log(h.c.bold(`  ${o}`)); } console.log(`    "${r.fieldKey}" → ${r.fieldType}`); } } },
+  { key: 'autofill.forget', repo: false, usage: 'autofill forget <url> <fieldKey>', about: 'forget one taught field on one site: the next fill asks again',
+    need: (a) => (a.args.length < 2 ? '<url> <fieldKey>' : null),
+    req: (a) => { const url = /^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}/`; return { system: 'clear-glass', method: 'POST', path: '/cli/autofill/forget', body: { url, fieldKey: a.args.slice(1).join(' ') } }; },
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.origin}: forgot "${d.fieldKey}"`) : h.c.amber(`  ${d.error}`)) },
   { key: 'glass.processes', repo: false, usage: 'glass processes', about: 'what is running in Clear Glass: each process with its tabs and background tabs, memory and CPU (ending one is his, in the Processes window)',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/processes' }),
     print: (d, a, h) => {

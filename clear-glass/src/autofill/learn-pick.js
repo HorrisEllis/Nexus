@@ -88,6 +88,30 @@ function saveLearned(siteSettings, url, fieldKey, fieldType) {
   return { ok: true, origin, fieldKey, fieldType, learned: M.learnedFromSettings(siteSettings.getAllForOrigin(url)) };
 }
 
+/**
+ * §JA4 0.60.231 — what was learned, and its undo (§0.3 reversible). Over the store's own listOrigins / getAllForOrigin / deleteKey.
+ * listLearned(siteSettings, url?) → [{ origin, fieldKey, fieldType }] — one site, or every site (only autofill.field.* keys)
+ * forgetLearned(siteSettings, url, fieldKey) → { ok, origin, fieldKey, learned } | { ok:false, error } — removes that one entry only
+ */
+function listLearned(siteSettings, url = null) {
+  if (!siteSettings) return [];
+  const origins = url ? [url] : (siteSettings.listOrigins ? siteSettings.listOrigins() : []);
+  const out = [];
+  for (const o of origins) {
+    let origin = o; try { origin = new URL(o).origin; } catch (_) {}
+    for (const [fieldKey, fieldType] of Object.entries(M.learnedFromSettings(siteSettings.getAllForOrigin(o)))) out.push({ origin, fieldKey, fieldType });
+  }
+  return out.sort((a, b) => a.origin.localeCompare(b.origin) || a.fieldKey.localeCompare(b.fieldKey));
+}
+function forgetLearned(siteSettings, url, fieldKey) {
+  if (!siteSettings) return { ok: false, error: 'siteSettings unavailable' };
+  fieldKey = String(fieldKey || '').trim().toLowerCase();
+  if (!url || !fieldKey) return { ok: false, error: 'url and fieldKey are required' };
+  let origin = url; try { origin = new URL(url).origin; } catch (_) {}
+  if (!siteSettings.deleteKey(url, M.learnKey(fieldKey))) return { ok: false, error: `nothing learned as "${fieldKey}" for ${origin}` };
+  return { ok: true, origin, fieldKey, learned: M.learnedFromSettings(siteSettings.getAllForOrigin(url)) };
+}
+
 function _guardianPicker() {
   try { return fs.readFileSync(path.join(__dirname, '..', '..', 'renderer', 'guardian-picker.js'), 'utf8'); } catch (_) { return null; }
 }
@@ -157,4 +181,4 @@ async function pickAndLearn({ wc, dom, autofillStore, siteSettings, fieldType, a
   return out;
 }
 
-module.exports = { MODULE_ID, VERSION, FIELD_TYPE_SET, isFillable, needsPick, chooseKey, saveLearned, pickScript, resolveScript, pickAndLearn };
+module.exports = { MODULE_ID, VERSION, FIELD_TYPE_SET, isFillable, needsPick, chooseKey, saveLearned, listLearned, forgetLearned, pickScript, resolveScript, pickAndLearn };

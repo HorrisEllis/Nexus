@@ -454,6 +454,7 @@ const SUITES = [
   'test-cos-run-target.test.js',     // 0.60.166 CT1 — the gate's test runs inside COS's process sandbox (clean env, timeout, output cap); portable, no KVM needed
   'test-tf-already-done.test.js',      // 0.60.167 — a phase whose files already exist is not stuck forever on test_first:require (TF.decide: passes-already+exists = already satisfied)
   'test-autofill-learned.test.js',     // 0.60.225 JA1 — the autofill matcher consults a per-site learned map (a picked field fills every time); works for micro1/Mercor/Turing/etc
+  'test-autofill-learn-ui.test.js',     // 0.60.231 JA4 — the learn-loop on screen (Clear Glass): Pick what a fill could not place; Fields it learned, with Forget
   'test-autofill-learn-pick.test.js',   // 0.60.230 JA3 — the element picker on a missed field: needsPick, a stable unique key, saved per-site, filled again
   'test-autofill-learn-save.test.js',   // 0.60.226 JA2 — a picked field saves per-origin to site-settings (autofill.field.<key>) and the fill path reads it back
   'test-stream-fallback.test.js',  // 0.60.191 R1/I1 — the DOM mutator's stream at the node anchor, kept as a partial .response; the last fallback before a re-send

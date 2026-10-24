@@ -626,6 +626,18 @@ class IpcBridge {
     // him. saves to per site settings ... and updates the autofill." · 2026-10-24: "ja3". The Guardian picker opens in the
     // application's tab for one fieldType (a fill's needsPick.unplaced); he clicks the box; it is checked, saved per-site through
     // saveLearned, and the page is filled again. Resolves when he picks or cancels.
+    // §JA4 0.60.231 — what was learned, per site, and its undo (§0.3 reversible): learn-pick.js listLearned / forgetLearned.
+    this.app.get('/cli/autofill/learned', (req, res) => {
+      if (!this.siteSettings) return res.status(503).json({ error: 'siteSettings unavailable' });
+      res.json({ ok: true, learned: require('../autofill/learn-pick.js').listLearned(this.siteSettings, req.query?.url || null) });
+    });
+    const forget = (req, res) => {   // DELETE /cli/autofill/learned?url&fieldKey, and POST /cli/autofill/forget {url, fieldKey} (the co-pilot's door)
+      const r = require('../autofill/learn-pick.js').forgetLearned(this.siteSettings, req.query?.url || req.body?.url, req.query?.fieldKey || req.body?.fieldKey);
+      if (r.ok) { try { this.postEvent?.('autofill.forgotten', { origin: r.origin, fieldKey: r.fieldKey, ts: Date.now() }); } catch (_) {} }
+      res.status(r.ok ? 200 : (this.siteSettings ? 404 : 503)).json(r);
+    };
+    this.app.delete('/cli/autofill/learned', forget);
+    this.app.post('/cli/autofill/forget', forget);
     this.app.post('/cli/autofill/pick', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
       const r = await this._autofillPick(req.body || {});
@@ -1644,9 +1656,16 @@ class IpcBridge {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
       return _autofillDetect(this.dom, this.autofillStore, { agentId, profileId, learned: this._learnedFields(agentId) });   // §JA3 — the panel's door reads the learned map too
     });
-    ipcMain.handle('autofill:pick', async (e, d = {}) => {   // §JA3 — the panel's "pick it" (JA4 builds the button)
+    ipcMain.handle('autofill:pick', async (e, d = {}) => {   // §JA3 — the panel's Pick (JA4)
       if (!this.dom || !this.autofillStore) return { ok: false, error: 'autofill unavailable' };
       return this._autofillPick(d);
+    });
+    // §JA4 0.60.231 — the panel's "Fields it learned" list and its Forget
+    ipcMain.handle('autofill:learned', async (e, { url = null } = {}) => ({ ok: true, learned: require('../autofill/learn-pick.js').listLearned(this.siteSettings, url) }));
+    ipcMain.handle('autofill:forget', async (e, { url, fieldKey } = {}) => {
+      const r = require('../autofill/learn-pick.js').forgetLearned(this.siteSettings, url, fieldKey);
+      if (r.ok) { try { this.postEvent?.('autofill.forgotten', { origin: r.origin, fieldKey: r.fieldKey, ts: Date.now() }); } catch (_) {} }
+      return r;
     });
     ipcMain.handle('autofill:fill', async (e, { agentId = 'default', profileId, minConfidence = 'medium', vars } = {}) => {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };

@@ -256,7 +256,9 @@ async function detectFields(dom, autofillStore, { agentId = 'default', profileId
   if (!profile) return { error: `no autofill profile "${profileId}"` };
   const domFields = await dom.handleQuery({ agentId, selector: 'input, select, textarea' });
   if (domFields?.error) return { error: domFields.error };
-  return { profileId, totalFields: domFields.length, matches: matchFields(domFields, profile, { vars, learned }) };
+  const matches = matchFields(domFields, profile, { vars, learned });
+  // §JA4 — the preview says what it cannot place too, so the panel offers a Pick before anything is typed
+  return { profileId, totalFields: domFields.length, matches, needsPick: require('./learn-pick.js').needsPick(domFields, profile, matches) };
 }
 
 /** fillFields(dom, autofillStore, {agentId, profileId, minConfidence, learned}) — real fill, real per-field report.

@@ -117,10 +117,11 @@ spec:
         the page is filled again with the new learned map. Cancel or a refused pick saves nothing and says why.
       proof: "pure: needsPick lists unplaced types and unmatched fields; chooseKey prefers a stable unique key, refuses one shared by two fields; pickAndLearn with a fake tab: a pick saves + refills, a cancel saves nothing, a button pick is refused"
     JA4_the_learn_loop_ui:
-      status: OPEN
+      status: DONE (0.60.231)
       depends_on: [JA3_the_picker_on_a_miss]
-      files: [clear-glass/renderer/settings/sections/autofill.js]
-      does: "The Autofill panel: after a fill, the unplaced fields each get a 'pick it' (IPC autofill:pick); the learned fields per site are listed with a Forget (§0.3 reversible)."
+      files: [clear-glass/src/autofill/learn-pick.js, clear-glass/src/autofill/matcher.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/src/copilot/tools.js, clear-glass/src/copilot/bridge.js, idearium/cli/route-commands.js, clear-glass/renderer/settings/sections/autofill.js, clear-glass/renderer/settings/sections/autofill.css]
+      does: "The Autofill panel: after a fill or a preview, the unplaced fields each get a 'Pick' (IPC autofill:pick); the learned fields per site are listed with a Forget (§0.3 reversible). Backend first: learn-pick.js listLearned / forgetLearned over the store's own listOrigins / deleteKey; GET|DELETE /cli/autofill/learned; rows `autofill learned|forget`; co-pilot tools autofill.learned / autofill.forget."
+      proof: "pure: listLearned across origins (only autofill.field.* keys), forgetLearned removes one and leaves the site's other settings; in Clear Glass (glass.js) the Settings › Autofill page: a Fill with an unplaced github shows a Pick that calls autofill:pick and reports the save; the learned pane lists a real store's entries and Forget removes one"
 
   build_order: "GA1 + GA1a first (the 'yes', makes 'fill this in for me' work); then GA2 → GA3 → GA4 (the picker-learn loop); GA5 last (surfaces it)."
   verification_here: "No real Fiverr page or browser in this container: every phase is proven with a fake dom bridge, fake page fields and a fake picker in Clear-Glass-driven tests; the real fill is his machine's (said, not faked)."
@@ -176,3 +177,17 @@ that built JA1/JA2 was closed by accident; the coder had listed JA3, JA4 and a l
 - **Not proven here:** the page scripts in a live Clear Glass tab (no Electron display in this container; no Playwright, his rule).
 - **Version:** 0.60.230, skipping 0.60.227–229, which the unmerged claude/sleepy-gates-9lc085 branch already uses.
 - **Open:** JA4 (the panel's pick-it + learned list with Forget); the macro home; a real fill on a live listing (his login).
+
+## ADDENDUM 2026-10-24 (JA4, 0.60.231) — the learn-loop on screen
+James, 2026-10-24: "continue" — said after the JA3 report, which named JA4 next (the panel's "pick it" per missed field, and the
+learned fields per site with a Forget).
+- **Built (backend → route → command → UI, his order 2026-10-07):** learn-pick.js listLearned / forgetLearned (the store's own
+  listOrigins / deleteKey, §8.6); detectFields reports needsPick; GET|DELETE /cli/autofill/learned + POST /cli/autofill/forget;
+  IPC autofill:learned / autofill:forget; preload cg.autofill.pick / learned / forget; rows `autofill learned|forget`; co-pilot tools
+  autofill.learned / autofill.forget; Settings › Autofill: "Pick <field>" after a Fill or Preview, and the "Fields it learned" pane
+  with Forget. Loom: economy-map edges panel → preload → IPC, co-pilot → routes.
+- **Found by the screen test (§0.1):** the panel's call() turns any {ok:false} into a toast, so a cancelled or refused pick left the
+  "click the box…" line on screen; the Pick reads its answer directly and says it in place.
+- **Proof:** tests/modules/test-autofill-learn-ui.test.js JA4 3/3, the screen driven in Clear Glass (glass.js) over the real learn-pick.js
+  and a real per-origin store (the pick's tab is a fake one; no live page here).
+- **Still open:** the macro home of his "as a macro or automation" (to confirm with him); a real fill on a live listing (his login).
