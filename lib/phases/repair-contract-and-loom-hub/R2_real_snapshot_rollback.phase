@@ -7,11 +7,11 @@ intent: null
 summary: R2_real_snapshot_rollback (?) — 16 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678336
+exported_at: 1792822478766
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678336
-lastSeenAt: 1792787678336
+firstSeenAt: 1792822478766
+lastSeenAt: 1792822478766
 fingerprint: null
 payload:
   id: R2_real_snapshot_rollback
@@ -26,9 +26,9 @@ payload:
     - lib/file-integrity.js
     - ui/tv-shell/index.html
     - cortex/boot.js
-    - architecture-spec/registry/api.js
     - clear-glass/renderer/settings/core.js
-    - intelligence/alk/index.js
+    - cos/remote-desktop/bridge-os-core/bridge-sngate/index.js
+    - idearium/architecture-spec/registry/api.js
     - versionium/lib/snapshot.js
     - copilot/lib/workset.js
     - cos/app/settings.js
@@ -39,4 +39,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: b4af0c3b6772dee3
+  graph: b681fb6ca7cb6813

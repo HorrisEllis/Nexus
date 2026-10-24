@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-definition-of-complete-phasemap.spec::DOD2_diagnose_and_self_repair
+type: phase
+id: docs_2026-08-28-definition-of-complete-phasemap.spec::DOD2_diagnose_and_self_repair
+context: >-
+  pipeline phase DOD2_diagnose_and_self_repair of
+  docs/2026-08-28-definition-of-complete-phasemap.spec
+intent: null
+summary: DOD2_diagnose_and_self_repair (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792822701831
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822701831
+lastSeenAt: 1792822701831
+fingerprint: null
+payload:
+  id: DOD2_diagnose_and_self_repair
+  map: docs/2026-08-28-definition-of-complete-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/nexus-diagnostic.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7c0c587cd5f9e926

@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787675393
+exported_at: 1792822475736
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675393
-lastSeenAt: 1792787675393
+firstSeenAt: 1792822475736
+lastSeenAt: 1792822475736
 fingerprint: null
 payload:
   for: BL1_macro_erosmancer_integration
@@ -57,18 +57,24 @@ payload:
     layer: 1
     deps:
       - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
-    dependents: []
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
     upstream:
       - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
-    downstream: []
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
+      - docs/2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL23_ncp_providers_start_verification
     conflicts: []
     dangling: []
     lines:
       - layer 1
       - 'depends on (1): BL0_macro_system'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): BL23_ncp_providers_start_verification · all downstream 2 · finishing it
+        unlocks BL23_ncp_providers_start_verification
     edges:
       - from: docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
         kind: declared

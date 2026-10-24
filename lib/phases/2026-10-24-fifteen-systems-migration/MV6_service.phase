@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV6_service
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV6_service
+context: pipeline phase MV6_service of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV6_service (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478480
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478480
+lastSeenAt: 1792822478480
+fingerprint: null
+payload:
+  id: MV6_service
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/guardian-service.js
+    - cortex/cortex-service.js
+    - idearium/idearium-service.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2a2e292fda677f2a

@@ -1,0 +1,272 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS7_api:445f01cbf00b465a
+type: graph
+id: phase:BS7_api:445f01cbf00b465a
+context: dependency graph of phase BS7_api
+intent: null
+summary: 29 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822476532
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476532
+lastSeenAt: 1792822476532
+fingerprint: null
+payload:
+  for: BS7_api
+  kind: phase
+  repo: null
+  hash: 445f01cbf00b465a
+  nodes:
+    - path: idearium/api/build-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/lib/config-core.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-build-surface.api.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-carve.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-undo-any-change.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/core/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/spatial/lattice.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/core/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-repo-carve.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-undo-any-change.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
+      - docs/2026-09-29-build-surface-phasemap.spec::BS3_baseline_deviation
+      - docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+      - docs/2026-09-29-build-surface-phasemap.spec::BS5_spec_to_phasemap
+      - docs/2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+    dependents:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+    upstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
+      - docs/2026-09-29-build-surface-phasemap.spec::BS3_baseline_deviation
+      - docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+      - docs/2026-09-29-build-surface-phasemap.spec::BS5_spec_to_phasemap
+      - docs/2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+    downstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      - docs/2026-09-29-build-surface-phasemap.spec::BS18_sync_ci_theme
+      - docs/2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5
+      - >-
+        depends on (5): BS2_file_states, BS3_baseline_deviation, BS4_environment_check,
+        BS5_spec_to_phasemap, BS6_build_plan
+      - >-
+        needed by (4): BS8_files_ui, BS9_spec_and_phase_build_ui, BS10_settings_and_environment_ui,
+        BS11_plan_panel · all downstream 6 · finishing it unlocks BS8_files_ui,
+        BS9_spec_and_phase_build_ui, BS10_settings_and_environment_ui, BS11_plan_panel
+    edges:
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS3_baseline_deviation
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS5_spec_to_phasemap
+        kind: declared
+      - from: docs/2026-09-29-build-surface-phasemap.spec::BS6_build_plan
+        kind: declared

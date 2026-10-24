@@ -9,11 +9,11 @@ intent: null
 summary: AB1_autobuild_loop_and_resume (automation) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677947
+exported_at: 1792822478288
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677947
-lastSeenAt: 1792787677947
+firstSeenAt: 1792822478288
+lastSeenAt: 1792822478288
 fingerprint: null
 payload:
   id: AB1_autobuild_loop_and_resume
@@ -31,4 +31,4 @@ payload:
   blocks:
     - '"autobuild"'
   spec: null
-  graph: 3d44db3a3fb6e381
+  graph: 8bebaae7ef8ec3d2

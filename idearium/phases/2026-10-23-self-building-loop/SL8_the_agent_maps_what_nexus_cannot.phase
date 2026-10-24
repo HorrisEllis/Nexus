@@ -9,11 +9,11 @@ intent: null
 summary: SL8_the_agent_maps_what_nexus_cannot (integration) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678087
+exported_at: 1792822478452
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678087
-lastSeenAt: 1792787678087
+firstSeenAt: 1792822478452
+lastSeenAt: 1792822478452
 fingerprint: null
 payload:
   id: SL8_the_agent_maps_what_nexus_cannot
@@ -34,4 +34,4 @@ payload:
   blocks:
     - MOD-SL-AGENTMAP
   spec: docs/self-building-loop.spec
-  graph: 0f39da6d2b92c695
+  graph: f6c7ecddbd0d8d46

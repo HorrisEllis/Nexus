@@ -7,11 +7,11 @@ intent: null
 summary: SL4_the_loop (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792775550207
+exported_at: 1792822478448
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792775550207
-lastSeenAt: 1792775550207
+firstSeenAt: 1792822478448
+lastSeenAt: 1792822478448
 fingerprint: null
 payload:
   id: SL4_the_loop
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-SL-LOOP
   spec: docs/self-building-loop.spec
-  graph: 3dcb223b8d82e43d
+  graph: 291fde3fbea484cf

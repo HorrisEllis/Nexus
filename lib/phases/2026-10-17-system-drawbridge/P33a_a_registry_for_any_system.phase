@@ -7,11 +7,11 @@ intent: null
 summary: P33a_a_registry_for_any_system (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677840
+exported_at: 1792822478162
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677840
-lastSeenAt: 1792787677840
+firstSeenAt: 1792822478162
+lastSeenAt: 1792822478162
 fingerprint: null
 payload:
   id: P33a_a_registry_for_any_system
@@ -23,11 +23,11 @@ payload:
     - lib/node-registry.js
     - lib/jaa-store.js
     - lib/system-nodes.js
-    - remote-desktop/bridge-os-core/bridge-core/registry/index.js
+    - cos/remote-desktop/bridge-os-core/bridge-core/registry/index.js
     - guardian/lib/node-registry.js
     - cos/archetype/nexus-system/lib/node-index.js
     - lib/node-index.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 973379dc15f50e89
+  graph: 33ce30516ecd0c08

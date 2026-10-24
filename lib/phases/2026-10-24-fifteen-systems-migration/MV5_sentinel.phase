@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV5_sentinel
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV5_sentinel
+context: pipeline phase MV5_sentinel of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV5_sentinel (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478479
+lastSeenAt: 1792822478479
+fingerprint: null
+payload:
+  id: MV5_sentinel
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - sentinel/
+    - lib/sentinel/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d8d83dfea81cf4bf

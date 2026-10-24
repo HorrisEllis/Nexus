@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-omniscience-phasemap.spec::P2_persistence_threaded
+type: phase
+id: docs_copilot-omniscience-phasemap.spec::P2_persistence_threaded
+context: pipeline phase P2_persistence_threaded of docs/copilot-omniscience-phasemap.spec
+intent: null
+summary: P2_persistence_threaded (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478597
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478597
+lastSeenAt: 1792822478597
+fingerprint: null
+payload:
+  id: P2_persistence_threaded
+  map: docs/copilot-omniscience-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/user-model.js
+    - cortex/core/raid/index.js
+    - cortex/core/raid/router.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1712827131ffab10

@@ -7,11 +7,11 @@ intent: null
 summary: OR6_old_code_out (?) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677184
+exported_at: 1792822477405
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677184
-lastSeenAt: 1792787677184
+firstSeenAt: 1792822477405
+lastSeenAt: 1792822477405
 fingerprint: null
 payload:
   id: OR6_old_code_out
@@ -25,9 +25,9 @@ payload:
     - ui/pulse.js
     - ui/pipeline-tutorial.js
     - scripts/_register-session-hooks.js
-    - security/e2e-channel.js
     - guardian/lib/command-registry.js
     - ui/consent/consent-gate.js
+    - cos/security/e2e-channel.js
     - cos/archetype/genesis-catalog.js
     - clear-glass/seam/watchdog-gates.js
     - run-all.js
@@ -35,4 +35,4 @@ payload:
     - OR0_the_census
   blocks: []
   spec: null
-  graph: 6af214e0e32a3243
+  graph: 613aca89c535c7bf

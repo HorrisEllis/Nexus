@@ -7,11 +7,11 @@ intent: null
 summary: IN8_any_size (foundation) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677906
+exported_at: 1792822478241
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677906
-lastSeenAt: 1792787677906
+firstSeenAt: 1792822478241
+lastSeenAt: 1792822478241
 fingerprint: null
 payload:
   id: IN8_any_size
@@ -28,4 +28,4 @@ payload:
     - IN0_baseline
   blocks: []
   spec: null
-  graph: 93a371269b367b64
+  graph: 600c9f6639a071fb

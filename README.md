@@ -28,7 +28,7 @@ The top zoom level is this repo. One level in are fifteen systems. Twelve are ke
 
 The systems never import each other's internals. They talk over HTTP, over the event bus, and through declared contracts: every system ships a `registry-components.js` listing its routes as components, an `interaction-contract.json` generated from it, and a .spec describing what it is supposed to be. Loom keeps the combined registry of components, hooks and wires, which is how NEXUS stays aware of its own shape. The rules that govern all of it are written down in `docs/AXIOMS-v3.1.md`, distilled for daily work in `docs/CLAUDE.md`, and every session starts by reading `docs/SESSION-PROTOCOL.md`.
 
-This atlas is the narrative map. Each system's own atlas in `docs/atlases/` is the next zoom level. Idearium's machine atlas, an atlas.json per repo written by [the import pipeline](idearium/repo/import-pipeline.js), is the level below that: every file, its language, its symbols. [The aggregator](architecture-spec/registry/nexus-atlas-aggregate.js) rolls those per-repo files up into the numbers at the top of this page.
+This atlas is the narrative map. Each system's own atlas in `docs/atlases/` is the next zoom level. Idearium's machine atlas, an atlas.json per repo written by [the import pipeline](idearium/repo/import-pipeline.js), is the level below that: every file, its language, its symbols. [The aggregator](idearium/architecture-spec/registry/nexus-atlas-aggregate.js) rolls those per-repo files up into the numbers at the top of this page.
 
 ---
 
@@ -80,30 +80,33 @@ nexus/
   nexus/                 core — autopilot, the bus, query and connect layers
   warp/                  core — the five-primitive event spine
   siso/                  core — single input, single output: Event, Gate, Stream
-  jaa/                   core — the JAA table schema
+  (retired) jaa           retired 2026-10-24 — the JAA table schema
   contracts/             core — the NEXUS interaction contract and contract nodes
   hooks/                 core — per-system hook declarations
-  seams/                 core — seam contracts and the port table
-  auth/                  core — the sovereign auth layer (keys, policy)
-  security/              core — the signed signaling envelope
+  (retired) seams  retired 2026-10-24 — seam contracts and the port table
+  orchestrator/auth/     orchestrator — sovereign authentication
+  cos/security/          cos — the encrypted remote-session channel and kill switch
   meta/                  core — domain-agnostic measurement (confidence, lattice)
-  mesh/                  core — networking daemons ported from BrainOS
-  remote-desktop/        core — remote desktop host, viewer, bridge-os-core
+  guardian/mesh/         guardian — networking daemons ported from BrainOS
+  cos/remote-desktop/    cos — remote desktop host, viewer and bridge-os-core (COS front end)
   emerge/                core — the .eg DSL runtime and spec compiler
   emergence/             core — James's Emergence: observation that feeds back into observation, on WARP
-  erosmancer/            core — ErosmancerOS, CDP browser automation
+  clear-glass/erosmancer/  clear-glass — ErosmancerOS, CDP browser automation
   cockpit/               core — the forge IDE spec and its core
-  architecture-spec/     core — the scaffold every new system is built on
+  idearium/architecture-spec/  idearium — the scaffold every new system is built on
   products/              core — what Nexus is made into: Flight Recorder
-  service/               core — ICO kernel service wrappers
+  (service split)        split 2026-10-24 — guardian/guardian-service.js, cortex/cortex-service.js, idearium/idearium-service.js
   sentinel/              core — the sentinel's interaction contract
   scripts/               core — verification and release scripts
   skills/                core — session skills (changelog, persona)
-  tablet/                core — tablet homepage and 3D map
+  cos/tablet/            cos — the tablet homepage and 3D map (COS front end)
   ui/                    core — UI shells: home, tv-shell, brainos
   docs/                  core — axioms, specs, phasemaps, handoffs, atlases
   tests/                 core — every suite and its runners
 ```
+
+> **2026-10-24 (0.60.236, RF2).** James: "need the systems soveriegn" · "remote desktop, tablet was meant to tbe the front end for cos" · "security goes with remote desktop". The folders that were not one of the 15 systems moved into the system that uses them (lib/architecture-apply.js; git kept each file's history): auth → orchestrator, mesh → guardian, idearium/architecture-spec → idearium, erosmancer → clear-glass, remote-desktop, security and tablet → cos, service/ split into guardian, cortex and idearium; jaa and seams retired to _archive/2026-10-24-retired-systems/. The rest (cockpit, contracts, hooks, meta, sentinel, siso, ui, emerge, emergence, warp, nexus, cli) are next, into lib/.
+
 
 Each directory is described in its own section: the twelve kernels under **The modules**, and every `core` directory under **core, directory by directory**.
 
@@ -141,7 +144,7 @@ Running happens through the COS run menu in `lib/cos-run.js`: run the entry, boo
 
 The axioms are immutable law in `docs/AXIOMS-v3.1.md`; earlier versions stay beside it (`docs/AXIOMS-v3.0.md`, `docs/AXIOMS-v2.0.md`, `docs/AXIOMS-v1.0.md`) because nothing is lost. `docs/CLAUDE.md` distills five standing rules every change follows: map before build, in a `docs/*-phasemap.spec`; reuse before build; update loom's registry with real wires; add a dated addendum to every spec a change touches, and register new specs in `docs/SPEC-REGISTRY.spec`; and archive instead of delete. Evidence discipline sits over all of it: a route, a wire or a claim is not real until it is checked against the source, and nothing fails silently.
 
-Two axioms shape the code most visibly. Sovereignty (§5.9, §5.10) is why systems talk only through contracts: `contracts/nexus-interaction-contract.js` is the single table of every endpoint, port, event name and CLI command, and each system's `interaction-contract.json` is derived from its own `registry-components.js`. SISO (§14) is why cross-system features are pipelines of pure gates over immutable events: the pattern lives in `siso/`, its hardened successor with digests and axioms in `warp/`, and its persistence in the JAA tables defined by `jaa/schema.sql`.
+Two axioms shape the code most visibly. Sovereignty (§5.9, §5.10) is why systems talk only through contracts: `contracts/nexus-interaction-contract.js` is the single table of every endpoint, port, event name and CLI command, and each system's `interaction-contract.json` is derived from its own `registry-components.js`. SISO (§14) is why cross-system features are pipelines of pure gates over immutable events: the pattern lives in `siso/`, its hardened successor with digests and axioms in `warp/`, and its persistence in the JAA tables defined by the JAA table schema (jaa/, retired 2026-10-24, kept in the archive).
 
 The process rules are as concrete. `docs/SESSION-PROTOCOL.md` exists because sessions once worked on isolated zip snapshots and silently forked; it is why the delivered zip always carries the .git folder. `lib/version.js` is the single source of every version number, with a dated entry per release; `package.json` follows it. Tests register in `tests/modules/run-all.js` and must never write to the tree, which `lib/test-sandbox.js` enforces by giving every suite a throwaway data root.
 
@@ -162,7 +165,7 @@ It owns its declared components in `orchestrator/orchestrator-contract.json` and
 <!-- generated:readme:system:orchestrator:start -->
 #### orchestrator: every module and every file
 
-Orchestrator is 67 files in 4 modules, entry `orchestrator/orchestrator.js`, port 9000, spec `orchestrator/spec/orchestrator.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/orchestrator-atlas.md`.
+Orchestrator is 78 files in 5 modules, entry `orchestrator/orchestrator.js`, port 9000, spec `orchestrator/spec/orchestrator.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/orchestrator-atlas.md`.
 
 <details>
 <summary>`orchestrator/` · 5 files</summary>
@@ -172,6 +175,17 @@ Orchestrator is 67 files in 4 modules, entry `orchestrator/orchestrator.js`, por
 - `orchestrator/orchestrator-contract.json`
 - `orchestrator/orchestrator.config.json`
 - `orchestrator/orchestrator.js` — // 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come…
+
+</details>
+
+<details>
+<summary>`orchestrator/auth/` · 5 files</summary>
+
+- `orchestrator/auth/client.js` — auth/client.js — NEXUS Remote Client First-run: generates RSA-2048 keypair, prints public key for admin to…
+- `orchestrator/auth/index.js`
+- `orchestrator/auth/keys/nexus-private.pem`
+- `orchestrator/auth/keys/nexus-public.pem`
+- `orchestrator/auth/policy.json`
 
 </details>
 
@@ -203,7 +217,7 @@ Orchestrator is 67 files in 4 modules, entry `orchestrator/orchestrator.js`, por
 </details>
 
 <details>
-<summary>`orchestrator/phases/` · 40 files</summary>
+<summary>`orchestrator/phases/` · 46 files</summary>
 
 - `orchestrator/phases/2026-08-27-event-taxonomy-and-brainstorm/ET4_orchestrator_autopilot_event_taxonomy.phase`
 - `orchestrator/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET4_orchestrator_autopilot_event_taxonomy-b566d3c8985e27fb.graph`
@@ -217,8 +231,9 @@ Orchestrator is 67 files in 4 modules, entry `orchestrator/orchestrator.js`, por
 - `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/CG3_ublock_style_adblocker-303ef29f7a7e41db.graph`
 - `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/MEM2_ledger_folder_reorg-2338a73cb6de9f6f.graph`
 - `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/MEM3_timestamps_everywhere-3782812ddfa09005.graph`
-- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/VS1_sovereign_folder_and_foundation-0347201816acd368.graph`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/VS1_sovereign_folder_and_foundation-fd93dc1477f0e768.graph`
 - `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/VS4_active_drift_enforcement-225162f916d418e1.graph`
+- `orchestrator/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/_superseded/VS1_sovereign_folder_and_foundation-0347201816acd368.graph`
 - `orchestrator/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P4_repoint_callers.phase`
 - `orchestrator/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P4_repoint_callers-052187ecb12107d5.graph`
 - `orchestrator/phases/2026-09-27-one-idearium-phases-living-spec-nodes/R1_ui_dir_redirect.phase`
@@ -242,8 +257,13 @@ Orchestrator is 67 files in 4 modules, entry `orchestrator/orchestrator.js`, por
 - `orchestrator/phases/2026-10-20-belief-loop/RA0_rca_says_what_it_does.phase`
 - `orchestrator/phases/2026-10-20-belief-loop/graph/RA0_rca_says_what_it_does-a63f882b1b3c07af.graph`
 - `orchestrator/phases/2026-10-21-data-layout/DL7_cortex_snapshot_out.phase`
-- `orchestrator/phases/2026-10-21-data-layout/graph/DL7_cortex_snapshot_out-8a40ede24582f4ff.graph`
+- `orchestrator/phases/2026-10-21-data-layout/graph/DL7_cortex_snapshot_out-ca8ba5f6619be0de.graph`
+- `orchestrator/phases/2026-10-21-data-layout/graph/_superseded/DL7_cortex_snapshot_out-8a40ede24582f4ff.graph`
 - `orchestrator/phases/2026-10-21-data-layout/graph/_superseded/DL7_cortex_snapshot_out-af1c908b9a84788d.graph`
+- `orchestrator/phases/2026-10-24-diagnostic-and-healing-one-system/DH2_every_system_states_its_expectations.phase`
+- `orchestrator/phases/2026-10-24-diagnostic-and-healing-one-system/DH3_the_announce_carries_the_spec.phase`
+- `orchestrator/phases/2026-10-24-diagnostic-and-healing-one-system/graph/DH2_every_system_states_its_expectations-b0d99e22ff786e68.graph`
+- `orchestrator/phases/2026-10-24-diagnostic-and-healing-one-system/graph/DH3_the_announce_carries_the_spec-9f5c61b976d1e15f.graph`
 - `orchestrator/phases/INDEX.md`
 
 </details>
@@ -255,7 +275,7 @@ Orchestrator is 67 files in 4 modules, entry `orchestrator/orchestrator.js`, por
 
 </details>
 
-6 release notes name a file of orchestrator: 0.60.131., 0.60.126., 0.39.355., 0.39.277., 0.39.173., 0.39.172.. Each is in the version history below, in his words.
+7 release notes name a file of orchestrator: 0.60.236., 0.60.131., 0.60.126., 0.39.355., 0.39.277., 0.39.173., 0.39.172.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:orchestrator:end -->
 
@@ -268,14 +288,15 @@ RAID, the routing authority every request passes through (§5.2, §9.1), lives i
 <!-- generated:readme:system:cortex:start -->
 #### cortex: every module and every file
 
-Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cortex/spec/cortex.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cortex-atlas.md`.
+Cortex is 303 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cortex/spec/cortex.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cortex-atlas.md`.
 
 <details>
-<summary>`cortex/` · 9 files</summary>
+<summary>`cortex/` · 10 files</summary>
 
 - `cortex/boot.js`
 - `cortex/compartment.json`
 - `cortex/config.js`
+- `cortex/cortex-service.js`
 - `cortex/cortex-v2.js`
 - `cortex/event-taxonomy.js`
 - `cortex/interaction-contract.json`
@@ -359,10 +380,11 @@ Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 </details>
 
 <details>
-<summary>`cortex/phases/` · 214 files</summary>
+<summary>`cortex/phases/` · 224 files</summary>
 
 - `cortex/phases/2026-08-23-backlog/BL13_cortex_component_registry_move.phase`
-- `cortex/phases/2026-08-23-backlog/graph/BL13_cortex_component_registry_move-7967e5a04f2c6d03.graph`
+- `cortex/phases/2026-08-23-backlog/graph/BL13_cortex_component_registry_move-192cb899df4586a7.graph`
+- `cortex/phases/2026-08-23-backlog/graph/_superseded/BL13_cortex_component_registry_move-7967e5a04f2c6d03.graph`
 - `cortex/phases/2026-08-28-self-building-pipeline/SBP3_wire_contract_intake_through_routing_ir.phase`
 - `cortex/phases/2026-08-28-self-building-pipeline/SBP4_wire_loom_and_selfheal_as_real_contract_sources.phase`
 - `cortex/phases/2026-08-28-self-building-pipeline/SBP5_cortex_data_organization_scoping.phase`
@@ -377,16 +399,18 @@ Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 - `cortex/phases/2026-09-02-nexus-vision-master/SR4_fitness_driven_contract_adjustment.phase`
 - `cortex/phases/2026-09-02-nexus-vision-master/T5_raid_full_cli.phase`
 - `cortex/phases/2026-09-02-nexus-vision-master/V9_precommit_gate_for_raid_contracts.phase`
-- `cortex/phases/2026-09-02-nexus-vision-master/graph/LM5_data_decay_per_system-968c129f68946726.graph`
+- `cortex/phases/2026-09-02-nexus-vision-master/graph/LM5_data_decay_per_system-1481fffb9897c15e.graph`
 - `cortex/phases/2026-09-02-nexus-vision-master/graph/SR4_fitness_driven_contract_adjustment-d411d9559fb15a73.graph`
 - `cortex/phases/2026-09-02-nexus-vision-master/graph/T5_raid_full_cli-0ea6cdd19666fd57.graph`
 - `cortex/phases/2026-09-02-nexus-vision-master/graph/V9_precommit_gate_for_raid_contracts-088f2ec27fdd977e.graph`
+- `cortex/phases/2026-09-02-nexus-vision-master/graph/_superseded/LM5_data_decay_per_system-968c129f68946726.graph`
 - `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/CG3_relay_into_cortex_sse.phase`
 - `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/DF2_cortex_and_versionium_off_root_data.phase`
 - `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/HIST1_boundary_constraint_history_schema.phase`
-- `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/CG3_relay_into_cortex_sse-24e51983a5045f80.graph`
+- `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/CG3_relay_into_cortex_sse-7b826bf2033ae46a.graph`
 - `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/DF2_cortex_and_versionium_off_root_data-878b01658023f007.graph`
 - `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/HIST1_boundary_constraint_history_schema-7a9b8b7a2b2c78de.graph`
+- `cortex/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/_superseded/CG3_relay_into_cortex_sse-24e51983a5045f80.graph`
 - `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/D2_self_heal_migration.phase`
 - `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/R1_recall_to_lib.phase`
 - `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/V2_snapshot_ownership_decision.phase`
@@ -394,11 +418,14 @@ Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 - `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/graph/R1_recall_to_lib-32458afe2804d0bc.graph`
 - `cortex/phases/2026-09-11-compartment-nodetype-and-reorg/graph/V2_snapshot_ownership_decision-812e620fe68626d8.graph`
 - `cortex/phases/2026-09-11-sovereign-node-architecture/P11_unify_failure_tracking.phase`
-- `cortex/phases/2026-09-11-sovereign-node-architecture/graph/P11_unify_failure_tracking-3a5dd3cf9faa33c1.graph`
+- `cortex/phases/2026-09-11-sovereign-node-architecture/graph/P11_unify_failure_tracking-349d9e95cc879e13.graph`
+- `cortex/phases/2026-09-11-sovereign-node-architecture/graph/_superseded/P11_unify_failure_tracking-3a5dd3cf9faa33c1.graph`
 - `cortex/phases/2026-09-13-axiom-5-2-raid-routing/MCO12_guardian_audit_complete.phase`
 - `cortex/phases/2026-09-13-axiom-5-2-raid-routing/MCO8_wire_the_honest_subset.phase`
-- `cortex/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO12_guardian_audit_complete-ff11ef686e0084e9.graph`
-- `cortex/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO8_wire_the_honest_subset-ea1b8c0c845ac17a.graph`
+- `cortex/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO12_guardian_audit_complete-47d560ccb245778e.graph`
+- `cortex/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO8_wire_the_honest_subset-532466528ec12a38.graph`
+- `cortex/phases/2026-09-13-axiom-5-2-raid-routing/graph/_superseded/MCO12_guardian_audit_complete-ff11ef686e0084e9.graph`
+- `cortex/phases/2026-09-13-axiom-5-2-raid-routing/graph/_superseded/MCO8_wire_the_honest_subset-ea1b8c0c845ac17a.graph`
 - `cortex/phases/2026-09-13-track-b-sovereignty/MCO17_contract_boundary_retracted.phase`
 - `cortex/phases/2026-09-13-track-b-sovereignty/MCO18_interaction_contract_split_scoped.phase`
 - `cortex/phases/2026-09-13-track-b-sovereignty/graph/MCO17_contract_boundary_retracted-7e7a95ae7baa92ae.graph`
@@ -414,11 +441,13 @@ Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 - `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B1_field_ownership-b57173bf62bbbbb6.graph`
 - `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B2_jaadb_not_single_writer-d497d683710ee21c.graph`
 - `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B4_userscript_cutover-3f2e8e0e67d4f20b.graph`
-- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B6_two_intelligence_runtimes-0258dad07ec7a2de.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B6_two_intelligence_runtimes-a698c063f3e574d8.graph`
 - `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P1_characterization-47dc454012e2d666.graph`
 - `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P3_cortex_becomes_forwarder-76fa1bf1526a963a.graph`
-- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P5_retire_second_runtime-7cbaf0dae879f2ed.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P5_retire_second_runtime-ab577dbf90759953.graph`
 - `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P6_versionium_residue-16ec7c94e45a4c8c.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/_superseded/B6_two_intelligence_runtimes-0258dad07ec7a2de.graph`
+- `cortex/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/_superseded/P5_retire_second_runtime-7cbaf0dae879f2ed.graph`
 - `cortex/phases/2026-09-28-graph-build-context-settings-memory/C2.phase`
 - `cortex/phases/2026-09-28-graph-build-context-settings-memory/M2.phase`
 - `cortex/phases/2026-09-28-graph-build-context-settings-memory/M3.phase`
@@ -471,14 +500,17 @@ Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 - `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT1b_reviewed-3178ffe24c2f885c.graph`
 - `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/EX0_executors_he_already_built-d7ad680fcecf9144.graph`
 - `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/MEM0_nexus_holds_everything-b3af5dee49c651c8.graph`
-- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/SC0_scheduler-c788fb307eb53e0b.graph`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/SC0_scheduler-94d357359b032b20.graph`
 - `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/TD0_today_and_yesterday_working-91e91c8146a1148c.graph`
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/graph/_superseded/SC0_scheduler-c788fb307eb53e0b.graph`
 - `cortex/phases/2026-10-13-projects-raid-and-gates/RD0_raid_has_its_own_contract.phase`
 - `cortex/phases/2026-10-13-projects-raid-and-gates/RD1_raid_commands.phase`
 - `cortex/phases/2026-10-13-projects-raid-and-gates/RD4_the_fulfilled_contract_is_one_file.phase`
 - `cortex/phases/2026-10-13-projects-raid-and-gates/graph/RD0_raid_has_its_own_contract-3b0ad3c04c18a6bb.graph`
-- `cortex/phases/2026-10-13-projects-raid-and-gates/graph/RD1_raid_commands-eaf659e67016b3ac.graph`
+- `cortex/phases/2026-10-13-projects-raid-and-gates/graph/RD1_raid_commands-620a12090c54f346.graph`
 - `cortex/phases/2026-10-13-projects-raid-and-gates/graph/RD4_the_fulfilled_contract_is_one_file-757df4a3809c380a.graph`
+- `cortex/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/RD1_raid_commands-27db254e34bab9f0.graph`
+- `cortex/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/RD1_raid_commands-eaf659e67016b3ac.graph`
 - `cortex/phases/2026-10-15-automatic-tracking/GA1_the_gate_assesses_before_it_spends.phase`
 - `cortex/phases/2026-10-15-automatic-tracking/GT2_each_gate_tags_and_reports.phase`
 - `cortex/phases/2026-10-15-automatic-tracking/QA2_a_real_run.phase`
@@ -492,15 +524,17 @@ Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 - `cortex/phases/2026-10-15-gate-held-work/GW25_the_systems_at_the_gate_moments.phase`
 - `cortex/phases/2026-10-15-gate-held-work/GW26_everything_declares_what_it_needs.phase`
 - `cortex/phases/2026-10-15-gate-held-work/graph/GW1_the_baton-2558d35dc4282735.graph`
-- `cortex/phases/2026-10-15-gate-held-work/graph/GW24_the_gate_holds_the_agent_gets_a_projection-80b3bd80f12d4cc4.graph`
+- `cortex/phases/2026-10-15-gate-held-work/graph/GW24_the_gate_holds_the_agent_gets_a_projection-9314e8e9be6ae30f.graph`
 - `cortex/phases/2026-10-15-gate-held-work/graph/GW25_the_systems_at_the_gate_moments-0b4eab67c2ed65d7.graph`
 - `cortex/phases/2026-10-15-gate-held-work/graph/GW26_everything_declares_what_it_needs-c970dbd56ce21cc0.graph`
+- `cortex/phases/2026-10-15-gate-held-work/graph/_superseded/GW24_the_gate_holds_the_agent_gets_a_projection-80b3bd80f12d4cc4.graph`
 - `cortex/phases/2026-10-15-one-contract-raid-releases/BR2_recursion_to_a_depth.phase`
 - `cortex/phases/2026-10-15-one-contract-raid-releases/GT1a_exhausted_climb_spends_its_attempt.phase`
 - `cortex/phases/2026-10-15-one-contract-raid-releases/RD0_raid_runs_the_contract.phase`
 - `cortex/phases/2026-10-15-one-contract-raid-releases/graph/BR2_recursion_to_a_depth-2e171420309b04aa.graph`
-- `cortex/phases/2026-10-15-one-contract-raid-releases/graph/GT1a_exhausted_climb_spends_its_attempt-6108f2a7ab7f09d8.graph`
+- `cortex/phases/2026-10-15-one-contract-raid-releases/graph/GT1a_exhausted_climb_spends_its_attempt-58ea4664b2b176b8.graph`
 - `cortex/phases/2026-10-15-one-contract-raid-releases/graph/RD0_raid_runs_the_contract-e1539a5fce346d1b.graph`
+- `cortex/phases/2026-10-15-one-contract-raid-releases/graph/_superseded/GT1a_exhausted_climb_spends_its_attempt-6108f2a7ab7f09d8.graph`
 - `cortex/phases/2026-10-15-spec-foundation-model/SF1_foundation_field.phase`
 - `cortex/phases/2026-10-15-spec-foundation-model/SF2_state_and_gate.phase`
 - `cortex/phases/2026-10-15-spec-foundation-model/SF3_evidence_not_claims.phase`
@@ -546,7 +580,8 @@ Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 - `cortex/phases/2026-10-20-substrate-graph-traversal-chunking-gating/DK1_dynamic_chunking.phase`
 - `cortex/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/DK1_dynamic_chunking-2e1c9985830b2941.graph`
 - `cortex/phases/2026-10-21-data-layout/DL6_cortex_server.phase`
-- `cortex/phases/2026-10-21-data-layout/graph/DL6_cortex_server-12bcbaa9f6f99ef8.graph`
+- `cortex/phases/2026-10-21-data-layout/graph/DL6_cortex_server-a8a702303bb02f47.graph`
+- `cortex/phases/2026-10-21-data-layout/graph/_superseded/DL6_cortex_server-12bcbaa9f6f99ef8.graph`
 - `cortex/phases/2026-10-21-data-layout/graph/_superseded/DL6_cortex_server-1ac803216ae293ca.graph`
 - `cortex/phases/INDEX.md`
 - `cortex/phases/agent-model-and-user-continuity/AM4_full_user_continuity.phase`
@@ -557,16 +592,12 @@ Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 - `cortex/phases/copilot-full-capability/P4_raid_snr_query_tool.phase`
 - `cortex/phases/copilot-full-capability/graph/P1_cross_agent_recall-a040d6583f3e1e8b.graph`
 - `cortex/phases/copilot-full-capability/graph/P4_raid_snr_query_tool-f934b5bf077cf0cd.graph`
+- `cortex/phases/copilot-omniscience/P2_persistence_threaded.phase`
+- `cortex/phases/copilot-omniscience/graph/P2_persistence_threaded-1712827131ffab10.graph`
 - `cortex/phases/gemini-multiagent-coding/P3_line_block_seam_sync.phase`
 - `cortex/phases/gemini-multiagent-coding/graph/P3_line_block_seam_sync-4c9b125899b7ce0f.graph`
 - `cortex/phases/nexus-architecture-rebuild/P7_schema_based_persistence_system_wide.phase`
 - `cortex/phases/nexus-architecture-rebuild/graph/P7_schema_based_persistence_system_wide-553361839aed4212.graph`
-- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/NC1_compartment_bootstrapping_decision.phase`
-- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/NC2_nested_compartment_support.phase`
-- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/RS1_repo_settings_sections.phase`
-- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/graph/NC1_compartment_bootstrapping_decision-bf4d956cc2a7c398.graph`
-- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/graph/NC2_nested_compartment_support-0b4000d92371184e.graph`
-- `cortex/phases/nexus-repo-compartment-and-rich-dispatch/graph/RS1_repo_settings_sections-06ec8dbcca479409.graph`
 - `cortex/phases/raid-routing-fidelity/RR1_verify_and_wire_the_snr_fidelity_gate.phase`
 - `cortex/phases/raid-routing-fidelity/RR6_cortex_fitness_and_fluid_configs.phase`
 - `cortex/phases/raid-routing-fidelity/graph/RR1_verify_and_wire_the_snr_fidelity_gate-811ac85b77bfb21d.graph`
@@ -646,23 +677,23 @@ Cortex is 292 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 
 </details>
 
-34 release notes name a file of cortex: 0.60.233., 0.60.226., 0.60.224., 0.60.203., 0.60.177., 0.60.158., 0.60.157., 0.60.150., 0.60.149., 0.60.147., 0.60.145., 0.60.133., 0.60.132., 0.60.131., 0.60.94., 0.60.79., 0.60.78., 0.60.75., 0.60.73., 0.60.36., 0.60.30., 0.60.29., 0.60.18., 0.60.16., 0.60.15., 0.60.3., 0.59.6., 0.43.0., 0.39.342., 0.39.333., 0.39.277., 0.39.267., 0.39.236., 0.39.181.. Each is in the version history below, in his words.
+35 release notes name a file of cortex: 0.60.236., 0.60.233., 0.60.226., 0.60.224., 0.60.203., 0.60.177., 0.60.158., 0.60.157., 0.60.150., 0.60.149., 0.60.147., 0.60.145., 0.60.133., 0.60.132., 0.60.131., 0.60.94., 0.60.79., 0.60.78., 0.60.75., 0.60.73., 0.60.36., 0.60.30., 0.60.29., 0.60.18., 0.60.16., 0.60.15., 0.60.3., 0.59.6., 0.43.0., 0.39.342., 0.39.333., 0.39.277., 0.39.267., 0.39.236., 0.39.181.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:cortex:end -->
 
 ### guardian
 
-The AI engine and NEXUS's only point of contact with AI providers: no API keys, no external inference calls, browser tabs only. `guardian/server.js` on :7820 receives jobs, and `guardian/lib/` is where they are handled: `guardian/lib/jobs.js` and `guardian/lib/dispatcher.js` for the job lifecycle, `guardian/lib/dispatch-pool.js` and `guardian/lib/dispatch-ladder.js` for choosing a tab, `guardian/lib/ncp.js` and `guardian/lib/ncp-handler.js` for the NCP protocol the userscripts speak, `guardian/lib/agent-registry.js` and `guardian/lib/selector-map.js` for each provider's page selectors, `guardian/lib/wake-loop.js` for an agent's "hey nexus" to NEXUS, and `guardian/lib/node-registry.js` for its JAA-backed node types, the watcher pattern `architecture-spec` generalizes. When a tab needs the person, a sign-in wall, a chat it cannot map, a tab that never connects, `guardian/lib/provider-attention.js` asks Clear Glass to show that tab with a Nexus panel and its element picker (`clear-glass/src/providers/attention.js`).
+The AI engine and NEXUS's only point of contact with AI providers: no API keys, no external inference calls, browser tabs only. `guardian/server.js` on :7820 receives jobs, and `guardian/lib/` is where they are handled: `guardian/lib/jobs.js` and `guardian/lib/dispatcher.js` for the job lifecycle, `guardian/lib/dispatch-pool.js` and `guardian/lib/dispatch-ladder.js` for choosing a tab, `guardian/lib/ncp.js` and `guardian/lib/ncp-handler.js` for the NCP protocol the userscripts speak, `guardian/lib/agent-registry.js` and `guardian/lib/selector-map.js` for each provider's page selectors, `guardian/lib/wake-loop.js` for an agent's "hey nexus" to NEXUS, and `guardian/lib/node-registry.js` for its JAA-backed node types, the watcher pattern `idearium/architecture-spec/` generalizes. When a tab needs the person, a sign-in wall, a chat it cannot map, a tab that never connects, `guardian/lib/provider-attention.js` asks Clear Glass to show that tab with a Nexus panel and its element picker (`clear-glass/src/providers/attention.js`).
 
 The provider side is the userscripts: `guardian/userscript-chatgpt.js`, `guardian/userscript-claude.js`, `guardian/userscript-gemini.js`, `guardian/userscript-perplexity.js` and `guardian/userscript-deepseek.js`, declared in `guardian/userscripts.yaml`. Its commands live in `guardian/commands/`, its routes in `guardian/routes/`, and its spec in `guardian/spec/guardian.spec`. The next zoom level is `guardian-atlas.md`.
 
 <!-- generated:readme:system:guardian:start -->
 #### guardian: every module and every file
 
-Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec `guardian/spec/guardian.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/guardian-atlas.md`.
+Guardian is 429 files in 47 modules, entry `guardian/server.js`, port 7820, spec `guardian/spec/guardian.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/guardian-atlas.md`.
 
 <details>
-<summary>`guardian/` · 35 files</summary>
+<summary>`guardian/` · 36 files</summary>
 
 - `guardian/api-dispatch.js`
 - `guardian/artifact-upload.js`
@@ -677,6 +708,7 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 - `guardian/guardian-api.js`
 - `guardian/guardian-cert.pem`
 - `guardian/guardian-key.pem`
+- `guardian/guardian-service.js`
 - `guardian/guardian.config.json`
 - `guardian/interaction-contract.json`
 - `guardian/interaction-contract.v2.json`
@@ -860,6 +892,32 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
+<summary>`guardian/mesh/` · 4 files</summary>
+
+- `guardian/mesh/README.md` — mesh — BrainOS, rebuilt for nexus (RELOCATED 2026-09-03)
+- `guardian/mesh/config.js` — // mesh/config.js — config for the mesh subsystem // UUID: nexus-mesh-config-v1-0000-4700-0000-000000000001
+- `guardian/mesh/daemons.js` — // mesh/daemons.js — optional standalone network daemons ported from BrainOS. // UUID:…
+- `guardian/mesh/install.js` — // mesh/install.js — wires the ported mesh modules together. // UUID:…
+
+</details>
+
+<details>
+<summary>`guardian/mesh/lib/` · 10 files</summary>
+
+- `guardian/mesh/lib/canvas-persistence.js`
+- `guardian/mesh/lib/crypto-engine.js`
+- `guardian/mesh/lib/ddns.js`
+- `guardian/mesh/lib/dns-server.js`
+- `guardian/mesh/lib/firewall.js`
+- `guardian/mesh/lib/host-rotation.js`
+- `guardian/mesh/lib/key-manager.js`
+- `guardian/mesh/lib/mesh-snr-filter.js`
+- `guardian/mesh/lib/port-registry.js`
+- `guardian/mesh/lib/reverse-proxy.js`
+
+</details>
+
+<details>
 <summary>`guardian/output/` · 1 file</summary>
 
 - `guardian/output/.gitkeep`
@@ -902,10 +960,20 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/2026-08-30-interaction-contract-context/` · 2 files</summary>
+<summary>`guardian/phases/2026-08-30-interaction-contract-context/` · 12 files</summary>
 
+- `guardian/phases/2026-08-30-interaction-contract-context/IC10_diagnostic_own_real_system_structure.phase`
 - `guardian/phases/2026-08-30-interaction-contract-context/IC1_context_by_uuid_injection.phase`
+- `guardian/phases/2026-08-30-interaction-contract-context/IC3_intention_taxonomy_per_system.phase`
+- `guardian/phases/2026-08-30-interaction-contract-context/IC4_idearium_system_template_update.phase`
+- `guardian/phases/2026-08-30-interaction-contract-context/IC8_callto_event_driven_cli_injection.phase`
+- `guardian/phases/2026-08-30-interaction-contract-context/IC9_diagnostic_stall_detection_and_autofix.phase`
+- `guardian/phases/2026-08-30-interaction-contract-context/graph/IC10_diagnostic_own_real_system_structure-ae8bcbb062cc4b81.graph`
 - `guardian/phases/2026-08-30-interaction-contract-context/graph/IC1_context_by_uuid_injection-e3fff7e8482237f8.graph`
+- `guardian/phases/2026-08-30-interaction-contract-context/graph/IC3_intention_taxonomy_per_system-4e285ed5aef34d74.graph`
+- `guardian/phases/2026-08-30-interaction-contract-context/graph/IC4_idearium_system_template_update-9f874130772add91.graph`
+- `guardian/phases/2026-08-30-interaction-contract-context/graph/IC8_callto_event_driven_cli_injection-f44516d2a55c9222.graph`
+- `guardian/phases/2026-08-30-interaction-contract-context/graph/IC9_diagnostic_stall_detection_and_autofix-13ed862cf85ae1ff.graph`
 
 </details>
 
@@ -988,10 +1056,11 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/2026-09-05-observability-sovereignty-and-agent-mesh/` · 2 files</summary>
+<summary>`guardian/phases/2026-09-05-observability-sovereignty-and-agent-mesh/` · 3 files</summary>
 
 - `guardian/phases/2026-09-05-observability-sovereignty-and-agent-mesh/DF1_guardian_own_data_folder.phase`
-- `guardian/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/DF1_guardian_own_data_folder-688ee953c3e55552.graph`
+- `guardian/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/DF1_guardian_own_data_folder-2e226062d179324f.graph`
+- `guardian/phases/2026-09-05-observability-sovereignty-and-agent-mesh/graph/_superseded/DF1_guardian_own_data_folder-688ee953c3e55552.graph`
 
 </details>
 
@@ -1006,10 +1075,11 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/2026-09-13-axiom-5-2-raid-routing/` · 2 files</summary>
+<summary>`guardian/phases/2026-09-13-axiom-5-2-raid-routing/` · 3 files</summary>
 
 - `guardian/phases/2026-09-13-axiom-5-2-raid-routing/MCO12_guardian_list_was_unreliable.phase`
-- `guardian/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO12_guardian_list_was_unreliable-699ffb5ba2eb8fea.graph`
+- `guardian/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO12_guardian_list_was_unreliable-2a4738616fd6035f.graph`
+- `guardian/phases/2026-09-13-axiom-5-2-raid-routing/graph/_superseded/MCO12_guardian_list_was_unreliable-699ffb5ba2eb8fea.graph`
 
 </details>
 
@@ -1042,12 +1112,13 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/` · 4 files</summary>
+<summary>`guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/` · 5 files</summary>
 
 - `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/R1.phase`
 - `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/T1.phase`
-- `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/R1-3c37b05f3eb39ced.graph`
+- `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/R1-372d486588abdfc2.graph`
 - `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/T1-a15775f6e0b048ee.graph`
+- `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/_superseded/R1-3c37b05f3eb39ced.graph`
 
 </details>
 
@@ -1060,10 +1131,11 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` · 2 files</summary>
+<summary>`guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` · 3 files</summary>
 
 - `guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/X2_guardian_hat_agent.phase`
-- `guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X2_guardian_hat_agent-03ec77b2152e6de4.graph`
+- `guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X2_guardian_hat_agent-34e8d01457f2b433.graph`
+- `guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/X2_guardian_hat_agent-03ec77b2152e6de4.graph`
 
 </details>
 
@@ -1086,18 +1158,20 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/2026-09-29-build-surface/` · 2 files</summary>
+<summary>`guardian/phases/2026-09-29-build-surface/` · 3 files</summary>
 
 - `guardian/phases/2026-09-29-build-surface/BS16_provider_login_wall.phase`
-- `guardian/phases/2026-09-29-build-surface/graph/BS16_provider_login_wall-b6c1499352b07bb4.graph`
+- `guardian/phases/2026-09-29-build-surface/graph/BS16_provider_login_wall-0555ae73a52e7573.graph`
+- `guardian/phases/2026-09-29-build-surface/graph/_superseded/BS16_provider_login_wall-b6c1499352b07bb4.graph`
 
 </details>
 
 <details>
-<summary>`guardian/phases/2026-09-29-provider-economy/` · 2 files</summary>
+<summary>`guardian/phases/2026-09-29-provider-economy/` · 3 files</summary>
 
 - `guardian/phases/2026-09-29-provider-economy/EC6_guardian_enforcement.phase`
-- `guardian/phases/2026-09-29-provider-economy/graph/EC6_guardian_enforcement-f302afba554cf0ff.graph`
+- `guardian/phases/2026-09-29-provider-economy/graph/EC6_guardian_enforcement-1f3590b568f96671.graph`
+- `guardian/phases/2026-09-29-provider-economy/graph/_superseded/EC6_guardian_enforcement-f302afba554cf0ff.graph`
 
 </details>
 
@@ -1144,7 +1218,7 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/2026-10-09-hardening-pass/` · 16 files</summary>
+<summary>`guardian/phases/2026-10-09-hardening-pass/` · 17 files</summary>
 
 - `guardian/phases/2026-10-09-hardening-pass/HP11_a_reply_on_the_page_is_never_sent_again.phase`
 - `guardian/phases/2026-10-09-hardening-pass/HP13_the_failure_is_put_at_the_right_gate.phase`
@@ -1158,10 +1232,11 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 - `guardian/phases/2026-10-09-hardening-pass/graph/HP13_the_failure_is_put_at_the_right_gate-17395f231ced9d63.graph`
 - `guardian/phases/2026-10-09-hardening-pass/graph/HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds-484cb9512f837f5a.graph`
 - `guardian/phases/2026-10-09-hardening-pass/graph/HP15_a_typed_prompt_is_never_sent_again-5c7b24fc42656fde.graph`
-- `guardian/phases/2026-10-09-hardening-pass/graph/HP16_a_job_nobody_waits_for_is_not_sent_later-2655911d9edadb7f.graph`
+- `guardian/phases/2026-10-09-hardening-pass/graph/HP16_a_job_nobody_waits_for_is_not_sent_later-5f7bacd397c46c43.graph`
 - `guardian/phases/2026-10-09-hardening-pass/graph/HP17_no_tab_is_said_in_seconds-9bc532dfbe78e5c6.graph`
 - `guardian/phases/2026-10-09-hardening-pass/graph/HP21_the_economy_holding_a_job_is_said-987bfbb18c496d42.graph`
 - `guardian/phases/2026-10-09-hardening-pass/graph/HP22_a_missing_tab_is_not_a_login_wall-7116d27e8a0491f4.graph`
+- `guardian/phases/2026-10-09-hardening-pass/graph/_superseded/HP16_a_job_nobody_waits_for_is_not_sent_later-2655911d9edadb7f.graph`
 
 </details>
 
@@ -1174,20 +1249,23 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/2026-10-10-copilot-talk-to-nexus/` · 2 files</summary>
+<summary>`guardian/phases/2026-10-10-copilot-talk-to-nexus/` · 4 files</summary>
 
 - `guardian/phases/2026-10-10-copilot-talk-to-nexus/TN1.phase`
-- `guardian/phases/2026-10-10-copilot-talk-to-nexus/graph/TN1-6f462d9a0ad9d3e2.graph`
+- `guardian/phases/2026-10-10-copilot-talk-to-nexus/graph/TN1-32c7f9698ed2b970.graph`
+- `guardian/phases/2026-10-10-copilot-talk-to-nexus/graph/_superseded/TN1-6f462d9a0ad9d3e2.graph`
+- `guardian/phases/2026-10-10-copilot-talk-to-nexus/graph/_superseded/TN1-927c85c28b6c7e80.graph`
 
 </details>
 
 <details>
-<summary>`guardian/phases/2026-10-10-idearium-solid/` · 4 files</summary>
+<summary>`guardian/phases/2026-10-10-idearium-solid/` · 5 files</summary>
 
 - `guardian/phases/2026-10-10-idearium-solid/SD15_no_website_can_drive_nexus.phase`
 - `guardian/phases/2026-10-10-idearium-solid/SD3_the_person_goes_first.phase`
-- `guardian/phases/2026-10-10-idearium-solid/graph/SD15_no_website_can_drive_nexus-c5838680af6ae20a.graph`
+- `guardian/phases/2026-10-10-idearium-solid/graph/SD15_no_website_can_drive_nexus-b50befd0bf62c343.graph`
 - `guardian/phases/2026-10-10-idearium-solid/graph/SD3_the_person_goes_first-244b6541848ccd0b.graph`
+- `guardian/phases/2026-10-10-idearium-solid/graph/_superseded/SD15_no_website_can_drive_nexus-c5838680af6ae20a.graph`
 
 </details>
 
@@ -1234,10 +1312,11 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/2026-10-17-failure-mode-report/` · 2 files</summary>
+<summary>`guardian/phases/2026-10-17-failure-mode-report/` · 3 files</summary>
 
 - `guardian/phases/2026-10-17-failure-mode-report/FMR5_replay_routes.phase`
-- `guardian/phases/2026-10-17-failure-mode-report/graph/FMR5_replay_routes-fbcdf4cf365d0b2c.graph`
+- `guardian/phases/2026-10-17-failure-mode-report/graph/FMR5_replay_routes-96158faa1b751b4d.graph`
+- `guardian/phases/2026-10-17-failure-mode-report/graph/_superseded/FMR5_replay_routes-fbcdf4cf365d0b2c.graph`
 
 </details>
 
@@ -1251,10 +1330,11 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/copilot-omniscience/` · 2 files</summary>
+<summary>`guardian/phases/copilot-omniscience/` · 3 files</summary>
 
 - `guardian/phases/copilot-omniscience/P4_guardian_tool_loop.phase`
-- `guardian/phases/copilot-omniscience/graph/P4_guardian_tool_loop-c8dd2f30f0b16d44.graph`
+- `guardian/phases/copilot-omniscience/graph/P4_guardian_tool_loop-889a68efafa40af8.graph`
+- `guardian/phases/copilot-omniscience/graph/_superseded/P4_guardian_tool_loop-c8dd2f30f0b16d44.graph`
 
 </details>
 
@@ -1323,7 +1403,7 @@ Guardian is 392 files in 45 modules, entry `guardian/server.js`, port 7820, spec
 
 </details>
 
-59 release notes name a file of guardian: 0.60.225., 0.60.208., 0.60.205., 0.60.191., 0.60.158., 0.60.149., 0.60.148., 0.60.146., 0.60.143., 0.60.133., 0.60.132., 0.60.131., 0.60.130., 0.60.124., 0.60.120., 0.60.113., 0.60.100., 0.60.70., 0.60.28., 0.60.15., 0.60.10., 0.60.2., 0.60.0., 0.59.15., 0.57.0., 0.54.0., 0.42.0., 0.41.0., 0.40.1., 0.39.335., 0.39.282., 0.39.281., 0.39.279., 0.39.278., 0.39.269., 0.39.268., 0.39.267., 0.39.266., 0.39.263., 0.39.256., and 19 older. Each is in the version history below, in his words.
+60 release notes name a file of guardian: 0.60.236., 0.60.225., 0.60.208., 0.60.205., 0.60.191., 0.60.158., 0.60.149., 0.60.148., 0.60.146., 0.60.143., 0.60.133., 0.60.132., 0.60.131., 0.60.130., 0.60.124., 0.60.120., 0.60.113., 0.60.100., 0.60.70., 0.60.28., 0.60.15., 0.60.10., 0.60.2., 0.60.0., 0.59.15., 0.57.0., 0.54.0., 0.42.0., 0.41.0., 0.40.1., 0.39.335., 0.39.282., 0.39.281., 0.39.279., 0.39.278., 0.39.269., 0.39.268., 0.39.267., 0.39.266., 0.39.263., and 20 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:guardian:end -->
 
@@ -1336,10 +1416,10 @@ The spec engine in `idearium/spec-engine/` turns an idea into a spec by chunking
 <!-- generated:readme:system:idearium:start -->
 #### idearium: every module and every file
 
-Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, spec `idearium/spec/idearium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/idearium-atlas.md`.
+Idearium is 1190 files in 113 modules, entry `idearium/api/index.js`, port 4800, spec `idearium/spec/idearium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/idearium-atlas.md`.
 
 <details>
-<summary>`idearium/` · 12 files</summary>
+<summary>`idearium/` · 13 files</summary>
 
 - `idearium/CHANGES-2026-07-11-MERGE.md`
 - `idearium/CHANGES-2026-07-11.md`
@@ -1348,6 +1428,7 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/compiler-bridge.js`
 - `idearium/config.js`
 - `idearium/event-taxonomy.cjs`
+- `idearium/idearium-service.js`
 - `idearium/idearium.config.json`
 - `idearium/index.js`
 - `idearium/interaction-contract.json`
@@ -1368,6 +1449,26 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 
 - `idearium/api/build-surface.js`
 - `idearium/api/index.js` — ╔══════════════════════════════════════════════════════════════════════════╗ ║ Idearium HTTP API —…
+
+</details>
+
+<details>
+<summary>`idearium/architecture-spec/registry/` · 14 files</summary>
+
+- `idearium/architecture-spec/registry/api.js`
+- `idearium/architecture-spec/registry/bundle.js`
+- `idearium/architecture-spec/registry/component.js`
+- `idearium/architecture-spec/registry/config.js`
+- `idearium/architecture-spec/registry/create-atlas.js`
+- `idearium/architecture-spec/registry/decompose.js`
+- `idearium/architecture-spec/registry/edit-atlas.js`
+- `idearium/architecture-spec/registry/friction.js`
+- `idearium/architecture-spec/registry/hook.js`
+- `idearium/architecture-spec/registry/lattice.js`
+- `idearium/architecture-spec/registry/nexus-atlas-aggregate.js`
+- `idearium/architecture-spec/registry/phases.js`
+- `idearium/architecture-spec/registry/watcher.js`
+- `idearium/architecture-spec/registry/wire.js`
 
 </details>
 
@@ -1432,14 +1533,11 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-08-28-definition-of-complete/` · 6 files</summary>
+<summary>`idearium/phases/2026-08-28-definition-of-complete/` · 3 files</summary>
 
-- `idearium/phases/2026-08-28-definition-of-complete/DOD1_fully_autonomous.phase`
 - `idearium/phases/2026-08-28-definition-of-complete/DOD3_build_using_idearium.phase`
-- `idearium/phases/2026-08-28-definition-of-complete/DOD7_tested_using_cos.phase`
-- `idearium/phases/2026-08-28-definition-of-complete/graph/DOD1_fully_autonomous-e5fd79a1162932ba.graph`
-- `idearium/phases/2026-08-28-definition-of-complete/graph/DOD3_build_using_idearium-081cb2e45bf759cd.graph`
-- `idearium/phases/2026-08-28-definition-of-complete/graph/DOD7_tested_using_cos-a31ec4e8442ad5dc.graph`
+- `idearium/phases/2026-08-28-definition-of-complete/graph/DOD3_build_using_idearium-2c5d5dfc92a15b2a.graph`
+- `idearium/phases/2026-08-28-definition-of-complete/graph/_superseded/DOD3_build_using_idearium-081cb2e45bf759cd.graph`
 
 </details>
 
@@ -1452,10 +1550,11 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-01-living-model-and-autonomous-pipeline/` · 2 files</summary>
+<summary>`idearium/phases/2026-09-01-living-model-and-autonomous-pipeline/` · 3 files</summary>
 
 - `idearium/phases/2026-09-01-living-model-and-autonomous-pipeline/LM19_atlas_spec_coverage_prerequisite.phase`
-- `idearium/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM19_atlas_spec_coverage_prerequisite-8a1244b9d4b5690b.graph`
+- `idearium/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM19_atlas_spec_coverage_prerequisite-d1e7eeff5ad6364d.graph`
+- `idearium/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/_superseded/LM19_atlas_spec_coverage_prerequisite-8a1244b9d4b5690b.graph`
 
 </details>
 
@@ -1476,50 +1575,58 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-13-axiom-5-2-raid-routing/` · 2 files</summary>
+<summary>`idearium/phases/2026-09-13-axiom-5-2-raid-routing/` · 3 files</summary>
 
 - `idearium/phases/2026-09-13-axiom-5-2-raid-routing/MCO7_map_real_proxy_traffic.phase`
-- `idearium/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO7_map_real_proxy_traffic-5b0ac9cdc5f323dc.graph`
+- `idearium/phases/2026-09-13-axiom-5-2-raid-routing/graph/MCO7_map_real_proxy_traffic-d1cfa064e384adfe.graph`
+- `idearium/phases/2026-09-13-axiom-5-2-raid-routing/graph/_superseded/MCO7_map_real_proxy_traffic-5b0ac9cdc5f323dc.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` · 4 files</summary>
+<summary>`idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` · 5 files</summary>
 
 - `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/N1.phase`
 - `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/T6.phase`
 - `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/N1-3390cee61d2ebd05.graph`
-- `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T6-3810abea7c97f392.graph`
+- `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T6-c2c6902939c1f533.graph`
+- `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/_superseded/T6-3810abea7c97f392.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/` · 2 files</summary>
+<summary>`idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/` · 3 files</summary>
 
 - `idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/I1.phase`
-- `idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/I1-3e215fa27c0ef67b.graph`
+- `idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/I1-647d5aac3c7988e9.graph`
+- `idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/_superseded/I1-3e215fa27c0ef67b.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-27-agent-hat-memory-download-manager/` · 6 files</summary>
+<summary>`idearium/phases/2026-09-27-agent-hat-memory-download-manager/` · 9 files</summary>
 
 - `idearium/phases/2026-09-27-agent-hat-memory-download-manager/G5.phase`
 - `idearium/phases/2026-09-27-agent-hat-memory-download-manager/H3.phase`
 - `idearium/phases/2026-09-27-agent-hat-memory-download-manager/M5.phase`
-- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/G5-48560a4db949405d.graph`
-- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/H3-0ab7eb9f0c2f66ba.graph`
-- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/M5-757541e5426618eb.graph`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/G5-35fe9a2cfba852af.graph`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/H3-6062a911dd3b1004.graph`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/M5-a7d40b614779d356.graph`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/_superseded/G5-48560a4db949405d.graph`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/_superseded/H3-0ab7eb9f0c2f66ba.graph`
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/graph/_superseded/M5-757541e5426618eb.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-27-components-store-and-atlases/` · 4 files</summary>
+<summary>`idearium/phases/2026-09-27-components-store-and-atlases/` · 6 files</summary>
 
 - `idearium/phases/2026-09-27-components-store-and-atlases/A3.phase`
 - `idearium/phases/2026-09-27-components-store-and-atlases/C2.phase`
-- `idearium/phases/2026-09-27-components-store-and-atlases/graph/A3-0b6cdaaf9610556c.graph`
-- `idearium/phases/2026-09-27-components-store-and-atlases/graph/C2-cd615ce780f27fd5.graph`
+- `idearium/phases/2026-09-27-components-store-and-atlases/graph/A3-fe538cfb63c95924.graph`
+- `idearium/phases/2026-09-27-components-store-and-atlases/graph/C2-475e009c5b37b3fa.graph`
+- `idearium/phases/2026-09-27-components-store-and-atlases/graph/_superseded/A3-0b6cdaaf9610556c.graph`
+- `idearium/phases/2026-09-27-components-store-and-atlases/graph/_superseded/C2-cd615ce780f27fd5.graph`
 
 </details>
 
@@ -1536,7 +1643,7 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` · 14 files</summary>
+<summary>`idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` · 18 files</summary>
 
 - `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/N1_one_idearium.phase`
 - `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/P2_phases_model.phase`
@@ -1546,17 +1653,21 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/S2_spec_tab.phase`
 - `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/V2_nexus_versionium_view.phase`
 - `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/N1_one_idearium-5fda47e81740f919.graph`
-- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/P2_phases_model-816d5f0b94fe19d0.graph`
-- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/P3_phase_build-bb6a1484090698da.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/P2_phases_model-e0d1d0e1adee4483.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/P3_phase_build-292fa8f77ef21e93.graph`
 - `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/P4_phases_ui-35f5c870235cabfb.graph`
-- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/S1_living_spec-54457ecfb317ec4d.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/S1_living_spec-eddc774bb495b77a.graph`
 - `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/S2_spec_tab-13a6b256674ca997.graph`
-- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/V2_nexus_versionium_view-68284806b8692565.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/V2_nexus_versionium_view-28173b4bbc41fa24.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/P2_phases_model-816d5f0b94fe19d0.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/P3_phase_build-bb6a1484090698da.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/S1_living_spec-54457ecfb317ec4d.graph`
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/V2_nexus_versionium_view-68284806b8692565.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-27-registry-harness-and-stability/` · 14 files</summary>
+<summary>`idearium/phases/2026-09-27-registry-harness-and-stability/` · 16 files</summary>
 
 - `idearium/phases/2026-09-27-registry-harness-and-stability/H2.phase`
 - `idearium/phases/2026-09-27-registry-harness-and-stability/H3.phase`
@@ -1570,13 +1681,15 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-09-27-registry-harness-and-stability/graph/H4-92d77964b48812eb.graph`
 - `idearium/phases/2026-09-27-registry-harness-and-stability/graph/H5-03cc29d13bf3176d.graph`
 - `idearium/phases/2026-09-27-registry-harness-and-stability/graph/S2-a5388d560a488d09.graph`
-- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/S3-de417ceb54735a28.graph`
-- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/S4-d3b6ee7978d85cca.graph`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/S3-985bc267d1aa1096.graph`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/S4-93fcd1d9647f0653.graph`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/_superseded/S3-de417ceb54735a28.graph`
+- `idearium/phases/2026-09-27-registry-harness-and-stability/graph/_superseded/S4-d3b6ee7978d85cca.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-28-graph-build-context-settings-memory/` · 20 files</summary>
+<summary>`idearium/phases/2026-09-28-graph-build-context-settings-memory/` · 23 files</summary>
 
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/B0.phase`
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/B3.phase`
@@ -1588,21 +1701,24 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/R1.phase`
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/R2.phase`
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/SV0.phase`
-- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/B0-933386e010c3ebb1.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/B0-992bea3e63ed402c.graph`
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/B3-d58404b70218a8eb.graph`
-- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/C0-32aeb3adb8f9dce3.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/C0-4d9c025b697816d2.graph`
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/G0-a214982f7f87efc5.graph`
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/G1-f85015d13bbbc49d.graph`
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/G2-0901ec7498435dd0.graph`
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/G3-528cf353349dea70.graph`
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/R1-ec37c4f3de4fb0de.graph`
-- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/R2-626eb489d1376cbe.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/R2-143266eaaab6ca03.graph`
 - `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/SV0-52bc14057534aec7.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/_superseded/B0-933386e010c3ebb1.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/_superseded/C0-32aeb3adb8f9dce3.graph`
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/graph/_superseded/R2-626eb489d1376cbe.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-29-build-surface/` · 24 files</summary>
+<summary>`idearium/phases/2026-09-29-build-surface/` · 27 files</summary>
 
 - `idearium/phases/2026-09-29-build-surface/BS10_settings_and_environment_ui.phase`
 - `idearium/phases/2026-09-29-build-surface/BS11_plan_panel.phase`
@@ -1618,16 +1734,19 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-09-29-build-surface/BS9_spec_and_phase_build_ui.phase`
 - `idearium/phases/2026-09-29-build-surface/graph/BS10_settings_and_environment_ui-e7b1f0a8ff8eb8f9.graph`
 - `idearium/phases/2026-09-29-build-surface/graph/BS11_plan_panel-90c293ef2576305c.graph`
-- `idearium/phases/2026-09-29-build-surface/graph/BS13_provider_sovereignty-a2118e304b33e3d9.graph`
-- `idearium/phases/2026-09-29-build-surface/graph/BS15_code_repo_delete-adf5a2f3bb4f53af.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS13_provider_sovereignty-486df72e06026e3c.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS15_code_repo_delete-068a129d7d06e9e3.graph`
 - `idearium/phases/2026-09-29-build-surface/graph/BS18_sync_ci_theme-58d5e571901660d4.graph`
 - `idearium/phases/2026-09-29-build-surface/graph/BS2_file_states-f0c78c53f55cc0ca.graph`
 - `idearium/phases/2026-09-29-build-surface/graph/BS3_baseline_deviation-caf5c578ba0ab542.graph`
 - `idearium/phases/2026-09-29-build-surface/graph/BS5_spec_to_phasemap-3d49ffccdcc03a7d.graph`
 - `idearium/phases/2026-09-29-build-surface/graph/BS6_build_plan-d849379e83770f3b.graph`
-- `idearium/phases/2026-09-29-build-surface/graph/BS7_api-557eb6b884c71f12.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/BS7_api-445f01cbf00b465a.graph`
 - `idearium/phases/2026-09-29-build-surface/graph/BS8_files_ui-c46c3ff81f3ff946.graph`
 - `idearium/phases/2026-09-29-build-surface/graph/BS9_spec_and_phase_build_ui-1dcee63c429e1ed4.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/_superseded/BS13_provider_sovereignty-a2118e304b33e3d9.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/_superseded/BS15_code_repo_delete-adf5a2f3bb4f53af.graph`
+- `idearium/phases/2026-09-29-build-surface/graph/_superseded/BS7_api-557eb6b884c71f12.graph`
 
 </details>
 
@@ -1644,29 +1763,31 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-29-provider-economy/` · 2 files</summary>
+<summary>`idearium/phases/2026-09-29-provider-economy/` · 3 files</summary>
 
 - `idearium/phases/2026-09-29-provider-economy/EC8_economy_console.phase`
-- `idearium/phases/2026-09-29-provider-economy/graph/EC8_economy_console-1d70149370aba577.graph`
+- `idearium/phases/2026-09-29-provider-economy/graph/EC8_economy_console-1c0b6cc758fb1254.graph`
+- `idearium/phases/2026-09-29-provider-economy/graph/_superseded/EC8_economy_console-1d70149370aba577.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-09-30-idearium-coding-flow/` · 8 files</summary>
+<summary>`idearium/phases/2026-09-30-idearium-coding-flow/` · 9 files</summary>
 
 - `idearium/phases/2026-09-30-idearium-coding-flow/W2_plan_always_lands.phase`
 - `idearium/phases/2026-09-30-idearium-coding-flow/W3_work_surface.phase`
 - `idearium/phases/2026-09-30-idearium-coding-flow/W4_navigation.phase`
 - `idearium/phases/2026-09-30-idearium-coding-flow/W5_theme_and_css.phase`
 - `idearium/phases/2026-09-30-idearium-coding-flow/graph/W2_plan_always_lands-ab26ca62c4c01f00.graph`
-- `idearium/phases/2026-09-30-idearium-coding-flow/graph/W3_work_surface-d22aa3fd5498f953.graph`
+- `idearium/phases/2026-09-30-idearium-coding-flow/graph/W3_work_surface-6cad9557f773c08a.graph`
 - `idearium/phases/2026-09-30-idearium-coding-flow/graph/W4_navigation-5dd9ebc74f199860.graph`
 - `idearium/phases/2026-09-30-idearium-coding-flow/graph/W5_theme_and_css-ec86ed1c0f589dd1.graph`
+- `idearium/phases/2026-09-30-idearium-coding-flow/graph/_superseded/W3_work_surface-d22aa3fd5498f953.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-01-idearium-agent-ready-master/` · 60 files</summary>
+<summary>`idearium/phases/2026-10-01-idearium-agent-ready-master/` · 70 files</summary>
 
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/BK1_blocked_is_actionable.phase`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/BK2_phase_build_writes_code.phase`
@@ -1698,23 +1819,23 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/UI7_phasemaps_out_of_files_and_tree_ops.phase`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/UI8_code_tab_is_code.phase`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/UI9_plan_and_work_surface_panels.phase`
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/BK1_blocked_is_actionable-01332261b8dcdc42.graph`
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/BK2_phase_build_writes_code-44c59481c9cd44ba.graph`
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/DK2_desktop_setup_popup-334decc7beb3a1fe.graph`
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/DT3_failure_modes_routes_and_preflight-16167e797e66f7b5.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/BK1_blocked_is_actionable-e86ec94710fad0b4.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/BK2_phase_build_writes_code-b18c237a25441cd3.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/DK2_desktop_setup_popup-b6ccd99dd920510d.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/DT3_failure_modes_routes_and_preflight-f4adf7c9246132a8.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/DT4_registry_block_to_nodes-4c6a53201ba84026.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/DT4b_registry_chunk_in_repo_chunking-8d3fc5c82176532b.graph`
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/IL1_spec_library_as_ideas-562cd46bda388a55.graph`
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/IL2_library_spec_into_the_pipeline-db5333e7b31f7131.graph`
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF1_sync_names_its_slow_step-a427008df9c74099.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/IL1_spec_library_as_ideas-96c01a3b65ef6210.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/IL2_library_spec_into_the_pipeline-5e3e3e4f9dd9cb11.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF1_sync_names_its_slow_step-5382cac8993bd384.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF2_yielding_ingest-9f9a7bc28177655b.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF4_manifest_meta_sidecar-406969092594bed8.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF5_in_place_spec_update-ffc0ff73206feef3.graph`
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF6_boot_sync_yields_to_the_person-f8e349719667eff2.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF6_boot_sync_yields_to_the_person-bc2ab21e371ed770.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF7_pipeline_scoped_to_changes-74c2988f7fb0dbb6.graph`
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF8_settings_console_one_cheap_read-8b3388d417799343.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PF8_settings_console_one_cheap_read-8dc5f72afc9cd4af.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PV2_repair_feedback-048005a4daa6896a.graph`
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PV3_prove_loop-1b213b5688552009.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PV3_prove_loop-3ca2bacf9b2c65d5.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/PV4_cli_and_ui-5720214899fed175.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/SW1_spec_workshop-72769d08ce74fe9f.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/TP1_promote_to_spec_templates-6373324428f83107.graph`
@@ -1728,11 +1849,21 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI7_phasemaps_out_of_files_and_tree_ops-44303ff60d0f06bc.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI8_code_tab_is_code-cfa6aff53868c372.graph`
 - `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/UI9_plan_and_work_surface_panels-6013a07a8ca625f2.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/BK1_blocked_is_actionable-01332261b8dcdc42.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/BK2_phase_build_writes_code-44c59481c9cd44ba.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/DK2_desktop_setup_popup-334decc7beb3a1fe.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/DT3_failure_modes_routes_and_preflight-16167e797e66f7b5.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/IL1_spec_library_as_ideas-562cd46bda388a55.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/IL2_library_spec_into_the_pipeline-db5333e7b31f7131.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/PF1_sync_names_its_slow_step-a427008df9c74099.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/PF6_boot_sync_yields_to_the_person-f8e349719667eff2.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/PF8_settings_console_one_cheap_read-8b3388d417799343.graph`
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/PV3_prove_loop-1b213b5688552009.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-01-routing-registry-genesis/` · 12 files</summary>
+<summary>`idearium/phases/2026-10-01-routing-registry-genesis/` · 15 files</summary>
 
 - `idearium/phases/2026-10-01-routing-registry-genesis/GN1_genesis.phase`
 - `idearium/phases/2026-10-01-routing-registry-genesis/RC1_registry_block.phase`
@@ -1742,31 +1873,37 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-01-routing-registry-genesis/RG4_routing_ui.phase`
 - `idearium/phases/2026-10-01-routing-registry-genesis/graph/GN1_genesis-9c19816095e79246.graph`
 - `idearium/phases/2026-10-01-routing-registry-genesis/graph/RC1_registry_block-54c0652a67274b90.graph`
-- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RC2_registry_as_nodes-89682c310007557f.graph`
-- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RG2_routing_config_api_cli-8fdd3d0d4da406d6.graph`
-- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RG3_dispatch_uses_the_route-d3d17279f019b332.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RC2_registry_as_nodes-a9280f81af0fea0f.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RG2_routing_config_api_cli-6c5f9f6ce060c588.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/RG3_dispatch_uses_the_route-0bd61a37342a8efe.graph`
 - `idearium/phases/2026-10-01-routing-registry-genesis/graph/RG4_routing_ui-0480ecf02ae62d8c.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/_superseded/RC2_registry_as_nodes-89682c310007557f.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/_superseded/RG2_routing_config_api_cli-8fdd3d0d4da406d6.graph`
+- `idearium/phases/2026-10-01-routing-registry-genesis/graph/_superseded/RG3_dispatch_uses_the_route-d3d17279f019b332.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-01-work-visibility-job-reuse/` · 10 files</summary>
+<summary>`idearium/phases/2026-10-01-work-visibility-job-reuse/` · 13 files</summary>
 
 - `idearium/phases/2026-10-01-work-visibility-job-reuse/D0.phase`
 - `idearium/phases/2026-10-01-work-visibility-job-reuse/D2.phase`
 - `idearium/phases/2026-10-01-work-visibility-job-reuse/J2.phase`
 - `idearium/phases/2026-10-01-work-visibility-job-reuse/J3.phase`
 - `idearium/phases/2026-10-01-work-visibility-job-reuse/J6.phase`
-- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/D0-c46d86f5fed6ba44.graph`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/D0-9d3915eec49d61ad.graph`
 - `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/D2-0622afce43bf66fc.graph`
-- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/J2-2dbf1ea4ae7e7b8c.graph`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/J2-1f917a31667ef7f8.graph`
 - `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/J3-7c8a64dbe9e7d597.graph`
-- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/J6-e6e3f0df4bcd8345.graph`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/J6-979de7d0b1f5d065.graph`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/_superseded/D0-c46d86f5fed6ba44.graph`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/_superseded/J2-2dbf1ea4ae7e7b8c.graph`
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/graph/_superseded/J6-e6e3f0df4bcd8345.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-02-emerge-field-memory-build/` · 26 files</summary>
+<summary>`idearium/phases/2026-10-02-emerge-field-memory-build/` · 31 files</summary>
 
 - `idearium/phases/2026-10-02-emerge-field-memory-build/CB1_cfr_build_logic.phase`
 - `idearium/phases/2026-10-02-emerge-field-memory-build/DA1_domain_agnostic_end_states.phase`
@@ -1783,22 +1920,27 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-02-emerge-field-memory-build/WS6_workshop_parts_and_modes.phase`
 - `idearium/phases/2026-10-02-emerge-field-memory-build/graph/CB1_cfr_build_logic-5bec749cb555f4e2.graph`
 - `idearium/phases/2026-10-02-emerge-field-memory-build/graph/DA1_domain_agnostic_end_states-6b50e373c633cffb.graph`
-- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/FV0_fulfil_a_taken_order-848e1bff5519633a.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/FV0_fulfil_a_taken_order-fe1bc19e713885b9.graph`
 - `idearium/phases/2026-10-02-emerge-field-memory-build/graph/FV1_client_jobs-662e29c3c4d7c409.graph`
 - `idearium/phases/2026-10-02-emerge-field-memory-build/graph/GL1_the_graphs_as_a_model-590458d74b8d9a0a.graph`
 - `idearium/phases/2026-10-02-emerge-field-memory-build/graph/LN1_lenses_on_the_canvas-792316b31766a3f3.graph`
 - `idearium/phases/2026-10-02-emerge-field-memory-build/graph/MR6_contradictions_held-66efe147c088270c.graph`
-- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/PH1_phase_runs_end_in_proof-9ce02babee77ae98.graph`
-- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/PR1_proof_run_the_delivery_checker-621112f06399821f.graph`
-- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/RC1_the_repo_main_chat-f42bc647bfb8ea76.graph`
-- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/ST1_settings-c4d6d286b5d353b4.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/PH1_phase_runs_end_in_proof-7dca2582c1470864.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/PR1_proof_run_the_delivery_checker-94675a76922873de.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/RC1_the_repo_main_chat-3ca0fc1ae93f6ffe.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/ST1_settings-f936bfb1bd8f266d.graph`
 - `idearium/phases/2026-10-02-emerge-field-memory-build/graph/UI0_the_stations_agree-70ddba11613a1584.graph`
 - `idearium/phases/2026-10-02-emerge-field-memory-build/graph/WS6_workshop_parts_and_modes-c8e779005ab897fb.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/_superseded/FV0_fulfil_a_taken_order-848e1bff5519633a.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/_superseded/PH1_phase_runs_end_in_proof-9ce02babee77ae98.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/_superseded/PR1_proof_run_the_delivery_checker-621112f06399821f.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/_superseded/RC1_the_repo_main_chat-f42bc647bfb8ea76.graph`
+- `idearium/phases/2026-10-02-emerge-field-memory-build/graph/_superseded/ST1_settings-c4d6d286b5d353b4.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-02-fractal-graph-any-size-agent/` · 14 files</summary>
+<summary>`idearium/phases/2026-10-02-fractal-graph-any-size-agent/` · 15 files</summary>
 
 - `idearium/phases/2026-10-02-fractal-graph-any-size-agent/FG1_containment_tree.phase`
 - `idearium/phases/2026-10-02-fractal-graph-any-size-agent/FG3_summaries_up_the_tree.phase`
@@ -1810,15 +1952,16 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG1_containment_tree-aaca074a00f1ef2c.graph`
 - `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG3_summaries_up_the_tree-b2a59b562ac95c2c.graph`
 - `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG4_context_for_any_agent-b0b88cad66b15693.graph`
-- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG5_recursive_build-b8e78a1fd1f50e1a.graph`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG5_recursive_build-d7d26bf687a1ce83.graph`
 - `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/FG6_relations_and_fractals-8a43ab6d43bbcebd.graph`
 - `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/UV1_versioned_ui_compartments-6876460bb288b810.graph`
 - `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/WS5_the_whole_workshop-be72ff97f0f348b3.graph`
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/graph/_superseded/FG5_recursive_build-b8e78a1fd1f50e1a.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-02-spatial-void/` · 12 files</summary>
+<summary>`idearium/phases/2026-10-02-spatial-void/` · 14 files</summary>
 
 - `idearium/phases/2026-10-02-spatial-void/V1_fonts_local.phase`
 - `idearium/phases/2026-10-02-spatial-void/V2_void_engine.phase`
@@ -1826,12 +1969,14 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-02-spatial-void/V4_routes_and_cli.phase`
 - `idearium/phases/2026-10-02-spatial-void/V5_the_page.phase`
 - `idearium/phases/2026-10-02-spatial-void/V6_replaces_ideas_and_brainstorm.phase`
-- `idearium/phases/2026-10-02-spatial-void/graph/V1_fonts_local-032a1c9ee94025d4.graph`
+- `idearium/phases/2026-10-02-spatial-void/graph/V1_fonts_local-8719a547cb06c4c2.graph`
 - `idearium/phases/2026-10-02-spatial-void/graph/V2_void_engine-92fad98a05ccf78f.graph`
 - `idearium/phases/2026-10-02-spatial-void/graph/V3_ideas_carry_the_void-d03b7633ea5d2bc2.graph`
-- `idearium/phases/2026-10-02-spatial-void/graph/V4_routes_and_cli-a9f04ac36a0b6f1c.graph`
+- `idearium/phases/2026-10-02-spatial-void/graph/V4_routes_and_cli-0bdd0b11594e3311.graph`
 - `idearium/phases/2026-10-02-spatial-void/graph/V5_the_page-598efc9ae1916e6f.graph`
 - `idearium/phases/2026-10-02-spatial-void/graph/V6_replaces_ideas_and_brainstorm-c80f4e0208c7a97c.graph`
+- `idearium/phases/2026-10-02-spatial-void/graph/_superseded/V1_fonts_local-032a1c9ee94025d4.graph`
+- `idearium/phases/2026-10-02-spatial-void/graph/_superseded/V4_routes_and_cli-a9f04ac36a0b6f1c.graph`
 
 </details>
 
@@ -1848,7 +1993,7 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-02-workshop-codex-rewind/` · 20 files</summary>
+<summary>`idearium/phases/2026-10-02-workshop-codex-rewind/` · 26 files</summary>
 
 - `idearium/phases/2026-10-02-workshop-codex-rewind/AR2_architect_in_the_workshop.phase`
 - `idearium/phases/2026-10-02-workshop-codex-rewind/AR3_one_architect_canvas.phase`
@@ -1860,21 +2005,27 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-02-workshop-codex-rewind/SW2_workshop_page_in_the_voids_style.phase`
 - `idearium/phases/2026-10-02-workshop-codex-rewind/UI12_workshop_surface.phase`
 - `idearium/phases/2026-10-02-workshop-codex-rewind/WS7_the_full_workshop.phase`
-- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/AR2_architect_in_the_workshop-32d0b6cc32026023.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/AR2_architect_in_the_workshop-60f26485d18c4707.graph`
 - `idearium/phases/2026-10-02-workshop-codex-rewind/graph/AR3_one_architect_canvas-78c9c0ecdde06280.graph`
 - `idearium/phases/2026-10-02-workshop-codex-rewind/graph/AR4_pipeline_architect_on_the_canvas-cec156eb688fb013.graph`
 - `idearium/phases/2026-10-02-workshop-codex-rewind/graph/AR5_repo_architect_on_the_canvas-c7fee44243c248cf.graph`
-- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/DP1_desktop_popout_options-e73c4e98f5f196a7.graph`
-- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/PL1_one_entry_point-140d09417fa111f5.graph`
-- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/SW1_spec_workshop-143188e3446aa061.graph`
-- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/SW2_workshop_page_in_the_voids_style-acac3b974a3233a1.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/DP1_desktop_popout_options-fe185ea18c108811.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/PL1_one_entry_point-afb68138f2d24e21.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/SW1_spec_workshop-41757f4f776e1433.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/SW2_workshop_page_in_the_voids_style-2649870476e49005.graph`
 - `idearium/phases/2026-10-02-workshop-codex-rewind/graph/UI12_workshop_surface-005dd01e2ba96ba8.graph`
-- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/WS7_the_full_workshop-7115b04f434c37ca.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/WS7_the_full_workshop-64cc34f12d7bde68.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/_superseded/AR2_architect_in_the_workshop-32d0b6cc32026023.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/_superseded/DP1_desktop_popout_options-e73c4e98f5f196a7.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/_superseded/PL1_one_entry_point-140d09417fa111f5.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/_superseded/SW1_spec_workshop-143188e3446aa061.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/_superseded/SW2_workshop_page_in_the_voids_style-acac3b974a3233a1.graph`
+- `idearium/phases/2026-10-02-workshop-codex-rewind/graph/_superseded/WS7_the_full_workshop-7115b04f434c37ca.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-05-build-from-the-spec/` · 58 files</summary>
+<summary>`idearium/phases/2026-10-05-build-from-the-spec/` · 69 files</summary>
 
 - `idearium/phases/2026-10-05-build-from-the-spec/CH1_compartment_charter.phase`
 - `idearium/phases/2026-10-05-build-from-the-spec/SB10_reuse_first_keyed_on_the_contract.phase`
@@ -1905,56 +2056,70 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-05-build-from-the-spec/SB8_promote_with_full_block_options.phase`
 - `idearium/phases/2026-10-05-build-from-the-spec/SB9_the_spec_is_a_spec_file.phase`
 - `idearium/phases/2026-10-05-build-from-the-spec/WS2_the_work_surface_streams_the_writing.phase`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/CH1_compartment_charter-3faf15b7b007ec19.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/CH1_compartment_charter-a2bc8cdaf8aaeba0.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB10_reuse_first_keyed_on_the_contract-9422db472ab6bb14.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB11_each_block_chunked-c80702c27e56d8d4.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB12_the_registry_is_the_component_list-663b7c8d93d31c6f.graph`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB13_each_component_chunked-ee3c5820b2bc2761.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB13_each_component_chunked-a7f05c3faf77d8cf.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB14_reuse_compounds-b122c110a18dd51b.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB16_genesis_nodes_domain-c9ee88ad2a876a14.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB17_the_system_template_is_complete-3da27595c5dc5343.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB18_the_system_template_is_used-518b2cbff03e266a.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB1_templates_are_the_default_frame-90e92a3e0e88e5e1.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB26_an_imported_project_shows_its_progress-7ddc383988ffdfbc.graph`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB27_expanding_a_repo_keeps_its_spec_and_phases_current-2f6ef3f3a636044e.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB27_expanding_a_repo_keeps_its_spec_and_phases_current-6fdc41e8ecb61cc7.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB28_genesis_in_the_shape_nexus_systems_have-34ff7104d20a1a90.graph`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB29_the_build_flow_in_his_order-7a9f4dc3ffde4f9b.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB29_the_build_flow_in_his_order-9895aa5832a84138.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB2_his_words_seed_the_spec-c38006264a07413e.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB30_the_template_is_a_skeleton-22cd72ac9008bd9b.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB31_every_new_repo_is_the_skeleton_the_idea_slots_in-a632e63c0a0c153d.graph`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB35_the_index_is_there_when_the_agent_asks-c03d44f4b918532e.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB35_the_index_is_there_when_the_agent_asks-c2428cb3904555ae.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB3_the_section_prompt_is_domain_agnostic-3b5793a0e3e8bb58.graph`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB44_phases_are_chunked_then_coded-e4aee8b08443f21c.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB44_phases_are_chunked_then_coded-5379476adecf9506.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB45_skeletons_grey_until_coded-a6b4f44b25b6f1db.graph`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB49_an_idea_runs_through_by_itself-9272ab6662f32a97.graph`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB4_template_fidelity-b5cd3fe3d598abc0.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB49_an_idea_runs_through_by_itself-32e3964372a7f80b.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB4_template_fidelity-cef01f79702c3be7.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB50_every_task_timestamped-31bb47cf8a30809d.graph`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB51_a_phase_built_in_chunks-d52a77216aaefbe3.graph`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB52_proven_on_the_proposed_code-e7942c807caa456b.graph`
-- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB8_promote_with_full_block_options-59a2cc99ce55bb7c.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB51_a_phase_built_in_chunks-f0c8a9b3f980452a.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB52_proven_on_the_proposed_code-78cfe7c733ed23ee.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/SB8_promote_with_full_block_options-2c008d12f5b51821.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/SB9_the_spec_is_a_spec_file-2a0075e7f7a66b99.graph`
 - `idearium/phases/2026-10-05-build-from-the-spec/graph/WS2_the_work_surface_streams_the_writing-6b554fb740867279.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/CH1_compartment_charter-3faf15b7b007ec19.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB13_each_component_chunked-ee3c5820b2bc2761.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB27_expanding_a_repo_keeps_its_spec_and_phases_current-2f6ef3f3a636044e.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB29_the_build_flow_in_his_order-7a9f4dc3ffde4f9b.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB35_the_index_is_there_when_the_agent_asks-c03d44f4b918532e.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB44_phases_are_chunked_then_coded-e4aee8b08443f21c.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB49_an_idea_runs_through_by_itself-9272ab6662f32a97.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB4_template_fidelity-b5cd3fe3d598abc0.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB51_a_phase_built_in_chunks-d52a77216aaefbe3.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB52_proven_on_the_proposed_code-e7942c807caa456b.graph`
+- `idearium/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB8_promote_with_full_block_options-59a2cc99ce55bb7c.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-05-cli-data-code/` · 10 files</summary>
+<summary>`idearium/phases/2026-10-05-cli-data-code/` · 13 files</summary>
 
 - `idearium/phases/2026-10-05-cli-data-code/CL2_the_agent_tab_is_the_endpoint.phase`
 - `idearium/phases/2026-10-05-cli-data-code/CT2_the_code_tab.phase`
 - `idearium/phases/2026-10-05-cli-data-code/LS3_one_feed_for_every_agent.phase`
 - `idearium/phases/2026-10-05-cli-data-code/LS4_live_in_the_code_tab_and_the_work_surface.phase`
 - `idearium/phases/2026-10-05-cli-data-code/PB2_a_reply_that_changed_nothing_is_incomplete.phase`
-- `idearium/phases/2026-10-05-cli-data-code/graph/CL2_the_agent_tab_is_the_endpoint-cd07a65975c0f372.graph`
+- `idearium/phases/2026-10-05-cli-data-code/graph/CL2_the_agent_tab_is_the_endpoint-0470783f38f397ba.graph`
 - `idearium/phases/2026-10-05-cli-data-code/graph/CT2_the_code_tab-4c5f7f3919966700.graph`
-- `idearium/phases/2026-10-05-cli-data-code/graph/LS3_one_feed_for_every_agent-cbe6c8256329685a.graph`
+- `idearium/phases/2026-10-05-cli-data-code/graph/LS3_one_feed_for_every_agent-607ae33cca91c5a9.graph`
 - `idearium/phases/2026-10-05-cli-data-code/graph/LS4_live_in_the_code_tab_and_the_work_surface-02a22b8ffa0fbdc1.graph`
-- `idearium/phases/2026-10-05-cli-data-code/graph/PB2_a_reply_that_changed_nothing_is_incomplete-cd4f2e31ab5e8a36.graph`
+- `idearium/phases/2026-10-05-cli-data-code/graph/PB2_a_reply_that_changed_nothing_is_incomplete-5e314eff162a2c23.graph`
+- `idearium/phases/2026-10-05-cli-data-code/graph/_superseded/CL2_the_agent_tab_is_the_endpoint-cd07a65975c0f372.graph`
+- `idearium/phases/2026-10-05-cli-data-code/graph/_superseded/LS3_one_feed_for_every_agent-cbe6c8256329685a.graph`
+- `idearium/phases/2026-10-05-cli-data-code/graph/_superseded/PB2_a_reply_that_changed_nothing_is_incomplete-cd4f2e31ab5e8a36.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-05-code-tab-and-one-router/` · 10 files</summary>
+<summary>`idearium/phases/2026-10-05-code-tab-and-one-router/` · 11 files</summary>
 
 - `idearium/phases/2026-10-05-code-tab-and-one-router/CT3_the_code_tab_is_the_work_surface.phase`
 - `idearium/phases/2026-10-05-code-tab-and-one-router/CT4_ollama_checked_on_his_machine.phase`
@@ -1962,10 +2127,11 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-05-code-tab-and-one-router/CT7_the_plan_shows_current_work.phase`
 - `idearium/phases/2026-10-05-code-tab-and-one-router/CT9_the_plan_pull_tab.phase`
 - `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT3_the_code_tab_is_the_work_surface-05771164854f548f.graph`
-- `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT4_ollama_checked_on_his_machine-1d3a38b45bcc1514.graph`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT4_ollama_checked_on_his_machine-07b280ffbe298899.graph`
 - `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT5_hooked_into_the_plan-d3f933a20724f93e.graph`
 - `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT7_the_plan_shows_current_work-a52abee8ded7dd97.graph`
 - `idearium/phases/2026-10-05-code-tab-and-one-router/graph/CT9_the_plan_pull_tab-c7ffc8d1f1c7dacb.graph`
+- `idearium/phases/2026-10-05-code-tab-and-one-router/graph/_superseded/CT4_ollama_checked_on_his_machine-1d3a38b45bcc1514.graph`
 
 </details>
 
@@ -1978,7 +2144,7 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-05-idea-to-spec-workshop/` · 12 files</summary>
+<summary>`idearium/phases/2026-10-05-idea-to-spec-workshop/` · 15 files</summary>
 
 - `idearium/phases/2026-10-05-idea-to-spec-workshop/WK1_the_workshop_is_blocks_from_the_templates.phase`
 - `idearium/phases/2026-10-05-idea-to-spec-workshop/WK2_templates_edited_saved_removed.phase`
@@ -1987,16 +2153,19 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-05-idea-to-spec-workshop/WK5_lanes_feed_gaps_and_phases.phase`
 - `idearium/phases/2026-10-05-idea-to-spec-workshop/WK6_enterprise_grade.phase`
 - `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK1_the_workshop_is_blocks_from_the_templates-7118b38fec612014.graph`
-- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK2_templates_edited_saved_removed-c001b523d5755bdc.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK2_templates_edited_saved_removed-d80fec69628ad251.graph`
 - `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK3_the_agent_drafts_every_block-06035725e06b5b37.graph`
-- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK4_the_void_feeds_the_workshop-239d2f058e122ae9.graph`
-- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK5_lanes_feed_gaps_and_phases-600c57b241fdd5b2.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK4_the_void_feeds_the_workshop-f0a4dc07e1fec10d.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK5_lanes_feed_gaps_and_phases-29be01597b2db244.graph`
 - `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/WK6_enterprise_grade-0d8254a618965546.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/_superseded/WK2_templates_edited_saved_removed-c001b523d5755bdc.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/_superseded/WK4_the_void_feeds_the_workshop-239d2f058e122ae9.graph`
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/graph/_superseded/WK5_lanes_feed_gaps_and_phases-600c57b241fdd5b2.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-05-spec-workshop-rebuild/` · 14 files</summary>
+<summary>`idearium/phases/2026-10-05-spec-workshop-rebuild/` · 16 files</summary>
 
 - `idearium/phases/2026-10-05-spec-workshop-rebuild/RS10_the_phases_tab_rebuilt.phase`
 - `idearium/phases/2026-10-05-spec-workshop-rebuild/RS11_workshop_and_phases_one_surface.phase`
@@ -2007,11 +2176,13 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-05-spec-workshop-rebuild/RS9_the_thread.phase`
 - `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS10_the_phases_tab_rebuilt-2b8342c245cb1a43.graph`
 - `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS11_workshop_and_phases_one_surface-0c60b2ce6d21565f.graph`
-- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS4_the_pipeline_on_warp2-1b500110a3a75d95.graph`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS4_the_pipeline_on_warp2-783f1e3006d94e50.graph`
 - `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS5_the_template_picker-2047af4e58c842c4.graph`
 - `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS6_the_workshop_as_the_editor-65ed3468201e5940.graph`
 - `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS7_architect_and_blueprint_stations-a3f6ef1273789a83.graph`
-- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS9_the_thread-f06ed39fcd8adc6f.graph`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/RS9_the_thread-15e75f13adeb2af6.graph`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/_superseded/RS4_the_pipeline_on_warp2-1b500110a3a75d95.graph`
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/graph/_superseded/RS9_the_thread-f06ed39fcd8adc6f.graph`
 
 </details>
 
@@ -2024,7 +2195,7 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-07-compartment-control-and-activity/` · 12 files</summary>
+<summary>`idearium/phases/2026-10-07-compartment-control-and-activity/` · 17 files</summary>
 
 - `idearium/phases/2026-10-07-compartment-control-and-activity/AL2_log_tab.phase`
 - `idearium/phases/2026-10-07-compartment-control-and-activity/BO1_brainos_reads_the_log.phase`
@@ -2034,10 +2205,15 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-07-compartment-control-and-activity/UI1_the_screens_for_cm3.phase`
 - `idearium/phases/2026-10-07-compartment-control-and-activity/graph/AL2_log_tab-4edf93608071f912.graph`
 - `idearium/phases/2026-10-07-compartment-control-and-activity/graph/BO1_brainos_reads_the_log-8567a373d208f9e7.graph`
-- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/CM1_every_capability_a_command-7b012b7934a26bf1.graph`
-- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/CM3_this_sessions_work_as_commands-65881101a8767d62.graph`
-- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/NC2_nexus_systems_as_compartments-bd7a70b20d504253.graph`
-- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/UI1_the_screens_for_cm3-66b98ef97a9f4405.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/CM1_every_capability_a_command-9a9190f223ba34d5.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/CM3_this_sessions_work_as_commands-833d2e75f114aa67.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/NC2_nexus_systems_as_compartments-66a08f2bde3cdc9e.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/UI1_the_screens_for_cm3-c3991e54ba34f121.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/CM1_every_capability_a_command-7b012b7934a26bf1.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/CM3_this_sessions_work_as_commands-1cf5e5712045496d.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/CM3_this_sessions_work_as_commands-65881101a8767d62.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/NC2_nexus_systems_as_compartments-bd7a70b20d504253.graph`
+- `idearium/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/UI1_the_screens_for_cm3-66b98ef97a9f4405.graph`
 
 </details>
 
@@ -2076,19 +2252,20 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-07-versionium-releases/` · 6 files</summary>
+<summary>`idearium/phases/2026-10-07-versionium-releases/` · 7 files</summary>
 
 - `idearium/phases/2026-10-07-versionium-releases/RN1_release_is_a_node_and_a_tag.phase`
 - `idearium/phases/2026-10-07-versionium-releases/RN3_releases_section.phase`
 - `idearium/phases/2026-10-07-versionium-releases/VR1_every_change_a_commit.phase`
 - `idearium/phases/2026-10-07-versionium-releases/graph/RN1_release_is_a_node_and_a_tag-ac55d5c78a92cf41.graph`
 - `idearium/phases/2026-10-07-versionium-releases/graph/RN3_releases_section-4141ba7fc63cd48b.graph`
-- `idearium/phases/2026-10-07-versionium-releases/graph/VR1_every_change_a_commit-14c51a8423588640.graph`
+- `idearium/phases/2026-10-07-versionium-releases/graph/VR1_every_change_a_commit-027f10a7cc126ff1.graph`
+- `idearium/phases/2026-10-07-versionium-releases/graph/_superseded/VR1_every_change_a_commit-14c51a8423588640.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-09-hardening-pass/` · 14 files</summary>
+<summary>`idearium/phases/2026-10-09-hardening-pass/` · 17 files</summary>
 
 - `idearium/phases/2026-10-09-hardening-pass/HP10_the_work_surface_in_view.phase`
 - `idearium/phases/2026-10-09-hardening-pass/HP1_stale_spreads_along_dependencies.phase`
@@ -2099,19 +2276,23 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-09-hardening-pass/HP9_the_plan_is_current_work.phase`
 - `idearium/phases/2026-10-09-hardening-pass/graph/HP10_the_work_surface_in_view-f1241943f37108b2.graph`
 - `idearium/phases/2026-10-09-hardening-pass/graph/HP1_stale_spreads_along_dependencies-9df169732afe005e.graph`
-- `idearium/phases/2026-10-09-hardening-pass/graph/HP2_interrupted_runs_are_said-79dee1361e48c6a2.graph`
-- `idearium/phases/2026-10-09-hardening-pass/graph/HP3_the_ladder_climbs_only_what_is_installed-c8c7d13d9c60af92.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/HP2_interrupted_runs_are_said-b96b9f387e779f40.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/HP3_the_ladder_climbs_only_what_is_installed-5fc0d678d2233afd.graph`
 - `idearium/phases/2026-10-09-hardening-pass/graph/HP6_the_build_surface_opens-cb6c79f8c844d719.graph`
-- `idearium/phases/2026-10-09-hardening-pass/graph/HP8_the_ladder_says_why_ollama_is_missing-57815805593abe9b.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/HP8_the_ladder_says_why_ollama_is_missing-759c9c7ee4f76954.graph`
 - `idearium/phases/2026-10-09-hardening-pass/graph/HP9_the_plan_is_current_work-f627db089c793902.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/_superseded/HP2_interrupted_runs_are_said-79dee1361e48c6a2.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/_superseded/HP3_the_ladder_climbs_only_what_is_installed-c8c7d13d9c60af92.graph`
+- `idearium/phases/2026-10-09-hardening-pass/graph/_superseded/HP8_the_ladder_says_why_ollama_is_missing-57815805593abe9b.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-09-one-model-engine/` · 2 files</summary>
+<summary>`idearium/phases/2026-10-09-one-model-engine/` · 3 files</summary>
 
 - `idearium/phases/2026-10-09-one-model-engine/ME11_old_settings_translated.phase`
-- `idearium/phases/2026-10-09-one-model-engine/graph/ME11_old_settings_translated-5b0ec7fc75e2ad91.graph`
+- `idearium/phases/2026-10-09-one-model-engine/graph/ME11_old_settings_translated-c344d85e2f4dd34c.graph`
+- `idearium/phases/2026-10-09-one-model-engine/graph/_superseded/ME11_old_settings_translated-5b0ec7fc75e2ad91.graph`
 
 </details>
 
@@ -2124,7 +2305,7 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-10-idearium-access/` · 12 files</summary>
+<summary>`idearium/phases/2026-10-10-idearium-access/` · 16 files</summary>
 
 - `idearium/phases/2026-10-10-idearium-access/IA0_the_door_checks_who_is_asking.phase`
 - `idearium/phases/2026-10-10-idearium-access/IA1_the_routes.phase`
@@ -2132,17 +2313,21 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-10-idearium-access/IA3_the_screens.phase`
 - `idearium/phases/2026-10-10-idearium-access/IA6_every_local_caller_carries_the_key.phase`
 - `idearium/phases/2026-10-10-idearium-access/IA7_the_hat_is_the_actor.phase`
-- `idearium/phases/2026-10-10-idearium-access/graph/IA0_the_door_checks_who_is_asking-e61c74f72a1e0e07.graph`
-- `idearium/phases/2026-10-10-idearium-access/graph/IA1_the_routes-524b4ed85ce0024b.graph`
-- `idearium/phases/2026-10-10-idearium-access/graph/IA2_the_command-447eafe8b6ed97e1.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/IA0_the_door_checks_who_is_asking-5658b9c9c82b0b4d.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/IA1_the_routes-2ca61320e80b189f.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/IA2_the_command-24f13b95eff7063d.graph`
 - `idearium/phases/2026-10-10-idearium-access/graph/IA3_the_screens-84728ca7fed20a3f.graph`
-- `idearium/phases/2026-10-10-idearium-access/graph/IA6_every_local_caller_carries_the_key-48cf449554a93a5a.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/IA6_every_local_caller_carries_the_key-f1ec5f91b44c5f9b.graph`
 - `idearium/phases/2026-10-10-idearium-access/graph/IA7_the_hat_is_the_actor-cff039c2c9e53264.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/_superseded/IA0_the_door_checks_who_is_asking-e61c74f72a1e0e07.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/_superseded/IA1_the_routes-524b4ed85ce0024b.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/_superseded/IA2_the_command-447eafe8b6ed97e1.graph`
+- `idearium/phases/2026-10-10-idearium-access/graph/_superseded/IA6_every_local_caller_carries_the_key-48cf449554a93a5a.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-10-idearium-solid/` · 22 files</summary>
+<summary>`idearium/phases/2026-10-10-idearium-solid/` · 27 files</summary>
 
 - `idearium/phases/2026-10-10-idearium-solid/SD11_the_desktop_inside_idearium.phase`
 - `idearium/phases/2026-10-10-idearium-solid/SD12_a_spec_starts_from_its_primitives.phase`
@@ -2159,13 +2344,18 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-10-idearium-solid/graph/SD12_a_spec_starts_from_its_primitives-5f1332ad4be21d47.graph`
 - `idearium/phases/2026-10-10-idearium-solid/graph/SD14_chunks_cut_at_primitives-9c0e825565000d6e.graph`
 - `idearium/phases/2026-10-10-idearium-solid/graph/SD16_a_plan_step_never_proposes_code-15a5817d56c7df8e.graph`
-- `idearium/phases/2026-10-10-idearium-solid/graph/SD17_an_imported_project_continues-ca41b1efd7fa26c1.graph`
-- `idearium/phases/2026-10-10-idearium-solid/graph/SD18_mastermind_ready-0605b1ba0a0ed196.graph`
-- `idearium/phases/2026-10-10-idearium-solid/graph/SD19_a_refusal_goes_back_to_its_agent-5ef0ac81785ee32f.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD17_an_imported_project_continues-2b4bbb42b4b7bb3d.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD18_mastermind_ready-6e60122522d0e684.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD19_a_refusal_goes_back_to_its_agent-3f25993be4992bbc.graph`
 - `idearium/phases/2026-10-10-idearium-solid/graph/SD1_rewind_and_versions_on_the_repo_card-2652c3fb731ca33b.graph`
-- `idearium/phases/2026-10-10-idearium-solid/graph/SD21_what_his_run_log_showed-b16c046b8f39cc7d.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD21_what_his_run_log_showed-b49844a127559b4a.graph`
 - `idearium/phases/2026-10-10-idearium-solid/graph/SD22_a_wrapped_repo_lifts_to_its_root-790d3ecb08212ea7.graph`
-- `idearium/phases/2026-10-10-idearium-solid/graph/SD6_an_idea_logged_asked_expanded-05cd4cbce953cad2.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/SD6_an_idea_logged_asked_expanded-1d402c08b3b1ae59.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/_superseded/SD17_an_imported_project_continues-ca41b1efd7fa26c1.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/_superseded/SD18_mastermind_ready-0605b1ba0a0ed196.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/_superseded/SD19_a_refusal_goes_back_to_its_agent-5ef0ac81785ee32f.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/_superseded/SD21_what_his_run_log_showed-b16c046b8f39cc7d.graph`
+- `idearium/phases/2026-10-10-idearium-solid/graph/_superseded/SD6_an_idea_logged_asked_expanded-05cd4cbce953cad2.graph`
 
 </details>
 
@@ -2178,84 +2368,95 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-10-shape-of-nexus/` · 8 files</summary>
+<summary>`idearium/phases/2026-10-10-shape-of-nexus/` · 11 files</summary>
 
 - `idearium/phases/2026-10-10-shape-of-nexus/FN1_the_field_as_commands.phase`
 - `idearium/phases/2026-10-10-shape-of-nexus/OP2_the_system_settings_in_its_repo.phase`
 - `idearium/phases/2026-10-10-shape-of-nexus/OP3_copilot_reads_and_sets_options.phase`
 - `idearium/phases/2026-10-10-shape-of-nexus/OP4_environment_and_desktop_one_menu.phase`
-- `idearium/phases/2026-10-10-shape-of-nexus/graph/FN1_the_field_as_commands-97a9854ac7d50136.graph`
-- `idearium/phases/2026-10-10-shape-of-nexus/graph/OP2_the_system_settings_in_its_repo-a31db0f4424409aa.graph`
-- `idearium/phases/2026-10-10-shape-of-nexus/graph/OP3_copilot_reads_and_sets_options-32a68d26ad74f22e.graph`
+- `idearium/phases/2026-10-10-shape-of-nexus/graph/FN1_the_field_as_commands-e87b0654c627df14.graph`
+- `idearium/phases/2026-10-10-shape-of-nexus/graph/OP2_the_system_settings_in_its_repo-b2e5ee189f2b8e73.graph`
+- `idearium/phases/2026-10-10-shape-of-nexus/graph/OP3_copilot_reads_and_sets_options-3d0a3182c689b10c.graph`
 - `idearium/phases/2026-10-10-shape-of-nexus/graph/OP4_environment_and_desktop_one_menu-f9648ccd1a2a07d5.graph`
+- `idearium/phases/2026-10-10-shape-of-nexus/graph/_superseded/FN1_the_field_as_commands-97a9854ac7d50136.graph`
+- `idearium/phases/2026-10-10-shape-of-nexus/graph/_superseded/OP2_the_system_settings_in_its_repo-a31db0f4424409aa.graph`
+- `idearium/phases/2026-10-10-shape-of-nexus/graph/_superseded/OP3_copilot_reads_and_sets_options-32a68d26ad74f22e.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-12-browser-providers-and-work/` · 6 files</summary>
+<summary>`idearium/phases/2026-10-12-browser-providers-and-work/` · 7 files</summary>
 
 - `idearium/phases/2026-10-12-browser-providers-and-work/CS1_drop_zips_to_decompose.phase`
 - `idearium/phases/2026-10-12-browser-providers-and-work/CS2_uploaded_projects_managed.phase`
 - `idearium/phases/2026-10-12-browser-providers-and-work/MX1_nothing_built_unmapped.phase`
 - `idearium/phases/2026-10-12-browser-providers-and-work/graph/CS1_drop_zips_to_decompose-122d522bc936da0d.graph`
-- `idearium/phases/2026-10-12-browser-providers-and-work/graph/CS2_uploaded_projects_managed-494c0ceef6476375.graph`
+- `idearium/phases/2026-10-12-browser-providers-and-work/graph/CS2_uploaded_projects_managed-64e8e3327c02b1dc.graph`
 - `idearium/phases/2026-10-12-browser-providers-and-work/graph/MX1_nothing_built_unmapped-eebb2de339d0afaf.graph`
+- `idearium/phases/2026-10-12-browser-providers-and-work/graph/_superseded/CS2_uploaded_projects_managed-494c0ceef6476375.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-12-request-spine/` · 4 files</summary>
+<summary>`idearium/phases/2026-10-12-request-spine/` · 5 files</summary>
 
 - `idearium/phases/2026-10-12-request-spine/RQ12_the_phase_dag.phase`
 - `idearium/phases/2026-10-12-request-spine/RQ25_progress_is_evidence_not_activity.phase`
 - `idearium/phases/2026-10-12-request-spine/graph/RQ12_the_phase_dag-657be08a0225c679.graph`
-- `idearium/phases/2026-10-12-request-spine/graph/RQ25_progress_is_evidence_not_activity-20b27d207cb31ec8.graph`
+- `idearium/phases/2026-10-12-request-spine/graph/RQ25_progress_is_evidence_not_activity-a5c5eb430ac05891.graph`
+- `idearium/phases/2026-10-12-request-spine/graph/_superseded/RQ25_progress_is_evidence_not_activity-20b27d207cb31ec8.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-13-identities-tabs-and-automation/` · 2 files</summary>
+<summary>`idearium/phases/2026-10-13-identities-tabs-and-automation/` · 3 files</summary>
 
 - `idearium/phases/2026-10-13-identities-tabs-and-automation/IR0_intent_routing_for_reasoning.phase`
-- `idearium/phases/2026-10-13-identities-tabs-and-automation/graph/IR0_intent_routing_for_reasoning-d117c137eb21d499.graph`
+- `idearium/phases/2026-10-13-identities-tabs-and-automation/graph/IR0_intent_routing_for_reasoning-13c4a3b37811825f.graph`
+- `idearium/phases/2026-10-13-identities-tabs-and-automation/graph/_superseded/IR0_intent_routing_for_reasoning-d117c137eb21d499.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-13-nexus-memory-gates-and-contract/` · 2 files</summary>
+<summary>`idearium/phases/2026-10-13-nexus-memory-gates-and-contract/` · 3 files</summary>
 
 - `idearium/phases/2026-10-13-nexus-memory-gates-and-contract/LN0_lines_tool.phase`
-- `idearium/phases/2026-10-13-nexus-memory-gates-and-contract/graph/LN0_lines_tool-88358d2f2c9e4f7e.graph`
+- `idearium/phases/2026-10-13-nexus-memory-gates-and-contract/graph/LN0_lines_tool-610d4e0276e2f1f3.graph`
+- `idearium/phases/2026-10-13-nexus-memory-gates-and-contract/graph/_superseded/LN0_lines_tool-88358d2f2c9e4f7e.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-13-projects-raid-and-gates/` · 11 files</summary>
+<summary>`idearium/phases/2026-10-13-projects-raid-and-gates/` · 14 files</summary>
 
 - `idearium/phases/2026-10-13-projects-raid-and-gates/NT0_notes.phase`
 - `idearium/phases/2026-10-13-projects-raid-and-gates/PL1_many_projects_at_once.phase`
 - `idearium/phases/2026-10-13-projects-raid-and-gates/PL5_specs_become_the_roadmap.phase`
 - `idearium/phases/2026-10-13-projects-raid-and-gates/RD2_idearium_routes_through_raid.phase`
 - `idearium/phases/2026-10-13-projects-raid-and-gates/VM0_versionium_managed_per_repo.phase`
-- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/NT0_notes-6b7863af6bf2d475.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/NT0_notes-380b9b53aef77846.graph`
 - `idearium/phases/2026-10-13-projects-raid-and-gates/graph/PL1_many_projects_at_once-1adf76c32de48afd.graph`
 - `idearium/phases/2026-10-13-projects-raid-and-gates/graph/PL5_specs_become_the_roadmap-494bc4384547022a.graph`
-- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/RD2_idearium_routes_through_raid-2983b6458a4a5d56.graph`
-- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/VM0_versionium_managed_per_repo-040fc109a1d5cee4.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/RD2_idearium_routes_through_raid-5a4b971d4bf5406f.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/VM0_versionium_managed_per_repo-c0df29a72af2a449.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/NT0_notes-6b7863af6bf2d475.graph`
 - `idearium/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/PL5_specs_become_the_roadmap-1b3e39b06f431b10.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/RD2_idearium_routes_through_raid-2983b6458a4a5d56.graph`
+- `idearium/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/VM0_versionium_managed_per_repo-040fc109a1d5cee4.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-15-automatic-tracking/` · 2 files</summary>
+<summary>`idearium/phases/2026-10-15-automatic-tracking/` · 3 files</summary>
 
 - `idearium/phases/2026-10-15-automatic-tracking/CP1_the_contract_panel.phase`
-- `idearium/phases/2026-10-15-automatic-tracking/graph/CP1_the_contract_panel-c237d6f98a19ae59.graph`
+- `idearium/phases/2026-10-15-automatic-tracking/graph/CP1_the_contract_panel-74dcff4d5f3b4b1e.graph`
+- `idearium/phases/2026-10-15-automatic-tracking/graph/_superseded/CP1_the_contract_panel-c237d6f98a19ae59.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-15-code-tab-run-state/` · 19 files</summary>
+<summary>`idearium/phases/2026-10-15-code-tab-run-state/` · 23 files</summary>
 
 - `idearium/phases/2026-10-15-code-tab-run-state/CE11_contract_panel_and_context.phase`
 - `idearium/phases/2026-10-15-code-tab-run-state/CE6_one_tab.phase`
@@ -2268,13 +2469,17 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-15-code-tab-run-state/CV6_phases_in_idearium.phase`
 - `idearium/phases/2026-10-15-code-tab-run-state/graph/CE11_contract_panel_and_context-1c20d408c33edd4a.graph`
 - `idearium/phases/2026-10-15-code-tab-run-state/graph/CE6_one_tab-cd0e8325ed28c665.graph`
-- `idearium/phases/2026-10-15-code-tab-run-state/graph/CE7_ai_assisted_editing-78ed53aff1a36f1d.graph`
-- `idearium/phases/2026-10-15-code-tab-run-state/graph/CE8_the_cli_reads_the_surface-0aea42978ca6e896.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CE7_ai_assisted_editing-ca5bbe38ad2f3395.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CE8_the_cli_reads_the_surface-250ecb5548f90036.graph`
 - `idearium/phases/2026-10-15-code-tab-run-state/graph/CE9_the_panels-e21c35e06e99c19e.graph`
 - `idearium/phases/2026-10-15-code-tab-run-state/graph/CV1_one_menu-ee95a78a4705be68.graph`
-- `idearium/phases/2026-10-15-code-tab-run-state/graph/CV3_file_rewind-b559809f1fb359df.graph`
-- `idearium/phases/2026-10-15-code-tab-run-state/graph/CV4_tagged_history-bf93d47b9e08cca2.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CV3_file_rewind-71fe4349cc92ee87.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/CV4_tagged_history-d5e1fb4ce6c7fea0.graph`
 - `idearium/phases/2026-10-15-code-tab-run-state/graph/CV6_phases_in_idearium-46e06b29cc567261.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/_superseded/CE7_ai_assisted_editing-78ed53aff1a36f1d.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/_superseded/CE8_the_cli_reads_the_surface-0aea42978ca6e896.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/_superseded/CV3_file_rewind-b559809f1fb359df.graph`
+- `idearium/phases/2026-10-15-code-tab-run-state/graph/_superseded/CV4_tagged_history-bf93d47b9e08cca2.graph`
 - `idearium/phases/2026-10-15-code-tab-run-state/graph/_superseded/CV6_phases_in_idearium-219944fafb6e0b35.graph`
 
 </details>
@@ -2288,24 +2493,29 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-15-one-contract-raid-releases/` · 6 files</summary>
+<summary>`idearium/phases/2026-10-15-one-contract-raid-releases/` · 9 files</summary>
 
 - `idearium/phases/2026-10-15-one-contract-raid-releases/BR1_bricks_on_every_path.phase`
 - `idearium/phases/2026-10-15-one-contract-raid-releases/RD1_every_build_goes_through_raid.phase`
 - `idearium/phases/2026-10-15-one-contract-raid-releases/RN3_releases_in_idearium.phase`
-- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/BR1_bricks_on_every_path-7f1e4cefe519e0ea.graph`
-- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/RD1_every_build_goes_through_raid-393f8766ca06b8e6.graph`
-- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/RN3_releases_in_idearium-1b5d6979e4dd7138.graph`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/BR1_bricks_on_every_path-389c2f3ca57716ad.graph`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/RD1_every_build_goes_through_raid-2b6669a4bffd04bf.graph`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/RN3_releases_in_idearium-6c103beb29afacf9.graph`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/_superseded/BR1_bricks_on_every_path-7f1e4cefe519e0ea.graph`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/_superseded/RD1_every_build_goes_through_raid-393f8766ca06b8e6.graph`
+- `idearium/phases/2026-10-15-one-contract-raid-releases/graph/_superseded/RN3_releases_in_idearium-1b5d6979e4dd7138.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-15-warp-builds-and-spec-framework/` · 4 files</summary>
+<summary>`idearium/phases/2026-10-15-warp-builds-and-spec-framework/` · 6 files</summary>
 
 - `idearium/phases/2026-10-15-warp-builds-and-spec-framework/MP2_automatic_in_every_repo.phase`
 - `idearium/phases/2026-10-15-warp-builds-and-spec-framework/MP4_a_model_only_where_nothing_maps.phase`
-- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP2_automatic_in_every_repo-bf38793cc2c63870.graph`
-- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP4_a_model_only_where_nothing_maps-caa26af1fd162af7.graph`
+- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP2_automatic_in_every_repo-8a644e8e18b1f8aa.graph`
+- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP4_a_model_only_where_nothing_maps-9220440577823eca.graph`
+- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/MP2_automatic_in_every_repo-bf38793cc2c63870.graph`
+- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/MP4_a_model_only_where_nothing_maps-caa26af1fd162af7.graph`
 
 </details>
 
@@ -2354,10 +2564,11 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-16-cos-console/` · 2 files</summary>
+<summary>`idearium/phases/2026-10-16-cos-console/` · 3 files</summary>
 
 - `idearium/phases/2026-10-16-cos-console/CON2_grammar_and_completion.phase`
-- `idearium/phases/2026-10-16-cos-console/graph/CON2_grammar_and_completion-8bab477abc0720ae.graph`
+- `idearium/phases/2026-10-16-cos-console/graph/CON2_grammar_and_completion-762c2205a20307d8.graph`
+- `idearium/phases/2026-10-16-cos-console/graph/_superseded/CON2_grammar_and_completion-8bab477abc0720ae.graph`
 
 </details>
 
@@ -2370,10 +2581,11 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-16-intent-hat-agent-chain/` · 2 files</summary>
+<summary>`idearium/phases/2026-10-16-intent-hat-agent-chain/` · 3 files</summary>
 
 - `idearium/phases/2026-10-16-intent-hat-agent-chain/IH4_api_command_ui.phase`
-- `idearium/phases/2026-10-16-intent-hat-agent-chain/graph/IH4_api_command_ui-491e5bd186c25940.graph`
+- `idearium/phases/2026-10-16-intent-hat-agent-chain/graph/IH4_api_command_ui-39e633419acbf0d0.graph`
+- `idearium/phases/2026-10-16-intent-hat-agent-chain/graph/_superseded/IH4_api_command_ui-491e5bd186c25940.graph`
 
 </details>
 
@@ -2388,30 +2600,35 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-16-reject-learn-retry/` · 4 files</summary>
+<summary>`idearium/phases/2026-10-16-reject-learn-retry/` · 7 files</summary>
 
 - `idearium/phases/2026-10-16-reject-learn-retry/RL2_learn_then_retry.phase`
 - `idearium/phases/2026-10-16-reject-learn-retry/RL4_the_lessons_on_the_door.phase`
-- `idearium/phases/2026-10-16-reject-learn-retry/graph/RL2_learn_then_retry-39af0667fca566e6.graph`
-- `idearium/phases/2026-10-16-reject-learn-retry/graph/RL4_the_lessons_on_the_door-bbafadd375cd2657.graph`
+- `idearium/phases/2026-10-16-reject-learn-retry/graph/RL2_learn_then_retry-e33fba3f258d9c82.graph`
+- `idearium/phases/2026-10-16-reject-learn-retry/graph/RL4_the_lessons_on_the_door-3304e77663db89d5.graph`
+- `idearium/phases/2026-10-16-reject-learn-retry/graph/_superseded/RL2_learn_then_retry-39af0667fca566e6.graph`
+- `idearium/phases/2026-10-16-reject-learn-retry/graph/_superseded/RL4_the_lessons_on_the_door-7e28e5b56ce09cac.graph`
+- `idearium/phases/2026-10-16-reject-learn-retry/graph/_superseded/RL4_the_lessons_on_the_door-bbafadd375cd2657.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-16-repo-carve/` · 4 files</summary>
+<summary>`idearium/phases/2026-10-16-repo-carve/` · 5 files</summary>
 
 - `idearium/phases/2026-10-16-repo-carve/CV1_carve_backend_route_command_ui.phase`
 - `idearium/phases/2026-10-16-repo-carve/FR9_sandboxed_in_compartments.phase`
-- `idearium/phases/2026-10-16-repo-carve/graph/CV1_carve_backend_route_command_ui-e3edbcdf3d659991.graph`
+- `idearium/phases/2026-10-16-repo-carve/graph/CV1_carve_backend_route_command_ui-dd041d77cc047b03.graph`
 - `idearium/phases/2026-10-16-repo-carve/graph/FR9_sandboxed_in_compartments-b650b1973c9adbba.graph`
+- `idearium/phases/2026-10-16-repo-carve/graph/_superseded/CV1_carve_backend_route_command_ui-e3edbcdf3d659991.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-17-debugging-product/` · 2 files</summary>
+<summary>`idearium/phases/2026-10-17-debugging-product/` · 3 files</summary>
 
 - `idearium/phases/2026-10-17-debugging-product/DP1_the_doors.phase`
-- `idearium/phases/2026-10-17-debugging-product/graph/DP1_the_doors-9c5b97f48be11c5b.graph`
+- `idearium/phases/2026-10-17-debugging-product/graph/DP1_the_doors-acae45ffeebafce1.graph`
+- `idearium/phases/2026-10-17-debugging-product/graph/_superseded/DP1_the_doors-9c5b97f48be11c5b.graph`
 
 </details>
 
@@ -2424,10 +2641,11 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-17-pieces-not-order/` · 2 files</summary>
+<summary>`idearium/phases/2026-10-17-pieces-not-order/` · 3 files</summary>
 
 - `idearium/phases/2026-10-17-pieces-not-order/PC5_control_when_he_chooses.phase`
-- `idearium/phases/2026-10-17-pieces-not-order/graph/PC5_control_when_he_chooses-11bf61bdc8df910b.graph`
+- `idearium/phases/2026-10-17-pieces-not-order/graph/PC5_control_when_he_chooses-c8e1abb9c6651522.graph`
+- `idearium/phases/2026-10-17-pieces-not-order/graph/_superseded/PC5_control_when_he_chooses-11bf61bdc8df910b.graph`
 
 </details>
 
@@ -2456,59 +2674,67 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-18-compartment-environment/` · 4 files</summary>
+<summary>`idearium/phases/2026-10-18-compartment-environment/` · 5 files</summary>
 
 - `idearium/phases/2026-10-18-compartment-environment/CE6_the_code_tab.phase`
 - `idearium/phases/2026-10-18-compartment-environment/CE7_agents_and_commands.phase`
 - `idearium/phases/2026-10-18-compartment-environment/graph/CE6_the_code_tab-f11d856e1aa25e18.graph`
-- `idearium/phases/2026-10-18-compartment-environment/graph/CE7_agents_and_commands-cc438bb660d2012c.graph`
+- `idearium/phases/2026-10-18-compartment-environment/graph/CE7_agents_and_commands-b55067f969093bc5.graph`
+- `idearium/phases/2026-10-18-compartment-environment/graph/_superseded/CE7_agents_and_commands-cc438bb660d2012c.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-18-debugging-product/` · 4 files</summary>
+<summary>`idearium/phases/2026-10-18-debugging-product/` · 5 files</summary>
 
 - `idearium/phases/2026-10-18-debugging-product/DBG5_rewind_from_a_case.phase`
 - `idearium/phases/2026-10-18-debugging-product/DBG7_route_command_ui.phase`
 - `idearium/phases/2026-10-18-debugging-product/graph/DBG5_rewind_from_a_case-cfffc4ab781d68ec.graph`
-- `idearium/phases/2026-10-18-debugging-product/graph/DBG7_route_command_ui-b81f989842d93bc7.graph`
+- `idearium/phases/2026-10-18-debugging-product/graph/DBG7_route_command_ui-a344147f583c3a54.graph`
+- `idearium/phases/2026-10-18-debugging-product/graph/_superseded/DBG7_route_command_ui-b81f989842d93bc7.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-18-gate-memory/` · 4 files</summary>
+<summary>`idearium/phases/2026-10-18-gate-memory/` · 6 files</summary>
 
 - `idearium/phases/2026-10-18-gate-memory/GM7_the_context_panel_per_gate.phase`
 - `idearium/phases/2026-10-18-gate-memory/GM8_agents_have_it.phase`
-- `idearium/phases/2026-10-18-gate-memory/graph/GM7_the_context_panel_per_gate-2031c0c663349829.graph`
-- `idearium/phases/2026-10-18-gate-memory/graph/GM8_agents_have_it-45a73d0250d2d055.graph`
+- `idearium/phases/2026-10-18-gate-memory/graph/GM7_the_context_panel_per_gate-2ed37a32420fdf17.graph`
+- `idearium/phases/2026-10-18-gate-memory/graph/GM8_agents_have_it-e98b0bbe016313f7.graph`
+- `idearium/phases/2026-10-18-gate-memory/graph/_superseded/GM7_the_context_panel_per_gate-2031c0c663349829.graph`
+- `idearium/phases/2026-10-18-gate-memory/graph/_superseded/GM8_agents_have_it-45a73d0250d2d055.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-19-gate-quality-checks/` · 8 files</summary>
+<summary>`idearium/phases/2026-10-19-gate-quality-checks/` · 11 files</summary>
 
 - `idearium/phases/2026-10-19-gate-quality-checks/GQ2_brick_gate_runs_the_test.phase`
 - `idearium/phases/2026-10-19-gate-quality-checks/GQ4_phase_gate_keeps_the_test.phase`
 - `idearium/phases/2026-10-19-gate-quality-checks/GQ5_command.phase`
 - `idearium/phases/2026-10-19-gate-quality-checks/GQ6_ui.phase`
-- `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ2_brick_gate_runs_the_test-44bd9b0fe7114c73.graph`
-- `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ4_phase_gate_keeps_the_test-8d183bcb2f8535fe.graph`
-- `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ5_command-176adf36740d9ccb.graph`
+- `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ2_brick_gate_runs_the_test-99535c5a555b550c.graph`
+- `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ4_phase_gate_keeps_the_test-3c5b3e03ff62f4e5.graph`
+- `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ5_command-34f5faae75b0451c.graph`
 - `idearium/phases/2026-10-19-gate-quality-checks/graph/GQ6_ui-60394e9276084fea.graph`
+- `idearium/phases/2026-10-19-gate-quality-checks/graph/_superseded/GQ2_brick_gate_runs_the_test-44bd9b0fe7114c73.graph`
+- `idearium/phases/2026-10-19-gate-quality-checks/graph/_superseded/GQ4_phase_gate_keeps_the_test-8d183bcb2f8535fe.graph`
+- `idearium/phases/2026-10-19-gate-quality-checks/graph/_superseded/GQ5_command-176adf36740d9ccb.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-19-gig-autofill-and-learn/` · 2 files</summary>
+<summary>`idearium/phases/2026-10-19-gig-autofill-and-learn/` · 3 files</summary>
 
 - `idearium/phases/2026-10-19-gig-autofill-and-learn/GA5_commands_and_the_panel.phase`
-- `idearium/phases/2026-10-19-gig-autofill-and-learn/graph/GA5_commands_and_the_panel-df6524bf85b1a1f6.graph`
+- `idearium/phases/2026-10-19-gig-autofill-and-learn/graph/GA5_commands_and_the_panel-22403425d95ab042.graph`
+- `idearium/phases/2026-10-19-gig-autofill-and-learn/graph/_superseded/GA5_commands_and_the_panel-df6524bf85b1a1f6.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-19-idearium-control/` · 16 files</summary>
+<summary>`idearium/phases/2026-10-19-idearium-control/` · 21 files</summary>
 
 - `idearium/phases/2026-10-19-idearium-control/CT0_code_tab_census.phase`
 - `idearium/phases/2026-10-19-idearium-control/CT1_fewer_wider_tabs.phase`
@@ -2520,27 +2746,34 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-19-idearium-control/VS1_versions_in_the_surface.phase`
 - `idearium/phases/2026-10-19-idearium-control/graph/CT0_code_tab_census-68fe806d18a6ee3e.graph`
 - `idearium/phases/2026-10-19-idearium-control/graph/CT1_fewer_wider_tabs-454129e18b89f64d.graph`
-- `idearium/phases/2026-10-19-idearium-control/graph/FM1_file_manager-30ae3862a6fbedde.graph`
-- `idearium/phases/2026-10-19-idearium-control/graph/FM2_stores_in_the_files_tab-0cb3102874e66839.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/FM1_file_manager-e0543c6f107072a8.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/FM2_stores_in_the_files_tab-d4fe2183710c725b.graph`
 - `idearium/phases/2026-10-19-idearium-control/graph/IM1_ideas_and_notes_as_one-b11d0d8dc6b1eec4.graph`
-- `idearium/phases/2026-10-19-idearium-control/graph/PC1_phase_controls-530560b20a4638d0.graph`
-- `idearium/phases/2026-10-19-idearium-control/graph/TB1_toolbox-573f4e5a75544e59.graph`
-- `idearium/phases/2026-10-19-idearium-control/graph/VS1_versions_in_the_surface-2f948ae931b8b5ff.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/PC1_phase_controls-15931af4eaa43519.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/TB1_toolbox-34de6cfb5f9c9649.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/VS1_versions_in_the_surface-9086183fce184ea5.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/_superseded/FM1_file_manager-30ae3862a6fbedde.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/_superseded/FM2_stores_in_the_files_tab-0cb3102874e66839.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/_superseded/PC1_phase_controls-530560b20a4638d0.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/_superseded/TB1_toolbox-573f4e5a75544e59.graph`
+- `idearium/phases/2026-10-19-idearium-control/graph/_superseded/VS1_versions_in_the_surface-2f948ae931b8b5ff.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-19-infrastructure-spine/` · 4 files</summary>
+<summary>`idearium/phases/2026-10-19-infrastructure-spine/` · 6 files</summary>
 
 - `idearium/phases/2026-10-19-infrastructure-spine/IN3a_build_stands_on_the_registry.phase`
 - `idearium/phases/2026-10-19-infrastructure-spine/IN8_any_size.phase`
-- `idearium/phases/2026-10-19-infrastructure-spine/graph/IN3a_build_stands_on_the_registry-a6693c99336de552.graph`
-- `idearium/phases/2026-10-19-infrastructure-spine/graph/IN8_any_size-93a371269b367b64.graph`
+- `idearium/phases/2026-10-19-infrastructure-spine/graph/IN3a_build_stands_on_the_registry-d5ae44f273f56804.graph`
+- `idearium/phases/2026-10-19-infrastructure-spine/graph/IN8_any_size-600c9f6639a071fb.graph`
+- `idearium/phases/2026-10-19-infrastructure-spine/graph/_superseded/IN3a_build_stands_on_the_registry-a6693c99336de552.graph`
+- `idearium/phases/2026-10-19-infrastructure-spine/graph/_superseded/IN8_any_size-93a371269b367b64.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-19-pipeline-root-causes/` · 18 files</summary>
+<summary>`idearium/phases/2026-10-19-pipeline-root-causes/` · 22 files</summary>
 
 - `idearium/phases/2026-10-19-pipeline-root-causes/DG3_the_whole_dag.phase`
 - `idearium/phases/2026-10-19-pipeline-root-causes/DG4_nexus_maps_meet_the_standard.phase`
@@ -2549,82 +2782,96 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-19-pipeline-root-causes/RC6_unowned_ollama_load.phase`
 - `idearium/phases/2026-10-19-pipeline-root-causes/RC7_every_run_names_its_starter.phase`
 - `idearium/phases/2026-10-19-pipeline-root-causes/UI2_version_in_code.phase`
-- `idearium/phases/2026-10-19-pipeline-root-causes/graph/DG3_the_whole_dag-387f28abb7b7bfa6.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/DG3_the_whole_dag-cd43eaf82d452fb7.graph`
 - `idearium/phases/2026-10-19-pipeline-root-causes/graph/DG4_nexus_maps_meet_the_standard-8326c3166e4620ea.graph`
 - `idearium/phases/2026-10-19-pipeline-root-causes/graph/DG5_dag_in_the_brief_and_the_ui-7c64f9ae4e29eb6a.graph`
 - `idearium/phases/2026-10-19-pipeline-root-causes/graph/PR2_autofill_and_copilot_read_first-b4ddc2d39aad8dc7.graph`
 - `idearium/phases/2026-10-19-pipeline-root-causes/graph/RC6_unowned_ollama_load-67b8e7d0ffd6cf9d.graph`
-- `idearium/phases/2026-10-19-pipeline-root-causes/graph/RC7_every_run_names_its_starter-4b99cd95537cb85c.graph`
-- `idearium/phases/2026-10-19-pipeline-root-causes/graph/UI2_version_in_code-d70b04b30efde11f.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/RC7_every_run_names_its_starter-f9e33f042818d7e9.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/UI2_version_in_code-a64f2e08115a04e1.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/DG3_the_whole_dag-387f28abb7b7bfa6.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/DG3_the_whole_dag-90cdc31b0f6c7614.graph`
 - `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/DG3_the_whole_dag-9cfb242403b7f8b3.graph`
 - `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/DG3_the_whole_dag-b29958cf7cd36370.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC7_every_run_names_its_starter-4b99cd95537cb85c.graph`
 - `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC7_every_run_names_its_starter-e71ac0a4e3f549ec.graph`
 - `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/UI2_version_in_code-a31a39722f93b060.graph`
+- `idearium/phases/2026-10-19-pipeline-root-causes/graph/_superseded/UI2_version_in_code-d70b04b30efde11f.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-19-solid-build-foundation/` · 8 files</summary>
+<summary>`idearium/phases/2026-10-19-solid-build-foundation/` · 11 files</summary>
 
 - `idearium/phases/2026-10-19-solid-build-foundation/GQ2_brick_gate_runs_the_test.phase`
 - `idearium/phases/2026-10-19-solid-build-foundation/GQ4_phase_gate_keeps_the_test.phase`
 - `idearium/phases/2026-10-19-solid-build-foundation/SET1_autobuild_config_and_command.phase`
 - `idearium/phases/2026-10-19-solid-build-foundation/SET2_autobuild_settings_ui.phase`
-- `idearium/phases/2026-10-19-solid-build-foundation/graph/GQ2_brick_gate_runs_the_test-384b9e70be3b7f5b.graph`
-- `idearium/phases/2026-10-19-solid-build-foundation/graph/GQ4_phase_gate_keeps_the_test-dea1678c49093827.graph`
-- `idearium/phases/2026-10-19-solid-build-foundation/graph/SET1_autobuild_config_and_command-8ba4dcf5e6c54fd0.graph`
+- `idearium/phases/2026-10-19-solid-build-foundation/graph/GQ2_brick_gate_runs_the_test-49aea393264a386d.graph`
+- `idearium/phases/2026-10-19-solid-build-foundation/graph/GQ4_phase_gate_keeps_the_test-3b4f12b4a21d6418.graph`
+- `idearium/phases/2026-10-19-solid-build-foundation/graph/SET1_autobuild_config_and_command-44c884e599eb17d4.graph`
 - `idearium/phases/2026-10-19-solid-build-foundation/graph/SET2_autobuild_settings_ui-c78e2af0f32b3534.graph`
+- `idearium/phases/2026-10-19-solid-build-foundation/graph/_superseded/GQ2_brick_gate_runs_the_test-384b9e70be3b7f5b.graph`
+- `idearium/phases/2026-10-19-solid-build-foundation/graph/_superseded/GQ4_phase_gate_keeps_the_test-dea1678c49093827.graph`
+- `idearium/phases/2026-10-19-solid-build-foundation/graph/_superseded/SET1_autobuild_config_and_command-8ba4dcf5e6c54fd0.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-19-upload-intent-and-page-map/` · 4 files</summary>
+<summary>`idearium/phases/2026-10-19-upload-intent-and-page-map/` · 5 files</summary>
 
 - `idearium/phases/2026-10-19-upload-intent-and-page-map/UP3_upload_routes_and_commands.phase`
 - `idearium/phases/2026-10-19-upload-intent-and-page-map/UP4_upload_ui.phase`
-- `idearium/phases/2026-10-19-upload-intent-and-page-map/graph/UP3_upload_routes_and_commands-482f723155e730e0.graph`
+- `idearium/phases/2026-10-19-upload-intent-and-page-map/graph/UP3_upload_routes_and_commands-a1c6f657e03bf3cf.graph`
 - `idearium/phases/2026-10-19-upload-intent-and-page-map/graph/UP4_upload_ui-dcd2230ed41c4df6.graph`
+- `idearium/phases/2026-10-19-upload-intent-and-page-map/graph/_superseded/UP3_upload_routes_and_commands-482f723155e730e0.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-20-belief-loop/` · 3 files</summary>
+<summary>`idearium/phases/2026-10-20-belief-loop/` · 4 files</summary>
 
 - `idearium/phases/2026-10-20-belief-loop/CY3_belief_panel.phase`
-- `idearium/phases/2026-10-20-belief-loop/graph/CY3_belief_panel-38cb88c35d626a37.graph`
+- `idearium/phases/2026-10-20-belief-loop/graph/CY3_belief_panel-15e237754c465dd9.graph`
+- `idearium/phases/2026-10-20-belief-loop/graph/_superseded/CY3_belief_panel-38cb88c35d626a37.graph`
 - `idearium/phases/2026-10-20-belief-loop/graph/_superseded/CY3_belief_panel-e6a09dc8b785fe0e.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` · 9 files</summary>
+<summary>`idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` · 12 files</summary>
 
 - `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/CH3_chunk_inspector.phase`
 - `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GR3_graph_query_surface.phase`
 - `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GW3_gate_panel.phase`
-- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/CH3_chunk_inspector-c8566fe9a29a7307.graph`
-- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR3_graph_query_surface-270c359dad6ee6b9.graph`
-- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW3_gate_panel-69c269bf13faff30.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/CH3_chunk_inspector-bd0deee9407c7069.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR3_graph_query_surface-970f41c6d6c7a265.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW3_gate_panel-f96ac00a48cb7b6b.graph`
 - `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/CH3_chunk_inspector-99f25ae95f99935d.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/CH3_chunk_inspector-c8566fe9a29a7307.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GR3_graph_query_surface-270c359dad6ee6b9.graph`
 - `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GR3_graph_query_surface-d0e57a5baa382165.graph`
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW3_gate_panel-69c269bf13faff30.graph`
 - `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW3_gate_panel-c9d8030a699919e0.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-21-approval-chain/` · 6 files</summary>
+<summary>`idearium/phases/2026-10-21-approval-chain/` · 8 files</summary>
 
 - `idearium/phases/2026-10-21-approval-chain/APV3_changelog_read.phase`
 - `idearium/phases/2026-10-21-approval-chain/APV4_emit_on_the_ledger.phase`
-- `idearium/phases/2026-10-21-approval-chain/graph/APV3_changelog_read-a8799b04b953ec28.graph`
-- `idearium/phases/2026-10-21-approval-chain/graph/APV4_emit_on_the_ledger-831e03b8acdf10fc.graph`
+- `idearium/phases/2026-10-21-approval-chain/graph/APV3_changelog_read-dc75b22caf0aa331.graph`
+- `idearium/phases/2026-10-21-approval-chain/graph/APV4_emit_on_the_ledger-247812d44b3d8736.graph`
 - `idearium/phases/2026-10-21-approval-chain/graph/_superseded/APV3_changelog_read-4b56ad2bdd0f2cad.graph`
+- `idearium/phases/2026-10-21-approval-chain/graph/_superseded/APV3_changelog_read-a8799b04b953ec28.graph`
+- `idearium/phases/2026-10-21-approval-chain/graph/_superseded/APV4_emit_on_the_ledger-831e03b8acdf10fc.graph`
 - `idearium/phases/2026-10-21-approval-chain/graph/_superseded/APV4_emit_on_the_ledger-cedb2fe875e7db6e.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-21-brainos-into-idearium/` · 17 files</summary>
+<summary>`idearium/phases/2026-10-21-brainos-into-idearium/` · 20 files</summary>
 
 - `idearium/phases/2026-10-21-brainos-into-idearium/BX2_flow_sources.phase`
 - `idearium/phases/2026-10-21-brainos-into-idearium/BX3_flow_canvas.phase`
@@ -2633,15 +2880,18 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-21-brainos-into-idearium/BX6_pipeline_edit.phase`
 - `idearium/phases/2026-10-21-brainos-into-idearium/BX7_automation.phase`
 - `idearium/phases/2026-10-21-brainos-into-idearium/BX8_dock_panels.phase`
-- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX2_flow_sources-0f02f30efeb426ac.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX2_flow_sources-aae3672d2c75671a.graph`
 - `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX3_flow_canvas-0cfcc543816b7eee.graph`
 - `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX4_agents_layer-a877f16582b136ef.graph`
-- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX5_node_controls-18d39953f30981ae.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX5_node_controls-53774bffdb605c65.graph`
 - `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX6_pipeline_edit-a7874d45d8fbf5a0.graph`
-- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX7_automation-1f9e4c1632626090.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX7_automation-883e4f966f6fffd2.graph`
 - `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX8_dock_panels-13df1648e45b6aa2.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX2_flow_sources-0f02f30efeb426ac.graph`
 - `idearium/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX2_flow_sources-37e364e91aef63f4.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX5_node_controls-18d39953f30981ae.graph`
 - `idearium/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX5_node_controls-8af169be49d40dc5.graph`
+- `idearium/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX7_automation-1f9e4c1632626090.graph`
 - `idearium/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX7_automation-6615544c90e45a2a.graph`
 
 </details>
@@ -2655,18 +2905,19 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-22-system-node-db/` · 5 files</summary>
+<summary>`idearium/phases/2026-10-22-system-node-db/` · 6 files</summary>
 
 - `idearium/phases/2026-10-22-system-node-db/ND5_every_agent_reaches_every_system.phase`
 - `idearium/phases/2026-10-22-system-node-db/ND6_the_nodes_screen.phase`
-- `idearium/phases/2026-10-22-system-node-db/graph/ND5_every_agent_reaches_every_system-85c309ce09d5a7d5.graph`
+- `idearium/phases/2026-10-22-system-node-db/graph/ND5_every_agent_reaches_every_system-4eb4f0833f459f6a.graph`
 - `idearium/phases/2026-10-22-system-node-db/graph/ND6_the_nodes_screen-84631efc91474720.graph`
+- `idearium/phases/2026-10-22-system-node-db/graph/_superseded/ND5_every_agent_reaches_every_system-85c309ce09d5a7d5.graph`
 - `idearium/phases/2026-10-22-system-node-db/graph/_superseded/ND5_every_agent_reaches_every_system-f07c86902defd601.graph`
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-23-self-building-loop/` · 15 files</summary>
+<summary>`idearium/phases/2026-10-23-self-building-loop/` · 21 files</summary>
 
 - `idearium/phases/2026-10-23-self-building-loop/SL0_what_can_be_built_now.phase`
 - `idearium/phases/2026-10-23-self-building-loop/SL10_the_pipeline_simulated.phase`
@@ -2674,15 +2925,44 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/2026-10-23-self-building-loop/SL4_the_loop.phase`
 - `idearium/phases/2026-10-23-self-building-loop/SL7_build_again_is_asked_for.phase`
 - `idearium/phases/2026-10-23-self-building-loop/SL8_the_agent_maps_what_nexus_cannot.phase`
-- `idearium/phases/2026-10-23-self-building-loop/graph/SL0_what_can_be_built_now-d4b7b03b3139be7f.graph`
-- `idearium/phases/2026-10-23-self-building-loop/graph/SL10_the_pipeline_simulated-1acb38d7cc404522.graph`
-- `idearium/phases/2026-10-23-self-building-loop/graph/SL1_a_proven_phase_closes_itself-c3e5309c4ae10c83.graph`
-- `idearium/phases/2026-10-23-self-building-loop/graph/SL4_the_loop-3dcb223b8d82e43d.graph`
-- `idearium/phases/2026-10-23-self-building-loop/graph/SL7_build_again_is_asked_for-0f0ab8a3543b9460.graph`
-- `idearium/phases/2026-10-23-self-building-loop/graph/SL8_the_agent_maps_what_nexus_cannot-0f39da6d2b92c695.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL0_what_can_be_built_now-eb2acda9c8595faf.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL10_the_pipeline_simulated-35d2671c3e5e5007.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL1_a_proven_phase_closes_itself-f33f53588a4a5d6f.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL4_the_loop-291fde3fbea484cf.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL7_build_again_is_asked_for-b4bfe731e603bdfb.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/SL8_the_agent_maps_what_nexus_cannot-f6c7ecddbd0d8d46.graph`
 - `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL0_what_can_be_built_now-b32fb6604d2567f7.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL0_what_can_be_built_now-d4b7b03b3139be7f.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL10_the_pipeline_simulated-1acb38d7cc404522.graph`
 - `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL1_a_proven_phase_closes_itself-6bccee108a7faf2e.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL1_a_proven_phase_closes_itself-c3e5309c4ae10c83.graph`
 - `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL4_the_loop-25e5d0a903e2cd92.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL4_the_loop-3dcb223b8d82e43d.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL7_build_again_is_asked_for-0f0ab8a3543b9460.graph`
+- `idearium/phases/2026-10-23-self-building-loop/graph/_superseded/SL8_the_agent_maps_what_nexus_cannot-0f39da6d2b92c695.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-24-diagnostic-and-healing-one-system/` · 2 files</summary>
+
+- `idearium/phases/2026-10-24-diagnostic-and-healing-one-system/DH6_seen_and_used.phase`
+- `idearium/phases/2026-10-24-diagnostic-and-healing-one-system/graph/DH6_seen_and_used-0b12cd8a75535716.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/2026-10-24-github-context-and-agent-settings/` · 9 files</summary>
+
+- `idearium/phases/2026-10-24-github-context-and-agent-settings/AS1_one_resolver_global_then_repo.phase`
+- `idearium/phases/2026-10-24-github-context-and-agent-settings/GH1_a_compartment_gets_its_github_repo.phase`
+- `idearium/phases/2026-10-24-github-context-and-agent-settings/GH3_sync_per_compartment.phase`
+- `idearium/phases/2026-10-24-github-context-and-agent-settings/graph/AS1_one_resolver_global_then_repo-5201c36903685dac.graph`
+- `idearium/phases/2026-10-24-github-context-and-agent-settings/graph/GH1_a_compartment_gets_its_github_repo-e11bf64b6f4cf915.graph`
+- `idearium/phases/2026-10-24-github-context-and-agent-settings/graph/GH3_sync_per_compartment-44ddd0ca95b9cd33.graph`
+- `idearium/phases/2026-10-24-github-context-and-agent-settings/graph/_superseded/AS1_one_resolver_global_then_repo-e2c9ffd78a9405e0.graph`
+- `idearium/phases/2026-10-24-github-context-and-agent-settings/graph/_superseded/GH1_a_compartment_gets_its_github_repo-8baa02e148376348.graph`
+- `idearium/phases/2026-10-24-github-context-and-agent-settings/graph/_superseded/GH3_sync_per_compartment-6b8b11f5d9cc9458.graph`
 
 </details>
 
@@ -2695,7 +2975,7 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 </details>
 
 <details>
-<summary>`idearium/phases/idearium-repository-overhaul/` · 14 files</summary>
+<summary>`idearium/phases/idearium-repository-overhaul/` · 15 files</summary>
 
 - `idearium/phases/idearium-repository-overhaul/MCO-C_repo_materialize.phase`
 - `idearium/phases/idearium-repository-overhaul/MCO-D_zoom_subrepo.phase`
@@ -2706,11 +2986,26 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/idearium-repository-overhaul/MCO3_snapshot_compliance.phase`
 - `idearium/phases/idearium-repository-overhaul/graph/MCO-C_repo_materialize-a03f31b0a540144f.graph`
 - `idearium/phases/idearium-repository-overhaul/graph/MCO-D_zoom_subrepo-3cf6d02affb08ecc.graph`
-- `idearium/phases/idearium-repository-overhaul/graph/MCO-F_config-7292893fe836f4d3.graph`
+- `idearium/phases/idearium-repository-overhaul/graph/MCO-F_config-e75766c143925a9e.graph`
 - `idearium/phases/idearium-repository-overhaul/graph/MCO0_audit_real_coverage-a2d64fda1e986d73.graph`
 - `idearium/phases/idearium-repository-overhaul/graph/MCO1_graph_layer-85de28ae27e35120.graph`
 - `idearium/phases/idearium-repository-overhaul/graph/MCO2_verification_deepening-6b47c1fa993010fe.graph`
 - `idearium/phases/idearium-repository-overhaul/graph/MCO3_snapshot_compliance-db5a3f4597bead05.graph`
+- `idearium/phases/idearium-repository-overhaul/graph/_superseded/MCO-F_config-7292893fe836f4d3.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/nexus-repo-compartment-and-rich-dispatch/` · 8 files</summary>
+
+- `idearium/phases/nexus-repo-compartment-and-rich-dispatch/NC1_compartment_bootstrapping_decision.phase`
+- `idearium/phases/nexus-repo-compartment-and-rich-dispatch/NC2_nested_compartment_support.phase`
+- `idearium/phases/nexus-repo-compartment-and-rich-dispatch/RD2_response_to_multiple_artifact_types.phase`
+- `idearium/phases/nexus-repo-compartment-and-rich-dispatch/RS1_repo_settings_sections.phase`
+- `idearium/phases/nexus-repo-compartment-and-rich-dispatch/graph/NC1_compartment_bootstrapping_decision-bf4d956cc2a7c398.graph`
+- `idearium/phases/nexus-repo-compartment-and-rich-dispatch/graph/NC2_nested_compartment_support-0b4000d92371184e.graph`
+- `idearium/phases/nexus-repo-compartment-and-rich-dispatch/graph/RD2_response_to_multiple_artifact_types-a912e2588846f069.graph`
+- `idearium/phases/nexus-repo-compartment-and-rich-dispatch/graph/RS1_repo_settings_sections-06ec8dbcca479409.graph`
 
 </details>
 
@@ -2727,6 +3022,18 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 - `idearium/phases/nexus-repository-system-build/graph/MCO2_verification_deepening-385db87094adb932.graph`
 - `idearium/phases/nexus-repository-system-build/graph/MCO5_git_integration_credentials-987edd70d4a2ee2a.graph`
 - `idearium/phases/nexus-repository-system-build/graph/MCO6_compartment_ownership-cc8efc7174f10e2c.graph`
+
+</details>
+
+<details>
+<summary>`idearium/phases/rich-atlas/` · 6 files</summary>
+
+- `idearium/phases/rich-atlas/AT1_full_enumeration_and_clickable_links.phase`
+- `idearium/phases/rich-atlas/AT2_atlas_editor.phase`
+- `idearium/phases/rich-atlas/AT3_agent_queryable_atlas.phase`
+- `idearium/phases/rich-atlas/graph/AT1_full_enumeration_and_clickable_links-b44d8db195669926.graph`
+- `idearium/phases/rich-atlas/graph/AT2_atlas_editor-fb9a6d853540388e.graph`
+- `idearium/phases/rich-atlas/graph/AT3_agent_queryable_atlas-528df862578c4752.graph`
 
 </details>
 
@@ -2979,7 +3286,7 @@ Idearium is 993 files in 108 modules, entry `idearium/api/index.js`, port 4800, 
 
 </details>
 
-135 release notes name a file of idearium: 0.60.233., 0.60.231., 0.60.230., 0.60.228., 0.60.225., 0.60.223., 0.60.222., 0.60.221., 0.60.206., 0.60.205., 0.60.203., 0.60.199., 0.60.198., 0.60.197., 0.60.196., 0.60.193., 0.60.188., 0.60.177., 0.60.168., 0.60.167., 0.60.165., 0.60.164., 0.60.163., 0.60.162., 0.60.156., 0.60.153., 0.60.151., 0.60.150., 0.60.148., 0.60.145., 0.60.143., 0.60.141., 0.60.140., 0.60.134., 0.60.132., 0.60.131., 0.60.130., 0.60.128., 0.60.127., 0.60.124., and 95 older. Each is in the version history below, in his words.
+136 release notes name a file of idearium: 0.60.236., 0.60.233., 0.60.231., 0.60.230., 0.60.228., 0.60.225., 0.60.223., 0.60.222., 0.60.221., 0.60.206., 0.60.205., 0.60.203., 0.60.199., 0.60.198., 0.60.197., 0.60.196., 0.60.193., 0.60.188., 0.60.177., 0.60.168., 0.60.167., 0.60.165., 0.60.164., 0.60.163., 0.60.162., 0.60.156., 0.60.153., 0.60.151., 0.60.150., 0.60.148., 0.60.145., 0.60.143., 0.60.141., 0.60.140., 0.60.134., 0.60.132., 0.60.131., 0.60.130., 0.60.128., 0.60.127., and 96 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:idearium:end -->
 
@@ -3080,7 +3387,7 @@ The system that watches the others. `diagnostic/nexus-diagnostic.js` on :7825 re
 <!-- generated:readme:system:diagnostic:start -->
 #### diagnostic: every module and every file
 
-Diagnostic is 58 files in 8 modules, entry `diagnostic/nexus-diagnostic.js`, port 7825, spec `diagnostic/spec/diagnostic.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/diagnostic-atlas.md`.
+Diagnostic is 72 files in 8 modules, entry `diagnostic/nexus-diagnostic.js`, port 7825, spec `diagnostic/spec/diagnostic.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/diagnostic-atlas.md`.
 
 <details>
 <summary>`diagnostic/` · 9 files</summary>
@@ -3124,10 +3431,18 @@ Diagnostic is 58 files in 8 modules, entry `diagnostic/nexus-diagnostic.js`, por
 </details>
 
 <details>
-<summary>`diagnostic/phases/` · 25 files</summary>
+<summary>`diagnostic/phases/` · 39 files</summary>
 
 - `diagnostic/phases/2026-08-27-event-taxonomy-and-brainstorm/ET3_clearglass_event_taxonomy.phase`
 - `diagnostic/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET3_clearglass_event_taxonomy-716426b659cd5b43.graph`
+- `diagnostic/phases/2026-08-28-definition-of-complete/DOD1_fully_autonomous.phase`
+- `diagnostic/phases/2026-08-28-definition-of-complete/DOD2_diagnose_and_self_repair.phase`
+- `diagnostic/phases/2026-08-28-definition-of-complete/DOD7_tested_using_cos.phase`
+- `diagnostic/phases/2026-08-28-definition-of-complete/graph/DOD1_fully_autonomous-e5fd79a1162932ba.graph`
+- `diagnostic/phases/2026-08-28-definition-of-complete/graph/DOD2_diagnose_and_self_repair-7c0c587cd5f9e926.graph`
+- `diagnostic/phases/2026-08-28-definition-of-complete/graph/DOD7_tested_using_cos-a31ec4e8442ad5dc.graph`
+- `diagnostic/phases/2026-09-11-sovereign-node-architecture/P9_diagnostic_from_expected_behavior.phase`
+- `diagnostic/phases/2026-09-11-sovereign-node-architecture/graph/P9_diagnostic_from_expected_behavior-fb61bdb4e85f32ec.graph`
 - `diagnostic/phases/2026-09-28-staging-self-heal/S2.phase`
 - `diagnostic/phases/2026-09-28-staging-self-heal/S5.phase`
 - `diagnostic/phases/2026-09-28-staging-self-heal/graph/S2-a3384fc440fa0ce2.graph`
@@ -3150,6 +3465,12 @@ Diagnostic is 58 files in 8 modules, entry `diagnostic/nexus-diagnostic.js`, por
 - `diagnostic/phases/2026-10-17-debugging-product/graph/DP8_a_proven_fix-33947ca526c2dde4.graph`
 - `diagnostic/phases/2026-10-17-failure-mode-report/FMR0_causality_measured.phase`
 - `diagnostic/phases/2026-10-17-failure-mode-report/graph/FMR0_causality_measured-f921952916dd5696.graph`
+- `diagnostic/phases/2026-10-24-diagnostic-and-healing-one-system/DH1_the_expected_behavior_schema.phase`
+- `diagnostic/phases/2026-10-24-diagnostic-and-healing-one-system/DH4_diagnose_against_the_expectation.phase`
+- `diagnostic/phases/2026-10-24-diagnostic-and-healing-one-system/DH5_diagnostic_heals.phase`
+- `diagnostic/phases/2026-10-24-diagnostic-and-healing-one-system/graph/DH1_the_expected_behavior_schema-ee27b8b90e4ffc97.graph`
+- `diagnostic/phases/2026-10-24-diagnostic-and-healing-one-system/graph/DH4_diagnose_against_the_expectation-8d1c57d900ffbdb2.graph`
+- `diagnostic/phases/2026-10-24-diagnostic-and-healing-one-system/graph/DH5_diagnostic_heals-d75b53f00880ee63.graph`
 - `diagnostic/phases/INDEX.md`
 
 </details>
@@ -3199,7 +3520,7 @@ The cognition layer, consolidated from three places that had no single home. `in
 <!-- generated:readme:system:intelligence:start -->
 #### intelligence: every module and every file
 
-Intelligence is 189 files in 60 modules, entry `intelligence/server.js`, port 3753, spec `intelligence/spec/intelligence.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/intelligence-atlas.md`.
+Intelligence is 191 files in 60 modules, entry `intelligence/server.js`, port 3753, spec `intelligence/spec/intelligence.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/intelligence-atlas.md`.
 
 <details>
 <summary>`intelligence/` · 18 files</summary>
@@ -3356,10 +3677,11 @@ Intelligence is 189 files in 60 modules, entry `intelligence/server.js`, port 37
 </details>
 
 <details>
-<summary>`intelligence/phases/2026-08-22-session-full/` · 2 files</summary>
+<summary>`intelligence/phases/2026-08-22-session-full/` · 3 files</summary>
 
 - `intelligence/phases/2026-08-22-session-full/SF18_intelligence_becomes_a_real_system.phase`
-- `intelligence/phases/2026-08-22-session-full/graph/SF18_intelligence_becomes_a_real_system-9ed23465f0df57af.graph`
+- `intelligence/phases/2026-08-22-session-full/graph/SF18_intelligence_becomes_a_real_system-b3f9f594064e5d03.graph`
+- `intelligence/phases/2026-08-22-session-full/graph/_superseded/SF18_intelligence_becomes_a_real_system-9ed23465f0df57af.graph`
 
 </details>
 
@@ -3388,10 +3710,11 @@ Intelligence is 189 files in 60 modules, entry `intelligence/server.js`, port 37
 </details>
 
 <details>
-<summary>`intelligence/phases/2026-09-11-compartment-nodetype-and-reorg/` · 2 files</summary>
+<summary>`intelligence/phases/2026-09-11-compartment-nodetype-and-reorg/` · 3 files</summary>
 
 - `intelligence/phases/2026-09-11-compartment-nodetype-and-reorg/I1_boot_js_intelligence_routes.phase`
-- `intelligence/phases/2026-09-11-compartment-nodetype-and-reorg/graph/I1_boot_js_intelligence_routes-18997881da9f86c9.graph`
+- `intelligence/phases/2026-09-11-compartment-nodetype-and-reorg/graph/I1_boot_js_intelligence_routes-7756cf8788f56ce9.graph`
+- `intelligence/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/I1_boot_js_intelligence_routes-18997881da9f86c9.graph`
 
 </details>
 
@@ -3761,7 +4084,7 @@ Local model dispatch, deliberately isolated from guardian: if guardian goes down
 <!-- generated:readme:system:ollama-bridge:start -->
 #### ollama-bridge: every module and every file
 
-Ollama-bridge is 73 files in 8 modules, entry `ollama/server.js`, port 3749. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/ollama-atlas.md`.
+Ollama-bridge is 74 files in 8 modules, entry `ollama/server.js`, port 3749. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/ollama-atlas.md`.
 
 <details>
 <summary>`ollama/` · 7 files</summary>
@@ -3823,7 +4146,7 @@ Ollama-bridge is 73 files in 8 modules, entry `ollama/server.js`, port 3749. Eac
 </details>
 
 <details>
-<summary>`ollama/phases/` · 17 files</summary>
+<summary>`ollama/phases/` · 18 files</summary>
 
 - `ollama/phases/2026-08-27-event-taxonomy-and-brainstorm/ET1_event_taxonomy_pattern.phase`
 - `ollama/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET1_event_taxonomy_pattern-7834cc624fa6c264.graph`
@@ -3835,10 +4158,11 @@ Ollama-bridge is 73 files in 8 modules, entry `ollama/server.js`, port 3749. Eac
 - `ollama/phases/2026-10-07-ollama-recorder/OR3_the_cassette.phase`
 - `ollama/phases/2026-10-07-ollama-recorder/OR4_live_and_what_if.phase`
 - `ollama/phases/2026-10-07-ollama-recorder/OR5_model_vitals.phase`
-- `ollama/phases/2026-10-07-ollama-recorder/graph/OR1_one_door-1fb3963d095de33b.graph`
+- `ollama/phases/2026-10-07-ollama-recorder/graph/OR1_one_door-ac8a7b30cc981dbb.graph`
 - `ollama/phases/2026-10-07-ollama-recorder/graph/OR3_the_cassette-f2cd6cab689d5744.graph`
 - `ollama/phases/2026-10-07-ollama-recorder/graph/OR4_live_and_what_if-7005c50c7012704b.graph`
 - `ollama/phases/2026-10-07-ollama-recorder/graph/OR5_model_vitals-ce09fca42b652b41.graph`
+- `ollama/phases/2026-10-07-ollama-recorder/graph/_superseded/OR1_one_door-1fb3963d095de33b.graph`
 - `ollama/phases/INDEX.md`
 - `ollama/phases/copilot-full-capability/P10_load_balancer.phase`
 - `ollama/phases/copilot-full-capability/graph/P10_load_balancer-3732489409fd4b99.graph`
@@ -3895,7 +4219,7 @@ Causal version control: temporal replay, calendar playback, sigma-gated commits.
 <!-- generated:readme:system:versionium:start -->
 #### versionium: every module and every file
 
-Versionium is 47 files in 6 modules, entry `versionium/server.js`, port 3754, spec `versionium/spec/versionium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/versionium-atlas.md`.
+Versionium is 48 files in 6 modules, entry `versionium/server.js`, port 3754, spec `versionium/spec/versionium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/versionium-atlas.md`.
 
 <details>
 <summary>`versionium/` · 6 files</summary>
@@ -3928,7 +4252,7 @@ Versionium is 47 files in 6 modules, entry `versionium/server.js`, port 3754, sp
 </details>
 
 <details>
-<summary>`versionium/phases/` · 15 files</summary>
+<summary>`versionium/phases/` · 16 files</summary>
 
 - `versionium/phases/2026-09-11-compartment-nodetype-and-reorg/V1_repoint_old_versionium_refs.phase`
 - `versionium/phases/2026-09-11-compartment-nodetype-and-reorg/graph/V1_repoint_old_versionium_refs-18f7f308b8d3dab0.graph`
@@ -3941,7 +4265,8 @@ Versionium is 47 files in 6 modules, entry `versionium/server.js`, port 3754, sp
 - `versionium/phases/2026-10-10-snapshot-compartments/SN1_open_a_snapshot_as_a_compartment.phase`
 - `versionium/phases/2026-10-10-snapshot-compartments/graph/SN1_open_a_snapshot_as_a_compartment-436e57c6d013f324.graph`
 - `versionium/phases/2026-10-15-one-contract-raid-releases/RN1_versionium_tags_and_releases.phase`
-- `versionium/phases/2026-10-15-one-contract-raid-releases/graph/RN1_versionium_tags_and_releases-176ac709020a4ba7.graph`
+- `versionium/phases/2026-10-15-one-contract-raid-releases/graph/RN1_versionium_tags_and_releases-cffd1fc32193f1ce.graph`
+- `versionium/phases/2026-10-15-one-contract-raid-releases/graph/_superseded/RN1_versionium_tags_and_releases-176ac709020a4ba7.graph`
 - `versionium/phases/INDEX.md`
 - `versionium/phases/idearium-repository-overhaul/MCO-B_versionium_bridge.phase`
 - `versionium/phases/idearium-repository-overhaul/graph/MCO-B_versionium_bridge-b5be98b34a3a8658.graph`
@@ -3991,7 +4316,7 @@ Intelligence as opposed to dispatch: copilot receives intent, assembles context,
 <!-- generated:readme:system:copilot:start -->
 #### copilot: every module and every file
 
-Copilot is 189 files in 8 modules, entry `copilot/server.js`, port 3750, spec `copilot/spec/copilot.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/copilot-atlas.md`.
+Copilot is 192 files in 8 modules, entry `copilot/server.js`, port 3750, spec `copilot/spec/copilot.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/copilot-atlas.md`.
 
 <details>
 <summary>`copilot/` · 26 files</summary>
@@ -4057,12 +4382,13 @@ Copilot is 189 files in 8 modules, entry `copilot/server.js`, port 3750, spec `c
 </details>
 
 <details>
-<summary>`copilot/phases/` · 125 files</summary>
+<summary>`copilot/phases/` · 128 files</summary>
 
 - `copilot/phases/2026-08-23-backlog/BL21_agent_mesh_real_connection.phase`
 - `copilot/phases/2026-08-23-backlog/graph/BL21_agent_mesh_real_connection-82582a994731b7ce.graph`
 - `copilot/phases/2026-09-01-living-model-and-autonomous-pipeline/LM18_atlas_map_each_system_first.phase`
-- `copilot/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM18_atlas_map_each_system_first-3e1939e10f908db4.graph`
+- `copilot/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/LM18_atlas_map_each_system_first-ef380e7fa3b116f6.graph`
+- `copilot/phases/2026-09-01-living-model-and-autonomous-pipeline/graph/_superseded/LM18_atlas_map_each_system_first-3e1939e10f908db4.graph`
 - `copilot/phases/2026-09-02-nexus-vision-master/CP2_copilot_learning_memory.phase`
 - `copilot/phases/2026-09-02-nexus-vision-master/graph/CP2_copilot_learning_memory-a6a813f538df0a06.graph`
 - `copilot/phases/2026-09-11-sovereign-node-architecture/P15_redundant_file_purge.phase`
@@ -4170,12 +4496,14 @@ Copilot is 189 files in 8 modules, entry `copilot/server.js`, port 3750, spec `c
 - `copilot/phases/nexus-live-mind/graph/P5_copilot_dynamic_and_user_aware-c4de9a7b4031461d.graph`
 - `copilot/phases/nexus-observability-tablet/OB1_live_diagnostics.phase`
 - `copilot/phases/nexus-observability-tablet/OB4_bottleneck_detection.phase`
+- `copilot/phases/nexus-observability-tablet/OB5_tablet_modules.phase`
 - `copilot/phases/nexus-observability-tablet/OB6_continuous_ollama_injection.phase`
 - `copilot/phases/nexus-observability-tablet/OB7_intelligence_optimization.phase`
 - `copilot/phases/nexus-observability-tablet/OB8_pattern_leverage_ratio.phase`
 - `copilot/phases/nexus-observability-tablet/OB9_3d_visual_map.phase`
 - `copilot/phases/nexus-observability-tablet/graph/OB1_live_diagnostics-b96f43f0be72f7ee.graph`
 - `copilot/phases/nexus-observability-tablet/graph/OB4_bottleneck_detection-591af951a6da1c78.graph`
+- `copilot/phases/nexus-observability-tablet/graph/OB5_tablet_modules-56792031e4691191.graph`
 - `copilot/phases/nexus-observability-tablet/graph/OB6_continuous_ollama_injection-48971e046feff0e8.graph`
 - `copilot/phases/nexus-observability-tablet/graph/OB7_intelligence_optimization-7e1433b5ec9d5df9.graph`
 - `copilot/phases/nexus-observability-tablet/graph/OB8_pattern_leverage_ratio-0c003c79fea3e208.graph`
@@ -4241,7 +4569,7 @@ The registry authority. `loom/server.js` on :3752 serves the registry of compone
 <!-- generated:readme:system:loom:start -->
 #### loom: every module and every file
 
-Loom is 244 files in 42 modules, entry `loom/server.js`, port 3752, spec `loom/spec/loom.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/loom-atlas.md`.
+Loom is 246 files in 42 modules, entry `loom/server.js`, port 3752, spec `loom/spec/loom.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/loom-atlas.md`.
 
 <details>
 <summary>`loom/` · 7 files</summary>
@@ -4550,10 +4878,11 @@ Loom is 244 files in 42 modules, entry `loom/server.js`, port 3752, spec `loom/s
 </details>
 
 <details>
-<summary>`loom/phases/2026-10-19-pipeline-root-causes/` · 2 files</summary>
+<summary>`loom/phases/2026-10-19-pipeline-root-causes/` · 3 files</summary>
 
 - `loom/phases/2026-10-19-pipeline-root-causes/SS4_seal_into_compartments.phase`
-- `loom/phases/2026-10-19-pipeline-root-causes/graph/SS4_seal_into_compartments-369aaef9557e2030.graph`
+- `loom/phases/2026-10-19-pipeline-root-causes/graph/SS4_seal_into_compartments-510925df507d6f0a.graph`
+- `loom/phases/2026-10-19-pipeline-root-causes/graph/_superseded/SS4_seal_into_compartments-369aaef9557e2030.graph`
 
 </details>
 
@@ -4581,7 +4910,7 @@ Loom is 244 files in 42 modules, entry `loom/server.js`, port 3752, spec `loom/s
 </details>
 
 <details>
-<summary>`loom/phases/nexus-architecture-rebuild/` · 26 files</summary>
+<summary>`loom/phases/nexus-architecture-rebuild/` · 27 files</summary>
 
 - `loom/phases/nexus-architecture-rebuild/P15_forge_shell_into_loom.phase`
 - `loom/phases/nexus-architecture-rebuild/P16_architect_node_canvas_in_loom.phase`
@@ -4600,7 +4929,7 @@ Loom is 244 files in 42 modules, entry `loom/server.js`, port 3752, spec `loom/s
 - `loom/phases/nexus-architecture-rebuild/graph/P17_blueprint_builder_onto_canvas-c9dc8279be53da93.graph`
 - `loom/phases/nexus-architecture-rebuild/graph/P18_tv_ui_triage-f01cd98115ddf748.graph`
 - `loom/phases/nexus-architecture-rebuild/graph/P19_tablet_continue-d79f4c355f96ff81.graph`
-- `loom/phases/nexus-architecture-rebuild/graph/P1_dangling_hook_flood-c2a48d9b68d5b863.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/P1_dangling_hook_flood-63159f4a6ed90372.graph`
 - `loom/phases/nexus-architecture-rebuild/graph/P21_loom_boundary_import_hooks-907e46438b65288f.graph`
 - `loom/phases/nexus-architecture-rebuild/graph/P22_scanner_hand_map_id_drift-dded8b9e97b3ca01.graph`
 - `loom/phases/nexus-architecture-rebuild/graph/P3_remaining_dangling_hooks-903fa24d744e6bd3.graph`
@@ -4608,6 +4937,7 @@ Loom is 244 files in 42 modules, entry `loom/server.js`, port 3752, spec `loom/s
 - `loom/phases/nexus-architecture-rebuild/graph/P5_cockpit_to_copilot_control_surface-fcb861ad77e320a9.graph`
 - `loom/phases/nexus-architecture-rebuild/graph/P6_copilot_toasts-a09fd4021c8e4d8e.graph`
 - `loom/phases/nexus-architecture-rebuild/graph/_superseded/P15_forge_shell_into_loom-5354ae367b60de9c.graph`
+- `loom/phases/nexus-architecture-rebuild/graph/_superseded/P1_dangling_hook_flood-c2a48d9b68d5b863.graph`
 - `loom/phases/nexus-architecture-rebuild/graph/_superseded/P4_forge_shell_rebuild-8e2cf5d748e1fd80.graph`
 
 </details>
@@ -4750,7 +5080,7 @@ The sovereign browser: Electron and Chromium, with its own fingerprint control, 
 <!-- generated:readme:system:clear-glass:start -->
 #### clear-glass: every module and every file
 
-Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear-glass.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/clear-glass-atlas.md`.
+Clear-glass is 967 files in 131 modules, port 7704, spec `clear-glass/spec/clear-glass.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/clear-glass-atlas.md`.
 
 <details>
 <summary>`clear-glass/` · 6 files</summary>
@@ -4781,6 +5111,45 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 </details>
 
 <details>
+<summary>`clear-glass/erosmancer/erosmancer-os/` · 26 files</summary>
+
+- `clear-glass/erosmancer/erosmancer-os/CHANGELOG.md`
+- `clear-glass/erosmancer/erosmancer-os/MANIFEST.json`
+- `clear-glass/erosmancer/erosmancer-os/README.md`
+- `clear-glass/erosmancer/erosmancer-os/ROADMAP.md`
+- `clear-glass/erosmancer/erosmancer-os/package.json`
+- `clear-glass/erosmancer/erosmancer-os/src/adaptive/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/api/server.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/behavior/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/bridge/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/dispatcher/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/hostile/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/observer/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/registry/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/replay/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/routing/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/selector/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/telemetry/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/src/types/index.ts`
+- `clear-glass/erosmancer/erosmancer-os/tests/adaptive.test.ts`
+- `clear-glass/erosmancer/erosmancer-os/tests/google-signin.test.ts`
+- `clear-glass/erosmancer/erosmancer-os/tests/hostile.test.ts`
+- `clear-glass/erosmancer/erosmancer-os/tests/integration.test.ts`
+- `clear-glass/erosmancer/erosmancer-os/tests/replay.test.ts`
+- `clear-glass/erosmancer/erosmancer-os/tests/suite.ts`
+- `clear-glass/erosmancer/erosmancer-os/tsconfig.json`
+
+</details>
+
+<details>
+<summary>`clear-glass/erosmancer/spec/` · 1 file</summary>
+
+- `clear-glass/erosmancer/spec/erosmancer.spec`
+
+</details>
+
+<details>
 <summary>`clear-glass/input/` · 1 file</summary>
 
 - `clear-glass/input/.gitkeep`
@@ -4803,7 +5172,7 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 </details>
 
 <details>
-<summary>`clear-glass/phases/2026-08-23-backlog/` · 34 files</summary>
+<summary>`clear-glass/phases/2026-08-23-backlog/` · 35 files</summary>
 
 - `clear-glass/phases/2026-08-23-backlog/BL0_macro_system.phase`
 - `clear-glass/phases/2026-08-23-backlog/BL10_nexus_roadmap_html_files.phase`
@@ -4830,7 +5199,7 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 - `clear-glass/phases/2026-08-23-backlog/graph/BL19_roadmap_readability-acd486febb7a758e.graph`
 - `clear-glass/phases/2026-08-23-backlog/graph/BL1_macro_erosmancer_integration-16a373b699bcfb38.graph`
 - `clear-glass/phases/2026-08-23-backlog/graph/BL22_rewind_timeline_ui-c303b8516180f930.graph`
-- `clear-glass/phases/2026-08-23-backlog/graph/BL23_ncp_providers_start_verification-68e2b72f9c16e13c.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/BL23_ncp_providers_start_verification-d624fa96e2f3d2bc.graph`
 - `clear-glass/phases/2026-08-23-backlog/graph/BL26_account_agent_window_uuid_linking-a60e3d64b570800c.graph`
 - `clear-glass/phases/2026-08-23-backlog/graph/BL28_background_tabs_setting-179098e301fdb617.graph`
 - `clear-glass/phases/2026-08-23-backlog/graph/BL29_tab_context_menu_move_to_background-801abdd7b0833200.graph`
@@ -4839,6 +5208,7 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 - `clear-glass/phases/2026-08-23-backlog/graph/BL31_architect_block_canvas_component_swap-5361bbb7f4319623.graph`
 - `clear-glass/phases/2026-08-23-backlog/graph/BL5_port_killswitch_pattern-48ab969e8779224d.graph`
 - `clear-glass/phases/2026-08-23-backlog/graph/BL6_captcha_detection-acc28d69b4475ef7.graph`
+- `clear-glass/phases/2026-08-23-backlog/graph/_superseded/BL23_ncp_providers_start_verification-68e2b72f9c16e13c.graph`
 
 </details>
 
@@ -4865,18 +5235,10 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 </details>
 
 <details>
-<summary>`clear-glass/phases/2026-08-30-interaction-contract-context/` · 11 files</summary>
+<summary>`clear-glass/phases/2026-08-30-interaction-contract-context/` · 3 files</summary>
 
 - `clear-glass/phases/2026-08-30-interaction-contract-context/IC11_agent_truth_fragmentation.phase`
-- `clear-glass/phases/2026-08-30-interaction-contract-context/IC3_intention_taxonomy_per_system.phase`
-- `clear-glass/phases/2026-08-30-interaction-contract-context/IC4_idearium_system_template_update.phase`
-- `clear-glass/phases/2026-08-30-interaction-contract-context/IC8_callto_event_driven_cli_injection.phase`
-- `clear-glass/phases/2026-08-30-interaction-contract-context/IC9_diagnostic_stall_detection_and_autofix.phase`
 - `clear-glass/phases/2026-08-30-interaction-contract-context/graph/IC11_agent_truth_fragmentation-0a51b71bfcb6edc5.graph`
-- `clear-glass/phases/2026-08-30-interaction-contract-context/graph/IC3_intention_taxonomy_per_system-4e285ed5aef34d74.graph`
-- `clear-glass/phases/2026-08-30-interaction-contract-context/graph/IC4_idearium_system_template_update-9f874130772add91.graph`
-- `clear-glass/phases/2026-08-30-interaction-contract-context/graph/IC8_callto_event_driven_cli_injection-f44516d2a55c9222.graph`
-- `clear-glass/phases/2026-08-30-interaction-contract-context/graph/IC9_diagnostic_stall_detection_and_autofix-13ed862cf85ae1ff.graph`
 - `clear-glass/phases/2026-08-30-interaction-contract-context/graph/_superseded/IC11_agent_truth_fragmentation-b9dc58c002c61d18.graph`
 
 </details>
@@ -4990,6 +5352,14 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 - `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/T3_wrong_page-36dd2c25439e70e1.graph`
 - `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/T4_two_actuators-1e41d389b0d7fe92.graph`
 - `clear-glass/phases/2026-09-19-guardian-mesh-first-dispatch/graph/T5_untestable_here-3ec3c1ec8bf6950c.graph`
+
+</details>
+
+<details>
+<summary>`clear-glass/phases/2026-09-26-guardian-retry-novelty-and-installs/` · 2 files</summary>
+
+- `clear-glass/phases/2026-09-26-guardian-retry-novelty-and-installs/E1.phase`
+- `clear-glass/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/E1-5447e615943195aa.graph`
 
 </details>
 
@@ -5350,7 +5720,7 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 </details>
 
 <details>
-<summary>`clear-glass/phases/2026-10-16-google-signin/` · 12 files</summary>
+<summary>`clear-glass/phases/2026-10-16-google-signin/` · 14 files</summary>
 
 - `clear-glass/phases/2026-10-16-google-signin/GS1_present_as_firefox_on_google_signin.phase`
 - `clear-glass/phases/2026-10-16-google-signin/GS2_request_hooks_compose.phase`
@@ -5358,12 +5728,14 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 - `clear-glass/phases/2026-10-16-google-signin/GS4_page_without_a_debugger.phase`
 - `clear-glass/phases/2026-10-16-google-signin/GS5_contexts_one_firefox.phase`
 - `clear-glass/phases/2026-10-16-google-signin/GS6_proxy.phase`
+- `clear-glass/phases/2026-10-16-google-signin/GS7_no_debugger_on_signin.phase`
 - `clear-glass/phases/2026-10-16-google-signin/graph/GS1_present_as_firefox_on_google_signin-0c6919648171727e.graph`
 - `clear-glass/phases/2026-10-16-google-signin/graph/GS2_request_hooks_compose-0889c4dbc2a8419e.graph`
 - `clear-glass/phases/2026-10-16-google-signin/graph/GS3_domains_and_version-be7633a1c9ac3502.graph`
 - `clear-glass/phases/2026-10-16-google-signin/graph/GS4_page_without_a_debugger-b89e3f9a2ae563ec.graph`
 - `clear-glass/phases/2026-10-16-google-signin/graph/GS5_contexts_one_firefox-8fd91edb7c3ff9cb.graph`
 - `clear-glass/phases/2026-10-16-google-signin/graph/GS6_proxy-aea64bd8ae7f3973.graph`
+- `clear-glass/phases/2026-10-16-google-signin/graph/GS7_no_debugger_on_signin-dc68db38452d4b55.graph`
 
 </details>
 
@@ -5481,7 +5853,7 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 </details>
 
 <details>
-<summary>`clear-glass/phases/2026-10-21-browser-shell/` · 45 files</summary>
+<summary>`clear-glass/phases/2026-10-21-browser-shell/` · 46 files</summary>
 
 - `clear-glass/phases/2026-10-21-browser-shell/BS10_new_tab.phase`
 - `clear-glass/phases/2026-10-21-browser-shell/BS11_copilot_pane.phase`
@@ -5520,7 +5892,7 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 - `clear-glass/phases/2026-10-21-browser-shell/graph/BS4_extensions-e040b9a57e2237a0.graph`
 - `clear-glass/phases/2026-10-21-browser-shell/graph/BS5_downloads_panel-f349b0efcf5ca190.graph`
 - `clear-glass/phases/2026-10-21-browser-shell/graph/BS6_float_cli-1600a40993ac1a76.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS7_surface-650e56a6af5ece66.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/BS7_surface-ff0a8120446ee3af.graph`
 - `clear-glass/phases/2026-10-21-browser-shell/graph/BS8_design_system-45800c467fe1ee6c.graph`
 - `clear-glass/phases/2026-10-21-browser-shell/graph/BS9_agents_hub-e6c8cd1e2f573362.graph`
 - `clear-glass/phases/2026-10-21-browser-shell/graph/_superseded/BS12_context_automatic-0ff3ebe721017029.graph`
@@ -5528,6 +5900,7 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 - `clear-glass/phases/2026-10-21-browser-shell/graph/_superseded/BS14_zoom_core-5aa982aa70280429.graph`
 - `clear-glass/phases/2026-10-21-browser-shell/graph/_superseded/BS15_context_menu-b603bd17ec87a808.graph`
 - `clear-glass/phases/2026-10-21-browser-shell/graph/_superseded/BS6_float_cli-c0fd47f327b73e8c.graph`
+- `clear-glass/phases/2026-10-21-browser-shell/graph/_superseded/BS7_surface-650e56a6af5ece66.graph`
 
 </details>
 
@@ -5679,6 +6052,14 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 </details>
 
 <details>
+<summary>`clear-glass/phases/nexus-architecture-rebuild/` · 2 files</summary>
+
+- `clear-glass/phases/nexus-architecture-rebuild/P20_intelligence_reads_present_not_oldest.phase`
+- `clear-glass/phases/nexus-architecture-rebuild/graph/P20_intelligence_reads_present_not_oldest-39fb7891dbfb23f5.graph`
+
+</details>
+
+<details>
 <summary>`clear-glass/phases/nexus-self-build-pipeline/` · 2 files</summary>
 
 - `clear-glass/phases/nexus-self-build-pipeline/SB9_full_clearglass_control.phase`
@@ -5721,16 +6102,6 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 - `clear-glass/phases/raid-warp-verification/graph/P7_one_raid_verify_spine-d51684d9b6de9d1f.graph`
 - `clear-glass/phases/raid-warp-verification/graph/P8_ui_as_copilot_tools-34bbffc617747a9c.graph`
 - `clear-glass/phases/raid-warp-verification/graph/_superseded/P2_constitution_gate-dff121c29106c93f.graph`
-
-</details>
-
-<details>
-<summary>`clear-glass/phases/rich-atlas/` · 4 files</summary>
-
-- `clear-glass/phases/rich-atlas/AT1_full_enumeration_and_clickable_links.phase`
-- `clear-glass/phases/rich-atlas/AT3_agent_queryable_atlas.phase`
-- `clear-glass/phases/rich-atlas/graph/AT1_full_enumeration_and_clickable_links-b44d8db195669926.graph`
-- `clear-glass/phases/rich-atlas/graph/AT3_agent_queryable_atlas-528df862578c4752.graph`
 
 </details>
 
@@ -6464,7 +6835,7 @@ Clear-glass is 944 files in 128 modules, port 7704, spec `clear-glass/spec/clear
 
 </details>
 
-90 release notes name a file of clear-glass: 0.60.232., 0.60.231., 0.60.230., 0.60.226., 0.60.225., 0.60.220., 0.60.219., 0.60.218., 0.60.217., 0.60.216., 0.60.215., 0.60.214., 0.60.213., 0.60.211., 0.60.210., 0.60.206., 0.60.204., 0.60.183., 0.60.179., 0.60.178., 0.60.175., 0.60.174., 0.60.149., 0.60.146., 0.60.145., 0.60.137., 0.60.131., 0.60.109., 0.60.108., 0.60.106., 0.60.93., 0.60.85., 0.60.84., 0.60.71., 0.60.70., 0.60.69., 0.60.60., 0.60.58., 0.60.55., 0.60.54., and 50 older. Each is in the version history below, in his words.
+91 release notes name a file of clear-glass: 0.60.236., 0.60.232., 0.60.231., 0.60.230., 0.60.226., 0.60.225., 0.60.220., 0.60.219., 0.60.218., 0.60.217., 0.60.216., 0.60.215., 0.60.214., 0.60.213., 0.60.211., 0.60.210., 0.60.206., 0.60.204., 0.60.183., 0.60.179., 0.60.178., 0.60.175., 0.60.174., 0.60.149., 0.60.146., 0.60.145., 0.60.137., 0.60.131., 0.60.109., 0.60.108., 0.60.106., 0.60.93., 0.60.85., 0.60.84., 0.60.71., 0.60.70., 0.60.69., 0.60.60., 0.60.58., 0.60.55., and 51 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:clear-glass:end -->
 
@@ -6493,7 +6864,7 @@ The Compartment OS: isolated sandboxes with their own process, network and runti
 <!-- generated:readme:system:cos:start -->
 #### cos: every module and every file
 
-Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cos-atlas.md`.
+Cos is 543 files in 73 modules, spec `cos/spec/cos.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cos-atlas.md`.
 
 <details>
 <summary>`cos/` · 5 files</summary>
@@ -6947,12 +7318,15 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
-<summary>`cos/phases/2026-10-01-idearium-agent-ready-master/` · 4 files</summary>
+<summary>`cos/phases/2026-10-01-idearium-agent-ready-master/` · 7 files</summary>
 
 - `cos/phases/2026-10-01-idearium-agent-ready-master/DK1_desktop_image_and_login.phase`
 - `cos/phases/2026-10-01-idearium-agent-ready-master/DK3_vm_engines.phase`
-- `cos/phases/2026-10-01-idearium-agent-ready-master/graph/DK1_desktop_image_and_login-0ce31841af1a7c24.graph`
+- `cos/phases/2026-10-01-idearium-agent-ready-master/DK4_the_screen_through_remote_desktop.phase`
+- `cos/phases/2026-10-01-idearium-agent-ready-master/graph/DK1_desktop_image_and_login-0a104b674af94fc6.graph`
 - `cos/phases/2026-10-01-idearium-agent-ready-master/graph/DK3_vm_engines-c8c57bc98a3b8bdc.graph`
+- `cos/phases/2026-10-01-idearium-agent-ready-master/graph/DK4_the_screen_through_remote_desktop-068dbdde9fe76e51.graph`
+- `cos/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/DK1_desktop_image_and_login-0ce31841af1a7c24.graph`
 
 </details>
 
@@ -6997,7 +7371,7 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
-<summary>`cos/phases/2026-10-05-cos-machines/` · 16 files</summary>
+<summary>`cos/phases/2026-10-05-cos-machines/` · 17 files</summary>
 
 - `cos/phases/2026-10-05-cos-machines/AP1_android_build_compartment.phase`
 - `cos/phases/2026-10-05-cos-machines/AP3_release_like_an_enterprise.phase`
@@ -7014,7 +7388,8 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 - `cos/phases/2026-10-05-cos-machines/graph/OS2_images_downloaded_and_kept_current-7a1fb496219ebe9e.graph`
 - `cos/phases/2026-10-05-cos-machines/graph/SU1_the_setup_asks_the_os_and_its_version-9797666d275643e9.graph`
 - `cos/phases/2026-10-05-cos-machines/graph/SU2_every_language_and_the_repos_own_dependencies-0d04ebd8abe18320.graph`
-- `cos/phases/2026-10-05-cos-machines/graph/VM1_control_like_vmware-6722ac63e2d3dd68.graph`
+- `cos/phases/2026-10-05-cos-machines/graph/VM1_control_like_vmware-79d679d7837cd17d.graph`
+- `cos/phases/2026-10-05-cos-machines/graph/_superseded/VM1_control_like_vmware-6722ac63e2d3dd68.graph`
 
 </details>
 
@@ -7027,10 +7402,11 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
-<summary>`cos/phases/2026-10-10-idearium-solid/` · 2 files</summary>
+<summary>`cos/phases/2026-10-10-idearium-solid/` · 3 files</summary>
 
 - `cos/phases/2026-10-10-idearium-solid/SD13_the_machine_is_cos.phase`
-- `cos/phases/2026-10-10-idearium-solid/graph/SD13_the_machine_is_cos-1141a9ac8cf919f0.graph`
+- `cos/phases/2026-10-10-idearium-solid/graph/SD13_the_machine_is_cos-c7b3196f387b1d3a.graph`
+- `cos/phases/2026-10-10-idearium-solid/graph/_superseded/SD13_the_machine_is_cos-1141a9ac8cf919f0.graph`
 
 </details>
 
@@ -7071,7 +7447,7 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
-<summary>`cos/phases/2026-10-15-cos-app/` · 14 files</summary>
+<summary>`cos/phases/2026-10-15-cos-app/` · 15 files</summary>
 
 - `cos/phases/2026-10-15-cos-app/COSA10_compartment_window.phase`
 - `cos/phases/2026-10-15-cos-app/COSA11_nested_tree.phase`
@@ -7080,18 +7456,19 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 - `cos/phases/2026-10-15-cos-app/COSA2_runtime_and_dependencies.phase`
 - `cos/phases/2026-10-15-cos-app/COSA3_run_and_supervise.phase`
 - `cos/phases/2026-10-15-cos-app/COSA4_switch_and_rollback.phase`
-- `cos/phases/2026-10-15-cos-app/graph/COSA10_compartment_window-b221406d3e785772.graph`
+- `cos/phases/2026-10-15-cos-app/graph/COSA10_compartment_window-dbca6a1f8bcb469d.graph`
 - `cos/phases/2026-10-15-cos-app/graph/COSA11_nested_tree-38fee2523eb2eed8.graph`
 - `cos/phases/2026-10-15-cos-app/graph/COSA13_auto_update-5d782bdcac57ed2b.graph`
 - `cos/phases/2026-10-15-cos-app/graph/COSA1_version_store_and_import-e72f32ca6a953d76.graph`
 - `cos/phases/2026-10-15-cos-app/graph/COSA2_runtime_and_dependencies-df3ed9356c77d331.graph`
 - `cos/phases/2026-10-15-cos-app/graph/COSA3_run_and_supervise-d173bfd7f8056f35.graph`
 - `cos/phases/2026-10-15-cos-app/graph/COSA4_switch_and_rollback-3bc800982689e9a5.graph`
+- `cos/phases/2026-10-15-cos-app/graph/_superseded/COSA10_compartment_window-b221406d3e785772.graph`
 
 </details>
 
 <details>
-<summary>`cos/phases/2026-10-15-gate-held-work/` · 8 files</summary>
+<summary>`cos/phases/2026-10-15-gate-held-work/` · 9 files</summary>
 
 - `cos/phases/2026-10-15-gate-held-work/GW11_a_snapshot_per_gate.phase`
 - `cos/phases/2026-10-15-gate-held-work/GW12_desktop_is_optional.phase`
@@ -7099,8 +7476,9 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 - `cos/phases/2026-10-15-gate-held-work/GW14_copy_in_diff_out.phase`
 - `cos/phases/2026-10-15-gate-held-work/graph/GW11_a_snapshot_per_gate-c999f94ef6a49515.graph`
 - `cos/phases/2026-10-15-gate-held-work/graph/GW12_desktop_is_optional-382b3d3a9de3de0f.graph`
-- `cos/phases/2026-10-15-gate-held-work/graph/GW13_the_sandbox_door-4f040753e8ae2406.graph`
+- `cos/phases/2026-10-15-gate-held-work/graph/GW13_the_sandbox_door-991f9175bf37d4ce.graph`
 - `cos/phases/2026-10-15-gate-held-work/graph/GW14_copy_in_diff_out-581149a84eca7d04.graph`
+- `cos/phases/2026-10-15-gate-held-work/graph/_superseded/GW13_the_sandbox_door-4f040753e8ae2406.graph`
 
 </details>
 
@@ -7169,7 +7547,7 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
-<summary>`cos/phases/2026-10-18-compartment-environment/` · 10 files</summary>
+<summary>`cos/phases/2026-10-18-compartment-environment/` · 12 files</summary>
 
 - `cos/phases/2026-10-18-compartment-environment/CE1_the_compartment_machine.phase`
 - `cos/phases/2026-10-18-compartment-environment/CE1a_cos_answers_on_a_route.phase`
@@ -7179,8 +7557,10 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 - `cos/phases/2026-10-18-compartment-environment/graph/CE1_the_compartment_machine-eb3bd9235c93618f.graph`
 - `cos/phases/2026-10-18-compartment-environment/graph/CE1a_cos_answers_on_a_route-42f314b45461a0f5.graph`
 - `cos/phases/2026-10-18-compartment-environment/graph/CE2_the_shell_is_declared-95cc76040589304d.graph`
-- `cos/phases/2026-10-18-compartment-environment/graph/CE4_the_terminal_bridge-008607ecef551be9.graph`
-- `cos/phases/2026-10-18-compartment-environment/graph/CE5_the_guest_file_tree-828a2472ed4dff16.graph`
+- `cos/phases/2026-10-18-compartment-environment/graph/CE4_the_terminal_bridge-3943c443e61c1557.graph`
+- `cos/phases/2026-10-18-compartment-environment/graph/CE5_the_guest_file_tree-9086acf19d9a00cf.graph`
+- `cos/phases/2026-10-18-compartment-environment/graph/_superseded/CE4_the_terminal_bridge-008607ecef551be9.graph`
+- `cos/phases/2026-10-18-compartment-environment/graph/_superseded/CE5_the_guest_file_tree-828a2472ed4dff16.graph`
 
 </details>
 
@@ -7270,6 +7650,90 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
+<summary>`cos/remote-desktop/` · 11 files</summary>
+
+- `cos/remote-desktop/README.md`
+- `cos/remote-desktop/contracts.js`
+- `cos/remote-desktop/host.html`
+- `cos/remote-desktop/input-auth.js`
+- `cos/remote-desktop/input-injector.js`
+- `cos/remote-desktop/package-lock.json`
+- `cos/remote-desktop/package.json`
+- `cos/remote-desktop/remote-desktop.spec`
+- `cos/remote-desktop/session-token.js`
+- `cos/remote-desktop/signal.js`
+- `cos/remote-desktop/viewer.html`
+
+</details>
+
+<details>
+<summary>`cos/remote-desktop/bridge-electron/` · 5 files</summary>
+
+- `cos/remote-desktop/bridge-electron/assets/icon.png`
+- `cos/remote-desktop/bridge-electron/assets/tray-icon.png`
+- `cos/remote-desktop/bridge-electron/main.js` — bridge-electron/main.js — phase 7 (host_application_shell), taken early out of spec order at explicit…
+- `cos/remote-desktop/bridge-electron/package.json`
+- `cos/remote-desktop/bridge-electron/preload.js` — the entire Electron-to-renderer surface. host.html degrades gracefully without any of this (checks
+
+</details>
+
+<details>
+<summary>`cos/remote-desktop/bridge-os-core/` · 31 files</summary>
+
+- `cos/remote-desktop/bridge-os-core/README.md`
+- `cos/remote-desktop/bridge-os-core/bridge-IME/index.js`
+- `cos/remote-desktop/bridge-os-core/bridge-IME/tests/test-ime-deep.js`
+- `cos/remote-desktop/bridge-os-core/bridge-IME/tests/test-ime.js`
+- `cos/remote-desktop/bridge-os-core/bridge-contracts/index.js`
+- `cos/remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts-deep.js`
+- `cos/remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`
+- `cos/remote-desktop/bridge-os-core/bridge-core/bus.js`
+- `cos/remote-desktop/bridge-os-core/bridge-core/crypto-engine.js`
+- `cos/remote-desktop/bridge-os-core/bridge-core/index.js`
+- `cos/remote-desktop/bridge-os-core/bridge-core/registry/index.js`
+- `cos/remote-desktop/bridge-os-core/bridge-core/siso/index.js`
+- `cos/remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
+- `cos/remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
+- `cos/remote-desktop/bridge-os-core/bridge-data/index.js`
+- `cos/remote-desktop/bridge-os-core/bridge-data/tests/test-data-deep.js`
+- `cos/remote-desktop/bridge-os-core/bridge-data/tests/test-data.js`
+- `cos/remote-desktop/bridge-os-core/bridge-heartbeat/index.js`
+- `cos/remote-desktop/bridge-os-core/bridge-heartbeat/tests/test-heartbeat-deep.js`
+- `cos/remote-desktop/bridge-os-core/bridge-heartbeat/tests/test-heartbeat.js`
+- `cos/remote-desktop/bridge-os-core/bridge-identity/identity.js`
+- `cos/remote-desktop/bridge-os-core/bridge-identity/index.js`
+- `cos/remote-desktop/bridge-os-core/bridge-identity/keystore/index.js`
+- `cos/remote-desktop/bridge-os-core/bridge-identity/tests/test-identity-deep.js`
+- `cos/remote-desktop/bridge-os-core/bridge-identity/tests/test-identity.js`
+- `cos/remote-desktop/bridge-os-core/bridge-node/boot.js`
+- `cos/remote-desktop/bridge-os-core/bridge-sngate/index.js`
+- `cos/remote-desktop/bridge-os-core/bridge-sngate/tests/test-sngate-deep.js`
+- `cos/remote-desktop/bridge-os-core/bridge-sngate/tests/test-sngate.js`
+- `cos/remote-desktop/bridge-os-core/index.js`
+- `cos/remote-desktop/bridge-os-core/package.json`
+
+</details>
+
+<details>
+<summary>`cos/remote-desktop/scripts/` · 2 files</summary>
+
+- `cos/remote-desktop/scripts/start-signal-background.bat`
+- `cos/remote-desktop/scripts/stop-signal-background.bat`
+
+</details>
+
+<details>
+<summary>`cos/remote-desktop/tests/` · 5 files</summary>
+
+- `cos/remote-desktop/tests/test-input-auth.js` — // replay guard
+- `cos/remote-desktop/tests/test-input-injector.js` — // valid click applies immediately (not coalesced) // malformed shape
+- `cos/remote-desktop/tests/test-input-pipeline.js` — // tests/test-input-pipeline.js — signFrame -> verifyFrame -> replayGuard -> // injector.inject(), the same…
+- `cos/remote-desktop/tests/test-session-token.js` — // test-session-token.js — exercises session-token.js purely through its // event bus, the way signal.js…
+- `cos/remote-desktop/tests/test-signal-integration.js` — // tests/test-signal-integration.js — spins up signal.js for real, connects // a host and two viewers (one…
+
+</details>
+
+<details>
 <summary>`cos/runtime/` · 5 files</summary>
 
 - `cos/runtime/preload.cjs`
@@ -7277,6 +7741,14 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 - `cos/runtime/resolve-hook.mjs` — // cos/runtime/resolve-hook.mjs — ESM resolution fallback for COS runs. // UUID:…
 - `cos/runtime/run.js` — COS's JS runtime: run node code from a branch or a workspace with dependency resolution, isolation and port…
 - `cos/runtime/syntax-check.cjs` — parse every file given on stdin (JSON array of absolute paths) WITHOUT running any of it, and print one JSON…
+
+</details>
+
+<details>
+<summary>`cos/security/` · 2 files</summary>
+
+- `cos/security/e2e-channel.js`
+- `cos/security/signaling-envelope.js` — security/signaling-envelope.js — signed envelope for the signaling channel (join/offer/answer/ice), closing…
 
 </details>
 
@@ -7304,6 +7776,14 @@ Cos is 476 files in 66 modules, spec `cos/spec/cos.spec`. Each module below open
 - `cos/spec/qa-catalog.spec`
 - `cos/spec/the-machine.spec`
 - `cos/spec/torture-chamber.spec`
+
+</details>
+
+<details>
+<summary>`cos/tablet/` · 2 files</summary>
+
+- `cos/tablet/index.html`
+- `cos/tablet/map3d.html`
 
 </details>
 
@@ -7378,7 +7858,7 @@ Everything no kernel owns. Core has no port and no entry: its code runs inside w
 <!-- generated:readme:system:core:start -->
 #### core: every module and every file
 
-Core is 4419 files in 49 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
+Core is 4475 files in 39 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
 
 <details>
 <summary>the files at the top of the tree · 19 files</summary>
@@ -7402,37 +7882,6 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `test-node-index.js`
 - `verification-manifest.json`
 - `writeback-failures.jsonl`
-
-</details>
-
-<details>
-<summary>`architecture-spec/` · 14 files</summary>
-
-- `architecture-spec/registry/api.js`
-- `architecture-spec/registry/bundle.js`
-- `architecture-spec/registry/component.js`
-- `architecture-spec/registry/config.js`
-- `architecture-spec/registry/create-atlas.js`
-- `architecture-spec/registry/decompose.js`
-- `architecture-spec/registry/edit-atlas.js`
-- `architecture-spec/registry/friction.js`
-- `architecture-spec/registry/hook.js`
-- `architecture-spec/registry/lattice.js`
-- `architecture-spec/registry/nexus-atlas-aggregate.js`
-- `architecture-spec/registry/phases.js`
-- `architecture-spec/registry/watcher.js`
-- `architecture-spec/registry/wire.js`
-
-</details>
-
-<details>
-<summary>`auth/` · 5 files</summary>
-
-- `auth/client.js` — NEXUS Remote Client First-run: generates RSA-2048 keypair, prints public key for admin to register
-- `auth/index.js`
-- `auth/keys/nexus-private.pem`
-- `auth/keys/nexus-public.pem`
-- `auth/policy.json`
 
 </details>
 
@@ -7505,7 +7954,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`docs/` · 442 files</summary>
+<summary>`docs/` · 445 files</summary>
 
 - `docs/2026-08-22-session-full-phasemap.spec`
 - `docs/2026-08-23-backlog-phasemap.spec`
@@ -7664,6 +8113,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `docs/2026-10-23-evidence-dry-run.md`
 - `docs/2026-10-23-self-building-loop-phasemap.spec`
 - `docs/2026-10-23-site-profile-processes-phasemap.spec`
+- `docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec`
+- `docs/2026-10-24-fifteen-systems-migration-phasemap.spec`
+- `docs/2026-10-24-github-context-and-agent-settings-phasemap.spec`
 - `docs/AXIOMS-PHASE-MAP.md`
 - `docs/AXIOMS-v1.0.md`
 - `docs/AXIOMS-v2.0.md`
@@ -8113,39 +8565,6 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`erosmancer/` · 27 files</summary>
-
-- `erosmancer/erosmancer-os/CHANGELOG.md`
-- `erosmancer/erosmancer-os/MANIFEST.json`
-- `erosmancer/erosmancer-os/README.md`
-- `erosmancer/erosmancer-os/ROADMAP.md`
-- `erosmancer/erosmancer-os/package.json`
-- `erosmancer/erosmancer-os/src/adaptive/index.ts`
-- `erosmancer/erosmancer-os/src/api/server.ts`
-- `erosmancer/erosmancer-os/src/behavior/index.ts`
-- `erosmancer/erosmancer-os/src/bridge/index.ts`
-- `erosmancer/erosmancer-os/src/dispatcher/index.ts`
-- `erosmancer/erosmancer-os/src/hostile/index.ts`
-- `erosmancer/erosmancer-os/src/index.ts`
-- `erosmancer/erosmancer-os/src/observer/index.ts`
-- `erosmancer/erosmancer-os/src/registry/index.ts`
-- `erosmancer/erosmancer-os/src/replay/index.ts`
-- `erosmancer/erosmancer-os/src/routing/index.ts`
-- `erosmancer/erosmancer-os/src/selector/index.ts`
-- `erosmancer/erosmancer-os/src/telemetry/index.ts`
-- `erosmancer/erosmancer-os/src/types/index.ts`
-- `erosmancer/erosmancer-os/tests/adaptive.test.ts`
-- `erosmancer/erosmancer-os/tests/google-signin.test.ts`
-- `erosmancer/erosmancer-os/tests/hostile.test.ts`
-- `erosmancer/erosmancer-os/tests/integration.test.ts`
-- `erosmancer/erosmancer-os/tests/replay.test.ts`
-- `erosmancer/erosmancer-os/tests/suite.ts`
-- `erosmancer/erosmancer-os/tsconfig.json`
-- `erosmancer/spec/erosmancer.spec`
-
-</details>
-
-<details>
 <summary>`hooks/` · 11 files</summary>
 
 - `hooks/architect.hooks.js`
@@ -8163,15 +8582,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`jaa/` · 2 files</summary>
-
-- `jaa/schema-full.sql`
-- `jaa/schema.sql`
-
-</details>
-
-<details>
-<summary>`lib/` · 291 files</summary>
+<summary>`lib/` · 294 files</summary>
 
 - `lib/account-identity-index.js`
 - `lib/account-registry.js`
@@ -8194,6 +8605,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/agent-router.js`
 - `lib/agent-self-model.js`
 - `lib/agent-tool-call.js`
+- `lib/architecture-apply.js`
+- `lib/architecture-migrate.decisions.json`
+- `lib/architecture-migrate.js`
 - `lib/atlas-generate.js`
 - `lib/autonomous-loop.js`
 - `lib/autonomous-repair.js`
@@ -8799,7 +9213,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`lib/phases/` · 1609 files</summary>
+<summary>`lib/phases/` · 1779 files</summary>
 
 - `lib/phases/2026-08-22-session-full/SF10_agent_notes.phase`
 - `lib/phases/2026-08-22-session-full/SF12_end_state_vision_and_full_phase_map_docs.phase`
@@ -8812,10 +9226,11 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-08-22-session-full/graph/SF12_end_state_vision_and_full_phase_map_docs-e20580490f498608.graph`
 - `lib/phases/2026-08-22-session-full/graph/SF13_orchestrator_agent_pipeline-de5ad9a019286d15.graph`
 - `lib/phases/2026-08-22-session-full/graph/SF16_event_types_real_registry-71639da711eaaf6d.graph`
-- `lib/phases/2026-08-22-session-full/graph/SF17_intelligence_system_all_4_phases-8f00a4235b63cc7b.graph`
+- `lib/phases/2026-08-22-session-full/graph/SF17_intelligence_system_all_4_phases-4c31159075863608.graph`
 - `lib/phases/2026-08-22-session-full/graph/SF5_wiring_gap_bridge-91251df2a9f05ad8.graph`
 - `lib/phases/2026-08-22-session-full/graph/SF7_axiom_8_7-0396343d7665f754.graph`
 - `lib/phases/2026-08-22-session-full/graph/_superseded/SF12_end_state_vision_and_full_phase_map_docs-1d20559f29b851d2.graph`
+- `lib/phases/2026-08-22-session-full/graph/_superseded/SF17_intelligence_system_all_4_phases-8f00a4235b63cc7b.graph`
 - `lib/phases/2026-08-22-session-full/graph/_superseded/SF7_axiom_8_7-c236c56937c33593.graph`
 - `lib/phases/2026-08-23-backlog/BL11_orchestrator_folder_consolidation.phase`
 - `lib/phases/2026-08-23-backlog/BL12_nexus_heal_loop_to_diagnostic.phase`
@@ -8825,14 +9240,16 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-08-23-backlog/BL27_agent_suite_consolidation.phase`
 - `lib/phases/2026-08-23-backlog/BL4_port_element_picker_ux.phase`
 - `lib/phases/2026-08-23-backlog/BL7_emerge_files_to_emerge_folder.phase`
-- `lib/phases/2026-08-23-backlog/graph/BL11_orchestrator_folder_consolidation-d04b773d3d681ed0.graph`
-- `lib/phases/2026-08-23-backlog/graph/BL12_nexus_heal_loop_to_diagnostic-aedd1b0928da63f4.graph`
+- `lib/phases/2026-08-23-backlog/graph/BL11_orchestrator_folder_consolidation-e8629d7afc8fe155.graph`
+- `lib/phases/2026-08-23-backlog/graph/BL12_nexus_heal_loop_to_diagnostic-4f389d7509036062.graph`
 - `lib/phases/2026-08-23-backlog/graph/BL15_agent_tools_tree_restructure-8c572d92803d3fae.graph`
 - `lib/phases/2026-08-23-backlog/graph/BL24_userscript_suite_enterprise_grade-edba621e935840c5.graph`
 - `lib/phases/2026-08-23-backlog/graph/BL25_nexus_options_config-abb545081f8c4e3e.graph`
 - `lib/phases/2026-08-23-backlog/graph/BL27_agent_suite_consolidation-5312857a8c56f41a.graph`
 - `lib/phases/2026-08-23-backlog/graph/BL4_port_element_picker_ux-8f7a989bfea93b3a.graph`
 - `lib/phases/2026-08-23-backlog/graph/BL7_emerge_files_to_emerge_folder-3ab7a1f57237920a.graph`
+- `lib/phases/2026-08-23-backlog/graph/_superseded/BL11_orchestrator_folder_consolidation-d04b773d3d681ed0.graph`
+- `lib/phases/2026-08-23-backlog/graph/_superseded/BL12_nexus_heal_loop_to_diagnostic-aedd1b0928da63f4.graph`
 - `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR2_ollama_output_folder_listener.phase`
 - `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR3_account_registry_userscript_hook.phase`
 - `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/BR5_build_contract_per_agent_per_intent.phase`
@@ -8846,17 +9263,16 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR5_build_contract_per_agent_per_intent-36bf07b27fc48bd7.graph`
 - `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR6_copilot_as_agent_chat_model-fd8edb04f0f53aaf.graph`
 - `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/BR7_guardian_dispatch_connectivity_sweep-e8d5cbb04e0fb190.graph`
-- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET2_guardian_event_taxonomy-3864f053a89e1c31.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET2_guardian_event_taxonomy-499ad40e6e9c3414.graph`
 - `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/ET6_sigma_gates_on_taxonomy-161a85ba5515e7c0.graph`
 - `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/SS3_unified_living_model_system_plus_person-0bbbc7d8adf65f4e.graph`
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/ET2_guardian_event_taxonomy-3864f053a89e1c31.graph`
 - `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/ET6_sigma_gates_on_taxonomy-39103ee4912fdf0c.graph`
 - `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/graph/_superseded/SS3_unified_living_model_system_plus_person-b7991f62394431da.graph`
-- `lib/phases/2026-08-28-definition-of-complete/DOD2_diagnose_and_self_repair.phase`
 - `lib/phases/2026-08-28-definition-of-complete/DOD4_build_and_expand_from_loom.phase`
 - `lib/phases/2026-08-28-definition-of-complete/DOD5_maps_snapshots_backups_living_model.phase`
 - `lib/phases/2026-08-28-definition-of-complete/DOD6_respects_axioms.phase`
 - `lib/phases/2026-08-28-definition-of-complete/DOD8_contract_conditions_comparison_and_drift_engines.phase`
-- `lib/phases/2026-08-28-definition-of-complete/graph/DOD2_diagnose_and_self_repair-5bfd602924d700e1.graph`
 - `lib/phases/2026-08-28-definition-of-complete/graph/DOD4_build_and_expand_from_loom-8ee63f9d1b09068e.graph`
 - `lib/phases/2026-08-28-definition-of-complete/graph/DOD5_maps_snapshots_backups_living_model-3908fcdebd5c6049.graph`
 - `lib/phases/2026-08-28-definition-of-complete/graph/DOD6_respects_axioms-0f8fab7681fae1d5.graph`
@@ -8873,16 +9289,15 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-08-28-self-building-pipeline/graph/SBP6_system_schema_inventory-01abcd223ab08b29.graph`
 - `lib/phases/2026-08-28-self-building-pipeline/graph/SBP8_agent_mesh_consolidation-5a5600d90602c11e.graph`
 - `lib/phases/2026-08-28-self-building-pipeline/graph/SBP9_hat_forge_real_hats-7d6322a91f58a6d6.graph`
-- `lib/phases/2026-08-30-interaction-contract-context/IC10_diagnostic_own_real_system_structure.phase`
 - `lib/phases/2026-08-30-interaction-contract-context/IC12_universal_gap_and_symmetry_detection.phase`
 - `lib/phases/2026-08-30-interaction-contract-context/IC13_agent_mesh_chat_index.phase`
 - `lib/phases/2026-08-30-interaction-contract-context/IC5_full_input_queue_output_qc_lifecycle.phase`
 - `lib/phases/2026-08-30-interaction-contract-context/IC7_drift_and_comparison_tracking_in_the_pipeline.phase`
-- `lib/phases/2026-08-30-interaction-contract-context/graph/IC10_diagnostic_own_real_system_structure-37d61971e616a68c.graph`
 - `lib/phases/2026-08-30-interaction-contract-context/graph/IC12_universal_gap_and_symmetry_detection-4c68e3f3c0900e7c.graph`
 - `lib/phases/2026-08-30-interaction-contract-context/graph/IC13_agent_mesh_chat_index-acae83a88cfed8cd.graph`
 - `lib/phases/2026-08-30-interaction-contract-context/graph/IC5_full_input_queue_output_qc_lifecycle-5cf93f4f44f1c70a.graph`
 - `lib/phases/2026-08-30-interaction-contract-context/graph/IC7_drift_and_comparison_tracking_in_the_pipeline-57b2a934eab904b3.graph`
+- `lib/phases/2026-08-30-interaction-contract-context/graph/_superseded/IC10_diagnostic_own_real_system_structure-37d61971e616a68c.graph`
 - `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM10_per_agent_wake_words.phase`
 - `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM14_components_store.phase`
 - `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/LM1_spec_as_living_model.phase`
@@ -8936,15 +9351,17 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-02-nexus-vision-master/graph/CP4_copilot_cli_deterministic_toggle-3e9bf786171d55b3.graph`
 - `lib/phases/2026-09-02-nexus-vision-master/graph/LM6_model_template-58c8bda5255910c8.graph`
 - `lib/phases/2026-09-02-nexus-vision-master/graph/SR10_iterative_prompt_optimization_loop-cb5c36dca66dacba.graph`
-- `lib/phases/2026-09-02-nexus-vision-master/graph/SR11_spec_project_import_to_compartment-3ba40fae475bab7c.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/SR11_spec_project_import_to_compartment-efe16300b3743d37.graph`
 - `lib/phases/2026-09-02-nexus-vision-master/graph/SR12_system_parse_query_surface-8c16a48512a80c7c.graph`
 - `lib/phases/2026-09-02-nexus-vision-master/graph/SR13_copilot_chat_ui-86f6ac2d0b97306a.graph`
-- `lib/phases/2026-09-02-nexus-vision-master/graph/SR3_artifact_extraction_introspect_bridge-4f813123ae64e4bd.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/SR3_artifact_extraction_introspect_bridge-42f0ba52c3fe0714.graph`
 - `lib/phases/2026-09-02-nexus-vision-master/graph/SR7_token_reduction_toolkit-3530c94e6e6673f7.graph`
 - `lib/phases/2026-09-02-nexus-vision-master/graph/SR9_autonomous_self_build_end_state-5e2b9a8991cf1a0d.graph`
 - `lib/phases/2026-09-02-nexus-vision-master/graph/T1_tool_listing_command-360e0c29705d7e89.graph`
 - `lib/phases/2026-09-02-nexus-vision-master/graph/T2_event_taxonomy_per_system-d01cf8ce65fbb403.graph`
 - `lib/phases/2026-09-02-nexus-vision-master/graph/VM1_versionium_owns_loom_map_sync-645d8fc81f9cd1b8.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/_superseded/SR11_spec_project_import_to_compartment-3ba40fae475bab7c.graph`
+- `lib/phases/2026-09-02-nexus-vision-master/graph/_superseded/SR3_artifact_extraction_introspect_bridge-4f813123ae64e4bd.graph`
 - `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/VS2_ring_buffer_and_causal_field.phase`
 - `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/VS3_agent_chat_log_query.phase`
 - `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/graph/VS2_ring_buffer_and_causal_field-a136f794f2a44987.graph`
@@ -8980,15 +9397,18 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-11-compartment-nodetype-and-reorg/N3_stray_root_files_found_after_N1.phase`
 - `lib/phases/2026-09-11-compartment-nodetype-and-reorg/T1_extend_system_scaffold.phase`
 - `lib/phases/2026-09-11-compartment-nodetype-and-reorg/X1_node_decomposition_tool.phase`
-- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR1_architect_retirement_and_hooks_to_loom-c44714dfce980acf.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR1_architect_retirement_and_hooks_to_loom-ec476c801239c1a2.graph`
 - `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/AR2_decentralize_interaction_contracts-004da81f2aa79f85.graph`
 - `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/C1_cli_per_system_split-7b2166b145a6e248.graph`
-- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/D1_diagnostic_real_folder-326872f5777c2e88.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/D1_diagnostic_real_folder-475c655800cebc65.graph`
 - `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N1_root_md_consolidation-d7ece054f8e1b547.graph`
 - `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N2_root_nexus_js_to_nexus_folder-6088de94a4c19d4b.graph`
 - `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/N3_stray_root_files_found_after_N1-46553cc0a1125676.graph`
 - `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/T1_extend_system_scaffold-c85e7dedf727b889.graph`
-- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/X1_node_decomposition_tool-6dc260de77610029.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/X1_node_decomposition_tool-6f5db2348ba53165.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/AR1_architect_retirement_and_hooks_to_loom-c44714dfce980acf.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/D1_diagnostic_real_folder-326872f5777c2e88.graph`
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/graph/_superseded/X1_node_decomposition_tool-6dc260de77610029.graph`
 - `lib/phases/2026-09-11-sovereign-node-architecture/P12_compartment_per_contract.phase`
 - `lib/phases/2026-09-11-sovereign-node-architecture/P19_dynamic_nodes_via_causal_graph.phase`
 - `lib/phases/2026-09-11-sovereign-node-architecture/P1_fix_the_declared_living_maps.phase`
@@ -9000,19 +9420,19 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-11-sovereign-node-architecture/P38_every_graph_has_its_route_command_and_node.phase`
 - `lib/phases/2026-09-11-sovereign-node-architecture/P3_per_system_node_schemas.phase`
 - `lib/phases/2026-09-11-sovereign-node-architecture/P4_full_node_type_coverage_per_system.phase`
-- `lib/phases/2026-09-11-sovereign-node-architecture/P9_diagnostic_from_expected_behavior.phase`
 - `lib/phases/2026-09-11-sovereign-node-architecture/graph/P12_compartment_per_contract-8cfd3609296f0e65.graph`
 - `lib/phases/2026-09-11-sovereign-node-architecture/graph/P19_dynamic_nodes_via_causal_graph-14175a5931199ebc.graph`
 - `lib/phases/2026-09-11-sovereign-node-architecture/graph/P1_fix_the_declared_living_maps-6e2243bd608aa76f.graph`
 - `lib/phases/2026-09-11-sovereign-node-architecture/graph/P22_ledger_data_integrity_checker-80f256cd544672ab.graph`
-- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P25_universal_per_system_queue-624624c871ccb0f6.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P25_universal_per_system_queue-25f546a0afcd48d4.graph`
 - `lib/phases/2026-09-11-sovereign-node-architecture/graph/P30_provider_ping_delta-81b879ff6f24b8b2.graph`
-- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P33_every_system_runs_its_node_registry-7955afec14f5b4a5.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P33_every_system_runs_its_node_registry-e35fe116fff586c0.graph`
 - `lib/phases/2026-09-11-sovereign-node-architecture/graph/P36_an_event_ledger_per_registry-fbd0abb2a175f847.graph`
 - `lib/phases/2026-09-11-sovereign-node-architecture/graph/P38_every_graph_has_its_route_command_and_node-ba638bb548c28c0d.graph`
 - `lib/phases/2026-09-11-sovereign-node-architecture/graph/P3_per_system_node_schemas-71d0409c318c73a0.graph`
 - `lib/phases/2026-09-11-sovereign-node-architecture/graph/P4_full_node_type_coverage_per_system-7d7cc69568624b23.graph`
-- `lib/phases/2026-09-11-sovereign-node-architecture/graph/P9_diagnostic_from_expected_behavior-d3f4fcb51886b539.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/_superseded/P25_universal_per_system_queue-624624c871ccb0f6.graph`
+- `lib/phases/2026-09-11-sovereign-node-architecture/graph/_superseded/P33_every_system_runs_its_node_registry-7955afec14f5b4a5.graph`
 - `lib/phases/2026-09-13-track-b-sovereignty/MCO16_component_projections_retracted.phase`
 - `lib/phases/2026-09-13-track-b-sovereignty/graph/MCO16_component_projections_retracted-4e9c11ff0b4b91af.graph`
 - `lib/phases/2026-09-19-architect-blueprint-forge-idearium/P0_place_spec_compiler.phase`
@@ -9023,8 +9443,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/P0_map.phase`
 - `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B3_availability_tier-1a4f7859f0f50ce1.graph`
 - `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/B5_port_3753_collision-3d6b1fadb758d77c.graph`
-- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/D5_new-8a8997642f5cb4af.graph`
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/D5_new-6de18476e3420697.graph`
 - `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/P0_map-270831fdfdc19271.graph`
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/graph/_superseded/D5_new-8a8997642f5cb4af.graph`
 - `lib/phases/2026-09-22-brainos-agent-suite/HT1_hat_manager.phase`
 - `lib/phases/2026-09-22-brainos-agent-suite/RD1_reader.phase`
 - `lib/phases/2026-09-22-brainos-agent-suite/TL1_tool_browser.phase`
@@ -9045,10 +9466,8 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/R1-2fc594cd0c71aec9.graph`
 - `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T3-255b5681dc7d3f96.graph`
 - `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/graph/T7-0870291c8f83c928.graph`
-- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/E1.phase`
 - `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/N1.phase`
 - `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/X1.phase`
-- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/E1-48449faf7b7f8211.graph`
 - `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/N1-afc3f2d2b1971c2a.graph`
 - `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/graph/X1-7a889bbcd135db9f.graph`
 - `lib/phases/2026-09-27-agent-hat-memory-download-manager/G1.phase`
@@ -9077,10 +9496,13 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-27-components-store-and-atlases/graph/A1-362ff4dd0f06f283.graph`
 - `lib/phases/2026-09-27-components-store-and-atlases/graph/A2-c42260b792aebce5.graph`
 - `lib/phases/2026-09-27-components-store-and-atlases/graph/C1-c901b0518083f11c.graph`
-- `lib/phases/2026-09-27-components-store-and-atlases/graph/C3-6f53d9aa14fc9e97.graph`
-- `lib/phases/2026-09-27-components-store-and-atlases/graph/C4-1e1f2af6d71358cb.graph`
+- `lib/phases/2026-09-27-components-store-and-atlases/graph/C3-9bc63567919d15c7.graph`
+- `lib/phases/2026-09-27-components-store-and-atlases/graph/C4-f4160414eefade2b.graph`
+- `lib/phases/2026-09-27-components-store-and-atlases/graph/_superseded/C3-6f53d9aa14fc9e97.graph`
+- `lib/phases/2026-09-27-components-store-and-atlases/graph/_superseded/C4-1e1f2af6d71358cb.graph`
 - `lib/phases/2026-09-27-idearium-atlas/A2.phase`
-- `lib/phases/2026-09-27-idearium-atlas/graph/A2-2ca200087c34a761.graph`
+- `lib/phases/2026-09-27-idearium-atlas/graph/A2-f56a8ed10fd0ab19.graph`
+- `lib/phases/2026-09-27-idearium-atlas/graph/_superseded/A2-2ca200087c34a761.graph`
 - `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/T1_suite_process.phase`
 - `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/T2_all_tests.phase`
 - `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/T3_debug_report.phase`
@@ -9090,11 +9512,12 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/Z1_release.phase`
 - `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T1_suite_process-f9f50c78f096c750.graph`
 - `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T2_all_tests-f20e3b22238a10f1.graph`
-- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T3_debug_report-7765b07df0393f7b.graph`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/T3_debug_report-073d1fb7cf9cd997.graph`
 - `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X1_system_nodes-46e5cb034f4618e8.graph`
 - `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X4_command_index_spec-f0c28b0337bbaf38.graph`
 - `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/X5_core_scripts-071bcce96653212c.graph`
 - `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/Z1_release-8e268e22b5c92e0c.graph`
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/graph/_superseded/T3_debug_report-7765b07df0393f7b.graph`
 - `lib/phases/2026-09-28-graph-build-context-settings-memory/A1.phase`
 - `lib/phases/2026-09-28-graph-build-context-settings-memory/B1.phase`
 - `lib/phases/2026-09-28-graph-build-context-settings-memory/C1.phase`
@@ -9119,8 +9542,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-28-staging-self-heal/X1.phase`
 - `lib/phases/2026-09-28-staging-self-heal/graph/A1-678cef6eb0b005d6.graph`
 - `lib/phases/2026-09-28-staging-self-heal/graph/C0-0b7235ad10d93e23.graph`
-- `lib/phases/2026-09-28-staging-self-heal/graph/S1-7fb03e9518bd1d90.graph`
+- `lib/phases/2026-09-28-staging-self-heal/graph/S1-ff2b556d4de9defe.graph`
 - `lib/phases/2026-09-28-staging-self-heal/graph/X1-5196f7fe55a3de4b.graph`
+- `lib/phases/2026-09-28-staging-self-heal/graph/_superseded/S1-7fb03e9518bd1d90.graph`
 - `lib/phases/2026-09-29-build-surface/BS12_release.phase`
 - `lib/phases/2026-09-29-build-surface/BS19_copilot_atlas_guide.phase`
 - `lib/phases/2026-09-29-build-surface/BS1_rewind_hit_test.phase`
@@ -9169,9 +9593,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-29-nex-node-store/graph/N26_work_surface_and_tv_ui_from_contracts-642ec62479f9e52c.graph`
 - `lib/phases/2026-09-29-nex-node-store/graph/N27_history_import_from_700_zips-e06097bc3f5fc96c.graph`
 - `lib/phases/2026-09-29-nex-node-store/graph/N28_live_run_findings-fbb9ca7ade269a9e.graph`
-- `lib/phases/2026-09-29-nex-node-store/graph/N29_full_run_only_failures-3ccc80b708b1184e.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N29_full_run_only_failures-1dd62d0e03dd585b.graph`
 - `lib/phases/2026-09-29-nex-node-store/graph/N2_types_and_gates-5e4c8e5f9b3fa871.graph`
-- `lib/phases/2026-09-29-nex-node-store/graph/N30_archive_import_dropbox_and_copilot_command-dedd8b0e675c778d.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/N30_archive_import_dropbox_and_copilot_command-8efac21914944c83.graph`
 - `lib/phases/2026-09-29-nex-node-store/graph/N3_projection_and_indexes-e869d4762f5f68e4.graph`
 - `lib/phases/2026-09-29-nex-node-store/graph/N4_kinds_record_ledger_ring_blob-0808a2146da71927.graph`
 - `lib/phases/2026-09-29-nex-node-store/graph/N5_kinds_edge_and_lattice-be77dec312fae18a.graph`
@@ -9179,6 +9603,8 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-29-nex-node-store/graph/N7_views_yaml_and_nex-d19115c9bdab18db.graph`
 - `lib/phases/2026-09-29-nex-node-store/graph/N8_service-a93084e10fd5c6be.graph`
 - `lib/phases/2026-09-29-nex-node-store/graph/N9_cli-2bd8335f5d98134a.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/_superseded/N29_full_run_only_failures-3ccc80b708b1184e.graph`
+- `lib/phases/2026-09-29-nex-node-store/graph/_superseded/N30_archive_import_dropbox_and_copilot_command-dedd8b0e675c778d.graph`
 - `lib/phases/2026-09-29-provider-economy/EC0_policy_model.phase`
 - `lib/phases/2026-09-29-provider-economy/EC10_eros_workbench.phase`
 - `lib/phases/2026-09-29-provider-economy/EC11_release.phase`
@@ -9189,7 +9615,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-29-provider-economy/EC5_staging_by_economy.phase`
 - `lib/phases/2026-09-29-provider-economy/EC7_router_in_builds.phase`
 - `lib/phases/2026-09-29-provider-economy/graph/EC0_policy_model-f08917980459b73a.graph`
-- `lib/phases/2026-09-29-provider-economy/graph/EC10_eros_workbench-27a839ee0a545a60.graph`
+- `lib/phases/2026-09-29-provider-economy/graph/EC10_eros_workbench-4d940447a9772128.graph`
 - `lib/phases/2026-09-29-provider-economy/graph/EC11_release-3ddf9b68b334fa07.graph`
 - `lib/phases/2026-09-29-provider-economy/graph/EC1_usage_ledger-3bb692c134237f3f.graph`
 - `lib/phases/2026-09-29-provider-economy/graph/EC2_gate-5b5011336adda021.graph`
@@ -9197,6 +9623,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-09-29-provider-economy/graph/EC4_learning_router-5ea981995e6aa2aa.graph`
 - `lib/phases/2026-09-29-provider-economy/graph/EC5_staging_by_economy-a13ffbca0770c51b.graph`
 - `lib/phases/2026-09-29-provider-economy/graph/EC7_router_in_builds-e6f92fef8dfca5e3.graph`
+- `lib/phases/2026-09-29-provider-economy/graph/_superseded/EC10_eros_workbench-27a839ee0a545a60.graph`
 - `lib/phases/2026-09-29-tool-layers-and-pane-memory/P5.phase`
 - `lib/phases/2026-09-29-tool-layers-and-pane-memory/graph/P5-8d626c5118de90a9.graph`
 - `lib/phases/2026-09-30-idearium-coding-flow/W0_map.phase`
@@ -9209,7 +9636,6 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-01-idearium-agent-ready-master/CT1_cut_replies_are_finished.phase`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/CX1_context_cascade.phase`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/DI1_chunking_for_data_ingestion.phase`
-- `lib/phases/2026-10-01-idearium-agent-ready-master/DK4_the_screen_through_remote_desktop.phase`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/DT1_persistence_census.phase`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/DT2_failure_mode_field.phase`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/DT5_pipeline_routing_spec.phase`
@@ -9226,27 +9652,29 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-01-idearium-agent-ready-master/UI4_w7_open_items.phase`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/UM1_nexus_understands_james.phase`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/AG1_coding_agent_provider-7098e6ab122046fe.graph`
-- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/CI1_compounding_iterate-1ceee25ce29d30d7.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/CI1_compounding_iterate-0f034aae1bf65fb7.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/CP1_copilot_drives_idearium_and_talks_to_its_agents-9573fd740fb5af49.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/CT1_cut_replies_are_finished-44a5ea9533f0d015.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/CX1_context_cascade-ca712cb3559b1665.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DI1_chunking_for_data_ingestion-91bad89cab545ae9.graph`
-- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DK4_the_screen_through_remote_desktop-068dbdde9fe76e51.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DT1_persistence_census-a397051c2ba83059.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DT2_failure_mode_field-6c0d9717247bc31e.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DT5_pipeline_routing_spec-4d9d36b0f640099b.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/DT6_node_store-587b34312496b309.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/EN1_run_isolated_and_environments-8b73ac9da187069c.graph`
-- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/FT1_file_tools_merge_patch_drop-b482bb0cc2b2da5b.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/FT1_file_tools_merge_patch_drop-b7eaeddbfe8a43b6.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/GL1_gate_verify_fix_loop-c375ed7a6843eff0.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/HC1_hat_agent_to_cos_build-27c92f78114946f9.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/M0_map-8ffcfde00fa30d75.graph`
-- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/PF3_snapshot_names_changed_files-ef1e8fe4b8bff7c1.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/PF3_snapshot_names_changed_files-5c83a76653dd564b.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/PV1_verify-8d8471a331531c9e.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/R1_release_per_phase-46c6115b0a540652.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/RM1_registry_driven_moves-37e44e3fd7c0b5e6.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/UI4_w7_open_items-18e3783da1c40086.graph`
 - `lib/phases/2026-10-01-idearium-agent-ready-master/graph/UM1_nexus_understands_james-941120d6e488072b.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/CI1_compounding_iterate-1ceee25ce29d30d7.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/FT1_file_tools_merge_patch_drop-b482bb0cc2b2da5b.graph`
+- `lib/phases/2026-10-01-idearium-agent-ready-master/graph/_superseded/PF3_snapshot_names_changed_files-ef1e8fe4b8bff7c1.graph`
 - `lib/phases/2026-10-01-routing-registry-genesis/AR1_architecture_spec.phase`
 - `lib/phases/2026-10-01-routing-registry-genesis/RG0_map.phase`
 - `lib/phases/2026-10-01-routing-registry-genesis/RG1_routing_policy_library.phase`
@@ -9359,7 +9787,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-05-build-from-the-spec/SB7_domain_file_tree_templates.phase`
 - `lib/phases/2026-10-05-build-from-the-spec/WS1_agents_use_the_work_surface.phase`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/BC1_build_context-a104b548fa539506.graph`
-- `lib/phases/2026-10-05-build-from-the-spec/graph/BC2_the_build_agent_gets_all_of_the_hat_and_repo_context-32034bedc3229b78.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/BC2_the_build_agent_gets_all_of_the_hat_and_repo_context-44a20b6a802b1332.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/BC3_what_a_build_was_sent_as_a_node-c3fd5f52e2545073.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/BC4_relational_context_wired_or_archived-13b633faec59fe77.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB0_map-af5948d939560015.graph`
@@ -9368,22 +9796,31 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB20_each_system_owns_its_own-4b6d2494146e3c0b.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB21_deterministic_parts_grow_with_the_system-f055f4bb449380e9.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB22_every_component_capability_command_events_as_nodes-0dc30ff0fe394f6b.graph`
-- `lib/phases/2026-10-05-build-from-the-spec/graph/SB23_a_new_system_slots_in-d8c8e1bb9fdc8301.graph`
-- `lib/phases/2026-10-05-build-from-the-spec/graph/SB25_atlas_template_in_his_structure-8782436b6f63495b.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB23_a_new_system_slots_in-bb7744f30f64e94a.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB25_atlas_template_in_his_structure-bad9e8de681486ca.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB32_context_is_never_optional-811c78496a6d6038.graph`
-- `lib/phases/2026-10-05-build-from-the-spec/graph/SB33_the_agent_runs_the_pipeline-4535cb3c5069ae44.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB33_the_agent_runs_the_pipeline-2e83de3b28049127.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB34_context_is_the_code_tab_the_graphs_and_memory-2adfa9887db541f0.graph`
-- `lib/phases/2026-10-05-build-from-the-spec/graph/SB36_every_agent_can_use_the_tools-dccbe766f7ed1fa8.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB36_every_agent_can_use_the_tools-a54d788bce06dcbb.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB38_prerequisites_the_questions_first-a417012ad83099c0.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB39_the_checklist_builds_the_working_set-2ebaab7551ee77f8.graph`
-- `lib/phases/2026-10-05-build-from-the-spec/graph/SB42_a_repo_expands_from_its_spec-e363fb41c2435456.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB42_a_repo_expands_from_its_spec-ec1b9907273648f1.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB43_the_expansion_is_phased-d07fa0b1c8d777ac.graph`
-- `lib/phases/2026-10-05-build-from-the-spec/graph/SB47_built_and_run_in_cos-00c4a05731de14a2.graph`
-- `lib/phases/2026-10-05-build-from-the-spec/graph/SB48_proof_in_cos_closes_the_phase-054d76a838a4463d.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB47_built_and_run_in_cos-d4816c5dcd2d4ec2.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/SB48_proof_in_cos_closes_the_phase-31b0493ad0a2de33.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB5_nexus_rebuilds_a_system_from_its_spec-17dc36ec94b3a10e.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB6_hundreds_of_specs-121a25b96ccdf275.graph`
 - `lib/phases/2026-10-05-build-from-the-spec/graph/SB7_domain_file_tree_templates-51af06abc8952960.graph`
-- `lib/phases/2026-10-05-build-from-the-spec/graph/WS1_agents_use_the_work_surface-3a87213be2eb4b9d.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/WS1_agents_use_the_work_surface-6f18edbd651497c1.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/BC2_the_build_agent_gets_all_of_the_hat_and_repo_context-32034bedc3229b78.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB23_a_new_system_slots_in-d8c8e1bb9fdc8301.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB25_atlas_template_in_his_structure-8782436b6f63495b.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB33_the_agent_runs_the_pipeline-4535cb3c5069ae44.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB36_every_agent_can_use_the_tools-dccbe766f7ed1fa8.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB42_a_repo_expands_from_its_spec-e363fb41c2435456.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB47_built_and_run_in_cos-00c4a05731de14a2.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/SB48_proof_in_cos_closes_the_phase-054d76a838a4463d.graph`
+- `lib/phases/2026-10-05-build-from-the-spec/graph/_superseded/WS1_agents_use_the_work_surface-3a87213be2eb4b9d.graph`
 - `lib/phases/2026-10-05-cli-data-code/CL1_commands_declared_by_their_system.phase`
 - `lib/phases/2026-10-05-cli-data-code/CT1_one_pending_change_path.phase`
 - `lib/phases/2026-10-05-cli-data-code/HG1_components_store_map_parses.phase`
@@ -9402,12 +9839,17 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-05-cli-data-code/graph/HG3_bv09_the_detector_and_files-8f5946737fc02601.graph`
 - `lib/phases/2026-10-05-cli-data-code/graph/HG4_scripts_inside_the_sandbox-a8510e63e202d6f6.graph`
 - `lib/phases/2026-10-05-cli-data-code/graph/HG7_the_law_and_clear_glass-e775e5b9fae4d6a3.graph`
-- `lib/phases/2026-10-05-cli-data-code/graph/HG8_raid_phases_belong_to_cortex-dc05cb067c7d5dd0.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/HG8_raid_phases_belong_to_cortex-8583fa2b6f57da3a.graph`
 - `lib/phases/2026-10-05-cli-data-code/graph/PB1_no_build_below_a_floor-aa5354fee35ba1e8.graph`
-- `lib/phases/2026-10-05-cli-data-code/graph/PB3_verify_counts_what_this_run_broke-2c3748ba8d24ac93.graph`
-- `lib/phases/2026-10-05-cli-data-code/graph/PB5_the_real_broken_imports-64c2d31e9c1a9aff.graph`
-- `lib/phases/2026-10-05-cli-data-code/graph/SY1_fifteen_systems-0b9d29e5e19e2532.graph`
-- `lib/phases/2026-10-05-cli-data-code/graph/SY2_cos_its_own_system-5140e15f0bab147d.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/PB3_verify_counts_what_this_run_broke-3aa1d43480832705.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/PB5_the_real_broken_imports-7736bfcd3a2587b3.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/SY1_fifteen_systems-2b7d8f61b0358084.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/SY2_cos_its_own_system-aac3d8f060ae686c.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/_superseded/HG8_raid_phases_belong_to_cortex-dc05cb067c7d5dd0.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/_superseded/PB3_verify_counts_what_this_run_broke-2c3748ba8d24ac93.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/_superseded/PB5_the_real_broken_imports-64c2d31e9c1a9aff.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/_superseded/SY1_fifteen_systems-0b9d29e5e19e2532.graph`
+- `lib/phases/2026-10-05-cli-data-code/graph/_superseded/SY2_cos_its_own_system-5140e15f0bab147d.graph`
 - `lib/phases/2026-10-05-code-tab-and-one-router/CT1_one_door_for_models.phase`
 - `lib/phases/2026-10-05-code-tab-and-one-router/CT2_it_learns_and_switches.phase`
 - `lib/phases/2026-10-05-code-tab-and-one-router/CT6_the_escalation_ladder.phase`
@@ -9449,13 +9891,15 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-07-compartment-control-and-activity/DX1_diagnose_it.phase`
 - `lib/phases/2026-10-07-compartment-control-and-activity/SP1_one_spotlight.phase`
 - `lib/phases/2026-10-07-compartment-control-and-activity/UN1_nexus_surfaces_in_the_field.phase`
-- `lib/phases/2026-10-07-compartment-control-and-activity/graph/AL1_activity_log-f60e21ab10d46017.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/AL1_activity_log-a33d6d01469c5bdf.graph`
 - `lib/phases/2026-10-07-compartment-control-and-activity/graph/CC1_claude_code_lands_like_every_agent-bab5260f8cf63874.graph`
-- `lib/phases/2026-10-07-compartment-control-and-activity/graph/CM2_every_command_for_every_agent-96b5745236336c5b.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/CM2_every_command_for_every_agent-b960e463b6a6c257.graph`
 - `lib/phases/2026-10-07-compartment-control-and-activity/graph/DT1_desktop_into_the_log-8ce7b320cd5c0cd0.graph`
 - `lib/phases/2026-10-07-compartment-control-and-activity/graph/DX1_diagnose_it-589ac7374abdf907.graph`
 - `lib/phases/2026-10-07-compartment-control-and-activity/graph/SP1_one_spotlight-094a82781d95acdc.graph`
 - `lib/phases/2026-10-07-compartment-control-and-activity/graph/UN1_nexus_surfaces_in_the_field-6a1c22a94c4ecbba.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/AL1_activity_log-f60e21ab10d46017.graph`
+- `lib/phases/2026-10-07-compartment-control-and-activity/graph/_superseded/CM2_every_command_for_every_agent-96b5745236336c5b.graph`
 - `lib/phases/2026-10-07-idearium-one-surface/OS1_commits_say_what_they_touched.phase`
 - `lib/phases/2026-10-07-idearium-one-surface/OS6_proved_on_the_real_page.phase`
 - `lib/phases/2026-10-07-idearium-one-surface/OS9_the_agent_is_in_the_code_tab.phase`
@@ -9508,7 +9952,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-09-one-model-engine/ME6_one_learner.phase`
 - `lib/phases/2026-10-09-one-model-engine/graph/ME0_the_inventory_proved-9d64861419da9a7a.graph`
 - `lib/phases/2026-10-09-one-model-engine/graph/ME10_nested_ladders_folded-4010d5284074ac51.graph`
-- `lib/phases/2026-10-09-one-model-engine/graph/ME12_callers_moved-9e7765b848590053.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/ME12_callers_moved-734d6fb40e0248fb.graph`
 - `lib/phases/2026-10-09-one-model-engine/graph/ME13_no_bypass-5db1b29401ba54fb.graph`
 - `lib/phases/2026-10-09-one-model-engine/graph/ME14_across_callers-0d67fbee2de537c0.graph`
 - `lib/phases/2026-10-09-one-model-engine/graph/ME15_the_docs_tell_the_truth-e4a2663f9650838b.graph`
@@ -9518,6 +9962,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-09-one-model-engine/graph/ME4_one_attempt_record-f2a989a0e8ce7614.graph`
 - `lib/phases/2026-10-09-one-model-engine/graph/ME5_one_chooser-c19c4acf0d80ec8c.graph`
 - `lib/phases/2026-10-09-one-model-engine/graph/ME6_one_learner-a3c93c03d487932a.graph`
+- `lib/phases/2026-10-09-one-model-engine/graph/_superseded/ME12_callers_moved-9e7765b848590053.graph`
 - `lib/phases/2026-10-09-one-roadmap/OR0_the_census.phase`
 - `lib/phases/2026-10-09-one-roadmap/OR2_how_done_is_checked.phase`
 - `lib/phases/2026-10-09-one-roadmap/OR2_the_proposal.phase`
@@ -9528,8 +9973,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-09-one-roadmap/graph/OR2_how_done_is_checked-438048adff31f436.graph`
 - `lib/phases/2026-10-09-one-roadmap/graph/OR2_the_proposal-87394dbbf51c92a7.graph`
 - `lib/phases/2026-10-09-one-roadmap/graph/OR3_his_decisions_applied-f52f9193180a26cb.graph`
-- `lib/phases/2026-10-09-one-roadmap/graph/OR6_old_code_out-6af214e0e32a3243.graph`
+- `lib/phases/2026-10-09-one-roadmap/graph/OR6_old_code_out-613aca89c535c7bf.graph`
 - `lib/phases/2026-10-09-one-roadmap/graph/OR7_the_shelf_combed-5e186047ef132114.graph`
+- `lib/phases/2026-10-09-one-roadmap/graph/_superseded/OR6_old_code_out-6af214e0e32a3243.graph`
 - `lib/phases/2026-10-10-design-surface/DS0_one_token_source.phase`
 - `lib/phases/2026-10-10-design-surface/DS3_components_are_mods.phase`
 - `lib/phases/2026-10-10-design-surface/DS5_the_agents_design_too.phase`
@@ -9539,9 +9985,10 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-10-design-surface/graph/DS0_one_token_source-385edcecb63311aa.graph`
 - `lib/phases/2026-10-10-design-surface/graph/DS3_components_are_mods-bb967cfd589a6163.graph`
 - `lib/phases/2026-10-10-design-surface/graph/DS5_the_agents_design_too-1fd7bef8de2d374a.graph`
-- `lib/phases/2026-10-10-design-surface/graph/DS6_one_module_contract_nested-53a34b1d184d1911.graph`
+- `lib/phases/2026-10-10-design-surface/graph/DS6_one_module_contract_nested-fd400d57a71b916d.graph`
 - `lib/phases/2026-10-10-design-surface/graph/DS7_tools_are_mods-95b991d2ba973682.graph`
 - `lib/phases/2026-10-10-design-surface/graph/DS8_the_registry_routes_the_ui_reflects-9db061f88abf55a1.graph`
+- `lib/phases/2026-10-10-design-surface/graph/_superseded/DS6_one_module_contract_nested-53a34b1d184d1911.graph`
 - `lib/phases/2026-10-10-idearium-access/IA5_provider_accounts_per_hat_and_repo.phase`
 - `lib/phases/2026-10-10-idearium-access/graph/IA5_provider_accounts_per_hat_and_repo-fd55efa3a8901e7f.graph`
 - `lib/phases/2026-10-10-idearium-solid/SD0_versionium_down_is_said_and_restarted.phase`
@@ -9553,11 +10000,12 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-10-idearium-solid/SD9_claude_code_inside_idearium.phase`
 - `lib/phases/2026-10-10-idearium-solid/graph/SD0_versionium_down_is_said_and_restarted-d745c23ff321527a.graph`
 - `lib/phases/2026-10-10-idearium-solid/graph/SD10_the_adversarial_gate-903ae831ea1a844a.graph`
-- `lib/phases/2026-10-10-idearium-solid/graph/SD20_a_starved_machine_does_not_spin-76dc07b8a12db6ca.graph`
+- `lib/phases/2026-10-10-idearium-solid/graph/SD20_a_starved_machine_does_not_spin-91403d453740d322.graph`
 - `lib/phases/2026-10-10-idearium-solid/graph/SD4_agents_live_in_guardian-d79b599501f437b1.graph`
 - `lib/phases/2026-10-10-idearium-solid/graph/SD5_account_fallback-655edc147445e9ca.graph`
 - `lib/phases/2026-10-10-idearium-solid/graph/SD7_blocks_that_generate_themselves-0d8df190210c4970.graph`
 - `lib/phases/2026-10-10-idearium-solid/graph/SD9_claude_code_inside_idearium-681f598deb142c6d.graph`
+- `lib/phases/2026-10-10-idearium-solid/graph/_superseded/SD20_a_starved_machine_does_not_spin-76dc07b8a12db6ca.graph`
 - `lib/phases/2026-10-10-self-awareness/AW2_every_call_says_who_asked.phase`
 - `lib/phases/2026-10-10-self-awareness/AW4_the_door_reads_the_lattice.phase`
 - `lib/phases/2026-10-10-self-awareness/graph/AW2_every_call_says_who_asked-a5bd86f3bfadf956.graph`
@@ -9586,14 +10034,16 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-12-browser-providers-and-work/PV2_hats_are_nodes.phase`
 - `lib/phases/2026-10-12-browser-providers-and-work/PV4_inputs_are_history.phase`
 - `lib/phases/2026-10-12-browser-providers-and-work/PV5_conversation_carries_across_providers.phase`
-- `lib/phases/2026-10-12-browser-providers-and-work/graph/CS0_projects_decomposed_into_components-c12a1ca2cc3030ee.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/CS0_projects_decomposed_into_components-5eac0923400df9d4.graph`
 - `lib/phases/2026-10-12-browser-providers-and-work/graph/JB5_varied_wording_true_facts-88d2ca99cff642c0.graph`
 - `lib/phases/2026-10-12-browser-providers-and-work/graph/MX4_one_system_digest-b1af60343305fd6c.graph`
 - `lib/phases/2026-10-12-browser-providers-and-work/graph/PV0_claude_code_is_a_guardian_provider-700deffb992647b8.graph`
-- `lib/phases/2026-10-12-browser-providers-and-work/graph/PV1_providers_read_from_nodes-727b5bb6b91c22ad.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/PV1_providers_read_from_nodes-c83ac4b82fb3e70c.graph`
 - `lib/phases/2026-10-12-browser-providers-and-work/graph/PV2_hats_are_nodes-66c258dbf8ec8139.graph`
 - `lib/phases/2026-10-12-browser-providers-and-work/graph/PV4_inputs_are_history-a129834872fdbcc9.graph`
 - `lib/phases/2026-10-12-browser-providers-and-work/graph/PV5_conversation_carries_across_providers-221b5ffcc46bedbf.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/_superseded/CS0_projects_decomposed_into_components-c12a1ca2cc3030ee.graph`
+- `lib/phases/2026-10-12-browser-providers-and-work/graph/_superseded/PV1_providers_read_from_nodes-727b5bb6b91c22ad.graph`
 - `lib/phases/2026-10-12-request-spine/RQ0_the_inventory_proved.phase`
 - `lib/phases/2026-10-12-request-spine/RQ10_anchors_and_the_diff_reconciled.phase`
 - `lib/phases/2026-10-12-request-spine/RQ13_the_work_surface_and_provenance.phase`
@@ -9618,7 +10068,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-12-request-spine/graph/RQ13_the_work_surface_and_provenance-26d29fe3a64d548b.graph`
 - `lib/phases/2026-10-12-request-spine/graph/RQ14_the_spine_end_to_end-293afff90452c8de.graph`
 - `lib/phases/2026-10-12-request-spine/graph/RQ16_hypotheses_in_parallel-39c60cb36660f79d.graph`
-- `lib/phases/2026-10-12-request-spine/graph/RQ17_observe_by_request-33924dbf8607becb.graph`
+- `lib/phases/2026-10-12-request-spine/graph/RQ17_observe_by_request-cfbad94be99e9081.graph`
 - `lib/phases/2026-10-12-request-spine/graph/RQ19_what_nexus_can_take_over-18b7aa141588697b.graph`
 - `lib/phases/2026-10-12-request-spine/graph/RQ1_the_verifier_library-ce3d943947d62331.graph`
 - `lib/phases/2026-10-12-request-spine/graph/RQ20_the_budget_meter-9d7db0cfde669293.graph`
@@ -9632,6 +10082,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-12-request-spine/graph/RQ5_the_small_model_baseline-4c70d01e0d9a89a3.graph`
 - `lib/phases/2026-10-12-request-spine/graph/RQ6_one_intent_map-d5b9477b2e039d62.graph`
 - `lib/phases/2026-10-12-request-spine/graph/RQ8_the_gap_is_a_question-103a81b4f5d8cf1c.graph`
+- `lib/phases/2026-10-12-request-spine/graph/_superseded/RQ17_observe_by_request-33924dbf8607becb.graph`
 - `lib/phases/2026-10-13-gates-that-learn-and-priorities/QA1_the_catalogue_runs.phase`
 - `lib/phases/2026-10-13-gates-that-learn-and-priorities/RT1_eligibility_then_preference.phase`
 - `lib/phases/2026-10-13-gates-that-learn-and-priorities/graph/QA1_the_catalogue_runs-2f28022294f93cfe.graph`
@@ -9645,13 +10096,14 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-13-nexus-memory-gates-and-contract/GT0_every_interaction_gated.phase`
 - `lib/phases/2026-10-13-nexus-memory-gates-and-contract/IM0_intent_map_his_to_change.phase`
 - `lib/phases/2026-10-13-nexus-memory-gates-and-contract/PF0_profiles_linked_to_hats.phase`
-- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT0_the_contract_is_a_reference-78068c3fef97cff2.graph`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT0_the_contract_is_a_reference-df6fb16d25b92bcf.graph`
 - `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT1_dynamic_chunking-f7d073f269227f58.graph`
 - `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CT2_ingestion_as_contracts-ba7095d82e6aabf3.graph`
 - `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/CX0_context_from_dependencies-dbe7d50a20a425b3.graph`
 - `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/GT0_every_interaction_gated-03a2a715a7b70f73.graph`
 - `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/IM0_intent_map_his_to_change-6349e71baccd8530.graph`
 - `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/PF0_profiles_linked_to_hats-1617b623eba97216.graph`
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/graph/_superseded/CT0_the_contract_is_a_reference-78068c3fef97cff2.graph`
 - `lib/phases/2026-10-13-projects-raid-and-gates/CK1_the_catalogue_runs.phase`
 - `lib/phases/2026-10-13-projects-raid-and-gates/PL0_his_projects_imported_for_real.phase`
 - `lib/phases/2026-10-13-projects-raid-and-gates/PL2_history_kept.phase`
@@ -9670,8 +10122,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-13-projects-raid-and-gates/graph/PL6_global_links_seen-d930008daef10476.graph`
 - `lib/phases/2026-10-13-projects-raid-and-gates/graph/RD3_the_registry_carries_events-f2ceaa39f7c300e5.graph`
 - `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF0_architecture_read-c117168ac25aa9f0.graph`
-- `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF1_migration_proposed_as_phases-0653cb1c1c976e54.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF1_migration_proposed_as_phases-37ed11040317ceba.graph`
 - `lib/phases/2026-10-13-projects-raid-and-gates/graph/RF2_applied_one_phase_at_a_time-fcaca59eda2838e7.graph`
+- `lib/phases/2026-10-13-projects-raid-and-gates/graph/_superseded/RF1_migration_proposed_as_phases-0653cb1c1c976e54.graph`
 - `lib/phases/2026-10-15-automatic-tracking/AU1_addenda_written_for_you.phase`
 - `lib/phases/2026-10-15-automatic-tracking/CS1_every_brick_a_component.phase`
 - `lib/phases/2026-10-15-automatic-tracking/CX1_context_from_the_dependencies.phase`
@@ -9722,8 +10175,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-15-fiverr-ledger/PF1_the_sources.phase`
 - `lib/phases/2026-10-15-fiverr-ledger/PF2_the_slots_into_a_gig.phase`
 - `lib/phases/2026-10-15-fiverr-ledger/graph/PF0_the_ledger-a4583a7c88b46cd6.graph`
-- `lib/phases/2026-10-15-fiverr-ledger/graph/PF1_the_sources-e60ed3365a0a2cec.graph`
+- `lib/phases/2026-10-15-fiverr-ledger/graph/PF1_the_sources-28198a8912efefda.graph`
 - `lib/phases/2026-10-15-fiverr-ledger/graph/PF2_the_slots_into_a_gig-6abf349983e78cdf.graph`
+- `lib/phases/2026-10-15-fiverr-ledger/graph/_superseded/PF1_the_sources-e60ed3365a0a2cec.graph`
 - `lib/phases/2026-10-15-gate-held-work/GW10_the_listener_knows_what_to_hear.phase`
 - `lib/phases/2026-10-15-gate-held-work/GW15_every_file_tested.phase`
 - `lib/phases/2026-10-15-gate-held-work/GW16_parallel_branches_benchmark.phase`
@@ -9739,13 +10193,15 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-15-gate-held-work/graph/GW15_every_file_tested-01a6f0bce2e5893d.graph`
 - `lib/phases/2026-10-15-gate-held-work/graph/GW16_parallel_branches_benchmark-7496bd8f1af2a364.graph`
 - `lib/phases/2026-10-15-gate-held-work/graph/GW18_debug_by_bisect-356417f6dfb2bb3d.graph`
-- `lib/phases/2026-10-15-gate-held-work/graph/GW22_find_before_generate-ebd47dffa0a8bc56.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW22_find_before_generate-0d881b61d2b990e3.graph`
 - `lib/phases/2026-10-15-gate-held-work/graph/GW2_the_run_follows_the_gate-8f78d99aa885a501.graph`
 - `lib/phases/2026-10-15-gate-held-work/graph/GW3_a_contract_is_traced-7ee6767772d2310d.graph`
-- `lib/phases/2026-10-15-gate-held-work/graph/GW5_agents_are_copilot-6b97cd0bef25edcb.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/GW5_agents_are_copilot-a8082de2026469af.graph`
 - `lib/phases/2026-10-15-gate-held-work/graph/GW6_the_intelligence_system_on_every_gate-88688bb77b7d9ade.graph`
 - `lib/phases/2026-10-15-gate-held-work/graph/GW7_failure_macro_and_rewind-9ea220d322030fc4.graph`
 - `lib/phases/2026-10-15-gate-held-work/graph/GW8_causal_graph_and_failure_mode_field-663a3a1b6c41b6e9.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/_superseded/GW22_find_before_generate-ebd47dffa0a8bc56.graph`
+- `lib/phases/2026-10-15-gate-held-work/graph/_superseded/GW5_agents_are_copilot-6b97cd0bef25edcb.graph`
 - `lib/phases/2026-10-15-macro-node-recording/MR10_capabilities_as_steps.phase`
 - `lib/phases/2026-10-15-macro-node-recording/MR14_tasks_and_mesh_spec.phase`
 - `lib/phases/2026-10-15-macro-node-recording/graph/MR10_capabilities_as_steps-7fc5751ee0244562.graph`
@@ -9762,8 +10218,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-15-one-contract-raid-releases/graph/ST1_stability_checks-73c9424926bf802e.graph`
 - `lib/phases/2026-10-15-personal-chat-import/PI1_the_importer.phase`
 - `lib/phases/2026-10-15-personal-chat-import/PI3_the_intelligence_pass.phase`
-- `lib/phases/2026-10-15-personal-chat-import/graph/PI1_the_importer-4811bb5810fcbe4d.graph`
+- `lib/phases/2026-10-15-personal-chat-import/graph/PI1_the_importer-c54409bf4a46b62d.graph`
 - `lib/phases/2026-10-15-personal-chat-import/graph/PI3_the_intelligence_pass-081c0303b5cee64e.graph`
+- `lib/phases/2026-10-15-personal-chat-import/graph/_superseded/PI1_the_importer-4811bb5810fcbe4d.graph`
 - `lib/phases/2026-10-15-spec-foundation-model/SF4_the_listener.phase`
 - `lib/phases/2026-10-15-spec-foundation-model/graph/SF4_the_listener-6ccc005b3e35e04e.graph`
 - `lib/phases/2026-10-15-warp-builds-and-spec-framework/IS1_intent_settings_per_repo.phase`
@@ -9778,38 +10235,43 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-15-warp-builds-and-spec-framework/WB2_raid_bricks_and_officiator_through_warp.phase`
 - `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/IS1_intent_settings_per_repo-6e793c69f386d367.graph`
 - `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP1_nexus_maps_every_phase-38eb3640a0730199.graph`
-- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP3_builds_get_the_mapped_context-a8ea1fb30dbfd70b.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/MP3_builds_get_the_mapped_context-ea105d5b59c94356.graph`
 - `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF1_intent_blocks-a8afa92a489433cd.graph`
 - `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF2_spec_framework_block-f3369f9f0bb0ba75.graph`
 - `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF3_collect_the_spec-2752c0d140f6df49.graph`
 - `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/SF4_compile_on_collect-aadcbf4561eb1533.graph`
 - `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB0_census-9a044eef08fa5b1b.graph`
-- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB1_warp_at_the_rung-60eb99e47c8e797a.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB1_warp_at_the_rung-9b6591af8b02377f.graph`
 - `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/WB2_raid_bricks_and_officiator_through_warp-c5988e845eadf750.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/MP3_builds_get_the_mapped_context-a8ea1fb30dbfd70b.graph`
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/graph/_superseded/WB1_warp_at_the_rung-60eb99e47c8e797a.graph`
 - `lib/phases/2026-10-16-agent-work-funnel/FN0_the_funnel_as_data.phase`
 - `lib/phases/2026-10-16-agent-work-funnel/FN1_every_door_goes_through_it.phase`
 - `lib/phases/2026-10-16-agent-work-funnel/FN2_what_is_missing_is_made_first.phase`
 - `lib/phases/2026-10-16-agent-work-funnel/FN3_every_answer_a_node.phase`
 - `lib/phases/2026-10-16-agent-work-funnel/graph/FN0_the_funnel_as_data-36bff935bc611507.graph`
-- `lib/phases/2026-10-16-agent-work-funnel/graph/FN1_every_door_goes_through_it-1841c94aa41f3eef.graph`
+- `lib/phases/2026-10-16-agent-work-funnel/graph/FN1_every_door_goes_through_it-3eaa762c5d3deb20.graph`
 - `lib/phases/2026-10-16-agent-work-funnel/graph/FN2_what_is_missing_is_made_first-94e1791ebf408132.graph`
 - `lib/phases/2026-10-16-agent-work-funnel/graph/FN3_every_answer_a_node-f0fd6a276c7d1d69.graph`
+- `lib/phases/2026-10-16-agent-work-funnel/graph/_superseded/FN1_every_door_goes_through_it-1841c94aa41f3eef.graph`
 - `lib/phases/2026-10-16-canvas-compartments/CN3_nested_compartments.phase`
 - `lib/phases/2026-10-16-canvas-compartments/CN6_canvas_screen.phase`
-- `lib/phases/2026-10-16-canvas-compartments/graph/CN3_nested_compartments-567d60a0f20626fb.graph`
+- `lib/phases/2026-10-16-canvas-compartments/graph/CN3_nested_compartments-a9434777c262960b.graph`
 - `lib/phases/2026-10-16-canvas-compartments/graph/CN6_canvas_screen-a122a921c355bbd5.graph`
+- `lib/phases/2026-10-16-canvas-compartments/graph/_superseded/CN3_nested_compartments-567d60a0f20626fb.graph`
 - `lib/phases/2026-10-16-code-tab-rebuild/DK1_procedures_backend.phase`
 - `lib/phases/2026-10-16-code-tab-rebuild/TB1_read_model_per_tab.phase`
 - `lib/phases/2026-10-16-code-tab-rebuild/TB3a_tool_calls_saved.phase`
 - `lib/phases/2026-10-16-code-tab-rebuild/TB4_reuse_responses.phase`
 - `lib/phases/2026-10-16-code-tab-rebuild/TB7d_node_controls.phase`
 - `lib/phases/2026-10-16-code-tab-rebuild/TB8_proof_and_wiring.phase`
-- `lib/phases/2026-10-16-code-tab-rebuild/graph/DK1_procedures_backend-8caea4d0996d7b22.graph`
+- `lib/phases/2026-10-16-code-tab-rebuild/graph/DK1_procedures_backend-74a55268895b8cd2.graph`
 - `lib/phases/2026-10-16-code-tab-rebuild/graph/TB1_read_model_per_tab-28d795fe5701a47d.graph`
 - `lib/phases/2026-10-16-code-tab-rebuild/graph/TB3a_tool_calls_saved-7ee37636c61d4d6c.graph`
 - `lib/phases/2026-10-16-code-tab-rebuild/graph/TB4_reuse_responses-cf2073506d98196c.graph`
 - `lib/phases/2026-10-16-code-tab-rebuild/graph/TB7d_node_controls-4f2be3f82aed75ef.graph`
 - `lib/phases/2026-10-16-code-tab-rebuild/graph/TB8_proof_and_wiring-bea6b955a3f4631e.graph`
+- `lib/phases/2026-10-16-code-tab-rebuild/graph/_superseded/DK1_procedures_backend-8caea4d0996d7b22.graph`
 - `lib/phases/2026-10-16-cos-console/CON5_pane.phase`
 - `lib/phases/2026-10-16-cos-console/CON8_nexus_server_hook.phase`
 - `lib/phases/2026-10-16-cos-console/graph/CON5_pane-8bbaf7e5aa41faf7.graph`
@@ -9822,16 +10284,16 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-16-durable-work-timeline/graph/TL1_chunks_land_as_they_arrive-477fcfa607154070.graph`
 - `lib/phases/2026-10-16-durable-work-timeline/graph/TL2_resume_at_boot-a0f0fae0e4e8a429.graph`
 - `lib/phases/2026-10-16-durable-work-timeline/graph/TL3_the_timeline-c61967b5d3fdb797.graph`
-- `lib/phases/2026-10-16-durable-work-timeline/graph/TL4_rewind_to_a_gate-1b73172e3db632d6.graph`
+- `lib/phases/2026-10-16-durable-work-timeline/graph/TL4_rewind_to_a_gate-218c037d5e3cb485.graph`
 - `lib/phases/2026-10-16-durable-work-timeline/graph/TL6_proof_and_wiring-2b6b52d3b29be7d3.graph`
+- `lib/phases/2026-10-16-durable-work-timeline/graph/_superseded/TL4_rewind_to_a_gate-1b73172e3db632d6.graph`
 - `lib/phases/2026-10-16-eravos-removal/ER1_delete_the_system.phase`
 - `lib/phases/2026-10-16-eravos-removal/ER2_unwire_the_platform.phase`
 - `lib/phases/2026-10-16-eravos-removal/ER3_unwire_the_screens.phase`
 - `lib/phases/2026-10-16-eravos-removal/graph/ER1_delete_the_system-2d6cbb2fd32f8057.graph`
 - `lib/phases/2026-10-16-eravos-removal/graph/ER2_unwire_the_platform-eccf746a91d275e5.graph`
-- `lib/phases/2026-10-16-eravos-removal/graph/ER3_unwire_the_screens-39401869987f58e9.graph`
-- `lib/phases/2026-10-16-google-signin/GS7_no_debugger_on_signin.phase`
-- `lib/phases/2026-10-16-google-signin/graph/GS7_no_debugger_on_signin-69372ec12b6080c9.graph`
+- `lib/phases/2026-10-16-eravos-removal/graph/ER3_unwire_the_screens-b77762163146e22d.graph`
+- `lib/phases/2026-10-16-eravos-removal/graph/_superseded/ER3_unwire_the_screens-39401869987f58e9.graph`
 - `lib/phases/2026-10-16-intent-hat-agent-chain/IH1_intent_nodes_point_at_hats.phase`
 - `lib/phases/2026-10-16-intent-hat-agent-chain/IH2_agents_bound.phase`
 - `lib/phases/2026-10-16-intent-hat-agent-chain/IH3_routers_read_the_chain.phase`
@@ -9845,7 +10307,8 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-16-nexus-git-sync/GS5_release_alignment.phase`
 - `lib/phases/2026-10-16-nexus-git-sync/graph/GS5_release_alignment-9cea81dfaa362267.graph`
 - `lib/phases/2026-10-16-plan-sidebar/PS1_context_recorded.phase`
-- `lib/phases/2026-10-16-plan-sidebar/graph/PS1_context_recorded-140511f9d8b21da5.graph`
+- `lib/phases/2026-10-16-plan-sidebar/graph/PS1_context_recorded-d021d698da4d1307.graph`
+- `lib/phases/2026-10-16-plan-sidebar/graph/_superseded/PS1_context_recorded-140511f9d8b21da5.graph`
 - `lib/phases/2026-10-16-proposal-evidence/PE1_test_map.phase`
 - `lib/phases/2026-10-16-proposal-evidence/PE2_evidence.phase`
 - `lib/phases/2026-10-16-proposal-evidence/PE3_wired_and_gated.phase`
@@ -9892,20 +10355,22 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-17-failure-mode-report/FMR1_every_ledger_into_rfr2.phase`
 - `lib/phases/2026-10-17-failure-mode-report/FMR2_every_failure_reaches_the_record.phase`
 - `lib/phases/2026-10-17-failure-mode-report/FMR7_a_fix_proven_by_its_macro.phase`
-- `lib/phases/2026-10-17-failure-mode-report/graph/FMR11_import_into_any_test_env-53ed35ed7a5f4718.graph`
+- `lib/phases/2026-10-17-failure-mode-report/graph/FMR11_import_into_any_test_env-b5e54d1c4aa8322b.graph`
 - `lib/phases/2026-10-17-failure-mode-report/graph/FMR1_every_ledger_into_rfr2-d672a060fcb71369.graph`
 - `lib/phases/2026-10-17-failure-mode-report/graph/FMR2_every_failure_reaches_the_record-7d5ad1479d3e7570.graph`
 - `lib/phases/2026-10-17-failure-mode-report/graph/FMR7_a_fix_proven_by_its_macro-6e7c8d81f12d75e7.graph`
+- `lib/phases/2026-10-17-failure-mode-report/graph/_superseded/FMR11_import_into_any_test_env-53ed35ed7a5f4718.graph`
 - `lib/phases/2026-10-17-infrastructure-migration/IM1_the_shape_census_as_a_command.phase`
 - `lib/phases/2026-10-17-infrastructure-migration/IM2_clean_the_redundant.phase`
 - `lib/phases/2026-10-17-infrastructure-migration/IM3_wire_what_exists.phase`
 - `lib/phases/2026-10-17-infrastructure-migration/IM5_each_system_to_the_template.phase`
 - `lib/phases/2026-10-17-infrastructure-migration/IM7_the_ui_on_the_registry.phase`
-- `lib/phases/2026-10-17-infrastructure-migration/graph/IM1_the_shape_census_as_a_command-6d5ddff3294636fc.graph`
+- `lib/phases/2026-10-17-infrastructure-migration/graph/IM1_the_shape_census_as_a_command-3abb3b64d2b71c76.graph`
 - `lib/phases/2026-10-17-infrastructure-migration/graph/IM2_clean_the_redundant-072ba52c90e90175.graph`
 - `lib/phases/2026-10-17-infrastructure-migration/graph/IM3_wire_what_exists-44f254336361884c.graph`
 - `lib/phases/2026-10-17-infrastructure-migration/graph/IM5_each_system_to_the_template-aebf66ab8872db55.graph`
 - `lib/phases/2026-10-17-infrastructure-migration/graph/IM7_the_ui_on_the_registry-a6263831c386b825.graph`
+- `lib/phases/2026-10-17-infrastructure-migration/graph/_superseded/IM1_the_shape_census_as_a_command-6d5ddff3294636fc.graph`
 - `lib/phases/2026-10-17-pieces-not-order/PC1_the_point_first.phase`
 - `lib/phases/2026-10-17-pieces-not-order/PC4_a_procedure_per_kind.phase`
 - `lib/phases/2026-10-17-pieces-not-order/graph/PC1_the_point_first-c775e908897ae8af.graph`
@@ -9929,17 +10394,21 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-17-system-drawbridge/graph/DB10_shadow_and_negative_space_at_the_drawbridge-408f43cb043a2054.graph`
 - `lib/phases/2026-10-17-system-drawbridge/graph/DB11_cos_compartment_per_system-9063cc203f88bc1d.graph`
 - `lib/phases/2026-10-17-system-drawbridge/graph/DB12_the_ui_handshake-f3192f7dde8331e8.graph`
-- `lib/phases/2026-10-17-system-drawbridge/graph/DB13_the_tunnel-1bdf18b3efb9edf1.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB13_the_tunnel-5e84eb9e78eeb3f6.graph`
 - `lib/phases/2026-10-17-system-drawbridge/graph/DB14_heartbeat_over_routes-07e3beb25770350e.graph`
 - `lib/phases/2026-10-17-system-drawbridge/graph/DB16_a_registry_for_each_system-1d1f44a2f7482cfa.graph`
-- `lib/phases/2026-10-17-system-drawbridge/graph/DB17_files_stay_with_their_system-0a30e279c2724858.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB17_files_stay_with_their_system-1d58c78f3b024f40.graph`
 - `lib/phases/2026-10-17-system-drawbridge/graph/DB18_nodes_in_relation_to_their_system-da6e7c02b2315c93.graph`
-- `lib/phases/2026-10-17-system-drawbridge/graph/DB1_the_census_and_the_ratchet-6bb5eb9cc6cd21f1.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/DB1_the_census_and_the_ratchet-cd96632b0252b4fb.graph`
 - `lib/phases/2026-10-17-system-drawbridge/graph/DB3_the_drawbridge-05dd7de14e589723.graph`
 - `lib/phases/2026-10-17-system-drawbridge/graph/DB6_move_the_crossings-f3fefc6b9f760ec6.graph`
 - `lib/phases/2026-10-17-system-drawbridge/graph/DB9_every_repo_generates_its_registry-2390a659741df494.graph`
-- `lib/phases/2026-10-17-system-drawbridge/graph/P33a_a_registry_for_any_system-973379dc15f50e89.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/P33a_a_registry_for_any_system-33ce30516ecd0c08.graph`
 - `lib/phases/2026-10-17-system-drawbridge/graph/P33b_each_system_runs_its_listener-62329d11d3def412.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/DB13_the_tunnel-1bdf18b3efb9edf1.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/DB17_files_stay_with_their_system-0a30e279c2724858.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/DB1_the_census_and_the_ratchet-6bb5eb9cc6cd21f1.graph`
+- `lib/phases/2026-10-17-system-drawbridge/graph/_superseded/P33a_a_registry_for_any_system-973379dc15f50e89.graph`
 - `lib/phases/2026-10-18-compartment-environment/CE3_the_handshake.phase`
 - `lib/phases/2026-10-18-compartment-environment/graph/CE3_the_handshake-aa79fe09a96f799d.graph`
 - `lib/phases/2026-10-18-debugging-product/DBG1_the_key.phase`
@@ -9948,12 +10417,13 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-18-debugging-product/DBG4_dependency_gaps.phase`
 - `lib/phases/2026-10-18-debugging-product/DBG6_cases_crystallize.phase`
 - `lib/phases/2026-10-18-debugging-product/DBG8_in_the_product.phase`
-- `lib/phases/2026-10-18-debugging-product/graph/DBG1_the_key-e4c6f44f796d9405.graph`
+- `lib/phases/2026-10-18-debugging-product/graph/DBG1_the_key-6716c6c874b49d8e.graph`
 - `lib/phases/2026-10-18-debugging-product/graph/DBG2_the_case-1fa8c76c4772fdd9.graph`
 - `lib/phases/2026-10-18-debugging-product/graph/DBG3_deviation_and_friction_per_run-3cdc3022f02a4874.graph`
 - `lib/phases/2026-10-18-debugging-product/graph/DBG4_dependency_gaps-1cbb2701c89b4f58.graph`
 - `lib/phases/2026-10-18-debugging-product/graph/DBG6_cases_crystallize-84f9d57bd845faf7.graph`
 - `lib/phases/2026-10-18-debugging-product/graph/DBG8_in_the_product-fb23f2c646765085.graph`
+- `lib/phases/2026-10-18-debugging-product/graph/_superseded/DBG1_the_key-e4c6f44f796d9405.graph`
 - `lib/phases/2026-10-18-debugging-product/graph/_superseded/DBG4_dependency_gaps-958076dca62f887c.graph`
 - `lib/phases/2026-10-18-gate-memory/GM5_the_context_ladder.phase`
 - `lib/phases/2026-10-18-gate-memory/GM6_crystallized_from_what_was_approved.phase`
@@ -9964,10 +10434,12 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-18-gating-census/L1_primitives_no_decision.phase`
 - `lib/phases/2026-10-18-gating-census/L2_one_of_each.phase`
 - `lib/phases/2026-10-18-gating-census/graph/GC0_the_census-46d5041e29861a47.graph`
-- `lib/phases/2026-10-18-gating-census/graph/GC1_layer_one-c6818f0350f0d936.graph`
-- `lib/phases/2026-10-18-gating-census/graph/L1_primitives_no_decision-0a03918617e67a44.graph`
+- `lib/phases/2026-10-18-gating-census/graph/GC1_layer_one-3f15fb69b24b7b4f.graph`
+- `lib/phases/2026-10-18-gating-census/graph/L1_primitives_no_decision-af2037ec4c7c7ccd.graph`
 - `lib/phases/2026-10-18-gating-census/graph/L2_one_of_each-15bb418b41b19b2a.graph`
 - `lib/phases/2026-10-18-gating-census/graph/_superseded/GC0_the_census-6e90f2f13b83fa5b.graph`
+- `lib/phases/2026-10-18-gating-census/graph/_superseded/GC1_layer_one-c6818f0350f0d936.graph`
+- `lib/phases/2026-10-18-gating-census/graph/_superseded/L1_primitives_no_decision-0a03918617e67a44.graph`
 - `lib/phases/2026-10-19-gate-quality-checks/GQ1_quality_stream.phase`
 - `lib/phases/2026-10-19-gate-quality-checks/GQ3_brick_tests.phase`
 - `lib/phases/2026-10-19-gate-quality-checks/graph/GQ1_quality_stream-78a010f02db9b5e2.graph`
@@ -9977,11 +10449,13 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-19-idearium-control/IX1_everything_linked.phase`
 - `lib/phases/2026-10-19-idearium-control/NM1_one_name_per_file.phase`
 - `lib/phases/2026-10-19-idearium-control/VS2_diff_only_backups.phase`
-- `lib/phases/2026-10-19-idearium-control/graph/IM2_promote_to_phase-1569487c0a2437d9.graph`
+- `lib/phases/2026-10-19-idearium-control/graph/IM2_promote_to_phase-3d3122e110bd5fcd.graph`
 - `lib/phases/2026-10-19-idearium-control/graph/IM3_ideas_mapped_to_nexus-4ab9902894ad0c86.graph`
-- `lib/phases/2026-10-19-idearium-control/graph/IX1_everything_linked-9bb44518c22de6ae.graph`
+- `lib/phases/2026-10-19-idearium-control/graph/IX1_everything_linked-936103a671e951e6.graph`
 - `lib/phases/2026-10-19-idearium-control/graph/NM1_one_name_per_file-4139029cd3912f57.graph`
 - `lib/phases/2026-10-19-idearium-control/graph/VS2_diff_only_backups-536284767e3a671e.graph`
+- `lib/phases/2026-10-19-idearium-control/graph/_superseded/IM2_promote_to_phase-1569487c0a2437d9.graph`
+- `lib/phases/2026-10-19-idearium-control/graph/_superseded/IX1_everything_linked-9bb44518c22de6ae.graph`
 - `lib/phases/2026-10-19-infrastructure-spine/AD1_adapter_contract.phase`
 - `lib/phases/2026-10-19-infrastructure-spine/AD2_javascript_adapter.phase`
 - `lib/phases/2026-10-19-infrastructure-spine/AD3_python_adapter.phase`
@@ -10012,18 +10486,26 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-19-infrastructure-spine/graph/IN1_old_files_out-84d149d952b4e723.graph`
 - `lib/phases/2026-10-19-infrastructure-spine/graph/IN2_quotes_ledger-746264db652fe47c.graph`
 - `lib/phases/2026-10-19-infrastructure-spine/graph/IN3_registry_is_the_spine-e420e3cd3dcadc6d.graph`
-- `lib/phases/2026-10-19-infrastructure-spine/graph/IN6_systems_onto_the_spine-cdcb05f20732c595.graph`
-- `lib/phases/2026-10-19-infrastructure-spine/graph/IN7_every_phase_and_spec_on_the_spine-ac080692893504b1.graph`
-- `lib/phases/2026-10-19-infrastructure-spine/graph/NC1_neutral_core_boundary-5ed2fce6c3979dcb.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/IN6_systems_onto_the_spine-d066bd1ea8707d4f.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/IN7_every_phase_and_spec_on_the_spine-d8202d911683f87e.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/NC1_neutral_core_boundary-eb01e51306363b43.graph`
 - `lib/phases/2026-10-19-infrastructure-spine/graph/NT1_neutrality_test-a331400b0767c9a0.graph`
 - `lib/phases/2026-10-19-infrastructure-spine/graph/PN1_phases_to_nodes-d373bee50a742ff2.graph`
-- `lib/phases/2026-10-19-infrastructure-spine/graph/PN2_dual_read-29e3557d98277a3d.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/PN2_dual_read-32284e7ca14d5e91.graph`
 - `lib/phases/2026-10-19-infrastructure-spine/graph/PN3_maps_rendered_from_nodes-e5c77a3e8f639f3f.graph`
-- `lib/phases/2026-10-19-infrastructure-spine/graph/PRC1_phase_reality_check-681b3b0a01191eac.graph`
-- `lib/phases/2026-10-19-infrastructure-spine/graph/SC1_scaling_limits_named-74bbc16498f13eed.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/PRC1_phase_reality_check-df85ce60c35981f4.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/SC1_scaling_limits_named-3ba475514025d6e3.graph`
 - `lib/phases/2026-10-19-infrastructure-spine/graph/ST1_schema_for_everything_reusable-7d79572c6ac4587e.graph`
-- `lib/phases/2026-10-19-infrastructure-spine/graph/VC1_a_change_entry_for_every_event-2d6d84c716d3eda0.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/VC1_a_change_entry_for_every_event-76c4f0affebe725c.graph`
 - `lib/phases/2026-10-19-infrastructure-spine/graph/VC2_changelogs_rendered-991430c3f767143b.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/IN6_systems_onto_the_spine-cdcb05f20732c595.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/IN7_every_phase_and_spec_on_the_spine-ac080692893504b1.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/NC1_neutral_core_boundary-5ed2fce6c3979dcb.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/PN2_dual_read-29e3557d98277a3d.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/PRC1_phase_reality_check-681b3b0a01191eac.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/PRC1_phase_reality_check-fc6855be1061677b.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/SC1_scaling_limits_named-74bbc16498f13eed.graph`
+- `lib/phases/2026-10-19-infrastructure-spine/graph/_superseded/VC1_a_change_entry_for_every_event-2d6d84c716d3eda0.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/CB1_coder_brief.phase`
 - `lib/phases/2026-10-19-pipeline-root-causes/CB2_gemini_first.phase`
 - `lib/phases/2026-10-19-pipeline-root-causes/ID1_ideas_wired_through.phase`
@@ -10046,42 +10528,47 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/CB2_gemini_first-8a828fa8e92f645c.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/ID1_ideas_wired_through-d74f2fa08863805e.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/MEM1_cortex_keeps_the_books-5dc59a5287acfba0.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC1_watchers_never_kill_a_kernel-5363c8138bf6ff4a.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC1_watchers_never_kill_a_kernel-40611d935182d4d5.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/RC2_linear_node_scan-4cebbf35ed841d10.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/RC3_windows_safe_node_names-1a150de507d7f945.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/RC4_agent_file_names_guarded-f7f24c9b4b5b26d9.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/SM1_agent_self_model-33989c7ddb1cbad4.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/SS1_system_store_adoption-d78715b3b21e685b.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/SS1_system_store_adoption-f53b8db610c7dc2d.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/SS3_nodes_are_the_data-42d3b5c93b4e3d49.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/UI1_toolbox_and_store_explorer-18a4d19d0f927715.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/UI3_ideas_and_notes_as_one-a5b53b729416888e.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF1_verify_first-f356503ab603ddbc.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF1_verify_first-75f31fd529045eff.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/VF2_one_response_bundle-48017c6b7737540e.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/VF3_mutation_check-a28ce7f9bc7982e8.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/VF4_second_opinion_on_need-9c8416f249e1db5c.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/VF5_verdict_cache-3f619ac10014ebb3.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/ID1_ideas_wired_through-b12b2d82d3da6242.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/MEM1_cortex_keeps_the_books-945fb1de062e2087.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC1_watchers_never_kill_a_kernel-5363c8138bf6ff4a.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC1_watchers_never_kill_a_kernel-5dd01d2da36edeb7.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC2_linear_node_scan-77759fcaf402a194.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC3_windows_safe_node_names-26a266c4495e09d0.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC3_windows_safe_node_names-abac5983cc545d58.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/RC4_agent_file_names_guarded-771ccf0a4d65cb41.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/SS1_system_store_adoption-4cd6ebb02c5a7c35.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/SS1_system_store_adoption-ad8ef05a560160bc.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/SS1_system_store_adoption-d78715b3b21e685b.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/SS1_system_store_adoption-f5e49c04fe5a9255.graph`
 - `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/VF1_verify_first-58454d1b9f24ee04.graph`
+- `lib/phases/2026-10-19-pipeline-root-causes/graph/_superseded/VF1_verify_first-f356503ab603ddbc.graph`
 - `lib/phases/2026-10-19-solid-build-foundation/AB1_autobuild_loop_and_resume.phase`
 - `lib/phases/2026-10-19-solid-build-foundation/AB2_hat_aware_ladder.phase`
 - `lib/phases/2026-10-19-solid-build-foundation/CR1_project_registry_spine.phase`
 - `lib/phases/2026-10-19-solid-build-foundation/GQ1_quality_stream.phase`
 - `lib/phases/2026-10-19-solid-build-foundation/GQ3_brick_tests.phase`
 - `lib/phases/2026-10-19-solid-build-foundation/MF1_model_fit_routing.phase`
-- `lib/phases/2026-10-19-solid-build-foundation/graph/AB1_autobuild_loop_and_resume-3d44db3a3fb6e381.graph`
+- `lib/phases/2026-10-19-solid-build-foundation/graph/AB1_autobuild_loop_and_resume-8bebaae7ef8ec3d2.graph`
 - `lib/phases/2026-10-19-solid-build-foundation/graph/AB2_hat_aware_ladder-ad9fe7f865a988d6.graph`
 - `lib/phases/2026-10-19-solid-build-foundation/graph/CR1_project_registry_spine-ad00a0602536365c.graph`
 - `lib/phases/2026-10-19-solid-build-foundation/graph/GQ1_quality_stream-85b1ad483b041f8f.graph`
 - `lib/phases/2026-10-19-solid-build-foundation/graph/GQ3_brick_tests-3769b79e631ed6e6.graph`
 - `lib/phases/2026-10-19-solid-build-foundation/graph/MF1_model_fit_routing-933ae7ea59a963fb.graph`
+- `lib/phases/2026-10-19-solid-build-foundation/graph/_superseded/AB1_autobuild_loop_and_resume-3d44db3a3fb6e381.graph`
 - `lib/phases/2026-10-19-upload-intent-and-page-map/PM6_nerve_feel.phase`
 - `lib/phases/2026-10-19-upload-intent-and-page-map/UP1_placement_tool.phase`
 - `lib/phases/2026-10-19-upload-intent-and-page-map/UP2_learned_placements.phase`
@@ -10141,11 +10628,12 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR2_graph_views-371086c0f14c49a2.graph`
 - `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW0_gate_census-0475656455782995.graph`
 - `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW1_gate_primitive-0fa8b100c09c9d93.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW2_gates_at_every_level-612136b666d5ea1e.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW2_gates_at_every_level-6b8b306dc65f4dfa.graph`
 - `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/PS1_phase_specs-77e8fe5e41ea6ccc.graph`
 - `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/TV1_traversal_primitive-addbf1f1b5a09bfa.graph`
 - `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/TV2_invariant_guided_traversal-e197883cad031a55.graph`
 - `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/TV3_traversal_as_context-8a5009bb03465d08.graph`
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW2_gates_at_every_level-612136b666d5ea1e.graph`
 - `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/GW2_gates_at_every_level-b10b437f7e757cde.graph`
 - `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/PS1_phase_specs-3ff2290d219d6c7c.graph`
 - `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/_superseded/PS1_phase_specs-77e8fe5e41ea6ccc.graph`
@@ -10160,8 +10648,10 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-21-brainos-into-idearium/CNS1_phase_census.phase`
 - `lib/phases/2026-10-21-brainos-into-idearium/graph/BX1_census-94187d8db6335e81.graph`
 - `lib/phases/2026-10-21-brainos-into-idearium/graph/BX9_retire-0c410c080c84da17.graph`
-- `lib/phases/2026-10-21-brainos-into-idearium/graph/CNS1_phase_census-ac4aa4a9dde1d8b0.graph`
+- `lib/phases/2026-10-21-brainos-into-idearium/graph/CNS1_phase_census-576dec22d027e819.graph`
 - `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/BX9_retire-2bc31a1a8b772044.graph`
+- `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-7ed45d431576d002.graph`
+- `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-ac4aa4a9dde1d8b0.graph`
 - `lib/phases/2026-10-21-brainos-into-idearium/graph/_superseded/CNS1_phase_census-ee838c5e542aa524.graph`
 - `lib/phases/2026-10-21-data-layout/DL0_data_census.phase`
 - `lib/phases/2026-10-21-data-layout/DL1_clearup_tool.phase`
@@ -10183,9 +10673,10 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-22-system-node-db/ND4_commands_and_capabilities_from_the_schemas.phase`
 - `lib/phases/2026-10-22-system-node-db/graph/ND1_every_system_has_its_database-d31a6f77d650fe55.graph`
 - `lib/phases/2026-10-22-system-node-db/graph/ND2_one_node_route_for_every_system-15ec1ac071c27e69.graph`
-- `lib/phases/2026-10-22-system-node-db/graph/ND3_each_server_serves_its_nodes-e4e6017c5d941f7b.graph`
+- `lib/phases/2026-10-22-system-node-db/graph/ND3_each_server_serves_its_nodes-a5ccfda0efc215f8.graph`
 - `lib/phases/2026-10-22-system-node-db/graph/ND4_commands_and_capabilities_from_the_schemas-ae691a15e3aa12bb.graph`
 - `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND1_every_system_has_its_database-87dd2ec53f3067a4.graph`
+- `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND3_each_server_serves_its_nodes-e4e6017c5d941f7b.graph`
 - `lib/phases/2026-10-22-system-node-db/graph/_superseded/ND3_each_server_serves_its_nodes-ea22d024a9a37bb4.graph`
 - `lib/phases/2026-10-23-cos-spine/CS10_hats_bound_to_the_compartment.phase`
 - `lib/phases/2026-10-23-cos-spine/graph/CS10_hats_bound_to_the_compartment-9593a2c519f5f235.graph`
@@ -10194,19 +10685,112 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/2026-10-23-self-building-loop/SL5_when_a_proven_change_lands_alone.phase`
 - `lib/phases/2026-10-23-self-building-loop/SL6_the_loop_counts_itself.phase`
 - `lib/phases/2026-10-23-self-building-loop/SL9_every_phase_a_node.phase`
-- `lib/phases/2026-10-23-self-building-loop/graph/SL2_done_by_evidence-7bb9c1e91cb43b0f.graph`
-- `lib/phases/2026-10-23-self-building-loop/graph/SL3_the_backlog_groomed-d984c6d6901fa316.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/SL2_done_by_evidence-e233725464e7928b.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/SL3_the_backlog_groomed-9333226d9dad1360.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/SL5_when_a_proven_change_lands_alone-379b566ca6597dd5.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/SL6_the_loop_counts_itself-596269867e9d3b8f.graph`
-- `lib/phases/2026-10-23-self-building-loop/graph/SL9_every_phase_a_node-607e664a07b3c690.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/SL9_every_phase_a_node-849580405cd11e1a.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-07f020fcde0980ec.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-7bb9c1e91cb43b0f.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-a5f720db904d7f54.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL2_done_by_evidence-f4cbd242e47d17fc.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-596ba88d3bb5ab0a.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-9fd399bb539845a2.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL3_the_backlog_groomed-d984c6d6901fa316.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL5_when_a_proven_change_lands_alone-4cb047583c75887c.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL6_the_loop_counts_itself-fb8338f83e0b2ad5.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-607e664a07b3c690.graph`
+- `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-6243f40c578704b7.graph`
 - `lib/phases/2026-10-23-self-building-loop/graph/_superseded/SL9_every_phase_a_node-cf5ae14f76bef8fc.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV10_emergence.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV10_remote_desktop.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV11_seams.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV11_warp.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV12_nexus.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV12_security.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV13_cli.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV13_sentinel.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV14_service.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV15_siso.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV16_tablet.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV17_ui.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV18_cli.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV18_emerge.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV19_emerge.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV19_emergence.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV1_architecture_spec.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV1_cockpit.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV20_emergence.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV20_warp.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV21_nexus.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV22_cli.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV22_warp.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV2_auth.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV2_contracts.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV3_cockpit.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV3_hooks.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV4_contracts.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV4_meta.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV5_erosmancer.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV5_sentinel.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV6_hooks.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV6_service.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV7_jaa.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV7_siso.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV8_mesh.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV8_ui.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV9_emerge.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/MV9_meta.phase`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV10_emergence-be4b111c2745b7e2.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV10_remote_desktop-1245b5713748f8a7.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV11_seams-2a0fa6f698193ee4.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV11_warp-ed5be8751d17b732.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV12_nexus-3c27ef56be491bfa.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV12_security-b22bbc2a9a8680cb.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV13_cli-908ffb32268f37b5.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV13_sentinel-3f88393b5ef78186.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV14_service-10cac063cd8b5afd.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV15_siso-12219a49e7ad0e5a.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV16_tablet-556c75f19fdd176f.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV17_ui-6dbe966341e443fd.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV18_cli-9acc4cce06b275dc.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV18_emerge-6a42da2a2aad3d22.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV19_emerge-8272550c4074bb32.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV19_emergence-9bfed80265b79410.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV1_architecture_spec-22b910cba9fbaa36.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV1_cockpit-12c88ba645d84835.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV20_emergence-7dd38453577b25f3.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV20_warp-96570ff299b75c60.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV21_nexus-71489a565b05f8bb.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV22_cli-fc91817e9db76c4d.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV22_warp-d84c8666ce9ba8b2.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV2_auth-cfc78b4516a1eb85.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV2_contracts-dd7116708426fe8f.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV3_cockpit-635f03465abd71f0.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV3_hooks-6b7d13e6306e0f5e.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV4_contracts-7adc42d787e9d7d6.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV4_meta-b732ebe36e00f6f1.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV5_erosmancer-449fe986edc42a2b.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV5_sentinel-d8d83dfea81cf4bf.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV6_hooks-113d95d9f05f1bb1.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV6_service-2a2e292fda677f2a.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV7_jaa-38e82d2d09520bc6.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV7_siso-a6919f351a48b791.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV8_mesh-93d292588723e559.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV8_ui-2a983fa84fdc58b5.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV9_emerge-fdcaa0eb6fa36abb.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/MV9_meta-9af12ac80daed8df.graph`
+- `lib/phases/2026-10-24-fifteen-systems-migration/graph/_superseded/MV11_seams-cde977a3ee02d317.graph`
+- `lib/phases/2026-10-24-github-context-and-agent-settings/AS2_each_provider_its_own_profile.phase`
+- `lib/phases/2026-10-24-github-context-and-agent-settings/GH2_the_context_brief_at_the_root.phase`
+- `lib/phases/2026-10-24-github-context-and-agent-settings/GH4_the_link_as_an_injection_method.phase`
+- `lib/phases/2026-10-24-github-context-and-agent-settings/GH5_a_github_agent_tool.phase`
+- `lib/phases/2026-10-24-github-context-and-agent-settings/GH6_send_a_requested_file.phase`
+- `lib/phases/2026-10-24-github-context-and-agent-settings/graph/AS2_each_provider_its_own_profile-8d89f1159394b129.graph`
+- `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH2_the_context_brief_at_the_root-4b61d2ee6d98ba20.graph`
+- `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH4_the_link_as_an_injection_method-5fd840c54ff4624d.graph`
+- `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH5_a_github_agent_tool-3f7b8323b911d2b0.graph`
+- `lib/phases/2026-10-24-github-context-and-agent-settings/graph/GH6_send_a_requested_file-b5163ccb719b6466.graph`
 - `lib/phases/INDEX.md`
 - `lib/phases/agent-intelligence-loop/AP1_pull_toolbox.phase`
 - `lib/phases/agent-intelligence-loop/AP5_autonomous_build_loop.phase`
@@ -10226,10 +10810,11 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/agent-model-and-user-continuity/graph/AM2_incident_debrief-04a4544016b9bb00.graph`
 - `lib/phases/agent-model-and-user-continuity/graph/AM3_open_ended_grounded_conversation-487ff1e8c712e962.graph`
 - `lib/phases/agent-model-and-user-continuity/graph/AM5_ambiguity_triggered_pull-ca63b016e003ffb7.graph`
-- `lib/phases/agent-model-and-user-continuity/graph/AM6_perplexity_confidence_loop-200f6a2a6a5cf5dd.graph`
+- `lib/phases/agent-model-and-user-continuity/graph/AM6_perplexity_confidence_loop-adca06647d527ddd.graph`
 - `lib/phases/agent-model-and-user-continuity/graph/AM7_agent_switch_continuity_and_chat_recall-e7c6fbbbe5175699.graph`
 - `lib/phases/agent-model-and-user-continuity/graph/AM8_lifeline_as_general_channel_and_reasoning_upgrade-6413a4c688ff13df.graph`
 - `lib/phases/agent-model-and-user-continuity/graph/AM9_get_to_know_you_and_idea_capture-32fca166c640cfd4.graph`
+- `lib/phases/agent-model-and-user-continuity/graph/_superseded/AM6_perplexity_confidence_loop-200f6a2a6a5cf5dd.graph`
 - `lib/phases/clearglass-agent-suite-and-cfr-loom/TX10_component_registry_discipline.phase`
 - `lib/phases/clearglass-agent-suite-and-cfr-loom/TX11_plugin_architecture_decision.phase`
 - `lib/phases/clearglass-agent-suite-and-cfr-loom/TX14_plugin_system_v1_build.phase`
@@ -10258,7 +10843,8 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/copilot-autonomous/graph/CA4_connections-fd002fc2bc10c045.graph`
 - `lib/phases/copilot-autonomous/graph/CA5_system_control_and_clearglass-292f947e788fddeb.graph`
 - `lib/phases/copilot-autonomous/graph/CA6_self_building_commands-4fc1ad9fd3f90dd6.graph`
-- `lib/phases/copilot-autonomous/graph/CA7_constant_autonomy-bcaaa823adb0c656.graph`
+- `lib/phases/copilot-autonomous/graph/CA7_constant_autonomy-fbcc8e9d8af7ed20.graph`
+- `lib/phases/copilot-autonomous/graph/_superseded/CA7_constant_autonomy-bcaaa823adb0c656.graph`
 - `lib/phases/copilot-awareness-routing/CA2_tool_self_awareness.phase`
 - `lib/phases/copilot-awareness-routing/CA6_routing_config.phase`
 - `lib/phases/copilot-awareness-routing/graph/CA2_tool_self_awareness-27716cb40c8eca89.graph`
@@ -10275,12 +10861,11 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/copilot-guardian-cos-expansion/graph/GA3_guardian_userscript_capability_wiring-378f86881837b81c.graph`
 - `lib/phases/copilot-guardian-cos-expansion/graph/GA6_spec_builder_depth-d8dcc592e1ac180c.graph`
 - `lib/phases/copilot-guardian-cos-expansion/graph/GA8_sse_announcements-2285f347862e5b5c.graph`
-- `lib/phases/copilot-omniscience/P2_persistence_threaded.phase`
 - `lib/phases/copilot-omniscience/P4_gate_never_actually_verified.phase`
 - `lib/phases/copilot-omniscience/P6_every_system_reachable.phase`
-- `lib/phases/copilot-omniscience/graph/P2_persistence_threaded-0abc56b443205734.graph`
-- `lib/phases/copilot-omniscience/graph/P4_gate_never_actually_verified-c081947773f7a8cc.graph`
+- `lib/phases/copilot-omniscience/graph/P4_gate_never_actually_verified-8d7d2e038d509427.graph`
 - `lib/phases/copilot-omniscience/graph/P6_every_system_reachable-7d719f5d40d918b1.graph`
+- `lib/phases/copilot-omniscience/graph/_superseded/P4_gate_never_actually_verified-c081947773f7a8cc.graph`
 - `lib/phases/cortex-schema-registry/P1_schema_table_in_cortex.phase`
 - `lib/phases/cortex-schema-registry/P2_conformance_check_lib.phase`
 - `lib/phases/cortex-schema-registry/P5_expectation_for_consumers.phase`
@@ -10306,14 +10891,14 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/idearium-repository-overhaul/graph/MCO-E_roadmap_ui-b86c0d6b1a69cd1d.graph`
 - `lib/phases/idearium-repository-overhaul/graph/MCO-G_git_cicd_credentials-209210182fab359f.graph`
 - `lib/phases/idearium-repository-overhaul/graph/MCO4_hooks_wires_flows_tools-1792b3e7c6ba3523.graph`
-- `lib/phases/idearium-repository-overhaul/graph/MCO6_compartment_ownership-ccbefa5d407a1b18.graph`
+- `lib/phases/idearium-repository-overhaul/graph/MCO6_compartment_ownership-e6332bb58736f1e3.graph`
 - `lib/phases/idearium-repository-overhaul/graph/_superseded/MCO-E_roadmap_ui-05dd511a8ef21910.graph`
+- `lib/phases/idearium-repository-overhaul/graph/_superseded/MCO6_compartment_ownership-ccbefa5d407a1b18.graph`
 - `lib/phases/nexus-architecture-rebuild/P10_safe_apply_verify_before_merge.phase`
 - `lib/phases/nexus-architecture-rebuild/P11_agent_council.phase`
 - `lib/phases/nexus-architecture-rebuild/P12_fault_logging_first_class.phase`
 - `lib/phases/nexus-architecture-rebuild/P13_roundtable_shared_council_chat.phase`
 - `lib/phases/nexus-architecture-rebuild/P14_emergence_axioms_endstate.phase`
-- `lib/phases/nexus-architecture-rebuild/P20_intelligence_reads_present_not_oldest.phase`
 - `lib/phases/nexus-architecture-rebuild/P2_autopilot_spawn_crash.phase`
 - `lib/phases/nexus-architecture-rebuild/P8_hat_forge_command.phase`
 - `lib/phases/nexus-architecture-rebuild/P9_multi_agent_parallel_dispatch.phase`
@@ -10322,28 +10907,27 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/nexus-architecture-rebuild/graph/P12_fault_logging_first_class-45cc2cf048e77d57.graph`
 - `lib/phases/nexus-architecture-rebuild/graph/P13_roundtable_shared_council_chat-bbfce2d577125626.graph`
 - `lib/phases/nexus-architecture-rebuild/graph/P14_emergence_axioms_endstate-7c968ba80520bc34.graph`
-- `lib/phases/nexus-architecture-rebuild/graph/P20_intelligence_reads_present_not_oldest-a58469a80f09bd67.graph`
 - `lib/phases/nexus-architecture-rebuild/graph/P2_autopilot_spawn_crash-7b3595f0354c6063.graph`
 - `lib/phases/nexus-architecture-rebuild/graph/P8_hat_forge_command-dfd13349bbd7e4e9.graph`
 - `lib/phases/nexus-architecture-rebuild/graph/P9_multi_agent_parallel_dispatch-8ad7c5128e9ee3f3.graph`
 - `lib/phases/nexus-live-mind/P3_diagnostic_kernel.phase`
 - `lib/phases/nexus-live-mind/P6_copilot_programmable.phase`
-- `lib/phases/nexus-live-mind/graph/P3_diagnostic_kernel-75ac0a6dcf420224.graph`
-- `lib/phases/nexus-live-mind/graph/P6_copilot_programmable-52e733c13ed35b06.graph`
+- `lib/phases/nexus-live-mind/graph/P3_diagnostic_kernel-18615a25df10af8b.graph`
+- `lib/phases/nexus-live-mind/graph/P6_copilot_programmable-aa8ea0b8ea0f0c37.graph`
+- `lib/phases/nexus-live-mind/graph/_superseded/P3_diagnostic_kernel-75ac0a6dcf420224.graph`
+- `lib/phases/nexus-live-mind/graph/_superseded/P3_diagnostic_kernel-9d8fd727a94f0524.graph`
+- `lib/phases/nexus-live-mind/graph/_superseded/P6_copilot_programmable-52e733c13ed35b06.graph`
 - `lib/phases/nexus-observability-tablet/OB11_edge_case_mapping.phase`
 - `lib/phases/nexus-observability-tablet/OB3_movement_map.phase`
-- `lib/phases/nexus-observability-tablet/OB5_tablet_modules.phase`
 - `lib/phases/nexus-observability-tablet/graph/OB11_edge_case_mapping-be0ff5bccc30824b.graph`
 - `lib/phases/nexus-observability-tablet/graph/OB3_movement_map-1750f2d80be7b16d.graph`
-- `lib/phases/nexus-observability-tablet/graph/OB5_tablet_modules-63020901121548d5.graph`
 - `lib/phases/nexus-repo-compartment-and-rich-dispatch/AG1_agent_nodes_sorted_by_provider.phase`
 - `lib/phases/nexus-repo-compartment-and-rich-dispatch/GC1_global_component_reuse_store.phase`
 - `lib/phases/nexus-repo-compartment-and-rich-dispatch/RD1_multi_file_response_parser.phase`
-- `lib/phases/nexus-repo-compartment-and-rich-dispatch/RD2_response_to_multiple_artifact_types.phase`
 - `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/AG1_agent_nodes_sorted_by_provider-244704b3a3825cc8.graph`
-- `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/GC1_global_component_reuse_store-7caeeeea63576bfe.graph`
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/GC1_global_component_reuse_store-5905dedcc5f2f956.graph`
 - `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/RD1_multi_file_response_parser-747cf5517c059840.graph`
-- `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/RD2_response_to_multiple_artifact_types-b35f25d3c582de18.graph`
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/graph/_superseded/GC1_global_component_reuse_store-7caeeeea63576bfe.graph`
 - `lib/phases/nexus-repository-system-build/MCO3_snapshot_compliance.phase`
 - `lib/phases/nexus-repository-system-build/MCO4_hooks_wires_flows_tools.phase`
 - `lib/phases/nexus-repository-system-build/MCO7_nexus_systems_as_repo_compartments.phase`
@@ -10400,16 +10984,16 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/phases/repair-contract-and-loom-hub/R9_ui_design_philosophy.phase`
 - `lib/phases/repair-contract-and-loom-hub/graph/R10_relational_context_and_reuse-0e23e7835362642d.graph`
 - `lib/phases/repair-contract-and-loom-hub/graph/R1_repair_contract_schema-3dd078c3c6681b99.graph`
-- `lib/phases/repair-contract-and-loom-hub/graph/R2_real_snapshot_rollback-b4af0c3b6772dee3.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R2_real_snapshot_rollback-b681fb6ca7cb6813.graph`
 - `lib/phases/repair-contract-and-loom-hub/graph/R3_autonomous_repair_trigger-4f6cbfa55d7722d6.graph`
 - `lib/phases/repair-contract-and-loom-hub/graph/R4_loom_ledger_awareness-605c42ef21895483.graph`
 - `lib/phases/repair-contract-and-loom-hub/graph/R5_loom_visual_map-486b78f53c8cc3c0.graph`
 - `lib/phases/repair-contract-and-loom-hub/graph/R6_living_documentation-52d5fcd6b04a85b2.graph`
-- `lib/phases/repair-contract-and-loom-hub/graph/R7_fault_taxonomy_reconnection-3fb547b4cfbe5881.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/R7_fault_taxonomy_reconnection-88c6c02aa5089a74.graph`
 - `lib/phases/repair-contract-and-loom-hub/graph/R8_ui_diagnostic_surfaces_wired_together-89ea8783a73fb339.graph`
 - `lib/phases/repair-contract-and-loom-hub/graph/R9_ui_design_philosophy-bb1f4bfdb151ae73.graph`
-- `lib/phases/rich-atlas/AT2_atlas_editor.phase`
-- `lib/phases/rich-atlas/graph/AT2_atlas_editor-a1b09cdf79d9b614.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/_superseded/R2_real_snapshot_rollback-b4af0c3b6772dee3.graph`
+- `lib/phases/repair-contract-and-loom-hub/graph/_superseded/R7_fault_taxonomy_reconnection-3fb547b4cfbe5881.graph`
 
 </details>
 
@@ -10464,26 +11048,6 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`mesh/` · 14 files</summary>
-
-- `mesh/README.md`
-- `mesh/config.js`
-- `mesh/daemons.js`
-- `mesh/install.js`
-- `mesh/lib/canvas-persistence.js`
-- `mesh/lib/crypto-engine.js`
-- `mesh/lib/ddns.js`
-- `mesh/lib/dns-server.js`
-- `mesh/lib/firewall.js`
-- `mesh/lib/host-rotation.js`
-- `mesh/lib/key-manager.js`
-- `mesh/lib/mesh-snr-filter.js`
-- `mesh/lib/port-registry.js`
-- `mesh/lib/reverse-proxy.js`
-
-</details>
-
-<details>
 <summary>`meta/` · 4 files</summary>
 
 - `meta/adversary-suite.js` — // ── lib/adversary-suite.js ──────────────────────────────────────────────────── // UUID:…
@@ -10517,66 +11081,6 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`remote-desktop/` · 54 files</summary>
-
-- `remote-desktop/README.md`
-- `remote-desktop/bridge-electron/assets/icon.png`
-- `remote-desktop/bridge-electron/assets/tray-icon.png`
-- `remote-desktop/bridge-electron/main.js`
-- `remote-desktop/bridge-electron/package.json`
-- `remote-desktop/bridge-electron/preload.js`
-- `remote-desktop/bridge-os-core/README.md`
-- `remote-desktop/bridge-os-core/bridge-IME/index.js`
-- `remote-desktop/bridge-os-core/bridge-IME/tests/test-ime-deep.js`
-- `remote-desktop/bridge-os-core/bridge-IME/tests/test-ime.js`
-- `remote-desktop/bridge-os-core/bridge-contracts/index.js`
-- `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts-deep.js`
-- `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`
-- `remote-desktop/bridge-os-core/bridge-core/bus.js`
-- `remote-desktop/bridge-os-core/bridge-core/crypto-engine.js`
-- `remote-desktop/bridge-os-core/bridge-core/index.js`
-- `remote-desktop/bridge-os-core/bridge-core/registry/index.js`
-- `remote-desktop/bridge-os-core/bridge-core/siso/index.js`
-- `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
-- `remote-desktop/bridge-os-core/bridge-data/index.js`
-- `remote-desktop/bridge-os-core/bridge-data/tests/test-data-deep.js`
-- `remote-desktop/bridge-os-core/bridge-data/tests/test-data.js`
-- `remote-desktop/bridge-os-core/bridge-heartbeat/index.js`
-- `remote-desktop/bridge-os-core/bridge-heartbeat/tests/test-heartbeat-deep.js`
-- `remote-desktop/bridge-os-core/bridge-heartbeat/tests/test-heartbeat.js`
-- `remote-desktop/bridge-os-core/bridge-identity/identity.js`
-- `remote-desktop/bridge-os-core/bridge-identity/index.js`
-- `remote-desktop/bridge-os-core/bridge-identity/keystore/index.js`
-- `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity-deep.js`
-- `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity.js`
-- `remote-desktop/bridge-os-core/bridge-node/boot.js`
-- `remote-desktop/bridge-os-core/bridge-sngate/index.js`
-- `remote-desktop/bridge-os-core/bridge-sngate/tests/test-sngate-deep.js`
-- `remote-desktop/bridge-os-core/bridge-sngate/tests/test-sngate.js`
-- `remote-desktop/bridge-os-core/index.js`
-- `remote-desktop/bridge-os-core/package.json`
-- `remote-desktop/contracts.js`
-- `remote-desktop/host.html`
-- `remote-desktop/input-auth.js`
-- `remote-desktop/input-injector.js`
-- `remote-desktop/package-lock.json`
-- `remote-desktop/package.json`
-- `remote-desktop/remote-desktop.spec`
-- `remote-desktop/scripts/start-signal-background.bat`
-- `remote-desktop/scripts/stop-signal-background.bat`
-- `remote-desktop/session-token.js`
-- `remote-desktop/signal.js`
-- `remote-desktop/tests/test-input-auth.js`
-- `remote-desktop/tests/test-input-injector.js`
-- `remote-desktop/tests/test-input-pipeline.js`
-- `remote-desktop/tests/test-session-token.js`
-- `remote-desktop/tests/test-signal-integration.js`
-- `remote-desktop/viewer.html`
-
-</details>
-
-<details>
 <summary>`scripts/` · 17 files</summary>
 
 - `scripts/analyze-methodless-routes.js`
@@ -10600,33 +11104,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`seams/` · 1 file</summary>
-
-- `seams/seam-contracts.js` — NEXUS Seam Contract Registry §SEAM: Growth happens at the seam. Every seam is declared here.
-
-</details>
-
-<details>
-<summary>`security/` · 2 files</summary>
-
-- `security/e2e-channel.js`
-- `security/signaling-envelope.js` — signed envelope for the signaling channel (join/offer/answer/ice), closing remote-desktop.spec phase 6's
-
-</details>
-
-<details>
 <summary>`sentinel/` · 1 file</summary>
 
 - `sentinel/interaction-contract.json`
-
-</details>
-
-<details>
-<summary>`service/` · 3 files</summary>
-
-- `service/cortex-service.js` — // service/cortex-service.js — Cortex ICO Kernel Service // UUID:…
-- `service/guardian-service.js` — // service/guardian-service.js — Guardian ICO Kernel Service // UUID:…
-- `service/idearium-service.js` — // service/idearium-service.js — Idearium ICO Kernel Service // UUID:…
 
 </details>
 
@@ -10657,15 +11137,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`tablet/` · 2 files</summary>
-
-- `tablet/index.html`
-- `tablet/map3d.html`
-
-</details>
-
-<details>
-<summary>`tests/` · 823 files</summary>
+<summary>`tests/` · 824 files</summary>
 
 - `tests/audit-results.json`
 - `tests/brutal.test.js`
@@ -10869,6 +11341,7 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-approval-chain.test.js`
 - `tests/modules/test-architect-pulse-migration.js`
 - `tests/modules/test-architect.test.js`
+- `tests/modules/test-architecture-migrate.test.js`
 - `tests/modules/test-artifact-index-jaa.test.js`
 - `tests/modules/test-artifact-namer.js`
 - `tests/modules/test-ask-tools-shape.js`
@@ -11657,9 +12130,9 @@ Core is 4419 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>the release notes · 437 files (each is in the version history below, in his words)</summary>
+<summary>the release notes · 440 files (each is in the version history below, in his words)</summary>
 
-`CHANGELOG-0.60.233.md` · `CHANGELOG-0.60.232.md` · `CHANGELOG-0.60.231.md` · `CHANGELOG-0.60.230.md` · `CHANGELOG-0.60.229.md` · `CHANGELOG-0.60.228.md` · `CHANGELOG-0.60.227.md` · `CHANGELOG-0.60.226.md` · `CHANGELOG-0.60.225.md` · `CHANGELOG-0.60.224.md` · `CHANGELOG-0.60.223.md` · `CHANGELOG-0.60.222.md` · `CHANGELOG-0.60.221.md` · `CHANGELOG-0.60.220.md` · `CHANGELOG-0.60.219.md` · `CHANGELOG-0.60.218.md` · `CHANGELOG-0.60.217.md` · `CHANGELOG-0.60.216.md` · `CHANGELOG-0.60.215.md` · `CHANGELOG-0.60.214.md` · `CHANGELOG-0.60.213.md` · `CHANGELOG-0.60.212.md` · `CHANGELOG-0.60.211.md` · `CHANGELOG-0.60.210.md` · `CHANGELOG-0.60.209.md` · `CHANGELOG-0.60.208.md` · `CHANGELOG-0.60.207.md` · `CHANGELOG-0.60.206.md` · `CHANGELOG-0.60.205.md` · `CHANGELOG-0.60.204.md` · `CHANGELOG-0.60.203.md` · `CHANGELOG-0.60.202.md` · `CHANGELOG-0.60.201.md` · `CHANGELOG-0.60.200.md` · `CHANGELOG-0.60.199.md` · `CHANGELOG-0.60.198.md` · `CHANGELOG-0.60.197.md` · `CHANGELOG-0.60.196.md` · `CHANGELOG-0.60.195.md` · `CHANGELOG-0.60.194.md` · `CHANGELOG-0.60.193.md` · `CHANGELOG-0.60.192.md` · `CHANGELOG-0.60.191.md` · `CHANGELOG-0.60.190.md` · `CHANGELOG-0.60.189.md` · `CHANGELOG-0.60.188.md` · `CHANGELOG-0.60.187.md` · `CHANGELOG-0.60.186.md` · `CHANGELOG-0.60.185.md` · `CHANGELOG-0.60.184.md` · `CHANGELOG-0.60.183.md` · `CHANGELOG-0.60.182.md` · `CHANGELOG-0.60.181.md` · `CHANGELOG-0.60.180.md` · `CHANGELOG-0.60.179.md` · `CHANGELOG-0.60.178.md` · `CHANGELOG-0.60.177.md` · `CHANGELOG-0.60.176.md` · `CHANGELOG-0.60.175.md` · `CHANGELOG-0.60.174.md` · `CHANGELOG-0.60.173.md` · `CHANGELOG-0.60.172.md` · `CHANGELOG-0.60.171.md` · `CHANGELOG-0.60.170.md` · `CHANGELOG-0.60.168.md` · `CHANGELOG-0.60.167.md` · `CHANGELOG-0.60.166.md` · `CHANGELOG-0.60.165.md` · `CHANGELOG-0.60.164.md` · `CHANGELOG-0.60.163.md` · `CHANGELOG-0.60.162.md` · `CHANGELOG-0.60.161.md` · `CHANGELOG-0.60.160.md` · `CHANGELOG-0.60.159.md` · `CHANGELOG-0.60.158.md` · `CHANGELOG-0.60.157.md` · `CHANGELOG-0.60.156.md` · `CHANGELOG-0.60.155.md` · `CHANGELOG-0.60.154.md` · `CHANGELOG-0.60.153.md` · `CHANGELOG-0.60.152.md` · `CHANGELOG-0.60.151.md` · `CHANGELOG-0.60.150.md` · `CHANGELOG-0.60.149.md` · `CHANGELOG-0.60.148.md` · `CHANGELOG-0.60.147.md` · `CHANGELOG-0.60.146.md` · `CHANGELOG-0.60.145.md` · `CHANGELOG-0.60.144.md` · `CHANGELOG-0.60.143.md` · `CHANGELOG-0.60.142.md` · `CHANGELOG-0.60.141.md` · `CHANGELOG-0.60.140.md` · `CHANGELOG-0.60.139.md` · `CHANGELOG-0.60.138.md` · `CHANGELOG-0.60.137.md` · `CHANGELOG-0.60.136.md` · `CHANGELOG-0.60.135.md` · `CHANGELOG-0.60.134.md` · `CHANGELOG-0.60.133.md` · `CHANGELOG-0.60.132.md` · `CHANGELOG-0.60.131.md` · `CHANGELOG-0.60.130.md` · `CHANGELOG-0.60.129.md` · `CHANGELOG-0.60.128.md` · `CHANGELOG-0.60.127.md` · `CHANGELOG-0.60.126.md` · `CHANGELOG-0.60.125.md` · `CHANGELOG-0.60.124.md` · `CHANGELOG-0.60.123.md` · `CHANGELOG-0.60.122.md` · `CHANGELOG-0.60.121.md` · `CHANGELOG-0.60.120.md` · `CHANGELOG-0.60.119.md` · `CHANGELOG-0.60.118.md` · `CHANGELOG-0.60.117.md` · `CHANGELOG-0.60.116.md` · `CHANGELOG-0.60.115.md` · `CHANGELOG-0.60.114.md` · `CHANGELOG-0.60.113.md` · `CHANGELOG-0.60.112.md` · `CHANGELOG-0.60.111.md` · `CHANGELOG-0.60.110.md` · `CHANGELOG-0.60.109.md` · `CHANGELOG-0.60.108.md` · `CHANGELOG-0.60.107.md` · `CHANGELOG-0.60.106.md` · `CHANGELOG-0.60.105.md` · `CHANGELOG-0.60.104.md` · `CHANGELOG-0.60.103.md` · `CHANGELOG-0.60.102.md` · `CHANGELOG-0.60.101.md` · `CHANGELOG-0.60.100.md` · `CHANGELOG-0.60.99.md` · `CHANGELOG-0.60.98.md` · `CHANGELOG-0.60.97.md` · `CHANGELOG-0.60.96.md` · `CHANGELOG-0.60.95.md` · `CHANGELOG-0.60.94.md` · `CHANGELOG-0.60.93.md` · `CHANGELOG-0.60.92.md` · `CHANGELOG-0.60.91.md` · `CHANGELOG-0.60.90.md` · `CHANGELOG-0.60.89.md` · `CHANGELOG-0.60.88.md` · `CHANGELOG-0.60.87.md` · `CHANGELOG-0.60.86.md` · `CHANGELOG-0.60.85.md` · `CHANGELOG-0.60.84.md` · `CHANGELOG-0.60.83.md` · `CHANGELOG-0.60.82.md` · `CHANGELOG-0.60.81.md` · `CHANGELOG-0.60.80.md` · `CHANGELOG-0.60.79.md` · `CHANGELOG-0.60.78.md` · `CHANGELOG-0.60.77.md` · `CHANGELOG-0.60.76.md` · `CHANGELOG-0.60.75.md` · `CHANGELOG-0.60.74.md` · `CHANGELOG-0.60.73.md` · `CHANGELOG-0.60.72.md` · `CHANGELOG-0.60.71.md` · `CHANGELOG-0.60.70.md` · `CHANGELOG-0.60.69.md` · `CHANGELOG-0.60.68.md` · `CHANGELOG-0.60.67.md` · `CHANGELOG-0.60.66.md` · `CHANGELOG-0.60.65.md` · `CHANGELOG-0.60.64.md` · `CHANGELOG-0.60.63.md` · `CHANGELOG-0.60.62.md` · `CHANGELOG-0.60.61.md` · `CHANGELOG-0.60.60.md` · `CHANGELOG-0.60.59.md` · `CHANGELOG-0.60.58.md` · `CHANGELOG-0.60.57.md` · `CHANGELOG-0.60.56.md` · `CHANGELOG-0.60.55.md` · `CHANGELOG-0.60.54.md` · `CHANGELOG-0.60.53.md` · `CHANGELOG-0.60.52.md` · `CHANGELOG-0.60.51.md` · `CHANGELOG-0.60.50.md` · `CHANGELOG-0.60.49.md` · `CHANGELOG-0.60.48.md` · `CHANGELOG-0.60.47.md` · `CHANGELOG-0.60.46.md` · `CHANGELOG-0.60.45.md` · `CHANGELOG-0.60.44.md` · `CHANGELOG-0.60.43.md` · `CHANGELOG-0.60.42.md` · `CHANGELOG-0.60.41.md` · `CHANGELOG-0.60.40.md` · `CHANGELOG-0.60.39.md` · `CHANGELOG-0.60.38.md` · `CHANGELOG-0.60.37.md` · `CHANGELOG-0.60.36.md` · `CHANGELOG-0.60.35.md` · `CHANGELOG-0.60.34.md` · `CHANGELOG-0.60.33.md` · `CHANGELOG-0.60.32.md` · `CHANGELOG-0.60.31.md` · `CHANGELOG-0.60.30.md` · `CHANGELOG-0.60.29.md` · `CHANGELOG-0.60.28.md` · `CHANGELOG-0.60.27.md` · `CHANGELOG-0.60.26.md` · `CHANGELOG-0.60.21.md` · `CHANGELOG-0.60.20.md` · `CHANGELOG-0.60.19.md` · `CHANGELOG-0.60.18.md` · `CHANGELOG-0.60.17.md` · `CHANGELOG-0.60.16.md` · `CHANGELOG-0.60.15.md` · `CHANGELOG-0.60.14.md` · `CHANGELOG-0.60.13.md` · `CHANGELOG-0.60.12.md` · `CHANGELOG-0.60.11.md` · `CHANGELOG-0.60.10.md` · `CHANGELOG-0.60.9.md` · `CHANGELOG-0.60.8.md` · `CHANGELOG-0.60.7.md` · `CHANGELOG-0.60.6.md` · `CHANGELOG-0.60.5.md` · `CHANGELOG-0.60.4.md` · `CHANGELOG-0.60.3.md` · `CHANGELOG-0.60.2.md` · `CHANGELOG-0.60.1.md` · `CHANGELOG-0.60.0.md` · `CHANGELOG-0.59.15.md` · `CHANGELOG-0.59.14.md` · `CHANGELOG-0.59.13.md` · `CHANGELOG-0.59.12.md` · `CHANGELOG-0.59.11.md` · `CHANGELOG-0.59.10.md` · `CHANGELOG-0.59.9.md` · `CHANGELOG-0.59.8.md` · `CHANGELOG-0.59.7.md` · `CHANGELOG-0.59.6.md` · `CHANGELOG-0.59.5.md` · `CHANGELOG-0.59.4.md` · `CHANGELOG-0.59.3.md` · `CHANGELOG-0.59.2.md` · `CHANGELOG-0.59.1.md` · `CHANGELOG-0.59.0.md` · `CHANGELOG-0.58.0.md` · `CHANGELOG-0.57.1.md` · `CHANGELOG-0.57.0.md` · `CHANGELOG-0.56.0.md` · `CHANGELOG-0.55.2.md` · `CHANGELOG-0.55.1.md` · `CHANGELOG-0.55.0.md` · `CHANGELOG-0.54.2.md` · `CHANGELOG-0.54.1.md` · `CHANGELOG-0.54.0.md` · `CHANGELOG-0.53.0.md` · `CHANGELOG-0.52.0.md` · `CHANGELOG-0.51.0.md` · `CHANGELOG-0.50.0.md` · `CHANGELOG-0.49.0.md` · `CHANGELOG-0.48.0.md` · `CHANGELOG-0.47.0.md` · `CHANGELOG-0.46.0.md` · `CHANGELOG-0.45.0.md` · `CHANGELOG-0.44.0.md` · `CHANGELOG-0.43.0.md` · `CHANGELOG-0.42.0.md` · `CHANGELOG-0.41.0.md` · `CHANGELOG-0.40.1.md` · `CHANGELOG-0.40.0.md` · `CHANGELOG-0.39.376.md` · `CHANGELOG-0.39.375.md` · `CHANGELOG-0.39.374.md` · `CHANGELOG-0.39.373.md` · `CHANGELOG-0.39.372.md` · `CHANGELOG-0.39.371.md` · `CHANGELOG-0.39.370.md` · `CHANGELOG-0.39.369.md` · `CHANGELOG-0.39.368.md` · `CHANGELOG-0.39.367.md` · `CHANGELOG-0.39.366.md` · `CHANGELOG-0.39.365.md` · `CHANGELOG-0.39.364.md` · `CHANGELOG-0.39.363.md` · `CHANGELOG-0.39.362.md` · `CHANGELOG-0.39.361.md` · `CHANGELOG-0.39.360.md` · `CHANGELOG-0.39.359.md` · `CHANGELOG-0.39.358.md` · `CHANGELOG-0.39.357.md` · `CHANGELOG-0.39.356.md` · `CHANGELOG-0.39.355.md` · `CHANGELOG-0.39.354.md` · `CHANGELOG-0.39.353.md` · `CHANGELOG-0.39.352.md` · `CHANGELOG-0.39.351.md` · `CHANGELOG-0.39.350.md` · `CHANGELOG-0.39.349.md` · `CHANGELOG-0.39.348.md` · `CHANGELOG-0.39.347.md` · `CHANGELOG-0.39.346.md` · `CHANGELOG-0.39.345.md` · `CHANGELOG-0.39.344.md` · `CHANGELOG-0.39.343.md` · `CHANGELOG-0.39.342.md` · `CHANGELOG-0.39.341.md` · `CHANGELOG-0.39.340.md` · `CHANGELOG-0.39.339.md` · `CHANGELOG-0.39.338.md` · `CHANGELOG-0.39.337.md` · `CHANGELOG-0.39.336.md` · `CHANGELOG-0.39.335.md` · `CHANGELOG-0.39.334.md` · `CHANGELOG-0.39.333.md` · `CHANGELOG-0.39.332.md` · `CHANGELOG-0.39.331.md` · `CHANGELOG-0.39.330.md` · `CHANGELOG-0.39.329.md` · `CHANGELOG-0.39.328.md` · `CHANGELOG-0.39.327.md` · `CHANGELOG-0.39.326.md` · `CHANGELOG-0.39.325.md` · `CHANGELOG-0.39.324.md` · `CHANGELOG-0.39.323.md` · `CHANGELOG-0.39.322.md` · `CHANGELOG-0.39.321.md` · `CHANGELOG-0.39.320.md` · `CHANGELOG-0.39.319.md` · `CHANGELOG-0.39.318.md` · `CHANGELOG-0.39.317.md` · `CHANGELOG-0.39.316.md` · `CHANGELOG-0.39.315.md` · `CHANGELOG-0.39.314.md` · `CHANGELOG-0.39.313.md` · `CHANGELOG-0.39.312.md` · `CHANGELOG-0.39.311.md` · `CHANGELOG-0.39.310.md` · `CHANGELOG-0.39.309.md` · `CHANGELOG-0.39.308.md` · `CHANGELOG-0.39.307.md` · `CHANGELOG-0.39.306.md` · `CHANGELOG-0.39.305.md` · `CHANGELOG-0.39.304.md` · `CHANGELOG-0.39.303.md` · `CHANGELOG-0.39.302.md` · `CHANGELOG-0.39.301.md` · `CHANGELOG-0.39.300.md` · `CHANGELOG-0.39.299.md` · `CHANGELOG-0.39.298.md` · `CHANGELOG-0.39.297.md` · `CHANGELOG-0.39.296.md` · `CHANGELOG-0.39.295.md` · `CHANGELOG-0.39.294.md` · `CHANGELOG-0.39.293.md` · `CHANGELOG-0.39.292.md` · `CHANGELOG-0.39.291.md` · `CHANGELOG-0.39.290.md` · `CHANGELOG-0.39.289.md` · `CHANGELOG-0.39.288.md` · `CHANGELOG-0.39.287.md` · `CHANGELOG-0.39.286.md` · `CHANGELOG-0.39.285.md` · `CHANGELOG-0.39.284.md` · `CHANGELOG-0.39.283.md` · `CHANGELOG-0.39.282.md` · `CHANGELOG-0.39.281.md` · `CHANGELOG-0.39.280.md` · `CHANGELOG-0.39.279.md` · `CHANGELOG-0.39.278.md` · `CHANGELOG-0.39.277.md` · `CHANGELOG-0.39.276.md` · `CHANGELOG-0.39.275.md` · `CHANGELOG-0.39.274.md` · `CHANGELOG-0.39.273.md` · `CHANGELOG-0.39.272.md` · `CHANGELOG-0.39.271.md` · `CHANGELOG-0.39.270.md` · `CHANGELOG-0.39.269.md` · `CHANGELOG-0.39.268.md` · `CHANGELOG-0.39.267.md` · `CHANGELOG-0.39.266.md` · `CHANGELOG-0.39.264.md` · `CHANGELOG-0.39.263.md` · `CHANGELOG-0.39.262.md` · `CHANGELOG-0.39.261.md` · `CHANGELOG-0.39.260.md` · `CHANGELOG-0.39.259.md` · `CHANGELOG-0.39.258.md` · `CHANGELOG-0.39.257.md` · `CHANGELOG-0.39.256.md` · `CHANGELOG-0.39.255.md` · `CHANGELOG-0.39.254.md` · `CHANGELOG-0.39.253.md` · `CHANGELOG-0.39.252.md` · `CHANGELOG-0.39.251.md` · `CHANGELOG-0.39.250.md` · `CHANGELOG-0.39.249.md` · `CHANGELOG-0.39.248.md` · `CHANGELOG-0.39.247.md` · `CHANGELOG-0.39.246.md` · `CHANGELOG-0.39.245.md` · `CHANGELOG-0.39.244.md` · `CHANGELOG-0.39.243.md` · `CHANGELOG-0.39.242.md` · `CHANGELOG-0.39.241.md` · `CHANGELOG-0.39.240.md` · `CHANGELOG-0.39.239.md` · `CHANGELOG-0.39.238.md` · `CHANGELOG-0.39.237.md` · `CHANGELOG-0.39.236.md` · `CHANGELOG-0.39.228.md` · `CHANGELOG-0.39.227.md` · `CHANGELOG-0.39.223.md` · `CHANGELOG-0.39.194.md` · `CHANGELOG-0.39.193.md` · `CHANGELOG-0.39.192.md` · `CHANGELOG-0.39.191.md` · `CHANGELOG-0.39.190.md` · `CHANGELOG-0.39.188.md` · `CHANGELOG-0.39.182.md` · `CHANGELOG-0.39.181.md` · `CHANGELOG-0.39.179.md` · `CHANGELOG-0.39.178.md` · `CHANGELOG-0.39.177.md` · `CHANGELOG-0.39.176.md` · `CHANGELOG-0.39.175.md` · `CHANGELOG-0.39.174.md` · `CHANGELOG-0.39.173.md` · `CHANGELOG-0.39.172.md` · `CHANGELOG-0.39.170.md` · `CHANGELOG-0.39.169.md` · `CHANGELOG-0.39.168.md` · `CHANGELOG-0.39.167.md` · `CHANGELOG-0.39.166.md` · `CHANGELOG-0.39.165.md` · `CHANGELOG-0.39.144.md` · `CHANGELOG-0.39.144-part2.md`
+`CHANGELOG-0.60.236.md` · `CHANGELOG-0.60.235.md` · `CHANGELOG-0.60.234.md` · `CHANGELOG-0.60.233.md` · `CHANGELOG-0.60.232.md` · `CHANGELOG-0.60.231.md` · `CHANGELOG-0.60.230.md` · `CHANGELOG-0.60.229.md` · `CHANGELOG-0.60.228.md` · `CHANGELOG-0.60.227.md` · `CHANGELOG-0.60.226.md` · `CHANGELOG-0.60.225.md` · `CHANGELOG-0.60.224.md` · `CHANGELOG-0.60.223.md` · `CHANGELOG-0.60.222.md` · `CHANGELOG-0.60.221.md` · `CHANGELOG-0.60.220.md` · `CHANGELOG-0.60.219.md` · `CHANGELOG-0.60.218.md` · `CHANGELOG-0.60.217.md` · `CHANGELOG-0.60.216.md` · `CHANGELOG-0.60.215.md` · `CHANGELOG-0.60.214.md` · `CHANGELOG-0.60.213.md` · `CHANGELOG-0.60.212.md` · `CHANGELOG-0.60.211.md` · `CHANGELOG-0.60.210.md` · `CHANGELOG-0.60.209.md` · `CHANGELOG-0.60.208.md` · `CHANGELOG-0.60.207.md` · `CHANGELOG-0.60.206.md` · `CHANGELOG-0.60.205.md` · `CHANGELOG-0.60.204.md` · `CHANGELOG-0.60.203.md` · `CHANGELOG-0.60.202.md` · `CHANGELOG-0.60.201.md` · `CHANGELOG-0.60.200.md` · `CHANGELOG-0.60.199.md` · `CHANGELOG-0.60.198.md` · `CHANGELOG-0.60.197.md` · `CHANGELOG-0.60.196.md` · `CHANGELOG-0.60.195.md` · `CHANGELOG-0.60.194.md` · `CHANGELOG-0.60.193.md` · `CHANGELOG-0.60.192.md` · `CHANGELOG-0.60.191.md` · `CHANGELOG-0.60.190.md` · `CHANGELOG-0.60.189.md` · `CHANGELOG-0.60.188.md` · `CHANGELOG-0.60.187.md` · `CHANGELOG-0.60.186.md` · `CHANGELOG-0.60.185.md` · `CHANGELOG-0.60.184.md` · `CHANGELOG-0.60.183.md` · `CHANGELOG-0.60.182.md` · `CHANGELOG-0.60.181.md` · `CHANGELOG-0.60.180.md` · `CHANGELOG-0.60.179.md` · `CHANGELOG-0.60.178.md` · `CHANGELOG-0.60.177.md` · `CHANGELOG-0.60.176.md` · `CHANGELOG-0.60.175.md` · `CHANGELOG-0.60.174.md` · `CHANGELOG-0.60.173.md` · `CHANGELOG-0.60.172.md` · `CHANGELOG-0.60.171.md` · `CHANGELOG-0.60.170.md` · `CHANGELOG-0.60.168.md` · `CHANGELOG-0.60.167.md` · `CHANGELOG-0.60.166.md` · `CHANGELOG-0.60.165.md` · `CHANGELOG-0.60.164.md` · `CHANGELOG-0.60.163.md` · `CHANGELOG-0.60.162.md` · `CHANGELOG-0.60.161.md` · `CHANGELOG-0.60.160.md` · `CHANGELOG-0.60.159.md` · `CHANGELOG-0.60.158.md` · `CHANGELOG-0.60.157.md` · `CHANGELOG-0.60.156.md` · `CHANGELOG-0.60.155.md` · `CHANGELOG-0.60.154.md` · `CHANGELOG-0.60.153.md` · `CHANGELOG-0.60.152.md` · `CHANGELOG-0.60.151.md` · `CHANGELOG-0.60.150.md` · `CHANGELOG-0.60.149.md` · `CHANGELOG-0.60.148.md` · `CHANGELOG-0.60.147.md` · `CHANGELOG-0.60.146.md` · `CHANGELOG-0.60.145.md` · `CHANGELOG-0.60.144.md` · `CHANGELOG-0.60.143.md` · `CHANGELOG-0.60.142.md` · `CHANGELOG-0.60.141.md` · `CHANGELOG-0.60.140.md` · `CHANGELOG-0.60.139.md` · `CHANGELOG-0.60.138.md` · `CHANGELOG-0.60.137.md` · `CHANGELOG-0.60.136.md` · `CHANGELOG-0.60.135.md` · `CHANGELOG-0.60.134.md` · `CHANGELOG-0.60.133.md` · `CHANGELOG-0.60.132.md` · `CHANGELOG-0.60.131.md` · `CHANGELOG-0.60.130.md` · `CHANGELOG-0.60.129.md` · `CHANGELOG-0.60.128.md` · `CHANGELOG-0.60.127.md` · `CHANGELOG-0.60.126.md` · `CHANGELOG-0.60.125.md` · `CHANGELOG-0.60.124.md` · `CHANGELOG-0.60.123.md` · `CHANGELOG-0.60.122.md` · `CHANGELOG-0.60.121.md` · `CHANGELOG-0.60.120.md` · `CHANGELOG-0.60.119.md` · `CHANGELOG-0.60.118.md` · `CHANGELOG-0.60.117.md` · `CHANGELOG-0.60.116.md` · `CHANGELOG-0.60.115.md` · `CHANGELOG-0.60.114.md` · `CHANGELOG-0.60.113.md` · `CHANGELOG-0.60.112.md` · `CHANGELOG-0.60.111.md` · `CHANGELOG-0.60.110.md` · `CHANGELOG-0.60.109.md` · `CHANGELOG-0.60.108.md` · `CHANGELOG-0.60.107.md` · `CHANGELOG-0.60.106.md` · `CHANGELOG-0.60.105.md` · `CHANGELOG-0.60.104.md` · `CHANGELOG-0.60.103.md` · `CHANGELOG-0.60.102.md` · `CHANGELOG-0.60.101.md` · `CHANGELOG-0.60.100.md` · `CHANGELOG-0.60.99.md` · `CHANGELOG-0.60.98.md` · `CHANGELOG-0.60.97.md` · `CHANGELOG-0.60.96.md` · `CHANGELOG-0.60.95.md` · `CHANGELOG-0.60.94.md` · `CHANGELOG-0.60.93.md` · `CHANGELOG-0.60.92.md` · `CHANGELOG-0.60.91.md` · `CHANGELOG-0.60.90.md` · `CHANGELOG-0.60.89.md` · `CHANGELOG-0.60.88.md` · `CHANGELOG-0.60.87.md` · `CHANGELOG-0.60.86.md` · `CHANGELOG-0.60.85.md` · `CHANGELOG-0.60.84.md` · `CHANGELOG-0.60.83.md` · `CHANGELOG-0.60.82.md` · `CHANGELOG-0.60.81.md` · `CHANGELOG-0.60.80.md` · `CHANGELOG-0.60.79.md` · `CHANGELOG-0.60.78.md` · `CHANGELOG-0.60.77.md` · `CHANGELOG-0.60.76.md` · `CHANGELOG-0.60.75.md` · `CHANGELOG-0.60.74.md` · `CHANGELOG-0.60.73.md` · `CHANGELOG-0.60.72.md` · `CHANGELOG-0.60.71.md` · `CHANGELOG-0.60.70.md` · `CHANGELOG-0.60.69.md` · `CHANGELOG-0.60.68.md` · `CHANGELOG-0.60.67.md` · `CHANGELOG-0.60.66.md` · `CHANGELOG-0.60.65.md` · `CHANGELOG-0.60.64.md` · `CHANGELOG-0.60.63.md` · `CHANGELOG-0.60.62.md` · `CHANGELOG-0.60.61.md` · `CHANGELOG-0.60.60.md` · `CHANGELOG-0.60.59.md` · `CHANGELOG-0.60.58.md` · `CHANGELOG-0.60.57.md` · `CHANGELOG-0.60.56.md` · `CHANGELOG-0.60.55.md` · `CHANGELOG-0.60.54.md` · `CHANGELOG-0.60.53.md` · `CHANGELOG-0.60.52.md` · `CHANGELOG-0.60.51.md` · `CHANGELOG-0.60.50.md` · `CHANGELOG-0.60.49.md` · `CHANGELOG-0.60.48.md` · `CHANGELOG-0.60.47.md` · `CHANGELOG-0.60.46.md` · `CHANGELOG-0.60.45.md` · `CHANGELOG-0.60.44.md` · `CHANGELOG-0.60.43.md` · `CHANGELOG-0.60.42.md` · `CHANGELOG-0.60.41.md` · `CHANGELOG-0.60.40.md` · `CHANGELOG-0.60.39.md` · `CHANGELOG-0.60.38.md` · `CHANGELOG-0.60.37.md` · `CHANGELOG-0.60.36.md` · `CHANGELOG-0.60.35.md` · `CHANGELOG-0.60.34.md` · `CHANGELOG-0.60.33.md` · `CHANGELOG-0.60.32.md` · `CHANGELOG-0.60.31.md` · `CHANGELOG-0.60.30.md` · `CHANGELOG-0.60.29.md` · `CHANGELOG-0.60.28.md` · `CHANGELOG-0.60.27.md` · `CHANGELOG-0.60.26.md` · `CHANGELOG-0.60.21.md` · `CHANGELOG-0.60.20.md` · `CHANGELOG-0.60.19.md` · `CHANGELOG-0.60.18.md` · `CHANGELOG-0.60.17.md` · `CHANGELOG-0.60.16.md` · `CHANGELOG-0.60.15.md` · `CHANGELOG-0.60.14.md` · `CHANGELOG-0.60.13.md` · `CHANGELOG-0.60.12.md` · `CHANGELOG-0.60.11.md` · `CHANGELOG-0.60.10.md` · `CHANGELOG-0.60.9.md` · `CHANGELOG-0.60.8.md` · `CHANGELOG-0.60.7.md` · `CHANGELOG-0.60.6.md` · `CHANGELOG-0.60.5.md` · `CHANGELOG-0.60.4.md` · `CHANGELOG-0.60.3.md` · `CHANGELOG-0.60.2.md` · `CHANGELOG-0.60.1.md` · `CHANGELOG-0.60.0.md` · `CHANGELOG-0.59.15.md` · `CHANGELOG-0.59.14.md` · `CHANGELOG-0.59.13.md` · `CHANGELOG-0.59.12.md` · `CHANGELOG-0.59.11.md` · `CHANGELOG-0.59.10.md` · `CHANGELOG-0.59.9.md` · `CHANGELOG-0.59.8.md` · `CHANGELOG-0.59.7.md` · `CHANGELOG-0.59.6.md` · `CHANGELOG-0.59.5.md` · `CHANGELOG-0.59.4.md` · `CHANGELOG-0.59.3.md` · `CHANGELOG-0.59.2.md` · `CHANGELOG-0.59.1.md` · `CHANGELOG-0.59.0.md` · `CHANGELOG-0.58.0.md` · `CHANGELOG-0.57.1.md` · `CHANGELOG-0.57.0.md` · `CHANGELOG-0.56.0.md` · `CHANGELOG-0.55.2.md` · `CHANGELOG-0.55.1.md` · `CHANGELOG-0.55.0.md` · `CHANGELOG-0.54.2.md` · `CHANGELOG-0.54.1.md` · `CHANGELOG-0.54.0.md` · `CHANGELOG-0.53.0.md` · `CHANGELOG-0.52.0.md` · `CHANGELOG-0.51.0.md` · `CHANGELOG-0.50.0.md` · `CHANGELOG-0.49.0.md` · `CHANGELOG-0.48.0.md` · `CHANGELOG-0.47.0.md` · `CHANGELOG-0.46.0.md` · `CHANGELOG-0.45.0.md` · `CHANGELOG-0.44.0.md` · `CHANGELOG-0.43.0.md` · `CHANGELOG-0.42.0.md` · `CHANGELOG-0.41.0.md` · `CHANGELOG-0.40.1.md` · `CHANGELOG-0.40.0.md` · `CHANGELOG-0.39.376.md` · `CHANGELOG-0.39.375.md` · `CHANGELOG-0.39.374.md` · `CHANGELOG-0.39.373.md` · `CHANGELOG-0.39.372.md` · `CHANGELOG-0.39.371.md` · `CHANGELOG-0.39.370.md` · `CHANGELOG-0.39.369.md` · `CHANGELOG-0.39.368.md` · `CHANGELOG-0.39.367.md` · `CHANGELOG-0.39.366.md` · `CHANGELOG-0.39.365.md` · `CHANGELOG-0.39.364.md` · `CHANGELOG-0.39.363.md` · `CHANGELOG-0.39.362.md` · `CHANGELOG-0.39.361.md` · `CHANGELOG-0.39.360.md` · `CHANGELOG-0.39.359.md` · `CHANGELOG-0.39.358.md` · `CHANGELOG-0.39.357.md` · `CHANGELOG-0.39.356.md` · `CHANGELOG-0.39.355.md` · `CHANGELOG-0.39.354.md` · `CHANGELOG-0.39.353.md` · `CHANGELOG-0.39.352.md` · `CHANGELOG-0.39.351.md` · `CHANGELOG-0.39.350.md` · `CHANGELOG-0.39.349.md` · `CHANGELOG-0.39.348.md` · `CHANGELOG-0.39.347.md` · `CHANGELOG-0.39.346.md` · `CHANGELOG-0.39.345.md` · `CHANGELOG-0.39.344.md` · `CHANGELOG-0.39.343.md` · `CHANGELOG-0.39.342.md` · `CHANGELOG-0.39.341.md` · `CHANGELOG-0.39.340.md` · `CHANGELOG-0.39.339.md` · `CHANGELOG-0.39.338.md` · `CHANGELOG-0.39.337.md` · `CHANGELOG-0.39.336.md` · `CHANGELOG-0.39.335.md` · `CHANGELOG-0.39.334.md` · `CHANGELOG-0.39.333.md` · `CHANGELOG-0.39.332.md` · `CHANGELOG-0.39.331.md` · `CHANGELOG-0.39.330.md` · `CHANGELOG-0.39.329.md` · `CHANGELOG-0.39.328.md` · `CHANGELOG-0.39.327.md` · `CHANGELOG-0.39.326.md` · `CHANGELOG-0.39.325.md` · `CHANGELOG-0.39.324.md` · `CHANGELOG-0.39.323.md` · `CHANGELOG-0.39.322.md` · `CHANGELOG-0.39.321.md` · `CHANGELOG-0.39.320.md` · `CHANGELOG-0.39.319.md` · `CHANGELOG-0.39.318.md` · `CHANGELOG-0.39.317.md` · `CHANGELOG-0.39.316.md` · `CHANGELOG-0.39.315.md` · `CHANGELOG-0.39.314.md` · `CHANGELOG-0.39.313.md` · `CHANGELOG-0.39.312.md` · `CHANGELOG-0.39.311.md` · `CHANGELOG-0.39.310.md` · `CHANGELOG-0.39.309.md` · `CHANGELOG-0.39.308.md` · `CHANGELOG-0.39.307.md` · `CHANGELOG-0.39.306.md` · `CHANGELOG-0.39.305.md` · `CHANGELOG-0.39.304.md` · `CHANGELOG-0.39.303.md` · `CHANGELOG-0.39.302.md` · `CHANGELOG-0.39.301.md` · `CHANGELOG-0.39.300.md` · `CHANGELOG-0.39.299.md` · `CHANGELOG-0.39.298.md` · `CHANGELOG-0.39.297.md` · `CHANGELOG-0.39.296.md` · `CHANGELOG-0.39.295.md` · `CHANGELOG-0.39.294.md` · `CHANGELOG-0.39.293.md` · `CHANGELOG-0.39.292.md` · `CHANGELOG-0.39.291.md` · `CHANGELOG-0.39.290.md` · `CHANGELOG-0.39.289.md` · `CHANGELOG-0.39.288.md` · `CHANGELOG-0.39.287.md` · `CHANGELOG-0.39.286.md` · `CHANGELOG-0.39.285.md` · `CHANGELOG-0.39.284.md` · `CHANGELOG-0.39.283.md` · `CHANGELOG-0.39.282.md` · `CHANGELOG-0.39.281.md` · `CHANGELOG-0.39.280.md` · `CHANGELOG-0.39.279.md` · `CHANGELOG-0.39.278.md` · `CHANGELOG-0.39.277.md` · `CHANGELOG-0.39.276.md` · `CHANGELOG-0.39.275.md` · `CHANGELOG-0.39.274.md` · `CHANGELOG-0.39.273.md` · `CHANGELOG-0.39.272.md` · `CHANGELOG-0.39.271.md` · `CHANGELOG-0.39.270.md` · `CHANGELOG-0.39.269.md` · `CHANGELOG-0.39.268.md` · `CHANGELOG-0.39.267.md` · `CHANGELOG-0.39.266.md` · `CHANGELOG-0.39.264.md` · `CHANGELOG-0.39.263.md` · `CHANGELOG-0.39.262.md` · `CHANGELOG-0.39.261.md` · `CHANGELOG-0.39.260.md` · `CHANGELOG-0.39.259.md` · `CHANGELOG-0.39.258.md` · `CHANGELOG-0.39.257.md` · `CHANGELOG-0.39.256.md` · `CHANGELOG-0.39.255.md` · `CHANGELOG-0.39.254.md` · `CHANGELOG-0.39.253.md` · `CHANGELOG-0.39.252.md` · `CHANGELOG-0.39.251.md` · `CHANGELOG-0.39.250.md` · `CHANGELOG-0.39.249.md` · `CHANGELOG-0.39.248.md` · `CHANGELOG-0.39.247.md` · `CHANGELOG-0.39.246.md` · `CHANGELOG-0.39.245.md` · `CHANGELOG-0.39.244.md` · `CHANGELOG-0.39.243.md` · `CHANGELOG-0.39.242.md` · `CHANGELOG-0.39.241.md` · `CHANGELOG-0.39.240.md` · `CHANGELOG-0.39.239.md` · `CHANGELOG-0.39.238.md` · `CHANGELOG-0.39.237.md` · `CHANGELOG-0.39.236.md` · `CHANGELOG-0.39.228.md` · `CHANGELOG-0.39.227.md` · `CHANGELOG-0.39.223.md` · `CHANGELOG-0.39.194.md` · `CHANGELOG-0.39.193.md` · `CHANGELOG-0.39.192.md` · `CHANGELOG-0.39.191.md` · `CHANGELOG-0.39.190.md` · `CHANGELOG-0.39.188.md` · `CHANGELOG-0.39.182.md` · `CHANGELOG-0.39.181.md` · `CHANGELOG-0.39.179.md` · `CHANGELOG-0.39.178.md` · `CHANGELOG-0.39.177.md` · `CHANGELOG-0.39.176.md` · `CHANGELOG-0.39.175.md` · `CHANGELOG-0.39.174.md` · `CHANGELOG-0.39.173.md` · `CHANGELOG-0.39.172.md` · `CHANGELOG-0.39.170.md` · `CHANGELOG-0.39.169.md` · `CHANGELOG-0.39.168.md` · `CHANGELOG-0.39.167.md` · `CHANGELOG-0.39.166.md` · `CHANGELOG-0.39.165.md` · `CHANGELOG-0.39.144.md` · `CHANGELOG-0.39.144-part2.md`
 
 </details>
 
@@ -11689,45 +12162,45 @@ Since 0.39.341 `cos/` is the system `cos` (above, and `cos-atlas.md`), no longer
 
 `siso/` is SISO, the coding model credited to Jonathan Bailey: every function one input and one output, state in the data structure, transformation as events (`siso/Gate.js`, `siso/Stream.js`, `siso/StreamLog.js`, `siso/spec/siso.spec`). `warp/` is the standalone devkit built on that idea, with five primitives, Event, Gate, Stream, StreamLog and Axiom (`warp/core/`), content digests and a delta cache for dispatch (`warp/dispatch/`), and its spec `warp/spec/warp.spec`. NEXUS imports WARP; WARP never imports NEXUS.
 
-#### `jaa/` — the tables
+#### the JAA schema (jaa/, retired 2026-10-24, kept in the archive) — the tables
 
-`jaa/schema.sql` and `jaa/schema-full.sql` define the JAA tables: every row has a UUID and hook fields, and state is a row, never an in-place mutation. The live implementation is `cortex/memory/jaa-db.js`, and guardian keeps its own in `guardian/jaa-store.js`.
+the JAA schema (jaa/, retired 2026-10-24, kept in the archive) and the JAA schema (jaa/, retired 2026-10-24, kept in the archive) define the JAA tables: every row has a UUID and hook fields, and state is a row, never an in-place mutation. The live implementation is `cortex/memory/jaa-db.js`, and guardian keeps its own in `guardian/jaa-store.js`.
 
-#### `contracts/`, `hooks/`, `seams/` — the declared connections
+#### `contracts/`, `hooks/`, the seam contracts (seams/, retired 2026-10-24, kept in the archive) — the declared connections
 
-`contracts/nexus-interaction-contract.js` is the one table of every endpoint, port, SSE event and command; `contracts/nodes/` holds the contract node types (axioms, gaps, faults, edges, ledgers, verification contracts). `hooks/index.js` is the living hook registry with one file per system (`hooks/guardian.hooks.js`, `hooks/cortex.hooks.js`, and the rest) and `hooks/side-effect-parser.js` to find undeclared side effects. `seams/seam-contracts.js` declares every seam and the port table.
+`contracts/nexus-interaction-contract.js` is the one table of every endpoint, port, SSE event and command; `contracts/nodes/` holds the contract node types (axioms, gaps, faults, edges, ledgers, verification contracts). `hooks/index.js` is the living hook registry with one file per system (`hooks/guardian.hooks.js`, `hooks/cortex.hooks.js`, and the rest) and `hooks/side-effect-parser.js` to find undeclared side effects. the seam contracts (seams/, retired 2026-10-24, kept in the archive) declares every seam and the port table.
 
-#### `auth/`, `security/` — identity and trust
+#### `orchestrator/auth/`, `cos/security/` — identity and trust
 
-`auth/index.js` is the sovereign authentication layer: an RSA keypair per client, signed requests, and a policy in `auth/policy.json`, with `auth/client.js` for callers. `security/signaling-envelope.js` signs the remote-desktop signaling channel so a replayed or hijacked session is refused.
+`orchestrator/auth/index.js` is the sovereign authentication layer: an RSA keypair per client, signed requests, and a policy in `orchestrator/auth/policy.json`, with `orchestrator/auth/client.js` for callers. `cos/security/signaling-envelope.js` signs the remote-desktop signaling channel so a replayed or hijacked session is refused.
 
 #### `meta/` — measurement
 
 `meta/index.js` gathers modules that measure, detect, classify and score without knowing what NEXUS is: `meta/confidence.js` and `meta/crystal-lattice.js`, the crystallization and lattice mechanism.
 
-#### `mesh/` — networking
+#### `guardian/mesh/` — networking
 
-Daemons ported from BrainOS and kept optional: DNS, dynamic DNS, a reverse proxy and a firewall in `mesh/lib/`, started by `mesh/daemons.js` and configured in `mesh/config.js`, with `mesh/install.js` for the host side.
+Daemons ported from BrainOS and kept optional: DNS, dynamic DNS, a reverse proxy and a firewall in `guardian/mesh/lib/`, started by `guardian/mesh/daemons.js` and configured in `guardian/mesh/config.js`, with `guardian/mesh/install.js` for the host side.
 
-#### `remote-desktop/` — remote control of a machine
+#### `cos/remote-desktop/` — remote control of a machine
 
-A host (`remote-desktop/host.html`), a viewer (`remote-desktop/viewer.html`), input authorization and injection (`remote-desktop/input-auth.js`, `remote-desktop/input-injector.js`), a signaling server (`remote-desktop/signal.js`), an Electron bridge (`remote-desktop/bridge-electron/main.js`), and the vendored `remote-desktop/bridge-os-core/` for identity and key storage. Its spec, `remote-desktop/remote-desktop.spec`, orders the work as a bottom-up phasemap.
+A host (`cos/remote-desktop/host.html`), a viewer (`cos/remote-desktop/viewer.html`), input authorization and injection (`cos/remote-desktop/input-auth.js`, `cos/remote-desktop/input-injector.js`), a signaling server (`cos/remote-desktop/signal.js`), an Electron bridge (`cos/remote-desktop/bridge-electron/main.js`), and the vendored `cos/remote-desktop/bridge-os-core/` for identity and key storage. Its spec, `cos/remote-desktop/remote-desktop.spec`, orders the work as a bottom-up phasemap.
 
 #### `emerge/` — the DSL runtime
 
 Emerge reads .eg files, a declarative language with a 569-keyword vocabulary: tokenizer, parser gated on signal-to-noise, kernel and emitter (`emerge/emerge-kernel.js`), with Ollama-backed code generation for the gaps (`emerge/emerge-codegen-v2.js`). Its spec compiler in `emerge/compiler/` runs the T0 to T3 pipeline, querying cortex first (`emerge/cortex-query/`). Specs: `emerge/spec/emerge.spec` and `emerge/SPEC_COMPILER.spec`.
 
-#### `erosmancer/`, `cockpit/`, `products/` — adjacent systems and the products
+#### `clear-glass/erosmancer/`, `cockpit/`, `products/` — adjacent systems and the products
 
-`erosmancer/erosmancer-os/` is ErosmancerOS, a TypeScript browser-automation platform over the Chrome DevTools Protocol for flows userscripts cannot handle (`erosmancer/spec/erosmancer.spec`). `cockpit/cockpit.spec` is the forge IDE's full specification, with its core in `cockpit/core.js`. The healer that used to stand beside them as its own scaffolded system moved into diagnostic in 0.60.136 (`diagnostic/healer/`). `products/` holds what Nexus is turned into for someone else: `products/flight-recorder/` is Flight Recorder, his "its a product?" (2026-10-16), an undo button and flight recorder for AI coding agents, built inside Nexus with a real boundary and carved out at each release (`products/flight-recorder/product.json` names what it must carry; `products/flight-recorder/bin/flight-recorder.js` runs it on any project folder).
+`clear-glass/erosmancer/erosmancer-os/` is ErosmancerOS, a TypeScript browser-automation platform over the Chrome DevTools Protocol for flows userscripts cannot handle (`clear-glass/erosmancer/spec/erosmancer.spec`). `cockpit/cockpit.spec` is the forge IDE's full specification, with its core in `cockpit/core.js`. The healer that used to stand beside them as its own scaffolded system moved into diagnostic in 0.60.136 (`diagnostic/healer/`). `products/` holds what Nexus is turned into for someone else: `products/flight-recorder/` is Flight Recorder, his "its a product?" (2026-10-16), an undo button and flight recorder for AI coding agents, built inside Nexus with a real boundary and carved out at each release (`products/flight-recorder/product.json` names what it must carry; `products/flight-recorder/bin/flight-recorder.js` runs it on any project folder).
 
-#### `architecture-spec/` — how a new system is scaffolded
+#### `idearium/architecture-spec/` — how a new system is scaffolded
 
-The base every new sovereign system is built on before it has features: components, hooks and wires compiled into a lattice that proves what connects (`architecture-spec/registry/lattice.js`), with friction and decomposition (`architecture-spec/registry/friction.js`, `architecture-spec/registry/decompose.js`) and the atlas tools (`architecture-spec/registry/create-atlas.js`, `architecture-spec/registry/edit-atlas.js`). Its atlas is `architecture-spec-atlas.md`.
+The base every new sovereign system is built on before it has features: components, hooks and wires compiled into a lattice that proves what connects (`idearium/architecture-spec/registry/lattice.js`), with friction and decomposition (`idearium/architecture-spec/registry/friction.js`, `idearium/architecture-spec/registry/decompose.js`) and the atlas tools (`idearium/architecture-spec/registry/create-atlas.js`, `idearium/architecture-spec/registry/edit-atlas.js`). Its atlas is `architecture-spec-atlas.md`.
 
-#### `service/`, `sentinel/`, `scripts/`, `skills/`, `tablet/`
+#### `sentinel/`, `scripts/`, `skills/` (service/ split into its systems, tablet/ moved to cos, 2026-10-24)
 
-`service/guardian-service.js` and `service/idearium-service.js` boot a kernel as a supervised service with every lifecycle event in its ledger. `sentinel/interaction-contract.json` is the sentinel's contract; its command is `cli/sentinel.js`. `scripts/` holds release and verification tools (`scripts/verify-boot.js`, `scripts/verify-wires.js`, `scripts/precommit-check.js`, `scripts/run-verification-manifest.cjs`). `skills/` holds session skills, among them `skills/nexus-session-changelog/SKILL.md`. `tablet/` is the tablet homepage (`tablet/index.html`) and its 3D map (`tablet/map3d.html`).
+`guardian/guardian-service.js` and `idearium/idearium-service.js` boot a kernel as a supervised service with every lifecycle event in its ledger. `sentinel/interaction-contract.json` is the sentinel's contract; its command is `cli/sentinel.js`. `scripts/` holds release and verification tools (`scripts/verify-boot.js`, `scripts/verify-wires.js`, `scripts/precommit-check.js`, `scripts/run-verification-manifest.cjs`). `skills/` holds session skills, among them `skills/nexus-session-changelog/SKILL.md`. `cos/tablet/` is the tablet homepage (`cos/tablet/index.html`) and its 3D map (`cos/tablet/map3d.html`).
 
 #### `ui/` — the shells
 
@@ -11791,7 +12264,7 @@ Everything below is written by `lib/readme-generate.js` from the tree as it is a
 
 ### Every phase
 
-Every phase of every phasemap, 2066 phases across 159 maps, read by the one phasemap parser loom uses (`loom/scanners/phasemap-map.js`). 842 are done, 11 in progress and 1213 pending. A decision (a question for James, or one his axioms decided) is marked as one. The maps are newest first; each opens to its phases, each phase with its status and what it does. The map itself, with the reasons and the proof, is the file named.
+Every phase of every phasemap, 2101 phases across 162 maps, read by the one phasemap parser loom uses (`loom/scanners/phasemap-map.js`). 849 are done, 11 in progress and 1241 pending. A decision (a question for James, or one his axioms decided) is marked as one. The maps are newest first; each opens to its phases, each phase with its status and what it does. The map itself, with the reasons and the proof, is the file named.
 
 <details>
 <summary>`docs/snapshot-trigger-phasemap.spec` · 2 · 0 done, 0 in progress, 2 pending</summary>
@@ -12169,6 +12642,59 @@ Every phase of every phasemap, 2066 phases across 159 maps, read by the one phas
 - **AP3_strategy_dynamic_db** · done
 - **AP4_intelligence_optimizes** · done
 - **AP5_autonomous_build_loop** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-24-github-context-and-agent-settings-phasemap.spec` · 12 · 4 done, 0 in progress, 8 pending</summary>
+
+- **GC0a_one_github_repo_per_compartment** · decision · done
+- **GC0b_link_first_paste_fallback** · decision · done
+- **GC0c_private_by_default** · decision · done
+- **GC0d_layers** · decision · done
+- **GH1_a_compartment_gets_its_github_repo** · pending
+- **GH2_the_context_brief_at_the_root** · pending
+- **GH3_sync_per_compartment** · pending
+- **GH4_the_link_as_an_injection_method** · pending
+- **AS1_one_resolver_global_then_repo** · pending
+- **AS2_each_provider_its_own_profile** · pending
+- **GH5_a_github_agent_tool** · pending
+- **GH6_send_a_requested_file** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-24-fifteen-systems-migration-phasemap.spec` · 14 · 0 done, 0 in progress, 14 pending</summary>
+
+- **MV0_unplaced_homes** · decision · pending
+- **MV1_cockpit** · pending
+- **MV2_contracts** · pending
+- **MV3_hooks** · pending
+- **MV4_meta** · pending
+- **MV5_sentinel** · pending
+- **MV6_service** · pending
+- **MV7_siso** · pending
+- **MV8_ui** · pending
+- **MV9_emerge** · pending
+- **MV10_emergence** · pending
+- **MV11_warp** · pending
+- **MV12_nexus** · pending
+- **MV13_cli** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-24-diagnostic-and-healing-one-system-phasemap.spec` · 9 · 3 done, 0 in progress, 6 pending</summary>
+
+- **DH0a_expectation_lives_in_the_spec** · decision · done
+- **DH0b_libraries_are_expected_not_beating** · decision · done
+- **DH0c_a_heal_is_proven_by_its_expectation** · decision · done
+- **DH1_the_expected_behavior_schema** · pending
+- **DH2_every_system_states_its_expectations** · pending
+- **DH3_the_announce_carries_the_spec** · pending
+- **DH4_diagnose_against_the_expectation** · pending
+- **DH5_diagnostic_heals** · pending
+- **DH6_seen_and_used** · pending
 
 </details>
 
@@ -14834,9 +15360,9 @@ NEXUS keeps its state out of git: everything under a data folder is runtime stat
 - **INTELLIGENCE_NODES_DIR** — default intelligence/lib/, '..', 'data' — opened by `intelligence/lib/domain-nodes.js`
 - **JAA_DATA_DIR** — default , 'data', 'cortex', 'memory' — opened by `cli/clear-idearium.js`, `cortex/memory/jaa-db.js`, `cortex/memory/table-compactor.js`, `lib/context-atlas.js`
 - **MEMORY_STORE_DIR** — default guardian/, '..', 'data', 'cortex', 'memory' — opened by `guardian/server.js`
-- **NEXUS_CLIENT_DIR** — default os.homedir(), '.nexus-client' — opened by `auth/client.js`
+- **NEXUS_CLIENT_DIR** — default os.homedir(), '.nexus-client' — opened by `orchestrator/auth/client.js`
 - **NEXUS_CODE_ARTIFACT_DIR** — default process.env.NEXUS_DATA_ || , 'data'), 'guardian', 'code-artifacts' — opened by `guardian/lib/code-artifact.js`
-- **NEXUS_DATA_DIR** — default process.cwd(), 'data' — opened by `remote-desktop/bridge-os-core/bridge-node/boot.js`, `remote-desktop/bridge-os-core/index.js`
+- **NEXUS_DATA_DIR** — default process.cwd(), 'data' — opened by `cos/remote-desktop/bridge-os-core/bridge-node/boot.js`, `cos/remote-desktop/bridge-os-core/index.js`
 - **NEXUS_DATA_ROOT** — default clear-glass/src/mesh/, '..', '..', '..', 'data' — opened by `clear-glass/src/mesh/automation-engine.js`, `idearium/lib/data-dir.cjs`, `lib/chat-logger.js`, `lib/component-ledger.js`
 - **NEXUS_INTAKE_DIR** — default cortex/core/raid/, '../../../data/intake' — opened by `cortex/core/raid/officiator.js`, `lib/intake.js`
 - **NEXUS_PHASEMAP_DIR** — default , 'docs' — opened by `lib/spec-census.js`, `loom/scanners/phasemap-map.js`
@@ -14851,7 +15377,7 @@ NEXUS keeps its state out of git: everything under a data folder is runtime stat
 
 </details>
 
-The tables. Cortex's JAA store (`jaa/`, `cortex/memory/`) holds the named tables most systems write into. These are the ones described in `lib/context-atlas.js`, each checked against a real writer, with the system that owns it and the tool that reads it deeper. A table not described there is still searchable by its name.
+The tables. Cortex's JAA store (`cortex/memory/`; the schema folder jaa/ was retired 2026-10-24) holds the named tables most systems write into. These are the ones described in `lib/context-atlas.js`, each checked against a real writer, with the system that owns it and the tool that reads it deeper. A table not described there is still searchable by its name.
 
 <details>
 <summary>the JAA tables · 50 described</summary>
@@ -14945,7 +15471,7 @@ The ledgers. What happened is append-only: each ledger keeps its rows in order a
 
 ### All the Idearium work
 
-Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and builds, and the Code tab where the agents work. Everything it can do is a route on :4800, served by `idearium/api/index.js`, and every route a person uses is also a command row in `idearium/cli/route-commands.js`, so every agent can do it through the one command tool. Read from the route table itself: 416 routes, and 157 command rows. Its files, module by module, are under its own section above; what each release did to it is in the version history below.
+Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and builds, and the Code tab where the agents work. Everything it can do is a route on :4800, served by `idearium/api/index.js`, and every route a person uses is also a command row in `idearium/cli/route-commands.js`, so every agent can do it through the one command tool. Read from the route table itself: 416 routes, and 158 command rows. Its files, module by module, are under its own section above; what each release did to it is in the version history below.
 
 <details>
 <summary>the routes · 416, grouped by path</summary>
@@ -15078,7 +15604,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 </details>
 
 <details>
-<summary>the command rows · 157 (every agent has them through nexus.command)</summary>
+<summary>the command rows · 158 (every agent has them through nexus.command)</summary>
 
 - **repo ask "" [--provider claude-code|ollama|chatgpt|…] [--model m]** — talk to the agent wearing the repo's hat (its code lands as proposals)
 - **repo agent [--provider p] [--inject review|auto|off] [--scope s] [--model m]** — who wears the hat, and how its code lands
@@ -15146,6 +15672,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **system routing [ ]** — the build routing policy (planner, contract_build, test_first, ladder…), or set one switch: routing. =
 - **system compartment [] [--apply]** — each system's COS compartment from loom's template (nexus-self-): its intent (end state: sovereign; conditions; the genesis axioms), runtime, mounts…
 - **system shape []** — does each system match genesis (the skeleton cos/archetype/nexus-system): every role — entry, cli, config, compartment, registry, contract, events,…
+- **system migrate [--write ]** — the refactor tool: every folder outside the 15 systems, who uses it, and the home its edges give it (one system → that system; lib/ or two systems →…
 - **system sovereign []** — which systems are sovereign (nothing they require is in another system's folder; lib/ is the kernel) and, for each that is not, what is in the way:…
 - **data home [] [--apply]** — each system's own data: where it lives and what of it still waits in the root data/ (and why); with a system, each file's plan; --apply brings it…
 - **data rollback** — put a bring-home's files back where they were, from the manifest it printed
@@ -15243,11 +15770,14 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 
 ### Every release, in his words
 
-Every release note in the tree, 437 of them, newest first. Each opens with James's own words: what he asked, as he wrote it, his spelling kept. Then what was built, from the note's own section headings. The note itself is the file named, at the top of the tree. Releases are grouped by series; each series opens to its releases.
+Every release note in the tree, 440 of them, newest first. Each opens with James's own words: what he asked, as he wrote it, his spelling kept. Then what was built, from the note's own section headings. The note itself is the file named, at the top of the tree. Releases are grouped by series; each series opens to its releases.
 
 <details>
-<summary>0.60.x · 229 releases · 0.60.0. to 0.60.233.</summary>
+<summary>0.60.x · 232 releases · 0.60.0. to 0.60.236.</summary>
 
+- **0.60.236.** — 2026-10-24 — RF2 batch 1: ten folders moved into the systems that use them — James: "yes start rf2, security goes with remote desktop" — built: The mover (lib/architecture-apply.js) · Applied · Found and fixed on the way
+- **0.60.235.** — 2026-10-24 — every folder has a home: uses by path counted, his calls recorded — James: "need the systems soveriegn" — built: Checked before retiring anything (§0.1) · The tool learned (lib/architecture-migrate.js 1.1.0) · Where the 22 folders go…
+- **0.60.234.** — 2026-10-24 — the refactor tool reads and proposes: 22 folders into the 15 systems — James: "need to make the refactor tool from the phgases. so we can make each system sovereignfor the cos migratoin" — built: What it is · The rules (his axioms: code belongs to the system it serves; shared code is… · The proposal for Nexus (docs/2026-10-24-fifteen-systems-migration-phasemap.spec)
 - **0.60.233.** — 2026-10-24 — the SL line merged into main, additively — James: "merge and push" — built: What was checked · What the merge needed · What the branch broke, found before merging (§0.1), and fixed here
 - **0.60.232.** — 2026-10-24 — JA5: the pick is also a macro and an automation node — James: "merge and push. yes make the macro too." — built: What it does · On screen · Reuse (§8.6)
 - **0.60.231.** — 2026-10-24 — JA4: the learn-loop on screen — James: "continue" — built: What was missing · On screen (Settings › Autofill) · Built (backend → API route → command/agent → UI, his order 2026-10-07)

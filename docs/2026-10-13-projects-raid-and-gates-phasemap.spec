@@ -402,3 +402,12 @@ spec:
 # tests/modules/test-architecture-migrate.test.js 3/3. Narrowed from RF0's original scope (a repo's whole component architecture) to the
 # question he asked today (top-level folders → the 15 systems); the component-level read stays open in RF0. RF2 (apply, one phase at a
 # time, staged and undoable) is next, after the 9 homes are confirmed.
+
+# ## ADDENDUM 2026-10-24 (0.60.236): RF2 applied — batch 1
+# James, 2026-10-24: "yes start rf2, security goes with remote desktop". lib/architecture-apply.js applies one proposed move at a time:
+# plan (moves + only the provable rewrites), apply (git mv; baseline file names renamed), check (parse, resolve, no new crossing), one
+# commit or a rollback. Batch 1: jaa, seams retired (_archive/2026-10-24-retired-systems/); service split into guardian, cortex, idearium
+# (live launchers — not retired); auth → orchestrator; mesh → guardian; architecture-spec → idearium; erosmancer → clear-glass; security,
+# remote-desktop, tablet → cos (his). The census's systems: 36 → 27. RF2's original plan (stage through lib/code-edit.js injects on
+# repo-<uuid>@staging) is for a repo inside Idearium; for Nexus's own tree git is the staging: one commit per move, `git revert` undoes it.
+# Remaining: cockpit, contracts, hooks, meta, sentinel, siso, ui, emerge, emergence, warp, nexus, cli → lib/.

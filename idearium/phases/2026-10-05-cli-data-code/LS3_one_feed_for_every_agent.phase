@@ -7,11 +7,11 @@ intent: null
 summary: LS3_one_feed_for_every_agent (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677003
+exported_at: 1792822477222
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677003
-lastSeenAt: 1792787677003
+firstSeenAt: 1792822477222
+lastSeenAt: 1792822477222
 fingerprint: null
 payload:
   id: LS3_one_feed_for_every_agent
@@ -25,4 +25,4 @@ payload:
     - LS2_copilot_sends_the_text_as_it_comes
   blocks: []
   spec: null
-  graph: cbe6c8256329685a
+  graph: 607ae33cca91c5a9

@@ -7,11 +7,11 @@ intent: null
 summary: FM2_stores_in_the_files_tab (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677892
+exported_at: 1792822478223
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677892
-lastSeenAt: 1792787677892
+firstSeenAt: 1792822478223
+lastSeenAt: 1792822478223
 fingerprint: null
 payload:
   id: FM2_stores_in_the_files_tab
@@ -27,4 +27,4 @@ payload:
     - FM1_file_manager
   blocks: []
   spec: null
-  graph: 0cb3102874e66839
+  graph: d4fe2183710c725b

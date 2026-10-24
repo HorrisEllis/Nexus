@@ -7,11 +7,11 @@ intent: null
 summary: TB1_toolbox (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677893
+exported_at: 1792822478225
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677893
-lastSeenAt: 1792787677893
+firstSeenAt: 1792822478225
+lastSeenAt: 1792822478225
 fingerprint: null
 payload:
   id: TB1_toolbox
@@ -27,4 +27,4 @@ payload:
     - FM2_stores_in_the_files_tab
   blocks: []
   spec: null
-  graph: 573f4e5a75544e59
+  graph: 34de6cfb5f9c9649

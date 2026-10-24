@@ -9,11 +9,11 @@ intent: null
 summary: AR1_architect_retirement_and_hooks_to_loom (?) — 16 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675846
+exported_at: 1792822476240
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675846
-lastSeenAt: 1792787675846
+firstSeenAt: 1792822476240
+lastSeenAt: 1792822476240
 fingerprint: null
 payload:
   id: AR1_architect_retirement_and_hooks_to_loom
@@ -41,4 +41,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: c44714dfce980acf
+  graph: ec476c801239c1a2

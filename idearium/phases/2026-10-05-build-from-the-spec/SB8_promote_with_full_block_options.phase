@@ -9,11 +9,11 @@ intent: null
 summary: SB8_promote_with_full_block_options (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676822
+exported_at: 1792822477030
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676822
-lastSeenAt: 1792787676822
+firstSeenAt: 1792822477030
+lastSeenAt: 1792822477030
 fingerprint: null
 payload:
   id: SB8_promote_with_full_block_options
@@ -34,4 +34,4 @@ payload:
     - SB11_each_block_chunked
   blocks: []
   spec: null
-  graph: 59a2cc99ce55bb7c
+  graph: 2c008d12f5b51821

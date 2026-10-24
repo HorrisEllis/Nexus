@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV1_cockpit
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV1_cockpit
+context: pipeline phase MV1_cockpit of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV1_cockpit (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478476
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478476
+lastSeenAt: 1792822478476
+fingerprint: null
+payload:
+  id: MV1_cockpit
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cockpit/
+    - lib/cockpit/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 12c88ba645d84835

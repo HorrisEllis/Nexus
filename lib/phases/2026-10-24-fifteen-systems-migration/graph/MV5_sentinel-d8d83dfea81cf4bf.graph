@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV5_sentinel:d8d83dfea81cf4bf
+type: graph
+id: phase:MV5_sentinel:d8d83dfea81cf4bf
+context: dependency graph of phase MV5_sentinel
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792822478479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478479
+lastSeenAt: 1792822478479
+fingerprint: null
+payload:
+  for: MV5_sentinel
+  kind: phase
+  repo: null
+  hash: d8d83dfea81cf4bf
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_cli
+    upstream: []
+    downstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV12_nexus
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_cli
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): MV13_cli · all downstream 2'
+    edges: []

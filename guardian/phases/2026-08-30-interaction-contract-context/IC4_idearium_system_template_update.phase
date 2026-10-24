@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC4_idearium_system_template_update
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC4_idearium_system_template_update
+context: >-
+  pipeline phase IC4_idearium_system_template_update of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC4_idearium_system_template_update (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792822701869
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822701869
+lastSeenAt: 1792822701869
+fingerprint: null
+payload:
+  id: IC4_idearium_system_template_update
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - RR4_governed_handshake_on_handoff
+    - IC1_context_by_uuid_injection
+    - IC2_raid_test_env_hook
+  blocks: []
+  spec: null
+  graph: 9f874130772add91

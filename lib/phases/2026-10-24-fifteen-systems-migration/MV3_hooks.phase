@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV3_hooks
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV3_hooks
+context: pipeline phase MV3_hooks of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV3_hooks (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792822478478
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478478
+lastSeenAt: 1792822478478
+fingerprint: null
+payload:
+  id: MV3_hooks
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - hooks/
+    - lib/hooks/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6b7d13e6306e0f5e

@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EC10_eros_workbench:4d940447a9772128
+type: graph
+id: phase:EC10_eros_workbench:4d940447a9772128
+context: dependency graph of phase EC10_eros_workbench
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792822476619
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822476619
+lastSeenAt: 1792822476619
+fingerprint: null
+payload:
+  for: EC10_eros_workbench
+  kind: phase
+  repo: null
+  hash: 4d940447a9772128
+  nodes:
+    - path: clear-glass/renderer/settings/sections/eros.css
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/settings/sections/eros.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: erosmancer/erosmancer-os/src/api/server.ts
+      role: changes
+      exists: false
+      system: null
+    - path: erosmancer/erosmancer-os/src/replay/index.ts
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+    upstream: []
+    downstream:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): EC11_release · finishing it unlocks EC11_release'
+    edges: []

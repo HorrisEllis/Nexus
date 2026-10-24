@@ -9,11 +9,11 @@ intent: null
 summary: SB25_atlas_template_in_his_structure (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676885
+exported_at: 1792822477094
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676885
-lastSeenAt: 1792787676885
+firstSeenAt: 1792822477094
+lastSeenAt: 1792822477094
 fingerprint: null
 payload:
   id: SB25_atlas_template_in_his_structure
@@ -29,4 +29,4 @@ payload:
     - SB17_the_system_template_is_complete
   blocks: []
   spec: null
-  graph: 8782436b6f63495b
+  graph: bad9e8de681486ca

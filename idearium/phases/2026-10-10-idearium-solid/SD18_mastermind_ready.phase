@@ -7,11 +7,11 @@ intent: null
 summary: SD18_mastermind_ready (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677246
+exported_at: 1792822477488
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677246
-lastSeenAt: 1792787677246
+firstSeenAt: 1792822477488
+lastSeenAt: 1792822477488
 fingerprint: null
 payload:
   id: SD18_mastermind_ready
@@ -29,4 +29,4 @@ payload:
     - SD17_an_imported_project_continues
   blocks: []
   spec: null
-  graph: 0605b1ba0a0ed196
+  graph: 6e60122522d0e684

@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV11_warp:ed5be8751d17b732
+type: graph
+id: phase:MV11_warp:ed5be8751d17b732
+context: dependency graph of phase MV11_warp
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792822478484
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792822478484
+lastSeenAt: 1792822478484
+fingerprint: null
+payload:
+  for: MV11_warp
+  kind: phase
+  repo: null
+  hash: ed5be8751d17b732
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+    dependents:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV10_emergence
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV12_nexus
+    upstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+    downstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV10_emergence
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV12_nexus
+    blockedBy:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+    unlocks:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV10_emergence
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by MV9_emerge
+      - 'depends on (1): MV9_emerge · all upstream 2'
+      - 'needed by (2): MV10_emergence, MV12_nexus · finishing it unlocks MV10_emergence'
+    edges:
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV9_emerge
+        kind: declared
