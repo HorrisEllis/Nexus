@@ -1,0 +1,207 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NC1_neutral_core_boundary:eb01e51306363b43
+type: graph
+id: phase:NC1_neutral_core_boundary:eb01e51306363b43
+context: dependency graph of phase NC1_neutral_core_boundary
+intent: null
+summary: 16 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792820508048
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820508048
+lastSeenAt: 1792820508048
+fingerprint: null
+payload:
+  for: NC1_neutral_core_boundary
+  kind: phase
+  repo: null
+  hash: eb01e51306363b43
+  nodes:
+    - path: lib/core/manifest.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/core/proof.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/phase-dag.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/project-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phase-mapping.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-deps-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-groom.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-architecture-migrate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-project-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/component-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/project-registry.js
+      to: lib/component-store.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/repo/phase-mapping.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/build-queue.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-census.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-deps-gate.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-groom.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: tests/modules/test-architecture-migrate.test.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: tests/modules/test-project-registry.test.js
+      to: lib/project-registry.js
+      kind: requires
+  crossings:
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: false
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+    dependents:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::FP1_feature_pilot
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+    upstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+    downstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD3_python_adapter
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD4_documents_adapter
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::FP1_feature_pilot
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NT1_neutrality_test
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+      - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+      - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+      - docs/2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
+      - docs/2026-10-20-belief-loop-phasemap.spec::IV2_invariant_miner
+      - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+      - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH2_chunk_laws
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH3_chunk_inspector
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK2_learned_granularity
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR3_graph_query_surface
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV2_invariant_guided_traversal
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV3_traversal_as_context
+    blockedBy:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+    unlocks:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+    conflicts:
+      - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+        files:
+          - lib/phase-dag.js
+      - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::SC1_scaling_limits_named
+        files:
+          - lib/phase-dag.js
+      - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+        files:
+          - lib/phase-dag.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by IN3_registry_is_the_spine
+      - 'depends on (1): IN3_registry_is_the_spine · all upstream 2'
+      - >-
+        needed by (4): AD1_adapter_contract, FP1_feature_pilot, GR1_graph_primitive,
+        PRC1_phase_reality_check · all downstream 35 · finishing it unlocks AD1_adapter_contract
+      - >-
+        same files as IN7_every_phase_and_spec_on_the_spine with no order between them:
+        lib/phase-dag.js
+      - 'same files as SC1_scaling_limits_named with no order between them: lib/phase-dag.js'
+      - 'same files as PN2_dual_read with no order between them: lib/phase-dag.js'
+    edges:
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        kind: declared

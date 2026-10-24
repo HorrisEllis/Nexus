@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV12_security
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV12_security
+context: pipeline phase MV12_security of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV12_security (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792820476276
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476276
+lastSeenAt: 1792820476276
+fingerprint: null
+payload:
+  id: MV12_security
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - security/
+  depends_on:
+    - MV0_unplaced_homes
+  blocks: []
+  spec: null
+  graph: b22bbc2a9a8680cb

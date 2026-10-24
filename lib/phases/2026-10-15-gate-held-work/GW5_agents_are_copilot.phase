@@ -7,11 +7,11 @@ intent: null
 summary: GW5_agents_are_copilot (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677553
+exported_at: 1792820507629
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677553
-lastSeenAt: 1792787677553
+firstSeenAt: 1792820507629
+lastSeenAt: 1792820507629
 fingerprint: null
 payload:
   id: GW5_agents_are_copilot
@@ -27,4 +27,4 @@ payload:
     - GW1_the_baton
   blocks: []
   spec: null
-  graph: 6b97cd0bef25edcb
+  graph: a8082de2026469af

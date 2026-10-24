@@ -7,11 +7,11 @@ intent: null
 summary: CON2_grammar_and_completion (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677680
+exported_at: 1792820507795
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677680
-lastSeenAt: 1792787677680
+firstSeenAt: 1792820507795
+lastSeenAt: 1792820507795
 fingerprint: null
 payload:
   id: CON2_grammar_and_completion
@@ -25,4 +25,4 @@ payload:
     - CON1_one_door_client
   blocks: []
   spec: null
-  graph: 8bab477abc0720ae
+  graph: 762c2205a20307d8

@@ -1,0 +1,154 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AS2_each_provider_its_own_profile:8d89f1159394b129
+type: graph
+id: phase:AS2_each_provider_its_own_profile:8d89f1159394b129
+context: dependency graph of phase AS2_each_provider_its_own_profile
+intent: null
+summary: 17 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792820475022
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820475022
+lastSeenAt: 1792820475022
+fingerprint: null
+payload:
+  for: AS2_each_provider_its_own_profile
+  kind: phase
+  repo: null
+  hash: 8d89f1159394b129
+  nodes:
+    - path: idearium/ui/settings.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-providers.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-settings.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-capability-profile.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-chat.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/generate-tool-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/economy/store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/hat-forge.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-capability-profile.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-chat.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-tools/generate-tool-nodes.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/economy/store.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-providers.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+    dependents:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH4_the_link_as_an_injection_method
+    upstream:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GC0d_layers
+    downstream:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::GH4_the_link_as_an_injection_method
+    blockedBy:
+      - docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by AS1_one_resolver_global_then_repo
+      - 'depends on (1): AS1_one_resolver_global_then_repo · all upstream 2'
+      - 'needed by (1): GH4_the_link_as_an_injection_method'
+    edges:
+      - from: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec::AS1_one_resolver_global_then_repo
+        kind: declared

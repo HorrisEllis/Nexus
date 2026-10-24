@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV8_mesh
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV8_mesh
+context: pipeline phase MV8_mesh of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV8_mesh (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792820476268
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476268
+lastSeenAt: 1792820476268
+fingerprint: null
+payload:
+  id: MV8_mesh
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - mesh/
+    - guardian/mesh/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 93d292588723e559

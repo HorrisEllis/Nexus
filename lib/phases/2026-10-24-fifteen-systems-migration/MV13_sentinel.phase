@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_sentinel
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_sentinel
+context: pipeline phase MV13_sentinel of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV13_sentinel (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792820476278
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476278
+lastSeenAt: 1792820476278
+fingerprint: null
+payload:
+  id: MV13_sentinel
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - sentinel/
+  depends_on:
+    - MV0_unplaced_homes
+  blocks: []
+  spec: null
+  graph: 3f88393b5ef78186

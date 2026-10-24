@@ -9,11 +9,11 @@ intent: null
 summary: CT0_the_contract_is_a_reference (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677418
+exported_at: 1792820507467
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677418
-lastSeenAt: 1792787677418
+firstSeenAt: 1792820507467
+lastSeenAt: 1792820507467
 fingerprint: null
 payload:
   id: CT0_the_contract_is_a_reference
@@ -28,4 +28,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 78068c3fef97cff2
+  graph: df6fb16d25b92bcf

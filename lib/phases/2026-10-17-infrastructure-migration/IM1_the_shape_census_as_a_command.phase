@@ -9,11 +9,11 @@ intent: null
 summary: IM1_the_shape_census_as_a_command (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677790
+exported_at: 1792820507908
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677790
-lastSeenAt: 1792787677790
+firstSeenAt: 1792820507908
+lastSeenAt: 1792820507908
 fingerprint: null
 payload:
   id: IM1_the_shape_census_as_a_command
@@ -28,4 +28,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 6d5ddff3294636fc
+  graph: 3abb3b64d2b71c76

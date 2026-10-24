@@ -104,5 +104,28 @@ spec:
         globally, overridable per repo, through AS1. The agent's run uses the profile of the provider that answers.
       proof: "a global ollama context size and a repo override resolve per repo; a provider's hat scopes its tools; the run row names the profile used"
 
-  build_order: "AS1 (everything else reads settings through it) → GH1 → GH2 → AS2 → GH3 → GH4. Each phase lands backend → route → command → UI."
+    GH5_a_github_agent_tool:
+      status: OPEN
+      depends_on: [GH1_a_compartment_gets_its_github_repo]
+      files: [lib/agent-tools/tools/nexus/github.js, lib/agent-tools/index.js, lib/repo-github.js, idearium/cli/route-commands.js]
+      james: '"maybe have a github  agent tool?" (2026-10-24)'
+      does: >-
+        An agent tool `github` over the same doors as the person (repo-github.js and the repo.git.* routes, through nexus.command):
+        status, link, create, sync (commit + push), pull, the repo's link for a provider. Writes go through the repo's own setting
+        (github.sync) and RAID as every write does (§5.2); the token is never an argument or an answer. No GitHub write a person
+        could not make from the repo's Settings.
+      proof: "the tool lists in the catalogue; status/link/sync run through the routes against a bare remote; a sync on a repo with github.sync off is refused with why"
+    GH6_send_a_requested_file:
+      status: OPEN
+      depends_on: [GH5_a_github_agent_tool]
+      files: [lib/agent-tools/tools/nexus/send-file.js, lib/repo-agent.js, guardian/lib/dispatcher.js]
+      james: '"and a tool to upload a rewquested file." (2026-10-24)'
+      does: >-
+        The coder's reading, to confirm: when an agent asks for a file it was not given ("send me src/x.js"), the file is delivered
+        to it — as a GitHub link to that file when the provider reads links (GH4), else uploaded into the provider's chat as an
+        attachment (Clear Glass's file input path, clear-glass/src/automation/dom.js DataTransfer), else pasted. Only files inside the
+        repo's compartment; a request outside it is refused and said (§4.3).
+      proof: "a request for a repo file is answered with its link (claude), an attachment (a provider without links), or pasted; a path outside the compartment is refused"
+
+  build_order: "AS1 (everything else reads settings through it) → GH1 → GH5 → GH2 → AS2 → GH3 → GH4 → GH6. Each phase lands backend → route → command → UI."
   verification_here: "No GitHub writes from tests: a fake GitHub API and a bare local git remote; the UI driven in Clear Glass (glass.js)."

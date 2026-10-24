@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::AS2_each_provider_its_own_profile
+type: phase
+id: docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::AS2_each_provider_its_own_profile
+context: >-
+  pipeline phase AS2_each_provider_its_own_profile of
+  docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+intent: null
+summary: AS2_each_provider_its_own_profile (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792820475022
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820475022
+lastSeenAt: 1792820475022
+fingerprint: null
+payload:
+  id: AS2_each_provider_its_own_profile
+  map: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-settings.js
+    - lib/agent-providers.js
+    - lib/hat-forge.js
+    - idearium/ui/settings.html
+  depends_on:
+    - AS1_one_resolver_global_then_repo
+  blocks: []
+  spec: null
+  graph: 8d89f1159394b129

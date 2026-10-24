@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV9_meta:9af12ac80daed8df
+type: graph
+id: phase:MV9_meta:9af12ac80daed8df
+context: dependency graph of phase MV9_meta
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792820476271
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476271
+lastSeenAt: 1792820476271
+fingerprint: null
+payload:
+  for: MV9_meta
+  kind: phase
+  repo: null
+  hash: 9af12ac80daed8df
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []
