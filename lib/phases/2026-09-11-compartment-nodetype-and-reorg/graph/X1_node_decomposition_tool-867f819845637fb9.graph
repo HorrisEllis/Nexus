@@ -1,0 +1,213 @@
+envelope: 1
+uuid: nexus-export-graph-phase:X1_node_decomposition_tool:867f819845637fb9
+type: graph
+id: phase:X1_node_decomposition_tool:867f819845637fb9
+context: dependency graph of phase X1_node_decomposition_tool
+intent: null
+summary: 24 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878420348
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878420348
+lastSeenAt: 1792878420348
+fingerprint: null
+payload:
+  for: X1_node_decomposition_tool
+  kind: phase
+  repo: null
+  hash: 867f819845637fb9
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/clear-glass/command-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ollama/lib/command-index.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/command-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: ollama/server.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: tests/modules/clear-glass-agent-surface.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/command-builder.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: tests/modules/clear-glass-agent-surface.test.js
+      to: lib/agent-tools/tools/clear-glass/command-index.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/command-index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+    dependents: []
+    upstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::I1_boot_js_intelligence_routes
+        files:
+          - cortex/boot.js
+      - with: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR1_architect_retirement_and_hooks_to_loom
+        files:
+          - cortex/boot.js
+          - lib/tool-index.js
+          - lib/agent-tools/tools/clear-glass/command-index.js
+          - ollama/lib/command-index.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): T1_extend_system_scaffold'
+      - 'needed by (0): —'
+      - 'same files as I1_boot_js_intelligence_routes with no order between them: cortex/boot.js'
+      - >-
+        same files as AR1_architect_retirement_and_hooks_to_loom with no order between them:
+        cortex/boot.js, lib/tool-index.js, lib/agent-tools/tools/clear-glass/command-index.js,
+        ollama/lib/command-index.js
+    edges:
+      - from: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+        kind: declared

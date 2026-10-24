@@ -7,11 +7,11 @@ intent: null
 summary: CN10_leftovers_named (integration) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792877325069
+exported_at: 1792878423776
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877325069
-lastSeenAt: 1792877325069
+firstSeenAt: 1792878423776
+lastSeenAt: 1792878423776
 fingerprint: null
 payload:
   id: CN10_leftovers_named
@@ -25,4 +25,4 @@ payload:
     - CN0_the_rule_in_force
   blocks: []
   spec: null
-  graph: 9a9afafc4ac6975d
+  graph: 512488fd2ce2b1d6

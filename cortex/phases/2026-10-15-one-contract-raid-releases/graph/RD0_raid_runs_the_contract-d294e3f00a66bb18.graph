@@ -1,0 +1,275 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RD0_raid_runs_the_contract:d294e3f00a66bb18
+type: graph
+id: phase:RD0_raid_runs_the_contract:d294e3f00a66bb18
+context: dependency graph of phase RD0_raid_runs_the_contract
+intent: null
+summary: 27 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878422920
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878422920
+lastSeenAt: 1792878422920
+fingerprint: null
+payload:
+  for: RD0_raid_runs_the_contract
+  kind: phase
+  repo: null
+  hash: d294e3f00a66bb18
+  nodes:
+    - path: cortex/core/raid/contract-boundary.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/worker.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: scripts/mco5-one-real-job.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/mco6-ic9-kill-and-restart.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-dependency-graph.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-tangible-file.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mco19-clearglass-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/event-taxonomy.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-intent-contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contract-repo-provision.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/meta/adversary-suite.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/contract-repo-provision.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/event-taxonomy.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/agent-intent-contract.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/worker.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco5-one-real-job.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco6-ic9-kill-and-restart.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-dependency-graph.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-tangible-file.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/mco19-clearglass-dispatch.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
+    dependents:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD1_every_build_goes_through_raid
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::FR1_failure_reports
+    upstream:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
+    downstream:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::AT1_atlases_and_specs_from_releases
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::BR1_bricks_on_every_path
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::BR2_recursion_to_a_depth
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::FR1_failure_reports
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GS1_a_snapshot_per_gate_rewind_and_compare
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD1_every_build_goes_through_raid
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN1_versionium_tags_and_releases
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN2_changelog_from_the_commits
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN3_releases_in_idearium
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::ST1_stability_checks
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD1_every_build_goes_through_raid
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::FR1_failure_reports
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): GT1a_exhausted_climb_spends_its_attempt'
+      - >-
+        needed by (2): RD1_every_build_goes_through_raid, FR1_failure_reports · all downstream 10 ·
+        finishing it unlocks RD1_every_build_goes_through_raid, FR1_failure_reports
+    edges:
+      - from: docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
+        kind: declared

@@ -57,7 +57,9 @@ function _resolveInputDir(system) {
   const fs = require('fs');
   // §0.39.282 — RAID_SYSTEMS_ROOT (the test sandbox sets it) instead of always the repo: tests wrote .contract files
   // into the real guardian/input/.
-  const dir = path.join(process.env.RAID_SYSTEMS_ROOT || path.join(__dirname, '../../../'), system, 'input');
+  // 0.60.247 — the system's folder by the one list (core's systems.js dirOf: emerge is lib/emerge since RF2), the same as lib/contract-queue.js
+  let home = system; try { home = require('../../../lib/nexus-self/systems.js').dirOf(system); } catch (_) {}
+  const dir = path.join(process.env.RAID_SYSTEMS_ROOT || path.join(__dirname, '../../../'), home, 'input');
   return fs.existsSync(dir) ? dir : null;
 }
 

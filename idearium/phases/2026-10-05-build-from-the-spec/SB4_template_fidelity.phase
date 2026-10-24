@@ -7,11 +7,11 @@ intent: null
 summary: SB4_template_fidelity (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792841754640
+exported_at: 1792878421679
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754640
-lastSeenAt: 1792841754640
+firstSeenAt: 1792878421679
+lastSeenAt: 1792878421679
 fingerprint: null
 payload:
   id: SB4_template_fidelity
@@ -27,4 +27,4 @@ payload:
     - SB17_the_system_template_is_complete
   blocks: []
   spec: null
-  graph: 15486675896866a8
+  graph: 07cf449a7e2cb77e

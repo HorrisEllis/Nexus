@@ -1,0 +1,254 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV1_every_table_has_one_owner:b8284fa1af987a99
+type: graph
+id: phase:SV1_every_table_has_one_owner:b8284fa1af987a99
+context: dependency graph of phase SV1_every_table_has_one_owner
+intent: null
+summary: 30 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878423755
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878423755
+lastSeenAt: 1792878423755
+fingerprint: null
+payload:
+  for: SV1_every_table_has_one_owner
+  kind: phase
+  repo: null
+  hash: b8284fa1af987a99
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/jaa-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/table-owners.js
+      role: changes
+      exists: false
+      system: lib
+    - path: clear-glass/src/cookies/vault.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/passwords/vault.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/healer/api/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/agents/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/jaa-store.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/lib/domain-nodes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/ledger-store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/node-index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/tiers.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/memory/jaa-db.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: diagnostic/healer/api/index.js
+      to: lib/system-store.js
+      kind: requires
+    - from: guardian/agents/index.js
+      to: lib/system-store.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-store.js
+      kind: requires
+    - from: clear-glass/src/cookies/vault.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: clear-glass/src/passwords/vault.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: clear-glass/src/storage/jaa.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: guardian/jaa-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: intelligence/lib/domain-nodes.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: lib/ledger-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: lib/node-index.js
+      to: lib/jaa-store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+    dependents:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+    upstream:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV8_warp_sovereign
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): SV0_the_census_tells_the_truth'
+      - >-
+        needed by (1): SV3_components_and_architect · all downstream 15 · finishing it unlocks
+        SV3_components_and_architect
+    edges:
+      - from: docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+        kind: declared

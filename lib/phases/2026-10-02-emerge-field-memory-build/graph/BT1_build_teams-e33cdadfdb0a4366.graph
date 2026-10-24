@@ -1,0 +1,259 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BT1_build_teams:e33cdadfdb0a4366
+type: graph
+id: phase:BT1_build_teams:e33cdadfdb0a4366
+context: dependency graph of phase BT1_build_teams
+intent: null
+summary: 28 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878421502
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878421502
+lastSeenAt: 1792878421502
+fingerprint: null
+payload:
+  for: BT1_build_teams
+  kind: phase
+  repo: null
+  hash: e33cdadfdb0a4366
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/contract-queue.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/copilot/hat.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/jobs.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-intent-contract.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/hat-seed-ollama-personalities.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/hat-seed.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/hat-forge.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/contract-queue.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/contract-queue.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-forge.js
+      kind: requires
+    - from: clear-glass/src/copilot/hat.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/agent-intent-contract.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/hat-seed-ollama-personalities.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/hat-seed.js
+      to: lib/hat-forge.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV0_fulfil_a_taken_order
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
+        files:
+          - idearium/api/index.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by CB1_cfr_build_logic, SH1_shadow_space
+      - >-
+        depends on (3): GA1_guardian_source_of_truth, CB1_cfr_build_logic, SH1_shadow_space · all
+        upstream 9
+      - 'needed by (1): FV1_client_jobs'
+      - 'same files as RC1_the_repo_main_chat with no order between them: idearium/api/index.js'
+      - 'same files as FV0_fulfil_a_taken_order with no order between them: idearium/api/index.js'
+      - 'same files as ST1_settings with no order between them: idearium/api/index.js'
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+        kind: declared

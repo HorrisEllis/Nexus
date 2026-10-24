@@ -11073,7 +11073,7 @@ export function startAPI() {
         // (not local to this closure) so a real shutdown path — cortex's
         // own migration found it has none either, a separate, pre-
         // existing gap, not fixed here — has something real to call.
-        _pulseClient = _require('../../orchestrator/lib/pulse.js').createPulse({
+        _pulseClient = _require('../../lib/pulse.js').createPulse({
           systemId: 'idearium', port: PORT,
           onOffline: () => console.warn('[idearium] orchestrator unreachable — pulse will keep retrying'),
           onOnline:  ({ latency }) => console.log(`[idearium] orchestrator back online, latency=${latency}ms`),

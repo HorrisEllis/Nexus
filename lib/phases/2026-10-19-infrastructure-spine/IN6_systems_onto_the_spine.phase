@@ -7,11 +7,11 @@ intent: null
 summary: IN6_systems_onto_the_spine (integration) — 14 file(s)
 system: idearium
 tags: []
-exported_at: 1792877163545
+exported_at: 1792878423340
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163545
-lastSeenAt: 1792877163545
+firstSeenAt: 1792878423340
+lastSeenAt: 1792878423340
 fingerprint: null
 payload:
   id: IN6_systems_onto_the_spine
@@ -38,4 +38,4 @@ payload:
     - IN4_retire_hand_maps
   blocks: []
   spec: null
-  graph: e1e32c821230f2a3
+  graph: 97b5bc26ce6b8001

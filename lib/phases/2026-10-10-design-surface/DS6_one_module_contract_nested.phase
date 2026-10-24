@@ -7,11 +7,11 @@ intent: null
 summary: DS6_one_module_contract_nested (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792841755085
+exported_at: 1792878422232
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755085
-lastSeenAt: 1792841755085
+firstSeenAt: 1792878422232
+lastSeenAt: 1792878422232
 fingerprint: null
 payload:
   id: DS6_one_module_contract_nested
@@ -25,4 +25,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 3acef63147f4f671
+  graph: 4e38b12b3398c591

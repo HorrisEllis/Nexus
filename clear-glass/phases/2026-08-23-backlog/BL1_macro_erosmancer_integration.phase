@@ -7,11 +7,11 @@ intent: null
 summary: BL1_macro_erosmancer_integration (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675393
+exported_at: 1792878419749
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675393
-lastSeenAt: 1792787675393
+firstSeenAt: 1792878419749
+lastSeenAt: 1792878419749
 fingerprint: null
 payload:
   id: BL1_macro_erosmancer_integration
@@ -25,4 +25,4 @@ payload:
     - BL0_macro_system
   blocks: []
   spec: null
-  graph: 16a373b699bcfb38
+  graph: e6757661dd635550
