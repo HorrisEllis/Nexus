@@ -9,7 +9,7 @@
 //   answers — after the run: which causes never got their effect, and what caused a given effect
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const S = await import('../siso/index.js');            // SISO (Jonathan Bailey), canonical shape
+const S = await import('../lib/siso/index.js');            // SISO (Jonathan Bailey), canonical shape
 const W = require('../warp');                           // WARP 1.x and WARP 2 (same package)
 
 const N = Number(process.argv[2] || 20000);

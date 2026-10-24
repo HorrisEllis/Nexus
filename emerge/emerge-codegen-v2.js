@@ -712,7 +712,7 @@ function generateCompartment(comp) {
   out.push(` * §1.1 §1.2 §2.1`);
   out.push(` */`);
   out.push(``);
-  out.push(`const { Event: _Event, Gate: _Gate, Stream: _Stream } = require('../siso');`);
+  out.push(`const { Event: _Event, Gate: _Gate, Stream: _Stream } = require('../lib/siso');`);
   out.push(`const { randomUUID: _uid } = require('crypto');`);
   out.push(``);
   out.push(`const MODULE_ID     = ${jsStr(id)};`);

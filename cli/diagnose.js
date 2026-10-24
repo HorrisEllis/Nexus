@@ -585,10 +585,10 @@ async function diagIdearium() {
     ['file: idearium/core/index.js',             () => fileExists('idearium/core/index.js')],
     ['file: idearium/schemas/interaction-contract.json', () => fileExists('idearium/schemas/interaction-contract.json')],
     ['file: idearium/ui/index.html',             () => fileExists('idearium/ui/index.html')],
-    ['file: siso/core/index.js (ESM)',           () => fileExists('siso/core/index.js')],
+    ['file: siso/core/index.js (ESM)',           () => fileExists('lib/siso/core/index.js')],
     ['file: siso/core/package.json type:module', () => {
       try {
-        const p = JSON.parse(fs.readFileSync(path.join(ROOT,'siso/core/package.json'),'utf8'));
+        const p = JSON.parse(fs.readFileSync(path.join(ROOT, 'lib', 'siso', 'core', 'package.json'),'utf8'));
         return p.type === 'module';
       } catch { return false; }
     }],

@@ -35,7 +35,7 @@ const required = [
   'lib/boot-sequence.js',
   'lib/cfr/ledger.js',
   'package.json',
-  'siso/index.js',
+  'lib/siso/index.js',
 ];
 
 let ok = true;
