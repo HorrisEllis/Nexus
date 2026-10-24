@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV14_service
 context: pipeline phase MV14_service of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
 intent: null
-summary: MV14_service (?) — 1 file(s)
+summary: MV14_service (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792820476280
+exported_at: 1792821071286
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820476280
-lastSeenAt: 1792820476280
+firstSeenAt: 1792821071286
+lastSeenAt: 1792821071286
 fingerprint: null
 payload:
   id: MV14_service
@@ -21,8 +21,8 @@ payload:
   status: OPEN
   files:
     - service/
-  depends_on:
-    - MV0_unplaced_homes
+    - _archive/2026-10-24-retired-systems/service/
+  depends_on: []
   blocks: []
   spec: null
   graph: 10cac063cd8b5afd

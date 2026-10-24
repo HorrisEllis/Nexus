@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_cli
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_cli
+context: pipeline phase MV22_cli of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV22_cli (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792821071295
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071295
+lastSeenAt: 1792821071295
+fingerprint: null
+payload:
+  id: MV22_cli
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cli/
+    - lib/cli/
+  depends_on:
+    - MV3_cockpit
+    - MV18_emerge
+    - MV13_sentinel
+    - MV15_siso
+  blocks: []
+  spec: null
+  graph: fc91817e9db76c4d

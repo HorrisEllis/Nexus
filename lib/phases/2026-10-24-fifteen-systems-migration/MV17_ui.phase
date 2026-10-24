@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV17_ui
 context: pipeline phase MV17_ui of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
 intent: null
-summary: MV17_ui (?) — 1 file(s)
+summary: MV17_ui (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792820476284
+exported_at: 1792821071289
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820476284
-lastSeenAt: 1792820476284
+firstSeenAt: 1792821071289
+lastSeenAt: 1792821071289
 fingerprint: null
 payload:
   id: MV17_ui
@@ -21,8 +21,8 @@ payload:
   status: OPEN
   files:
     - ui/
-  depends_on:
-    - MV0_unplaced_homes
+    - lib/ui/
+  depends_on: []
   blocks: []
   spec: null
   graph: 6dbe966341e443fd

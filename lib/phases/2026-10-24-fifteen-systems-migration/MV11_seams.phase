@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV11_seams
 context: pipeline phase MV11_seams of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
 intent: null
-summary: MV11_seams (?) — 1 file(s)
+summary: MV11_seams (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792820476275
+exported_at: 1792821071281
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820476275
-lastSeenAt: 1792820476275
+firstSeenAt: 1792821071281
+lastSeenAt: 1792821071281
 fingerprint: null
 payload:
   id: MV11_seams
@@ -21,8 +21,9 @@ payload:
   status: OPEN
   files:
     - seams/
-  depends_on:
-    - MV0_unplaced_homes
+    - _archive/2026-10-24-retired-systems/seams/
+    - seams/seam-contracts.js
+  depends_on: []
   blocks: []
   spec: null
-  graph: cde977a3ee02d317
+  graph: 2a0fa6f698193ee4

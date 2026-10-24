@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792820476255
+exported_at: 1792821071266
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820476255
-lastSeenAt: 1792820476255
+firstSeenAt: 1792821071266
+lastSeenAt: 1792821071266
 fingerprint: null
 payload:
   for: MV3_cockpit
@@ -25,9 +25,12 @@ payload:
   dag:
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_cli
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV21_nexus
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_cli
     blockedBy: []
     unlocks: []
     conflicts: []
@@ -35,5 +38,5 @@ payload:
     lines:
       - layer 0 · ready
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - 'needed by (1): MV22_cli · all downstream 2'
     edges: []

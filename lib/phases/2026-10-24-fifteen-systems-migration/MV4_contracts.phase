@@ -7,11 +7,11 @@ intent: null
 summary: MV4_contracts (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792820476258
+exported_at: 1792821071267
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820476258
-lastSeenAt: 1792820476258
+firstSeenAt: 1792821071267
+lastSeenAt: 1792821071267
 fingerprint: null
 payload:
   id: MV4_contracts
@@ -21,7 +21,7 @@ payload:
   status: OPEN
   files:
     - contracts/
-    - orchestrator/contracts/
+    - lib/contracts/
   depends_on: []
   blocks: []
   spec: null

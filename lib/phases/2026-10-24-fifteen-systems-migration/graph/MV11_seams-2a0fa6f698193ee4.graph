@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV11_seams:2a0fa6f698193ee4
+type: graph
+id: phase:MV11_seams:2a0fa6f698193ee4
+context: dependency graph of phase MV11_seams
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792821071281
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792821071281
+lastSeenAt: 1792821071281
+fingerprint: null
+payload:
+  for: MV11_seams
+  kind: phase
+  repo: null
+  hash: 2a0fa6f698193ee4
+  nodes:
+    - path: seams/seam-contracts.js
+      role: changes
+      exists: true
+      system: seams
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []
