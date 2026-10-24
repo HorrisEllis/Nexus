@@ -7,11 +7,11 @@ intent: null
 summary: RQ7_the_context_obligations (?) — 7 file(s)
 system: cortex
 tags: []
-exported_at: 1792854995112
+exported_at: 1792855568356
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995112
-lastSeenAt: 1792854995112
+firstSeenAt: 1792855568356
+lastSeenAt: 1792855568356
 fingerprint: null
 payload:
   id: RQ7_the_context_obligations
@@ -247,7 +247,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
@@ -288,7 +288,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by RQ6_one_intent_map, RQ1_the_verifier_library
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by RQ6_one_intent_map, RQ1_the_verifier_library
         - 'depends on (2): RQ6_one_intent_map, RQ1_the_verifier_library · all upstream 3'
         - >-
           needed by (4): RQ8_the_gap_is_a_question, RQ9_the_chunked_contract,

@@ -7,11 +7,11 @@ intent: null
 summary: SB43_the_expansion_is_phased (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854983061
+exported_at: 1792855556695
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983061
-lastSeenAt: 1792854983061
+firstSeenAt: 1792855556695
+lastSeenAt: 1792855556695
 fingerprint: null
 payload:
   id: SB43_the_expansion_is_phased
@@ -50,7 +50,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
@@ -72,7 +72,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6
+        - DAG 7d2ff66183c6511e · layer 6
         - 'depends on (1): SB42_a_repo_expands_from_its_spec · all upstream 6'
         - >-
           needed by (1): SB44_phases_are_chunked_then_coded · all downstream 2 · finishing it

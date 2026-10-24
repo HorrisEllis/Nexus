@@ -7,11 +7,11 @@ intent: null
 summary: SD3_the_person_goes_first (?) — 3 file(s)
 system: guardian
 tags: []
-exported_at: 1792854992872
+exported_at: 1792855566181
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854992872
-lastSeenAt: 1792854992872
+firstSeenAt: 1792855566181
+lastSeenAt: 1792855566181
 fingerprint: null
 payload:
   id: SD3_the_person_goes_first
@@ -171,7 +171,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -182,7 +182,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 8635b430-da75-5106-8031-6b21cccddba6

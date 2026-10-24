@@ -7,11 +7,11 @@ intent: null
 summary: RC4_agent_file_names_guarded (foundation) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792855015859
+exported_at: 1792855588954
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015859
-lastSeenAt: 1792855015859
+firstSeenAt: 1792855588954
+lastSeenAt: 1792855588954
 fingerprint: null
 payload:
   id: RC4_agent_file_names_guarded
@@ -219,7 +219,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -243,7 +243,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): RC5_find_where_the_label_enters, VF1_verify_first · all downstream 9 ·

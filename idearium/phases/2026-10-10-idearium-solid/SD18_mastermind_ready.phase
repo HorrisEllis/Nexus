@@ -7,11 +7,11 @@ intent: null
 summary: SD18_mastermind_ready (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854992890
+exported_at: 1792855566200
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854992890
-lastSeenAt: 1792854992890
+firstSeenAt: 1792855566200
+lastSeenAt: 1792855566200
 fingerprint: null
 payload:
   id: SD18_mastermind_ready
@@ -230,7 +230,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-10-idearium-solid-phasemap.spec::SD17_an_imported_project_continues
@@ -251,7 +251,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): SD17_an_imported_project_continues'
         - >-
           needed by (2): SD19_a_refusal_goes_back_to_its_agent,

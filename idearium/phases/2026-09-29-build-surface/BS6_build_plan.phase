@@ -7,11 +7,11 @@ intent: null
 summary: BS6_build_plan (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854976739
+exported_at: 1792855550124
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854976739
-lastSeenAt: 1792854976739
+firstSeenAt: 1792855550124
+lastSeenAt: 1792855550124
 fingerprint: null
 payload:
   id: BS6_build_plan
@@ -62,7 +62,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-29-build-surface-phasemap.spec::BS5_spec_to_phasemap
@@ -83,7 +83,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): BS5_spec_to_phasemap'
         - 'needed by (1): BS7_api · all downstream 6 · finishing it unlocks BS7_api'
   uuid: 9e14a8e3-42ea-5365-90ed-dd4e9f63653e

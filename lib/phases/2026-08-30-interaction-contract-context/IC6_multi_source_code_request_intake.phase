@@ -9,11 +9,11 @@ intent: null
 summary: IC6_multi_source_code_request_intake (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854962999
+exported_at: 1792855536905
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854962999
-lastSeenAt: 1792854962999
+firstSeenAt: 1792855536905
+lastSeenAt: 1792855536905
 fingerprint: null
 payload:
   id: IC6_multi_source_code_request_intake
@@ -253,7 +253,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC5_full_input_queue_output_qc_lifecycle
@@ -270,7 +270,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by IC5_full_input_queue_output_qc_lifecycle
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by IC5_full_input_queue_output_qc_lifecycle
         - 'depends on (1): IC5_full_input_queue_output_qc_lifecycle · all upstream 4'
         - 'needed by (0): —'
   uuid: 2839bd7c-d5da-5e97-bf62-0a903099ab76

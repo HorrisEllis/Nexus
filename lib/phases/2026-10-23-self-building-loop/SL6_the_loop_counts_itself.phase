@@ -7,11 +7,11 @@ intent: null
 summary: SL6_the_loop_counts_itself (library) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792855022686
+exported_at: 1792855595396
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855022686
-lastSeenAt: 1792855022686
+firstSeenAt: 1792855595396
+lastSeenAt: 1792855595396
 fingerprint: null
 payload:
   id: SL6_the_loop_counts_itself
@@ -77,7 +77,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
@@ -90,7 +90,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): SL0_what_can_be_built_now'
         - 'needed by (0): —'
   uuid: 170d6c24-92c0-5894-8988-94e45384c796

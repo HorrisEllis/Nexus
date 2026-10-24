@@ -7,11 +7,11 @@ intent: null
 summary: MB2_android_compartment (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855007082
+exported_at: 1792855580231
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855007082
-lastSeenAt: 1792855007082
+firstSeenAt: 1792855580231
+lastSeenAt: 1792855580231
 fingerprint: null
 payload:
   id: MB2_android_compartment
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 9674795718df2e8a
+    hash: f6967005b7c8a99d
     nodes:
       - path: cos/compartment/process-runner.js
         role: changes
@@ -58,6 +58,10 @@ payload:
         role: used-by
         exists: true
         system: cos
+      - path: lib/cos-bridge.js
+        role: used-by
+        exists: true
+        system: lib
       - path: cos/compartment/qemu-runtime.js
         role: uses
         exists: true
@@ -101,10 +105,19 @@ payload:
       - from: cos/watchdog/monitor.js
         to: cos/compartment/process-runner.js
         kind: requires
-    crossings: []
+      - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+    crossings:
+      - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: false
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -115,7 +128,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

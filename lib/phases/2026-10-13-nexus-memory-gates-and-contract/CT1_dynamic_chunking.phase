@@ -9,11 +9,11 @@ intent: null
 summary: CT1_dynamic_chunking (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854996433
+exported_at: 1792855569688
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854996433
-lastSeenAt: 1792854996433
+firstSeenAt: 1792855569688
+lastSeenAt: 1792855569688
 fingerprint: null
 payload:
   id: CT1_dynamic_chunking
@@ -120,7 +120,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT0_the_contract_is_a_reference
@@ -136,7 +136,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): CT0_the_contract_is_a_reference'
         - >-
           needed by (1): CT2_ingestion_as_contracts · finishing it unlocks

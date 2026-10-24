@@ -7,11 +7,11 @@ intent: null
 summary: N18_hardcode_census (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854977234
+exported_at: 1792855550585
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977234
-lastSeenAt: 1792854977234
+firstSeenAt: 1792855550585
+lastSeenAt: 1792855550585
 fingerprint: null
 payload:
   id: N18_hardcode_census
@@ -43,7 +43,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
@@ -58,7 +58,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): N0_census'
         - 'needed by (1): N24_no_json_yaml_node_types_only'
   uuid: 4daa3186-a68e-5339-9bd9-371f63449946

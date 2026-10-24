@@ -9,11 +9,11 @@ intent: null
 summary: UN1_nexus_surfaces_in_the_field (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854987173
+exported_at: 1792855560687
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854987173
-lastSeenAt: 1792854987173
+firstSeenAt: 1792855560687
+lastSeenAt: 1792855560687
 fingerprint: null
 payload:
   id: UN1_nexus_surfaces_in_the_field
@@ -104,7 +104,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CM2_every_command_for_every_agent
@@ -124,7 +124,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): CM2_every_command_for_every_agent'
         - >-
           needed by (2): SP1_one_spotlight, DC1_a_click_that_did_nothing · all downstream 3 ·

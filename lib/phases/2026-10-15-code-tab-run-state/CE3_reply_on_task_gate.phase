@@ -7,11 +7,11 @@ intent: null
 summary: CE3_reply_on_task_gate (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854999132
+exported_at: 1792855572347
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854999132
-lastSeenAt: 1792854999132
+firstSeenAt: 1792855572347
+lastSeenAt: 1792855572347
 fingerprint: null
 payload:
   id: CE3_reply_on_task_gate
@@ -52,7 +52,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
@@ -75,7 +75,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): CE1_the_run_state'
         - 'needed by (1): CE5_events · all downstream 8 · finishing it unlocks CE5_events'
   uuid: c46267c0-234f-520e-bbeb-0538db438dbb

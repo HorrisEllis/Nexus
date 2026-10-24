@@ -9,11 +9,11 @@ intent: null
 summary: LM26_atlas_completeness_and_release_gate (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854963461
+exported_at: 1792855537374
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854963461
-lastSeenAt: 1792854963461
+firstSeenAt: 1792855537374
+lastSeenAt: 1792855537374
 fingerprint: null
 payload:
   id: LM26_atlas_completeness_and_release_gate
@@ -39,7 +39,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
@@ -75,7 +75,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 6 · blocked by LM19_atlas_spec_coverage_prerequisite,
+          DAG 7d2ff66183c6511e · layer 6 · blocked by LM19_atlas_spec_coverage_prerequisite,
           LM20_atlas_schema_and_deterministic_seed, LM21_atlas_fact_extractors,
           LM22_atlas_structure_ledger, LM23_atlas_history_versions_calendar, LM24_atlas_prose_layer,
           LM25_atlas_living_update

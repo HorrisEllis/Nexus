@@ -7,11 +7,11 @@ intent: null
 summary: R1_repair_contract_schema (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855034958
+exported_at: 1792855608070
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855034958
-lastSeenAt: 1792855034958
+firstSeenAt: 1792855608070
+lastSeenAt: 1792855608070
 fingerprint: null
 payload:
   id: R1_repair_contract_schema
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 7f797fc00c2ca729
+    hash: b40c22e010108e98
     nodes:
       - path: copilot/diagnostics.js
         role: changes
@@ -78,6 +78,10 @@ payload:
         role: used-by
         exists: true
         system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
       - path: cortex/gap-finder/index.js
         role: used-by
         exists: true
@@ -103,10 +107,6 @@ payload:
         exists: true
         system: lib
       - path: lib/agent-tools/tools/sandbox/self-repair.js
-        role: used-by
-        exists: true
-        system: lib
-      - path: lib/autonomous-repair.js
         role: used-by
         exists: true
         system: lib
@@ -207,6 +207,9 @@ payload:
       - from: copilot/lifeline.js
         to: lib/gap-field.js
         kind: requires
+      - from: cortex/boot.js
+        to: lib/gap-field.js
+        kind: requires
       - from: cortex/gap-finder/index.js
         to: lib/gap-field.js
         kind: requires
@@ -226,9 +229,6 @@ payload:
         to: lib/gap-field.js
         kind: requires
       - from: lib/agent-tools/tools/sandbox/self-repair.js
-        to: lib/gap-field.js
-        kind: requires
-      - from: lib/autonomous-repair.js
         to: lib/gap-field.js
         kind: requires
     crossings:
@@ -258,7 +258,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -274,7 +274,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): R3_autonomous_repair_trigger, R8_ui_diagnostic_surfaces_wired_together ·

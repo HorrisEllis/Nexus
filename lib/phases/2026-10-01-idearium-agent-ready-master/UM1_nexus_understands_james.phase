@@ -9,11 +9,11 @@ intent: null
 summary: UM1_nexus_understands_james (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854978946
+exported_at: 1792855552444
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978946
-lastSeenAt: 1792854978946
+firstSeenAt: 1792855552444
+lastSeenAt: 1792855552444
 fingerprint: null
 payload:
   id: UM1_nexus_understands_james
@@ -190,7 +190,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
@@ -218,7 +218,7 @@ payload:
             - lib/node-schemas/
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5 · blocked by DT1_persistence_census, CX1_context_cascade
+        - DAG 7d2ff66183c6511e · layer 5 · blocked by DT1_persistence_census, CX1_context_cascade
         - 'depends on (2): DT1_persistence_census, CX1_context_cascade · all upstream 5'
         - 'needed by (1): SW1_spec_workshop'
         - 'same files as CI1_compounding_iterate with no order between them: lib/node-schemas/'

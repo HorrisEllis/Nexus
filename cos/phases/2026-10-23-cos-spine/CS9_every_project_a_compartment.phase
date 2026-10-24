@@ -7,11 +7,11 @@ intent: null
 summary: CS9_every_project_a_compartment (integration) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792855022209
+exported_at: 1792855594969
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855022209
-lastSeenAt: 1792855022209
+firstSeenAt: 1792855594969
+lastSeenAt: 1792855594969
 fingerprint: null
 payload:
   id: CS9_every_project_a_compartment
@@ -31,7 +31,7 @@ payload:
     - MOD-CS-PROJECTS
   spec: cos/spec/cos-spine.spec
   graph:
-    hash: 4ceb779c4ef8413d
+    hash: b74d5a1c5c110ced
     nodes:
       - path: cos/spine/projects.js
         role: changes
@@ -109,6 +109,10 @@ payload:
         role: uses
         exists: true
         system: cos
+      - path: cos/compartment/process-runner.js
+        role: uses
+        exists: true
+        system: cos
       - path: cos/foundation/intent.js
         role: uses
         exists: true
@@ -118,10 +122,6 @@ payload:
         exists: true
         system: cos
       - path: cos/workspace/index.js
-        role: uses
-        exists: true
-        system: cos
-      - path: cos/workspace/vm-control.js
         role: uses
         exists: true
         system: cos
@@ -173,10 +173,10 @@ payload:
         to: cos/cli/commands/intent.js
         kind: requires
       - from: lib/cos-bridge.js
-        to: cos/workspace/index.js
+        to: cos/compartment/process-runner.js
         kind: requires
       - from: lib/cos-bridge.js
-        to: cos/workspace/vm-control.js
+        to: cos/workspace/index.js
         kind: requires
       - from: idearium/api/index.js
         to: idearium/repo/index.js
@@ -252,20 +252,20 @@ payload:
         kind: upward
         known: true
       - from: lib/cos-bridge.js
-        to: cos/workspace/index.js
+        to: cos/compartment/process-runner.js
         fromSystem: lib
         toSystem: cos
         kind: upward
-        known: true
+        known: false
       - from: lib/cos-bridge.js
-        to: cos/workspace/vm-control.js
+        to: cos/workspace/index.js
         fromSystem: lib
         toSystem: cos
         kind: upward
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
@@ -307,7 +307,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 6 · blocked by CS4_every_system_a_compartment,
+          DAG 7d2ff66183c6511e · layer 6 · blocked by CS4_every_system_a_compartment,
           CS1_a_version_is_a_system_state, CS_D6_every_project_a_compartment
         - >-
           depends on (3): CS4_every_system_a_compartment, CS1_a_version_is_a_system_state,
@@ -319,4 +319,4 @@ payload:
     spec: cos/spec/cos-spine.spec
     modules:
       - id: MOD-CS-PROJECTS
-        uuid: nexus-cos-spine-projects-v1-0000-2026-1023-001
+        uuid: null

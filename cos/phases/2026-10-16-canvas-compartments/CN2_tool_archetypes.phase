@@ -7,11 +7,11 @@ intent: null
 summary: CN2_tool_archetypes (?) — 5 file(s)
 system: cos
 tags: []
-exported_at: 1792855004147
+exported_at: 1792855577243
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855004147
-lastSeenAt: 1792855004147
+firstSeenAt: 1792855577243
+lastSeenAt: 1792855577243
 fingerprint: null
 payload:
   id: CN2_tool_archetypes
@@ -131,7 +131,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -142,7 +142,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

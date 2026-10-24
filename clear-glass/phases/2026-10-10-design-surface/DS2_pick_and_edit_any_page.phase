@@ -7,11 +7,11 @@ intent: null
 summary: DS2_pick_and_edit_any_page (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854992006
+exported_at: 1792855565349
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854992006
-lastSeenAt: 1792854992006
+firstSeenAt: 1792855565349
+lastSeenAt: 1792855565349
 fingerprint: null
 payload:
   id: DS2_pick_and_edit_any_page
@@ -125,7 +125,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-10-design-surface-phasemap.spec::DS1_tokens_edited_live
@@ -146,7 +146,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by DS1_tokens_edited_live
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by DS1_tokens_edited_live
         - 'depends on (1): DS1_tokens_edited_live · all upstream 2'
         - >-
           needed by (2): DS4_interface_types_by_adapter, DS5_the_agents_design_too · finishing it

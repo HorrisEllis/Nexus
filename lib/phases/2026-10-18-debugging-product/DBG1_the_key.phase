@@ -7,11 +7,11 @@ intent: null
 summary: DBG1_the_key (?) — 8 file(s)
 system: core
 tags: []
-exported_at: 1792855012759
+exported_at: 1792855585861
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855012759
-lastSeenAt: 1792855012759
+firstSeenAt: 1792855585861
+lastSeenAt: 1792855585861
 fingerprint: null
 payload:
   id: DBG1_the_key
@@ -251,7 +251,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-18-debugging-product-phasemap.spec::DBG0a_synchronized_ids
@@ -275,7 +275,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): DBG0a_synchronized_ids'
         - 'needed by (1): DBG2_the_case · all downstream 6 · finishing it unlocks DBG2_the_case'
         - 'same files as DBG4_dependency_gaps with no order between them: idearium/api/index.js'

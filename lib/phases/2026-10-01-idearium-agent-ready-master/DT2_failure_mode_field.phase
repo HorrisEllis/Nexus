@@ -7,11 +7,11 @@ intent: null
 summary: DT2_failure_mode_field (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854978895
+exported_at: 1792855552387
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978895
-lastSeenAt: 1792854978895
+firstSeenAt: 1792855552387
+lastSeenAt: 1792855552387
 fingerprint: null
 payload:
   id: DT2_failure_mode_field
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
@@ -267,7 +267,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by DT1_persistence_census
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by DT1_persistence_census
         - 'depends on (1): DT1_persistence_census · all upstream 2'
         - >-
           needed by (5): DT3_failure_modes_routes_and_preflight, CI1_compounding_iterate,

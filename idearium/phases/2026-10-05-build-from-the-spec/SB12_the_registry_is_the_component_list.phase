@@ -9,11 +9,11 @@ intent: null
 summary: SB12_the_registry_is_the_component_list (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854982985
+exported_at: 1792855556627
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854982985
-lastSeenAt: 1792854982985
+firstSeenAt: 1792855556627
+lastSeenAt: 1792855556627
 fingerprint: null
 payload:
   id: SB12_the_registry_is_the_component_list
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB11_each_block_chunked
@@ -272,7 +272,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5 · blocked by SB11_each_block_chunked
+        - DAG 7d2ff66183c6511e · layer 5 · blocked by SB11_each_block_chunked
         - 'depends on (1): SB11_each_block_chunked · all upstream 5'
         - >-
           needed by (4): SB13_each_component_chunked, SB15_empty_is_not_built,

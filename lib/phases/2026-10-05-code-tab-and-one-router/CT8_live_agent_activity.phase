@@ -7,11 +7,11 @@ intent: null
 summary: CT8_live_agent_activity (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854984119
+exported_at: 1792855557758
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854984119
-lastSeenAt: 1792854984119
+firstSeenAt: 1792855557758
+lastSeenAt: 1792855557758
 fingerprint: null
 payload:
   id: CT8_live_agent_activity
@@ -236,7 +236,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT5_hooked_into_the_plan
@@ -252,7 +252,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4
+        - DAG 7d2ff66183c6511e · layer 4
         - 'depends on (1): CT5_hooked_into_the_plan · all upstream 4'
         - 'needed by (0): —'
   uuid: 829c4162-6c77-5122-9bb1-da7cd0be7f28

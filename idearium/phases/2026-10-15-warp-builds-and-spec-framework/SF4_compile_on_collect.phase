@@ -9,11 +9,11 @@ intent: null
 summary: SF4_compile_on_collect (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792855003282
+exported_at: 1792855576404
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855003282
-lastSeenAt: 1792855003282
+firstSeenAt: 1792855576404
+lastSeenAt: 1792855576404
 fingerprint: null
 payload:
   id: SF4_compile_on_collect
@@ -259,7 +259,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF3_collect_the_spec
@@ -274,7 +274,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): SF3_collect_the_spec · all upstream 3'
         - 'needed by (0): —'
   uuid: 196311c7-9302-57e0-84bc-0b36e9a3102b

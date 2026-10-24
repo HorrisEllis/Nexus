@@ -7,11 +7,11 @@ intent: null
 summary: SB0_map (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854982959
+exported_at: 1792855556601
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854982959
-lastSeenAt: 1792854982959
+firstSeenAt: 1792855556601
+lastSeenAt: 1792855556601
 fingerprint: null
 payload:
   id: SB0_map
@@ -40,7 +40,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -102,7 +102,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): SB1_templates_are_the_default_frame, SB16_genesis_nodes_domain · all

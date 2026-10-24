@@ -7,11 +7,11 @@ intent: null
 summary: CS5_caps_per_compartment (backend) — 2 file(s)
 system: cos
 tags: []
-exported_at: 1792855022207
+exported_at: 1792855594967
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855022207
-lastSeenAt: 1792855022207
+firstSeenAt: 1792855594967
+lastSeenAt: 1792855594967
 fingerprint: null
 payload:
   id: CS5_caps_per_compartment
@@ -113,7 +113,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
@@ -158,7 +158,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 6 · blocked by CS4_every_system_a_compartment,
+          DAG 7d2ff66183c6511e · layer 6 · blocked by CS4_every_system_a_compartment,
           CS_D4_caps_by_the_os
         - 'depends on (2): CS4_every_system_a_compartment, CS_D4_caps_by_the_os · all upstream 20'
         - >-
@@ -173,4 +173,4 @@ payload:
     spec: cos/spec/cos-spine.spec
     modules:
       - id: MOD-CS-CAPS
-        uuid: nexus-cos-spine-caps-v1-0000-2026-1023-001
+        uuid: null

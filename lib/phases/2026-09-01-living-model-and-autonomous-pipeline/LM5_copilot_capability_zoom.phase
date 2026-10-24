@@ -9,11 +9,11 @@ intent: null
 summary: LM5_copilot_capability_zoom (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854963437
+exported_at: 1792855537352
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854963437
-lastSeenAt: 1792854963437
+firstSeenAt: 1792855537352
+lastSeenAt: 1792855537352
 fingerprint: null
 payload:
   id: LM5_copilot_capability_zoom
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM4_per_system_tool_index
@@ -48,7 +48,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by LM4_per_system_tool_index
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by LM4_per_system_tool_index
         - 'depends on (1): LM4_per_system_tool_index · all upstream 2'
         - 'needed by (0): —'
   uuid: 174f2751-5ae1-54cc-955f-b565edbacbc4

@@ -9,11 +9,11 @@ intent: null
 summary: DC1_a_click_that_did_nothing (?) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854987174
+exported_at: 1792855560688
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854987174
-lastSeenAt: 1792854987174
+firstSeenAt: 1792855560688
+lastSeenAt: 1792855560688
 fingerprint: null
 payload:
   id: DC1_a_click_that_did_nothing
@@ -138,7 +138,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::UN1_nexus_surfaces_in_the_field
@@ -158,7 +158,7 @@ payload:
             - clear-glass/src/page/field.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by UN1_nexus_surfaces_in_the_field
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by UN1_nexus_surfaces_in_the_field
         - 'depends on (1): UN1_nexus_surfaces_in_the_field · all upstream 2'
         - 'needed by (1): DX1_diagnose_it'
         - 'same files as SP1_one_spotlight with no order between them: clear-glass/src/page/field.js'

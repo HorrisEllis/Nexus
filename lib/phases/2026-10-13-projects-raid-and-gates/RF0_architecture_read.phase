@@ -7,11 +7,11 @@ intent: null
 summary: RF0_architecture_read (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854996907
+exported_at: 1792855570153
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854996907
-lastSeenAt: 1792854996907
+firstSeenAt: 1792855570153
+lastSeenAt: 1792855570153
 fingerprint: null
 payload:
   id: RF0_architecture_read
@@ -178,7 +178,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: null
       deps:
         - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::VM0_versionium_managed_per_repo
@@ -211,7 +211,7 @@ payload:
             - lib/project-decompose.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer — · blocked by PL6_global_links_seen
+        - DAG 7d2ff66183c6511e · layer — · blocked by PL6_global_links_seen
         - >-
           depends on (3): VM0_versionium_managed_per_repo, PL4_import_reports_what_is_broken,
           PL6_global_links_seen · all upstream 6

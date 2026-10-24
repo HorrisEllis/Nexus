@@ -7,11 +7,11 @@ intent: null
 summary: CE9_the_panels (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854999137
+exported_at: 1792855572352
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854999137
-lastSeenAt: 1792854999137
+firstSeenAt: 1792855572352
+lastSeenAt: 1792855572352
 fingerprint: null
 payload:
   id: CE9_the_panels
@@ -68,7 +68,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
@@ -85,7 +85,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (2): CE5_events, CE4_reply_kind_and_tags · all upstream 4'
         - 'needed by (0): —'
   uuid: ffffff62-a7ff-5e4c-ac4f-787408767f4c

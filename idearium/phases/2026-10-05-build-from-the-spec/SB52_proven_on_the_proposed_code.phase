@@ -9,11 +9,11 @@ intent: null
 summary: SB52_proven_on_the_proposed_code (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854983078
+exported_at: 1792855556714
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983078
-lastSeenAt: 1792854983078
+firstSeenAt: 1792855556714
+lastSeenAt: 1792855556714
 fingerprint: null
 payload:
   id: SB52_proven_on_the_proposed_code
@@ -227,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB51_a_phase_built_in_chunks
@@ -244,7 +244,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): SB51_a_phase_built_in_chunks'
         - >-
           needed by (1): CH1_compartment_charter · all downstream 2 · finishing it unlocks

@@ -7,11 +7,11 @@ intent: null
 summary: CT2_it_learns_and_switches (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854984114
+exported_at: 1792855557752
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854984114
-lastSeenAt: 1792854984114
+firstSeenAt: 1792855557752
+lastSeenAt: 1792855557752
 fingerprint: null
 payload:
   id: CT2_it_learns_and_switches
@@ -226,7 +226,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT1_one_door_for_models
@@ -249,7 +249,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): CT1_one_door_for_models'
         - >-
           needed by (2): CT3_the_code_tab_is_the_work_surface, CT6_the_escalation_ladder · all

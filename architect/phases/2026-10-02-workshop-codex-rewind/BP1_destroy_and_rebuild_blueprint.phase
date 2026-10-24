@@ -9,11 +9,11 @@ intent: null
 summary: BP1_destroy_and_rebuild_blueprint (?) — 2 file(s)
 system: architect
 tags: []
-exported_at: 1792854982116
+exported_at: 1792855555701
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854982116
-lastSeenAt: 1792854982116
+firstSeenAt: 1792855555701
+lastSeenAt: 1792855555701
 fingerprint: null
 payload:
   id: BP1_destroy_and_rebuild_blueprint
@@ -50,7 +50,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
@@ -69,7 +69,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by CX0_codex_component_store
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by CX0_codex_component_store
         - 'depends on (1): CX0_codex_component_store'
         - >-
           needed by (2): PL1_one_entry_point, UI12_workshop_surface · finishing it unlocks

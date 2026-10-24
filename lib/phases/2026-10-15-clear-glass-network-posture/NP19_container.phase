@@ -7,11 +7,11 @@ intent: null
 summary: NP19_container (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854998262
+exported_at: 1792855571459
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854998262
-lastSeenAt: 1792854998262
+firstSeenAt: 1792855571459
+lastSeenAt: 1792855571459
 fingerprint: null
 payload:
   id: NP19_container
@@ -39,7 +39,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
@@ -53,7 +53,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by NP1_compartment
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by NP1_compartment
         - 'depends on (1): NP1_compartment'
         - 'needed by (0): —'
   uuid: 985fa50d-bf54-5f56-8e9f-1f6e113a36bc

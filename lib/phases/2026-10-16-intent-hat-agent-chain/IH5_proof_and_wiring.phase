@@ -7,11 +7,11 @@ intent: null
 summary: IH5_proof_and_wiring (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792855006683
+exported_at: 1792855579816
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855006683
-lastSeenAt: 1792855006683
+firstSeenAt: 1792855579816
+lastSeenAt: 1792855579816
 fingerprint: null
 payload:
   id: IH5_proof_and_wiring
@@ -128,7 +128,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
@@ -143,7 +143,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by IH1_intent_nodes_point_at_hats
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by IH1_intent_nodes_point_at_hats
         - 'depends on (1): IH1_intent_nodes_point_at_hats · all upstream 2'
         - 'needed by (0): —'
   uuid: 32fdf88c-e454-51fe-86c5-ba6908cc013f

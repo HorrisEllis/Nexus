@@ -7,11 +7,11 @@ intent: null
 summary: CON5_pane (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855005001
+exported_at: 1792855578094
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855005001
-lastSeenAt: 1792855005001
+firstSeenAt: 1792855578094
+lastSeenAt: 1792855578094
 fingerprint: null
 payload:
   id: CON5_pane
@@ -35,7 +35,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-16-cos-console-phasemap.spec::CON2_grammar_and_completion
@@ -50,7 +50,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by CON2_grammar_and_completion
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by CON2_grammar_and_completion
         - 'depends on (1): CON2_grammar_and_completion · all upstream 2'
         - 'needed by (0): —'
   uuid: 58daf4a0-14a3-55e1-ade1-9bdf8535a754

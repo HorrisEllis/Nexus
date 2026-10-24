@@ -7,11 +7,11 @@ intent: null
 summary: MR6_contradictions_held (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854980282
+exported_at: 1792855553836
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980282
-lastSeenAt: 1792854980282
+firstSeenAt: 1792855553836
+lastSeenAt: 1792855553836
 fingerprint: null
 payload:
   id: MR6_contradictions_held
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
@@ -56,7 +56,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 6 · blocked by RF1_relational_field,
+          DAG 7d2ff66183c6511e · layer 6 · blocked by RF1_relational_field,
           MR1_recall_triad_and_context_table
         - 'depends on (2): RF1_relational_field, MR1_recall_triad_and_context_table · all upstream 8'
         - 'needed by (0): —'

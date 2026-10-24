@@ -7,11 +7,11 @@ intent: null
 summary: GD7_the_bus_and_connect (foundation) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792855024443
+exported_at: 1792855597154
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855024443
-lastSeenAt: 1792855024443
+firstSeenAt: 1792855597154
+lastSeenAt: 1792855597154
 fingerprint: null
 payload:
   id: GD7_the_bus_and_connect
@@ -298,7 +298,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
@@ -325,7 +325,7 @@ payload:
             - guardian/server.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by GD6_the_ways_in
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by GD6_the_ways_in
         - 'depends on (1): GD6_the_ways_in · all upstream 3'
         - 'needed by (1): GD8_guardian_in_its_compartment'
         - 'same files as GD2_primitives_to_the_kernel with no order between them: guardian/server.js'

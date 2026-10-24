@@ -7,11 +7,11 @@ intent: null
 summary: CA7_constant_autonomy (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855026543
+exported_at: 1792855599328
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855026543
-lastSeenAt: 1792855026543
+firstSeenAt: 1792855599328
+lastSeenAt: 1792855599328
 fingerprint: null
 payload:
   id: CA7_constant_autonomy
@@ -281,7 +281,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
@@ -299,7 +299,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4
+        - DAG 7d2ff66183c6511e · layer 4
         - >-
           depends on (3): CA1_scheduler, CA2_triggers_conditions, CA6_self_building_commands · all
           upstream 4

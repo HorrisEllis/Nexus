@@ -7,11 +7,11 @@ intent: null
 summary: N15_contract_history (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854977231
+exported_at: 1792855550582
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977231
-lastSeenAt: 1792854977231
+firstSeenAt: 1792855550582
+lastSeenAt: 1792855550582
 fingerprint: null
 payload:
   id: N15_contract_history
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
@@ -65,7 +65,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6 · blocked by N8_service, N14_failure_mode_field
+        - DAG 7d2ff66183c6511e · layer 6 · blocked by N8_service, N14_failure_mode_field
         - 'depends on (2): N8_service, N14_failure_mode_field · all upstream 10'
         - >-
           needed by (1): N16_settings_without_iframes · finishing it unlocks

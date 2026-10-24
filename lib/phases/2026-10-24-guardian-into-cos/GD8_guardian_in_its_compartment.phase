@@ -7,11 +7,11 @@ intent: null
 summary: GD8_guardian_in_its_compartment (integration) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792855024444
+exported_at: 1792855597154
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855024444
-lastSeenAt: 1792855024444
+firstSeenAt: 1792855597154
+lastSeenAt: 1792855597154
 fingerprint: null
 payload:
   id: GD8_guardian_in_its_compartment
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: d8c554df2a58ad50
+    hash: 1105146438f02391
     nodes:
       - path: cos/compartment/process-runner.js
         role: changes
@@ -66,6 +66,10 @@ payload:
         role: used-by
         exists: true
         system: cos
+      - path: lib/cos-bridge.js
+        role: used-by
+        exists: true
+        system: lib
       - path: cos/compartment/qemu-runtime.js
         role: uses
         exists: true
@@ -137,6 +141,9 @@ payload:
       - from: cos/watchdog/monitor.js
         to: cos/compartment/process-runner.js
         kind: requires
+      - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        kind: requires
     crossings:
       - from: service/guardian-service.js
         to: intelligence/baseline.js
@@ -150,9 +157,15 @@ payload:
         toSystem: guardian
         kind: system
         known: true
+      - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: false
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
@@ -181,7 +194,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 5 · blocked by GD7_the_bus_and_connect,
+          DAG 7d2ff66183c6511e · layer 5 · blocked by GD7_the_bus_and_connect,
           CS3_the_registry_is_the_bridge
         - 'depends on (2): GD7_the_bus_and_connect, CS3_the_registry_is_the_bridge · all upstream 13'
         - 'needed by (0): —'

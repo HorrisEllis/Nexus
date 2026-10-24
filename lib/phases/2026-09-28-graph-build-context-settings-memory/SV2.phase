@@ -7,11 +7,11 @@ intent: null
 summary: SV2 (?) — 10 file(s)
 system: core
 tags: []
-exported_at: 1792854975828
+exported_at: 1792855549081
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854975828
-lastSeenAt: 1792854975828
+firstSeenAt: 1792855549081
+lastSeenAt: 1792855549081
 fingerprint: null
 payload:
   id: SV2
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV1
@@ -253,7 +253,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5 · blocked by SV1, M1
+        - DAG 7d2ff66183c6511e · layer 5 · blocked by SV1, M1
         - 'depends on (2): SV1, M1 · all upstream 7'
         - 'needed by (0): —'
   uuid: a35e9b80-a68c-50fb-9563-e6c165128ab0

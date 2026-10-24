@@ -9,11 +9,11 @@ intent: null
 summary: SB37_the_working_set_signal_to_noise (?) — 6 file(s)
 system: copilot
 tags: []
-exported_at: 1792854983053
+exported_at: 1792855556687
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983053
-lastSeenAt: 1792854983053
+firstSeenAt: 1792855556687
+lastSeenAt: 1792855556687
 fingerprint: null
 payload:
   id: SB37_the_working_set_signal_to_noise
@@ -255,7 +255,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 8
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
@@ -279,7 +279,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 8
+        - DAG 7d2ff66183c6511e · layer 8
         - 'depends on (1): SB36_every_agent_can_use_the_tools · all upstream 8'
         - >-
           needed by (1): SB38_prerequisites_the_questions_first · all downstream 2 · finishing it

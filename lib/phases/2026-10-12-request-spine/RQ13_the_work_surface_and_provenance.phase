@@ -7,11 +7,11 @@ intent: null
 summary: RQ13_the_work_surface_and_provenance (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792854995123
+exported_at: 1792855568365
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995123
-lastSeenAt: 1792854995123
+firstSeenAt: 1792855568365
+lastSeenAt: 1792855568365
 fingerprint: null
 payload:
   id: RQ13_the_work_surface_and_provenance
@@ -275,7 +275,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
@@ -304,7 +304,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 5 · blocked by RQ9_the_chunked_contract,
+          DAG 7d2ff66183c6511e · layer 5 · blocked by RQ9_the_chunked_contract,
           RQ10_anchors_and_the_diff_reconciled
         - >-
           depends on (2): RQ9_the_chunked_contract, RQ10_anchors_and_the_diff_reconciled · all

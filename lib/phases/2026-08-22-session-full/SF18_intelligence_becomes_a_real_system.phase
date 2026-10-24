@@ -9,11 +9,11 @@ intent: null
 summary: SF18_intelligence_becomes_a_real_system (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854959816
+exported_at: 1792855534393
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854959816
-lastSeenAt: 1792854959816
+firstSeenAt: 1792855534393
+lastSeenAt: 1792855534393
 fingerprint: null
 payload:
   id: SF18_intelligence_becomes_a_real_system
@@ -165,7 +165,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-08-22-session-full-phasemap.spec::SF17_intelligence_system_all_4_phases
@@ -181,7 +181,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): SF17_intelligence_system_all_4_phases'
         - >-
           needed by (1): SF19_loom_registry_never_auto_synced · finishing it unlocks

@@ -7,11 +7,11 @@ intent: null
 summary: GM3_the_fulfilled_contract_index (?) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792855013206
+exported_at: 1792855586322
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855013206
-lastSeenAt: 1792855013206
+firstSeenAt: 1792855586322
+lastSeenAt: 1792855586322
 fingerprint: null
 payload:
   id: GM3_the_fulfilled_contract_index
@@ -155,7 +155,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-18-gate-memory-phasemap.spec::GM1_the_gate_record
@@ -172,7 +172,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by GM1_the_gate_record
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by GM1_the_gate_record
         - 'depends on (1): GM1_the_gate_record · all upstream 2'
         - 'needed by (1): GM6_crystallized_from_what_was_approved'
   uuid: a51ce7b0-d8b3-5109-a5de-478386345a08

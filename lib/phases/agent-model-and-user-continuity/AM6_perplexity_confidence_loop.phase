@@ -9,11 +9,11 @@ intent: null
 summary: AM6_perplexity_confidence_loop (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855025696
+exported_at: 1792855598467
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855025696
-lastSeenAt: 1792855025696
+firstSeenAt: 1792855598467
+lastSeenAt: 1792855598467
 fingerprint: null
 payload:
   id: AM6_perplexity_confidence_loop
@@ -298,7 +298,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
@@ -316,7 +316,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 1 · blocked by AM1_per_agent_learned_model,
+          DAG 7d2ff66183c6511e · layer 1 · blocked by AM1_per_agent_learned_model,
           AM5_ambiguity_triggered_pull
         - 'depends on (2): AM1_per_agent_learned_model, AM5_ambiguity_triggered_pull'
         - 'needed by (0): —'

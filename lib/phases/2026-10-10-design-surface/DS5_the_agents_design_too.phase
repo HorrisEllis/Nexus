@@ -7,11 +7,11 @@ intent: null
 summary: DS5_the_agents_design_too (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854992008
+exported_at: 1792855565351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854992008
-lastSeenAt: 1792854992008
+firstSeenAt: 1792855565351
+lastSeenAt: 1792855565351
 fingerprint: null
 payload:
   id: DS5_the_agents_design_too
@@ -216,7 +216,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
@@ -232,7 +232,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by DS2_pick_and_edit_any_page
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by DS2_pick_and_edit_any_page
         - 'depends on (1): DS2_pick_and_edit_any_page · all upstream 3'
         - 'needed by (0): —'
   uuid: add48abf-e632-5714-b437-f3a06d25e156

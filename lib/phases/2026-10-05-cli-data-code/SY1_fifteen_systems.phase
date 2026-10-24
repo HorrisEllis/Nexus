@@ -7,11 +7,11 @@ intent: null
 summary: SY1_fifteen_systems (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854983609
+exported_at: 1792855557240
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983609
-lastSeenAt: 1792854983609
+firstSeenAt: 1792855557240
+lastSeenAt: 1792855557240
 fingerprint: null
 payload:
   id: SY1_fifteen_systems
@@ -143,7 +143,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -157,7 +157,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (1): SY2_cos_its_own_system · finishing it unlocks SY2_cos_its_own_system'
   uuid: 128dd408-cc5a-5508-95f9-b3c50689184d

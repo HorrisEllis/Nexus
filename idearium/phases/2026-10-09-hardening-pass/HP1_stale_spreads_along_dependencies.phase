@@ -9,11 +9,11 @@ intent: null
 summary: HP1_stale_spreads_along_dependencies (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854990233
+exported_at: 1792855563618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854990233
-lastSeenAt: 1792854990233
+firstSeenAt: 1792855563618
+lastSeenAt: 1792855563618
 fingerprint: null
 payload:
   id: HP1_stale_spreads_along_dependencies
@@ -49,7 +49,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -60,7 +60,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: d242b9c2-51e1-58f5-a026-f42c34f742ba

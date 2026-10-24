@@ -9,11 +9,11 @@ intent: null
 summary: SR9_autonomous_self_build_end_state (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854964551
+exported_at: 1792855538417
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854964551
-lastSeenAt: 1792854964551
+firstSeenAt: 1792855538417
+lastSeenAt: 1792855538417
 fingerprint: null
 payload:
   id: SR9_autonomous_self_build_end_state
@@ -302,7 +302,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
@@ -317,7 +317,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (2): B1_full_build_contract_schema, SR3_artifact_extraction_introspect_bridge'
         - 'needed by (0): —'
   uuid: 2e27e748-06ff-51c4-b545-53c55a906fa1

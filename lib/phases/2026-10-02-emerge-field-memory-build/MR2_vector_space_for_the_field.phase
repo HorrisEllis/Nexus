@@ -9,11 +9,11 @@ intent: null
 summary: MR2_vector_space_for_the_field (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854980274
+exported_at: 1792855553826
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980274
-lastSeenAt: 1792854980274
+firstSeenAt: 1792855553826
+lastSeenAt: 1792855553826
 fingerprint: null
 payload:
   id: MR2_vector_space_for_the_field
@@ -144,7 +144,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
@@ -172,7 +172,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 5 · blocked by MR1_recall_triad_and_context_table,
+          DAG 7d2ff66183c6511e · layer 5 · blocked by MR1_recall_triad_and_context_table,
           CF1_cfr_improved_with_rfr2
         - >-
           depends on (2): MR1_recall_triad_and_context_table, CF1_cfr_improved_with_rfr2 · all

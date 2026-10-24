@@ -7,11 +7,11 @@ intent: null
 summary: HG3_bv09_the_detector_and_files (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854983600
+exported_at: 1792855557233
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983600
-lastSeenAt: 1792854983600
+firstSeenAt: 1792855557233
+lastSeenAt: 1792855557233
 fingerprint: null
 payload:
   id: HG3_bv09_the_detector_and_files
@@ -110,7 +110,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -121,7 +121,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: cf35dd43-e3a8-5458-a955-879092ae7fd1

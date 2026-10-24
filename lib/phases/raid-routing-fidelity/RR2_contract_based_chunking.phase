@@ -7,11 +7,11 @@ intent: null
 summary: RR2_contract_based_chunking (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855033683
+exported_at: 1792855606806
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855033683
-lastSeenAt: 1792855033683
+firstSeenAt: 1792855606806
+lastSeenAt: 1792855606806
 fingerprint: null
 payload:
   id: RR2_contract_based_chunking
@@ -82,7 +82,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
@@ -109,7 +109,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): RR1_verify_and_wire_the_snr_fidelity_gate'
         - >-
           needed by (1): RR4_governed_handshake_on_handoff · all downstream 12 · finishing it

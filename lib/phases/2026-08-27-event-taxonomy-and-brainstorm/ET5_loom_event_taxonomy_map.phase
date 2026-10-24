@@ -9,11 +9,11 @@ intent: null
 summary: ET5_loom_event_taxonomy_map (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854961074
+exported_at: 1792855535388
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854961074
-lastSeenAt: 1792854961074
+firstSeenAt: 1792855535388
+lastSeenAt: 1792855535388
 fingerprint: null
 payload:
   id: ET5_loom_event_taxonomy_map
@@ -228,7 +228,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET2_guardian_event_taxonomy
@@ -256,7 +256,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 2 · blocked by ET2_guardian_event_taxonomy,
+          DAG 7d2ff66183c6511e · layer 2 · blocked by ET2_guardian_event_taxonomy,
           ET3_clearglass_event_taxonomy, ET4_orchestrator_autopilot_event_taxonomy
         - >-
           depends on (3): ET2_guardian_event_taxonomy, ET3_clearglass_event_taxonomy,

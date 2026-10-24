@@ -7,11 +7,11 @@ intent: null
 summary: PC5_control_when_he_chooses (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792855011363
+exported_at: 1792855584508
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855011363
-lastSeenAt: 1792855011363
+firstSeenAt: 1792855584508
+lastSeenAt: 1792855584508
 fingerprint: null
 payload:
   id: PC5_control_when_he_chooses
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
@@ -254,7 +254,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by PC1_the_point_first
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by PC1_the_point_first
         - 'depends on (1): PC1_the_point_first · all upstream 3'
         - 'needed by (0): —'
   uuid: c20ad68d-c5cc-55f4-a20a-b111d35362c7

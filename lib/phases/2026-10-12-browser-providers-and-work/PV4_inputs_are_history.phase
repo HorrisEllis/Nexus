@@ -7,11 +7,11 @@ intent: null
 summary: PV4_inputs_are_history (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854994594
+exported_at: 1792855567882
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854994594
-lastSeenAt: 1792854994594
+firstSeenAt: 1792855567882
+lastSeenAt: 1792855567882
 fingerprint: null
 payload:
   id: PV4_inputs_are_history
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV3_input_nodes
@@ -238,7 +238,7 @@ payload:
             - lib/repo-agent.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by PV3_input_nodes
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by PV3_input_nodes
         - 'depends on (1): PV3_input_nodes · all upstream 2'
         - 'needed by (0): —'
         - 'same files as PV1_providers_read_from_nodes with no order between them: lib/repo-agent.js'

@@ -6,25 +6,33 @@ context: >-
   pipeline phase LM4_the_seal_and_into_its_compartment of
   docs/2026-10-24-loom-into-cos-phasemap.spec
 intent: null
-summary: LM4_the_seal_and_into_its_compartment (integration) — 3 file(s)
+summary: LM4_the_seal_and_into_its_compartment (integration) — 9 file(s)
 system: loom
 tags: []
-exported_at: 1792855024865
+exported_at: 1792855597568
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855024865
-lastSeenAt: 1792855024865
+firstSeenAt: 1792855597568
+lastSeenAt: 1792855597568
 fingerprint: null
 payload:
   id: LM4_the_seal_and_into_its_compartment
   map: docs/2026-10-24-loom-into-cos-phasemap.spec
   repo: null
   layer: integration
-  status: OPEN
+  status: >-
+    DONE 0.60.242 — Loom runs in nexus-self-loom behind the enforced wall; test-loom-into-cos
+    LI-05..LI-08
   files:
     - loom/templates/cos-compartment.js
     - cos/compartment/process-runner.js
-    - idearium/repo/nexus-self.js
+    - cos/compartment/boundary.js (new)
+    - lib/cos-bridge.js
+    - lib/system-boundary.js
+    - lib/gap-field.js
+    - cortex/boot.js
+    - loom/server.js
+    - loom/scanners/wiring-gaps.js
   depends_on:
     - LM0_the_heartbeat
     - LM1_ollama_through_its_bridge
@@ -32,20 +40,48 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 9496d2577f4c129b
+    hash: 198f13b41a6dc315
     nodes:
+      - path: cortex/boot.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: cos/compartment/boundary.js
+        role: changes
+        exists: true
+        system: cos
       - path: cos/compartment/process-runner.js
         role: changes
         exists: true
         system: cos
-      - path: idearium/repo/nexus-self.js
+      - path: lib/cos-bridge.js
         role: changes
         exists: true
-        system: idearium
+        system: lib
+      - path: lib/gap-field.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/system-boundary.js
+        role: changes
+        exists: true
+        system: lib
+      - path: loom/scanners/wiring-gaps.js
+        role: changes
+        exists: true
+        system: loom
+      - path: loom/server.js
+        role: changes
+        exists: true
+        system: loom
       - path: loom/templates/cos-compartment.js
         role: changes
         exists: true
         system: loom
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
       - path: cos/cli/commands/run.js
         role: used-by
         exists: true
@@ -74,26 +110,38 @@ payload:
         role: used-by
         exists: true
         system: cos
+      - path: guardian/routes/autonomous-loop.js
+        role: used-by
+        exists: true
+        system: guardian
       - path: idearium/api/index.js
         role: used-by
         exists: true
         system: idearium
-      - path: idearium/repo/living-spec.js
+      - path: idearium/repo/code-api.js
         role: used-by
         exists: true
         system: idearium
-      - path: loom/server.js
-        role: used-by
-        exists: true
-        system: loom
       - path: tests/modules/test-cos-compartment-template.test.js
         role: used-by
         exists: true
         system: null
-      - path: tests/modules/test-nexus-atlas-and-glass.test.js
-        role: used-by
+      - path: cos/cli/commands/advance-work-phase.js
+        role: uses
         exists: true
-        system: null
+        system: cos
+      - path: cos/cli/commands/create.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/cli/commands/destroy.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/cli/commands/intent.js
+        role: uses
+        exists: true
+        system: cos
       - path: cos/compartment/qemu-runtime.js
         role: uses
         exists: true
@@ -102,23 +150,19 @@ payload:
         role: uses
         exists: true
         system: cos
+      - path: cos/foundation/intent.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/host/index.js
+        role: uses
+        exists: true
+        system: cos
       - path: cos/siso/Event.js
         role: uses
         exists: true
         system: cos
-      - path: idearium/lib/db.js
-        role: uses
-        exists: true
-        system: idearium
-      - path: idearium/repo/import-pipeline.js
-        role: uses
-        exists: true
-        system: idearium
-      - path: lib/cos-bridge.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/nexus-self/store.js
+      - path: lib/agent-tools/index.js
         role: uses
         exists: true
         system: lib
@@ -126,31 +170,16 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/system-boundary.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/system-registry.js
         role: uses
         exists: true
         system: lib
-      - path: lib/zip-ingest.js
-        role: uses
-        exists: true
-        system: lib
-      - path: loom/scanners/phasemap-map.js
-        role: uses
-        exists: true
-        system: loom
     edges:
       - from: loom/templates/cos-compartment.js
         to: lib/system-registry.js
         kind: requires
       - from: loom/templates/cos-compartment.js
-        to: lib/system-boundary.js
-        kind: requires
-      - from: loom/templates/cos-compartment.js
-        to: lib/cos-bridge.js
+        to: lib/nexus-self/systems.js
         kind: requires
       - from: cos/compartment/process-runner.js
         to: cos/siso/Event.js
@@ -161,26 +190,26 @@ payload:
       - from: cos/compartment/process-runner.js
         to: cos/compartment/qemu-runtime.js
         kind: requires
-      - from: idearium/repo/nexus-self.js
-        to: idearium/repo/import-pipeline.js
+      - from: lib/cos-bridge.js
+        to: cos/host/index.js
         kind: requires
-      - from: idearium/repo/nexus-self.js
-        to: idearium/lib/db.js
+      - from: lib/cos-bridge.js
+        to: cos/cli/commands/create.js
         kind: requires
-      - from: idearium/repo/nexus-self.js
-        to: lib/nexus-self/store.js
+      - from: lib/cos-bridge.js
+        to: cos/cli/commands/advance-work-phase.js
         kind: requires
-      - from: idearium/repo/nexus-self.js
-        to: lib/nexus-self/systems.js
+      - from: lib/cos-bridge.js
+        to: lib/agent-tools/index.js
         kind: requires
-      - from: idearium/repo/nexus-self.js
-        to: lib/zip-ingest.js
+      - from: lib/cos-bridge.js
+        to: cos/cli/commands/destroy.js
         kind: requires
-      - from: idearium/repo/nexus-self.js
-        to: loom/scanners/phasemap-map.js
+      - from: lib/cos-bridge.js
+        to: cos/foundation/intent.js
         kind: requires
-      - from: loom/server.js
-        to: loom/templates/cos-compartment.js
+      - from: lib/cos-bridge.js
+        to: cos/cli/commands/intent.js
         kind: requires
       - from: tests/modules/test-cos-compartment-template.test.js
         to: loom/templates/cos-compartment.js
@@ -206,25 +235,58 @@ payload:
       - from: cos/watchdog/monitor.js
         to: cos/compartment/process-runner.js
         kind: requires
+      - from: clear-glass/src/main/index.js
+        to: lib/cos-bridge.js
+        kind: requires
+      - from: guardian/routes/autonomous-loop.js
+        to: lib/cos-bridge.js
+        kind: requires
       - from: idearium/api/index.js
-        to: idearium/repo/nexus-self.js
+        to: lib/cos-bridge.js
         kind: requires
-      - from: idearium/repo/living-spec.js
-        to: idearium/repo/nexus-self.js
-        kind: requires
-      - from: tests/modules/test-nexus-atlas-and-glass.test.js
-        to: idearium/repo/nexus-self.js
+      - from: idearium/repo/code-api.js
+        to: lib/cos-bridge.js
         kind: requires
     crossings:
-      - from: idearium/repo/nexus-self.js
-        to: loom/scanners/phasemap-map.js
-        fromSystem: idearium
-        toSystem: loom
-        kind: system
+      - from: lib/cos-bridge.js
+        to: cos/host/index.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/cos-bridge.js
+        to: cos/cli/commands/create.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/cos-bridge.js
+        to: cos/cli/commands/advance-work-phase.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/cos-bridge.js
+        to: cos/cli/commands/destroy.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/cos-bridge.js
+        to: cos/foundation/intent.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/cos-bridge.js
+        to: cos/cli/commands/intent.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
@@ -247,7 +309,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · ready
+        - DAG 7d2ff66183c6511e · layer 3
         - >-
           depends on (3): LM0_the_heartbeat, LM1_ollama_through_its_bridge,
           LM3_readers_through_its_routes · all upstream 6

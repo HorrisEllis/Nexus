@@ -7,11 +7,11 @@ intent: null
 summary: LA0_loom_or_architect (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854997386
+exported_at: 1792855570589
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854997386
-lastSeenAt: 1792854997386
+firstSeenAt: 1792855570589
+lastSeenAt: 1792855570589
 fingerprint: null
 payload:
   id: LA0_loom_or_architect
@@ -258,7 +258,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -269,7 +269,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

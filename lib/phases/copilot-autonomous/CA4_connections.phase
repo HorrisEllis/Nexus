@@ -7,11 +7,11 @@ intent: null
 summary: CA4_connections (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855026541
+exported_at: 1792855599326
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855026541
-lastSeenAt: 1792855026541
+firstSeenAt: 1792855599326
+lastSeenAt: 1792855599326
 fingerprint: null
 payload:
   id: CA4_connections
@@ -105,7 +105,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
@@ -121,7 +121,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): CA1_scheduler'
         - >-
           needed by (1): CA5_system_control_and_clearglass · finishing it unlocks

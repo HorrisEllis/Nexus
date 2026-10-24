@@ -9,11 +9,11 @@ intent: null
 summary: GQ4_phase_gate_keeps_the_test (api) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792855016301
+exported_at: 1792855589418
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855016301
-lastSeenAt: 1792855016301
+firstSeenAt: 1792855589418
+lastSeenAt: 1792855589418
 fingerprint: null
 payload:
   id: GQ4_phase_gate_keeps_the_test
@@ -213,7 +213,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
@@ -236,7 +236,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by GQ1_quality_stream
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by GQ1_quality_stream
         - 'depends on (1): GQ1_quality_stream · all upstream 2'
         - 'needed by (1): AB1_autobuild_loop_and_resume · all downstream 4'
         - >-

@@ -9,11 +9,11 @@ intent: null
 summary: BR2_ollama_output_folder_listener (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854961076
+exported_at: 1792855535390
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854961076
-lastSeenAt: 1792854961076
+firstSeenAt: 1792855535390
+lastSeenAt: 1792855535390
 fingerprint: null
 payload:
   id: BR2_ollama_output_folder_listener
@@ -50,7 +50,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -61,7 +61,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 00970a80-81a5-5873-92d1-fb8846800c9e

@@ -7,11 +7,11 @@ intent: null
 summary: EC8_economy_console (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854977676
+exported_at: 1792855551040
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977676
-lastSeenAt: 1792854977676
+firstSeenAt: 1792855551040
+lastSeenAt: 1792855551040
 fingerprint: null
 payload:
   id: EC8_economy_console
@@ -215,7 +215,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-09-29-provider-economy-phasemap.spec::EC6_guardian_enforcement
@@ -235,7 +235,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): EC6_guardian_enforcement · all upstream 5'
         - 'needed by (1): EC11_release · finishing it unlocks EC11_release'
   uuid: 92011c89-7626-56ff-8511-136d1128c9dd

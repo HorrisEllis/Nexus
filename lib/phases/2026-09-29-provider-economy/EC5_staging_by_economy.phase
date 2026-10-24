@@ -7,11 +7,11 @@ intent: null
 summary: EC5_staging_by_economy (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854977674
+exported_at: 1792855551038
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977674
-lastSeenAt: 1792854977674
+firstSeenAt: 1792855551038
+lastSeenAt: 1792855551038
 fingerprint: null
 payload:
   id: EC5_staging_by_economy
@@ -227,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-29-provider-economy-phasemap.spec::EC0_policy_model
@@ -243,7 +243,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): EC0_policy_model'
         - 'needed by (1): EC11_release · finishing it unlocks EC11_release'
   uuid: 3cfc6cbd-ee2c-55b6-9249-8ed2ff4eab16

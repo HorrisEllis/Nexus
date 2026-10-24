@@ -7,11 +7,11 @@ intent: null
 summary: DP0d_one_gap_door (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855010001
+exported_at: 1792855583157
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855010001
-lastSeenAt: 1792855010001
+firstSeenAt: 1792855583157
+lastSeenAt: 1792855583157
 fingerprint: null
 payload:
   id: DP0d_one_gap_door
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: a4d03d96545f234a
+    hash: c67223caba57760e
     nodes:
       - path: lib/gap-field.js
         role: changes
@@ -50,6 +50,10 @@ payload:
         role: used-by
         exists: true
         system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
       - path: cortex/gap-finder/index.js
         role: used-by
         exists: true
@@ -71,10 +75,6 @@ payload:
         exists: true
         system: idearium
       - path: lib/agent-build-loop.js
-        role: used-by
-        exists: true
-        system: lib
-      - path: lib/agent-tools/tools/diagnostic/system-priority.js
         role: used-by
         exists: true
         system: lib
@@ -129,6 +129,9 @@ payload:
       - from: copilot/tool-runtime.js
         to: lib/gap-field.js
         kind: requires
+      - from: cortex/boot.js
+        to: lib/gap-field.js
+        kind: requires
       - from: cortex/gap-finder/index.js
         to: lib/gap-field.js
         kind: requires
@@ -147,9 +150,6 @@ payload:
       - from: lib/agent-build-loop.js
         to: lib/gap-field.js
         kind: requires
-      - from: lib/agent-tools/tools/diagnostic/system-priority.js
-        to: lib/gap-field.js
-        kind: requires
     crossings:
       - from: lib/gap-field.js
         to: cortex/memory/jaa-db.js
@@ -159,7 +159,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -170,7 +170,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 16eaae38-026f-5a16-a500-c44125af83b0

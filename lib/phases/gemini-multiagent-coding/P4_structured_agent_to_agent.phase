@@ -7,11 +7,11 @@ intent: null
 summary: P4_structured_agent_to_agent (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855029035
+exported_at: 1792855601988
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855029035
-lastSeenAt: 1792855029035
+firstSeenAt: 1792855601988
+lastSeenAt: 1792855601988
 fingerprint: null
 payload:
   id: P4_structured_agent_to_agent
@@ -112,7 +112,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
@@ -129,7 +129,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · ready
+        - DAG 7d2ff66183c6511e · layer 2 · ready
         - 'depends on (2): P1_per_agent_contracts, P2_tree_parse_recall_injection'
         - 'needed by (1): P5_autonomous_multiagent_loop'
   uuid: 1822aca7-d36f-5959-9609-b986dd99180c

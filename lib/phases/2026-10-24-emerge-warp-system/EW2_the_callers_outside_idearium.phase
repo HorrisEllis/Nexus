@@ -9,11 +9,11 @@ intent: null
 summary: EW2_the_callers_outside_idearium (design) — 8 file(s)
 system: core
 tags: []
-exported_at: 1792855024035
+exported_at: 1792855596706
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855024035
-lastSeenAt: 1792855024035
+firstSeenAt: 1792855596706
+lastSeenAt: 1792855596706
 fingerprint: null
 payload:
   id: EW2_the_callers_outside_idearium
@@ -280,7 +280,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
@@ -302,7 +302,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - >-
           depends on (2): EW_D1_compiler_and_ide_with_idearium, EW1_emerge_and_warp_one_system · all
           upstream 4

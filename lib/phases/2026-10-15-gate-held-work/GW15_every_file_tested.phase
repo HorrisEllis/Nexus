@@ -7,11 +7,11 @@ intent: null
 summary: GW15_every_file_tested (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792855000575
+exported_at: 1792855573813
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855000575
-lastSeenAt: 1792855000575
+firstSeenAt: 1792855573813
+lastSeenAt: 1792855573813
 fingerprint: null
 payload:
   id: GW15_every_file_tested
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: db80fe1f1cc31eff
+    hash: 4501f3b1020199bf
     nodes:
       - path: cos/testenv/detect.js
         role: changes
@@ -64,6 +64,10 @@ payload:
         role: used-by
         exists: true
         system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
       - path: cortex/gap-finder/index.js
         role: used-by
         exists: true
@@ -84,10 +88,6 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: lib/agent-build-loop.js
-        role: used-by
-        exists: true
-        system: lib
       - path: lib/cos-run.js
         role: used-by
         exists: true
@@ -198,6 +198,9 @@ payload:
       - from: copilot/tool-runtime.js
         to: lib/gap-field.js
         kind: requires
+      - from: cortex/boot.js
+        to: lib/gap-field.js
+        kind: requires
       - from: cortex/gap-finder/index.js
         to: lib/gap-field.js
         kind: requires
@@ -208,9 +211,6 @@ payload:
         to: lib/gap-field.js
         kind: requires
       - from: diagnostic/nexus-diagnostic.js
-        to: lib/gap-field.js
-        kind: requires
-      - from: lib/agent-build-loop.js
         to: lib/gap-field.js
         kind: requires
     crossings:
@@ -228,7 +228,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
@@ -257,7 +257,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by GW13_the_sandbox_door
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by GW13_the_sandbox_door
         - 'depends on (2): GW13_the_sandbox_door, GW0f_mutation_testing · all upstream 7'
         - 'needed by (1): GW16_parallel_branches_benchmark'
         - 'same files as GW12_desktop_is_optional with no order between them: cos/testenv/detect.js'

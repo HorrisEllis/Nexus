@@ -9,11 +9,11 @@ intent: null
 summary: RF1_migration_proposed_as_phases (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854996907
+exported_at: 1792855570154
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854996907
-lastSeenAt: 1792854996907
+firstSeenAt: 1792855570154
+lastSeenAt: 1792855570154
 fingerprint: null
 payload:
   id: RF1_migration_proposed_as_phases
@@ -84,7 +84,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps:
         - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF0_architecture_read
@@ -108,7 +108,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · blocked by RF0_architecture_read
+        - DAG 7d2ff66183c6511e · layer 0 · blocked by RF0_architecture_read
         - 'depends on (1): RF0_architecture_read · all upstream 5'
         - >-
           needed by (2): RF2_applied_one_phase_at_a_time, PL5_specs_become_the_roadmap · finishing

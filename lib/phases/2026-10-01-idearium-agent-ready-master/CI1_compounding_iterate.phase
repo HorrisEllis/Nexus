@@ -9,11 +9,11 @@ intent: null
 summary: CI1_compounding_iterate (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854978901
+exported_at: 1792855552394
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978901
-lastSeenAt: 1792854978901
+firstSeenAt: 1792855552394
+lastSeenAt: 1792855552394
 fingerprint: null
 payload:
   id: CI1_compounding_iterate
@@ -229,7 +229,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
@@ -271,7 +271,7 @@ payload:
             - lib/node-schemas/
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · ready
+        - DAG 7d2ff66183c6511e · layer 3 · ready
         - 'depends on (1): DT2_failure_mode_field · all upstream 3'
         - >-
           needed by (4): AG1_coding_agent_provider, BK2_phase_build_writes_code,

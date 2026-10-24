@@ -7,11 +7,11 @@ intent: null
 summary: SB5_self_modification_from_inside (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855032832
+exported_at: 1792855605943
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855032832
-lastSeenAt: 1792855032832
+firstSeenAt: 1792855605943
+lastSeenAt: 1792855605943
 fingerprint: null
 payload:
   id: SB5_self_modification_from_inside
@@ -83,7 +83,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
@@ -103,7 +103,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 3 · blocked by SB3_guided_build_loop,
+          DAG 7d2ff66183c6511e · layer 3 · blocked by SB3_guided_build_loop,
           SB4_decision_lattice_wiring
         - 'depends on (2): SB3_guided_build_loop, SB4_decision_lattice_wiring · all upstream 4'
         - 'needed by (0): —'

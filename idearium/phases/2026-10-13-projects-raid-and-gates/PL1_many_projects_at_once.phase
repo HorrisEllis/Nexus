@@ -7,11 +7,11 @@ intent: null
 summary: PL1_many_projects_at_once (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854996902
+exported_at: 1792855570149
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854996902
-lastSeenAt: 1792854996902
+firstSeenAt: 1792855570149
+lastSeenAt: 1792855570149
 fingerprint: null
 payload:
   id: PL1_many_projects_at_once
@@ -152,7 +152,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::PL0_his_projects_imported_for_real
@@ -171,7 +171,7 @@ payload:
             - lib/project-decompose.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): PL0_his_projects_imported_for_real'
         - 'needed by (0): —'
         - 'same files as RF0_architecture_read with no order between them: lib/project-decompose.js'

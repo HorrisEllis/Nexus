@@ -7,11 +7,11 @@ intent: null
 summary: PV2_repair_feedback (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854978942
+exported_at: 1792855552440
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978942
-lastSeenAt: 1792854978942
+firstSeenAt: 1792855552440
+lastSeenAt: 1792855552440
 fingerprint: null
 payload:
   id: PV2_repair_feedback
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV1_verify
@@ -239,7 +239,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): PV1_verify'
         - 'needed by (1): PV3_prove_loop · all downstream 3 · finishing it unlocks PV3_prove_loop'
   uuid: 20c72d88-7b35-57e6-8f3c-15becd52e49b

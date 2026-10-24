@@ -7,11 +7,11 @@ intent: null
 summary: EM2_warp_his_own (?) — 8 file(s)
 system: emerge
 tags: []
-exported_at: 1792854980263
+exported_at: 1792855553815
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980263
-lastSeenAt: 1792854980263
+firstSeenAt: 1792855553815
+lastSeenAt: 1792855553815
 fingerprint: null
 payload:
   id: EM2_warp_his_own
@@ -114,7 +114,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
@@ -163,7 +163,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by SH1_shadow_space
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by SH1_shadow_space
         - 'depends on (2): EM1_emerge_core, SH1_shadow_space · all upstream 4'
         - >-
           needed by (4): CF1_cfr_improved_with_rfr2, MR8_crystallization, CB1_cfr_build_logic,

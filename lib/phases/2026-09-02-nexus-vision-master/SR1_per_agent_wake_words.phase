@@ -7,11 +7,11 @@ intent: null
 summary: SR1_per_agent_wake_words (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854964539
+exported_at: 1792855538400
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854964539
-lastSeenAt: 1792854964539
+firstSeenAt: 1792855538400
+lastSeenAt: 1792855538400
 fingerprint: null
 payload:
   id: SR1_per_agent_wake_words
@@ -34,7 +34,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -45,7 +45,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 051eafd5-ba0b-54d8-93a4-5ecf278de108

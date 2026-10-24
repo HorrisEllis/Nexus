@@ -7,11 +7,11 @@ intent: null
 summary: TL6_proof_and_wiring (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792855005421
+exported_at: 1792855578523
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855005421
-lastSeenAt: 1792855005421
+firstSeenAt: 1792855578523
+lastSeenAt: 1792855578523
 fingerprint: null
 payload:
   id: TL6_proof_and_wiring
@@ -164,7 +164,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL1_chunks_land_as_they_arrive
@@ -178,7 +178,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by TL1_chunks_land_as_they_arrive
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by TL1_chunks_land_as_they_arrive
         - 'depends on (1): TL1_chunks_land_as_they_arrive'
         - 'needed by (0): —'
   uuid: 7e48d849-453e-59c2-8fa6-36360ad0b8cb

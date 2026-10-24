@@ -7,11 +7,11 @@ intent: null
 summary: OP3_copilot_reads_and_sets_options (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854993737
+exported_at: 1792855567037
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854993737
-lastSeenAt: 1792854993737
+firstSeenAt: 1792855567037
+lastSeenAt: 1792855567037
 fingerprint: null
 payload:
   id: OP3_copilot_reads_and_sets_options
@@ -167,7 +167,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP2_the_system_settings_in_its_repo
@@ -182,7 +182,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): OP2_the_system_settings_in_its_repo · all upstream 3'
         - 'needed by (0): —'
   uuid: e771048f-4b8e-5768-bdab-9df7d39b2cd9

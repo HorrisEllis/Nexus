@@ -9,11 +9,11 @@ intent: null
 summary: VS1_sovereign_folder_and_foundation (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854965031
+exported_at: 1792855538910
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854965031
-lastSeenAt: 1792854965031
+firstSeenAt: 1792855538910
+lastSeenAt: 1792855538910
 fingerprint: null
 payload:
   id: VS1_sovereign_folder_and_foundation
@@ -156,7 +156,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -176,7 +176,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (3): VS2_ring_buffer_and_causal_field, VS3_agent_chat_log_query,

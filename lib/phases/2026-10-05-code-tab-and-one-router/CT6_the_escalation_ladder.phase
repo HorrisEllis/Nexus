@@ -7,11 +7,11 @@ intent: null
 summary: CT6_the_escalation_ladder (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792854984118
+exported_at: 1792855557756
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854984118
-lastSeenAt: 1792854984118
+firstSeenAt: 1792855557756
+lastSeenAt: 1792855557756
 fingerprint: null
 payload:
   id: CT6_the_escalation_ladder
@@ -252,7 +252,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT2_it_learns_and_switches
@@ -266,7 +266,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): CT2_it_learns_and_switches · all upstream 2'
         - 'needed by (0): —'
   uuid: a9dea990-ef3b-522e-a953-e1bad2effc4a

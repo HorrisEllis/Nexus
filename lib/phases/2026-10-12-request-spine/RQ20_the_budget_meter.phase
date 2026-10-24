@@ -7,11 +7,11 @@ intent: null
 summary: RQ20_the_budget_meter (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854995132
+exported_at: 1792855568375
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995132
-lastSeenAt: 1792854995132
+firstSeenAt: 1792855568375
+lastSeenAt: 1792855568375
 fingerprint: null
 payload:
   id: RQ20_the_budget_meter
@@ -125,7 +125,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 7
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
@@ -153,7 +153,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 7 · blocked by RQ14_the_spine_end_to_end
+        - DAG 7d2ff66183c6511e · layer 7 · blocked by RQ14_the_spine_end_to_end
         - 'depends on (1): RQ14_the_spine_end_to_end · all upstream 15'
         - 'needed by (0): —'
   uuid: da355f55-97eb-5f92-a1a2-037af45dfafc

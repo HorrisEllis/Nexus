@@ -7,11 +7,11 @@ intent: null
 summary: AD2_javascript_adapter (library) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792855015411
+exported_at: 1792855588495
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015411
-lastSeenAt: 1792855015411
+firstSeenAt: 1792855588495
+lastSeenAt: 1792855588495
 fingerprint: null
 payload:
   id: AD2_javascript_adapter
@@ -177,7 +177,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
@@ -207,7 +207,7 @@ payload:
             - lib/verify-first.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by AD1_adapter_contract
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by AD1_adapter_contract
         - 'depends on (1): AD1_adapter_contract · all upstream 4'
         - >-
           needed by (3): NT1_neutrality_test, FP1_feature_pilot, XD1_cross_domain_verification · all

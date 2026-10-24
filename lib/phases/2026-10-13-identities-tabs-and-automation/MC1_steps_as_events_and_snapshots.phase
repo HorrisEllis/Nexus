@@ -9,11 +9,11 @@ intent: null
 summary: MC1_steps_as_events_and_snapshots (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854996010
+exported_at: 1792855569270
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854996010
-lastSeenAt: 1792854996010
+firstSeenAt: 1792855569270
+lastSeenAt: 1792855569270
 fingerprint: null
 payload:
   id: MC1_steps_as_events_and_snapshots
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::NV1_words_to_elements
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by NV1_words_to_elements
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by NV1_words_to_elements
         - 'depends on (1): NV1_words_to_elements'
         - 'needed by (0): —'
   uuid: 4759243a-5f11-52f5-a63f-39fdfef16c97

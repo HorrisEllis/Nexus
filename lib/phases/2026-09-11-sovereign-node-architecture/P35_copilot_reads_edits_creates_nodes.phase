@@ -9,11 +9,11 @@ intent: null
 summary: P35_copilot_reads_edits_creates_nodes (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854967263
+exported_at: 1792855540790
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854967263
-lastSeenAt: 1792854967263
+firstSeenAt: 1792855540790
+lastSeenAt: 1792855540790
 fingerprint: null
 payload:
   id: P35_copilot_reads_edits_creates_nodes
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
@@ -52,7 +52,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by P33_every_system_runs_its_node_registry
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by P33_every_system_runs_its_node_registry
         - 'depends on (1): P33_every_system_runs_its_node_registry · all upstream 3'
         - 'needed by (1): ND5_every_agent_reaches_every_system · all downstream 2'
   uuid: 8cd0c04f-1428-5872-ac03-f4fa89913998

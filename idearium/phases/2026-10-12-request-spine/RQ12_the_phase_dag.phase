@@ -7,11 +7,11 @@ intent: null
 summary: RQ12_the_phase_dag (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854995120
+exported_at: 1792855568363
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995120
-lastSeenAt: 1792854995120
+firstSeenAt: 1792855568363
+lastSeenAt: 1792855568363
 fingerprint: null
 payload:
   id: RQ12_the_phase_dag
@@ -226,7 +226,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
@@ -256,7 +256,7 @@ payload:
             - idearium/ui/js/plan-panel.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by RQ9_the_chunked_contract
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by RQ9_the_chunked_contract
         - 'depends on (1): RQ9_the_chunked_contract · all upstream 5'
         - >-
           needed by (2): RQ14_the_spine_end_to_end, RQ27_the_reasoning_half_gets_its_home · all

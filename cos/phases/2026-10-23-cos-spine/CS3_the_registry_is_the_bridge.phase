@@ -7,11 +7,11 @@ intent: null
 summary: CS3_the_registry_is_the_bridge (integration) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792855022204
+exported_at: 1792855594965
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855022204
-lastSeenAt: 1792855022204
+firstSeenAt: 1792855594965
+lastSeenAt: 1792855594965
 fingerprint: null
 payload:
   id: CS3_the_registry_is_the_bridge
@@ -120,7 +120,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
@@ -165,7 +165,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 4 · blocked by CS_D1_registry_is_the_bridge,
+          DAG 7d2ff66183c6511e · layer 4 · blocked by CS_D1_registry_is_the_bridge,
           IN3_registry_is_the_spine, CE3_the_handshake, DB16_a_registry_for_each_system
         - >-
           depends on (4): CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine,
@@ -182,4 +182,4 @@ payload:
     spec: cos/spec/cos-spine.spec
     modules:
       - id: MOD-CS-BRIDGE
-        uuid: nexus-cos-spine-bridge-v1-0000-2026-1023-001
+        uuid: null

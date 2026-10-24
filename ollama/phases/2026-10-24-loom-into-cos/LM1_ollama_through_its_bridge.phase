@@ -7,11 +7,11 @@ intent: null
 summary: LM1_ollama_through_its_bridge (backend) — 5 file(s)
 system: ollama-bridge
 tags: []
-exported_at: 1792855024863
+exported_at: 1792855597566
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855024863
-lastSeenAt: 1792855024863
+firstSeenAt: 1792855597566
+lastSeenAt: 1792855597566
 fingerprint: null
 payload:
   id: LM1_ollama_through_its_bridge
@@ -147,7 +147,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
@@ -164,7 +164,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): LM_D1_ollama_through_its_bridge'
         - >-
           needed by (1): LM4_the_seal_and_into_its_compartment · all downstream 2 · finishing it

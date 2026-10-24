@@ -7,11 +7,11 @@ intent: null
 summary: DP8_a_proven_fix (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855010007
+exported_at: 1792855583163
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855010007
-lastSeenAt: 1792855010007
+firstSeenAt: 1792855583163
+lastSeenAt: 1792855583163
 fingerprint: null
 payload:
   id: DP8_a_proven_fix
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
@@ -51,7 +51,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by DP6_reproduce_in_cos
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by DP6_reproduce_in_cos
         - 'depends on (1): DP6_reproduce_in_cos · all upstream 4'
         - 'needed by (1): DP9_crystallize_the_fix · finishing it unlocks DP9_crystallize_the_fix'
   uuid: 0f7841e0-ea81-56d3-856f-fb8f747a2013

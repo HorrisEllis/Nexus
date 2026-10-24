@@ -7,11 +7,11 @@ intent: null
 summary: CS10_hats_bound_to_the_compartment (integration) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792855022209
+exported_at: 1792855594969
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855022209
-lastSeenAt: 1792855022209
+firstSeenAt: 1792855594969
+lastSeenAt: 1792855594969
 fingerprint: null
 payload:
   id: CS10_hats_bound_to_the_compartment
@@ -228,7 +228,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 7
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
@@ -271,7 +271,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 7 · blocked by CS9_every_project_a_compartment,
+          DAG 7d2ff66183c6511e · layer 7 · blocked by CS9_every_project_a_compartment,
           CS5_caps_per_compartment, CS3_the_registry_is_the_bridge
         - >-
           depends on (3): CS9_every_project_a_compartment, CS5_caps_per_compartment,
@@ -283,4 +283,4 @@ payload:
     spec: cos/spec/cos-spine.spec
     modules:
       - id: MOD-CS-HAT
-        uuid: nexus-cos-spine-hat-v1-0000-2026-1023-001
+        uuid: null

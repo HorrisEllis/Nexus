@@ -7,11 +7,11 @@ intent: null
 summary: CY0_one_crystal_schema (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792855017168
+exported_at: 1792855590300
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855017168
-lastSeenAt: 1792855017168
+firstSeenAt: 1792855590300
+lastSeenAt: 1792855590300
 fingerprint: null
 payload:
   id: CY0_one_crystal_schema
@@ -154,7 +154,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -171,7 +171,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (2): CY1_lifecycle_and_injection, CY2_invariants_are_crystals · all downstream 4'
   uuid: 2dd12049-9c7c-5308-9665-1e7a193b4fda

@@ -7,11 +7,11 @@ intent: null
 summary: IA2_the_command (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854992413
+exported_at: 1792855565762
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854992413
-lastSeenAt: 1792854992413
+firstSeenAt: 1792855565762
+lastSeenAt: 1792855565762
 fingerprint: null
 payload:
   id: IA2_the_command
@@ -167,7 +167,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-10-idearium-access-phasemap.spec::IA1_the_routes
@@ -181,7 +181,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): IA1_the_routes · all upstream 2'
         - 'needed by (0): —'
   uuid: e223d037-59f8-50f8-8ebb-b83c66642f2d

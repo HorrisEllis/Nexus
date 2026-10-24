@@ -7,11 +7,11 @@ intent: null
 summary: P11_agent_council (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855030762
+exported_at: 1792855603772
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855030762
-lastSeenAt: 1792855030762
+firstSeenAt: 1792855603772
+lastSeenAt: 1792855603772
 fingerprint: null
 payload:
   id: P11_agent_council
@@ -176,7 +176,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -187,7 +187,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

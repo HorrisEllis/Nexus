@@ -7,11 +7,11 @@ intent: null
 summary: TL3_the_timeline (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792855005419
+exported_at: 1792855578521
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855005419
-lastSeenAt: 1792855005419
+firstSeenAt: 1792855578521
+lastSeenAt: 1792855578521
 fingerprint: null
 payload:
   id: TL3_the_timeline
@@ -246,7 +246,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL1_chunks_land_as_they_arrive
@@ -270,7 +270,7 @@ payload:
             - lib/run-state.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by TL1_chunks_land_as_they_arrive
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by TL1_chunks_land_as_they_arrive
         - 'depends on (1): TL1_chunks_land_as_they_arrive'
         - >-
           needed by (2): TL4_rewind_to_a_gate, TL5_the_code_tab_timeline · all downstream 3 ·

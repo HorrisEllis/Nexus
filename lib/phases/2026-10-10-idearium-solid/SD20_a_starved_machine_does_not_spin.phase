@@ -9,11 +9,11 @@ intent: null
 summary: SD20_a_starved_machine_does_not_spin (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792854992892
+exported_at: 1792855566202
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854992892
-lastSeenAt: 1792854992892
+firstSeenAt: 1792855566202
+lastSeenAt: 1792855566202
 fingerprint: null
 payload:
   id: SD20_a_starved_machine_does_not_spin
@@ -242,7 +242,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-10-idearium-solid-phasemap.spec::SD19_a_refusal_goes_back_to_its_agent
@@ -261,7 +261,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): SD19_a_refusal_goes_back_to_its_agent · all upstream 3'
         - >-
           needed by (1): SD21_what_his_run_log_showed · all downstream 2 · finishing it unlocks

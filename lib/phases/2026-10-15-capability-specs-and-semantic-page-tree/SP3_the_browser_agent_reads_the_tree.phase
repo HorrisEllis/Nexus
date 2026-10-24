@@ -9,11 +9,11 @@ intent: null
 summary: SP3_the_browser_agent_reads_the_tree (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854997827
+exported_at: 1792855571026
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854997827
-lastSeenAt: 1792854997827
+firstSeenAt: 1792855571026
+lastSeenAt: 1792855571026
 fingerprint: null
 payload:
   id: SP3_the_browser_agent_reads_the_tree
@@ -295,7 +295,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP1_semantic_page_tree
@@ -308,7 +308,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): SP1_semantic_page_tree'
         - 'needed by (0): —'
   uuid: 0ead4b85-4548-52ff-be23-5d96e49a8cc0

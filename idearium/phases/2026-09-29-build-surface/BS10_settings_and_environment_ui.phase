@@ -7,11 +7,11 @@ intent: null
 summary: BS10_settings_and_environment_ui (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854976742
+exported_at: 1792855550127
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854976742
-lastSeenAt: 1792854976742
+firstSeenAt: 1792855550127
+lastSeenAt: 1792855550127
 fingerprint: null
 payload:
   id: BS10_settings_and_environment_ui
@@ -46,7 +46,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
@@ -67,7 +67,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): BS7_api · all upstream 6'
         - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
   uuid: 8364e3fd-ee07-52ec-a5f5-c747e3f18129

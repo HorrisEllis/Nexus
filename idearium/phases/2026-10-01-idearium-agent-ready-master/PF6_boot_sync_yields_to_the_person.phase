@@ -9,11 +9,11 @@ intent: null
 summary: PF6_boot_sync_yields_to_the_person (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854978887
+exported_at: 1792855552377
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978887
-lastSeenAt: 1792854978887
+firstSeenAt: 1792855552377
+lastSeenAt: 1792855552377
 fingerprint: null
 payload:
   id: PF6_boot_sync_yields_to_the_person
@@ -213,7 +213,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
@@ -226,7 +226,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): PF5_in_place_spec_update'
         - 'needed by (0): —'
   uuid: 2bc33965-2a2b-5d2e-acfb-326cb26152e9

@@ -7,11 +7,11 @@ intent: null
 summary: P5_copilot_dynamic_and_user_aware (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855031184
+exported_at: 1792855604269
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855031184
-lastSeenAt: 1792855031184
+firstSeenAt: 1792855604269
+lastSeenAt: 1792855604269
 fingerprint: null
 payload:
   id: P5_copilot_dynamic_and_user_aware
@@ -143,7 +143,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/nexus-live-mind-phasemap.spec::P4_copilot_awareness
@@ -159,7 +159,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4
+        - DAG 7d2ff66183c6511e · layer 4
         - 'depends on (1): P4_copilot_awareness · all upstream 4'
         - 'needed by (0): —'
   uuid: 9dbc4fa1-4e21-54f5-aa1a-980e29085944

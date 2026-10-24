@@ -9,11 +9,11 @@ intent: null
 summary: RQ25_progress_is_evidence_not_activity (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854995139
+exported_at: 1792855568384
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995139
-lastSeenAt: 1792854995139
+firstSeenAt: 1792855568384
+lastSeenAt: 1792855568384
 fingerprint: null
 payload:
   id: RQ25_progress_is_evidence_not_activity
@@ -233,7 +233,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ21_the_contract_file_is_its_record
@@ -259,7 +259,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 5 · blocked by RQ21_the_contract_file_is_its_record,
+          DAG 7d2ff66183c6511e · layer 5 · blocked by RQ21_the_contract_file_is_its_record,
           RQ23_acceptance_conditions_that_cannot_be_moved
         - >-
           depends on (2): RQ21_the_contract_file_is_its_record,

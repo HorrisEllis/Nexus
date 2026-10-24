@@ -7,11 +7,11 @@ intent: null
 summary: J1 (?) — 4 file(s)
 system: guardian
 tags: []
-exported_at: 1792854979836
+exported_at: 1792855553351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854979836
-lastSeenAt: 1792854979836
+firstSeenAt: 1792855553351
+lastSeenAt: 1792855553351
 fingerprint: null
 payload:
   id: J1
@@ -197,7 +197,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::J0
@@ -217,7 +217,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by J0
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by J0
         - 'depends on (1): J0'
         - 'needed by (2): J4, J5 · finishing it unlocks J4, J5'
   uuid: 0b7af088-4937-599a-a0dc-3b0a045b3c32

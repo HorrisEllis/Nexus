@@ -7,11 +7,11 @@ intent: null
 summary: DG3_the_whole_dag (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792855015869
+exported_at: 1792855588969
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015869
-lastSeenAt: 1792855015869
+firstSeenAt: 1792855588969
+lastSeenAt: 1792855588969
 fingerprint: null
 payload:
   id: DG3_the_whole_dag
@@ -225,7 +225,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -242,7 +242,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): DG4_nexus_maps_meet_the_standard, DG5_dag_in_the_brief_and_the_ui ·

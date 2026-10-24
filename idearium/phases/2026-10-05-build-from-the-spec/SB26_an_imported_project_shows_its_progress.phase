@@ -9,11 +9,11 @@ intent: null
 summary: SB26_an_imported_project_shows_its_progress (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792854983022
+exported_at: 1792855556664
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983022
-lastSeenAt: 1792854983022
+firstSeenAt: 1792855556664
+lastSeenAt: 1792855556664
 fingerprint: null
 payload:
   id: SB26_an_imported_project_shows_its_progress
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
@@ -274,7 +274,7 @@ payload:
             - idearium/repo/proof-run.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6 · ready
+        - DAG 7d2ff66183c6511e · layer 6 · ready
         - >-
           depends on (2): SB17_the_system_template_is_complete,
           SB12_the_registry_is_the_component_list · all upstream 8

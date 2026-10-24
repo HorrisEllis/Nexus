@@ -7,11 +7,11 @@ intent: null
 summary: TB4a_recall_in_the_dispatcher (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855004576
+exported_at: 1792855577676
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855004576
-lastSeenAt: 1792855004576
+firstSeenAt: 1792855577676
+lastSeenAt: 1792855577676
 fingerprint: null
 payload:
   id: TB4a_recall_in_the_dispatcher
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
@@ -51,7 +51,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by TB3a_tool_calls_saved
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by TB3a_tool_calls_saved
         - 'depends on (1): TB3a_tool_calls_saved · all upstream 4'
         - 'needed by (1): TB4c_measure · finishing it unlocks TB4c_measure'
   uuid: a7880fa0-a9a8-5e93-a904-33c7eea3632e

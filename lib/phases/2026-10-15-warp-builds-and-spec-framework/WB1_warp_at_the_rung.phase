@@ -9,11 +9,11 @@ intent: null
 summary: WB1_warp_at_the_rung (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792855003277
+exported_at: 1792855576400
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855003277
-lastSeenAt: 1792855003277
+firstSeenAt: 1792855576400
+lastSeenAt: 1792855576400
 fingerprint: null
 payload:
   id: WB1_warp_at_the_rung
@@ -248,7 +248,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB0_census
@@ -264,7 +264,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): WB0_census'
         - >-
           needed by (1): WB2_raid_bricks_and_officiator_through_warp · finishing it unlocks

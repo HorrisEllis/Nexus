@@ -7,11 +7,11 @@ intent: null
 summary: SB2_his_words_seed_the_spec (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854982964
+exported_at: 1792855556605
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854982964
-lastSeenAt: 1792854982964
+firstSeenAt: 1792855556605
+lastSeenAt: 1792855556605
 fingerprint: null
 payload:
   id: SB2_his_words_seed_the_spec
@@ -226,7 +226,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
@@ -242,7 +242,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): SB1_templates_are_the_default_frame · all upstream 2'
         - 'needed by (1): SB8_promote_with_full_block_options'
   uuid: e289dcdf-2435-5fc0-b5b2-6fdb68b6bdd4

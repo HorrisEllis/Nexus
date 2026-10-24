@@ -7,11 +7,11 @@ intent: null
 summary: PF3_the_section (?) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854998727
+exported_at: 1792855571880
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854998727
-lastSeenAt: 1792854998727
+firstSeenAt: 1792855571880
+lastSeenAt: 1792855571880
 fingerprint: null
 payload:
   id: PF3_the_section
@@ -46,7 +46,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::PF2_the_items
@@ -62,7 +62,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by PF2_the_items
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by PF2_the_items
         - 'depends on (1): PF2_the_items · all upstream 3'
         - 'needed by (0): —'
   uuid: ba1a6b46-b1cc-5380-9e34-a84848072b59

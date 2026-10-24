@@ -7,11 +7,11 @@ intent: null
 summary: CS7_spawn_despawn_and_balance (backend) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792855022208
+exported_at: 1792855594968
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855022208
-lastSeenAt: 1792855022208
+firstSeenAt: 1792855594968
+lastSeenAt: 1792855594968
 fingerprint: null
 payload:
   id: CS7_spawn_despawn_and_balance
@@ -48,7 +48,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 7
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
@@ -89,7 +89,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 7 · blocked by CS5_caps_per_compartment, CS11_raid_in_the_exe
+        - DAG 7d2ff66183c6511e · layer 7 · blocked by CS5_caps_per_compartment, CS11_raid_in_the_exe
         - 'depends on (2): CS5_caps_per_compartment, CS11_raid_in_the_exe · all upstream 24'
         - 'needed by (1): CS8_the_cos_screen'
   uuid: e5f91498-7ff0-53dc-8b7a-ac6286af0abf
@@ -98,4 +98,4 @@ payload:
     spec: cos/spec/cos-spine.spec
     modules:
       - id: MOD-CS-SCALE
-        uuid: nexus-cos-spine-scale-v1-0000-2026-1023-001
+        uuid: null

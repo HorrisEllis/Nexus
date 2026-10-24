@@ -9,11 +9,11 @@ intent: null
 summary: SB48_proof_in_cos_closes_the_phase (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854983070
+exported_at: 1792855556704
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983070
-lastSeenAt: 1792854983070
+firstSeenAt: 1792855556704
+lastSeenAt: 1792855556704
 fingerprint: null
 payload:
   id: SB48_proof_in_cos_closes_the_phase
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 9
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB47_built_and_run_in_cos
@@ -264,7 +264,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 9 · blocked by SB47_built_and_run_in_cos
+        - DAG 7d2ff66183c6511e · layer 9 · blocked by SB47_built_and_run_in_cos
         - 'depends on (1): SB47_built_and_run_in_cos · all upstream 15'
         - 'needed by (1): SB49_an_idea_runs_through_by_itself'
         - >-

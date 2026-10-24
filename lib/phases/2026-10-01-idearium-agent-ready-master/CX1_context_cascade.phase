@@ -7,11 +7,11 @@ intent: null
 summary: CX1_context_cascade (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854978934
+exported_at: 1792855552430
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978934
-lastSeenAt: 1792854978934
+firstSeenAt: 1792855552430
+lastSeenAt: 1792855552430
 fingerprint: null
 payload:
   id: CX1_context_cascade
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
@@ -244,7 +244,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by DT3_failure_modes_routes_and_preflight
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by DT3_failure_modes_routes_and_preflight
         - 'depends on (1): DT3_failure_modes_routes_and_preflight · all upstream 4'
         - >-
           needed by (3): CP1_copilot_drives_idearium_and_talks_to_its_agents,

@@ -7,11 +7,11 @@ intent: null
 summary: CD2_quarantine_downloads (library) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855019872
+exported_at: 1792855592883
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855019872
-lastSeenAt: 1792855019872
+firstSeenAt: 1792855592883
+lastSeenAt: 1792855592883
 fingerprint: null
 payload:
   id: CD2_quarantine_downloads
@@ -51,7 +51,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
@@ -69,7 +69,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): CD1_magnet_parse'
         - >-
           needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks

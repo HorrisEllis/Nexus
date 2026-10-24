@@ -7,11 +7,11 @@ intent: null
 summary: BS12_context_automatic (integration) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855019355
+exported_at: 1792855592426
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855019355
-lastSeenAt: 1792855019355
+firstSeenAt: 1792855592426
+lastSeenAt: 1792855592426
 fingerprint: null
 payload:
   id: BS12_context_automatic
@@ -178,7 +178,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS11_copilot_pane
@@ -193,7 +193,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): BS11_copilot_pane · all upstream 3'
         - 'needed by (0): —'
   uuid: 3434eb6e-5a93-569c-9724-d773228556cf

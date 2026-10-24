@@ -7,11 +7,11 @@ intent: null
 summary: AW4_the_door_reads_the_lattice (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854993336
+exported_at: 1792855566628
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854993336
-lastSeenAt: 1792854993336
+firstSeenAt: 1792855566628
+lastSeenAt: 1792855566628
 fingerprint: null
 payload:
   id: AW4_the_door_reads_the_lattice
@@ -203,7 +203,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-10-self-awareness-phasemap.spec::AW3_the_field_hears_the_lifecycle
@@ -220,7 +220,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by AW3_the_field_hears_the_lifecycle
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by AW3_the_field_hears_the_lifecycle
         - 'depends on (1): AW3_the_field_hears_the_lifecycle · all upstream 2'
         - 'needed by (1): AW5_its_own_face'
   uuid: 2e01479c-cc49-55d7-9756-a4b8b35a3216

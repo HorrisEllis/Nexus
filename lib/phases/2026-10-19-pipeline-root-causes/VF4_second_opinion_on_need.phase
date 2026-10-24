@@ -7,11 +7,11 @@ intent: null
 summary: VF4_second_opinion_on_need (library) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792855015862
+exported_at: 1792855588961
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015862
-lastSeenAt: 1792855015862
+firstSeenAt: 1792855588961
+lastSeenAt: 1792855588961
 fingerprint: null
 payload:
   id: VF4_second_opinion_on_need
@@ -83,7 +83,7 @@ payload:
         known: false
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF2_one_response_bundle
@@ -105,7 +105,7 @@ payload:
             - lib/verify-first.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by VF2_one_response_bundle, VF3_mutation_check
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by VF2_one_response_bundle, VF3_mutation_check
         - 'depends on (2): VF2_one_response_bundle, VF3_mutation_check · all upstream 4'
         - 'needed by (0): —'
         - 'same files as VF5_verdict_cache with no order between them: lib/verify-first.js'

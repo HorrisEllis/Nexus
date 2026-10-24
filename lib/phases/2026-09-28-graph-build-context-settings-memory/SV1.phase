@@ -7,11 +7,11 @@ intent: null
 summary: SV1 (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854975827
+exported_at: 1792855549080
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854975827
-lastSeenAt: 1792854975827
+firstSeenAt: 1792855549080
+lastSeenAt: 1792855549080
 fingerprint: null
 payload:
   id: SV1
@@ -38,7 +38,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV0
@@ -60,7 +60,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by SV0
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by SV0
         - 'depends on (1): SV0 · all upstream 4'
         - 'needed by (2): SV2, SV3 · finishing it unlocks SV3'
   uuid: a390b017-b1a3-5417-b434-7580ca2e3184

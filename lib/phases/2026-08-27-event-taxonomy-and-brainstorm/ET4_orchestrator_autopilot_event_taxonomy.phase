@@ -9,11 +9,11 @@ intent: null
 summary: ET4_orchestrator_autopilot_event_taxonomy (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854961073
+exported_at: 1792855535387
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854961073
-lastSeenAt: 1792854961073
+firstSeenAt: 1792855535387
+lastSeenAt: 1792855535387
 fingerprint: null
 payload:
   id: ET4_orchestrator_autopilot_event_taxonomy
@@ -84,7 +84,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
@@ -102,7 +102,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by ET1_event_taxonomy_pattern
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by ET1_event_taxonomy_pattern
         - 'depends on (1): ET1_event_taxonomy_pattern'
         - 'needed by (1): ET5_loom_event_taxonomy_map · all downstream 3'
   uuid: 0869c561-1435-5340-8293-3ea90082d546

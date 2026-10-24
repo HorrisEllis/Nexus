@@ -9,11 +9,11 @@ intent: null
 summary: ID3_bookmarks_carry_the_identity (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854995992
+exported_at: 1792855569261
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995992
-lastSeenAt: 1792854995992
+firstSeenAt: 1792855569261
+lastSeenAt: 1792855569261
 fingerprint: null
 payload:
   id: ID3_bookmarks_carry_the_identity
@@ -64,7 +64,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
@@ -80,7 +80,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by TB1_tab_is_a_view
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by TB1_tab_is_a_view
         - 'depends on (1): TB1_tab_is_a_view · all upstream 3'
         - 'needed by (0): —'
   uuid: 6244f8bf-5a95-5f6a-9efa-e136f6df2a95

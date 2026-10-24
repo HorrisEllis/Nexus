@@ -7,11 +7,11 @@ intent: null
 summary: CON3_system_controls (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855005000
+exported_at: 1792855578093
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855005000
-lastSeenAt: 1792855005000
+firstSeenAt: 1792855578093
+lastSeenAt: 1792855578093
 fingerprint: null
 payload:
   id: CON3_system_controls
@@ -172,7 +172,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
@@ -195,7 +195,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6 · blocked by CON1_one_door_client, COSA11_nested_tree
+        - DAG 7d2ff66183c6511e · layer 6 · blocked by CON1_one_door_client, COSA11_nested_tree
         - 'depends on (2): CON1_one_door_client, COSA11_nested_tree · all upstream 8'
         - 'needed by (0): —'
   uuid: 2e1dabaf-cf47-5ae2-a9bd-d2bc37ca54ba

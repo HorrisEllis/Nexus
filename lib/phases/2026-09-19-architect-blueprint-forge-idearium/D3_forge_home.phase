@@ -7,11 +7,11 @@ intent: null
 summary: D3_forge_home (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854969079
+exported_at: 1792855542505
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854969079
-lastSeenAt: 1792854969079
+firstSeenAt: 1792855542505
+lastSeenAt: 1792855542505
 fingerprint: null
 payload:
   id: D3_forge_home
@@ -34,7 +34,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -45,7 +45,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 5ccf24d8-b4bd-51f2-aead-619ccc01f28b

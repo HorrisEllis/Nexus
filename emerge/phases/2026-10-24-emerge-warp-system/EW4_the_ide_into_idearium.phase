@@ -7,11 +7,11 @@ intent: null
 summary: EW4_the_ide_into_idearium (backend) — 3 file(s)
 system: emerge
 tags: []
-exported_at: 1792855024037
+exported_at: 1792855596709
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855024037
-lastSeenAt: 1792855024037
+firstSeenAt: 1792855596709
+lastSeenAt: 1792855596709
 fingerprint: null
 payload:
   id: EW4_the_ide_into_idearium
@@ -273,7 +273,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
@@ -294,7 +294,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · ready
+        - DAG 7d2ff66183c6511e · layer 4 · ready
         - 'depends on (1): EW3_the_spec_compiler_into_idearium · all upstream 6'
         - >-
           needed by (1): EW5_the_registry_with_wires · finishing it unlocks

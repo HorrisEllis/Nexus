@@ -9,11 +9,11 @@ intent: null
 summary: BC4_relational_context_wired_or_archived (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854982997
+exported_at: 1792855556639
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854982997
-lastSeenAt: 1792854982997
+firstSeenAt: 1792855556639
+lastSeenAt: 1792855556639
 fingerprint: null
 payload:
   id: BC4_relational_context_wired_or_archived
@@ -165,7 +165,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::BC1_build_context
@@ -178,7 +178,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): BC1_build_context'
         - 'needed by (0): —'
   uuid: b989280f-31ed-59e3-88f9-7a6b1375c978

@@ -7,11 +7,11 @@ intent: null
 summary: SB9_the_spec_is_a_spec_file (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854982979
+exported_at: 1792855556621
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854982979
-lastSeenAt: 1792854982979
+firstSeenAt: 1792855556621
+lastSeenAt: 1792855556621
 fingerprint: null
 payload:
   id: SB9_the_spec_is_a_spec_file
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
@@ -267,7 +267,7 @@ payload:
             - idearium/spec-engine/index.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · ready
+        - DAG 7d2ff66183c6511e · layer 2 · ready
         - 'depends on (1): SB1_templates_are_the_default_frame · all upstream 2'
         - >-
           needed by (2): SB8_promote_with_full_block_options, SB10_reuse_first_keyed_on_the_contract

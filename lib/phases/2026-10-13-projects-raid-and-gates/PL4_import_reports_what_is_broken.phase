@@ -9,11 +9,11 @@ intent: null
 summary: PL4_import_reports_what_is_broken (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854996905
+exported_at: 1792855570151
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854996905
-lastSeenAt: 1792854996905
+firstSeenAt: 1792855570151
+lastSeenAt: 1792855570151
 fingerprint: null
 payload:
   id: PL4_import_reports_what_is_broken
@@ -96,7 +96,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::CK1_the_catalogue_runs
@@ -117,7 +117,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by CK1_the_catalogue_runs
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by CK1_the_catalogue_runs
         - 'depends on (1): CK1_the_catalogue_runs · all upstream 2'
         - 'needed by (1): RF0_architecture_read · all downstream 5'
   uuid: ef4e2f93-93bd-560c-8c3d-f15c74e3f2ea

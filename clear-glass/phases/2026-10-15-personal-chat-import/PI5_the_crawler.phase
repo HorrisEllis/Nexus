@@ -7,11 +7,11 @@ intent: null
 summary: PI5_the_crawler (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855002024
+exported_at: 1792855575157
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855002024
-lastSeenAt: 1792855002024
+firstSeenAt: 1792855575157
+lastSeenAt: 1792855575157
 fingerprint: null
 payload:
   id: PI5_the_crawler
@@ -69,7 +69,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
@@ -86,7 +86,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by PI1_the_importer
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by PI1_the_importer
         - 'depends on (1): PI1_the_importer · all upstream 2'
         - 'needed by (1): PI7_the_links'
   uuid: 8df24d21-7247-54a3-b1de-e36b29f09919

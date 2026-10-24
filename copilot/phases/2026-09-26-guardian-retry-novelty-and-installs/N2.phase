@@ -7,11 +7,11 @@ intent: null
 summary: N2 (?) — 4 file(s)
 system: copilot
 tags: []
-exported_at: 1792854972162
+exported_at: 1792855545576
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854972162
-lastSeenAt: 1792854972162
+firstSeenAt: 1792855545576
+lastSeenAt: 1792855545576
 fingerprint: null
 payload:
   id: N2
@@ -225,7 +225,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
@@ -264,7 +264,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by N1
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by N1
         - 'depends on (1): N1'
         - >-
           needed by (3): T1, N3_projection_and_indexes, N24_no_json_yaml_node_types_only · all

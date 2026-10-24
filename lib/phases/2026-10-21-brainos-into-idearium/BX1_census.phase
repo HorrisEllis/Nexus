@@ -7,11 +7,11 @@ intent: null
 summary: BX1_census (foundation) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792855018904
+exported_at: 1792855592001
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855018904
-lastSeenAt: 1792855018904
+firstSeenAt: 1792855592001
+lastSeenAt: 1792855592001
 fingerprint: null
 payload:
   id: BX1_census
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0a_where_it_lands
@@ -61,7 +61,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): BX0a_where_it_lands'
         - 'needed by (1): BX2_flow_sources · all downstream 9 · finishing it unlocks BX2_flow_sources'
   uuid: 4c1c8b94-7924-5305-9985-21503a00d356

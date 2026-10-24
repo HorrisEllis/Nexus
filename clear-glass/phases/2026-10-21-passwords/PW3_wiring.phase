@@ -7,11 +7,11 @@ intent: null
 summary: PW3_wiring (integration) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855020895
+exported_at: 1792855593735
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855020895
-lastSeenAt: 1792855020895
+firstSeenAt: 1792855593735
+lastSeenAt: 1792855593735
 fingerprint: null
 payload:
   id: PW3_wiring
@@ -178,7 +178,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-21-passwords-phasemap.spec::PW2_page
@@ -196,7 +196,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): PW2_page · all upstream 3'
         - 'needed by (1): PW4_surface · finishing it unlocks PW4_surface'
   uuid: fb6e1d63-b327-5f60-8427-ebc90fb13134

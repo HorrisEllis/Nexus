@@ -7,11 +7,11 @@ intent: null
 summary: IM2_clean_the_redundant (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855010919
+exported_at: 1792855584074
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855010919
-lastSeenAt: 1792855010919
+firstSeenAt: 1792855584074
+lastSeenAt: 1792855584074
 fingerprint: null
 payload:
   id: IM2_clean_the_redundant
@@ -178,7 +178,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM0a_state_in_git
@@ -196,7 +196,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by IM1_the_shape_census_as_a_command
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by IM1_the_shape_census_as_a_command
         - 'depends on (3): IM0a_state_in_git, IM0b_root_files, IM1_the_shape_census_as_a_command'
         - 'needed by (0): —'
   uuid: 486c78b5-2508-5f70-8de1-32f9f93c22e6

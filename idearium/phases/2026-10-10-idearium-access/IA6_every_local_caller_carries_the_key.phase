@@ -9,11 +9,11 @@ intent: null
 summary: IA6_every_local_caller_carries_the_key (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854992416
+exported_at: 1792855565764
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854992416
-lastSeenAt: 1792854992416
+firstSeenAt: 1792855565764
+lastSeenAt: 1792855565764
 fingerprint: null
 payload:
   id: IA6_every_local_caller_carries_the_key
@@ -181,7 +181,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-10-idearium-access-phasemap.spec::IA0_the_door_checks_who_is_asking
@@ -194,7 +194,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): IA0_the_door_checks_who_is_asking'
         - 'needed by (0): —'
   uuid: f039384a-a23e-5a9f-bc54-1779afa79fe6

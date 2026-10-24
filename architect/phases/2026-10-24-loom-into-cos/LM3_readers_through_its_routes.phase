@@ -7,11 +7,11 @@ intent: null
 summary: LM3_readers_through_its_routes (backend) — 3 file(s)
 system: architect
 tags: []
-exported_at: 1792855024864
+exported_at: 1792855597567
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855024864
-lastSeenAt: 1792855024864
+firstSeenAt: 1792855597567
+lastSeenAt: 1792855597567
 fingerprint: null
 payload:
   id: LM3_readers_through_its_routes
@@ -162,7 +162,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
@@ -180,7 +180,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): LM2_loom_owns_its_tables · all upstream 2'
         - >-
           needed by (1): LM4_the_seal_and_into_its_compartment · all downstream 2 · finishing it

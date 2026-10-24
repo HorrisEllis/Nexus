@@ -7,11 +7,11 @@ intent: null
 summary: A3 (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854974019
+exported_at: 1792855547265
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854974019
-lastSeenAt: 1792854974019
+firstSeenAt: 1792855547265
+lastSeenAt: 1792855547265
 fingerprint: null
 payload:
   id: A3
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-09-27-idearium-atlas-phasemap.spec::A2
@@ -48,7 +48,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): A2 · all upstream 2'
         - 'needed by (1): A4 · finishing it unlocks A4'
   uuid: 9d6c1b30-9bd9-5c95-8ab3-3e7712f69d95

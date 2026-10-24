@@ -7,11 +7,11 @@ intent: null
 summary: GG1_graphs_generate_code (?) — 4 file(s)
 system: emerge
 tags: []
-exported_at: 1792854980355
+exported_at: 1792855553906
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980355
-lastSeenAt: 1792854980355
+firstSeenAt: 1792855553906
+lastSeenAt: 1792855553906
 fingerprint: null
 payload:
   id: GG1_graphs_generate_code
@@ -94,7 +94,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
@@ -120,7 +120,7 @@ payload:
             - emerge/compiler/emit.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · ready
+        - DAG 7d2ff66183c6511e · layer 3 · ready
         - >-
           depends on (2): PH1_phase_runs_end_in_proof, EV0_contracts_for_every_system · all upstream
           4

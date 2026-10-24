@@ -7,11 +7,11 @@ intent: null
 summary: BW1_borrowing (library) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792855017175
+exported_at: 1792855590308
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855017175
-lastSeenAt: 1792855017175
+firstSeenAt: 1792855590308
+lastSeenAt: 1792855590308
 fingerprint: null
 payload:
   id: BW1_borrowing
@@ -39,7 +39,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 9
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
@@ -80,7 +80,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 9 · ON THE CRITICAL PATH · blocked by
+          DAG 7d2ff66183c6511e · layer 9 · ON THE CRITICAL PATH · blocked by
           XD1_cross_domain_verification, CY2_invariants_are_crystals
         - >-
           depends on (2): XD1_cross_domain_verification, CY2_invariants_are_crystals · all upstream

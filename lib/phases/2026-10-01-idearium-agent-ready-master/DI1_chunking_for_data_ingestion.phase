@@ -9,11 +9,11 @@ intent: null
 summary: DI1_chunking_for_data_ingestion (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854978935
+exported_at: 1792855552431
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978935
-lastSeenAt: 1792854978935
+firstSeenAt: 1792855552431
+lastSeenAt: 1792855552431
 fingerprint: null
 payload:
   id: DI1_chunking_for_data_ingestion
@@ -191,7 +191,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
@@ -226,7 +226,7 @@ payload:
             - lib/zip-ingest.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by DT1_persistence_census
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by DT1_persistence_census
         - 'depends on (1): DT1_persistence_census · all upstream 2'
         - 'needed by (1): IL1_spec_library_as_ideas · all downstream 4'
         - >-

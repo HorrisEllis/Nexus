@@ -9,11 +9,11 @@ intent: null
 summary: CH2_chunk_laws (library) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792855017626
+exported_at: 1792855590735
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855017626
-lastSeenAt: 1792855017626
+firstSeenAt: 1792855590735
+lastSeenAt: 1792855590735
 fingerprint: null
 payload:
   id: CH2_chunk_laws
@@ -39,7 +39,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
@@ -61,7 +61,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6 · blocked by CH1_strategies_behind_the_contract
+        - DAG 7d2ff66183c6511e · layer 6 · blocked by CH1_strategies_behind_the_contract
         - 'depends on (1): CH1_strategies_behind_the_contract · all upstream 9'
         - 'needed by (0): —'
   uuid: 3299a28c-5676-5cda-83ba-6d26cda9c54d

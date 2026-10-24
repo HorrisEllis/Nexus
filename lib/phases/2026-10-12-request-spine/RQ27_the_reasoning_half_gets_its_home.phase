@@ -9,11 +9,11 @@ intent: null
 summary: RQ27_the_reasoning_half_gets_its_home (?) — 13 file(s)
 system: core
 tags: []
-exported_at: 1792854995142
+exported_at: 1792855568387
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995142
-lastSeenAt: 1792854995142
+firstSeenAt: 1792855568387
+lastSeenAt: 1792855568387
 fingerprint: null
 payload:
   id: RQ27_the_reasoning_half_gets_its_home
@@ -273,7 +273,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
@@ -312,7 +312,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 5 · blocked by RQ7_the_context_obligations,
+          DAG 7d2ff66183c6511e · layer 5 · blocked by RQ7_the_context_obligations,
           RQ9_the_chunked_contract, RQ12_the_phase_dag, RQ21_the_contract_file_is_its_record
         - >-
           depends on (4): RQ7_the_context_obligations, RQ9_the_chunked_contract, RQ12_the_phase_dag,

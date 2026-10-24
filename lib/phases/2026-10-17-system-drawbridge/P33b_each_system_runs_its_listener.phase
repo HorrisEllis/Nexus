@@ -9,11 +9,11 @@ intent: null
 summary: P33b_each_system_runs_its_listener (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855011814
+exported_at: 1792855584948
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855011814
-lastSeenAt: 1792855011814
+firstSeenAt: 1792855584948
+lastSeenAt: 1792855584948
 fingerprint: null
 payload:
   id: P33b_each_system_runs_its_listener
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 3ce0f2acd4816129
+    hash: 59567105b9d492b3
     nodes:
       - path: contracts/handshake.js
         role: changes
@@ -124,6 +124,10 @@ payload:
         role: uses
         exists: true
         system: cos
+      - path: cos/compartment/process-runner.js
+        role: uses
+        exists: true
+        system: cos
       - path: cos/foundation/intent.js
         role: uses
         exists: true
@@ -152,10 +156,6 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: loom/scanners/capability-map.js
-        role: uses
-        exists: true
-        system: loom
     edges:
       - from: idearium/spec-engine/templates.js
         to: lib/agent-tools/tools/sandbox/cos-compartment.js
@@ -182,6 +182,9 @@ payload:
         to: cos/cli/commands/intent.js
         kind: requires
       - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+      - from: lib/cos-bridge.js
         to: cos/workspace/index.js
         kind: requires
       - from: lib/cos-bridge.js
@@ -189,9 +192,6 @@ payload:
         kind: requires
       - from: lib/system-registry.js
         to: lib/component-registry.js
-        kind: requires
-      - from: lib/drawbridge-registry.js
-        to: loom/scanners/capability-map.js
         kind: requires
       - from: idearium/api/index.js
         to: idearium/spec-engine/templates.js
@@ -267,6 +267,12 @@ payload:
         kind: upward
         known: true
       - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: false
+      - from: lib/cos-bridge.js
         to: cos/workspace/index.js
         fromSystem: lib
         toSystem: cos
@@ -278,15 +284,9 @@ payload:
         toSystem: cos
         kind: upward
         known: true
-      - from: lib/drawbridge-registry.js
-        to: loom/scanners/capability-map.js
-        fromSystem: lib
-        toSystem: loom
-        kind: upward
-        known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -305,7 +305,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): ND1_every_system_has_its_database · all downstream 6 · finishing it unlocks

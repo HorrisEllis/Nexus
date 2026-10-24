@@ -9,11 +9,11 @@ intent: null
 summary: CT3_the_code_tab_is_the_work_surface (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854984115
+exported_at: 1792855557753
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854984115
-lastSeenAt: 1792854984115
+firstSeenAt: 1792855557753
+lastSeenAt: 1792855557753
 fingerprint: null
 payload:
   id: CT3_the_code_tab_is_the_work_surface
@@ -62,7 +62,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT2_it_learns_and_switches
@@ -82,7 +82,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): CT2_it_learns_and_switches · all upstream 2'
         - >-
           needed by (1): CT5_hooked_into_the_plan · all downstream 4 · finishing it unlocks

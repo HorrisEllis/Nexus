@@ -9,11 +9,11 @@ intent: null
 summary: SB49_an_idea_runs_through_by_itself (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854983072
+exported_at: 1792855556706
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983072
-lastSeenAt: 1792854983072
+firstSeenAt: 1792855556706
+lastSeenAt: 1792855556706
 fingerprint: null
 payload:
   id: SB49_an_idea_runs_through_by_itself
@@ -223,7 +223,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 10
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB46_every_step_by_hand
@@ -270,7 +270,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 10 · blocked by SB46_every_step_by_hand,
+          DAG 7d2ff66183c6511e · layer 10 · blocked by SB46_every_step_by_hand,
           SB48_proof_in_cos_closes_the_phase
         - >-
           depends on (2): SB46_every_step_by_hand, SB48_proof_in_cos_closes_the_phase · all upstream

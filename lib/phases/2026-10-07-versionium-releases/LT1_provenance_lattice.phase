@@ -7,11 +7,11 @@ intent: null
 summary: LT1_provenance_lattice (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854989831
+exported_at: 1792855563223
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854989831
-lastSeenAt: 1792854989831
+firstSeenAt: 1792855563223
+lastSeenAt: 1792855563223
 fingerprint: null
 payload:
   id: LT1_provenance_lattice
@@ -139,7 +139,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
@@ -155,7 +155,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): VR1_every_change_a_commit'
         - 'needed by (1): RN2_cortex_is_the_bookkeeper · all downstream 2'
   uuid: 90372843-0a17-5edc-9d9f-c86eeb957c07

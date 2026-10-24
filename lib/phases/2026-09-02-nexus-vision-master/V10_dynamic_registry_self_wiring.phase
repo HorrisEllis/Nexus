@@ -9,11 +9,11 @@ intent: null
 summary: V10_dynamic_registry_self_wiring (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854964527
+exported_at: 1792855538380
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854964527
-lastSeenAt: 1792854964527
+firstSeenAt: 1792855538380
+lastSeenAt: 1792855538380
 fingerprint: null
 payload:
   id: V10_dynamic_registry_self_wiring
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by VM1_versionium_owns_loom_map_sync
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by VM1_versionium_owns_loom_map_sync
         - 'depends on (1): VM1_versionium_owns_loom_map_sync'
         - 'needed by (0): —'
   uuid: a5ac0292-1bbd-582b-b8c5-bfeccbed5b7e

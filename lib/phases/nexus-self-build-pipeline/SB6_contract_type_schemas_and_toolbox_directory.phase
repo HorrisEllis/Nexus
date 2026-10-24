@@ -9,11 +9,11 @@ intent: null
 summary: SB6_contract_type_schemas_and_toolbox_directory (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855032833
+exported_at: 1792855605944
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855032833
-lastSeenAt: 1792855032833
+firstSeenAt: 1792855605944
+lastSeenAt: 1792855605944
 fingerprint: null
 payload:
   id: SB6_contract_type_schemas_and_toolbox_directory
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: c5ebdf092da9729b
+    hash: ade0ba60167bcdb8
     nodes:
       - path: lib/gap-field.js
         role: changes
@@ -57,15 +57,15 @@ payload:
         role: used-by
         exists: true
         system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
       - path: cortex/gap-finder/index.js
         role: used-by
         exists: true
         system: cortex
       - path: cortex/self-heal/index.js
-        role: used-by
-        exists: true
-        system: cortex
-      - path: cortex/tools/table-materializer.js
         role: used-by
         exists: true
         system: cortex
@@ -148,13 +148,13 @@ payload:
       - from: copilot/tool-runtime.js
         to: lib/gap-field.js
         kind: requires
+      - from: cortex/boot.js
+        to: lib/gap-field.js
+        kind: requires
       - from: cortex/gap-finder/index.js
         to: lib/gap-field.js
         kind: requires
       - from: cortex/self-heal/index.js
-        to: lib/gap-field.js
-        kind: requires
-      - from: cortex/tools/table-materializer.js
         to: lib/gap-field.js
         kind: requires
     crossings:
@@ -166,7 +166,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
@@ -182,7 +182,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): SB1_schema_extension'
         - >-
           needed by (1): SB8_tool_agnosticism_and_new_tool_flow · finishing it unlocks

@@ -9,11 +9,11 @@ intent: null
 summary: WS2_the_work_surface_streams_the_writing (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854983085
+exported_at: 1792855556719
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983085
-lastSeenAt: 1792854983085
+firstSeenAt: 1792855556719
+lastSeenAt: 1792855556719
 fingerprint: null
 payload:
   id: WS2_the_work_surface_streams_the_writing
@@ -47,7 +47,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -58,7 +58,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 3fe2fb56-6277-5069-abd7-46e952899250

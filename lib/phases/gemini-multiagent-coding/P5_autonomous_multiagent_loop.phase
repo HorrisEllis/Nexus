@@ -7,11 +7,11 @@ intent: null
 summary: P5_autonomous_multiagent_loop (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855029036
+exported_at: 1792855601989
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855029036
-lastSeenAt: 1792855029036
+firstSeenAt: 1792855601989
+lastSeenAt: 1792855601989
 fingerprint: null
 payload:
   id: P5_autonomous_multiagent_loop
@@ -320,7 +320,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
@@ -342,7 +342,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 3 · blocked by P3_line_block_seam_sync,
+          DAG 7d2ff66183c6511e · layer 3 · blocked by P3_line_block_seam_sync,
           P4_structured_agent_to_agent
         - >-
           depends on (4): P1_per_agent_contracts, P2_tree_parse_recall_injection,

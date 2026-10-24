@@ -9,11 +9,11 @@ intent: null
 summary: AM3_open_ended_grounded_conversation (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855025693
+exported_at: 1792855598464
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855025693
-lastSeenAt: 1792855025693
+firstSeenAt: 1792855598464
+lastSeenAt: 1792855598464
 fingerprint: null
 payload:
   id: AM3_open_ended_grounded_conversation
@@ -182,7 +182,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -195,7 +195,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): AM10_thinking_partner_rename_and_ui_builder'
   uuid: 0e4758d2-65a5-53a6-9266-b864472dc638

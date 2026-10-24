@@ -7,11 +7,11 @@ intent: null
 summary: GD6_the_ways_in (backend) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792855024442
+exported_at: 1792855597152
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855024442
-lastSeenAt: 1792855024442
+firstSeenAt: 1792855597152
+lastSeenAt: 1792855597152
 fingerprint: null
 payload:
   id: GD6_the_ways_in
@@ -254,7 +254,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5_the_response_store
@@ -273,7 +273,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by GD5_the_response_store
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by GD5_the_response_store
         - 'depends on (1): GD5_the_response_store · all upstream 2'
         - >-
           needed by (1): GD7_the_bus_and_connect · all downstream 2 · finishing it unlocks

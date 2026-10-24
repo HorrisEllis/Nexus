@@ -7,11 +7,11 @@ intent: null
 summary: SD6_an_idea_logged_asked_expanded (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854992875
+exported_at: 1792855566184
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854992875
-lastSeenAt: 1792854992875
+firstSeenAt: 1792855566184
+lastSeenAt: 1792855566184
 fingerprint: null
 payload:
   id: SD6_an_idea_logged_asked_expanded
@@ -178,7 +178,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -196,7 +196,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (2): SD7_blocks_that_generate_themselves, SD12_a_spec_starts_from_its_primitives

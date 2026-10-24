@@ -9,11 +9,11 @@ intent: null
 summary: CG11_ublock_adblocker_native_features (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854964522
+exported_at: 1792855538374
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854964522
-lastSeenAt: 1792854964522
+firstSeenAt: 1792855538374
+lastSeenAt: 1792855538374
 fingerprint: null
 payload:
   id: CG11_ublock_adblocker_native_features
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -43,7 +43,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: b3cf69e9-7b55-52b5-8ef1-627602d3149b

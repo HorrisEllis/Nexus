@@ -7,11 +7,11 @@ intent: null
 summary: GQ2_brick_gate_runs_the_test (library) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792855014100
+exported_at: 1792855587144
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855014100
-lastSeenAt: 1792855014100
+firstSeenAt: 1792855587144
+lastSeenAt: 1792855587144
 fingerprint: null
 payload:
   id: GQ2_brick_gate_runs_the_test
@@ -217,7 +217,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ1_quality_stream
@@ -240,7 +240,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by GQ1_quality_stream, GQ3_brick_tests
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by GQ1_quality_stream, GQ3_brick_tests
         - 'depends on (2): GQ1_quality_stream, GQ3_brick_tests'
         - 'needed by (1): GQ5_command · all downstream 2'
         - >-

@@ -9,11 +9,11 @@ intent: null
 summary: BR2_recursion_to_a_depth (?) — 1 file(s)
 system: cortex
 tags: []
-exported_at: 1792855001474
+exported_at: 1792855574692
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855001474
-lastSeenAt: 1792855001474
+firstSeenAt: 1792855574692
+lastSeenAt: 1792855574692
 fingerprint: null
 payload:
   id: BR2_recursion_to_a_depth
@@ -91,7 +91,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GS1_a_snapshot_per_gate_rewind_and_compare
@@ -108,7 +108,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5
+        - DAG 7d2ff66183c6511e · layer 5
         - 'depends on (1): GS1_a_snapshot_per_gate_rewind_and_compare · all upstream 5'
         - 'needed by (0): —'
   uuid: 8b148746-6652-5b4b-a755-7198e5ad7b63

@@ -9,11 +9,11 @@ intent: null
 summary: DT1_desktop_into_the_log (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854987166
+exported_at: 1792855560680
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854987166
-lastSeenAt: 1792854987166
+firstSeenAt: 1792855560680
+lastSeenAt: 1792855560680
 fingerprint: null
 payload:
   id: DT1_desktop_into_the_log
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 8ce7b320cd5c0cd0
+    hash: 79ec2aaa9da67337
     nodes:
       - path: cos/testenv/setup-job.js
         role: changes
@@ -108,7 +108,7 @@ payload:
         role: uses
         exists: true
         system: cos
-      - path: cos/compartment/qemu-runtime.js
+      - path: cos/compartment/process-runner.js
         role: uses
         exists: true
         system: cos
@@ -163,6 +163,9 @@ payload:
         to: cos/cli/commands/intent.js
         kind: requires
       - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+      - from: lib/cos-bridge.js
         to: cos/workspace/index.js
         kind: requires
       - from: lib/cos-bridge.js
@@ -173,9 +176,6 @@ payload:
         kind: requires
       - from: cos/testenv/setup-job.js
         to: cos/testenv/host.js
-        kind: requires
-      - from: cos/testenv/setup-job.js
-        to: cos/compartment/qemu-runtime.js
         kind: requires
       - from: clear-glass/src/main/index.js
         to: lib/cos-bridge.js
@@ -251,6 +251,12 @@ payload:
         kind: upward
         known: true
       - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: false
+      - from: lib/cos-bridge.js
         to: cos/workspace/index.js
         fromSystem: lib
         toSystem: cos
@@ -264,7 +270,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
@@ -281,7 +287,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): AL1_activity_log · all upstream 2'
         - >-
           needed by (1): VM1_checkpoints_on_the_log · finishing it unlocks

@@ -9,11 +9,11 @@ intent: null
 summary: NC2_nexus_systems_as_compartments (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854987168
+exported_at: 1792855560682
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854987168
-lastSeenAt: 1792854987168
+firstSeenAt: 1792855560682
+lastSeenAt: 1792855560682
 fingerprint: null
 payload:
   id: NC2_nexus_systems_as_compartments
@@ -175,7 +175,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
@@ -189,7 +189,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): AL1_activity_log · all upstream 2'
         - 'needed by (0): —'
   uuid: 1f81b81f-3805-5e6f-a752-3cb73cd0e940

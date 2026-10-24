@@ -7,11 +7,11 @@ intent: null
 summary: GD1_guardian_supervises_cos (?) — 2 file(s)
 system: guardian
 tags: []
-exported_at: 1792854982123
+exported_at: 1792855555709
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854982123
-lastSeenAt: 1792854982123
+firstSeenAt: 1792855555709
+lastSeenAt: 1792855555709
 fingerprint: null
 payload:
   id: GD1_guardian_supervises_cos
@@ -102,7 +102,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::RW1_rewind_engine_vm_snapshots
@@ -116,7 +116,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by RW1_rewind_engine_vm_snapshots
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by RW1_rewind_engine_vm_snapshots
         - 'depends on (1): RW1_rewind_engine_vm_snapshots'
         - 'needed by (0): —'
   uuid: d8e6bf0e-79d3-5780-a1f8-616bb8206eac

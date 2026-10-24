@@ -7,11 +7,11 @@ intent: null
 summary: AP4_intelligence_optimizes (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855025289
+exported_at: 1792855598046
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855025289
-lastSeenAt: 1792855025289
+firstSeenAt: 1792855598046
+lastSeenAt: 1792855598046
 fingerprint: null
 payload:
   id: AP4_intelligence_optimizes
@@ -63,7 +63,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/agent-intelligence-loop-phasemap.spec::AP2_agent_events_to_intelligence
@@ -82,7 +82,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (2): AP2_agent_events_to_intelligence, AP3_strategy_dynamic_db · all upstream 3'
         - 'needed by (1): AP5_autonomous_build_loop · finishing it unlocks AP5_autonomous_build_loop'
   uuid: 8c680874-4ef5-5caa-955c-4aee38f736c0

@@ -9,11 +9,11 @@ intent: null
 summary: PR2_the_diagnostic_listens_not_polls (?) — 2 file(s)
 system: diagnostic
 tags: []
-exported_at: 1792854982535
+exported_at: 1792855556182
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854982535
-lastSeenAt: 1792854982535
+firstSeenAt: 1792855556182
+lastSeenAt: 1792855556182
 fingerprint: null
 payload:
   id: PR2_the_diagnostic_listens_not_polls
@@ -171,7 +171,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR1_the_announced_registry_is_the_list
@@ -189,7 +189,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): PR1_the_announced_registry_is_the_list'
         - >-
           needed by (1): PR3_negative_space_for_missed_heartbeats · all downstream 3 · finishing it

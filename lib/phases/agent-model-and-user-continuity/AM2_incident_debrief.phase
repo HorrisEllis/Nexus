@@ -7,11 +7,11 @@ intent: null
 summary: AM2_incident_debrief (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855025692
+exported_at: 1792855598463
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855025692
-lastSeenAt: 1792855025692
+firstSeenAt: 1792855598463
+lastSeenAt: 1792855598463
 fingerprint: null
 payload:
   id: AM2_incident_debrief
@@ -25,7 +25,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 04a4544016b9bb00
+    hash: ddeea2e6fcf928aa
     nodes:
       - path: copilot/tool-runtime.js
         role: changes
@@ -71,6 +71,10 @@ payload:
         role: used-by
         exists: true
         system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
       - path: cortex/gap-finder/index.js
         role: used-by
         exists: true
@@ -96,10 +100,6 @@ payload:
         exists: true
         system: lib
       - path: lib/agent-tools/tools/sandbox/self-repair.js
-        role: used-by
-        exists: true
-        system: lib
-      - path: lib/autonomous-repair.js
         role: used-by
         exists: true
         system: lib
@@ -200,6 +200,9 @@ payload:
       - from: copilot/lifeline.js
         to: lib/gap-field.js
         kind: requires
+      - from: cortex/boot.js
+        to: lib/gap-field.js
+        kind: requires
       - from: cortex/gap-finder/index.js
         to: lib/gap-field.js
         kind: requires
@@ -221,9 +224,6 @@ payload:
       - from: lib/agent-tools/tools/sandbox/self-repair.js
         to: lib/gap-field.js
         kind: requires
-      - from: lib/autonomous-repair.js
-        to: lib/gap-field.js
-        kind: requires
     crossings:
       - from: lib/agent-system/submit.js
         to: cortex/core/raid/index.js
@@ -239,7 +239,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
@@ -253,7 +253,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by AM1_per_agent_learned_model
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by AM1_per_agent_learned_model
         - 'depends on (1): AM1_per_agent_learned_model'
         - 'needed by (0): —'
   uuid: 14f8b111-e069-5932-bf4e-57efb718695c

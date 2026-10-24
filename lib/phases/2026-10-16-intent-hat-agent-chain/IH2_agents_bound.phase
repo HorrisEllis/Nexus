@@ -7,11 +7,11 @@ intent: null
 summary: IH2_agents_bound (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792855006681
+exported_at: 1792855579813
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855006681
-lastSeenAt: 1792855006681
+firstSeenAt: 1792855579813
+lastSeenAt: 1792855579813
 fingerprint: null
 payload:
   id: IH2_agents_bound
@@ -98,7 +98,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
@@ -113,7 +113,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by IH1_intent_nodes_point_at_hats
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by IH1_intent_nodes_point_at_hats
         - 'depends on (1): IH1_intent_nodes_point_at_hats · all upstream 2'
         - 'needed by (0): —'
   uuid: bae4c015-2264-528f-83a9-96a4ee223a4e

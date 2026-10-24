@@ -7,11 +7,11 @@ intent: null
 summary: BX9_retire (surface) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792855018909
+exported_at: 1792855592007
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855018909
-lastSeenAt: 1792855018909
+firstSeenAt: 1792855592007
+lastSeenAt: 1792855592007
 fingerprint: null
 payload:
   id: BX9_retire
@@ -167,7 +167,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0b_retire_brainos_page
@@ -196,7 +196,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 6 · blocked by BX6_pipeline_edit, BX7_automation,
+          DAG 7d2ff66183c6511e · layer 6 · blocked by BX6_pipeline_edit, BX7_automation,
           BX8_dock_panels
         - >-
           depends on (4): BX0b_retire_brainos_page, BX6_pipeline_edit, BX7_automation,

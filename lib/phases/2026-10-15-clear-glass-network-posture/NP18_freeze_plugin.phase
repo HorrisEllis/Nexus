@@ -7,11 +7,11 @@ intent: null
 summary: NP18_freeze_plugin (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854998259
+exported_at: 1792855571457
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854998259
-lastSeenAt: 1792854998259
+firstSeenAt: 1792855571457
+lastSeenAt: 1792855571457
 fingerprint: null
 payload:
   id: NP18_freeze_plugin
@@ -140,7 +140,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primitive
@@ -161,7 +161,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by NP17_hold_primitive, NP12_plugin_split
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by NP17_hold_primitive, NP12_plugin_split
         - 'depends on (2): NP17_hold_primitive, NP12_plugin_split · all upstream 6'
         - 'needed by (0): —'
   uuid: e517e90b-133c-58e6-8d9a-7abd6bcbec54

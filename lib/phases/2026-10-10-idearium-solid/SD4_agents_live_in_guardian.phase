@@ -7,11 +7,11 @@ intent: null
 summary: SD4_agents_live_in_guardian (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854992873
+exported_at: 1792855566182
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854992873
-lastSeenAt: 1792854992873
+firstSeenAt: 1792855566182
+lastSeenAt: 1792855566182
 fingerprint: null
 payload:
   id: SD4_agents_live_in_guardian
@@ -106,7 +106,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -120,7 +120,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): SD5_account_fallback · finishing it unlocks SD5_account_fallback'
   uuid: 3e3569f2-8c3c-554c-9926-2018e5e34c1b

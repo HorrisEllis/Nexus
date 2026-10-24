@@ -7,11 +7,11 @@ intent: null
 summary: FR5_the_demo (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855009136
+exported_at: 1792855582338
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855009136
-lastSeenAt: 1792855009136
+firstSeenAt: 1792855582338
+lastSeenAt: 1792855582338
 fingerprint: null
 payload:
   id: FR5_the_demo
@@ -244,7 +244,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-16-repo-carve-phasemap.spec::FR2_tested_before_it_lands
@@ -262,7 +262,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · ready
+        - DAG 7d2ff66183c6511e · layer 4 · ready
         - 'depends on (2): FR2_tested_before_it_lands, FR3_undo_any_change · all upstream 5'
         - 'needed by (0): —'
   uuid: 6f82ade2-d673-57ee-b1f5-afc3ffabe92f

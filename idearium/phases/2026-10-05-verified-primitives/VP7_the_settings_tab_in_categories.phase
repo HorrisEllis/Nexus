@@ -9,11 +9,11 @@ intent: null
 summary: VP7_the_settings_tab_in_categories (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854986714
+exported_at: 1792855560262
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854986714
-lastSeenAt: 1792854986714
+firstSeenAt: 1792855560262
+lastSeenAt: 1792855560262
 fingerprint: null
 payload:
   id: VP7_the_settings_tab_in_categories
@@ -58,7 +58,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-05-verified-primitives-phasemap.spec::VP0_map_and_atlas
@@ -71,7 +71,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): VP0_map_and_atlas'
         - 'needed by (0): —'
   uuid: 566e46d1-f425-5162-b893-286aafa8412b

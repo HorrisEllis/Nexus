@@ -9,11 +9,11 @@ intent: null
 summary: SR3_artifact_extraction_introspect_bridge (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854964542
+exported_at: 1792855538404
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854964542
-lastSeenAt: 1792854964542
+firstSeenAt: 1792855538404
+lastSeenAt: 1792855538404
 fingerprint: null
 payload:
   id: SR3_artifact_extraction_introspect_bridge
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 4f813123ae64e4bd
+    hash: 0a5a8bf8b6fc3c4e
     nodes:
       - path: guardian/server.js
         role: changes
@@ -68,15 +68,15 @@ payload:
         role: used-by
         exists: true
         system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
       - path: cortex/gap-finder/index.js
         role: used-by
         exists: true
         system: cortex
       - path: cortex/self-heal/index.js
-        role: used-by
-        exists: true
-        system: cortex
-      - path: cortex/tools/table-materializer.js
         role: used-by
         exists: true
         system: cortex
@@ -204,13 +204,13 @@ payload:
       - from: copilot/tool-runtime.js
         to: lib/gap-field.js
         kind: requires
+      - from: cortex/boot.js
+        to: lib/gap-field.js
+        kind: requires
       - from: cortex/gap-finder/index.js
         to: lib/gap-field.js
         kind: requires
       - from: cortex/self-heal/index.js
-        to: lib/gap-field.js
-        kind: requires
-      - from: cortex/tools/table-materializer.js
         to: lib/gap-field.js
         kind: requires
     crossings:
@@ -240,7 +240,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -260,7 +260,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (3): SR8_deterministic_claude_replication, SR9_autonomous_self_build_end_state,

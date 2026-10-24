@@ -9,11 +9,11 @@ intent: null
 summary: SET1_autobuild_config_and_command (cli) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792855016302
+exported_at: 1792855589420
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855016302
-lastSeenAt: 1792855016302
+firstSeenAt: 1792855589420
+lastSeenAt: 1792855589420
 fingerprint: null
 payload:
   id: SET1_autobuild_config_and_command
@@ -188,7 +188,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB1_autobuild_loop_and_resume
@@ -211,7 +211,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5 · ready
+        - DAG 7d2ff66183c6511e · layer 5 · ready
         - 'depends on (1): AB1_autobuild_loop_and_resume · all upstream 8'
         - >-
           needed by (1): SET2_autobuild_settings_ui · finishing it unlocks

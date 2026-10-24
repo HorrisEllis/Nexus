@@ -401,8 +401,13 @@ const server = http.createServer(async (req, res) => {
       try {
         const hooksFile = require(`../hooks/${system}.hooks.js`);
         declared = { systemId: hooksFile.systemId, port: hooksFile.port, version: hooksFile.version, updatedAt: hooksFile.updatedAt, hooks: hooksFile.hooks, activeCount: hooksFile.active().length, totalCount: hooksFile.hooks.length };
-      } catch (_) { /* not every system has a hand-declared hooks.js — honest absence, not an error */ }
-      const gaps = gapField.openGaps({ limit: 500 }).filter(g => (g.source || '').includes(system));
+      } catch (e) {
+        // not every system has a hand-declared hooks.js (honest absence). 0.60.242 LM4: inside Loom's compartment the wall refuses another
+        // system's file (code COS_BOUNDARY); that is said, not shown as absence. The census cannot see this require (its path is built at
+        // run time); the wall did. Its real fix is each system's hooks through its own registry (LM5).
+        if (e && e.code === 'COS_BOUNDARY') declared = { unavailable: true, why: e.message };
+      }
+      const gaps = (await gapField.openGapsAsync({ limit: 500 })).filter(g => (g.source || '').includes(system));   // 0.60.242 LM4 Cortex's route
       const history = componentLedger.bySystem(system, 100);
       return json(res, 200, { ok: true, system, structuralNodes, declared, gaps, gapCount: gaps.length, history, historyCount: history.length });
     }
@@ -468,13 +473,13 @@ const server = http.createServer(async (req, res) => {
     // pipeline (lib/gap-field.js), same has/get shape as phasemap above.
     if (method === 'GET' && p === '/api/gaps') {
       const domain = url.searchParams.get('domain') || null;
-      const gaps = gapField.openGaps({ domain, limit: 200 });
+      const gaps = await gapField.openGapsAsync({ domain, limit: 200 });   // 0.60.242 LM4 Cortex's route
       return json(res, 200, { ok: true, gaps, count: gaps.length, domain: domain || 'all' });
     }
     if (method === 'GET' && p.startsWith('/api/gaps/')) {
       const domain = decodeURIComponent(p.slice('/api/gaps/'.length));
       if (!domain) return json(res, 400, { ok: false, error: 'domain required' });
-      const gaps = gapField.openGaps({ domain, limit: 200 });
+      const gaps = await gapField.openGapsAsync({ domain, limit: 200 });   // 0.60.242 LM4 Cortex's route
       return json(res, 200, { ok: true, gaps, count: gaps.length, domain });
     }
     // §R4 2026-08-12 — James: "a ledger to log each system change to a

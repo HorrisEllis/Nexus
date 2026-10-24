@@ -9,11 +9,11 @@ intent: null
 summary: AG1_coding_agent_provider (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854978905
+exported_at: 1792855552398
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978905
-lastSeenAt: 1792854978905
+firstSeenAt: 1792855552398
+lastSeenAt: 1792855552398
 fingerprint: null
 payload:
   id: AG1_coding_agent_provider
@@ -195,7 +195,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
@@ -213,7 +213,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by CI1_compounding_iterate
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by CI1_compounding_iterate
         - 'depends on (2): DT2_failure_mode_field, CI1_compounding_iterate · all upstream 4'
         - 'needed by (0): —'
   uuid: dc85c623-e998-5f76-a2b4-4c2121538b74

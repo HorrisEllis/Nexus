@@ -7,11 +7,11 @@ intent: null
 summary: RS3_the_spec_document (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854986271
+exported_at: 1792855559856
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854986271
-lastSeenAt: 1792854986271
+firstSeenAt: 1792855559856
+lastSeenAt: 1792855559856
 fingerprint: null
 payload:
   id: RS3_the_spec_document
@@ -66,7 +66,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -88,7 +88,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): RS4_the_pipeline_on_warp2, RS9_the_thread · all downstream 8 · finishing it

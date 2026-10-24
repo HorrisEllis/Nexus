@@ -9,11 +9,11 @@ intent: null
 summary: PH1_phase_runs_end_in_proof (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854980353
+exported_at: 1792855553904
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980353
-lastSeenAt: 1792854980353
+firstSeenAt: 1792855553904
+lastSeenAt: 1792855553904
 fingerprint: null
 payload:
   id: PH1_phase_runs_end_in_proof
@@ -227,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
@@ -249,7 +249,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): PR1_proof_run_the_delivery_checker · all upstream 2'
         - >-
           needed by (3): FV0_fulfil_a_taken_order, GG1_graphs_generate_code, CL1_the_component_lab ·

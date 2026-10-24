@@ -9,11 +9,11 @@ intent: null
 summary: PR2_screenshots_through_clear_glass (?) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854980337
+exported_at: 1792855553888
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980337
-lastSeenAt: 1792854980337
+firstSeenAt: 1792855553888
+lastSeenAt: 1792855553888
 fingerprint: null
 payload:
   id: PR2_screenshots_through_clear_glass
@@ -161,7 +161,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
@@ -196,7 +196,7 @@ payload:
             - idearium/repo/proof-run.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · ready
+        - DAG 7d2ff66183c6511e · layer 3 · ready
         - >-
           depends on (2): PR1_proof_run_the_delivery_checker, GA1_guardian_source_of_truth · all
           upstream 4

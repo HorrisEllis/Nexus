@@ -7,11 +7,11 @@ intent: null
 summary: BS7_api (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854976740
+exported_at: 1792855550125
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854976740
-lastSeenAt: 1792854976740
+firstSeenAt: 1792855550125
+lastSeenAt: 1792855550125
 fingerprint: null
 payload:
   id: BS7_api
@@ -234,7 +234,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
@@ -268,7 +268,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - >-
           depends on (5): BS2_file_states, BS3_baseline_deviation, BS4_environment_check,
           BS5_spec_to_phasemap, BS6_build_plan

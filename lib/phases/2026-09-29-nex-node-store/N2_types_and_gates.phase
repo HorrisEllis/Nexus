@@ -7,11 +7,11 @@ intent: null
 summary: N2_types_and_gates (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854977218
+exported_at: 1792855550567
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977218
-lastSeenAt: 1792854977218
+firstSeenAt: 1792855550567
+lastSeenAt: 1792855550567
 fingerprint: null
 payload:
   id: N2_types_and_gates
@@ -43,7 +43,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
@@ -56,7 +56,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): N0_census'
         - 'needed by (0): —'
   uuid: 9abef316-281a-5831-8983-3d7a970dae61

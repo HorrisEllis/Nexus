@@ -7,11 +7,11 @@ intent: null
 summary: W4_navigation (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854978469
+exported_at: 1792855551916
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978469
-lastSeenAt: 1792854978469
+firstSeenAt: 1792855551916
+lastSeenAt: 1792855551916
 fingerprint: null
 payload:
   id: W4_navigation
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W3_work_surface
@@ -62,7 +62,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4
+        - DAG 7d2ff66183c6511e · layer 4
         - 'depends on (1): W3_work_surface · all upstream 4'
         - 'needed by (1): W5_theme_and_css · all downstream 3 · finishing it unlocks W5_theme_and_css'
   uuid: 68eca463-5136-5e79-8076-9eec6bd3c3b5

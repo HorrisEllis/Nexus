@@ -9,11 +9,11 @@ intent: null
 summary: GQ2_brick_gate_runs_the_test (api) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792855016300
+exported_at: 1792855589417
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855016300
-lastSeenAt: 1792855016300
+firstSeenAt: 1792855589417
+lastSeenAt: 1792855589417
 fingerprint: null
 payload:
   id: GQ2_brick_gate_runs_the_test
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
@@ -251,7 +251,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 3 · blocked by GQ1_quality_stream, GQ3_brick_tests,
+          DAG 7d2ff66183c6511e · layer 3 · blocked by GQ1_quality_stream, GQ3_brick_tests,
           DC1_dynamic_chunk_at_plan
         - >-
           depends on (3): GQ1_quality_stream, GQ3_brick_tests, DC1_dynamic_chunk_at_plan · all

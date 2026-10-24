@@ -9,11 +9,11 @@ intent: null
 summary: VP6_debug_and_intelligence_in_the_desktop (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854986713
+exported_at: 1792855560261
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854986713
-lastSeenAt: 1792854986713
+firstSeenAt: 1792855560261
+lastSeenAt: 1792855560261
 fingerprint: null
 payload:
   id: VP6_debug_and_intelligence_in_the_desktop
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: cb17f73919611193
+    hash: e7312753e730055b
     nodes:
       - path: cos/testenv/index.js
         role: changes
@@ -69,7 +69,7 @@ payload:
         role: used-by
         exists: true
         system: copilot
-      - path: cortex/gap-finder/index.js
+      - path: cortex/boot.js
         role: used-by
         exists: true
         system: cortex
@@ -201,7 +201,7 @@ payload:
       - from: copilot/tool-runtime.js
         to: lib/gap-field.js
         kind: requires
-      - from: cortex/gap-finder/index.js
+      - from: cortex/boot.js
         to: lib/gap-field.js
         kind: requires
     crossings:
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-05-verified-primitives-phasemap.spec::VP1_confidence_from_evidence
@@ -246,7 +246,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by VP1_confidence_from_evidence
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by VP1_confidence_from_evidence
         - 'depends on (1): VP1_confidence_from_evidence · all upstream 2'
         - 'needed by (0): —'
   uuid: 400af5d9-ef88-53d1-b97b-82f2a4bec588

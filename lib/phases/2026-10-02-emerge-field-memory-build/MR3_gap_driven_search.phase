@@ -7,11 +7,11 @@ intent: null
 summary: MR3_gap_driven_search (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854980276
+exported_at: 1792855553828
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980276
-lastSeenAt: 1792854980276
+firstSeenAt: 1792855553828
+lastSeenAt: 1792855553828
 fingerprint: null
 payload:
   id: MR3_gap_driven_search
@@ -46,7 +46,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
@@ -65,7 +65,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by MR1_recall_triad_and_context_table
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by MR1_recall_triad_and_context_table
         - 'depends on (1): MR1_recall_triad_and_context_table · all upstream 3'
         - 'needed by (1): RC1_the_repo_main_chat · all downstream 2'
   uuid: 9626d8d2-9d25-5391-aa59-c267d77da2d2

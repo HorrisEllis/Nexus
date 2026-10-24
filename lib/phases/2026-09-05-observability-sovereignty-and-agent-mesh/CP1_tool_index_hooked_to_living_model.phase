@@ -9,11 +9,11 @@ intent: null
 summary: CP1_tool_index_hooked_to_living_model (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854965667
+exported_at: 1792855539392
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854965667
-lastSeenAt: 1792854965667
+firstSeenAt: 1792855539392
+lastSeenAt: 1792855539392
 fingerprint: null
 payload:
   id: CP1_tool_index_hooked_to_living_model
@@ -34,7 +34,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::EVT1_commands_and_tools_emit_events
@@ -52,7 +52,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 1 · blocked by EVT1_commands_and_tools_emit_events,
+          DAG 7d2ff66183c6511e · layer 1 · blocked by EVT1_commands_and_tools_emit_events,
           TC1_tools_get_real_contracts
         - 'depends on (2): EVT1_commands_and_tools_emit_events, TC1_tools_get_real_contracts'
         - 'needed by (0): —'

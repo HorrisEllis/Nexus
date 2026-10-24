@@ -7,11 +7,11 @@ intent: null
 summary: OR2_the_proposal (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854991168
+exported_at: 1792855564520
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854991168
-lastSeenAt: 1792854991168
+firstSeenAt: 1792855564520
+lastSeenAt: 1792855564520
 fingerprint: null
 payload:
   id: OR2_the_proposal
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
@@ -51,7 +51,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by OR1_five_answers_for_an_open_phase
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by OR1_five_answers_for_an_open_phase
         - 'depends on (1): OR1_five_answers_for_an_open_phase · all upstream 2'
         - 'needed by (0): —'
   uuid: bd2537fa-81a8-57ec-a52d-95a55ab73840

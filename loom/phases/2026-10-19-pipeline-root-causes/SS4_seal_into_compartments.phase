@@ -7,11 +7,11 @@ intent: null
 summary: SS4_seal_into_compartments (integration) — 2 file(s)
 system: loom
 tags: []
-exported_at: 1792855015865
+exported_at: 1792855588965
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015865
-lastSeenAt: 1792855015865
+firstSeenAt: 1792855588965
+lastSeenAt: 1792855588965
 fingerprint: null
 payload:
   id: SS4_seal_into_compartments
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: d2917233f0403b5e
+    hash: 90245f075089fa4b
     nodes:
       - path: lib/system-boundary.js
         role: changes
@@ -90,10 +90,10 @@ payload:
         to: lib/system-registry.js
         kind: requires
       - from: loom/templates/cos-compartment.js
-        to: lib/cos-bridge.js
-        kind: requires
-      - from: lib/system-boundary.js
         to: lib/nexus-self/systems.js
+        kind: requires
+      - from: loom/templates/cos-compartment.js
+        to: lib/cos-bridge.js
         kind: requires
       - from: loom/server.js
         to: loom/templates/cos-compartment.js
@@ -125,7 +125,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS3_nodes_are_the_data
@@ -142,7 +142,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by SS3_nodes_are_the_data
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by SS3_nodes_are_the_data
         - 'depends on (1): SS3_nodes_are_the_data · all upstream 4'
         - 'needed by (0): —'
   uuid: d851cbf5-0008-5d0b-949c-1a68c04240bc

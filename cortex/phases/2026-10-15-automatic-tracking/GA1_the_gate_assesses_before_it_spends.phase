@@ -9,11 +9,11 @@ intent: null
 summary: GA1_the_gate_assesses_before_it_spends (?) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792854997389
+exported_at: 1792855570592
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854997389
-lastSeenAt: 1792854997389
+firstSeenAt: 1792855570592
+lastSeenAt: 1792855570592
 fingerprint: null
 payload:
   id: GA1_the_gate_assesses_before_it_spends
@@ -270,7 +270,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-15-automatic-tracking-phasemap.spec::GT2_each_gate_tags_and_reports
@@ -283,7 +283,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): GT2_each_gate_tags_and_reports'
         - 'needed by (0): —'
   uuid: db042d42-3665-51ff-9f8f-d675c60f5b13

@@ -7,11 +7,11 @@ intent: null
 summary: CON8_nexus_server_hook (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855005003
+exported_at: 1792855578096
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855005003
-lastSeenAt: 1792855005003
+firstSeenAt: 1792855578096
+lastSeenAt: 1792855578096
 fingerprint: null
 payload:
   id: CON8_nexus_server_hook
@@ -241,7 +241,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
@@ -255,7 +255,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by CON1_one_door_client
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by CON1_one_door_client
         - 'depends on (1): CON1_one_door_client'
         - 'needed by (0): —'
   uuid: bc63759b-12d7-57c1-b182-a162f17250bc

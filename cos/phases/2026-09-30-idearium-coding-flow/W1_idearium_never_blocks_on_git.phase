@@ -9,11 +9,11 @@ intent: null
 summary: W1_idearium_never_blocks_on_git (?) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792854978467
+exported_at: 1792855551914
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978467
-lastSeenAt: 1792854978467
+firstSeenAt: 1792855551914
+lastSeenAt: 1792855551914
 fingerprint: null
 payload:
   id: W1_idearium_never_blocks_on_git
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 0c2b3bd63ecb5cb9
+    hash: 5b66d345303285db
     nodes:
       - path: cos/workspace/index.js
         role: changes
@@ -112,6 +112,10 @@ payload:
         role: uses
         exists: true
         system: cos
+      - path: cos/compartment/process-runner.js
+        role: uses
+        exists: true
+        system: cos
       - path: cos/compartment/qemu-runtime.js
         role: uses
         exists: true
@@ -129,10 +133,6 @@ payload:
         exists: true
         system: cos
       - path: cos/testenv/tar.js
-        role: uses
-        exists: true
-        system: cos
-      - path: cos/workspace/vm-control.js
         role: uses
         exists: true
         system: cos
@@ -175,7 +175,7 @@ payload:
         to: cos/cli/commands/intent.js
         kind: requires
       - from: lib/cos-bridge.js
-        to: cos/workspace/vm-control.js
+        to: cos/compartment/process-runner.js
         kind: requires
       - from: cos/workspace/vm-control.js
         to: cos/workspace/index.js
@@ -251,11 +251,11 @@ payload:
         kind: upward
         known: true
       - from: lib/cos-bridge.js
-        to: cos/workspace/vm-control.js
+        to: cos/compartment/process-runner.js
         fromSystem: lib
         toSystem: cos
         kind: upward
-        known: true
+        known: false
       - from: lib/shadow-space.js
         to: cos/workspace/index.js
         fromSystem: lib
@@ -264,7 +264,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W0_map
@@ -285,7 +285,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): W0_map'
         - >-
           needed by (1): W2_plan_always_lands · all downstream 6 · finishing it unlocks

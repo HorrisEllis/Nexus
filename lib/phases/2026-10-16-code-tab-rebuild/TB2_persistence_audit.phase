@@ -7,11 +7,11 @@ intent: null
 summary: TB2_persistence_audit (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855004567
+exported_at: 1792855577667
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855004567
-lastSeenAt: 1792855004567
+firstSeenAt: 1792855577667
+lastSeenAt: 1792855577667
 fingerprint: null
 payload:
   id: TB2_persistence_audit
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
@@ -65,7 +65,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by TB1_read_model_per_tab
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by TB1_read_model_per_tab
         - 'depends on (1): TB1_read_model_per_tab · all upstream 2'
         - >-
           needed by (4): TB3_close_the_persistence_gaps, TB7a_edges_recorded, TB7b_keep_every_step,

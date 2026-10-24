@@ -7,11 +7,11 @@ intent: null
 summary: RQ3_repair_with_the_checks_own_words (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854995107
+exported_at: 1792855568351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995107
-lastSeenAt: 1792854995107
+firstSeenAt: 1792855568351
+lastSeenAt: 1792855568351
 fingerprint: null
 payload:
   id: RQ3_repair_with_the_checks_own_words
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
@@ -250,7 +250,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 3 · blocked by RQ1_the_verifier_library,
+          DAG 7d2ff66183c6511e · layer 3 · blocked by RQ1_the_verifier_library,
           RQ2_the_generation_failure_vocabulary_and_index
         - >-
           depends on (2): RQ1_the_verifier_library, RQ2_the_generation_failure_vocabulary_and_index

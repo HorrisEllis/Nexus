@@ -9,11 +9,11 @@ intent: null
 summary: X4_command_index_spec (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854974901
+exported_at: 1792855548124
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854974901
-lastSeenAt: 1792854974901
+firstSeenAt: 1792855548124
+lastSeenAt: 1792855548124
 fingerprint: null
 payload:
   id: X4_command_index_spec
@@ -38,7 +38,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
@@ -55,7 +55,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): X1_system_nodes · all upstream 2'
         - 'needed by (1): Z1_release · finishing it unlocks Z1_release'
   uuid: fb62f1e6-6ee3-517f-95c8-e197640709d7

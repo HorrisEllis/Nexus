@@ -9,11 +9,11 @@ intent: null
 summary: D2_idearium_compartment_structure (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854964494
+exported_at: 1792855538343
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854964494
-lastSeenAt: 1792854964494
+firstSeenAt: 1792855538343
+lastSeenAt: 1792855538343
 fingerprint: null
 payload:
   id: D2_idearium_compartment_structure
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::D1_bridgeos_readme_template
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by D1_bridgeos_readme_template
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by D1_bridgeos_readme_template
         - 'depends on (1): D1_bridgeos_readme_template'
         - 'needed by (0): —'
   uuid: 1c87f372-b986-5d33-bc46-66d31b3d5a15

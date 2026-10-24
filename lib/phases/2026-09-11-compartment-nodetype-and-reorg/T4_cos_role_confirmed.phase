@@ -9,11 +9,11 @@ intent: null
 summary: T4_cos_role_confirmed (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854966705
+exported_at: 1792855540223
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854966705
-lastSeenAt: 1792854966705
+firstSeenAt: 1792855540223
+lastSeenAt: 1792855540223
 fingerprint: null
 payload:
   id: T4_cos_role_confirmed
@@ -58,7 +58,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
@@ -71,7 +71,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): T1_extend_system_scaffold'
         - 'needed by (0): —'
   uuid: a06de8e5-4968-5c34-9010-367f1c58b91d

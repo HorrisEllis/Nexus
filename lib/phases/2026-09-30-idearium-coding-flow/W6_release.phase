@@ -7,11 +7,11 @@ intent: null
 summary: W6_release (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854978471
+exported_at: 1792855551919
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978471
-lastSeenAt: 1792854978471
+firstSeenAt: 1792855551919
+lastSeenAt: 1792855551919
 fingerprint: null
 payload:
   id: W6_release
@@ -115,7 +115,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W5_theme_and_css
@@ -133,7 +133,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6
+        - DAG 7d2ff66183c6511e · layer 6
         - 'depends on (1): W5_theme_and_css · all upstream 6'
         - 'needed by (0): —'
   uuid: 167ee8d0-4ee2-59d5-a022-75c68be6d1a6

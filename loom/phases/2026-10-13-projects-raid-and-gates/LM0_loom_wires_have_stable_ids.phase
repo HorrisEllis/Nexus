@@ -9,11 +9,11 @@ intent: null
 summary: LM0_loom_wires_have_stable_ids (?) — 2 file(s)
 system: loom
 tags: []
-exported_at: 1792854996919
+exported_at: 1792855570165
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854996919
-lastSeenAt: 1792854996919
+firstSeenAt: 1792855570165
+lastSeenAt: 1792855570165
 fingerprint: null
 payload:
   id: LM0_loom_wires_have_stable_ids
@@ -234,7 +234,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -245,7 +245,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

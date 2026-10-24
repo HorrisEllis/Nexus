@@ -9,11 +9,11 @@ intent: null
 summary: IC9_diagnostic_stall_detection_and_autofix (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854962994
+exported_at: 1792855536900
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854962994
-lastSeenAt: 1792854962994
+firstSeenAt: 1792855536900
+lastSeenAt: 1792855536900
 fingerprint: null
 payload:
   id: IC9_diagnostic_stall_detection_and_autofix
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC5_full_input_queue_output_qc_lifecycle
@@ -50,7 +50,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by IC5_full_input_queue_output_qc_lifecycle
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by IC5_full_input_queue_output_qc_lifecycle
         - 'depends on (1): IC5_full_input_queue_output_qc_lifecycle · all upstream 4'
         - 'needed by (0): —'
   uuid: 37d0007a-af63-5188-b04d-cd963c04c7ec

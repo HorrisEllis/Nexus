@@ -9,11 +9,11 @@ intent: null
 summary: GD1_gaps_from_the_graph_for_any_repo (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855010011
+exported_at: 1792855583166
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855010011
-lastSeenAt: 1792855010011
+firstSeenAt: 1792855583166
+lastSeenAt: 1792855583166
 fingerprint: null
 payload:
   id: GD1_gaps_from_the_graph_for_any_repo
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 86ed49b93223b477
+    hash: c2d3829cdc2e3467
     nodes:
       - path: cortex/core/raid/contract-gates.js
         role: changes
@@ -68,11 +68,11 @@ payload:
         role: used-by
         exists: true
         system: copilot
-      - path: cortex/gap-finder/index.js
+      - path: cortex/boot.js
         role: used-by
         exists: true
         system: cortex
-      - path: cortex/tools/table-materializer.js
+      - path: cortex/gap-finder/index.js
         role: used-by
         exists: true
         system: cortex
@@ -211,16 +211,16 @@ payload:
       - from: copilot/tool-runtime.js
         to: lib/gap-field.js
         kind: requires
-      - from: cortex/gap-finder/index.js
+      - from: cortex/boot.js
         to: lib/gap-field.js
         kind: requires
-      - from: cortex/tools/table-materializer.js
+      - from: cortex/gap-finder/index.js
         to: lib/gap-field.js
         kind: requires
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -231,7 +231,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

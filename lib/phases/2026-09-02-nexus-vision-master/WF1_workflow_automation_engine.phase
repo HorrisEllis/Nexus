@@ -7,11 +7,11 @@ intent: null
 summary: WF1_workflow_automation_engine (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854964508
+exported_at: 1792855538361
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854964508
-lastSeenAt: 1792854964508
+firstSeenAt: 1792855538361
+lastSeenAt: 1792855538361
 fingerprint: null
 payload:
   id: WF1_workflow_automation_engine
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM11_per_agent_tasks_automation
@@ -46,7 +46,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by AM11_per_agent_tasks_automation
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by AM11_per_agent_tasks_automation
         - 'depends on (1): AM11_per_agent_tasks_automation · all upstream 2'
         - 'needed by (0): —'
   uuid: 3f21681c-56d1-51fa-956c-da401d3feabc

@@ -9,11 +9,11 @@ intent: null
 summary: SBP8_agent_mesh_consolidation (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854962471
+exported_at: 1792855536394
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854962471
-lastSeenAt: 1792854962471
+firstSeenAt: 1792855536394
+lastSeenAt: 1792855536394
 fingerprint: null
 payload:
   id: SBP8_agent_mesh_consolidation
@@ -99,7 +99,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -110,7 +110,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 865cba19-cd3f-55f4-aeaa-fe19dd0e7504

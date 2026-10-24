@@ -7,11 +7,11 @@ intent: null
 summary: SB46_every_step_by_hand (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792854983067
+exported_at: 1792855556700
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983067
-lastSeenAt: 1792854983067
+firstSeenAt: 1792855556700
+lastSeenAt: 1792855556700
 fingerprint: null
 payload:
   id: SB46_every_step_by_hand
@@ -65,7 +65,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
@@ -88,7 +88,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6 · ready
+        - DAG 7d2ff66183c6511e · layer 6 · ready
         - 'depends on (1): SB42_a_repo_expands_from_its_spec · all upstream 6'
         - >-
           needed by (2): SB47_built_and_run_in_cos, SB49_an_idea_runs_through_by_itself · all

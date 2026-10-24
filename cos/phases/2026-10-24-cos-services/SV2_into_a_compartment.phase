@@ -7,11 +7,11 @@ intent: null
 summary: SV2_into_a_compartment (integration) — 2 file(s)
 system: cos
 tags: []
-exported_at: 1792855023553
+exported_at: 1792855596264
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855023553
-lastSeenAt: 1792855023553
+firstSeenAt: 1792855596264
+lastSeenAt: 1792855596264
 fingerprint: null
 payload:
   id: SV2_into_a_compartment
@@ -28,7 +28,7 @@ payload:
     - MOD-SV-DEPLOY
   spec: cos/spec/cos-services.spec
   graph:
-    hash: 071893fb79ec63bc
+    hash: 2c92a7d065552f87
     nodes:
       - path: cos/compartment/process-runner.js
         role: changes
@@ -66,6 +66,10 @@ payload:
         role: used-by
         exists: true
         system: cos
+      - path: lib/cos-bridge.js
+        role: used-by
+        exists: true
+        system: lib
       - path: cos/compartment/qemu-runtime.js
         role: uses
         exists: true
@@ -109,10 +113,19 @@ payload:
       - from: cos/watchdog/monitor.js
         to: cos/compartment/process-runner.js
         kind: requires
-    crossings: []
+      - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+    crossings:
+      - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: false
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
@@ -129,7 +142,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by SV1_a_stack_per_root
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by SV1_a_stack_per_root
         - 'depends on (1): SV1_a_stack_per_root · all upstream 2'
         - 'needed by (1): SV4_the_doors'
   uuid: a04b581b-57d7-570e-9e6f-2ea983d29c29

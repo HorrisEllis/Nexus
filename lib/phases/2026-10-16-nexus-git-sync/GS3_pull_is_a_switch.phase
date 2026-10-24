@@ -7,11 +7,11 @@ intent: null
 summary: GS3_pull_is_a_switch (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855007484
+exported_at: 1792855580654
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855007484
-lastSeenAt: 1792855007484
+firstSeenAt: 1792855580654
+lastSeenAt: 1792855580654
 fingerprint: null
 payload:
   id: GS3_pull_is_a_switch
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-16-nexus-git-sync-phasemap.spec::GS2_nexus_as_a_repo
@@ -46,7 +46,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by GS2_nexus_as_a_repo
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by GS2_nexus_as_a_repo
         - 'depends on (1): GS2_nexus_as_a_repo · all upstream 2'
         - 'needed by (0): —'
   uuid: b1fab132-751d-59be-8918-a3f05da91aac

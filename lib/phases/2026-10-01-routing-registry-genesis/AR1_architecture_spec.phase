@@ -7,11 +7,11 @@ intent: null
 summary: AR1_architecture_spec (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854979424
+exported_at: 1792855552940
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854979424
-lastSeenAt: 1792854979424
+firstSeenAt: 1792855552940
+lastSeenAt: 1792855552940
 fingerprint: null
 payload:
   id: AR1_architecture_spec
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-01-routing-registry-genesis-phasemap.spec::GN1_genesis
@@ -56,7 +56,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4
+        - DAG 7d2ff66183c6511e · layer 4
         - 'depends on (1): GN1_genesis · all upstream 4'
         - 'needed by (1): RG9_release · finishing it unlocks RG9_release'
   uuid: cfd7a4e4-1670-56ca-a88c-87a0142a93f0

@@ -7,11 +7,11 @@ intent: null
 summary: DS3_components_are_mods (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854992007
+exported_at: 1792855565350
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854992007
-lastSeenAt: 1792854992007
+firstSeenAt: 1792855565350
+lastSeenAt: 1792855565350
 fingerprint: null
 payload:
   id: DS3_components_are_mods
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
@@ -57,7 +57,7 @@ payload:
             - eravos/ui/runtime/mod-factory.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by DS0_one_token_source
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by DS0_one_token_source
         - 'depends on (1): DS0_one_token_source'
         - 'needed by (0): —'
         - >-

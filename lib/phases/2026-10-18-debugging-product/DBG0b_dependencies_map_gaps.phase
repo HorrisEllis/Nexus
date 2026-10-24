@@ -7,11 +7,11 @@ intent: null
 summary: DBG0b_dependencies_map_gaps (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855012757
+exported_at: 1792855585858
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855012757
-lastSeenAt: 1792855012757
+firstSeenAt: 1792855585858
+lastSeenAt: 1792855585858
 fingerprint: null
 payload:
   id: DBG0b_dependencies_map_gaps
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: cf51b9f7abd94be2
+    hash: 9255769bdc8eda20
     nodes:
       - path: docs/2026-10-17-decisions-by-the-axioms.spec
         role: changes
@@ -84,6 +84,10 @@ payload:
         role: used-by
         exists: true
         system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
       - path: cortex/gap-finder/index.js
         role: used-by
         exists: true
@@ -105,10 +109,6 @@ payload:
         exists: true
         system: idearium
       - path: lib/agent-build-loop.js
-        role: used-by
-        exists: true
-        system: lib
-      - path: lib/agent-tools/tools/diagnostic/system-priority.js
         role: used-by
         exists: true
         system: lib
@@ -191,6 +191,9 @@ payload:
       - from: copilot/tool-runtime.js
         to: lib/gap-field.js
         kind: requires
+      - from: cortex/boot.js
+        to: lib/gap-field.js
+        kind: requires
       - from: cortex/gap-finder/index.js
         to: lib/gap-field.js
         kind: requires
@@ -209,9 +212,6 @@ payload:
       - from: lib/agent-build-loop.js
         to: lib/gap-field.js
         kind: requires
-      - from: lib/agent-tools/tools/diagnostic/system-priority.js
-        to: lib/gap-field.js
-        kind: requires
     crossings:
       - from: lib/gap-field.js
         to: cortex/memory/jaa-db.js
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -235,7 +235,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (1): DBG4_dependency_gaps · finishing it unlocks DBG4_dependency_gaps'
   uuid: 2addfb4e-31e7-5dbf-9a4f-cd9e903986a6

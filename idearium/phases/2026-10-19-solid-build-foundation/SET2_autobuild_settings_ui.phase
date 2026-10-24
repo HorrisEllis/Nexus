@@ -7,11 +7,11 @@ intent: null
 summary: SET2_autobuild_settings_ui (ui) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792855016303
+exported_at: 1792855589420
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855016303
-lastSeenAt: 1792855016303
+firstSeenAt: 1792855589420
+lastSeenAt: 1792855589420
 fingerprint: null
 payload:
   id: SET2_autobuild_settings_ui
@@ -42,7 +42,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET1_autobuild_config_and_command
@@ -64,7 +64,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6 · blocked by SET1_autobuild_config_and_command
+        - DAG 7d2ff66183c6511e · layer 6 · blocked by SET1_autobuild_config_and_command
         - 'depends on (1): SET1_autobuild_config_and_command · all upstream 9'
         - 'needed by (0): —'
   uuid: 4d1ca78e-2cf5-5af4-a32c-311981903900

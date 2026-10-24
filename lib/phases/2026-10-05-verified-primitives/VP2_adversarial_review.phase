@@ -7,11 +7,11 @@ intent: null
 summary: VP2_adversarial_review (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854986709
+exported_at: 1792855560258
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854986709
-lastSeenAt: 1792854986709
+firstSeenAt: 1792855560258
+lastSeenAt: 1792855560258
 fingerprint: null
 payload:
   id: VP2_adversarial_review
@@ -243,7 +243,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-05-verified-primitives-phasemap.spec::VP1_confidence_from_evidence
@@ -261,7 +261,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by VP1_confidence_from_evidence
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by VP1_confidence_from_evidence
         - 'depends on (1): VP1_confidence_from_evidence · all upstream 2'
         - 'needed by (1): VP4_the_primitive_field · all downstream 2'
   uuid: db6506cd-e8b3-5aa7-9cce-8e98cd8b6561

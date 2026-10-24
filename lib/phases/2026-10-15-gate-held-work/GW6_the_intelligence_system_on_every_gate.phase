@@ -9,11 +9,11 @@ intent: null
 summary: GW6_the_intelligence_system_on_every_gate (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792855000562
+exported_at: 1792855573802
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855000562
-lastSeenAt: 1792855000562
+firstSeenAt: 1792855573802
+lastSeenAt: 1792855573802
 fingerprint: null
 payload:
   id: GW6_the_intelligence_system_on_every_gate
@@ -171,7 +171,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
@@ -198,7 +198,7 @@ payload:
             - lib/fault-log.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by GW3_a_contract_is_traced
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by GW3_a_contract_is_traced
         - 'depends on (1): GW3_a_contract_is_traced · all upstream 4'
         - >-
           needed by (2): GW8_causal_graph_and_failure_mode_field,

@@ -7,11 +7,11 @@ intent: null
 summary: IM3_ideas_mapped_to_nexus (integration) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792855014969
+exported_at: 1792855588019
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855014969
-lastSeenAt: 1792855014969
+firstSeenAt: 1792855588019
+lastSeenAt: 1792855588019
 fingerprint: null
 payload:
   id: IM3_ideas_mapped_to_nexus
@@ -97,7 +97,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-19-idearium-control-phasemap.spec::IM1_ideas_and_notes_as_one
@@ -115,7 +115,7 @@ payload:
             - lib/work-funnel.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by IM1_ideas_and_notes_as_one
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by IM1_ideas_and_notes_as_one
         - 'depends on (1): IM1_ideas_and_notes_as_one · all upstream 2'
         - 'needed by (0): —'
         - 'same files as IM2_promote_to_phase with no order between them: lib/work-funnel.js'

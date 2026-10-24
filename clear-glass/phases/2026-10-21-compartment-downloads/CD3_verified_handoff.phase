@@ -7,11 +7,11 @@ intent: null
 summary: CD3_verified_handoff (library) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855019873
+exported_at: 1792855592884
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855019873
-lastSeenAt: 1792855019873
+firstSeenAt: 1792855592884
+lastSeenAt: 1792855592884
 fingerprint: null
 payload:
   id: CD3_verified_handoff
@@ -45,7 +45,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-21-compartment-downloads-phasemap.spec::CD0_magnet_client
@@ -65,7 +65,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (2): CD0_magnet_client, CD1_magnet_parse'
         - >-
           needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks

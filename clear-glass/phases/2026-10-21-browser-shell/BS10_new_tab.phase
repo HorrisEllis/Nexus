@@ -7,11 +7,11 @@ intent: null
 summary: BS10_new_tab (surface) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855019354
+exported_at: 1792855592425
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855019354
-lastSeenAt: 1792855019354
+firstSeenAt: 1792855592425
+lastSeenAt: 1792855592425
 fingerprint: null
 payload:
   id: BS10_new_tab
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
@@ -52,7 +52,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): BS9_agents_hub · all upstream 3'
         - 'needed by (0): —'
   uuid: 0f7d9a39-17a2-581f-b20d-e145d88461ee

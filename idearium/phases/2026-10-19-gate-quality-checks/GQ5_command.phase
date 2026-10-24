@@ -7,11 +7,11 @@ intent: null
 summary: GQ5_command (cli) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792855014103
+exported_at: 1792855587146
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855014103
-lastSeenAt: 1792855014103
+firstSeenAt: 1792855587146
+lastSeenAt: 1792855587146
 fingerprint: null
 payload:
   id: GQ5_command
@@ -169,7 +169,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-19-gate-quality-checks-phasemap.spec::GQ2_brick_gate_runs_the_test
@@ -192,7 +192,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 3 · blocked by GQ2_brick_gate_runs_the_test,
+          DAG 7d2ff66183c6511e · layer 3 · blocked by GQ2_brick_gate_runs_the_test,
           GQ4_phase_gate_keeps_the_test
         - >-
           depends on (2): GQ2_brick_gate_runs_the_test, GQ4_phase_gate_keeps_the_test · all upstream

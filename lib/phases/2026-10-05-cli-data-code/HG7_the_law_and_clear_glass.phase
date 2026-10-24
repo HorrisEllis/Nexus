@@ -7,11 +7,11 @@ intent: null
 summary: HG7_the_law_and_clear_glass (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854983606
+exported_at: 1792855557237
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983606
-lastSeenAt: 1792854983606
+firstSeenAt: 1792855557237
+lastSeenAt: 1792855557237
 fingerprint: null
 payload:
   id: HG7_the_law_and_clear_glass
@@ -35,7 +35,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -46,7 +46,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 1d2ed0e9-c36a-5211-953f-37d77206dd97

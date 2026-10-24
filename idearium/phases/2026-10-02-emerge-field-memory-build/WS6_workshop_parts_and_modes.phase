@@ -9,11 +9,11 @@ intent: null
 summary: WS6_workshop_parts_and_modes (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854980306
+exported_at: 1792855553857
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980306
-lastSeenAt: 1792854980306
+firstSeenAt: 1792855553857
+lastSeenAt: 1792855553857
 fingerprint: null
 payload:
   id: WS6_workshop_parts_and_modes
@@ -63,7 +63,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
@@ -86,7 +86,7 @@ payload:
             - idearium/ui/workshop.html
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6 · blocked by CB3_the_causal_spec_block
+        - DAG 7d2ff66183c6511e · layer 6 · blocked by CB3_the_causal_spec_block
         - 'depends on (1): CB3_the_causal_spec_block · all upstream 7'
         - 'needed by (0): —'
         - 'same files as UI0_the_stations_agree with no order between them: idearium/ui/workshop.html'

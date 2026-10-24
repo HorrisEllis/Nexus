@@ -9,11 +9,11 @@ intent: null
 summary: NP16_quarantine_pipeline (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854998257
+exported_at: 1792855571455
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854998257
-lastSeenAt: 1792854998257
+firstSeenAt: 1792855571455
+lastSeenAt: 1792855571455
 fingerprint: null
 payload:
   id: NP16_quarantine_pipeline
@@ -59,7 +59,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
@@ -76,7 +76,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by NP1_compartment, NP9_cli_first
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by NP1_compartment, NP9_cli_first
         - 'depends on (2): NP1_compartment, NP9_cli_first'
         - 'needed by (0): —'
   uuid: 1962a36a-d6c7-5332-865a-19fa4430d667

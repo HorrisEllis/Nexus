@@ -7,11 +7,11 @@ intent: null
 summary: RQ18_test_and_attack_intents (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792854995129
+exported_at: 1792855568372
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995129
-lastSeenAt: 1792854995129
+firstSeenAt: 1792855568372
+lastSeenAt: 1792855568372
 fingerprint: null
 payload:
   id: RQ18_test_and_attack_intents
@@ -136,7 +136,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 8
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
@@ -165,7 +165,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 8 · blocked by RQ15_cells_in_parallel
+        - DAG 7d2ff66183c6511e · layer 8 · blocked by RQ15_cells_in_parallel
         - 'depends on (1): RQ15_cells_in_parallel · all upstream 16'
         - 'needed by (0): —'
   uuid: 9720db3b-2a3f-5583-b037-f71baed86ac2

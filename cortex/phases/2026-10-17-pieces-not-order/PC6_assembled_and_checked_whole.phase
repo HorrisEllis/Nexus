@@ -7,11 +7,11 @@ intent: null
 summary: PC6_assembled_and_checked_whole (?) — 1 file(s)
 system: cortex
 tags: []
-exported_at: 1792855011363
+exported_at: 1792855584509
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855011363
-lastSeenAt: 1792855011363
+firstSeenAt: 1792855584509
+lastSeenAt: 1792855584509
 fingerprint: null
 payload:
   id: PC6_assembled_and_checked_whole
@@ -90,7 +90,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-17-pieces-not-order-phasemap.spec::PC2_any_order
@@ -112,7 +112,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 3 · blocked by PC2_any_order,
+          DAG 7d2ff66183c6511e · layer 3 · blocked by PC2_any_order,
           PC3_verified_alone_resumed_by_recheck
         - 'depends on (2): PC2_any_order, PC3_verified_alone_resumed_by_recheck · all upstream 6'
         - 'needed by (0): —'

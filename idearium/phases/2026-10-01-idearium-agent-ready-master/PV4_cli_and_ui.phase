@@ -7,11 +7,11 @@ intent: null
 summary: PV4_cli_and_ui (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854978945
+exported_at: 1792855552442
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978945
-lastSeenAt: 1792854978945
+firstSeenAt: 1792855552442
+lastSeenAt: 1792855552442
 fingerprint: null
 payload:
   id: PV4_cli_and_ui
@@ -111,7 +111,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
@@ -128,7 +128,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): PV3_prove_loop · all upstream 3'
         - 'needed by (1): CP1_copilot_drives_idearium_and_talks_to_its_agents'
   uuid: 7cb97b50-2bd2-5dd4-b1ca-e022a12bfb95

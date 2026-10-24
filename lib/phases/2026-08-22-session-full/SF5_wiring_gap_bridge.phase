@@ -7,11 +7,11 @@ intent: null
 summary: SF5_wiring_gap_bridge (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854959804
+exported_at: 1792855534382
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854959804
-lastSeenAt: 1792854959804
+firstSeenAt: 1792855534382
+lastSeenAt: 1792855534382
 fingerprint: null
 payload:
   id: SF5_wiring_gap_bridge
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 91251df2a9f05ad8
+    hash: 3235e3edb8e3668e
     nodes:
       - path: lib/autonomous-repair.js
         role: changes
@@ -66,6 +66,10 @@ payload:
         role: used-by
         exists: true
         system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
       - path: cortex/gap-finder/index.js
         role: used-by
         exists: true
@@ -87,10 +91,6 @@ payload:
         exists: true
         system: idearium
       - path: lib/agent-build-loop.js
-        role: used-by
-        exists: true
-        system: lib
-      - path: lib/agent-tools/tools/diagnostic/system-priority.js
         role: used-by
         exists: true
         system: lib
@@ -194,6 +194,9 @@ payload:
       - from: copilot/tool-runtime.js
         to: lib/gap-field.js
         kind: requires
+      - from: cortex/boot.js
+        to: lib/gap-field.js
+        kind: requires
       - from: cortex/gap-finder/index.js
         to: lib/gap-field.js
         kind: requires
@@ -210,9 +213,6 @@ payload:
         to: lib/gap-field.js
         kind: requires
       - from: lib/agent-build-loop.js
-        to: lib/gap-field.js
-        kind: requires
-      - from: lib/agent-tools/tools/diagnostic/system-priority.js
         to: lib/gap-field.js
         kind: requires
     crossings:
@@ -236,7 +236,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -250,7 +250,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (1): SF6_wiring_gaps_applied · finishing it unlocks SF6_wiring_gaps_applied'
   uuid: c4a1e687-ffdf-5dfa-a9fb-2e3b54b4bfef

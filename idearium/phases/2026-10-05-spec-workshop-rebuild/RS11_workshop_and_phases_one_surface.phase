@@ -9,11 +9,11 @@ intent: null
 summary: RS11_workshop_and_phases_one_surface (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854986278
+exported_at: 1792855559861
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854986278
-lastSeenAt: 1792854986278
+firstSeenAt: 1792855559861
+lastSeenAt: 1792855559861
 fingerprint: null
 payload:
   id: RS11_workshop_and_phases_one_surface
@@ -49,7 +49,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
@@ -71,7 +71,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by RS6_the_workshop_as_the_editor
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by RS6_the_workshop_as_the_editor
         - >-
           depends on (2): RS6_the_workshop_as_the_editor, RS10_the_phases_tab_rebuilt · all upstream
           8

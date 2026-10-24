@@ -7,11 +7,11 @@ intent: null
 summary: APV1_change_entry (foundation) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792855018488
+exported_at: 1792855591590
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855018488
-lastSeenAt: 1792855018488
+firstSeenAt: 1792855591590
+lastSeenAt: 1792855591590
 fingerprint: null
 payload:
   id: APV1_change_entry
@@ -51,7 +51,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-21-approval-chain-phasemap.spec::APV0_one_record
@@ -72,7 +72,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): APV0_one_record'
         - >-
           needed by (2): APV2_commit_carries_it, APV5_wired_in_loom · all downstream 4 · finishing

@@ -7,11 +7,11 @@ intent: null
 summary: SB16_genesis_nodes_domain (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854983001
+exported_at: 1792855556645
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983001
-lastSeenAt: 1792854983001
+firstSeenAt: 1792855556645
+lastSeenAt: 1792855556645
 fingerprint: null
 payload:
   id: SB16_genesis_nodes_domain
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
@@ -78,7 +78,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): SB0_map'
         - >-
           needed by (1): SB17_the_system_template_is_complete · all downstream 27 · finishing it

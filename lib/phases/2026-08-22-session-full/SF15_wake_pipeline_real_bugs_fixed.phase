@@ -7,11 +7,11 @@ intent: null
 summary: SF15_wake_pipeline_real_bugs_fixed (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854959813
+exported_at: 1792855534391
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854959813
-lastSeenAt: 1792854959813
+firstSeenAt: 1792855534391
+lastSeenAt: 1792855534391
 fingerprint: null
 payload:
   id: SF15_wake_pipeline_real_bugs_fixed
@@ -39,7 +39,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-08-22-session-full-phasemap.spec::SF14_wake_pipeline_real_architecture
@@ -52,7 +52,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): SF14_wake_pipeline_real_architecture'
         - 'needed by (0): —'
   uuid: 94074cc6-51c4-5d9d-9015-25786c58c4db

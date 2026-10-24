@@ -7,11 +7,11 @@ intent: null
 summary: OT1_one_write_path (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854980270
+exported_at: 1792855553822
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980270
-lastSeenAt: 1792854980270
+firstSeenAt: 1792855553822
+lastSeenAt: 1792855553822
 fingerprint: null
 payload:
   id: OT1_one_write_path
@@ -209,7 +209,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
@@ -233,7 +233,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6 · blocked by RF1_relational_field
+        - DAG 7d2ff66183c6511e · layer 6 · blocked by RF1_relational_field
         - 'depends on (1): RF1_relational_field · all upstream 7'
         - 'needed by (2): MR4_field_memory, MR11_rewind_the_mind'
   uuid: 31499ec4-9465-5428-9211-b9becf90f9ad

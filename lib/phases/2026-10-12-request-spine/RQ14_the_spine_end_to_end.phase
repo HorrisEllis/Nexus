@@ -7,11 +7,11 @@ intent: null
 summary: RQ14_the_spine_end_to_end (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854995124
+exported_at: 1792855568366
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995124
-lastSeenAt: 1792854995124
+firstSeenAt: 1792855568366
+lastSeenAt: 1792855568366
 fingerprint: null
 payload:
   id: RQ14_the_spine_end_to_end
@@ -47,7 +47,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
@@ -96,7 +96,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 6 · blocked by RQ5_the_small_model_baseline,
+          DAG 7d2ff66183c6511e · layer 6 · blocked by RQ5_the_small_model_baseline,
           RQ8_the_gap_is_a_question, RQ10_anchors_and_the_diff_reconciled,
           RQ11_spec_and_registry_reconciled, RQ12_the_phase_dag,
           RQ13_the_work_surface_and_provenance

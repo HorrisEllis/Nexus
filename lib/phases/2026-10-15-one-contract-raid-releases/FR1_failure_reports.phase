@@ -7,11 +7,11 @@ intent: null
 summary: FR1_failure_reports (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792855001478
+exported_at: 1792855574696
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855001478
-lastSeenAt: 1792855001478
+firstSeenAt: 1792855574696
+lastSeenAt: 1792855574696
 fingerprint: null
 payload:
   id: FR1_failure_reports
@@ -195,7 +195,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD0_raid_runs_the_contract
@@ -212,7 +212,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · ready
+        - DAG 7d2ff66183c6511e · layer 2 · ready
         - 'depends on (1): RD0_raid_runs_the_contract · all upstream 2'
         - 'needed by (1): ST1_stability_checks · finishing it unlocks ST1_stability_checks'
   uuid: 17f1ea07-3441-524f-a242-865de076728d

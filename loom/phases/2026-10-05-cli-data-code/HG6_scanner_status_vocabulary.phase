@@ -7,11 +7,11 @@ intent: null
 summary: HG6_scanner_status_vocabulary (?) — 1 file(s)
 system: loom
 tags: []
-exported_at: 1792854983603
+exported_at: 1792855557236
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983603
-lastSeenAt: 1792854983603
+firstSeenAt: 1792855557236
+lastSeenAt: 1792855557236
 fingerprint: null
 payload:
   id: HG6_scanner_status_vocabulary
@@ -194,7 +194,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -205,7 +205,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 9a76f07c-bacf-5591-8760-db8089d7fafc

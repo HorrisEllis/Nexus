@@ -9,11 +9,11 @@ intent: null
 summary: P7_hostile_verify_and_ship (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854969533
+exported_at: 1792855542954
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854969533
-lastSeenAt: 1792854969533
+firstSeenAt: 1792855542954
+lastSeenAt: 1792855542954
 fingerprint: null
 payload:
   id: P7_hostile_verify_and_ship
@@ -278,7 +278,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P5_retire_second_runtime
@@ -304,7 +304,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 6 · blocked by P5_retire_second_runtime,
+          DAG 7d2ff66183c6511e · layer 6 · blocked by P5_retire_second_runtime,
           P6_versionium_residue
         - 'depends on (2): P5_retire_second_runtime, P6_versionium_residue · all upstream 10'
         - 'needed by (0): —'

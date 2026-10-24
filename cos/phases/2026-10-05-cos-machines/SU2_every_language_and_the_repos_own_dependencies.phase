@@ -9,11 +9,11 @@ intent: null
 summary: SU2_every_language_and_the_repos_own_dependencies (?) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792854984533
+exported_at: 1792855558197
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854984533
-lastSeenAt: 1792854984533
+firstSeenAt: 1792855558197
+lastSeenAt: 1792855558197
 fingerprint: null
 payload:
   id: SU2_every_language_and_the_repos_own_dependencies
@@ -76,7 +76,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-05-cos-machines-phasemap.spec::SU1_the_setup_asks_the_os_and_its_version
@@ -99,7 +99,7 @@ payload:
             - cos/testenv/provision.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by SU1_the_setup_asks_the_os_and_its_version
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by SU1_the_setup_asks_the_os_and_its_version
         - 'depends on (1): SU1_the_setup_asks_the_os_and_its_version · all upstream 4'
         - 'needed by (0): —'
         - >-

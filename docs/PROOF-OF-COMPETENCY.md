@@ -1139,3 +1139,13 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   work.
 - **Skill:** asking the question that changes the plan. Checking current state before continuing turned a long migration into a fast proof.
 - **Checkable:** `CHANGELOG-0.60.241.md`; `tests/modules/test-loom-into-cos.test.js` LI-04 (Loom reaches into no other system).
+
+### 2026-10-24 — 0.60.242: "There's no coupling after that." Made true.
+- **His words:** "once it's merged with COS, those fucking boundaries, they're not, it's not coupling after that. There's no coupling after
+  that." · "Do it."
+- **Context:** He had predicted that COS would end coupling. On reading COS, the coder found that compartments only recorded their
+  boundaries and enforced none. Building the wall he described as a property of COS (a require hook in COS's process runner) made Loom the
+  first system running isolated. On its first run, the wall found two couplings the static census could not see.
+- **Skill:** architectural foresight. His model of COS (a boundary that removes coupling by construction) was right, and building it took
+  a few dozen lines on primitives that already existed.
+- **Checkable:** \`CHANGELOG-0.60.242.md\`; \`tests/modules/test-loom-into-cos.test.js\` LI-05 (the wall) and LI-08 (Loom running inside it).

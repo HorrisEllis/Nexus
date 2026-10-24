@@ -7,11 +7,11 @@ intent: null
 summary: CD4_kill_on_disconnect (integration) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855019873
+exported_at: 1792855592884
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855019873
-lastSeenAt: 1792855019873
+firstSeenAt: 1792855592884
+lastSeenAt: 1792855592884
 fingerprint: null
 payload:
   id: CD4_kill_on_disconnect
@@ -100,7 +100,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-21-compartment-downloads-phasemap.spec::CD0_kill_default
@@ -123,7 +123,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - >-
           depends on (3): CD0_kill_default, CD2_quarantine_downloads, CD3_verified_handoff · all
           upstream 5

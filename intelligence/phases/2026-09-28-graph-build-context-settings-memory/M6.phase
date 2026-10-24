@@ -7,11 +7,11 @@ intent: null
 summary: M6 (?) — 2 file(s)
 system: intelligence
 tags: []
-exported_at: 1792854975843
+exported_at: 1792855549098
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854975843
-lastSeenAt: 1792854975843
+firstSeenAt: 1792855549098
+lastSeenAt: 1792855549098
 fingerprint: null
 payload:
   id: M6
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M1
@@ -48,7 +48,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by M1
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by M1
         - 'depends on (1): M1 · all upstream 2'
         - 'needed by (0): —'
   uuid: c9c63efa-fc6f-563a-84cf-6a44bcd4218b

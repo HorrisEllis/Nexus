@@ -9,11 +9,11 @@ intent: null
 summary: CM2_every_command_for_every_agent (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854987171
+exported_at: 1792855560684
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854987171
-lastSeenAt: 1792854987171
+firstSeenAt: 1792855560684
+lastSeenAt: 1792855560684
 fingerprint: null
 payload:
   id: CM2_every_command_for_every_agent
@@ -237,7 +237,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -254,7 +254,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): UN1_nexus_surfaces_in_the_field · all downstream 4 · finishing it unlocks

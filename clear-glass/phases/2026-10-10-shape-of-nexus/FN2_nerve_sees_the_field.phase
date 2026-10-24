@@ -7,11 +7,11 @@ intent: null
 summary: FN2_nerve_sees_the_field (?) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854993741
+exported_at: 1792855567041
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854993741
-lastSeenAt: 1792854993741
+firstSeenAt: 1792855567041
+lastSeenAt: 1792855567041
 fingerprint: null
 payload:
   id: FN2_nerve_sees_the_field
@@ -176,7 +176,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-10-shape-of-nexus-phasemap.spec::FN1_the_field_as_commands
@@ -192,7 +192,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): FN1_the_field_as_commands'
         - >-
           needed by (1): FN3_the_nerve_shows_it_and_the_field_sees_the_nerve · finishing it unlocks

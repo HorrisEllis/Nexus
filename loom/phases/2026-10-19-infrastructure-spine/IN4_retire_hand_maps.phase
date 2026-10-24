@@ -7,11 +7,11 @@ intent: null
 summary: IN4_retire_hand_maps (library) — 2 file(s)
 system: loom
 tags: []
-exported_at: 1792855015407
+exported_at: 1792855588490
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015407
-lastSeenAt: 1792855015407
+firstSeenAt: 1792855588490
+lastSeenAt: 1792855588490
 fingerprint: null
 payload:
   id: IN4_retire_hand_maps
@@ -121,7 +121,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
@@ -145,7 +145,7 @@ payload:
             - loom/bootstrap.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by IN3_registry_is_the_spine
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by IN3_registry_is_the_spine
         - 'depends on (1): IN3_registry_is_the_spine · all upstream 2'
         - >-
           needed by (1): IN6_systems_onto_the_spine · finishing it unlocks

@@ -7,11 +7,11 @@ intent: null
 summary: UP2_learned_placements (library) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792855016722
+exported_at: 1792855589853
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855016722
-lastSeenAt: 1792855016722
+firstSeenAt: 1792855589853
+lastSeenAt: 1792855589853
 fingerprint: null
 payload:
   id: UP2_learned_placements
@@ -43,7 +43,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP1_placement_tool
@@ -66,7 +66,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): UP1_placement_tool'
         - >-
           needed by (1): UP3_upload_routes_and_commands · all downstream 8 · finishing it unlocks

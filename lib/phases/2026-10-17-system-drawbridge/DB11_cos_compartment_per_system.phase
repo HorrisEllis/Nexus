@@ -7,11 +7,11 @@ intent: null
 summary: DB11_cos_compartment_per_system (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855011797
+exported_at: 1792855584935
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855011797
-lastSeenAt: 1792855011797
+firstSeenAt: 1792855584935
+lastSeenAt: 1792855584935
 fingerprint: null
 payload:
   id: DB11_cos_compartment_per_system
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 9aebf9e7b6f71828
+    hash: 477a0a24c2f53449
     nodes:
       - path: idearium/repo/nexus-self.js
         role: changes
@@ -106,7 +106,7 @@ payload:
         role: uses
         exists: true
         system: cos
-      - path: cos/cli/commands/list.js
+      - path: cos/compartment/process-runner.js
         role: uses
         exists: true
         system: cos
@@ -122,11 +122,11 @@ payload:
         role: uses
         exists: true
         system: cos
-      - path: cos/workspace/vm-control.js
+      - path: lib/agent-tools/index.js
         role: uses
         exists: true
-        system: cos
-      - path: lib/agent-tools/index.js
+        system: lib
+      - path: lib/nexus-self/systems.js
         role: uses
         exists: true
         system: lib
@@ -144,6 +144,9 @@ payload:
         kind: requires
       - from: loom/templates/cos-compartment.js
         to: lib/system-boundary.js
+        kind: requires
+      - from: loom/templates/cos-compartment.js
+        to: lib/nexus-self/systems.js
         kind: requires
       - from: lib/cos-bridge.js
         to: cos/host/index.js
@@ -167,13 +170,10 @@ payload:
         to: cos/cli/commands/intent.js
         kind: requires
       - from: lib/cos-bridge.js
-        to: cos/workspace/index.js
+        to: cos/compartment/process-runner.js
         kind: requires
       - from: lib/cos-bridge.js
-        to: cos/workspace/vm-control.js
-        kind: requires
-      - from: lib/agent-tools/tools/sandbox/cos-compartment.js
-        to: cos/cli/commands/list.js
+        to: cos/workspace/index.js
         kind: requires
       - from: loom/server.js
         to: loom/templates/cos-compartment.js
@@ -249,26 +249,20 @@ payload:
         kind: upward
         known: true
       - from: lib/cos-bridge.js
-        to: cos/workspace/index.js
+        to: cos/compartment/process-runner.js
         fromSystem: lib
         toSystem: cos
         kind: upward
-        known: true
+        known: false
       - from: lib/cos-bridge.js
-        to: cos/workspace/vm-control.js
-        fromSystem: lib
-        toSystem: cos
-        kind: upward
-        known: true
-      - from: lib/agent-tools/tools/sandbox/cos-compartment.js
-        to: cos/cli/commands/list.js
+        to: cos/workspace/index.js
         fromSystem: lib
         toSystem: cos
         kind: upward
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -288,7 +282,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): CS4_every_system_a_compartment · all downstream 8'
         - >-

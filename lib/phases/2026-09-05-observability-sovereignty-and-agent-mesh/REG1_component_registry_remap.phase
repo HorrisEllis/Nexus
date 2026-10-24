@@ -9,11 +9,11 @@ intent: null
 summary: REG1_component_registry_remap (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854965663
+exported_at: 1792855539389
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854965663
-lastSeenAt: 1792854965663
+firstSeenAt: 1792855539389
+lastSeenAt: 1792855539389
 fingerprint: null
 payload:
   id: REG1_component_registry_remap
@@ -171,7 +171,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -185,7 +185,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): SPEC1_rewrite_nexus_spec · finishing it unlocks SPEC1_rewrite_nexus_spec'
   uuid: bff26986-5053-5a76-b215-097badf63494

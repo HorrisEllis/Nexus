@@ -9,11 +9,11 @@ intent: null
 summary: SS3_event_driven_handshake_contracts (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855033270
+exported_at: 1792855606363
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855033270
-lastSeenAt: 1792855033270
+firstSeenAt: 1792855606363
+lastSeenAt: 1792855606363
 fingerprint: null
 payload:
   id: SS3_event_driven_handshake_contracts
@@ -121,7 +121,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
@@ -142,7 +142,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by SS1_system_manifest
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by SS1_system_manifest
         - 'depends on (1): SS1_system_manifest · all upstream 2'
         - 'needed by (2): SS4_full_logging_per_system, SS7_decoupling_audit · all downstream 4'
   uuid: 0006b877-6cd1-5b14-95a9-7fc78bead932

@@ -7,11 +7,11 @@ intent: null
 summary: IM0e_what_is_a_primitive (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855010923
+exported_at: 1792855584078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855010923
-lastSeenAt: 1792855010923
+firstSeenAt: 1792855584078
+lastSeenAt: 1792855584078
 fingerprint: null
 payload:
   id: IM0e_what_is_a_primitive
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 069d0da502c7534a
+    hash: f881831b1cfe80cf
     nodes:
       - path: cli/compartments.js
         role: changes
@@ -102,10 +102,6 @@ payload:
         role: used-by
         exists: true
         system: lib
-      - path: cos/host/index.js
-        role: uses
-        exists: true
-        system: cos
       - path: intelligence/lattice/associative-lattice.js
         role: uses
         exists: true
@@ -115,6 +111,10 @@ payload:
         exists: true
         system: lib
       - path: lib/heartbeat.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/systems.js
         role: uses
         exists: true
         system: lib
@@ -182,10 +182,10 @@ payload:
         to: lib/system-boundary.js
         kind: requires
       - from: loom/templates/cos-compartment.js
-        to: lib/cos-bridge.js
+        to: lib/nexus-self/systems.js
         kind: requires
-      - from: lib/agent-tools/tools/sandbox/cos-compartment.js
-        to: cos/host/index.js
+      - from: loom/templates/cos-compartment.js
+        to: lib/cos-bridge.js
         kind: requires
       - from: cortex/boot.js
         to: nexus/nexus-bus.js
@@ -229,12 +229,6 @@ payload:
         fromSystem: nexus
         toSystem: intelligence
         kind: system
-        known: true
-      - from: lib/agent-tools/tools/sandbox/cos-compartment.js
-        to: cos/host/index.js
-        fromSystem: lib
-        toSystem: cos
-        kind: upward
         known: true
       - from: cortex/boot.js
         to: nexus/nexus-bus.js
@@ -310,7 +304,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -321,7 +315,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

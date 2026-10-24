@@ -9,11 +9,11 @@ intent: null
 summary: ET6_sigma_gates_on_taxonomy (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854961075
+exported_at: 1792855535389
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854961075
-lastSeenAt: 1792854961075
+firstSeenAt: 1792855535389
+lastSeenAt: 1792855535389
 fingerprint: null
 payload:
   id: ET6_sigma_gates_on_taxonomy
@@ -248,7 +248,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
@@ -266,7 +266,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by ET5_loom_event_taxonomy_map
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by ET5_loom_event_taxonomy_map
         - 'depends on (1): ET5_loom_event_taxonomy_map · all upstream 5'
         - 'needed by (0): —'
   uuid: f0428093-6e23-529e-bfa9-e4920736d054

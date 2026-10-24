@@ -7,11 +7,11 @@ intent: null
 summary: AV1_adversarial_review (service) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792855017173
+exported_at: 1792855590305
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855017173
-lastSeenAt: 1792855017173
+firstSeenAt: 1792855590305
+lastSeenAt: 1792855590305
 fingerprint: null
 payload:
   id: AV1_adversarial_review
@@ -250,7 +250,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 7
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
@@ -279,7 +279,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 7 · blocked by CF1_confidence_from_evidence,
+          DAG 7d2ff66183c6511e · layer 7 · blocked by CF1_confidence_from_evidence,
           GW1_gate_primitive
         - 'depends on (2): CF1_confidence_from_evidence, GW1_gate_primitive · all upstream 13'
         - 'needed by (0): —'

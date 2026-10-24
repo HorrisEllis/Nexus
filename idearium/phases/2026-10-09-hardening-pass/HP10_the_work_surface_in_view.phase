@@ -7,11 +7,11 @@ intent: null
 summary: HP10_the_work_surface_in_view (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854990241
+exported_at: 1792855563628
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854990241
-lastSeenAt: 1792854990241
+firstSeenAt: 1792855563628
+lastSeenAt: 1792855563628
 fingerprint: null
 payload:
   id: HP10_the_work_surface_in_view
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-09-hardening-pass-phasemap.spec::HP9_the_plan_is_current_work
@@ -49,7 +49,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): HP9_the_plan_is_current_work'
         - 'needed by (0): —'
   uuid: d45a6b09-b5b6-5a73-aacf-3f55aa2c9926

@@ -7,11 +7,11 @@ intent: null
 summary: WK6_enterprise_grade (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854985824
+exported_at: 1792855559454
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854985824
-lastSeenAt: 1792854985824
+firstSeenAt: 1792855559454
+lastSeenAt: 1792855559454
 fingerprint: null
 payload:
   id: WK6_enterprise_grade
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK3_the_agent_drafts_every_block
@@ -55,7 +55,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · ready
+        - DAG 7d2ff66183c6511e · layer 2 · ready
         - 'depends on (1): WK3_the_agent_drafts_every_block · all upstream 2'
         - 'needed by (0): —'
   uuid: a086fd18-c498-5e0e-806f-0960052d20fc

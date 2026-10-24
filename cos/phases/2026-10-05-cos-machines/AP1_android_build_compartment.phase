@@ -7,11 +7,11 @@ intent: null
 summary: AP1_android_build_compartment (?) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792854984530
+exported_at: 1792855558193
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854984530
-lastSeenAt: 1792854984530
+firstSeenAt: 1792855558193
+lastSeenAt: 1792855558193
 fingerprint: null
 payload:
   id: AP1_android_build_compartment
@@ -189,7 +189,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-05-cos-machines-phasemap.spec::OS2_images_downloaded_and_kept_current
@@ -218,7 +218,7 @@ payload:
             - cos/testenv/provision.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by OS2_images_downloaded_and_kept_current
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by OS2_images_downloaded_and_kept_current
         - 'depends on (1): OS2_images_downloaded_and_kept_current · all upstream 3'
         - 'needed by (1): AP2_test_on_the_android_compartment · all downstream 2'
         - >-

@@ -9,11 +9,11 @@ intent: null
 summary: P36_an_event_ledger_per_registry (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854967264
+exported_at: 1792855540792
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854967264
-lastSeenAt: 1792854967264
+firstSeenAt: 1792855540792
+lastSeenAt: 1792855540792
 fingerprint: null
 payload:
   id: P36_an_event_ledger_per_registry
@@ -175,7 +175,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P8_per_system_component_registry
@@ -191,7 +191,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by P8_per_system_component_registry
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by P8_per_system_component_registry
         - 'depends on (1): P8_per_system_component_registry'
         - 'needed by (1): P37_the_ui_floats_on_the_registry'
   uuid: 4035825a-9614-5685-92d1-a00bd948e3c8

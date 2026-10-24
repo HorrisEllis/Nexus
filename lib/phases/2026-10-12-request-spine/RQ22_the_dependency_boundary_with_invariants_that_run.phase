@@ -9,11 +9,11 @@ intent: null
 summary: RQ22_the_dependency_boundary_with_invariants_that_run (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792854995135
+exported_at: 1792855568378
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995135
-lastSeenAt: 1792854995135
+firstSeenAt: 1792855568378
+lastSeenAt: 1792855568378
 fingerprint: null
 payload:
   id: RQ22_the_dependency_boundary_with_invariants_that_run
@@ -190,7 +190,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
@@ -221,7 +221,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 4 · blocked by RQ7_the_context_obligations,
+          DAG 7d2ff66183c6511e · layer 4 · blocked by RQ7_the_context_obligations,
           RQ9_the_chunked_contract, RQ1_the_verifier_library
         - >-
           depends on (3): RQ7_the_context_obligations, RQ9_the_chunked_contract,

@@ -7,11 +7,11 @@ intent: null
 summary: BS17_copilot_browser_verbs (?) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854976747
+exported_at: 1792855550132
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854976747
-lastSeenAt: 1792854976747
+firstSeenAt: 1792855550132
+lastSeenAt: 1792855550132
 fingerprint: null
 payload:
   id: BS17_copilot_browser_verbs
@@ -169,7 +169,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -186,7 +186,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): BS19_copilot_atlas_guide, BS12_release · finishing it unlocks

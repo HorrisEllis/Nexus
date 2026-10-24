@@ -7,11 +7,11 @@ intent: null
 summary: R2 (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854975825
+exported_at: 1792855549078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854975825
-lastSeenAt: 1792854975825
+firstSeenAt: 1792855549078
+lastSeenAt: 1792855549078
 fingerprint: null
 payload:
   id: R2
@@ -216,7 +216,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
@@ -233,7 +233,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by R0
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by R0
         - 'depends on (1): R0'
         - >-
           needed by (1): R3_autonomous_repair_trigger · finishing it unlocks

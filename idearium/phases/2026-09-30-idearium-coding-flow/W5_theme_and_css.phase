@@ -7,11 +7,11 @@ intent: null
 summary: W5_theme_and_css (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792854978470
+exported_at: 1792855551917
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978470
-lastSeenAt: 1792854978470
+firstSeenAt: 1792855551917
+lastSeenAt: 1792855551917
 fingerprint: null
 payload:
   id: W5_theme_and_css
@@ -95,7 +95,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W4_navigation
@@ -118,7 +118,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5
+        - DAG 7d2ff66183c6511e · layer 5
         - 'depends on (1): W4_navigation · all upstream 5'
         - >-
           needed by (2): W7_next_mapped_2026_09_30, W6_release · finishing it unlocks

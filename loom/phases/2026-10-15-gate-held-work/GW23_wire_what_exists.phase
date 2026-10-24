@@ -7,11 +7,11 @@ intent: null
 summary: GW23_wire_what_exists (?) — 4 file(s)
 system: loom
 tags: []
-exported_at: 1792855000580
+exported_at: 1792855573821
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855000580
-lastSeenAt: 1792855000580
+firstSeenAt: 1792855573821
+lastSeenAt: 1792855573821
 fingerprint: null
 payload:
   id: GW23_wire_what_exists
@@ -66,7 +66,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -80,7 +80,7 @@ payload:
             - lib/rfr2-bridge.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - 'same files as GW7_failure_macro_and_rewind with no order between them: lib/rfr2-bridge.js'

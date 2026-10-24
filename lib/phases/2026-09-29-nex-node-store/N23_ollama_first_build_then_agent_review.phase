@@ -9,11 +9,11 @@ intent: null
 summary: N23_ollama_first_build_then_agent_review (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854977240
+exported_at: 1792855550590
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977240
-lastSeenAt: 1792854977240
+firstSeenAt: 1792855550590
+lastSeenAt: 1792855550590
 fingerprint: null
 payload:
   id: N23_ollama_first_build_then_agent_review
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N21_no_empty_generation_event_gates
@@ -258,7 +258,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6
+        - DAG 7d2ff66183c6511e · layer 6
         - 'depends on (1): N21_no_empty_generation_event_gates · all upstream 8'
         - 'needed by (0): —'
   uuid: 1edbfe1d-ed20-5ad0-90da-fe8539f57150

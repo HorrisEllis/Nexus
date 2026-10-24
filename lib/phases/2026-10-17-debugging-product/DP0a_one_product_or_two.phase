@@ -7,11 +7,11 @@ intent: null
 summary: DP0a_one_product_or_two (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855009999
+exported_at: 1792855583155
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855009999
-lastSeenAt: 1792855009999
+firstSeenAt: 1792855583155
+lastSeenAt: 1792855583155
 fingerprint: null
 payload:
   id: DP0a_one_product_or_two
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -44,7 +44,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - 'needed by (1): DP11_the_product_boundary · finishing it unlocks DP11_the_product_boundary'
   uuid: 4fe7703c-a2d8-5d35-b02c-236e779b262b

@@ -7,11 +7,11 @@ intent: null
 summary: TB3_close_the_persistence_gaps (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855004568
+exported_at: 1792855577667
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855004568
-lastSeenAt: 1792855004568
+firstSeenAt: 1792855577667
+lastSeenAt: 1792855577667
 fingerprint: null
 payload:
   id: TB3_close_the_persistence_gaps
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
@@ -52,7 +52,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by TB2_persistence_audit
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by TB2_persistence_audit
         - 'depends on (1): TB2_persistence_audit · all upstream 3'
         - >-
           needed by (2): TB4_reuse_responses, TB7_runs_tab · finishing it unlocks

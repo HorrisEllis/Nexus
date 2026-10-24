@@ -9,11 +9,11 @@ intent: null
 summary: SBP3_wire_contract_intake_through_routing_ir (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854962476
+exported_at: 1792855536398
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854962476
-lastSeenAt: 1792854962476
+firstSeenAt: 1792855536398
+lastSeenAt: 1792855536398
 fingerprint: null
 payload:
   id: SBP3_wire_contract_intake_through_routing_ir
@@ -262,7 +262,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -276,7 +276,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): SBP10_per_hat_model_assignment · finishing it unlocks

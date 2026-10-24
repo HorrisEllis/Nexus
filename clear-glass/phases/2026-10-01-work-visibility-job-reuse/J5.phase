@@ -7,11 +7,11 @@ intent: null
 summary: J5 (?) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854979840
+exported_at: 1792855553353
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854979840
-lastSeenAt: 1792854979840
+firstSeenAt: 1792855553353
+lastSeenAt: 1792855553353
 fingerprint: null
 payload:
   id: J5
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::J1
@@ -246,7 +246,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by J1
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by J1
         - 'depends on (1): J1 · all upstream 2'
         - 'needed by (0): —'
   uuid: 9dfdef4f-f59d-54e1-b5d4-1e2c4a9dd019

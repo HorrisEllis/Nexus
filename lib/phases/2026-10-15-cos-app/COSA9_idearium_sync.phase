@@ -7,11 +7,11 @@ intent: null
 summary: COSA9_idearium_sync (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854999637
+exported_at: 1792855572867
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854999637
-lastSeenAt: 1792854999637
+firstSeenAt: 1792855572867
+lastSeenAt: 1792855572867
 fingerprint: null
 payload:
   id: COSA9_idearium_sync
@@ -276,7 +276,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
@@ -299,7 +299,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · ready
+        - DAG 7d2ff66183c6511e · layer 3 · ready
         - 'depends on (2): COSA1_version_store_and_import, COSA3_run_and_supervise · all upstream 3'
         - >-
           needed by (3): COSA10_compartment_window, COSA11_nested_tree, COSA14_versionium_record ·

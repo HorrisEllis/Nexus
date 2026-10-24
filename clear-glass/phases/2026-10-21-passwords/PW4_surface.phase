@@ -7,11 +7,11 @@ intent: null
 summary: PW4_surface (surface) — 5 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855020895
+exported_at: 1792855593735
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855020895
-lastSeenAt: 1792855020895
+firstSeenAt: 1792855593735
+lastSeenAt: 1792855593735
 fingerprint: null
 payload:
   id: PW4_surface
@@ -65,7 +65,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-21-passwords-phasemap.spec::PW3_wiring
@@ -85,7 +85,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4
+        - DAG 7d2ff66183c6511e · layer 4
         - 'depends on (2): PW3_wiring, BS13_plugin_settings · all upstream 7'
         - 'needed by (0): —'
   uuid: d5f7fab3-caf4-5e38-8998-ee6a239bcb45

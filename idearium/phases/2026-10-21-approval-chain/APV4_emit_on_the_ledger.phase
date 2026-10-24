@@ -7,11 +7,11 @@ intent: null
 summary: APV4_emit_on_the_ledger (api) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792855018491
+exported_at: 1792855591592
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855018491
-lastSeenAt: 1792855018491
+firstSeenAt: 1792855591592
+lastSeenAt: 1792855591592
 fingerprint: null
 payload:
   id: APV4_emit_on_the_ledger
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
@@ -238,7 +238,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): APV2_commit_carries_it · all upstream 5'
         - 'needed by (0): —'
   uuid: ed082536-6788-544d-afc7-f2404ea89de0

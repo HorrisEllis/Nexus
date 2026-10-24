@@ -7,11 +7,11 @@ intent: null
 summary: SF1_foundation_field (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855002876
+exported_at: 1792855575984
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855002876
-lastSeenAt: 1792855002876
+firstSeenAt: 1792855575984
+lastSeenAt: 1792855575984
 fingerprint: null
 payload:
   id: SF1_foundation_field
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -50,7 +50,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (2): SF2_state_and_gate, SF6_addenda_view · all downstream 5 · finishing it

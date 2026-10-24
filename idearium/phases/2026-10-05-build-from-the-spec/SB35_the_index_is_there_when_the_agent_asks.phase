@@ -9,11 +9,11 @@ intent: null
 summary: SB35_the_index_is_there_when_the_agent_asks (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854983049
+exported_at: 1792855556683
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983049
-lastSeenAt: 1792854983049
+firstSeenAt: 1792855556683
+lastSeenAt: 1792855556683
 fingerprint: null
 payload:
   id: SB35_the_index_is_there_when_the_agent_asks
@@ -244,7 +244,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB34_context_is_the_code_tab_the_graphs_and_memory
@@ -268,7 +268,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6
+        - DAG 7d2ff66183c6511e · layer 6
         - 'depends on (1): SB34_context_is_the_code_tab_the_graphs_and_memory · all upstream 6'
         - >-
           needed by (1): SB36_every_agent_can_use_the_tools · all downstream 4 · finishing it

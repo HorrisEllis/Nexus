@@ -7,11 +7,11 @@ intent: null
 summary: BL6_captcha_detection (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854960471
+exported_at: 1792855534877
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854960471
-lastSeenAt: 1792854960471
+firstSeenAt: 1792855534877
+lastSeenAt: 1792855534877
 fingerprint: null
 payload:
   id: BL6_captcha_detection
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
@@ -44,7 +44,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): BL0_macro_system'
         - 'needed by (0): —'
   uuid: c306ff4a-3afa-5394-96ae-edfdbcdeb3a6

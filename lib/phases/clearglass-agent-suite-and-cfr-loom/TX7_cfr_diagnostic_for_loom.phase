@@ -9,11 +9,11 @@ intent: null
 summary: TX7_cfr_diagnostic_for_loom (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855026111
+exported_at: 1792855598906
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855026111
-lastSeenAt: 1792855026111
+firstSeenAt: 1792855598906
+lastSeenAt: 1792855598906
 fingerprint: null
 payload:
   id: TX7_cfr_diagnostic_for_loom
@@ -256,7 +256,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -270,7 +270,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (1): TX8_3d_cfr_visual_for_loom · finishing it unlocks

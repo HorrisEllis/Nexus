@@ -7,11 +7,11 @@ intent: null
 summary: N24_no_json_yaml_node_types_only (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854977241
+exported_at: 1792855550591
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977241
-lastSeenAt: 1792854977241
+firstSeenAt: 1792855550591
+lastSeenAt: 1792855550591
 fingerprint: null
 payload:
   id: N24_no_json_yaml_node_types_only
@@ -100,7 +100,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
@@ -127,7 +127,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5 · blocked by N2, N7_views_yaml_and_nex, N18_hardcode_census
+        - DAG 7d2ff66183c6511e · layer 5 · blocked by N2, N7_views_yaml_and_nex, N18_hardcode_census
         - 'depends on (3): N2, N7_views_yaml_and_nex, N18_hardcode_census · all upstream 10'
         - 'needed by (0): —'
   uuid: 993e9685-2455-5ab2-b2ec-dc00d4564523

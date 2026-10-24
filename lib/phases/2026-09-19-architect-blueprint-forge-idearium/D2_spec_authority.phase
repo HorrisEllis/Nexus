@@ -9,11 +9,11 @@ intent: null
 summary: D2_spec_authority (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854969078
+exported_at: 1792855542504
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854969078
-lastSeenAt: 1792854969078
+firstSeenAt: 1792855542504
+lastSeenAt: 1792855542504
 fingerprint: null
 payload:
   id: D2_spec_authority
@@ -116,7 +116,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -127,7 +127,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: b6a18326-b1e5-50ac-9ab2-25b0a9af396b

@@ -9,11 +9,11 @@ intent: null
 summary: T3_debug_report (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854974896
+exported_at: 1792855548120
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854974896
-lastSeenAt: 1792854974896
+firstSeenAt: 1792855548120
+lastSeenAt: 1792855548120
 fingerprint: null
 payload:
   id: T3_debug_report
@@ -258,7 +258,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T1_suite_process
@@ -273,7 +273,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (2): T1_suite_process, T2'
         - 'needed by (0): —'
   uuid: e9bfb424-d7ff-5a03-85b3-31d81829cb7b

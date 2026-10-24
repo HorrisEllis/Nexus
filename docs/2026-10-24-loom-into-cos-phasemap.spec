@@ -49,6 +49,21 @@ decisions:
       brought home once from Cortex's, whose rows are kept (§0.3). Readers elsewhere read through Loom's routes: Architect's hook read view,
       and agent-build-loop's phase history.
 
+  LM_D3_the_wall:
+    status: DECIDED 2026-10-24 by his axioms
+    james: '"once it''s merged with COS, those fucking boundaries, they''re not, it''s not coupling after that. There''s no coupling after that."'
+    problem: >-
+      A compartment's mounts were a record, not an enforcement (lib/cos-bridge.js mountPath: "a RECORD, not an enforcement"; process-runner
+      set cwd and nothing more). A system "in its compartment" could still require any file in the tree: his "no coupling after that"
+      would have been false, against §0.0.
+    chosen: >-
+      cos/compartment/boundary.js, COS's own code: a Node preload process-runner adds for a compartment whose env carries COS_BOUNDARY. Every
+      require() resolving outside the allowed paths is refused (enforce) or said (audit). The allowed paths are the census's: the system's
+      own folders, the kernel (lib/ and what is folded into it), the language (LANGUAGE_PATHS) and node_modules, from the template, never
+      typed twice. Not walled by it, and said: fs reads and writes, child processes, the network. Novel and stable: one hook on Node's own
+      module resolver.
+    axioms: "§0.0 (a boundary that is only a record must not be called isolation), §1.2 (each refusal said, with the route to use), his 2026-10-07 'prefer novel if it's stable'"
+
 phases:
 
   LM0_the_heartbeat:
@@ -85,9 +100,9 @@ phases:
 
   LM4_the_seal_and_into_its_compartment:
     layer: integration
-    status: OPEN
+    status: DONE 0.60.242 — Loom runs in nexus-self-loom behind the enforced wall; test-loom-into-cos LI-05..LI-08
     depends_on: [LM0_the_heartbeat, LM1_ollama_through_its_bridge, LM3_readers_through_its_routes]
-    files: [loom/templates/cos-compartment.js, cos/compartment/process-runner.js, idearium/repo/nexus-self.js]
+    files: [loom/templates/cos-compartment.js, cos/compartment/process-runner.js, cos/compartment/boundary.js (new), lib/cos-bridge.js, lib/system-boundary.js, lib/gap-field.js, cortex/boot.js, loom/server.js, loom/scanners/wiring-gaps.js]
     does: "the seal reads ready for loom; Loom boots inside nexus-self-loom (its folder read-write, the kernel read-only, nothing of another system) and is reached through its routes."
     proof: "Loom's health answers from inside its compartment; a hook written through its route is read back"
 
@@ -119,3 +134,32 @@ phases:
 - Found: Architect's local store is fixed at architect/data (createJAA(__dirname/data)), so it writes there even in a sandboxed boot (one
   file, event_log.jsonl, restored). Logged for Architect's own decoupling.
 - Next: LM4, the seal and the move into nexus-self-loom.
+
+## ADDENDUM 2026-10-24 (0.60.242) — LM4 built: Loom runs in its COS compartment, behind a wall
+- **The wall** (LM_D3): cos/compartment/boundary.js. process-runner preloads it into a node compartment whose env carries COS_BOUNDARY.
+- **The template** (loom/templates/cos-compartment.js) gains:
+  - boundaryFor(system): its own folders, lib/, siso/, the language paths and node_modules, from lib/system-boundary.js (LANGUAGE_PATHS is
+    now the one list the census and the wall share);
+  - moveIn({ system, mode }): refuses until the seal is ready; makes the compartment under nexus-self if missing; sets its entry as its
+    runtime with the wall in its env; starts it through COS.
+  lib/cos-bridge.js gains start, stop and processOf, through COS's own gates.
+- **Proof:**
+  - Run: Loom moved into nexus-self-loom (sandboxed COS data root), started by COS behind the enforced wall. It answered /health, its 4
+    hooks, /api/phasemap, its history, hooks validate and graph, /api/compartments, /contract and /api/changelog. The wall refused nothing
+    at boot. The tree was untouched.
+  - Wall check: inside the same wall, require of cortex/memory/jaa-db.js was refused (COS_BOUNDARY), naming the route to use; Loom's own
+    files and Node's built-ins load.
+  - The seal refuses Guardian: 20 crossings, listed as blockers.
+  - Tests: test-loom-into-cos 8/8; LI-08 is the real move-in.
+- **What the wall found that the census could not:**
+  1. lib/gap-field.js required Cortex's store at load. The census allows a system's use of lib/, so it never counted this, but inside the
+     wall Loom could not have booted. gap-field now loads Cortex's store only when its synchronous API is used, and has reportAsync and
+     openGapsAsync, which ask Cortex. Cortex serves POST /api/gap-field/report and GET /api/gap-field/open, running the same report() and
+     openGaps(), so dedup, occurrences and priority are unchanged. Loom uses the async API; gap-field's 30 other callers keep the sync one
+     until their own system's phase.
+  2. loom/server.js requires hooks/<system>.hooks.js through a template-literal path, which the census cannot read. Inside the wall it was
+     refused, and its catch would have reported "no hooks file" for a file that exists. It now says the wall refused it; the real fix
+     (each system's declared hooks through its registry) is in LM5.
+  The kernel's 241 upward crossings into systems are what every compartment will meet next: the census lets them pass as kernel uses.
+  The wall shows which a system actually hits.
+- **Not walled yet:** fs, child processes and the network (said in boundary.js and in cos-bridge's note).

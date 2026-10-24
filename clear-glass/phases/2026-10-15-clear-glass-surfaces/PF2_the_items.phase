@@ -7,11 +7,11 @@ intent: null
 summary: PF2_the_items (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854998727
+exported_at: 1792855571880
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854998727
-lastSeenAt: 1792854998727
+firstSeenAt: 1792855571880
+lastSeenAt: 1792855571880
 fingerprint: null
 payload:
   id: PF2_the_items
@@ -147,7 +147,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::PF1_read_the_log
@@ -168,7 +168,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 1 · blocked by PF1_read_the_log,
+          DAG 7d2ff66183c6511e · layer 1 · blocked by PF1_read_the_log,
           PF0_internal_vs_client_facing
         - 'depends on (2): PF1_read_the_log, PF0_internal_vs_client_facing'
         - 'needed by (1): PF3_the_section · finishing it unlocks PF3_the_section'

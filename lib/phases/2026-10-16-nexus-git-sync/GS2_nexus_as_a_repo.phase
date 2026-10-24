@@ -7,11 +7,11 @@ intent: null
 summary: GS2_nexus_as_a_repo (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855007483
+exported_at: 1792855580654
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855007483
-lastSeenAt: 1792855007483
+firstSeenAt: 1792855580654
+lastSeenAt: 1792855580654
 fingerprint: null
 payload:
   id: GS2_nexus_as_a_repo
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-16-nexus-git-sync-phasemap.spec::GS1_commands
@@ -48,7 +48,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by GS1_commands
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by GS1_commands
         - 'depends on (1): GS1_commands'
         - 'needed by (1): GS3_pull_is_a_switch · finishing it unlocks GS3_pull_is_a_switch'
   uuid: b0cf724d-905d-52f9-bed5-1feacb3f9fa9

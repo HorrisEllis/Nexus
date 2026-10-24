@@ -7,11 +7,11 @@ intent: null
 summary: SF6_surface (surface) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855021306
+exported_at: 1792855594143
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855021306
-lastSeenAt: 1792855021306
+firstSeenAt: 1792855594143
+lastSeenAt: 1792855594143
 fingerprint: null
 payload:
   id: SF6_surface
@@ -220,7 +220,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
@@ -248,7 +248,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - >-
           depends on (5): SF1_honest_detection, SF2_bridge_sources, SF3_page_in_the_compartment,
           SF4_https_only, SF5_circuit_check

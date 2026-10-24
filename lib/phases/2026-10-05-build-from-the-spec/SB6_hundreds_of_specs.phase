@@ -7,11 +7,11 @@ intent: null
 summary: SB6_hundreds_of_specs (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854982972
+exported_at: 1792855556615
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854982972
-lastSeenAt: 1792854982972
+firstSeenAt: 1792855556615
+lastSeenAt: 1792855556615
 fingerprint: null
 payload:
   id: SB6_hundreds_of_specs
@@ -160,7 +160,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB3_the_section_prompt_is_domain_agnostic
@@ -190,7 +190,7 @@ payload:
             - lib/economy/
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5 · blocked by SB5_nexus_rebuilds_a_system_from_its_spec
+        - DAG 7d2ff66183c6511e · layer 5 · blocked by SB5_nexus_rebuilds_a_system_from_its_spec
         - >-
           depends on (2): SB3_the_section_prompt_is_domain_agnostic,
           SB5_nexus_rebuilds_a_system_from_its_spec · all upstream 7

@@ -9,11 +9,11 @@ intent: null
 summary: N22_shadow_and_negative_space_reasoning (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854977238
+exported_at: 1792855550589
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977238
-lastSeenAt: 1792854977238
+firstSeenAt: 1792855550589
+lastSeenAt: 1792855550589
 fingerprint: null
 payload:
   id: N22_shadow_and_negative_space_reasoning
@@ -118,7 +118,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 6
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N21_no_empty_generation_event_gates
@@ -140,7 +140,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 6 · blocked by N14_failure_mode_field
+        - DAG 7d2ff66183c6511e · layer 6 · blocked by N14_failure_mode_field
         - >-
           depends on (2): N21_no_empty_generation_event_gates, N14_failure_mode_field · all upstream
           8

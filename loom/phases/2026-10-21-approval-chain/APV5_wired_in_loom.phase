@@ -7,11 +7,11 @@ intent: null
 summary: APV5_wired_in_loom (library) — 1 file(s)
 system: loom
 tags: []
-exported_at: 1792855018492
+exported_at: 1792855591593
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855018492
-lastSeenAt: 1792855018492
+firstSeenAt: 1792855591593
+lastSeenAt: 1792855591593
 fingerprint: null
 payload:
   id: APV5_wired_in_loom
@@ -58,7 +58,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
@@ -72,7 +72,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): APV1_change_entry · all upstream 2'
         - 'needed by (0): —'
   uuid: 8534e5c9-3096-5b57-93fe-4db39a3ea018

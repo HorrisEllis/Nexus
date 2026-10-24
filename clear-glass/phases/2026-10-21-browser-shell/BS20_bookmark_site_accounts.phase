@@ -7,11 +7,11 @@ intent: null
 summary: BS20_bookmark_site_accounts (integration) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855019360
+exported_at: 1792855592431
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855019360
-lastSeenAt: 1792855019360
+firstSeenAt: 1792855592431
+lastSeenAt: 1792855592431
 fingerprint: null
 payload:
   id: BS20_bookmark_site_accounts
@@ -157,7 +157,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
@@ -170,7 +170,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): BS2_shell_rebuild'
         - 'needed by (0): —'
   uuid: bf7facff-5956-5dcc-985e-e65436e30e50

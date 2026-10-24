@@ -9,11 +9,11 @@ intent: null
 summary: TX15_whisper_as_a_real_optional_capability (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855026119
+exported_at: 1792855598913
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855026119
-lastSeenAt: 1792855026119
+firstSeenAt: 1792855598913
+lastSeenAt: 1792855598913
 fingerprint: null
 payload:
   id: TX15_whisper_as_a_real_optional_capability
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
@@ -48,7 +48,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by TX14_plugin_system_v1_build
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by TX14_plugin_system_v1_build
         - 'depends on (1): TX14_plugin_system_v1_build · all upstream 2'
         - 'needed by (0): —'
   uuid: e5e37c7b-5cb1-5224-be94-1bc512cc05ed

@@ -7,11 +7,11 @@ intent: null
 summary: SF4_the_listener (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855002878
+exported_at: 1792855575986
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855002878
-lastSeenAt: 1792855002878
+firstSeenAt: 1792855575986
+lastSeenAt: 1792855575986
 fingerprint: null
 payload:
   id: SF4_the_listener
@@ -161,7 +161,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF2_state_and_gate
@@ -179,7 +179,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by SF2_state_and_gate
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by SF2_state_and_gate
         - 'depends on (1): SF2_state_and_gate · all upstream 2'
         - 'needed by (1): SF5_hat_intent_injection · finishing it unlocks SF5_hat_intent_injection'
   uuid: 9faf2b7b-a644-574d-90c8-3a053652fff3

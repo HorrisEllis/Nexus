@@ -7,11 +7,11 @@ intent: null
 summary: DB12_the_ui_handshake (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855011798
+exported_at: 1792855584937
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855011798
-lastSeenAt: 1792855011798
+firstSeenAt: 1792855584937
+lastSeenAt: 1792855584937
 fingerprint: null
 payload:
   id: DB12_the_ui_handshake
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 0f4f6e1f3c902c4b
+    hash: f3b5fcea0816e893
     nodes:
       - path: diagnostic/lib/pulse-watch.js
         role: changes
@@ -114,15 +114,15 @@ payload:
         role: uses
         exists: true
         system: cos
+      - path: cos/compartment/process-runner.js
+        role: uses
+        exists: true
+        system: cos
       - path: cos/foundation/intent.js
         role: uses
         exists: true
         system: cos
       - path: cos/host/index.js
-        role: uses
-        exists: true
-        system: cos
-      - path: cos/workspace/index.js
         role: uses
         exists: true
         system: cos
@@ -181,7 +181,7 @@ payload:
         to: cos/cli/commands/intent.js
         kind: requires
       - from: lib/cos-bridge.js
-        to: cos/workspace/index.js
+        to: cos/compartment/process-runner.js
         kind: requires
       - from: cli/compartments.js
         to: lib/system-registry.js
@@ -263,14 +263,14 @@ payload:
         kind: upward
         known: true
       - from: lib/cos-bridge.js
-        to: cos/workspace/index.js
+        to: cos/compartment/process-runner.js
         fromSystem: lib
         toSystem: cos
         kind: upward
-        known: true
+        known: false
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -281,7 +281,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

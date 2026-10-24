@@ -9,11 +9,11 @@ intent: null
 summary: FT1_file_tools_merge_patch_drop (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854978952
+exported_at: 1792855552450
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978952
-lastSeenAt: 1792854978952
+firstSeenAt: 1792855552450
+lastSeenAt: 1792855552450
 fingerprint: null
 payload:
   id: FT1_file_tools_merge_patch_drop
@@ -223,7 +223,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
@@ -278,7 +278,7 @@ payload:
             - idearium/ui/js/app.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by CI1_compounding_iterate
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by CI1_compounding_iterate
         - 'depends on (1): CI1_compounding_iterate · all upstream 4'
         - 'needed by (1): IL1_spec_library_as_ideas · all downstream 4'
         - >-

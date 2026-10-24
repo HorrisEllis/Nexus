@@ -9,11 +9,11 @@ intent: null
 summary: BO1_brainos_reads_the_log (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854987169
+exported_at: 1792855560683
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854987169
-lastSeenAt: 1792854987169
+firstSeenAt: 1792855560683
+lastSeenAt: 1792855560683
 fingerprint: null
 payload:
   id: BO1_brainos_reads_the_log
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): AL1_activity_log · all upstream 2'
         - 'needed by (0): —'
   uuid: c8f47734-0f7c-554c-9356-39c59d6f501f

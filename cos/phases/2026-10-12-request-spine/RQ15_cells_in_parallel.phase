@@ -7,11 +7,11 @@ intent: null
 summary: RQ15_cells_in_parallel (?) — 5 file(s)
 system: cos
 tags: []
-exported_at: 1792854995125
+exported_at: 1792855568368
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854995125
-lastSeenAt: 1792854995125
+firstSeenAt: 1792855568368
+lastSeenAt: 1792855568368
 fingerprint: null
 payload:
   id: RQ15_cells_in_parallel
@@ -127,7 +127,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 7
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
@@ -160,7 +160,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 7 · blocked by RQ14_the_spine_end_to_end
+        - DAG 7d2ff66183c6511e · layer 7 · blocked by RQ14_the_spine_end_to_end
         - 'depends on (1): RQ14_the_spine_end_to_end · all upstream 15'
         - >-
           needed by (2): RQ16_hypotheses_in_parallel, RQ18_test_and_attack_intents · finishing it

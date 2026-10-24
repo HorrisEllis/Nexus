@@ -7,11 +7,11 @@ intent: null
 summary: LM2_loom_owns_its_tables (backend) — 6 file(s)
 system: loom
 tags: []
-exported_at: 1792855024864
+exported_at: 1792855597567
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855024864
-lastSeenAt: 1792855024864
+firstSeenAt: 1792855597567
+lastSeenAt: 1792855597567
 fingerprint: null
 payload:
   id: LM2_loom_owns_its_tables
@@ -283,7 +283,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
@@ -301,7 +301,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): LM_D2_loom_owns_its_tables'
         - >-
           needed by (1): LM3_readers_through_its_routes · all downstream 3 · finishing it unlocks

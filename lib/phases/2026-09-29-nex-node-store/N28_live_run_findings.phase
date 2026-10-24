@@ -7,11 +7,11 @@ intent: null
 summary: N28_live_run_findings (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854977245
+exported_at: 1792855550596
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977245
-lastSeenAt: 1792854977245
+firstSeenAt: 1792855550596
+lastSeenAt: 1792855550596
 fingerprint: null
 payload:
   id: N28_live_run_findings
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: fbb9ca7ade269a9e
+    hash: 15693c17302b00e3
     nodes:
       - path: idearium/repo/nexus-self.js
         role: changes
@@ -98,6 +98,10 @@ payload:
         role: uses
         exists: true
         system: cos
+      - path: cos/compartment/process-runner.js
+        role: uses
+        exists: true
+        system: cos
       - path: cos/foundation/intent.js
         role: uses
         exists: true
@@ -126,10 +130,6 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/nexus-self/store.js
-        role: uses
-        exists: true
-        system: lib
     edges:
       - from: lib/cos-bridge.js
         to: cos/host/index.js
@@ -153,6 +153,9 @@ payload:
         to: cos/cli/commands/intent.js
         kind: requires
       - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+      - from: lib/cos-bridge.js
         to: cos/workspace/index.js
         kind: requires
       - from: lib/cos-bridge.js
@@ -163,9 +166,6 @@ payload:
         kind: requires
       - from: idearium/repo/nexus-self.js
         to: idearium/lib/db.js
-        kind: requires
-      - from: idearium/repo/nexus-self.js
-        to: lib/nexus-self/store.js
         kind: requires
       - from: clear-glass/src/main/index.js
         to: lib/cos-bridge.js
@@ -241,6 +241,12 @@ payload:
         kind: upward
         known: true
       - from: lib/cos-bridge.js
+        to: cos/compartment/process-runner.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: false
+      - from: lib/cos-bridge.js
         to: cos/workspace/index.js
         fromSystem: lib
         toSystem: cos
@@ -254,7 +260,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -265,7 +271,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: b1ac575c-6051-538d-a0d5-f8c9e1983077

@@ -7,11 +7,11 @@ intent: null
 summary: BL5_port_killswitch_pattern (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854960470
+exported_at: 1792855534876
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854960470
-lastSeenAt: 1792854960470
+firstSeenAt: 1792855534876
+lastSeenAt: 1792855534876
 fingerprint: null
 payload:
   id: BL5_port_killswitch_pattern
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-08-23-backlog-phasemap.spec::BL2_guardian_zip_mining_report
@@ -44,7 +44,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): BL2_guardian_zip_mining_report'
         - 'needed by (0): —'
   uuid: ceac6385-cd14-56ae-a2a0-6ee50143dffd

@@ -9,11 +9,11 @@ intent: null
 summary: RW1_rewind_engine_vm_snapshots (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792854982114
+exported_at: 1792855555699
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854982114
-lastSeenAt: 1792854982114
+firstSeenAt: 1792855555699
+lastSeenAt: 1792855555699
 fingerprint: null
 payload:
   id: RW1_rewind_engine_vm_snapshots
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 823f1c8b9650eab6
+    hash: be3e1e2dd9353e15
     nodes:
       - path: cos/compartment/qmp.js
         role: changes
@@ -116,6 +116,10 @@ payload:
         role: uses
         exists: true
         system: cos
+      - path: cos/compartment/process-runner.js
+        role: uses
+        exists: true
+        system: cos
       - path: cos/compartment/qemu-runtime.js
         role: uses
         exists: true
@@ -133,10 +137,6 @@ payload:
         exists: true
         system: cos
       - path: cos/testenv/tar.js
-        role: uses
-        exists: true
-        system: cos
-      - path: cos/workspace/vm-control.js
         role: uses
         exists: true
         system: cos
@@ -179,7 +179,7 @@ payload:
         to: cos/cli/commands/intent.js
         kind: requires
       - from: lib/cos-bridge.js
-        to: cos/workspace/vm-control.js
+        to: cos/compartment/process-runner.js
         kind: requires
       - from: cos/workspace/vm-control.js
         to: cos/workspace/index.js
@@ -255,11 +255,11 @@ payload:
         kind: upward
         known: true
       - from: lib/cos-bridge.js
-        to: cos/workspace/vm-control.js
+        to: cos/compartment/process-runner.js
         fromSystem: lib
         toSystem: cos
         kind: upward
-        known: true
+        known: false
       - from: lib/shadow-space.js
         to: cos/workspace/index.js
         fromSystem: lib
@@ -268,7 +268,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -285,7 +285,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (2): GD1_guardian_supervises_cos, DP1_desktop_popout_options · finishing it

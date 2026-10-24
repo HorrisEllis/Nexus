@@ -7,11 +7,11 @@ intent: null
 summary: EC1_usage_ledger (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854977671
+exported_at: 1792855551036
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977671
-lastSeenAt: 1792854977671
+firstSeenAt: 1792855551036
+lastSeenAt: 1792855551036
 fingerprint: null
 payload:
   id: EC1_usage_ledger
@@ -84,7 +84,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -110,7 +110,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (4): EC2_gate, EC3_token_constraints, EC4_learning_router,

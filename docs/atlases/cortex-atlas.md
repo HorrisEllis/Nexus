@@ -201,7 +201,7 @@ Not confirmed.
 
 7 code · 2 other file(s).
 
-- `cortex/boot.js` (1638 lines) — // 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come home first (lib/data-home.js).  
+- `cortex/boot.js` (1678 lines) — // 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come home first (lib/data-home.js).  
   exports server, jaaDB · requires 5 · required by 4 · tested by `tests/modules/cortex-sse-broadcast.test.js`
 - `cortex/config.js` (22 lines) — real, distinct config, not inline constants scattered across cortex/boot.js. Matches the pattern established by  
   exports PORT, OR_URL, GD_URL, OL_URL, IN_PORT · requires 0 · required by 2

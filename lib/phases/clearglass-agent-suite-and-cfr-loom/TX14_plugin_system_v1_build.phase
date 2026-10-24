@@ -9,11 +9,11 @@ intent: null
 summary: TX14_plugin_system_v1_build (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855026116
+exported_at: 1792855598911
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855026116
-lastSeenAt: 1792855026116
+firstSeenAt: 1792855598911
+lastSeenAt: 1792855598911
 fingerprint: null
 payload:
   id: TX14_plugin_system_v1_build
@@ -59,7 +59,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX11_plugin_architecture_decision
@@ -81,7 +81,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · ready
+        - DAG 7d2ff66183c6511e · layer 1 · ready
         - 'depends on (1): TX11_plugin_architecture_decision'
         - >-
           needed by (3): BR4_erosmancer_as_clearglass_plugin,

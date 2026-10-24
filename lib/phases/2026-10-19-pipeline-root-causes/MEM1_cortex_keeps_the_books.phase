@@ -7,11 +7,11 @@ intent: null
 summary: MEM1_cortex_keeps_the_books (foundation) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855015872
+exported_at: 1792855588972
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015872
-lastSeenAt: 1792855015872
+firstSeenAt: 1792855588972
+lastSeenAt: 1792855588972
 fingerprint: null
 payload:
   id: MEM1_cortex_keeps_the_books
@@ -70,7 +70,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
@@ -84,7 +84,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · ready
+        - DAG 7d2ff66183c6511e · layer 2 · ready
         - 'depends on (1): SS1_system_store_adoption · all upstream 2'
         - 'needed by (0): —'
   uuid: 43e0a74a-1c02-5021-9406-6fca83ee7f85

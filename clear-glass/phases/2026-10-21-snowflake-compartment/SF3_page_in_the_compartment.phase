@@ -7,11 +7,11 @@ intent: null
 summary: SF3_page_in_the_compartment (integration) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855021304
+exported_at: 1792855594142
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855021304
-lastSeenAt: 1792855021304
+firstSeenAt: 1792855594142
+lastSeenAt: 1792855594142
 fingerprint: null
 payload:
   id: SF3_page_in_the_compartment
@@ -165,7 +165,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
@@ -187,7 +187,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (2): SF1_honest_detection, SF4_https_only · all upstream 3'
         - 'needed by (1): SF6_surface · all downstream 4 · finishing it unlocks SF6_surface'
   uuid: 6cb9c1d9-abbb-5297-90f2-804e54f66b8f

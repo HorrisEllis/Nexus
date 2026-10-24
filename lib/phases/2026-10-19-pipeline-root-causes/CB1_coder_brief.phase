@@ -7,11 +7,11 @@ intent: null
 summary: CB1_coder_brief (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792855015867
+exported_at: 1792855588968
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015867
-lastSeenAt: 1792855015867
+firstSeenAt: 1792855588968
+lastSeenAt: 1792855588968
 fingerprint: null
 payload:
   id: CB1_coder_brief
@@ -50,7 +50,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
@@ -64,7 +64,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): VF1_verify_first · all upstream 2'
         - 'needed by (0): —'
   uuid: b3de5efc-e0c5-5eed-8c92-3cde1a5f9578

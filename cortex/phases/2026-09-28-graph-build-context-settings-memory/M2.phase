@@ -7,11 +7,11 @@ intent: null
 summary: M2 (?) — 2 file(s)
 system: cortex
 tags: []
-exported_at: 1792854975839
+exported_at: 1792855549094
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854975839
-lastSeenAt: 1792854975839
+firstSeenAt: 1792855549094
+lastSeenAt: 1792855549094
 fingerprint: null
 payload:
   id: M2
@@ -227,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G3
@@ -251,7 +251,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by G3, M1
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by G3, M1
         - 'depends on (2): G3, M1 · all upstream 6'
         - 'needed by (1): M3 · finishing it unlocks M3'
   uuid: 47df94c2-d600-501c-a15b-775742a95d23

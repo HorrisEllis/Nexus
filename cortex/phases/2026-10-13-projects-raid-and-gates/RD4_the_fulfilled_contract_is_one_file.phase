@@ -9,11 +9,11 @@ intent: null
 summary: RD4_the_fulfilled_contract_is_one_file (?) — 2 file(s)
 system: cortex
 tags: []
-exported_at: 1792854996915
+exported_at: 1792855570162
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854996915
-lastSeenAt: 1792854996915
+firstSeenAt: 1792855570162
+lastSeenAt: 1792855570162
 fingerprint: null
 payload:
   id: RD4_the_fulfilled_contract_is_one_file
@@ -265,7 +265,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD2_idearium_routes_through_raid
@@ -283,7 +283,7 @@ payload:
             - cortex/core/raid/contract-intake.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by RD2_idearium_routes_through_raid
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by RD2_idearium_routes_through_raid
         - 'depends on (1): RD2_idearium_routes_through_raid · all upstream 2'
         - 'needed by (0): —'
         - >-

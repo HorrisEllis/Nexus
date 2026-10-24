@@ -7,11 +7,11 @@ intent: null
 summary: JB0_gig_files (?) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854994597
+exported_at: 1792855567887
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854994597
-lastSeenAt: 1792854994597
+firstSeenAt: 1792855567887
+lastSeenAt: 1792855567887
 fingerprint: null
 payload:
   id: JB0_gig_files
@@ -74,7 +74,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents:
@@ -92,7 +92,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0
+        - DAG 7d2ff66183c6511e · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): JB1_the_agent_writes_the_gig_file, JB4_resume_import · all downstream 4 ·

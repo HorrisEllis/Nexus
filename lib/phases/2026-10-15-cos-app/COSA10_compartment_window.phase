@@ -7,11 +7,11 @@ intent: null
 summary: COSA10_compartment_window (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854999638
+exported_at: 1792855572868
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854999638
-lastSeenAt: 1792854999638
+firstSeenAt: 1792855572868
+lastSeenAt: 1792855572868
 fingerprint: null
 payload:
   id: COSA10_compartment_window
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-15-cos-app-phasemap.spec::COSA6_the_exe
@@ -244,7 +244,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by COSA6_the_exe, COSA9_idearium_sync
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by COSA6_the_exe, COSA9_idearium_sync
         - 'depends on (2): COSA6_the_exe, COSA9_idearium_sync · all upstream 5'
         - 'needed by (1): COSA11_nested_tree · all downstream 2'
   uuid: 517f432f-ef70-5221-a376-af8559d6482c

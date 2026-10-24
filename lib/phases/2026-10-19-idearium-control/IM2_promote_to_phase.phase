@@ -7,11 +7,11 @@ intent: null
 summary: IM2_promote_to_phase (integration) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792855014968
+exported_at: 1792855588019
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855014968
-lastSeenAt: 1792855014968
+firstSeenAt: 1792855588019
+lastSeenAt: 1792855588019
 fingerprint: null
 payload:
   id: IM2_promote_to_phase
@@ -216,7 +216,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-19-idearium-control-phasemap.spec::IM1_ideas_and_notes_as_one
@@ -249,7 +249,7 @@ payload:
             - lib/work-funnel.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by IM1_ideas_and_notes_as_one, PC1_phase_controls
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by IM1_ideas_and_notes_as_one, PC1_phase_controls
         - 'depends on (2): IM1_ideas_and_notes_as_one, PC1_phase_controls · all upstream 3'
         - 'needed by (0): —'
         - 'same files as FM1_file_manager with no order between them: idearium/api/index.js'

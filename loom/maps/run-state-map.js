@@ -107,6 +107,7 @@ const FILES = [
   ['lib/ollama-port.js', I('lib/ollama-port.js'), [I('lib/nexus-self/systems.js')]],   // 0.60.241 LM1 the kernel's door to the ollama bridge (in-process when provided, else POST /api/generate)
   ['ollama/routes/generate.js', I('ollama/routes/generate.js'), [I('ollama/lib/ollama-client.js'), I('ollama/lib/state.js'), I('ollama/lib/http-utils.js')]],   // 0.60.241 LM1 POST /api/generate
   ['loom/lib/store.js', I('loom/lib/store.js'), [I('lib/system-store.js')]],   // 0.60.241 LM2 Loom's own store: hooks, hook_bindings, loom_changelog, phasemap_history
+  ['cos/compartment/boundary.js', I('cos/compartment/boundary.js'), []],   // 0.60.242 LM4 the wall: a require outside the compartment's allowed paths refused
   ['lib/upload-placement.js', I('lib/upload-placement.js'), []],   // §0.60.173 UP1/UP2 a zip's files placed against a repo (strip, exists, same bytes, folders, intent, his learned rules); requires/requiredBy
   ['idearium/ui/js/upload-intent.js', I('idearium/ui/js/upload-intent.js'), [I('idearium/ui/js/code-tab-panels.js')]],   // §0.60.173 UP4 the Code tab's upload panel (page globals: CX, _cxPaintPanel, api)
   ['lib/phase-dag.js', I('lib/phase-dag.js'), [I('loom/scanners/phasemap-map.js')]],   // §0.60.172 DG3 the whole DAG of every phasemap
@@ -166,6 +167,11 @@ const CONSUMERS = [
   [I('loom/server.js'), I('lib/pulse.js'), '0.60.241 LM0 the heartbeat (was nexus-connect startHeartbeat)'],
   [I('architect/service.js'), I('loom/server.js'), '0.60.241 LM3 the hook read view over HTTP: GET /api/hooks, /:id, /validate, /graph (not a require)'],
   [I('lib/agent-build-loop.js'), I('loom/server.js'), '0.60.241 LM3 introspect(): GET /api/phasemap/history (not a require)'],
+  [I('cos/compartment/process-runner.js'), I('cos/compartment/boundary.js'), '0.60.242 LM4 preloaded (node --require) when the env carries COS_BOUNDARY (not a require)'],
+  [I('loom/templates/cos-compartment.js'), I('lib/cos-bridge.js'), '0.60.242 LM4 moveIn: getCompartment, createCompartment, setRuntime, start, processOf'],
+  [I('loom/templates/cos-compartment.js'), I('lib/system-boundary.js'), '0.60.242 LM4 boundaryFor: FOLDED, KERNEL, LANGUAGE_PATHS (the census\'s list)'],
+  [I('lib/gap-field.js'), I('cortex/boot.js'), '0.60.242 LM4 reportAsync / openGapsAsync over HTTP: POST /api/gap-field/report, GET /api/gap-field/open (not a require)'],
+  [I('cortex/boot.js'), I('lib/gap-field.js'), '0.60.242 LM4 provideLocal(); the two routes run report() / openGaps()'],
   [I('idearium/api/index.js'), I('lib/upload-placement.js'), '§0.60.173 UP3 repo.uploads.{create,list,get,answer}: plan → needs-you; his answer → repo-inject propose/apply (text) and writeSourceBytes (binaries); learn()'],
   [I('idearium/api/index.js'), I('lib/zip-ingest.js'), '§0.60.173 UP3 the uploaded zip read with the importer\'s own bounds (project-import.config ZIP)'],
   [I('idearium/api/index.js'), I('lib/repo-inject.js'), '§0.60.173 UP3 an upload\'s text files land through propose() and apply() — the one door'],

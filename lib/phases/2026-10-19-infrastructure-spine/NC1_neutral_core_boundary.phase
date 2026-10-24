@@ -7,11 +7,11 @@ intent: null
 summary: NC1_neutral_core_boundary (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792855015410
+exported_at: 1792855588494
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015410
-lastSeenAt: 1792855015410
+firstSeenAt: 1792855588494
+lastSeenAt: 1792855588494
 fingerprint: null
 payload:
   id: NC1_neutral_core_boundary
@@ -106,7 +106,7 @@ payload:
         known: false
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
@@ -173,7 +173,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 86519dc3b354b627 · layer 2 · ON THE CRITICAL PATH · blocked by
+          DAG 7d2ff66183c6511e · layer 2 · ON THE CRITICAL PATH · blocked by
           IN3_registry_is_the_spine
         - 'depends on (1): IN3_registry_is_the_spine · all upstream 2'
         - >-

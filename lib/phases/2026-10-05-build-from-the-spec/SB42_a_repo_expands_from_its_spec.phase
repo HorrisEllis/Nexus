@@ -9,11 +9,11 @@ intent: null
 summary: SB42_a_repo_expands_from_its_spec (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854983059
+exported_at: 1792855556693
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983059
-lastSeenAt: 1792854983059
+firstSeenAt: 1792855556693
+lastSeenAt: 1792855556693
 fingerprint: null
 payload:
   id: SB42_a_repo_expands_from_its_spec
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
@@ -250,7 +250,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5
+        - DAG 7d2ff66183c6511e · layer 5
         - 'depends on (1): SB31_every_new_repo_is_the_skeleton_the_idea_slots_in · all upstream 5'
         - >-
           needed by (2): SB43_the_expansion_is_phased, SB46_every_step_by_hand · all downstream 7 ·

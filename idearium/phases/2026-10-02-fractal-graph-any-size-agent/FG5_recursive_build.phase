@@ -7,11 +7,11 @@ intent: null
 summary: FG5_recursive_build (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854980804
+exported_at: 1792855554397
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980804
-lastSeenAt: 1792854980804
+firstSeenAt: 1792855554397
+lastSeenAt: 1792855554397
 fingerprint: null
 payload:
   id: FG5_recursive_build
@@ -82,7 +82,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
@@ -99,7 +99,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by FG4_context_for_any_agent
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by FG4_context_for_any_agent
         - 'depends on (1): FG4_context_for_any_agent · all upstream 4'
         - 'needed by (0): —'
   uuid: 85e6bf8f-c595-5727-baa7-b2b7f2ac710d

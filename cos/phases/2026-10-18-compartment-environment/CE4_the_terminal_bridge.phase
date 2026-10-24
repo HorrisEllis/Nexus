@@ -7,11 +7,11 @@ intent: null
 summary: CE4_the_terminal_bridge (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792855012319
+exported_at: 1792855585426
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855012319
-lastSeenAt: 1792855012319
+firstSeenAt: 1792855585426
+lastSeenAt: 1792855585426
 fingerprint: null
 payload:
   id: CE4_the_terminal_bridge
@@ -225,7 +225,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
@@ -250,7 +250,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by CE3_the_handshake
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by CE3_the_handshake
         - 'depends on (1): CE3_the_handshake · all upstream 4'
         - 'needed by (2): CE6_the_code_tab, CE7_agents_and_commands'
         - >-

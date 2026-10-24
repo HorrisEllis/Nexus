@@ -7,11 +7,11 @@ intent: null
 summary: SN4_benchmarks_teach (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854994171
+exported_at: 1792855567464
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854994171
-lastSeenAt: 1792854994171
+firstSeenAt: 1792855567464
+lastSeenAt: 1792855567464
 fingerprint: null
 payload:
   id: SN4_benchmarks_teach
@@ -145,7 +145,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN3_measured_by_rfr2
@@ -162,7 +162,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by SN3_measured_by_rfr2
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by SN3_measured_by_rfr2
         - 'depends on (1): SN3_measured_by_rfr2 · all upstream 4'
         - 'needed by (0): —'
   uuid: e1dac483-3f5b-5d67-bb3c-b68aebc733e6

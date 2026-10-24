@@ -7,11 +7,11 @@ intent: null
 summary: LS3_one_feed_for_every_agent (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854983620
+exported_at: 1792855557249
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983620
-lastSeenAt: 1792854983620
+firstSeenAt: 1792855557249
+lastSeenAt: 1792855557249
 fingerprint: null
 payload:
   id: LS3_one_feed_for_every_agent
@@ -210,7 +210,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-05-cli-data-code-phasemap.spec::LS2_copilot_sends_the_text_as_it_comes
@@ -227,7 +227,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): LS2_copilot_sends_the_text_as_it_comes · all upstream 2'
         - >-
           needed by (1): LS4_live_in_the_code_tab_and_the_work_surface · finishing it unlocks

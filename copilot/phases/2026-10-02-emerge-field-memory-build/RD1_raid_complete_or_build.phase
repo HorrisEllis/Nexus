@@ -9,11 +9,11 @@ intent: null
 summary: RD1_raid_complete_or_build (?) — 3 file(s)
 system: copilot
 tags: []
-exported_at: 1792854980347
+exported_at: 1792855553898
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980347
-lastSeenAt: 1792854980347
+firstSeenAt: 1792855553898
+lastSeenAt: 1792855553898
 fingerprint: null
 payload:
   id: RD1_raid_complete_or_build
@@ -264,7 +264,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 7
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
@@ -303,7 +303,7 @@ payload:
             - idearium/repo/proof-run.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 7 · blocked by LB1_the_end_state_lab
+        - DAG 7d2ff66183c6511e · layer 7 · blocked by LB1_the_end_state_lab
         - >-
           depends on (2): PR1_proof_run_the_delivery_checker, LB1_the_end_state_lab · all upstream
           10

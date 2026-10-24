@@ -9,11 +9,11 @@ intent: null
 summary: ST1_schema_for_everything_reusable (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792855015416
+exported_at: 1792855588497
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015416
-lastSeenAt: 1792855015416
+firstSeenAt: 1792855588497
+lastSeenAt: 1792855588497
 fingerprint: null
 payload:
   id: ST1_schema_for_everything_reusable
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
@@ -60,7 +60,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by IN0_baseline
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by IN0_baseline
         - 'depends on (1): IN0_baseline'
         - >-
           needed by (1): PN1_phases_to_nodes · all downstream 3 · finishing it unlocks

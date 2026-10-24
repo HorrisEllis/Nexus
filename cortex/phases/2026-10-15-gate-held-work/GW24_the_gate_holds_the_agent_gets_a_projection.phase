@@ -9,11 +9,11 @@ intent: null
 summary: GW24_the_gate_holds_the_agent_gets_a_projection (?) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792855000581
+exported_at: 1792855573822
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855000581
-lastSeenAt: 1792855000581
+firstSeenAt: 1792855573822
+lastSeenAt: 1792855573822
 fingerprint: null
 payload:
   id: GW24_the_gate_holds_the_agent_gets_a_projection
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
@@ -272,7 +272,7 @@ payload:
             - cortex/core/raid/contract-gates.js
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by GW1_the_baton
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by GW1_the_baton
         - 'depends on (1): GW1_the_baton'
         - 'needed by (1): GW25_the_systems_at_the_gate_moments'
         - >-

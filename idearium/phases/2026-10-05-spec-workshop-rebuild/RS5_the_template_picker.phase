@@ -7,11 +7,11 @@ intent: null
 summary: RS5_the_template_picker (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854986273
+exported_at: 1792855559857
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854986273
-lastSeenAt: 1792854986273
+firstSeenAt: 1792855559857
+lastSeenAt: 1792855559857
 fingerprint: null
 payload:
   id: RS5_the_template_picker
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
@@ -61,7 +61,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by RS4_the_pipeline_on_warp2
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by RS4_the_pipeline_on_warp2
         - 'depends on (1): RS4_the_pipeline_on_warp2 · all upstream 3'
         - 'needed by (1): RS6_the_workshop_as_the_editor · all downstream 3'
   uuid: 9d1f7220-11fb-52af-8ece-7d2d953733f2

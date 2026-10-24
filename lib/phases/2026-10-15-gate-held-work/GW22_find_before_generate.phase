@@ -7,11 +7,11 @@ intent: null
 summary: GW22_find_before_generate (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792855000579
+exported_at: 1792855573820
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855000579
-lastSeenAt: 1792855000579
+firstSeenAt: 1792855573820
+lastSeenAt: 1792855573820
 fingerprint: null
 payload:
   id: GW22_find_before_generate
@@ -251,7 +251,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW5_agents_are_copilot
@@ -273,7 +273,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by GW5_agents_are_copilot, GW13_the_sandbox_door
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by GW5_agents_are_copilot, GW13_the_sandbox_door
         - 'depends on (2): GW5_agents_are_copilot, GW13_the_sandbox_door · all upstream 7'
         - 'needed by (0): —'
   uuid: 2cbd0a7a-1a0c-5b27-83f8-359c26921df6

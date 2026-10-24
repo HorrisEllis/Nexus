@@ -7,11 +7,11 @@ intent: null
 summary: N8_service (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854977224
+exported_at: 1792855550573
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854977224
-lastSeenAt: 1792854977224
+firstSeenAt: 1792855550573
+lastSeenAt: 1792855550573
 fingerprint: null
 payload:
   id: N8_service
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
@@ -75,7 +75,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5 · blocked by N7_views_yaml_and_nex
+        - DAG 7d2ff66183c6511e · layer 5 · blocked by N7_views_yaml_and_nex
         - 'depends on (1): N7_views_yaml_and_nex · all upstream 8'
         - >-
           needed by (3): N9_cli, N10_migration, N15_contract_history · all downstream 8 · finishing

@@ -7,11 +7,11 @@ intent: null
 summary: HP17_no_tab_is_said_in_seconds (?) — 1 file(s)
 system: guardian
 tags: []
-exported_at: 1792854990247
+exported_at: 1792855563636
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854990247
-lastSeenAt: 1792854990247
+firstSeenAt: 1792855563636
+lastSeenAt: 1792855563636
 fingerprint: null
 payload:
   id: HP17_no_tab_is_said_in_seconds
@@ -92,7 +92,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
@@ -111,7 +111,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): HP16_a_job_nobody_waits_for_is_not_sent_later'
         - >-
           needed by (2): HP19_the_simulator_stays, HP22_a_missing_tab_is_not_a_login_wall ·

@@ -9,11 +9,11 @@ intent: null
 summary: RS7_architect_and_blueprint_stations (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854986275
+exported_at: 1792855559858
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854986275
-lastSeenAt: 1792854986275
+firstSeenAt: 1792855559858
+lastSeenAt: 1792855559858
 fingerprint: null
 payload:
   id: RS7_architect_and_blueprint_stations
@@ -123,7 +123,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 4
       deps:
         - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
@@ -142,7 +142,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 4 · blocked by RS6_the_workshop_as_the_editor
+        - DAG 7d2ff66183c6511e · layer 4 · blocked by RS6_the_workshop_as_the_editor
         - 'depends on (1): RS6_the_workshop_as_the_editor · all upstream 6'
         - 'needed by (0): —'
   uuid: 092a58ee-9e2f-551e-83d6-0eb04d66f583

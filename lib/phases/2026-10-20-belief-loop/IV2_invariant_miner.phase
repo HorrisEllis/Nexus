@@ -7,11 +7,11 @@ intent: null
 summary: IV2_invariant_miner (library) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792855017171
+exported_at: 1792855590302
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855017171
-lastSeenAt: 1792855017171
+firstSeenAt: 1792855590302
+lastSeenAt: 1792855590302
 fingerprint: null
 payload:
   id: IV2_invariant_miner
@@ -38,7 +38,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 5
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
@@ -67,7 +67,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 5 · blocked by IV1_invariant_kinds, TV1_traversal_primitive
+        - DAG 7d2ff66183c6511e · layer 5 · blocked by IV1_invariant_kinds, TV1_traversal_primitive
         - 'depends on (2): IV1_invariant_kinds, TV1_traversal_primitive · all upstream 9'
         - >-
           needed by (2): CY2_invariants_are_crystals, TV2_invariant_guided_traversal · all

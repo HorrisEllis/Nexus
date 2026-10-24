@@ -9,11 +9,11 @@ intent: null
 summary: VS3_agent_chat_log_query (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854965032
+exported_at: 1792855538913
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854965032
-lastSeenAt: 1792854965032
+firstSeenAt: 1792855538913
+lastSeenAt: 1792855538913
 fingerprint: null
 payload:
   id: VS3_agent_chat_log_query
@@ -44,7 +44,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS1_sovereign_folder_and_foundation
@@ -58,7 +58,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by VS1_sovereign_folder_and_foundation
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by VS1_sovereign_folder_and_foundation
         - 'depends on (1): VS1_sovereign_folder_and_foundation'
         - 'needed by (0): —'
   uuid: 75f707e4-ddb7-5503-81d7-3003d8a6c3ad

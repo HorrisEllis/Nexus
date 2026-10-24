@@ -9,11 +9,11 @@ intent: null
 summary: RC5_find_where_the_label_enters (foundation) — 3 file(s)
 system: guardian
 tags: []
-exported_at: 1792855015860
+exported_at: 1792855588956
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015860
-lastSeenAt: 1792855015860
+firstSeenAt: 1792855588956
+lastSeenAt: 1792855588956
 fingerprint: null
 payload:
   id: RC5_find_where_the_label_enters
@@ -233,7 +233,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
@@ -246,7 +246,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): RC4_agent_file_names_guarded'
         - 'needed by (0): —'
   uuid: f3174989-a502-58f1-8b46-d2a652453caa

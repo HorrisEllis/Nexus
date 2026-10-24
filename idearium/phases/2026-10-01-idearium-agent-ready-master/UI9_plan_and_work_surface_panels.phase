@@ -9,11 +9,11 @@ intent: null
 summary: UI9_plan_and_work_surface_panels (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854978932
+exported_at: 1792855552429
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854978932
-lastSeenAt: 1792854978932
+firstSeenAt: 1792855552429
+lastSeenAt: 1792855552429
 fingerprint: null
 payload:
   id: UI9_plan_and_work_surface_panels
@@ -43,7 +43,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 0
       deps: []
       dependents: []
@@ -60,7 +60,7 @@ payload:
             - idearium/ui/css/
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 0 · ready
+        - DAG 7d2ff66183c6511e · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

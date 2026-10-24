@@ -9,11 +9,11 @@ intent: null
 summary: SBP11_agent_tools_registry_awareness (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854962474
+exported_at: 1792855536396
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854962474
-lastSeenAt: 1792854962474
+firstSeenAt: 1792855536396
+lastSeenAt: 1792855536396
 fingerprint: null
 payload:
   id: SBP11_agent_tools_registry_awareness
@@ -215,7 +215,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP9_hat_forge_real_hats
@@ -228,7 +228,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): SBP9_hat_forge_real_hats'
         - 'needed by (0): —'
   uuid: d86a9e58-8dcb-5be1-9c68-7403f06f7c3f

@@ -7,11 +7,11 @@ intent: null
 summary: SF3_evidence_not_claims (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792855002878
+exported_at: 1792855575985
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855002878
-lastSeenAt: 1792855002878
+firstSeenAt: 1792855575985
+lastSeenAt: 1792855575985
 fingerprint: null
 payload:
   id: SF3_evidence_not_claims
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF2_state_and_gate
@@ -46,7 +46,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2 · blocked by SF2_state_and_gate
+        - DAG 7d2ff66183c6511e · layer 2 · blocked by SF2_state_and_gate
         - 'depends on (1): SF2_state_and_gate · all upstream 2'
         - 'needed by (0): —'
   uuid: 6778f23d-a04b-5f57-83ec-4aecf17c643e

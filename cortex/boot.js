@@ -609,6 +609,21 @@ const server = http.createServer(async (req, res) => {
     json(res, 200, { ok: true, uuid: row.uuid || row.id, status });
     return;
   }
+  // 0.60.242 LM4 — the gap field's own report() and openGaps(), for a system that is not Cortex (lib/gap-field.js reportAsync /
+  // openGapsAsync): the same dedup, occurrences and priority as in-process, without that system loading Cortex's store
+  if (p === '/api/gap-field/report' && method === 'POST') {
+    const body = await readBody(req);
+    try { json(res, 200, { ok: true, ...require('../lib/gap-field.js').report(body || {}) }); }
+    catch (e) { json(res, 500, { ok: false, error: `gap-field report: ${e.message}` }); }
+    return;
+  }
+  if (p === '/api/gap-field/open') {
+    const limit = parseInt(url.searchParams.get('limit') || '100', 10) || 100;
+    try { json(res, 200, { ok: true, gaps: require('../lib/gap-field.js').openGaps({ domain: url.searchParams.get('domain') || undefined, limit }) }); }
+    catch (e) { json(res, 500, { ok: false, error: `gap-field open: ${e.message}` }); }
+    return;
+  }
+
   if (p === '/api/gaps') {
     if (method === 'POST') {
       const body = await readBody(req);
@@ -1409,6 +1424,8 @@ function _pollOrchestrator() {
   req.end();
 }
 
+// 0.60.242 LM4 — the gap field is Cortex's: here its async API is its sync one (lib/gap-field.js provideLocal)
+require('../lib/gap-field.js').provideLocal(true);
 // 0.60.240 GD1 — RAID is Cortex's: in this process the port calls it directly; every other system reaches it over the routes above
 require('../lib/raid-port.js').provide({
   approveTool: (source, command, opts) => require('./core/raid')._approveTool(source, command, opts || {}),

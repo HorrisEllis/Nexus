@@ -7,11 +7,11 @@ intent: null
 summary: C0 (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854975830
+exported_at: 1792855549084
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854975830
-lastSeenAt: 1792854975830
+firstSeenAt: 1792855549084
+lastSeenAt: 1792855549084
 fingerprint: null
 payload:
   id: C0
@@ -211,7 +211,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
@@ -232,7 +232,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by R0
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by R0
         - 'depends on (1): R0'
         - 'needed by (1): C1 · all downstream 5 · finishing it unlocks C1'
   uuid: c3408bd3-f1a3-53bc-b413-7964a18c30b2

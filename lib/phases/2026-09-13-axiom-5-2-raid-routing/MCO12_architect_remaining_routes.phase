@@ -9,11 +9,11 @@ intent: null
 summary: MCO12_architect_remaining_routes (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854967719
+exported_at: 1792855541257
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854967719
-lastSeenAt: 1792854967719
+firstSeenAt: 1792855541257
+lastSeenAt: 1792855541257
 fingerprint: null
 payload:
   id: MCO12_architect_remaining_routes
@@ -151,7 +151,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 2
       deps:
         - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO8_wire_the_honest_subset
@@ -165,7 +165,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 2
+        - DAG 7d2ff66183c6511e · layer 2
         - 'depends on (1): MCO8_wire_the_honest_subset · all upstream 2'
         - 'needed by (0): —'
   uuid: 9bd77931-ccdf-5054-871c-04ec07cb516e

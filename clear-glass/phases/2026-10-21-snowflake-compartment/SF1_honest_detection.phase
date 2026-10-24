@@ -7,11 +7,11 @@ intent: null
 summary: SF1_honest_detection (library) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792855021303
+exported_at: 1792855594141
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855021303
-lastSeenAt: 1792855021303
+firstSeenAt: 1792855594141
+lastSeenAt: 1792855594141
 fingerprint: null
 payload:
   id: SF1_honest_detection
@@ -98,7 +98,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
@@ -123,7 +123,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): SF2_bridge_sources'
         - >-
           needed by (3): SF3_page_in_the_compartment, SF5_circuit_check, SF6_surface · all

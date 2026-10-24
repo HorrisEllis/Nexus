@@ -7,11 +7,11 @@ intent: null
 summary: AD1_adapter_contract (foundation) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792855015410
+exported_at: 1792855588494
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792855015410
-lastSeenAt: 1792855015410
+firstSeenAt: 1792855588494
+lastSeenAt: 1792855588494
 fingerprint: null
 payload:
   id: AD1_adapter_contract
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
@@ -78,7 +78,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3 · blocked by NC1_neutral_core_boundary
+        - DAG 7d2ff66183c6511e · layer 3 · blocked by NC1_neutral_core_boundary
         - 'depends on (1): NC1_neutral_core_boundary · all upstream 3'
         - >-
           needed by (5): AD2_javascript_adapter, AD3_python_adapter, AD4_documents_adapter,

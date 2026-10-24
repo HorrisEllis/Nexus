@@ -9,11 +9,11 @@ intent: null
 summary: FG3_summaries_up_the_tree (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854980803
+exported_at: 1792855554396
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854980803
-lastSeenAt: 1792854980803
+firstSeenAt: 1792855554396
+lastSeenAt: 1792855554396
 fingerprint: null
 payload:
   id: FG3_summaries_up_the_tree
@@ -38,7 +38,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
@@ -56,7 +56,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by FG1_containment_tree
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by FG1_containment_tree
         - 'depends on (1): FG1_containment_tree'
         - 'needed by (1): FG4_context_for_any_agent · all downstream 3'
   uuid: c35fa2d3-d3ef-5375-9431-dc76f8079ae6

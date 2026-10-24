@@ -9,11 +9,11 @@ intent: null
 summary: LM4_per_system_tool_index (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854963437
+exported_at: 1792855537351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854963437
-lastSeenAt: 1792854963437
+firstSeenAt: 1792855537351
+lastSeenAt: 1792855537351
 fingerprint: null
 payload:
   id: LM4_per_system_tool_index
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
@@ -52,7 +52,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by LM1_spec_as_living_model
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by LM1_spec_as_living_model
         - 'depends on (1): LM1_spec_as_living_model'
         - >-
           needed by (2): LM5_copilot_capability_zoom, LM14_components_store · finishing it unlocks

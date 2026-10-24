@@ -7,11 +7,11 @@ intent: null
 summary: C4_build_wizard_two_modes (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854964492
+exported_at: 1792855538341
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854964492
-lastSeenAt: 1792854964492
+firstSeenAt: 1792855538341
+lastSeenAt: 1792855538341
 fingerprint: null
 payload:
   id: C4_build_wizard_two_modes
@@ -62,7 +62,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::C1_copilot_spec_wizard
@@ -76,7 +76,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1 · blocked by C1_copilot_spec_wizard
+        - DAG 7d2ff66183c6511e · layer 1 · blocked by C1_copilot_spec_wizard
         - 'depends on (1): C1_copilot_spec_wizard'
         - 'needed by (0): —'
   uuid: 8f2d08ee-3f00-52a1-a076-ca64b964c62b

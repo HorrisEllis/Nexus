@@ -7,11 +7,11 @@ intent: null
 summary: BS19_copilot_atlas_guide (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854976748
+exported_at: 1792855550133
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854976748
-lastSeenAt: 1792854976748
+firstSeenAt: 1792855550133
+lastSeenAt: 1792855550133
 fingerprint: null
 payload:
   id: BS19_copilot_atlas_guide
@@ -48,7 +48,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 1
       deps:
         - docs/2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
@@ -64,7 +64,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 1
+        - DAG 7d2ff66183c6511e · layer 1
         - 'depends on (1): BS17_copilot_browser_verbs'
         - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
   uuid: b1e7f895-fd34-5294-9203-ee1428d51e1c

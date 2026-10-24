@@ -9,11 +9,11 @@ intent: null
 summary: WS1_agents_use_the_work_surface (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854983083
+exported_at: 1792855556718
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854983083
-lastSeenAt: 1792854983083
+firstSeenAt: 1792855556718
+lastSeenAt: 1792855556718
 fingerprint: null
 payload:
   id: WS1_agents_use_the_work_surface
@@ -232,7 +232,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 86519dc3b354b627
+      dagHash: 7d2ff66183c6511e
       layer: 3
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::CH1_compartment_charter
@@ -247,7 +247,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 86519dc3b354b627 · layer 3
+        - DAG 7d2ff66183c6511e · layer 3
         - 'depends on (1): CH1_compartment_charter · all upstream 3'
         - 'needed by (0): —'
   uuid: 40306b0a-7544-545a-8dc5-423f8af5842d

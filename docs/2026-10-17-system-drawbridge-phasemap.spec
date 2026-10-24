@@ -554,3 +554,11 @@ James, 2026-10-24: "okay warp and emerge. / spec compiler, ide, and idearium". S
 lib/nexus-self/systems.js gains emerge (dirs emerge, warp); lib/system-boundary.js FOLDED warp → emerge, and LANGUAGE (warp/core, dispatch,
 plugins, index.js; emerge/core) makes a use of the runtime kind 'language': not ratcheted, not a sovereignty blocker (EW_D2, by his axioms).
 Map: docs/2026-10-24-emerge-warp-system-phasemap.spec.
+
+## ADDENDUM 2026-10-24 (0.60.242) — the census has two blind spots; the wall covers them
+Found when Loom ran in its compartment behind cos/compartment/boundary.js (docs/2026-10-24-loom-into-cos-phasemap.spec LM4):
+1. A system's use of lib/ is never a crossing, but lib/ itself reaches into systems (241 upward edges). A system that loads lib/gap-field.js
+   loaded Cortex's store with it.
+2. A require whose path is built at run time (``require(`../hooks/${system}.hooks.js`)``) is not read by the scanner.
+The wall sees both, because it judges every require as Node resolves it. So a compartment move runs audit first, then enforce. The census
+stays the ratchet; the wall is the proof.
