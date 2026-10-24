@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876202819
+exported_at: 1792877163427
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876202819
-lastSeenAt: 1792876202819
+firstSeenAt: 1792877163427
+lastSeenAt: 1792877163427
 fingerprint: null
 payload:
   for: DB16_a_registry_for_each_system
@@ -229,7 +229,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 6 · blocked by DB0c_reading
+      - layer 6 · ON THE CRITICAL PATH · blocked by DB0c_reading
       - 'depends on (2): DB0c_reading, DB13_the_tunnel · all upstream 9'
       - >-
         needed by (4): DB21_one_registry_schema_every_level, CS3_the_registry_is_the_bridge,

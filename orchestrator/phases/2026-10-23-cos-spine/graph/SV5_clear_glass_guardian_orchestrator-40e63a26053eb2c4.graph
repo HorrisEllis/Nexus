@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876203206
+exported_at: 1792877163827
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876203206
-lastSeenAt: 1792876203206
+firstSeenAt: 1792877163827
+lastSeenAt: 1792877163827
 fingerprint: null
 payload:
   for: SV5_clear_glass_guardian_orchestrator
@@ -59,7 +59,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 4 · ON THE CRITICAL PATH · blocked by SV4_ollama_versionium_diagnostic
+      - layer 4 · blocked by SV4_ollama_versionium_diagnostic
       - 'depends on (1): SV4_ollama_versionium_diagnostic · all upstream 6'
       - >-
         needed by (1): SV6_loom_idearium_copilot · all downstream 12 · finishing it unlocks

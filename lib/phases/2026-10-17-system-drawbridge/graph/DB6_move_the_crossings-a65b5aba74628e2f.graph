@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876202780
+exported_at: 1792877163402
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876202780
-lastSeenAt: 1792876202780
+firstSeenAt: 1792877163402
+lastSeenAt: 1792877163402
 fingerprint: null
 payload:
   for: DB6_move_the_crossings
@@ -62,7 +62,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 7 · ON THE CRITICAL PATH · blocked by SV7_intelligence_cos_cortex
+      - layer 7 · blocked by SV7_intelligence_cos_cortex
       - 'depends on (1): SV7_intelligence_cos_cortex · all upstream 9'
       - 'needed by (2): CS4_every_system_a_compartment, CS11_raid_in_the_exe · all downstream 8'
     edges:

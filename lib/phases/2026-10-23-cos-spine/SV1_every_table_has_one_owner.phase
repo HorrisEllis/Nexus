@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
 context: pipeline phase SV1_every_table_has_one_owner of docs/2026-10-23-cos-spine-phasemap.spec
 intent: null
-summary: SV1_every_table_has_one_owner (?) — 5 file(s)
+summary: SV1_every_table_has_one_owner (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792876203202
+exported_at: 1792877163823
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876203202
-lastSeenAt: 1792876203202
+firstSeenAt: 1792877163823
+lastSeenAt: 1792877163823
 fingerprint: null
 payload:
   id: SV1_every_table_has_one_owner
@@ -20,6 +20,7 @@ payload:
   layer: null
   status: OPEN
   files:
+    - lib/system-store.js
     - lib/table-owners.js
     - lib/jaa-store.js
     - cortex/memory/jaa-db.js
@@ -29,4 +30,4 @@ payload:
     - SV0_the_census_tells_the_truth
   blocks: []
   spec: null
-  graph: 475062f92bd11f1a
+  graph: c212f0715f21a235

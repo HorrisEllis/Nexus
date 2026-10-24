@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876203191
+exported_at: 1792877163813
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876203191
-lastSeenAt: 1792876203191
+firstSeenAt: 1792877163813
+lastSeenAt: 1792877163813
 fingerprint: null
 payload:
   for: CS12_the_mover_is_proven
@@ -82,6 +82,7 @@ payload:
     unlocks:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS16_erosmancer_os
       - docs/2026-10-23-cos-spine-phasemap.spec::CS18_one_copy_of_the_primitives
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV2_core_files_go_home
     conflicts: []
     dangling: []
     lines:
@@ -91,5 +92,5 @@ payload:
         needed by (7): CS13_autopilot_to_orchestrator, CS14_cli_inside_nexus,
         CS15_changelogs_to_versionium, CS16_erosmancer_os, CS17_cockpit_home,
         CS18_one_copy_of_the_primitives, SV2_core_files_go_home · all downstream 24 · finishing it
-        unlocks CS16_erosmancer_os, CS18_one_copy_of_the_primitives
+        unlocks CS16_erosmancer_os, CS18_one_copy_of_the_primitives, SV2_core_files_go_home
     edges: []

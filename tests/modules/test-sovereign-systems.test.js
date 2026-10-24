@@ -96,6 +96,30 @@ test('SV-08 the census: which systems are sovereign, and each blocker named (dat
   assert.strictEqual(SPEC.find(x => x.key === 'system.sovereign').req({ args: ['cos'], flags: {} }).path, '/api/system/sovereign?system=cos');
 });
 
+// 0.60.242 SV0 — James: "i want to get each system soveriegn and inside a cos compartment". Sovereign is his CS_D7 both ways, and a
+// require written in a comment is no crossing (intelligence/alk/index.js:122 had counted as one).
+test('SV-09 the census tells the truth: a commented require is no crossing; sovereign means both ways; the step on his road', () => {
+  const SB = require('../../lib/system-boundary.js');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'sv9-'));
+  const w = (f, t) => { fs.mkdirSync(path.dirname(path.join(root, f)), { recursive: true }); fs.writeFileSync(path.join(root, f), t); };
+  w('b/x.js', 'module.exports = 1;\n');
+  w('a/index.js', "// this used to require('../b/x.js') — a comment, not a crossing\n/* require('../b/x.js') */\nmodule.exports = 0;\n");   // known limit, said: require('…') text inside a string still counts (a real require's argument is a string too)
+  w('c/index.js', "module.exports = require('../b/x.js');\n");
+  w('lib/k.js', "module.exports = require('../a/index.js');\n");
+  w('a/registry-components.js', 'module.exports = [];\n');
+  w('b/registry-components.js', 'module.exports = [];\n'); w('b/compartment.json', '{}');
+  const by = Object.fromEntries(SB.sovereignty({ root }).systems.map(r => [r.system, r]));
+  assert.strictEqual(by.a.out, 0, 'a\'s two mentions of b are a line comment and a block comment');
+  assert.ok(!by.a.sovereign && by.a.inFrom.core === 1 && by.a.step === 'crossings', 'core loads a, so a is not sovereign yet');
+  assert.ok(!by.b.sovereign && by.b.outClean && by.b.inFrom.systems === 1, 'c loads b: b loads nothing, and still is not sovereign');
+  assert.ok(!by.c.sovereign && by.c.out === 1);
+  w('c/index.js', 'module.exports = 2;\n');
+  const b2 = SB.sovereignty({ root, system: 'b' }).systems[0];
+  assert.ok(b2.sovereign && b2.step === 'ready' && b2.registry && b2.compartment, JSON.stringify(b2));
+  const c2 = SB.sovereignty({ root, system: 'c' }).systems[0];
+  assert.ok(c2.sovereign && c2.step === 'registry', 'c is sovereign; its next step is its registry');
+});
+
 (async () => {
   for (const [n, f] of tests) { try { await f(); passed++; console.log(`  ✓ ${n}`); } catch (e) { failed++; console.log(`  ✗ ${n}\n    ${e.message}`); } }
   console.log(`\n  ${passed} passed, ${failed} failed`);

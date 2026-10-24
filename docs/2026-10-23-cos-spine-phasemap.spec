@@ -440,7 +440,7 @@ phases_b:
 # (DB16, DB4, DB5) → its compartment (DB11) → opened on demand (CS4). "Sovereign" here = out 0 and in 0 and up 0 in the census.
 phases_c:
   SV0_the_census_tells_the_truth:
-    status: OPEN
+    status: "DONE 0.60.242 — comments skipped; sovereign both ways (inFrom, registry, compartment, step); the Sovereignty card; the ratchet green (3 crossings designed out: lib/phasemap-parse.js, COS's runTarget handed over). Only components is sovereign both ways."
     depends_on: []
     files: [lib/system-boundary.js, tests/modules/test-system-boundary.test.js, tests/modules/test-sovereign-systems.test.js]
     does: >-
@@ -452,7 +452,8 @@ phases_c:
   SV1_every_table_has_one_owner:
     status: OPEN
     depends_on: [SV0_the_census_tells_the_truth]
-    files: [lib/table-owners.js, lib/jaa-store.js, cortex/memory/jaa-db.js, cortex/boot.js, idearium/cli/route-commands.js]
+    files: [lib/system-store.js, lib/table-owners.js, lib/jaa-store.js, cortex/memory/jaa-db.js, cortex/boot.js, idearium/cli/route-commands.js]
+    reuse: "found 2026-10-24 (§8.6): lib/system-store.js openStore(system, { tables, migrate }) already gives a system its own store and brings its tables home from cortex's once, keeping the rows there (SV-01; guardian uses it, test-guardian-own-data). SV1 builds the ownership census on it, not beside it."
     does: >-
       Every table in the shared store gets one owner, decided from the evidence: the system whose code writes it. A table written by
       several is listed for his call, never guessed. The owner opens its tables through core's engine (lib/jaa-store.js, already in core);

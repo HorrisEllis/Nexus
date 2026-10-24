@@ -26,14 +26,15 @@ test('CT-02 the same compartments nexus-self makes (nexus-self-<system> under ne
   const m = T.compartmentFor('cortex');
   assert.deepStrictEqual([m.cos.name, m.cos.parent], ['nexus-self-cortex', 'nexus-self']);
 });
-test('CT-03 COS verifies the end state for real: sentinel (sovereign) meets it, cortex (not yet) does not', () => {
-  const ok = I.verify(T.compartmentFor('sentinel').cos.intent, REPO);
+// 0.60.242: sentinel/ moved into core (lib/sentinel, RF2), so it is no system; components is the one sovereign both ways (SV0's census)
+test('CT-03 COS verifies the end state for real: components (sovereign) meets it, cortex (not yet) does not', () => {
+  const ok = I.verify(T.compartmentFor('components').cos.intent, REPO);
   assert.deepStrictEqual([ok.endState.met, ok.endState.total], [1, 1], JSON.stringify(ok.endState.results));
   const no = I.verify(T.compartmentFor('cortex').cos.intent, REPO);
   assert.deepStrictEqual([no.endState.met, no.endState.total], [0, 1]);
 });
 test('CT-04 the seal: ready only when sovereign; until then the blockers are named and its folder is mounted read-only', () => {
-  const h = T.compartmentFor('sentinel'), c = T.compartmentFor('cortex');
+  const h = T.compartmentFor('components'), c = T.compartmentFor('cortex');
   assert.ok(h.seal.ready && h.mounts[0].mode === 'rw');
   assert.ok(!c.seal.ready && c.mounts[0].mode === 'ro' && c.seal.blockers && (c.seal.blockers.data + c.seal.blockers.primitive + c.seal.blockers.capability) > 0);
   for (const m of [h, c]) assert.deepStrictEqual(m.mounts.map(x => x.path), [`${m.system}/`, 'lib/', 'node_modules/'], 'its folder and the kernel, nothing of another system');

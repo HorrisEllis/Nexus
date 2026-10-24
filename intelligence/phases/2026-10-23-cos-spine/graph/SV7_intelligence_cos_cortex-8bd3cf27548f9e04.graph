@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792876203207
+exported_at: 1792877163828
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876203207
-lastSeenAt: 1792876203207
+firstSeenAt: 1792877163828
+lastSeenAt: 1792877163828
 fingerprint: null
 payload:
   for: SV7_intelligence_cos_cortex
@@ -56,7 +56,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 6 · ON THE CRITICAL PATH · blocked by SV6_loom_idearium_copilot
+      - layer 6 · blocked by SV6_loom_idearium_copilot
       - 'depends on (1): SV6_loom_idearium_copilot · all upstream 8'
       - >-
         needed by (2): DB6_move_the_crossings, SV8_warp_sovereign · all downstream 10 · finishing it

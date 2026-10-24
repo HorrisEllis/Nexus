@@ -1,0 +1,265 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW18_debug_by_bisect:dc62e611e9228240
+type: graph
+id: phase:GW18_debug_by_bisect:dc62e611e9228240
+context: dependency graph of phase GW18_debug_by_bisect
+intent: null
+summary: 28 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877163080
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877163080
+lastSeenAt: 1792877163080
+fingerprint: null
+payload:
+  for: GW18_debug_by_bisect
+  kind: phase
+  repo: null
+  hash: dc62e611e9228240
+  nodes:
+    - path: cos/testenv/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/failure-macro.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/replay-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: versionium/lib/engine.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/run-target.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: intelligence/snapshot-trigger.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/integrity-revert.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: products/flight-recorder/lib/versions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-migration.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: versionium/routes/versionium.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: versionium/server.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/playground/sandbox.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/run-target.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/tar.js
+      role: uses
+      exists: true
+      system: cos
+    - path: intelligence/rfr2/compress/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/context/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/kernel/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: versionium/config.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: lib/replay-engine.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/compress/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/context/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: versionium/config.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/run-target.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: intelligence/snapshot-trigger.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: lib/integrity-revert.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: products/flight-recorder/lib/versions.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: tests/modules/test-versionium-migration.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: versionium/routes/versionium.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/run-target.js
+      to: cos/testenv/index.js
+      kind: requires
+  crossings:
+    - from: lib/replay-engine.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/kernel/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/compress/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/context/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+    dependents: []
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0_what_is_a_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0c_replay_mode
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0e_sandbox_egress
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by GW7_failure_macro_and_rewind, GW11_a_snapshot_per_gate
+      - 'depends on (2): GW7_failure_macro_and_rewind, GW11_a_snapshot_per_gate · all upstream 10'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+        kind: declared
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 12 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876203185
+exported_at: 1792877163806
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876203185
-lastSeenAt: 1792876203185
+firstSeenAt: 1792877163806
+lastSeenAt: 1792877163806
 fingerprint: null
 payload:
   for: CS5_caps_per_compartment
@@ -160,9 +160,7 @@ payload:
           - cos/compartment/qemu-runtime.js
     dangling: []
     lines:
-      - >-
-        layer 9 · ON THE CRITICAL PATH · blocked by CS4_every_system_a_compartment,
-        CS_D4_caps_by_the_os
+      - layer 9 · blocked by CS4_every_system_a_compartment, CS_D4_caps_by_the_os
       - 'depends on (2): CS4_every_system_a_compartment, CS_D4_caps_by_the_os · all upstream 36'
       - >-
         needed by (3): CS7_spawn_despawn_and_balance, CS10_hats_bound_to_the_compartment,

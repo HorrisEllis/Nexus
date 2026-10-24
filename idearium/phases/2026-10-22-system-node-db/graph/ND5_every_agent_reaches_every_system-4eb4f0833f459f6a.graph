@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876203170
+exported_at: 1792877163792
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876203170
-lastSeenAt: 1792876203170
+firstSeenAt: 1792877163792
+lastSeenAt: 1792877163792
 fingerprint: null
 payload:
   for: ND5_every_agent_reaches_every_system
@@ -264,7 +264,7 @@ payload:
     dangling: []
     lines:
       - >-
-        layer 13 · blocked by ND4_commands_and_capabilities_from_the_schemas,
+        layer 13 · ON THE CRITICAL PATH · blocked by ND4_commands_and_capabilities_from_the_schemas,
         P35_copilot_reads_edits_creates_nodes
       - >-
         depends on (2): ND4_commands_and_capabilities_from_the_schemas,

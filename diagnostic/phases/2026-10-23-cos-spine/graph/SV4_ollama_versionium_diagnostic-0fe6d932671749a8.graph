@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876203205
+exported_at: 1792877163826
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876203205
-lastSeenAt: 1792876203205
+firstSeenAt: 1792877163826
+lastSeenAt: 1792877163826
 fingerprint: null
 payload:
   for: SV4_ollama_versionium_diagnostic
@@ -94,9 +94,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - >-
-        layer 3 · ON THE CRITICAL PATH · blocked by SV3_components_and_architect,
-        SV2_core_files_go_home
+      - layer 3 · blocked by SV3_components_and_architect, SV2_core_files_go_home
       - 'depends on (2): SV3_components_and_architect, SV2_core_files_go_home · all upstream 5'
       - >-
         needed by (1): SV5_clear_glass_guardian_orchestrator · all downstream 13 · finishing it

@@ -1,0 +1,182 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FMR6_run_it_in_cos:7b9845f3f1ec69a3
+type: graph
+id: phase:FMR6_run_it_in_cos:7b9845f3f1ec69a3
+context: dependency graph of phase FMR6_run_it_in_cos
+intent: null
+summary: 15 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877163361
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877163361
+lastSeenAt: 1792877163361
+fingerprint: null
+payload:
+  for: FMR6_run_it_in_cos
+  kind: phase
+  repo: null
+  hash: 7b9845f3f1ec69a3
+  nodes:
+    - path: cos/testenv/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/replay.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/run-target.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-verify-first.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/playground/sandbox.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/run-target.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/tar.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/testenv/index.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/run-target.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/run-target.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: tests/modules/test-verify-first.test.js
+      to: cos/testenv/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+    dependents:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR7_a_fix_proven_by_its_macro
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR11_import_into_any_test_env
+    upstream:
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR1_every_ledger_into_rfr2
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR2_every_failure_reaches_the_record
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR3_the_report
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR4_the_macro_bundle
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+    downstream:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR10_it_compounds
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR11_import_into_any_test_env
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR7_a_fix_proven_by_its_macro
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM6_crystallized_from_what_was_approved
+    blockedBy:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+    unlocks:
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR7_a_fix_proven_by_its_macro
+      - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR11_import_into_any_test_env
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by FMR5_replay_routes, SN0_one_branch
+      - 'depends on (2): FMR5_replay_routes, SN0_one_branch · all upstream 7'
+      - >-
+        needed by (2): FMR7_a_fix_proven_by_its_macro, FMR11_import_into_any_test_env · all
+        downstream 4 · finishing it unlocks FMR7_a_fix_proven_by_its_macro,
+        FMR11_import_into_any_test_env
+    edges:
+      - from: docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+        kind: declared
+      - from: docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+        kind: declared

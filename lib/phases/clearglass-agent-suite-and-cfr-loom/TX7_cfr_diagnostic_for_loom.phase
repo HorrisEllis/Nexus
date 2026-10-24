@@ -9,11 +9,11 @@ intent: null
 summary: TX7_cfr_diagnostic_for_loom (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792841756308
+exported_at: 1792877163984
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841756308
-lastSeenAt: 1792841756308
+firstSeenAt: 1792877163984
+lastSeenAt: 1792877163984
 fingerprint: null
 payload:
   id: TX7_cfr_diagnostic_for_loom
@@ -30,4 +30,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: beb3b81afd44af85
+  graph: 07f3805bbecc3f2d

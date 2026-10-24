@@ -24,7 +24,7 @@
  */
 import { createRequire } from 'module';
 const _require = createRequire(import.meta.url);
-const loom = _require('../../loom/scanners/phasemap-map.js');
+const loom = _require('../../lib/phasemap-parse.js');   // 0.60.242 SV0: the parser is core's (was loom's: a crossing into loom)
 
 export const MODULE_ID = 'nexus.idearium.repo.roadmap-import';
 export const VERSION = '1.1.0';   // 1.1.0 (0.60.221 SD17b): phased specs (SPEC.md), issue lists (ISSUES.md), done by evidence

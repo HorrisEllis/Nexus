@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876203191
+exported_at: 1792877163812
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876203191
-lastSeenAt: 1792876203191
+firstSeenAt: 1792877163812
+lastSeenAt: 1792877163812
 fingerprint: null
 payload:
   for: CS8_the_cos_screen
@@ -168,8 +168,8 @@ payload:
     dangling: []
     lines:
       - >-
-        layer 11 · ON THE CRITICAL PATH · blocked by CS2_test_every_version,
-        CS5_caps_per_compartment, CS7_spawn_despawn_and_balance
+        layer 11 · blocked by CS2_test_every_version, CS5_caps_per_compartment,
+        CS7_spawn_despawn_and_balance
       - >-
         depends on (3): CS2_test_every_version, CS5_caps_per_compartment,
         CS7_spawn_despawn_and_balance · all upstream 46

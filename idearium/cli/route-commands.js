@@ -486,7 +486,7 @@ export const SPEC = [
     req: (a) => ({ method: 'GET', path: `/api/system/sovereign${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
     print: (d, a, h) => {
       for (const r of d.systems || []) {
-        console.log(`  ${(r.sovereign ? h.c.mint('sovereign') : h.c.amber('not yet  '))} ${r.system.padEnd(16)} ${h.c.dim(`out ${r.out} · in ${r.in} · kernel ${r.kernel}`)}${r.sovereign ? '' : h.c.dim(`  — data ${r.blockers.data} · primitive ${r.blockers.primitive} · capability ${r.blockers.capability}`)}`);
+        console.log(`  ${(r.sovereign ? h.c.mint('sovereign') : h.c.amber('not yet  '))} ${r.system.padEnd(16)} ${h.c.dim(`out ${r.out} · in ${r.in}${r.inFrom ? ` (systems ${r.inFrom.systems}, core ${r.inFrom.core})` : ''} · kernel ${r.kernel}${r.step ? ` · next: ${r.step}` : ''}`)}${r.sovereign ? '' : h.c.dim(`  — data ${r.blockers.data} · primitive ${r.blockers.primitive} · capability ${r.blockers.capability}`)}`);
         if (r.list) for (const [k, xs] of Object.entries(r.list)) for (const x of xs) console.log(h.c.dim(`      ${k.padEnd(10)} ${x.from} → ${x.to}`));
       }
       console.log(h.c.dim(`  ${(d.sovereign || []).length} sovereign: ${(d.sovereign || []).join(', ') || '—'}`));

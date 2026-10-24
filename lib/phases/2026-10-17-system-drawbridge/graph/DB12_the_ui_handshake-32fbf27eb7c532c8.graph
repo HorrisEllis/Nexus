@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792876202811
+exported_at: 1792877163419
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792876202811
-lastSeenAt: 1792876202811
+firstSeenAt: 1792877163419
+lastSeenAt: 1792877163419
 fingerprint: null
 payload:
   for: DB12_the_ui_handshake
@@ -321,8 +321,8 @@ payload:
     dangling: []
     lines:
       - >-
-        layer 4 · blocked by DB0c_reading, DB10_shadow_and_negative_space_at_the_drawbridge,
-        DB11_cos_compartment_per_system
+        layer 4 · ON THE CRITICAL PATH · blocked by DB0c_reading,
+        DB10_shadow_and_negative_space_at_the_drawbridge, DB11_cos_compartment_per_system
       - >-
         depends on (3): DB0c_reading, DB10_shadow_and_negative_space_at_the_drawbridge,
         DB11_cos_compartment_per_system · all upstream 7

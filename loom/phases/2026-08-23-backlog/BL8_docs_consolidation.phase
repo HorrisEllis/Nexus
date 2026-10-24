@@ -7,11 +7,11 @@ intent: null
 summary: BL8_docs_consolidation (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787918384
+exported_at: 1792877160027
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787918384
-lastSeenAt: 1792787918384
+firstSeenAt: 1792877160027
+lastSeenAt: 1792877160027
 fingerprint: null
 payload:
   id: BL8_docs_consolidation
@@ -24,4 +24,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: f11d47b75fd95959
+  graph: 50aac87abb09692c
