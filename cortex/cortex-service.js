@@ -81,7 +81,7 @@ function startService() {
   if (replayed.length) console.log(`[cortex-service] replayed ${replayed.length} queue items`);
 
   ico.ledger.append('boot', { type: 'service.start', pid: process.pid, ts: Date.now() });
-  require('../cortex/boot.js');
+  require('./boot.js');
 
   setInterval(() => {
     baseline.observe({ type: 'heartbeat', latencyMs: 0, error: false });
