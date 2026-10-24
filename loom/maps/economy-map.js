@@ -64,6 +64,12 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig.js'), '_gigAutofill/_gigFill/_gigDraft: write and fill a Fiverr gig'],
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/store.js'), '0.60.161 GA1a getLastGig/setLastGig: the panel and the co-pilot fill the same gig'],
   [I('clear-glass/src/main/index.js'), I('erosmancer/erosmancer-os/src/api/server.ts'), '_proxyEros: /eros/* → /api/*'],
+  // §JA3 0.60.230 — the element picker on a missed autofill field (James: "have the element picker popup for me to select the element")
+  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.230 autofill.pick -> /cli/autofill/pick (_autofillPick)'],
+  [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.230 autofill pick|learn rows -> HTTP :7702 /cli/autofill/pick|learn'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/learn-pick.js'), '_autofillPick -> pickAndLearn; /cli/autofill/learn -> saveLearned (one save path)'],
+  [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/renderer/guardian-picker.js'), 'pickScript: the Guardian picker source run in the tab, field mode (pickField)'],
+  [I('clear-glass/src/autofill/matcher.js'), I('clear-glass/src/autofill/learn-pick.js'), 'fillFields -> needsPick (lazy require: learn-pick requires matcher)'],
 ];
 
 function mapEconomy(driver) {

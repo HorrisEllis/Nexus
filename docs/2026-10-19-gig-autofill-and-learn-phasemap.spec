@@ -93,6 +93,34 @@ spec:
       depends_on: [GA3_the_pick_is_saved_three_ways]
       files: [idearium/cli/route-commands.js, clear-glass/renderer/settings/sections/autofill.js]
       does: "`gig fill`, `gig learned <origin>` as command rows; the Autofill panel shows the learned fields per site (with a Forget), so the three saves are visible and undoable (§0.3 reversible)."
+    # §JA 2026-10-23/24 — the general job-application form of the learn-loop (addenda below). JA1/JA2 recorded here as phases so
+    # the DAG standard (DG3) sees them; their record is the addenda.
+    JA1_the_matcher_consults_learned:
+      status: DONE (0.60.225)
+      depends_on: [GA0c_the_learned_map_is_per_site]
+      files: [clear-glass/src/autofill/matcher.js]
+    JA2_a_pick_is_saved_per_site:
+      status: DONE (0.60.226)
+      depends_on: [JA1_the_matcher_consults_learned]
+      files: [clear-glass/src/autofill/matcher.js, clear-glass/src/ipc/bridge.js, clear-glass/src/copilot/tools.js, clear-glass/src/copilot/bridge.js]
+    JA3_the_picker_on_a_miss:
+      status: DONE (0.60.230)
+      depends_on: [JA2_a_pick_is_saved_per_site]
+      files: [clear-glass/src/autofill/learn-pick.js, clear-glass/src/autofill/matcher.js, clear-glass/src/ipc/bridge.js, clear-glass/src/copilot/tools.js, clear-glass/src/copilot/bridge.js, idearium/cli/route-commands.js]
+      does: >-
+        A fill reports what it could not place: `needsPick` = { unplaced: the profile's field types with a value that no field took,
+        unmatched: the page's fillable fields nothing matched }. For one fieldType, POST /cli/autofill/pick pops the Guardian picker
+        in its field mode (renderer/guardian-picker.js pickField — the one src/providers/attention.js already drives) in the
+        application's tab; he clicks the field (traverses with the arrows, USE). The pick is resolved to the dom mesh's own field
+        record (archaeology.js, the same record matchFields reads), checked (a fillable box; a key — fieldKeysOf — that names exactly
+        one field on the page, stable keys preferred by selector-check.js's looksGenerated), saved through the one JA2 save path, and
+        the page is filled again with the new learned map. Cancel or a refused pick saves nothing and says why.
+      proof: "pure: needsPick lists unplaced types and unmatched fields; chooseKey prefers a stable unique key, refuses one shared by two fields; pickAndLearn with a fake tab: a pick saves + refills, a cancel saves nothing, a button pick is refused"
+    JA4_the_learn_loop_ui:
+      status: OPEN
+      depends_on: [JA3_the_picker_on_a_miss]
+      files: [clear-glass/renderer/settings/sections/autofill.js]
+      does: "The Autofill panel: after a fill, the unplaced fields each get a 'pick it' (IPC autofill:pick); the learned fields per site are listed with a Forget (§0.3 reversible)."
 
   build_order: "GA1 + GA1a first (the 'yes', makes 'fill this in for me' work); then GA2 → GA3 → GA4 (the picker-learn loop); GA5 last (surfaces it)."
   verification_here: "No real Fiverr page or browser in this container: every phase is proven with a fake dom bridge, fake page fields and a fake picker in Clear-Glass-driven tests; the real fill is his machine's (said, not faked)."
@@ -129,3 +157,22 @@ for the general application matcher, the per-site home GA3/GA4 name — reusing 
     SiteSettingsStore; a saved pick drives matchFields to fill a pattern-missed field end-to-end).
 - **Open:** JA3 the element picker pops up on a missed field (reuse renderer/selector-check.js + selector-assign); JA4 the UI for
   the learn-loop (the fill path already loads learned); and a real Clear Glass fill on one live listing (his login, his machine).
+
+## ADDENDUM 2026-10-24 (JA3, 0.60.230) — the element picker on a missed field
+James, 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for him. saves to per site
+settings, and as a macro or automation and updates the autofill." · 2026-10-24: "ja3" (asked "continue with JA3?" after the session
+that built JA1/JA2 was closed by accident; the coder had listed JA3, JA4 and a live fill as what was open).
+- **Built:** clear-glass/src/autofill/learn-pick.js (needsPick · chooseKey · saveLearned · pickAndLearn); fillFields returns needsPick;
+  POST /cli/autofill/pick + IPC autofill:pick (bridge _autofillPick); the IPC autofill:detect/fill (the panel's door) now load learned too
+  (JA2 had wired only the HTTP routes); JA2's /cli/autofill/learn now saves through saveLearned (one save
+  path); rows `autofill pick|learn`; co-pilot tool autofill.pick (5 min wait). Loom: copilot-capability-map + economy-map edges.
+  Test tests/modules/test-autofill-learn-pick.test.js JA3 5/5; JA1 4/4, JA2 3/3 still pass.
+- **Decided by his axioms (§8.6 reuse, §1.2 nothing silent, §0.3):** the picker is guardian-picker.js pickField (attention.js's mode);
+  a pick resolves to the dom mesh record matchFields reads; the learned key must name exactly one field on the page (selector-assign's
+  evidence rule), stable first by selector-check.js looksGenerated; a cancel or refusal saves nothing and says why.
+- **Readings, to confirm:** (1) "as a macro or automation" — GA0b's third home is NOT built for JA; site-settings + the learned map
+  (one entry) are. (2) "reuse selector-check.js" read as its looksGenerated + selector-assign's one-match rule on field keys, since the
+  learned identity is a field key, not a CSS selector.
+- **Not proven here:** the page scripts in a live Clear Glass tab (no Electron display in this container; no Playwright, his rule).
+- **Version:** 0.60.230, skipping 0.60.227–229, which the unmerged claude/sleepy-gates-9lc085 branch already uses.
+- **Open:** JA4 (the panel's pick-it + learned list with Forget); the macro home; a real fill on a live listing (his login).

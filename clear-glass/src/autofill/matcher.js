@@ -227,7 +227,7 @@ function matchFields(domFields, profile, opts = {}) {
   return matches;
 }
 
-module.exports = { matchFields, fieldKeysOf, learnKey, learnedFromSettings, LEARNED_PREFIX, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
+module.exports = { matchFields, fieldKeysOf, valueFor: _valueFor, learnKey, learnedFromSettings, LEARNED_PREFIX, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
 
 // §BUILT 2026-09-19 — James: "library ui." Extracted here after finding
 // the exact same detect/fill orchestration (query -> match -> filter ->
@@ -280,5 +280,8 @@ async function fillFields(dom, autofillStore, { agentId = 'default', profileId, 
       else filled.push({ cgId: m.cgId, fieldType: m.fieldType, confidence: m.confidence, source: m.source });
     } catch (err) { failed.push({ cgId: m.cgId, fieldType: m.fieldType, error: err.message }); }
   }
-  return { profileId, totalFields: domFields.length, filled, skipped, failed };
+  // §JA3 0.60.230 — what this fill could not place, so the element picker can ask for it (src/autofill/learn-pick.js needsPick):
+  // the profile's types no field took, and the page's boxes nothing matched. Required lazily: learn-pick requires this file.
+  const needsPick = require('./learn-pick.js').needsPick(domFields, profile, allMatches);
+  return { profileId, totalFields: domFields.length, filled, skipped, failed, needsPick };
 }

@@ -101,6 +101,10 @@ const FILES = [
   // clear-glass/src/ipc/bridge.js's autofill:proposal / autofill:gig* handlers.
   ['clear-glass/src/autofill/proposal.js', 'nexus.clear-glass.src.autofill.proposal', []],
   ['clear-glass/src/autofill/gig.js', 'nexus.clear-glass.src.autofill.gig', []],
+  // §JA3 0.60.230 — the element picker on a missed field: requires store (field types), matcher (fieldKeysOf, learnKey, fillFields)
+  // and renderer/selector-check.js (looksGenerated); its non-require edges (the picker source, the bridge) are in economy-map.js.
+  ['clear-glass/src/autofill/learn-pick.js', 'nexus.clear-glass.src.autofill.learn-pick',
+    ['nexus.clear-glass.src.autofill.store', 'nexus.clear-glass.src.autofill.matcher']],
   ['lib/extract-code.js', 'nexus.lib.extract-code', []],
   ['idearium/spec-engine/index.js', 'nexus.idearium.spec-engine', []],
   ['idearium/spec-engine/compiler-t0.js', 'nexus.idearium.spec-engine.compiler-t0',

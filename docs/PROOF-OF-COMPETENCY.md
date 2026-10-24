@@ -1032,3 +1032,21 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - `tests/modules/test-site-profile`, `test-site-readers` (7, each feature's own code), `test-site-settings-ui`, `test-global-settings`,
     `test-processes` and `test-processes-ui`. The screens are driven in Clear Glass;
   - docs/2026-10-23-site-profile-processes-phasemap.spec SP1–SP6.
+
+### 2026-10-24 — 0.60.225, 0.60.226, 0.60.230: an autofill that asks once, and remembers per site
+- **His words:** 2026-10-19: "if he doesn't understand, have the element picker popup for me to select the element for him. saves to
+  per site settings, and as a macro or automation and updates the autofill." · 2026-10-23: "make sure it works for these" (micro1,
+  Mercor, Turing, RemoExperts…) · "then the phases with the per site settings." · 2026-10-24: "ja3".
+- **Context:** The autofill matched fields by pattern only. A platform that labels a box oddly was missed on every visit, and
+  silently. His design closes that as a loop: when it misses, he points at the box once; the pick is saved for that site; the next
+  fill uses it. The coder built that design in three phases: the matcher reads the learned map (JA1), the pick is saved per site
+  (JA2), and the picker asks on a miss (JA3).
+- **What it shows:** human-in-the-loop design. A person is asked only where the machine is actually unsure. The answer is kept and
+  checked: a pick must name exactly one field on the page, or it is refused with the reason. A miss is reported, not hidden. One
+  instruction from him spans the matcher, the store, the picker and the agents' tools.
+- **Checkable:**
+  - `CHANGELOG-0.60.225.md`, `CHANGELOG-0.60.226.md`, `CHANGELOG-0.60.230.md`;
+  - `tests/modules/test-autofill-learned.test.js` (4), `test-autofill-learn-save.test.js` (3), `test-autofill-learn-pick.test.js` (5);
+  - `docs/2026-10-19-gig-autofill-and-learn-phasemap.spec` JA1–JA3.
+
+  Not yet shown: a fill on a live listing (his login).
