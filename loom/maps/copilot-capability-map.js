@@ -245,7 +245,7 @@ const FILES = [
   ['intelligence/registry-components.js', 'nexus.intelligence.registry', []],
   ['intelligence/routes.js', 'nexus.intelligence.routes', ['nexus.intelligence.index']],
   ['intelligence/field-provider.js', 'nexus.intelligence.field-provider', ['nexus.intelligence.cfr']],
-  ['hooks/intelligence.hooks.js', 'nexus.hooks.intelligence', []],
+  ['lib/hooks/intelligence.hooks.js', 'nexus.hooks.intelligence', []],
   ['intelligence/consumer.js', 'nexus.intelligence.consumer', ['nexus.lib.contract-queue', 'nexus.intelligence.framework-builder']],
   ['intelligence/schemas.js', 'nexus.intelligence.schemas', []],
   ['intelligence/config.js', 'nexus.intelligence.config', []],

@@ -27,13 +27,13 @@ phases:
   ER1_delete_the_system:
     status: BUILT 0.60.83
     systems: [eravos, core]
-    files: [eravos/ (deleted), ui/eravos/ (deleted), hooks/eravos.hooks.js (deleted), hooks/index.js, docs/eravos.spec (deleted), docs/eravos-agnostic-canvas.spec (deleted), tests/modules/test-eravos-pulse-migration.js (deleted), run-all.js, tests/modules/run-all.js]
+    files: [eravos/ (deleted), ui/eravos/ (deleted), hooks/eravos.hooks.js (deleted), lib/hooks/index.js, docs/eravos.spec (deleted), docs/eravos-agnostic-canvas.spec (deleted), tests/modules/test-eravos-pulse-migration.js (deleted), run-all.js, tests/modules/run-all.js]
     does: "The system, its UI, its hook declarations, its two specs and its own test are deleted."
 
   ER2_unwire_the_platform:
     status: BUILT 0.60.83
     systems: [orchestrator, core, guardian, loom, diagnostic]
-    files: [orchestrator/orchestrator.config.json, orchestrator/orchestrator.js, orchestrator/lib/contract-poller.js, orchestrator/lib/contract-handshake.js, orchestrator/lib/mcp-server.js, nexus/autopilot.js, lib/system-check.js, lib/nexus-self/systems.js, lib/blueprint-index.js, lib/gap-priority.js, lib/lean-mode.js, lib/agent-tools/naming.js, lib/agent-tools/tools/coordination/capability-tools.js, scripts/precommit-check.js, diagnostic/nexus-diagnostic.js, guardian/server.js, guardian/interaction-contract.json, hooks/guardian.hooks.js, loom/maps/session-2026-08-14-map.js, loom/maps/cos-testenv-map.js, loom/scanners/capability-map.js, loom/ui/index.html]
+    files: [orchestrator/orchestrator.config.json, orchestrator/orchestrator.js, orchestrator/lib/contract-poller.js, orchestrator/lib/contract-handshake.js, orchestrator/lib/mcp-server.js, nexus/autopilot.js, lib/system-check.js, lib/nexus-self/systems.js, lib/blueprint-index.js, lib/gap-priority.js, lib/lean-mode.js, lib/agent-tools/naming.js, lib/agent-tools/tools/coordination/capability-tools.js, scripts/precommit-check.js, diagnostic/nexus-diagnostic.js, guardian/server.js, guardian/interaction-contract.json, lib/hooks/guardian.hooks.js, loom/maps/session-2026-08-14-map.js, loom/maps/cos-testenv-map.js, loom/scanners/capability-map.js, loom/ui/index.html]
     does: >-
       Out of every list of live systems: the port, the orchestrator's systems, autopilot boot, health checks,
       contract polling and handshake, lean mode, gap priority, the blueprint index, the nexus-self system table,

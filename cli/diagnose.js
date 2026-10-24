@@ -1152,7 +1152,7 @@ const INTEGRITY_MANIFEST = [
   { file:'cortex/boot.js',           system:'cortex',       critical:true,  check: src => src.includes('intelligence') || src.includes('Phase 5.3') },
   { file:'cortex/intelligence/index.js', system:'cortex',   critical:false, check: src => src.includes('_scanPatterns') },
   // Hooks
-  { file:'hooks/index.js',           system:'architect',    critical:false, check: src => src.includes('seamManifest') },
+  { file:'lib/hooks/index.js',           system:'architect',    critical:false, check: src => src.includes('seamManifest') },
 ];
 
 async function integrityCheck(systems = null) {

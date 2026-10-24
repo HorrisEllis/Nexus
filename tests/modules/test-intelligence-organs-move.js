@@ -108,13 +108,13 @@ test('IOM-007', 'contracts: cortex declares none of the moved paths; intelligenc
 });
 
 test('IOM-008', 'hooks: cortex holds none of the moved routes; intelligence hooks live on :3753 and are unique', () => {
-  const ch = require(path.join(ROOT, 'hooks/cortex.hooks.js')).hooks;
+  const ch = require(path.join(ROOT, 'lib', 'hooks', 'cortex.hooks.js')).hooks;
   for (const h of ch) assert.ok(!MOVED.includes(h.config && h.config.path), `cortex hook ${h.id} still declares ${h.config.path}`);
-  const ih = require(path.join(ROOT, 'hooks/intelligence.hooks.js')).hooks;
+  const ih = require(path.join(ROOT, 'lib', 'hooks', 'intelligence.hooks.js')).hooks;
   assert.ok(ih.length >= 9);
   assert.strictEqual(new Set(ih.map(h => h.id)).size, ih.length);
   for (const h of ih) { assert.strictEqual(h.to.surface, 'intelligence'); assert.strictEqual(h.to.port, 3753); }
-  assert.ok(require(path.join(ROOT, 'hooks/index.js')).bySystem('intelligence').length === ih.length, 'hooks/index.js must register the intelligence hook system');
+  assert.ok(require(path.join(ROOT, 'lib', 'hooks', 'index.js')).bySystem('intelligence').length === ih.length, 'hooks/index.js must register the intelligence hook system');
 });
 
 test('IOM-009', 'registries: cortex registers no intelligence.* components; intelligence registers its own, uniquely', () => {
@@ -148,7 +148,7 @@ test('IOM-011', 'RAID registration is remote (server.js), and in-process registr
 test('IOM-012', 'cortex no longer serves /cfr/field|health (410 -> orchestrator) and declares no cfr routes/hooks/components', () => {
   assert.ok(/p === '\/cfr\/health' \|\| p === '\/cfr\/field'\) \{\s*const orchPort[\s\S]{0,400}?410/.test(BOOT), 'cortex must tombstone the CFR relay');
   assert.ok(!/_updateField\(body\)/.test(BOOT), 'cortex must not accept field writes over HTTP any more');
-  const hooks = require(path.join(ROOT, 'hooks/cortex.hooks.js')).hooks;
+  const hooks = require(path.join(ROOT, 'lib', 'hooks', 'cortex.hooks.js')).hooks;
   assert.ok(!hooks.some(h => /^\/cfr\//.test((h.config && h.config.path) || '')), 'cortex hooks still declare /cfr routes');
   assert.ok(!require(path.join(ROOT, 'cortex/registry-components.js')).some(c => /^cfr\./.test(c.name || c.id) || /\/cfr\//.test((c.route && c.route.path) || '')), 'cortex registry still declares cfr components');
 });

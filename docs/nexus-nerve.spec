@@ -58,7 +58,7 @@ spec:
         for a consumer like Nerve and never got one. That's the gap
         Nerve closes, not new ground.
     hooks_registry:
-      file:   hooks/index.js
+      file:   lib/hooks/index.js
       status: confirmed — real, unified query interface over
               hooks/*.hooks.js (10 systems: guardian, cortex,
               orchestrator, idearium, architect, bridge, emerge,

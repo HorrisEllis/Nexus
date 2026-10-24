@@ -425,7 +425,7 @@ const server = http.createServer(async (req, res) => {
   // exposed over HTTP. This is the missing piece, not new data.
   if (p === '/hooks/summary' && method === 'GET') {
     try {
-      const hooks = require('../hooks/index.js');
+      const hooks = require('../lib/hooks/index.js');
       json(res, 200, {
         ok: true,
         summary: hooks.summary(),
