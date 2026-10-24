@@ -7,11 +7,11 @@ intent: null
 summary: RQ21_the_contract_file_is_its_record (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852527072
+exported_at: 1792853481686
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852527072
-lastSeenAt: 1792852527072
+firstSeenAt: 1792853481686
+lastSeenAt: 1792853481686
 fingerprint: null
 payload:
   id: RQ21_the_contract_file_is_its_record
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 89c16f5cc7865829
+    hash: 227a0fa6933c8d29
     nodes:
       - path: cortex/core/raid/contract-intake.js
         role: changes
@@ -85,14 +85,14 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: emerge/schemas/index.js
         role: used-by
         exists: true
         system: emerge
+      - path: guardian/lib/agent-facts.js
+        role: used-by
+        exists: true
+        system: guardian
       - path: cortex/core/raid/contract-boundary.js
         role: uses
         exists: true
@@ -208,10 +208,10 @@ payload:
       - from: diagnostic/schemas/index.js
         to: lib/node-export.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: emerge/schemas/index.js
         to: lib/node-export.js
         kind: requires
-      - from: emerge/schemas/index.js
+      - from: guardian/lib/agent-facts.js
         to: lib/node-export.js
         kind: requires
     crossings:

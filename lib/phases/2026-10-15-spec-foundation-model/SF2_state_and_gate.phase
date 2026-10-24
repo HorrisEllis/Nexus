@@ -7,11 +7,11 @@ intent: null
 summary: SF2_state_and_gate (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852534215
+exported_at: 1792853489257
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852534215
-lastSeenAt: 1792852534215
+firstSeenAt: 1792853489257
+lastSeenAt: 1792853489257
 fingerprint: null
 payload:
   id: SF2_state_and_gate

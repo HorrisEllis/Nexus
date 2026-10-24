@@ -7,11 +7,11 @@ intent: null
 summary: CA6_routing_config (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852555775
+exported_at: 1792853511073
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852555775
-lastSeenAt: 1792852555775
+firstSeenAt: 1792853511073
+lastSeenAt: 1792853511073
 fingerprint: null
 payload:
   id: CA6_routing_config

@@ -9,11 +9,11 @@ intent: null
 summary: P5_cockpit_to_copilot_control_surface (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852559364
+exported_at: 1792853514775
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852559364
-lastSeenAt: 1792852559364
+firstSeenAt: 1792853514775
+lastSeenAt: 1792853514775
 fingerprint: null
 payload:
   id: P5_cockpit_to_copilot_control_surface

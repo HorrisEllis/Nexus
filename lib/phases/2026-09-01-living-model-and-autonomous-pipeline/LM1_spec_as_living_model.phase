@@ -9,11 +9,11 @@ intent: null
 summary: LM1_spec_as_living_model (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852497414
+exported_at: 1792853451669
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852497414
-lastSeenAt: 1792852497414
+firstSeenAt: 1792853451669
+lastSeenAt: 1792853451669
 fingerprint: null
 payload:
   id: LM1_spec_as_living_model

@@ -9,11 +9,11 @@ intent: null
 summary: P38_every_graph_has_its_route_command_and_node (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852500758
+exported_at: 1792853455142
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852500758
-lastSeenAt: 1792852500758
+firstSeenAt: 1792853455142
+lastSeenAt: 1792853455142
 fingerprint: null
 payload:
   id: P38_every_graph_has_its_route_command_and_node

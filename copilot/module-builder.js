@@ -693,7 +693,8 @@ Return the fixed spec only, starting with "spec:"`;
       );
     }
 
-    const { compile } = require('../emerge/compiler/pipeline');
+    // 0.60.239 EW2 — the spec compiler is Idearium's (idearium/spec-compiler); reached through the kernel's port, never required (a crossing)
+    const compile = (s, o, opts) => require('../lib/spec-compiler-port.js').pipeline(s, o, opts);
     try {
       const result = await compile(specPath, buildDir, { verbose: false });
       buildResult = result.ok

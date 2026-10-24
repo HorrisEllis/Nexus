@@ -7,11 +7,11 @@ intent: null
 summary: GM0b_files_and_a_table (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852544167
+exported_at: 1792853499120
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852544167
-lastSeenAt: 1792852544167
+firstSeenAt: 1792853499120
+lastSeenAt: 1792853499120
 fingerprint: null
 payload:
   id: GM0b_files_and_a_table
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: eaa6b1fb863def9c
+    hash: c69c264f1b8a9f3c
     nodes:
       - path: guardian/lib/node-registry.js
         role: changes
@@ -82,7 +82,7 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: emerge/compiler/phase-specs.js
+      - path: emerge/schemas/index.js
         role: used-by
         exists: true
         system: emerge
@@ -162,7 +162,7 @@ payload:
       - from: diagnostic/schemas/index.js
         to: lib/node-export.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: emerge/schemas/index.js
         to: lib/node-export.js
         kind: requires
     crossings: []

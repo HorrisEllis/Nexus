@@ -7,11 +7,11 @@ intent: null
 summary: SR13_copilot_chat_ui (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852498371
+exported_at: 1792853452659
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852498371
-lastSeenAt: 1792852498371
+firstSeenAt: 1792853452659
+lastSeenAt: 1792853452659
 fingerprint: null
 payload:
   id: SR13_copilot_chat_ui

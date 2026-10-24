@@ -7,11 +7,11 @@ intent: null
 summary: OB6_continuous_ollama_injection (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852560177
+exported_at: 1792853515610
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852560177
-lastSeenAt: 1792852560177
+firstSeenAt: 1792853515610
+lastSeenAt: 1792853515610
 fingerprint: null
 payload:
   id: OB6_continuous_ollama_injection

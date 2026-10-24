@@ -7,11 +7,11 @@ intent: null
 summary: CL1_the_component_lab (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852513277
+exported_at: 1792853467731
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852513277
-lastSeenAt: 1792852513277
+firstSeenAt: 1792853467731
+lastSeenAt: 1792853467731
 fingerprint: null
 payload:
   id: CL1_the_component_lab

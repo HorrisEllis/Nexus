@@ -7,11 +7,11 @@ intent: null
 summary: TB8_proof_and_wiring (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852535883
+exported_at: 1792853490913
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852535883
-lastSeenAt: 1792852535883
+firstSeenAt: 1792853490913
+lastSeenAt: 1792853490913
 fingerprint: null
 payload:
   id: TB8_proof_and_wiring

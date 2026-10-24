@@ -29,7 +29,7 @@
  *   gaps               Gap[]     (what's missing, ranked by downstream impact)
  */
 
-const { Event, Gate, Stream, StreamLog } = require('../siso');
+const { Event, Gate, Stream, StreamLog } = require('../../../emerge/siso');
 
 // ── Event type constants ──────────────────────────────────────────────────────
 

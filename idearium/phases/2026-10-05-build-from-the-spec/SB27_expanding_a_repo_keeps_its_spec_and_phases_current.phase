@@ -9,11 +9,11 @@ intent: null
 summary: SB27_expanding_a_repo_keeps_its_spec_and_phases_current (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792852515920
+exported_at: 1792853470295
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852515920
-lastSeenAt: 1792852515920
+firstSeenAt: 1792853470295
+lastSeenAt: 1792853470295
 fingerprint: null
 payload:
   id: SB27_expanding_a_repo_keeps_its_spec_and_phases_current

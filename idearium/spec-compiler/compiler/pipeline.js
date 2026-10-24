@@ -35,7 +35,7 @@
 const fs   = require('fs');
 const path = require('path');
 
-const { Event, Gate, Stream, StreamLog } = require('../siso');
+const { Event, Gate, Stream, StreamLog } = require('../../../emerge/siso');
 const { preflight, ping }                = require('../cortex-query');
 const { writeback, summarizeWriteback }  = require('../cortex-query/writeback');
 const { sync: ideaSync }                 = require('../idearium/client');

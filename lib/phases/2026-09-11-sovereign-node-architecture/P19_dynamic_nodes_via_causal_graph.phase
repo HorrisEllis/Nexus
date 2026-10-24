@@ -9,11 +9,11 @@ intent: null
 summary: P19_dynamic_nodes_via_causal_graph (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852500736
+exported_at: 1792853455115
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852500736
-lastSeenAt: 1792852500736
+firstSeenAt: 1792853455115
+lastSeenAt: 1792853455115
 fingerprint: null
 payload:
   id: P19_dynamic_nodes_via_causal_graph

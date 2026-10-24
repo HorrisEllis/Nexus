@@ -9,11 +9,11 @@ intent: null
 summary: DI1_chunking_for_data_ingestion (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852511803
+exported_at: 1792853466346
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852511803
-lastSeenAt: 1792852511803
+firstSeenAt: 1792853466346
+lastSeenAt: 1792853466346
 fingerprint: null
 payload:
   id: DI1_chunking_for_data_ingestion

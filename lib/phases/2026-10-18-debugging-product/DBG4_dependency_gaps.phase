@@ -7,11 +7,11 @@ intent: null
 summary: DBG4_dependency_gaps (?) — 11 file(s)
 system: core
 tags: []
-exported_at: 1792852543781
+exported_at: 1792853498718
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852543781
-lastSeenAt: 1792852543781
+firstSeenAt: 1792853498718
+lastSeenAt: 1792853498718
 fingerprint: null
 payload:
   id: DBG4_dependency_gaps
@@ -36,7 +36,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 82f756fa15212e56
+    hash: c6bc9a0c1d9fbc33
     nodes:
       - path: idearium/api/index.js
         role: changes
@@ -146,10 +146,6 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/data-home.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/diagnostic-causal.js
         role: uses
         exists: true
@@ -167,6 +163,10 @@ payload:
         exists: true
         system: lib
       - path: lib/resource-monitor.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -213,7 +213,7 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/data-home.js
+        to: lib/spec-compiler-port.js
         kind: requires
       - from: lib/atlas-generate.js
         to: lib/component-store.js

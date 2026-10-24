@@ -7,11 +7,11 @@ intent: null
 summary: MR13_finance_field (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852532592
+exported_at: 1792853487611
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852532592
-lastSeenAt: 1792852532592
+firstSeenAt: 1792853487611
+lastSeenAt: 1792853487611
 fingerprint: null
 payload:
   id: MR13_finance_field

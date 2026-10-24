@@ -7,11 +7,11 @@ intent: null
 summary: RC3_windows_safe_node_names (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852546579
+exported_at: 1792853501602
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546579
-lastSeenAt: 1792852546579
+firstSeenAt: 1792853501602
+lastSeenAt: 1792853501602
 fingerprint: null
 payload:
   id: RC3_windows_safe_node_names
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: abac5983cc545d58
+    hash: 52ab8d3d3524cb96
     nodes:
       - path: idearium/api/index.js
         role: changes
@@ -90,7 +90,7 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: emerge/compiler/phase-specs.js
+      - path: emerge/schemas/index.js
         role: used-by
         exists: true
         system: emerge
@@ -98,22 +98,22 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/lib/access.cjs
-        role: uses
-        exists: true
-        system: idearium
       - path: idearium/lib/config.js
         role: uses
         exists: true
         system: idearium
-      - path: lib/data-home.js
+      - path: idearium/spec-compiler/compiler/index.js
         role: uses
         exists: true
-        system: lib
-      - path: lib/economy/tokens.js
+        system: idearium
+      - path: idearium/spec-compiler/compiler/pipeline.js
         role: uses
         exists: true
-        system: lib
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
+        role: uses
+        exists: true
+        system: idearium
       - path: lib/jaa-store.js
         role: uses
         exists: true
@@ -130,15 +130,15 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/spec-compiler-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: lib/system-registry.js
         role: uses
         exists: true
         system: lib
       - path: lib/test-sandbox.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/warp-rung.js
         role: uses
         exists: true
         system: lib
@@ -168,16 +168,16 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/data-home.js
+        to: lib/spec-compiler-port.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/warp-rung.js
+        to: idearium/spec-compiler/compiler/index.js
         kind: requires
       - from: idearium/api/index.js
-        to: idearium/lib/access.cjs
+        to: idearium/spec-compiler/compiler/pipeline.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/economy/tokens.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
         kind: requires
       - from: architect/schemas/index.js
         to: lib/node-export.js
@@ -212,7 +212,7 @@ payload:
       - from: diagnostic/schemas/index.js
         to: lib/node-export.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: emerge/schemas/index.js
         to: lib/node-export.js
         kind: requires
     crossings: []

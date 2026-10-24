@@ -9,11 +9,11 @@ intent: null
 summary: AG1_coding_agent_provider (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852511775
+exported_at: 1792853466317
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852511775
-lastSeenAt: 1792852511775
+firstSeenAt: 1792853466317
+lastSeenAt: 1792853466317
 fingerprint: null
 payload:
   id: AG1_coding_agent_provider

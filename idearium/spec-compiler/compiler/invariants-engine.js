@@ -39,7 +39,7 @@
  *     → AssembleReportGate → invariants.check.complete (pending)
  */
 
-const { Event, Gate, Stream, StreamLog } = require('../siso');
+const { Event, Gate, Stream, StreamLog } = require('../../../emerge/siso');
 
 // ── Event type constants ──────────────────────────────────────────────────────
 

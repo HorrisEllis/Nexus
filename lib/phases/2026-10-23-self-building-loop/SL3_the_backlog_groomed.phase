@@ -7,11 +7,11 @@ intent: null
 summary: SL3_the_backlog_groomed (library) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852552584
+exported_at: 1792853507815
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852552584
-lastSeenAt: 1792852552584
+firstSeenAt: 1792853507815
+lastSeenAt: 1792853507815
 fingerprint: null
 payload:
   id: SL3_the_backlog_groomed
@@ -29,7 +29,7 @@ payload:
     - MOD-SL-GROOM
   spec: docs/self-building-loop.spec
   graph:
-    hash: 9fd399bb539845a2
+    hash: 9f98414c184c2fa3
     nodes:
       - path: lib/phase-dag.js
         role: changes
@@ -43,15 +43,15 @@ payload:
         role: changes
         exists: true
         system: lib
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -96,13 +96,13 @@ payload:
       - from: lib/phase-dag.js
         to: loom/scanners/phasemap-map.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-map-auto.js
-        kind: requires
       - from: idearium/api/index.js
         to: lib/phase-map-auto.js
         kind: requires
       - from: idearium/repo/phases.js
+        to: lib/phase-map-auto.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-map-auto.js
         kind: requires
       - from: lib/work-funnel.js

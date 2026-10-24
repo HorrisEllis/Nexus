@@ -7,11 +7,11 @@ intent: null
 summary: ND6_the_nodes_screen (ui) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792852551797
+exported_at: 1792853506995
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852551797
-lastSeenAt: 1792852551797
+firstSeenAt: 1792853506995
+lastSeenAt: 1792853506995
 fingerprint: null
 payload:
   id: ND6_the_nodes_screen

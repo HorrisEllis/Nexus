@@ -7,11 +7,11 @@ intent: null
 summary: BX6_pipeline_edit (surface) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792852549389
+exported_at: 1792853504555
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852549389
-lastSeenAt: 1792852549389
+firstSeenAt: 1792853504555
+lastSeenAt: 1792853504555
 fingerprint: null
 payload:
   id: BX6_pipeline_edit

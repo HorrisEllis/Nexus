@@ -44,8 +44,9 @@ async function run() {
     assert.ok(!/cq\.create\(/.test(codeOnly) && !/cq\.dispatch\(/.test(codeOnly));
   });
 
-  test('EM-003', 'build() now requires and calls emerge/compiler/pipeline.js\'s compile() directly', () => {
-    assert.ok(/require\(['"]\.\.\/emerge\/compiler\/pipeline['"]\)/.test(src));
+  // 0.60.239 EW2 — James, 2026-10-24: "spec compiler, ide, and idearium": the compiler is Idearium's, reached through the kernel's port
+  test('EM-003', 'build() calls the spec compiler\'s pipeline compile() through lib/spec-compiler-port.js (EW2)', () => {
+    assert.ok(/require\(['"]\.\.\/lib\/spec-compiler-port\.js['"]\)\.pipeline\(/.test(src));
     assert.ok(/await compile\(specPath, buildDir/.test(src));
   });
 
@@ -57,8 +58,8 @@ async function run() {
     assert.ok(fs.existsSync(path.join(__dirname, '../../_archive/2026-09-06-emerge-consumer-retired/consumer.js')));
   });
 
-  test('EM-006', 'emerge/compiler/ itself is untouched — the real, load-bearing part James said to keep', () => {
-    assert.ok(fs.existsSync(path.join(__dirname, '../../emerge/compiler/pipeline.js')));
+  test('EM-006', 'the compiler itself is kept, moved whole to idearium/spec-compiler (EW3) — the real, load-bearing part James said to keep', () => {
+    assert.ok(fs.existsSync(path.join(__dirname, '../../idearium/spec-compiler/compiler/pipeline.js')) && !fs.existsSync(path.join(__dirname, '../../emerge/compiler')));
   });
 
   test('EM-007', 'autopilot.js no longer spawns emerge/consumer.js as a kernel', () => {

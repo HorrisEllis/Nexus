@@ -9,11 +9,11 @@ intent: null
 summary: V10_dynamic_registry_self_wiring (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852498342
+exported_at: 1792853452619
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852498342
-lastSeenAt: 1792852498342
+firstSeenAt: 1792853452619
+lastSeenAt: 1792853452619
 fingerprint: null
 payload:
   id: V10_dynamic_registry_self_wiring

@@ -7,11 +7,11 @@ intent: null
 summary: EW5_the_registry_with_wires (integration) — 2 file(s)
 system: emerge
 tags: []
-exported_at: 1792852553778
+exported_at: 1792853509012
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852553778
-lastSeenAt: 1792852553778
+firstSeenAt: 1792853509012
+lastSeenAt: 1792853509012
 fingerprint: null
 payload:
   id: EW5_the_registry_with_wires

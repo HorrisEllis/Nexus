@@ -9,11 +9,11 @@ intent: null
 summary: GR1_graph_primitive (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852548205
+exported_at: 1792853503266
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852548205
-lastSeenAt: 1792852548205
+firstSeenAt: 1792853503266
+lastSeenAt: 1792853503266
 fingerprint: null
 payload:
   id: GR1_graph_primitive

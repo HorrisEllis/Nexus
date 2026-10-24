@@ -9,11 +9,11 @@ intent: null
 summary: SR3_artifact_extraction_introspect_bridge (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852498356
+exported_at: 1792853452643
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852498356
-lastSeenAt: 1792852498356
+firstSeenAt: 1792853452643
+lastSeenAt: 1792853452643
 fingerprint: null
 payload:
   id: SR3_artifact_extraction_introspect_bridge

@@ -9,11 +9,11 @@ intent: null
 summary: KT1_observations_on_a_semantic_tree (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852529161
+exported_at: 1792853483982
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852529161
-lastSeenAt: 1792852529161
+firstSeenAt: 1792853483982
+lastSeenAt: 1792853483982
 fingerprint: null
 payload:
   id: KT1_observations_on_a_semantic_tree

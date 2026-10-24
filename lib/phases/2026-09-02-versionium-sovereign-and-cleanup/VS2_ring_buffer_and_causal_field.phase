@@ -9,11 +9,11 @@ intent: null
 summary: VS2_ring_buffer_and_causal_field (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852498837
+exported_at: 1792853453093
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852498837
-lastSeenAt: 1792852498837
+firstSeenAt: 1792853453093
+lastSeenAt: 1792853453093
 fingerprint: null
 payload:
   id: VS2_ring_buffer_and_causal_field
@@ -27,12 +27,12 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: a136f794f2a44987
+    hash: cc963a35fc819799
     nodes:
-      - path: emerge/compiler/ring-buffer.js
+      - path: idearium/spec-compiler/compiler/ring-buffer.js
         role: changes
         exists: true
-        system: emerge
+        system: idearium
       - path: intelligence/rfr2/kernel/index.js
         role: changes
         exists: true

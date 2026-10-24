@@ -9,11 +9,11 @@ intent: null
 summary: TV1_traversal_primitive (foundation) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792852548207
+exported_at: 1792853503268
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852548207
-lastSeenAt: 1792852548207
+firstSeenAt: 1792853503268
+lastSeenAt: 1792853503268
 fingerprint: null
 payload:
   id: TV1_traversal_primitive

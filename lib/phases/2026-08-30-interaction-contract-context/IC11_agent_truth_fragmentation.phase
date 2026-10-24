@@ -9,11 +9,11 @@ intent: null
 summary: IC11_agent_truth_fragmentation (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852496985
+exported_at: 1792853451205
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852496985
-lastSeenAt: 1792852496985
+firstSeenAt: 1792853451205
+lastSeenAt: 1792853451205
 fingerprint: null
 payload:
   id: IC11_agent_truth_fragmentation

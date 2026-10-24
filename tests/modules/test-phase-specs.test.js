@@ -20,7 +20,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const ROOT = path.join(__dirname, '../..');
-const PS = require(path.join(ROOT, 'emerge/compiler/phase-specs.js'));
+const PS = require(path.join(ROOT, 'idearium/spec-compiler/compiler/phase-specs.js'));
 
 let passed = 0, failed = 0;
 function test(id, desc, fn) { try { fn(); console.log(`  ✓ ${id} ${desc}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${e.stack.split('\n').slice(0, 5).join('\n    ')}`); failed++; } }

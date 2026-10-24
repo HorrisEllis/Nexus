@@ -9,11 +9,11 @@ intent: null
 summary: X2_guardian_hat_agent (?) — 3 file(s)
 system: guardian
 tags: []
-exported_at: 1792852507741
+exported_at: 1792853462383
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852507741
-lastSeenAt: 1792852507741
+firstSeenAt: 1792853462383
+lastSeenAt: 1792853462383
 fingerprint: null
 payload:
   id: X2_guardian_hat_agent

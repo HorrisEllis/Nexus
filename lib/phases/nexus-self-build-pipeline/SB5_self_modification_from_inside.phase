@@ -7,11 +7,11 @@ intent: null
 summary: SB5_self_modification_from_inside (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852561356
+exported_at: 1792853516847
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852561356
-lastSeenAt: 1792852561356
+firstSeenAt: 1792853516847
+lastSeenAt: 1792853516847
 fingerprint: null
 payload:
   id: SB5_self_modification_from_inside

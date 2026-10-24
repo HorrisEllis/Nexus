@@ -7,11 +7,11 @@ intent: null
 summary: HG3_bv09_the_detector_and_files (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852516510
+exported_at: 1792853470850
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852516510
-lastSeenAt: 1792852516510
+firstSeenAt: 1792853470850
+lastSeenAt: 1792853470850
 fingerprint: null
 payload:
   id: HG3_bv09_the_detector_and_files

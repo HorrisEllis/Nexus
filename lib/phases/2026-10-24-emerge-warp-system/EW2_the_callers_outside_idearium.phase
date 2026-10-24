@@ -6,33 +6,39 @@ context: >-
   pipeline phase EW2_the_callers_outside_idearium of
   docs/2026-10-24-emerge-warp-system-phasemap.spec
 intent: null
-summary: EW2_the_callers_outside_idearium (design) — 4 file(s)
+summary: EW2_the_callers_outside_idearium (design) — 8 file(s)
 system: core
 tags: []
-exported_at: 1792852553775
+exported_at: 1792853509009
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852553775
-lastSeenAt: 1792852553775
+firstSeenAt: 1792853509009
+lastSeenAt: 1792853509009
 fingerprint: null
 payload:
   id: EW2_the_callers_outside_idearium
   map: docs/2026-10-24-emerge-warp-system-phasemap.spec
   repo: null
   layer: design
-  status: OPEN
+  status: >-
+    DONE 0.60.239 — lib/spec-compiler-port.js; the four callers through it; test-spec-compiler-port
+    4/4; a real boot compiled through the route
   files:
     - lib/build-pipeline.js
     - lib/spec-collect.js
     - guardian/server.js
     - copilot/module-builder.js
+    - lib/spec-compiler-port.js (new)
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-spec-compiler-port.test.js (new)
   depends_on:
     - EW_D1_compiler_and_ide_with_idearium
     - EW1_emerge_and_warp_one_system
   blocks: []
   spec: docs/2026-10-17-system-drawbridge-phasemap.spec
   graph:
-    hash: 4d4a9463021f9fe8
+    hash: afada58470ca59f3
     nodes:
       - path: copilot/module-builder.js
         role: changes
@@ -42,6 +48,14 @@ payload:
         role: changes
         exists: true
         system: guardian
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/cli/route-commands.js
+        role: changes
+        exists: true
+        system: idearium
       - path: lib/build-pipeline.js
         role: changes
         exists: true
@@ -50,6 +64,14 @@ payload:
         role: changes
         exists: true
         system: lib
+      - path: lib/spec-compiler-port.js
+        role: changes
+        exists: true
+        system: lib
+      - path: tests/modules/test-spec-compiler-port.test.js
+        role: changes
+        exists: true
+        system: null
       - path: copilot/server.js
         role: used-by
         exists: true
@@ -58,7 +80,7 @@ payload:
         role: used-by
         exists: true
         system: guardian
-      - path: idearium/api/index.js
+      - path: idearium/cli/index.js
         role: used-by
         exists: true
         system: idearium
@@ -86,14 +108,18 @@ payload:
         role: used-by
         exists: true
         system: service
-      - path: emerge/compiler/index.js
-        role: uses
+      - path: service/idearium-service.js
+        role: used-by
         exists: true
-        system: emerge
-      - path: emerge/compiler/t2-gate.js
-        role: uses
+        system: service
+      - path: tests/modules/idearium-build-queue-poller.test.js
+        role: used-by
         exists: true
-        system: emerge
+        system: null
+      - path: tests/modules/idearium-guardian-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
       - path: guardian/config.js
         role: uses
         exists: true
@@ -107,6 +133,10 @@ payload:
         exists: true
         system: guardian
       - path: intelligence/cfr/ledger.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/gap/hunter.js
         role: uses
         exists: true
         system: intelligence
@@ -130,22 +160,20 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/seam/queue.js
+        role: uses
+        exists: true
+        system: lib
       - path: nexus/nexus-bus.js
         role: uses
         exists: true
         system: nexus
     edges:
-      - from: lib/build-pipeline.js
-        to: emerge/compiler/t2-gate.js
-        kind: requires
       - from: lib/spec-collect.js
         to: nexus/nexus-bus.js
         kind: requires
       - from: lib/spec-collect.js
         to: lib/file-tree-plan.js
-        kind: requires
-      - from: lib/spec-collect.js
-        to: emerge/compiler/index.js
         kind: requires
       - from: lib/spec-collect.js
         to: lib/repo-inject.js
@@ -171,11 +199,14 @@ payload:
       - from: guardian/server.js
         to: lib/seam/detector.js
         kind: requires
+      - from: guardian/server.js
+        to: intelligence/gap/hunter.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/queue.js
+        kind: requires
       - from: lib/execution-pipeline.js
         to: lib/build-pipeline.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/spec-collect.js
         kind: requires
       - from: lib/repo-inject.js
         to: lib/spec-collect.js
@@ -198,27 +229,33 @@ payload:
       - from: lib/agent-tools/tools/faculty/faculty-tools.js
         to: copilot/module-builder.js
         kind: requires
+      - from: idearium/cli/index.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-build-queue-poller.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-guardian-dispatch.test.js
+        to: idearium/api/index.js
+        kind: requires
     crossings:
-      - from: lib/build-pipeline.js
-        to: emerge/compiler/t2-gate.js
-        fromSystem: lib
-        toSystem: emerge
-        kind: upward
-        known: true
       - from: lib/spec-collect.js
         to: nexus/nexus-bus.js
         fromSystem: lib
         toSystem: nexus
         kind: upward
         known: true
-      - from: lib/spec-collect.js
-        to: emerge/compiler/index.js
-        fromSystem: lib
-        toSystem: emerge
-        kind: upward
-        known: true
       - from: guardian/server.js
         to: intelligence/cfr/ledger.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: guardian/server.js
+        to: intelligence/gap/hunter.js
         fromSystem: guardian
         toSystem: intelligence
         kind: system
@@ -234,6 +271,12 @@ payload:
         fromSystem: lib
         toSystem: copilot
         kind: upward
+        known: true
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        fromSystem: service
+        toSystem: idearium
+        kind: system
         known: true
     ready: true
     dag:
@@ -259,7 +302,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - DAG 83f93cbcbb0fa46f · layer 2
         - >-
           depends on (2): EW_D1_compiler_and_ide_with_idearium, EW1_emerge_and_warp_one_system · all
           upstream 4

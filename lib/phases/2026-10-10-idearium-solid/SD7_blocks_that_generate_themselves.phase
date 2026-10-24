@@ -7,11 +7,11 @@ intent: null
 summary: SD7_blocks_that_generate_themselves (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852524907
+exported_at: 1792853479507
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852524907
-lastSeenAt: 1792852524907
+firstSeenAt: 1792853479507
+lastSeenAt: 1792853479507
 fingerprint: null
 payload:
   id: SD7_blocks_that_generate_themselves

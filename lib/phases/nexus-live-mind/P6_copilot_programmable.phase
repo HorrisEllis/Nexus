@@ -7,11 +7,11 @@ intent: null
 summary: P6_copilot_programmable (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852559785
+exported_at: 1792853515205
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852559785
-lastSeenAt: 1792852559785
+firstSeenAt: 1792853515205
+lastSeenAt: 1792853515205
 fingerprint: null
 payload:
   id: P6_copilot_programmable

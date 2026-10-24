@@ -7,11 +7,11 @@ intent: null
 summary: AD2_javascript_adapter (library) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792852546176
+exported_at: 1792853501183
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546176
-lastSeenAt: 1792852546176
+firstSeenAt: 1792853501183
+lastSeenAt: 1792853501183
 fingerprint: null
 payload:
   id: AD2_javascript_adapter
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 1421bce99f6b0fd1
+    hash: 5dfa69575943d8ab
     nodes:
       - path: lib/adapters/javascript.js
         role: changes
@@ -52,15 +52,15 @@ payload:
         role: changes
         exists: true
         system: loom
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -111,10 +111,10 @@ payload:
       - from: idearium/api/index.js
         to: lib/verify-first.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: idearium/repo/phases.js
         to: lib/phase-plan.js
         kind: requires
-      - from: idearium/repo/phases.js
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-plan.js
         kind: requires
       - from: lib/capability-spec.js

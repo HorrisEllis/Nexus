@@ -9,11 +9,11 @@ intent: null
 summary: CG11_ublock_adblocker_native_features (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852498337
+exported_at: 1792853452612
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852498337
-lastSeenAt: 1792852498337
+firstSeenAt: 1792853452612
+lastSeenAt: 1792853452612
 fingerprint: null
 payload:
   id: CG11_ublock_adblocker_native_features

@@ -9,11 +9,11 @@ intent: null
 summary: SB8_tool_agnosticism_and_new_tool_flow (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852561359
+exported_at: 1792853516849
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852561359
-lastSeenAt: 1792852561359
+firstSeenAt: 1792853516849
+lastSeenAt: 1792853516849
 fingerprint: null
 payload:
   id: SB8_tool_agnosticism_and_new_tool_flow
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 0dad83e5c39c6d0a
+    hash: 18e019eb0d42f2aa
     nodes:
       - path: copilot/axiom-manager.js
         role: changes
@@ -133,10 +133,6 @@ payload:
         role: uses
         exists: true
         system: cortex
-      - path: emerge/compiler/pipeline.js
-        role: uses
-        exists: true
-        system: emerge
       - path: lib/agent-router.js
         role: uses
         exists: true
@@ -165,6 +161,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/spec-compiler-port.js
+        role: uses
+        exists: true
+        system: lib
     edges:
       - from: lib/agent-system/contracts.js
         to: lib/agent-router.js
@@ -182,7 +182,7 @@ payload:
         to: copilot/lib/descriptor-projector.js
         kind: requires
       - from: copilot/module-builder.js
-        to: emerge/compiler/pipeline.js
+        to: lib/spec-compiler-port.js
         kind: requires
       - from: copilot/module-builder.js
         to: lib/event-types.js
@@ -239,12 +239,6 @@ payload:
         to: lib/gemini-toolbox/agent-contracts.js
         kind: requires
     crossings:
-      - from: copilot/module-builder.js
-        to: emerge/compiler/pipeline.js
-        fromSystem: copilot
-        toSystem: emerge
-        kind: system
-        known: true
       - from: copilot/module-builder.js
         to: cortex/memory/jaa-db.js
         fromSystem: copilot

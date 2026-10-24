@@ -7,11 +7,11 @@ intent: null
 summary: ND1_every_system_has_its_database (foundation) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852551794
+exported_at: 1792853506992
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852551794
-lastSeenAt: 1792852551794
+firstSeenAt: 1792853506992
+lastSeenAt: 1792853506992
 fingerprint: null
 payload:
   id: ND1_every_system_has_its_database

@@ -9,11 +9,11 @@ intent: null
 summary: D2_spec_authority (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852502407
+exported_at: 1792853456891
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852502407
-lastSeenAt: 1792852502407
+firstSeenAt: 1792853456891
+lastSeenAt: 1792853456891
 fingerprint: null
 payload:
   id: D2_spec_authority

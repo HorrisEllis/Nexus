@@ -7,11 +7,11 @@ intent: null
 summary: FN0_the_funnel_as_data (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852535062
+exported_at: 1792853490115
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852535062
-lastSeenAt: 1792852535062
+firstSeenAt: 1792853490115
+lastSeenAt: 1792853490115
 fingerprint: null
 payload:
   id: FN0_the_funnel_as_data

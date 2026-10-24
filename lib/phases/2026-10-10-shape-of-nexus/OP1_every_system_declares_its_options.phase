@@ -9,11 +9,11 @@ intent: null
 summary: OP1_every_system_declares_its_options (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792852525743
+exported_at: 1792853480373
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852525743
-lastSeenAt: 1792852525743
+firstSeenAt: 1792853480373
+lastSeenAt: 1792853480373
 fingerprint: null
 payload:
   id: OP1_every_system_declares_its_options

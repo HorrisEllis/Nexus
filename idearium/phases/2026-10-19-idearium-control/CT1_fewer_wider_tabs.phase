@@ -7,11 +7,11 @@ intent: null
 summary: CT1_fewer_wider_tabs (interface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792852545775
+exported_at: 1792853500772
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852545775
-lastSeenAt: 1792852545775
+firstSeenAt: 1792853500772
+lastSeenAt: 1792853500772
 fingerprint: null
 payload:
   id: CT1_fewer_wider_tabs

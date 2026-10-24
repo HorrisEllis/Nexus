@@ -7,11 +7,11 @@ intent: null
 summary: AD1_adapter_contract (foundation) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792852546175
+exported_at: 1792853501182
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546175
-lastSeenAt: 1792852546175
+firstSeenAt: 1792853501182
+lastSeenAt: 1792853501182
 fingerprint: null
 payload:
   id: AD1_adapter_contract

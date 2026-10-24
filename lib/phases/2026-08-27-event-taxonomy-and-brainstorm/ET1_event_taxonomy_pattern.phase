@@ -9,11 +9,11 @@ intent: null
 summary: ET1_event_taxonomy_pattern (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852495385
+exported_at: 1792853449786
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852495385
-lastSeenAt: 1792852495385
+firstSeenAt: 1792853449786
+lastSeenAt: 1792853449786
 fingerprint: null
 payload:
   id: ET1_event_taxonomy_pattern

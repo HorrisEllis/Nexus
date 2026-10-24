@@ -7,11 +7,11 @@ intent: null
 summary: TL4_rewind_to_a_gate (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792852536725
+exported_at: 1792853491740
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852536725
-lastSeenAt: 1792852536725
+firstSeenAt: 1792853491740
+lastSeenAt: 1792853491740
 fingerprint: null
 payload:
   id: TL4_rewind_to_a_gate
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 1b73172e3db632d6
+    hash: 29eb6d8b288a63ee
     nodes:
       - path: cortex/core/raid/contract-gates.js
         role: changes
@@ -109,10 +109,6 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/lib/access.cjs
-        role: uses
-        exists: true
-        system: idearium
       - path: idearium/lib/config.js
         role: uses
         exists: true
@@ -121,19 +117,23 @@ payload:
         role: uses
         exists: true
         system: idearium
+      - path: idearium/spec-compiler/compiler/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/pipeline.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
+        role: uses
+        exists: true
+        system: idearium
       - path: lib/data-home.js
         role: uses
         exists: true
         system: lib
-      - path: lib/economy/tokens.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/repo-agent.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/spec-collect.js
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -173,22 +173,22 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
+        to: lib/spec-compiler-port.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/pipeline.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
+        kind: requires
+      - from: idearium/api/index.js
         to: lib/data-home.js
         kind: requires
       - from: idearium/api/index.js
         to: lib/warp-rung.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/lib/access.cjs
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/economy/tokens.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/repo-agent.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/spec-collect.js
         kind: requires
       - from: cortex/core/raid/contract-adapters.js
         to: cortex/core/raid/contract-gates.js

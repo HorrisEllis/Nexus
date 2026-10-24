@@ -9,11 +9,11 @@ intent: null
 summary: SB36_every_agent_can_use_the_tools (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852515940
+exported_at: 1792853470311
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852515940
-lastSeenAt: 1792852515940
+firstSeenAt: 1792853470311
+lastSeenAt: 1792853470311
 fingerprint: null
 payload:
   id: SB36_every_agent_can_use_the_tools

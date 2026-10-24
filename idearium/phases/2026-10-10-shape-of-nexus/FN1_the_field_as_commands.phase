@@ -7,11 +7,11 @@ intent: null
 summary: FN1_the_field_as_commands (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792852525748
+exported_at: 1792853480377
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852525748
-lastSeenAt: 1792852525748
+firstSeenAt: 1792853480377
+lastSeenAt: 1792853480377
 fingerprint: null
 payload:
   id: FN1_the_field_as_commands

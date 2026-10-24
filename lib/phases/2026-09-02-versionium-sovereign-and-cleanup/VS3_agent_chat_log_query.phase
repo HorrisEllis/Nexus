@@ -9,11 +9,11 @@ intent: null
 summary: VS3_agent_chat_log_query (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852498838
+exported_at: 1792853453094
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852498838
-lastSeenAt: 1792852498838
+firstSeenAt: 1792853453094
+lastSeenAt: 1792853453094
 fingerprint: null
 payload:
   id: VS3_agent_chat_log_query

@@ -9,11 +9,11 @@ intent: null
 summary: HP8_the_ladder_says_why_ollama_is_missing (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792852522467
+exported_at: 1792853476902
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852522467
-lastSeenAt: 1792852522467
+firstSeenAt: 1792853476902
+lastSeenAt: 1792853476902
 fingerprint: null
 payload:
   id: HP8_the_ladder_says_why_ollama_is_missing
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 57815805593abe9b
+    hash: 40a011faed487d9d
     nodes:
       - path: idearium/api/index.js
         role: changes
@@ -85,10 +85,6 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/core/index.js
-        role: uses
-        exists: true
-        system: idearium
       - path: idearium/lib/access.cjs
         role: uses
         exists: true
@@ -97,14 +93,18 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/spec-engine/index.js
+      - path: idearium/spec-compiler/compiler/index.js
         role: uses
         exists: true
         system: idearium
-      - path: intelligence/spatial/lattice.js
+      - path: idearium/spec-compiler/compiler/pipeline.js
         role: uses
         exists: true
-        system: intelligence
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
+        role: uses
+        exists: true
+        system: idearium
       - path: lib/data-home.js
         role: uses
         exists: true
@@ -113,15 +113,15 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/nexus-client.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/repo-agent.js
         role: uses
         exists: true
         system: lib
       - path: lib/spec-collect.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -135,6 +135,18 @@ payload:
         kind: requires
       - from: idearium/api/index.js
         to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-compiler-port.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/pipeline.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
         kind: requires
       - from: idearium/api/index.js
         to: lib/data-home.js
@@ -153,18 +165,6 @@ payload:
         kind: requires
       - from: idearium/api/index.js
         to: lib/spec-collect.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/nexus-client.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: intelligence/spatial/lattice.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/core/index.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/spec-engine/index.js
         kind: requires
       - from: idearium/cli/index.js
         to: idearium/api/index.js
@@ -203,12 +203,6 @@ payload:
         to: idearium/api/index.js
         kind: requires
     crossings:
-      - from: idearium/api/index.js
-        to: intelligence/spatial/lattice.js
-        fromSystem: idearium
-        toSystem: intelligence
-        kind: system
-        known: true
       - from: service/idearium-service.js
         to: idearium/api/index.js
         fromSystem: service

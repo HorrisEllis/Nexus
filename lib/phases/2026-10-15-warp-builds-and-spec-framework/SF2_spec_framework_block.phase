@@ -9,11 +9,11 @@ intent: null
 summary: SF2_spec_framework_block (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852534609
+exported_at: 1792853489678
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852534609
-lastSeenAt: 1792852534609
+firstSeenAt: 1792853489678
+lastSeenAt: 1792853489678
 fingerprint: null
 payload:
   id: SF2_spec_framework_block
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: f3369f9f0bb0ba75
+    hash: aa6795633e0acd9b
     nodes:
       - path: docs/spec-compiler.spec
         role: changes
@@ -77,10 +77,10 @@ payload:
         role: uses
         exists: true
         system: cortex
-      - path: emerge/compiler/index.js
+      - path: idearium/spec-compiler/compiler/index.js
         role: uses
         exists: true
-        system: emerge
+        system: idearium
       - path: lib/repo-hat.js
         role: uses
         exists: true
@@ -100,7 +100,7 @@ payload:
         to: lib/spec-collect.js
         kind: requires
       - from: idearium/compiler-bridge.js
-        to: emerge/compiler/index.js
+        to: idearium/spec-compiler/compiler/index.js
         kind: requires
       - from: idearium/api/index.js
         to: lib/repo-prompt-blocks.js
@@ -126,12 +126,6 @@ payload:
         fromSystem: lib
         toSystem: cortex
         kind: upward
-        known: true
-      - from: idearium/compiler-bridge.js
-        to: emerge/compiler/index.js
-        fromSystem: idearium
-        toSystem: emerge
-        kind: system
         known: true
     ready: true
     dag:

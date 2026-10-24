@@ -9,11 +9,11 @@ intent: null
 summary: AM2_first_principles_hat_or_modifier (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852497887
+exported_at: 1792853452151
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852497887
-lastSeenAt: 1792852497887
+firstSeenAt: 1792853452151
+lastSeenAt: 1792853452151
 fingerprint: null
 payload:
   id: AM2_first_principles_hat_or_modifier

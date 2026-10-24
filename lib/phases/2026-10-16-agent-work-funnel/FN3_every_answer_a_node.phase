@@ -7,11 +7,11 @@ intent: null
 summary: FN3_every_answer_a_node (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852535065
+exported_at: 1792853490117
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852535065
-lastSeenAt: 1792852535065
+firstSeenAt: 1792853490117
+lastSeenAt: 1792853490117
 fingerprint: null
 payload:
   id: FN3_every_answer_a_node

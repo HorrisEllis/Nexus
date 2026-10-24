@@ -9,11 +9,11 @@ intent: null
 summary: N30_archive_import_dropbox_and_copilot_command (?) — 9 file(s)
 system: core
 tags: []
-exported_at: 1792852509993
+exported_at: 1792853464631
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852509993
-lastSeenAt: 1792852509993
+firstSeenAt: 1792853464631
+lastSeenAt: 1792853464631
 fingerprint: null
 payload:
   id: N30_archive_import_dropbox_and_copilot_command
@@ -44,7 +44,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: dedd8b0e675c778d
+    hash: 82eb1ee45a1be9de
     nodes:
       - path: clear-glass/src/copilot/bridge.js
         role: changes
@@ -158,11 +158,19 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/lib/access.cjs
+      - path: idearium/lib/config.js
         role: uses
         exists: true
         system: idearium
-      - path: idearium/lib/config.js
+      - path: idearium/spec-compiler/compiler/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/pipeline.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
         role: uses
         exists: true
         system: idearium
@@ -170,15 +178,7 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/economy/tokens.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/repo-agent.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/warp-rung.js
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -209,19 +209,19 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
+        to: lib/spec-compiler-port.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/pipeline.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
+        kind: requires
+      - from: idearium/api/index.js
         to: lib/data-home.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/warp-rung.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/lib/access.cjs
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/economy/tokens.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/repo-agent.js
         kind: requires
       - from: lib/repo-history.js
         to: cli/import-history.js

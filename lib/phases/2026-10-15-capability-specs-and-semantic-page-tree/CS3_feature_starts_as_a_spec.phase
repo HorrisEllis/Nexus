@@ -9,11 +9,11 @@ intent: null
 summary: CS3_feature_starts_as_a_spec (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852529557
+exported_at: 1792853484447
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852529557
-lastSeenAt: 1792852529557
+firstSeenAt: 1792853484447
+lastSeenAt: 1792853484447
 fingerprint: null
 payload:
   id: CS3_feature_starts_as_a_spec

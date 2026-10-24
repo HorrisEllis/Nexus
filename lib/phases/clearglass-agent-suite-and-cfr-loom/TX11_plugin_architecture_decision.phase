@@ -9,11 +9,11 @@ intent: null
 summary: TX11_plugin_architecture_decision (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852554970
+exported_at: 1792853510236
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852554970
-lastSeenAt: 1792852554970
+firstSeenAt: 1792853510236
+lastSeenAt: 1792853510236
 fingerprint: null
 payload:
   id: TX11_plugin_architecture_decision

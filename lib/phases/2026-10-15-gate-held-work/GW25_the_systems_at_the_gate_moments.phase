@@ -9,11 +9,11 @@ intent: null
 summary: GW25_the_systems_at_the_gate_moments (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852532133
+exported_at: 1792853487113
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852532133
-lastSeenAt: 1792852532133
+firstSeenAt: 1792853487113
+lastSeenAt: 1792853487113
 fingerprint: null
 payload:
   id: GW25_the_systems_at_the_gate_moments
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 1cbbebed615a505e
+    hash: 2d8aee5e1c987c64
     nodes:
       - path: cortex/core/raid/contract-adapters.js
         role: changes
@@ -50,10 +50,6 @@ payload:
         role: used-by
         exists: true
         system: cortex
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -63,6 +59,10 @@ payload:
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -137,10 +137,10 @@ payload:
       - from: lib/checks/ck-247-decomposition.js
         to: cortex/core/raid/contract-gates.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: idearium/repo/phases.js
         to: lib/phase-map-auto.js
         kind: requires
-      - from: idearium/repo/phases.js
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-map-auto.js
         kind: requires
       - from: lib/work-funnel.js

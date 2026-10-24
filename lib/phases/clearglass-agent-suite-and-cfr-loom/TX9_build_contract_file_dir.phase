@@ -9,11 +9,11 @@ intent: null
 summary: TX9_build_contract_file_dir (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852554968
+exported_at: 1792853510234
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852554968
-lastSeenAt: 1792852554968
+firstSeenAt: 1792853510234
+lastSeenAt: 1792853510234
 fingerprint: null
 payload:
   id: TX9_build_contract_file_dir
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 11f20eb5730c0d6f
+    hash: f3840a67fc2f5e3e
     nodes:
       - path: clear-glass/renderer/copilot-cli.js
         role: changes
@@ -124,10 +124,6 @@ payload:
         role: uses
         exists: true
         system: cortex
-      - path: emerge/compiler/pipeline.js
-        role: uses
-        exists: true
-        system: emerge
       - path: intelligence/rfr2/adapter-sandbox/index.js
         role: uses
         exists: true
@@ -156,6 +152,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/spec-compiler-port.js
+        role: uses
+        exists: true
+        system: lib
     edges:
       - from: copilot/module-builder.js
         to: copilot/lifeline.js
@@ -173,7 +173,7 @@ payload:
         to: copilot/lib/descriptor-projector.js
         kind: requires
       - from: copilot/module-builder.js
-        to: emerge/compiler/pipeline.js
+        to: lib/spec-compiler-port.js
         kind: requires
       - from: copilot/module-builder.js
         to: lib/event-types.js
@@ -230,12 +230,6 @@ payload:
         to: lib/grammar-engine.js
         kind: requires
     crossings:
-      - from: copilot/module-builder.js
-        to: emerge/compiler/pipeline.js
-        fromSystem: copilot
-        toSystem: emerge
-        kind: system
-        known: true
       - from: copilot/module-builder.js
         to: cortex/memory/jaa-db.js
         fromSystem: copilot

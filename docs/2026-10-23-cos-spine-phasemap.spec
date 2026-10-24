@@ -339,3 +339,18 @@ becomes impossible, because the folder is not there. What remains is coupling th
 table): explicit, versioned and checkable, the kind the design wants. Two things a compartment does not remove by itself: the shared data
 store (cortex/memory/jaa-db.js, which has to split, IM6) and a contract's shape (if one changes, every caller feels it). That is why CS_D7
 holds: a system goes into COS only once it is sovereign.
+
+## ADDENDUM 2026-10-24 — his direction: boundaries only, until COS can be integrated
+James, 2026-10-24, shown what is left (clutter clean-up, sovereignty, the COS migration, the CB agent fixes, and the genesis self-heal system and
+the COS distro still to map): "just don't, we don't need to do anything that's not, more, like, redefining those boundaries, right? Like, the
+diagnostic and self-heal system is not important right now. Like, we'll do that after. I just want to get this, just get to the point where
+COS becomes, like where we could get to the point where we could integrate COS, and then the Nexus would become immensely fucking easier to
+manage and more powerful."
+Decided (his): until COS can be integrated, the work is the boundaries only:
+1. the EW moves (emerge + warp, the compiler and the IDE to Idearium);
+2. homing or archiving the folders that are not systems;
+3. the data store split (cortex/memory/jaa-db.js);
+4. the remaining ways out, system by system;
+5. then the COS spine phases.
+Deferred by him (kept, not dropped): the genesis diagnostic and self-heal system, the COS Linux distro, and the README split. The CB fixes
+are not boundary work, so they are deferred too; the coder will flag one if it starts blocking the boundary work (to confirm).

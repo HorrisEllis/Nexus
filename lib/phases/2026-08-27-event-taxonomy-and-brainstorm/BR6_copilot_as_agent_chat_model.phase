@@ -9,11 +9,11 @@ intent: null
 summary: BR6_copilot_as_agent_chat_model (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852495394
+exported_at: 1792853449800
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852495394
-lastSeenAt: 1792852495394
+firstSeenAt: 1792853449800
+lastSeenAt: 1792853449800
 fingerprint: null
 payload:
   id: BR6_copilot_as_agent_chat_model

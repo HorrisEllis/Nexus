@@ -4,7 +4,7 @@
  * Tests: SISO pipeline, scoring, blast radius, chain, gaps, chunk integration.
  */
 const { build, DEPTH, KG } = require('../compiler/kg-builder');
-const { Event, Stream, StreamLog } = require('../siso');
+const { Event, Stream, StreamLog } = require('../../../emerge/siso');
 const yaml = require('js-yaml');
 const fs   = require('fs');
 

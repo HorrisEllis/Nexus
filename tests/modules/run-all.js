@@ -467,6 +467,7 @@ const SUITES = [
   'clear-glass-page-session.test.js',   // 0.60.175 PM5-PM8 — the page map as driver actions, co-pilot tools and commands; attention → Nerve → Ollama feel; live re-map; the panel in Clear Glass
   'test-substrate-spec.test.js',        // 0.60.176 — docs/substrate.spec, docs/belief-loop.spec, emerge SPEC_COMPILER compile at full depth, tied to their phases; emerge build order topological
   'test-phase-specs.test.js',           // 0.60.176 PS1 — each phase specced again with its DAG and related files beside its owner; drift checked
+  'test-spec-compiler-port.test.js',    // 0.60.239 EW2/EW3 — the kernel's one door to Idearium's spec compiler (in-process when provided, else its route)
   'test-data-clearup.test.js',          // 0.60.177 DL0/DL1 — every data file placed by docs/data-layout.spec; moved by hash with a manifest; rolled back byte for byte
   'test-readme-generate.test.js',    // 0.60.153 — the README: every system, module and file; every phase; the data; Idearium; every release; under 512 KiB
   'test-ui-editor.test.js',           // 0.60.122 UE0/UE1 — the UI editor: GrapesJS vendored, a repo page opened, edited, saved back (Clear Glass)

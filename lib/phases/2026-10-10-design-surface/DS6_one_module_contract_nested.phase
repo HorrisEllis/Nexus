@@ -7,11 +7,11 @@ intent: null
 summary: DS6_one_module_contract_nested (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852524107
+exported_at: 1792853478672
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852524107
-lastSeenAt: 1792852524107
+firstSeenAt: 1792853478672
+lastSeenAt: 1792853478672
 fingerprint: null
 payload:
   id: DS6_one_module_contract_nested
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: f4efc65eae813809
+    hash: 446967da79eb78c1
     nodes:
       - path: eravos/ui/runtime/mod-factory.js
         role: changes
@@ -37,10 +37,6 @@ payload:
         role: changes
         exists: true
         system: lib
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -54,6 +50,10 @@ payload:
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -86,9 +86,6 @@ payload:
         exists: true
         system: lib
     edges:
-      - from: emerge/compiler/phase-specs.js
-        to: lib/nexus-self/systems.js
-        kind: requires
       - from: idearium/api/index.js
         to: lib/nexus-self/systems.js
         kind: requires
@@ -99,6 +96,9 @@ payload:
         to: lib/nexus-self/systems.js
         kind: requires
       - from: idearium/repo/phases.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: lib/atlas-generate.js

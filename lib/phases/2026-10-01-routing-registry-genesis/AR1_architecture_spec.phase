@@ -7,11 +7,11 @@ intent: null
 summary: AR1_architecture_spec (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852512301
+exported_at: 1792853466807
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852512301
-lastSeenAt: 1792852512301
+firstSeenAt: 1792853466807
+lastSeenAt: 1792853466807
 fingerprint: null
 payload:
   id: AR1_architecture_spec

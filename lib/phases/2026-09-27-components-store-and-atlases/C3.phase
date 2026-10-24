@@ -7,11 +7,11 @@ intent: null
 summary: C3 (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852506548
+exported_at: 1792853461167
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852506548
-lastSeenAt: 1792852506548
+firstSeenAt: 1792853461167
+lastSeenAt: 1792853461167
 fingerprint: null
 payload:
   id: C3
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 6f53d9aa14fc9e97
+    hash: 39100c349b8fd32e
     nodes:
       - path: lib/nexus-self/systems.js
         role: changes
@@ -41,10 +41,6 @@ payload:
         role: changes
         exists: true
         system: loom
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -58,6 +54,10 @@ payload:
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -90,9 +90,6 @@ payload:
         exists: true
         system: lib
     edges:
-      - from: emerge/compiler/phase-specs.js
-        to: lib/nexus-self/systems.js
-        kind: requires
       - from: idearium/api/index.js
         to: lib/nexus-self/systems.js
         kind: requires
@@ -103,6 +100,9 @@ payload:
         to: lib/nexus-self/systems.js
         kind: requires
       - from: idearium/repo/phases.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: lib/atlas-generate.js

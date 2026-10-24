@@ -57,8 +57,8 @@ const criticalFiles = [
   'guardian/server.js', 'guardian/agents/co-pilot/index.js',
   'cortex/cortex.js', 'cortex/self-heal/index.js', 'cortex/self-heal/escalation.js',
   'intelligence/index.js',
-  'emerge/compiler/pipeline.js', 'emerge/compiler/emit.js',
-  'emerge/compiler/reply-engine.js', 'emerge/compiler/t2-gate.js',
+  'idearium/spec-compiler/compiler/pipeline.js', 'idearium/spec-compiler/compiler/emit.js',
+  'idearium/spec-compiler/compiler/reply-engine.js', 'idearium/spec-compiler/compiler/t2-gate.js',
   'bridge/causal/expectation.js', 'bridge/causal/graph.js',
   'lib/component-registry.js', 'lib/grammar-engine.js',
   'lib/blueprint.js', 'lib/autonomous-loop.js',
@@ -81,7 +81,7 @@ const jsFiles = [
   'guardian/server.js', 'guardian/agents/co-pilot/index.js',
   'cortex/self-heal/index.js', 'cortex/self-heal/escalation.js',
   'intelligence/index.js',
-  'emerge/compiler/t2-gate.js', 'emerge/compiler/pipeline.js',
+  'idearium/spec-compiler/compiler/t2-gate.js', 'idearium/spec-compiler/compiler/pipeline.js',
   'bridge/causal/expectation.js',
   'lib/component-registry.js', 'lib/grammar-engine.js',
   'lib/blueprint.js', 'lib/autonomous-loop.js', 'lib/hot-loader.js',
@@ -107,8 +107,8 @@ t('guardian has /autonomous/run (Phase 13)', () => read('guardian/server.js').in
 t('copilot has build intent', () => read('guardian/agents/co-pilot/index.js').includes("intent:'build'"));
 t('copilot has token-first _tryDataAnswer', () => read('guardian/agents/co-pilot/index.js').includes('_tryDataAnswer'));
 t('copilot grammar engine wired', () => read('guardian/agents/co-pilot/index.js').includes('_ensureGrammar'));
-t('t2-gate imports pipeline', () => read('emerge/compiler/t2-gate.js').includes("require('./pipeline')"));
-t('t2-gate posts to guardian /command', () => read('emerge/compiler/t2-gate.js').includes("'/command'"));
+t('t2-gate imports pipeline', () => read('idearium/spec-compiler/compiler/t2-gate.js').includes("require('./pipeline')"));
+t('t2-gate posts to guardian /command', () => read('idearium/spec-compiler/compiler/t2-gate.js').includes("'/command'"));
 t('expectation engine wires anomaly engine', () => read('bridge/causal/expectation.js').includes("require('../../intelligence/causal/anomaly')"));
 t('escalation has wireAnomalyTrigger (Phase 71.4)', () => read('cortex/self-heal/escalation.js').includes('wireAnomalyTrigger'));
 t('component-registry seeds DESCRIPTOR_FIELDS (Phase 40)', () => read('lib/component-registry.js').includes('DESCRIPTOR_FIELDS'));

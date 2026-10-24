@@ -9,11 +9,11 @@ intent: null
 summary: P3_phase_build (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792852507735
+exported_at: 1792853462374
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852507735
-lastSeenAt: 1792852507735
+firstSeenAt: 1792853462374
+lastSeenAt: 1792853462374
 fingerprint: null
 payload:
   id: P3_phase_build
@@ -29,7 +29,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: bb6a1484090698da
+    hash: 5844b66d5acf79cf
     nodes:
       - path: idearium/api/index.js
         role: changes
@@ -91,10 +91,6 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/lib/access.cjs
-        role: uses
-        exists: true
-        system: idearium
       - path: idearium/lib/config.js
         role: uses
         exists: true
@@ -103,14 +99,18 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: lib/data-home.js
+      - path: idearium/spec-compiler/compiler/index.js
         role: uses
         exists: true
-        system: lib
-      - path: lib/economy/tokens.js
+        system: idearium
+      - path: idearium/spec-compiler/compiler/pipeline.js
         role: uses
         exists: true
-        system: lib
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
+        role: uses
+        exists: true
+        system: idearium
       - path: lib/nexus-self/store.js
         role: uses
         exists: true
@@ -127,7 +127,7 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/warp-rung.js
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -161,16 +161,16 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/data-home.js
+        to: lib/spec-compiler-port.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/warp-rung.js
+        to: idearium/spec-compiler/compiler/index.js
         kind: requires
       - from: idearium/api/index.js
-        to: idearium/lib/access.cjs
+        to: idearium/spec-compiler/compiler/pipeline.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/economy/tokens.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
         kind: requires
       - from: idearium/api/build-surface.js
         to: idearium/repo/phases.js

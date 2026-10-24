@@ -9,11 +9,11 @@ intent: null
 summary: BC4_relational_context_wired_or_archived (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852515895
+exported_at: 1792853470269
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852515895
-lastSeenAt: 1792852515895
+firstSeenAt: 1792853470269
+lastSeenAt: 1792853470269
 fingerprint: null
 payload:
   id: BC4_relational_context_wired_or_archived

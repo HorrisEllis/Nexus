@@ -65,9 +65,9 @@ phases:
 
   EW2_the_callers_outside_idearium:
     layer: design
-    status: OPEN
+    status: DONE 0.60.239 — lib/spec-compiler-port.js; the four callers through it; test-spec-compiler-port 4/4; a real boot compiled through the route
     depends_on: [EW_D1_compiler_and_ide_with_idearium, EW1_emerge_and_warp_one_system]
-    files: [lib/build-pipeline.js, lib/spec-collect.js, guardian/server.js, copilot/module-builder.js]
+    files: [lib/build-pipeline.js, lib/spec-collect.js, guardian/server.js, copilot/module-builder.js, lib/spec-compiler-port.js (new), idearium/api/index.js, idearium/cli/route-commands.js, tests/modules/test-spec-compiler-port.test.js (new)]
     spec: docs/2026-10-17-system-drawbridge-phasemap.spec
     does: >-
       Four callers of the compiler live outside Idearium (lib/build-pipeline.js and guardian/server.js use t2-gate; lib/spec-collect.js
@@ -78,9 +78,9 @@ phases:
 
   EW3_the_spec_compiler_into_idearium:
     layer: backend
-    status: OPEN
+    status: DONE 0.60.239 — moved whole to idearium/spec-compiler; no crossing into it; emerge has 0 ways in
     depends_on: [EW2_the_callers_outside_idearium]
-    files: [emerge/compiler/index.js, emerge/compiler/pipeline.js, emerge/compiler/kg-builder.js, emerge/compiler/invariants-engine.js, emerge/compiler/t2-gate.js, emerge/compiler/phase-specs.js, emerge/idearium/client.js, idearium/compiler-bridge.js, tests/modules/test-phase-specs.test.js, tests/modules/test-substrate-spec.test.js]
+    files: [idearium/spec-compiler/compiler/index.js, idearium/spec-compiler/compiler/pipeline.js, idearium/spec-compiler/compiler/kg-builder.js, idearium/spec-compiler/compiler/invariants-engine.js, idearium/spec-compiler/compiler/t2-gate.js, idearium/spec-compiler/compiler/phase-specs.js, idearium/spec-compiler/idearium/client.js, idearium/compiler-bridge.js, tests/modules/test-phase-specs.test.js, tests/modules/test-substrate-spec.test.js]   # 0.60.239: named at their new paths (they were emerge/compiler/…, emerge/idearium/client.js)
     spec: emerge/SPEC_COMPILER.spec
     does: >-
       git mv emerge/compiler → idearium/compiler (history kept); emerge/SPEC_COMPILER.spec goes with it. The compiler's requires into emerge
@@ -118,3 +118,38 @@ phases:
 - README: the 4,195 phase nodes are now listed per map folder (lib/readme-generate.js). Regenerated, the README is still 585 KB against
   GitHub's 512 KiB, from organic growth of "Every release" and "Every phase"; README.md is left at its committed 493 KB and RG-02 stays red
   until he decides how the inventory is split.
+
+## ADDENDUM 2026-10-24 — EW2 and EW3 land together; the design, decided by his axioms
+Found while grounding EW2: the spec compiler is its own package inside emerge. emerge/package.json is "spec-compiler", with main
+compiler/pipeline.js. Its parts are compiler/, chunk/, cortex-query/, idearium/client.js, version.js, SPEC_COMPILER.spec, verify.js and
+test/, and nothing outside the compiler uses them (the census, 2026-10-24). It also requires emerge/siso, the CommonJS bus that every module
+emerge-codegen-v2 compiles requires.
+- **The package moves whole**, by git mv, to idearium/spec-compiler/, keeping its internal layout so its own relative requires do not change.
+  Paths into lib/ get one level deeper.
+- **emerge/siso joins LANGUAGE.** It is the language's bus primitive: pure, with no state or process (§5.9). The compiler's use of it is the
+  language, not a crossing.
+- **Callers outside Idearium** go through lib/spec-compiler-port.js (the kernel). The port has no require of Idearium (§5.2: one door; DB6):
+  - in the Idearium process, Idearium provides the compiler at boot (provide()), so the port calls it directly;
+  - in any other process (cortex's RAID through lib/execution-pipeline, guardian /build, copilot's module builder), the port posts to
+    Idearium's routes: POST /api/compiler/compile | /pipeline | /t2. Each route has a command row, so agents have it too.
+  - Without either, it says so; it never falls back silently (§1.2).
+- They land in one phase because doing EW2 first would add a new crossing: idearium/api requiring emerge/compiler to provide it.
+
+## ADDENDUM 2026-10-24 (0.60.239) — EW2 and EW3 built
+- **Moved by git mv** (history kept): emerge/{compiler, chunk, cortex-query, idearium/client.js, version.js, SPEC_COMPILER.spec, verify.js, test,
+  seams, package.json} → idearium/spec-compiler/. emerge has a new package.json of its own (commonjs). Inside the package, requires into
+  lib/ are one level deeper and '../siso' is '../../../emerge/siso' (the language).
+- **The port.** lib/spec-compiler-port.js. Idearium provides the compiler at boot; the routes are POST /api/compiler/{compile,pipeline,t2}
+  (WRITE_IDEAS; specPath and outputDir held to the tree or the temp folder); the command row is compiler.run. The callers moved onto it:
+  lib/build-pipeline, lib/spec-collect, guardian /build, copilot's module builder.
+- **Proof.**
+  - Run: the port in a separate process reached a booted Idearium (sandboxed, port 4891) through the route, and Idearium compiled
+    SPEC_COMPILER.spec into 26 files (21 T0, 15 T1). /etc/passwd was refused.
+  - Census: emerge 4 out / 0 in; copilot 27 → 26, guardian 28 → 27, idearium 33 → 32; no new crossing.
+  - Ratchet baseline: 540 → 481 lines. 59 lines no longer in the tree, most closed earlier and never taken out, are recorded in its closed
+    list.
+- **Not done here.** EW4: the IDE (emerge/emerge-ide.js) still requires emerge's kernel and codegen; moving it makes those two Idearium's
+  only remaining uses of emerge besides the language. Its 4 ways out are emerge/core → intelligence/rfr2 (3) and the IDE → ollama (1).
+- **Found while grounding** (lib/system-check.js 2026-09-07): James then called emerge "its just a compiler thats it, the rest is trash".
+  On 2026-10-24 he read it again, said "Look at emerge. Deeply Custom", and kept the language. The earlier words are kept with the code
+  (§0.3); the later decision supersedes them.

@@ -9,11 +9,11 @@ intent: null
 summary: LM6_who_creates_contracts (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852497419
+exported_at: 1792853451674
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852497419
-lastSeenAt: 1792852497419
+firstSeenAt: 1792853451674
+lastSeenAt: 1792853451674
 fingerprint: null
 payload:
   id: LM6_who_creates_contracts

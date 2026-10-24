@@ -9,11 +9,11 @@ intent: null
 summary: RQ22_the_dependency_boundary_with_invariants_that_run (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792852527073
+exported_at: 1792853481688
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852527073
-lastSeenAt: 1792852527073
+firstSeenAt: 1792853481688
+lastSeenAt: 1792853481688
 fingerprint: null
 payload:
   id: RQ22_the_dependency_boundary_with_invariants_that_run

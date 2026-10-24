@@ -22,7 +22,7 @@ const { decideAll }       = require('../compiler/tier-contract');
 const { computeGapField } = require('../compiler/gap-field-engine');
 const { check }           = require('../compiler/invariants-engine');
 const { build }           = require('../compiler/kg-builder');
-const { Event }           = require('../siso');
+const { Event }           = require('../../../emerge/siso');
 
 let p = 0, f = 0;
 function test(label, fn) {

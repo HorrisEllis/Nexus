@@ -7,11 +7,11 @@ intent: null
 summary: C2_templates_folder_structure (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852498307
+exported_at: 1792853452580
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852498307
-lastSeenAt: 1792852498307
+firstSeenAt: 1792853452580
+lastSeenAt: 1792853452580
 fingerprint: null
 payload:
   id: C2_templates_folder_structure

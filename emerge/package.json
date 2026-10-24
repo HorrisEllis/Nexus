@@ -1,15 +1,7 @@
 {
-  "name": "spec-compiler",
+  "name": "emerge",
   "version": "1.1.0",
-  "description": "Compress intent. Decompress deterministically. Pay tokens once.",
+  "description": "Emergence: James's language (grammar, kernel, codegen, core primitives) and warp, its runtime. The spec compiler that lived here is idearium/spec-compiler (0.60.239, EW3).",
   "type": "commonjs",
-  "main": "compiler/pipeline.js",
-  "scripts": {
-    "compile": "node compiler/pipeline.js",
-    "verify": "node verify.js",
-    "test": "node test/propagation.test.js && node test/kg.test.js && node test/tier-contract.test.js && node test/invariants.test.js && node test/gap-field.test.js && node test/reply-engine.test.js"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "private": true
 }

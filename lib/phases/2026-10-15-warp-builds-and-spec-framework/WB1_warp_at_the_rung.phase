@@ -9,11 +9,11 @@ intent: null
 summary: WB1_warp_at_the_rung (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792852534606
+exported_at: 1792853489675
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852534606
-lastSeenAt: 1792852534606
+firstSeenAt: 1792853489675
+lastSeenAt: 1792853489675
 fingerprint: null
 payload:
   id: WB1_warp_at_the_rung
@@ -34,7 +34,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 60eb99e47c8e797a
+    hash: 482306358fb314f8
     nodes:
       - path: idearium/api/index.js
         role: changes
@@ -112,19 +112,7 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: idearium/agent-suite/index.js
-        role: uses
-        exists: true
-        system: idearium
       - path: idearium/config.js
-        role: uses
-        exists: true
-        system: idearium
-      - path: idearium/copilot-adapter/index.js
-        role: uses
-        exists: true
-        system: idearium
-      - path: idearium/core/index.js
         role: uses
         exists: true
         system: idearium
@@ -136,7 +124,15 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/spec-engine/index.js
+      - path: idearium/spec-compiler/compiler/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/pipeline.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
         role: uses
         exists: true
         system: idearium
@@ -160,12 +156,28 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/spec-compiler-port.js
+        role: uses
+        exists: true
+        system: lib
     edges:
       - from: idearium/api/index.js
         to: idearium/config.js
         kind: requires
       - from: idearium/api/index.js
         to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-compiler-port.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/pipeline.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
         kind: requires
       - from: idearium/api/index.js
         to: lib/data-home.js
@@ -184,18 +196,6 @@ payload:
         kind: requires
       - from: idearium/api/index.js
         to: intelligence/spatial/lattice.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/core/index.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/spec-engine/index.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/copilot-adapter/index.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/agent-suite/index.js
         kind: requires
       - from: idearium/cli/index.js
         to: idearium/api/index.js

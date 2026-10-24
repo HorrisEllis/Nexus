@@ -23,6 +23,13 @@ import { spawnSync, spawn as spawnProc } from 'child_process';
 import config from '../config.js';
 import { getConfig as getIdeariumConfig, setConfig as setIdeariumConfig, getValue as getIdeariumValue, describe as describeIdeariumConfig, resetConfig as resetIdeariumConfig } from '../lib/config.js';
 const _require = createRequire(import.meta.url);
+// 0.60.239 EW2/EW3 — the spec compiler is Idearium's (idearium/spec-compiler). In this process the kernel's port calls it directly; every
+// other process reaches it through POST /api/compiler/{compile,pipeline,t2} below (docs/2026-10-24-emerge-warp-system-phasemap.spec)
+_require('../../lib/spec-compiler-port.js').provide({
+  compile:  (s, o, opts) => _require('../spec-compiler/compiler/index.js').compile(s, o, opts),
+  pipeline: (s, o, opts) => _require('../spec-compiler/compiler/pipeline.js').compile(s, o, opts),
+  t2:       (s, o, opts) => _require('../spec-compiler/compiler/t2-gate.js').run(s, o, opts),
+});
 // 0.60.207 DL2 — James: "make each system responsible for it's own data". Idearium's files in the root data/ come home (lib/data-home.js).
 // ESM: the imports above this line ran first; Idearium's own refs still name data/idearium (DL3 rewires them before any of it moves).
 _require('../../lib/data-home.js').atBoot('idearium');
@@ -3325,6 +3332,7 @@ const ROUTE_CAP = {
   'context.find': CAPS.READ_IDEAS, 'repo.context.find': CAPS.READ_IDEAS, 'context.sources': CAPS.READ_IDEAS,   // 0.60.156 GM5 — reads only
   'lattice.neighbours': CAPS.READ_IDEAS,   // 0.60.157 GM4 — reads only
   'system.tunnel': CAPS.READ_IDEAS, 'system.tunnel.one': CAPS.READ_IDEAS, 'system.heartbeat': CAPS.READ_IDEAS,   // 0.60.128 DB13/DB14
+  'compiler.compile': CAPS.WRITE_IDEAS, 'compiler.pipeline': CAPS.WRITE_IDEAS, 'compiler.t2': CAPS.WRITE_IDEAS,   // 0.60.239 EW2 — writes only under the tree or the temp folder
   'system.registry.drafts': CAPS.READ_IDEAS, 'system.registry.draft': CAPS.READ_IDEAS,   // 0.60.229 DB16 — reads only
   'system.registry': CAPS.READ_IDEAS, 'system.registry.one': CAPS.READ_IDEAS, 'system.registry.settle': CAPS.WRITE_IDEAS,   // 0.60.127 DB9/DB10
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
@@ -3628,6 +3636,9 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','heartbeat'], 'system.heartbeat'],   // 0.60.128 DB14 — every system asked over its health route: up, degraded, down
     ['GET',    ['api','system','registry'], 'system.registry'],   // 0.60.127 DB9 — every system and the crossings between them: the dependency graph
     ['GET',    ['api','system','registry',':system'], 'system.registry.one'],   // 0.60.127 DB9/DB10 — one system's generated registry: declared, observed, negative space
+    ['POST',   ['api','compiler','compile'],  'compiler.compile'],    // 0.60.239 EW2 — the spec compiler's T0/T1 (lib/spec-compiler-port.js from another process)
+    ['POST',   ['api','compiler','pipeline'], 'compiler.pipeline'],   // 0.60.239 EW2 — the full compile pipeline
+    ['POST',   ['api','compiler','t2'],       'compiler.t2'],         // 0.60.239 EW2 — t2-gate.run: T0→T1→T2 dispatch, verify, write; progress returned as a list
     ['GET',    ['api','system','registry-drafts'], 'system.registry.drafts'],   // 0.60.229 DB16 — every system with no registry: its draft from the tree, and how far from sovereign
     ['GET',    ['api','system','registry',':system','draft'], 'system.registry.draft'],   // 0.60.229 DB16 — one system's draft (lib/registry-draft.js), not in force
     ['POST',   ['api','system','registry',':system','settle'], 'system.registry.settle'],   // 0.60.127 DB10 — the shadow settled: each absence a gap
@@ -6009,6 +6020,27 @@ async function handle(req, res, route, query, body) {
       const t = SYS.tunnel(String(params.name || ''), { commands: SPEC });
       if (!t.ok) return err(res, 404, t.error);
       return ok(res, { ...t, heartbeat: await SYS.heartbeat(t.name) });
+    }
+    case 'compiler.compile': case 'compiler.pipeline': case 'compiler.t2': {
+      // 0.60.239 EW2 — a spec in, files out. Paths are held to the Nexus tree or the temp folder (a route that writes anywhere is a door);
+      // specText instead of specPath is written to a temp file first
+      const os = _require('os');
+      const root = path.dirname(_require.resolve('../../package.json'));
+      const inside = (p) => { const r = path.resolve(String(p)); return [root, os.tmpdir()].some(b => r === b || r.startsWith(b + path.sep)); };
+      let specPath = body.specPath ? path.resolve(root, String(body.specPath)) : null;
+      if (!specPath && body.specText) { specPath = path.join(os.tmpdir(), `nexus-spec-${Date.now()}-${Math.random().toString(36).slice(2, 6)}.spec`); fs.writeFileSync(specPath, String(body.specText), 'utf8'); }
+      if (!specPath) return err(res, 400, 'specPath or specText required');
+      const outputDir = body.outputDir ? path.resolve(root, String(body.outputDir)) : path.join(os.tmpdir(), `nexus-compile-${Date.now()}`);
+      if (!inside(specPath) || !inside(outputDir)) return err(res, 403, 'specPath and outputDir must be inside the Nexus tree or the temp folder');
+      const opts = (body.opts && typeof body.opts === 'object') ? body.opts : {};
+      const PORT_ = _require('../../lib/spec-compiler-port.js');
+      try {
+        if (action === 'compiler.compile') return ok(res, await PORT_.compile(specPath, outputDir, opts));
+        if (action === 'compiler.pipeline') return ok(res, await PORT_.pipeline(specPath, outputDir, opts));
+        const progress = [];
+        const result = await PORT_.t2(specPath, outputDir, { ...opts, onProgress: (node, status, detail) => progress.push({ node: node ? { name: node.name || null, id: node.id || null } : null, status, detail: detail == null ? null : detail }) });
+        return ok(res, { ok: !!(result && result.ok), result, progress, outputDir });
+      } catch (e) { return err(res, 500, `the spec compiler failed: ${e.message}`); }
     }
     case 'system.registry.drafts': case 'system.registry.draft': {
       // 0.60.229 DB16 — a draft is built fresh from the tree each time; whether it is written (<system>/registry-components.draft.json) and

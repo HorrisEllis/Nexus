@@ -7,11 +7,11 @@ intent: null
 summary: IM3_ideas_mapped_to_nexus (integration) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852545780
+exported_at: 1792853500776
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852545780
-lastSeenAt: 1792852545780
+firstSeenAt: 1792853500776
+lastSeenAt: 1792853500776
 fingerprint: null
 payload:
   id: IM3_ideas_mapped_to_nexus
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 725eea3433049919
+    hash: f34eea0339e402b1
     nodes:
       - path: lib/phase-map-auto.js
         role: changes
@@ -37,15 +37,15 @@ payload:
         role: changes
         exists: true
         system: lib
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -88,10 +88,10 @@ payload:
       - from: idearium/api/index.js
         to: lib/work-funnel.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: idearium/repo/phases.js
         to: lib/phase-map-auto.js
         kind: requires
-      - from: idearium/repo/phases.js
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-map-auto.js
         kind: requires
     crossings: []

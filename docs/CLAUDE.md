@@ -310,3 +310,10 @@ James, 2026-10-24: ".phase/.graph should be one file i feel like?" · "need to k
 Step 3 of the 2026-10-20 rule above now writes one file per phase: <owner>/phases/<map-id>/<phase>.phase, holding what is authored and, under
 graph:, its related files with roles, its crossings and its slice of the whole DAG. There is no separate graph/*.graph any more (that text is
 kept above, §0.3). The owner is the system its files belong to, and the node says so (system:).
+
+
+## ADDENDUM 2026-10-24 (0.60.239 EW3) — the spec compiler is Idearium's
+James, 2026-10-24: "spec compiler, ide, and idearium". The 2026-10-20 rule above names emerge/SPEC_COMPILER.spec, emerge/compiler/kg-builder.js
+and `node emerge/compiler/phase-specs.js`. They are now idearium/spec-compiler/SPEC_COMPILER.spec, idearium/spec-compiler/compiler/kg-builder.js
+and `node idearium/spec-compiler/compiler/phase-specs.js` (the text above is kept, §0.3). From outside Idearium the compiler is reached through
+lib/spec-compiler-port.js or the `compiler` command, never by require.

@@ -9,11 +9,11 @@ intent: null
 summary: SB22_every_component_capability_command_events_as_nodes (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852515910
+exported_at: 1792853470285
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852515910
-lastSeenAt: 1792852515910
+firstSeenAt: 1792853470285
+lastSeenAt: 1792853470285
 fingerprint: null
 payload:
   id: SB22_every_component_capability_command_events_as_nodes

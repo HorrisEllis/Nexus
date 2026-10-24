@@ -9,11 +9,11 @@ intent: null
 summary: LM21_atlas_fact_extractors (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852497435
+exported_at: 1792853451690
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852497435
-lastSeenAt: 1792852497435
+firstSeenAt: 1792853451690
+lastSeenAt: 1792853451690
 fingerprint: null
 payload:
   id: LM21_atlas_fact_extractors

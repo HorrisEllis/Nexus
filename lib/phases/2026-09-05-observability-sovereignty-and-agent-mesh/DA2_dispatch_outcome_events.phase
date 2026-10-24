@@ -9,11 +9,11 @@ intent: null
 summary: DA2_dispatch_outcome_events (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852499305
+exported_at: 1792853453629
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852499305
-lastSeenAt: 1792852499305
+firstSeenAt: 1792853453629
+lastSeenAt: 1792853453629
 fingerprint: null
 payload:
   id: DA2_dispatch_outcome_events

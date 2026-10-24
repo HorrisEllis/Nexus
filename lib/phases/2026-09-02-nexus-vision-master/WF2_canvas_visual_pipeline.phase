@@ -7,11 +7,11 @@ intent: null
 summary: WF2_canvas_visual_pipeline (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852498323
+exported_at: 1792853452600
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852498323
-lastSeenAt: 1792852498323
+firstSeenAt: 1792853452600
+lastSeenAt: 1792853452600
 fingerprint: null
 payload:
   id: WF2_canvas_visual_pipeline

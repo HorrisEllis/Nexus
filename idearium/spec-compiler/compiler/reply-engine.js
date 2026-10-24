@@ -49,7 +49,7 @@
  *       Gates do not query the KG or gap field directly.
  */
 
-const { Event, Gate, Stream, StreamLog } = require('../siso');
+const { Event, Gate, Stream, StreamLog } = require('../../../emerge/siso');
 const { decideTier, BOUNDARIES }         = require('./tier-contract');
 const { GAP_TYPE, GAP_REASON }           = require('./gap-field-engine');
 

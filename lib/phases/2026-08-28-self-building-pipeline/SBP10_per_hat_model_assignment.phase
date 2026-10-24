@@ -9,11 +9,11 @@ intent: null
 summary: SBP10_per_hat_model_assignment (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852496467
+exported_at: 1792853450681
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852496467
-lastSeenAt: 1792852496467
+firstSeenAt: 1792853450681
+lastSeenAt: 1792853450681
 fingerprint: null
 payload:
   id: SBP10_per_hat_model_assignment

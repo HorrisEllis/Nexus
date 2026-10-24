@@ -9,11 +9,11 @@ intent: null
 summary: FN2_what_is_missing_is_made_first (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852535064
+exported_at: 1792853490117
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852535064
-lastSeenAt: 1792852535064
+firstSeenAt: 1792853490117
+lastSeenAt: 1792853490117
 fingerprint: null
 payload:
   id: FN2_what_is_missing_is_made_first
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 94e1791ebf408132
+    hash: 440e25be86b0f154
     nodes:
       - path: idearium/repo/phases.js
         role: changes
@@ -49,15 +49,15 @@ payload:
         role: changes
         exists: true
         system: lib
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/build-surface.js
         role: used-by
         exists: true
         system: idearium
       - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -85,10 +85,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: emerge/compiler/index.js
-        role: uses
-        exists: true
-        system: emerge
       - path: idearium/repo/roadmap.js
         role: uses
         exists: true
@@ -121,6 +117,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/spec-compiler-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: loom/scanners/phasemap-map.js
         role: uses
         exists: true
@@ -146,7 +146,7 @@ payload:
         to: lib/file-tree-plan.js
         kind: requires
       - from: lib/spec-collect.js
-        to: emerge/compiler/index.js
+        to: lib/spec-compiler-port.js
         kind: requires
       - from: lib/spec-collect.js
         to: lib/repo-inject.js
@@ -178,7 +178,7 @@ payload:
       - from: idearium/api/build-surface.js
         to: idearium/repo/phases.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-plan.js
         kind: requires
       - from: lib/capability-spec.js
@@ -195,12 +195,6 @@ payload:
         to: nexus/nexus-bus.js
         fromSystem: lib
         toSystem: nexus
-        kind: upward
-        known: true
-      - from: lib/spec-collect.js
-        to: emerge/compiler/index.js
-        fromSystem: lib
-        toSystem: emerge
         kind: upward
         known: true
       - from: idearium/repo/phases.js

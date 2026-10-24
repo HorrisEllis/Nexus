@@ -7,11 +7,11 @@ intent: null
 summary: GG1_graphs_generate_code (?) — 4 file(s)
 system: emerge
 tags: []
-exported_at: 1792852513275
+exported_at: 1792853467729
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852513275
-lastSeenAt: 1792852513275
+firstSeenAt: 1792853467729
+lastSeenAt: 1792853467729
 fingerprint: null
 payload:
   id: GG1_graphs_generate_code
@@ -30,15 +30,15 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: e8989d4b9064ae28
+    hash: f9fba7f6f9701344
     nodes:
       - path: emerge/compiler/emit.js
         role: changes
-        exists: true
+        exists: false
         system: emerge
       - path: emerge/compiler/index.js
         role: changes
-        exists: true
+        exists: false
         system: emerge
       - path: idearium/lib/wiring-gen.js
         role: changes
@@ -48,31 +48,7 @@ payload:
         role: changes
         exists: true
         system: idearium
-      - path: emerge/compiler/pipeline.js
-        role: used-by
-        exists: true
-        system: emerge
-      - path: emerge/test/gap-field.test.js
-        role: used-by
-        exists: true
-        system: null
-      - path: emerge/test/invariants.test.js
-        role: used-by
-        exists: true
-        system: null
-      - path: emerge/test/reply-engine.test.js
-        role: used-by
-        exists: true
-        system: null
-      - path: emerge/verify.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
-        role: used-by
-        exists: true
-        system: idearium
-      - path: idearium/compiler-bridge.js
         role: used-by
         exists: true
         system: idearium
@@ -92,60 +68,11 @@ payload:
         role: used-by
         exists: true
         system: idearium
-      - path: lib/spec-collect.js
+      - path: tests/modules/test-repo-graph.js
         role: used-by
         exists: true
-        system: lib
-      - path: emerge/compiler/tier-contract.js
-        role: uses
-        exists: true
-        system: emerge
-      - path: emerge/cortex-query/index.js
-        role: uses
-        exists: true
-        system: emerge
-      - path: emerge/cortex-query/writeback.js
-        role: uses
-        exists: true
-        system: emerge
-      - path: emerge/version.js
-        role: uses
-        exists: true
-        system: emerge
+        system: null
     edges:
-      - from: emerge/compiler/index.js
-        to: emerge/cortex-query/index.js
-        kind: requires
-      - from: emerge/compiler/index.js
-        to: emerge/cortex-query/writeback.js
-        kind: requires
-      - from: emerge/compiler/index.js
-        to: emerge/version.js
-        kind: requires
-      - from: emerge/compiler/emit.js
-        to: emerge/compiler/tier-contract.js
-        kind: requires
-      - from: emerge/verify.js
-        to: emerge/compiler/index.js
-        kind: requires
-      - from: idearium/compiler-bridge.js
-        to: emerge/compiler/index.js
-        kind: requires
-      - from: lib/spec-collect.js
-        to: emerge/compiler/index.js
-        kind: requires
-      - from: emerge/compiler/pipeline.js
-        to: emerge/compiler/emit.js
-        kind: requires
-      - from: emerge/test/gap-field.test.js
-        to: emerge/compiler/emit.js
-        kind: requires
-      - from: emerge/test/invariants.test.js
-        to: emerge/compiler/emit.js
-        kind: requires
-      - from: emerge/test/reply-engine.test.js
-        to: emerge/compiler/emit.js
-        kind: requires
       - from: idearium/api/index.js
         to: idearium/repo/graph.js
         kind: requires
@@ -161,19 +88,10 @@ payload:
       - from: idearium/repo/verify-lazy.js
         to: idearium/repo/graph.js
         kind: requires
-    crossings:
-      - from: idearium/compiler-bridge.js
-        to: emerge/compiler/index.js
-        fromSystem: idearium
-        toSystem: emerge
-        kind: system
-        known: true
-      - from: lib/spec-collect.js
-        to: emerge/compiler/index.js
-        fromSystem: lib
-        toSystem: emerge
-        kind: upward
-        known: true
+      - from: tests/modules/test-repo-graph.js
+        to: idearium/repo/graph.js
+        kind: requires
+    crossings: []
     ready: true
     dag:
       dagHash: 83f93cbcbb0fa46f

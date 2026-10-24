@@ -7,11 +7,11 @@ intent: null
 summary: SY2_cos_its_own_system (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852516518
+exported_at: 1792853470859
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852516518
-lastSeenAt: 1792852516518
+firstSeenAt: 1792853470859
+lastSeenAt: 1792853470859
 fingerprint: null
 payload:
   id: SY2_cos_its_own_system
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 5140e15f0bab147d
+    hash: 0266a2d2bdefe360
     nodes:
       - path: docs/2026-10-05-cos-machines-phasemap.spec
         role: changes
@@ -42,10 +42,6 @@ payload:
         role: changes
         exists: true
         system: null
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -59,6 +55,10 @@ payload:
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -91,9 +91,6 @@ payload:
         exists: true
         system: lib
     edges:
-      - from: emerge/compiler/phase-specs.js
-        to: lib/nexus-self/systems.js
-        kind: requires
       - from: idearium/api/index.js
         to: lib/nexus-self/systems.js
         kind: requires
@@ -104,6 +101,9 @@ payload:
         to: lib/nexus-self/systems.js
         kind: requires
       - from: idearium/repo/phases.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: lib/atlas-generate.js

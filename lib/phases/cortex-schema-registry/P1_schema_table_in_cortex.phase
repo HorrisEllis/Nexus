@@ -7,11 +7,11 @@ intent: null
 summary: P1_schema_table_in_cortex (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852557354
+exported_at: 1792853512730
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852557354
-lastSeenAt: 1792852557354
+firstSeenAt: 1792853512730
+lastSeenAt: 1792853512730
 fingerprint: null
 payload:
   id: P1_schema_table_in_cortex

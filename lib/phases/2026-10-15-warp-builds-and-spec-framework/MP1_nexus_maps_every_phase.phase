@@ -9,11 +9,11 @@ intent: null
 summary: MP1_nexus_maps_every_phase (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852534615
+exported_at: 1792853489684
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852534615
-lastSeenAt: 1792852534615
+firstSeenAt: 1792853489684
+lastSeenAt: 1792853489684
 fingerprint: null
 payload:
   id: MP1_nexus_maps_every_phase
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 14450a9f272f384b
+    hash: df3249e8ffc5bc29
     nodes:
       - path: lib/phase-files.js
         role: changes
@@ -44,10 +44,6 @@ payload:
         role: changes
         exists: true
         system: null
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -57,6 +53,10 @@ payload:
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -86,13 +86,13 @@ payload:
       - from: lib/phase-files.js
         to: loom/scanners/phasemap-map.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-map-auto.js
-        kind: requires
       - from: idearium/api/index.js
         to: lib/phase-map-auto.js
         kind: requires
       - from: idearium/repo/phases.js
+        to: lib/phase-map-auto.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-map-auto.js
         kind: requires
       - from: lib/work-funnel.js

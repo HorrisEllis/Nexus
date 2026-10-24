@@ -9,11 +9,11 @@ intent: null
 summary: C1_copilot_contract (?) — 2 file(s)
 system: copilot
 tags: []
-exported_at: 1792852507740
+exported_at: 1792853462380
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852507740
-lastSeenAt: 1792852507740
+firstSeenAt: 1792853462380
+lastSeenAt: 1792853462380
 fingerprint: null
 payload:
   id: C1_copilot_contract

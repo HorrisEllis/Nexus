@@ -9,11 +9,11 @@ intent: null
 summary: TX10_component_registry_discipline (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852554969
+exported_at: 1792853510235
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852554969
-lastSeenAt: 1792852554969
+firstSeenAt: 1792853510235
+lastSeenAt: 1792853510235
 fingerprint: null
 payload:
   id: TX10_component_registry_discipline

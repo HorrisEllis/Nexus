@@ -7,11 +7,11 @@ intent: null
 summary: GN1_genesis (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792852512300
+exported_at: 1792853466807
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852512300
-lastSeenAt: 1792852512300
+firstSeenAt: 1792853466807
+lastSeenAt: 1792853466807
 fingerprint: null
 payload:
   id: GN1_genesis

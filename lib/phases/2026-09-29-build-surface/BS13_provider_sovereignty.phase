@@ -7,11 +7,11 @@ intent: null
 summary: BS13_provider_sovereignty (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852509501
+exported_at: 1792853464184
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852509501
-lastSeenAt: 1792852509501
+firstSeenAt: 1792853464184
+lastSeenAt: 1792853464184
 fingerprint: null
 payload:
   id: BS13_provider_sovereignty
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 3ece1862f254b4c5
+    hash: 5a1459f5c6d397c4
     nodes:
       - path: idearium/api/index.js
         role: changes
@@ -92,11 +92,11 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: lib/agent-providers.js
+      - path: idearium/spec-compiler/compiler/index.js
         role: uses
         exists: true
-        system: lib
-      - path: lib/data-home.js
+        system: idearium
+      - path: lib/agent-providers.js
         role: uses
         exists: true
         system: lib
@@ -116,7 +116,7 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/warp-rung.js
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -164,10 +164,10 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/data-home.js
+        to: lib/spec-compiler-port.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/warp-rung.js
+        to: idearium/spec-compiler/compiler/index.js
         kind: requires
       - from: idearium/spec-engine/warp-build-dispatch.js
         to: lib/seam/adapters/warp-cascade.js

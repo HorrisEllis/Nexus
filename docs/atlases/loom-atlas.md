@@ -563,7 +563,7 @@ Not expanded further — this session did not read `loom/server.js` or `package.
   exports mapRaidEventsAndTools, FILES, CONSUMERS · requires 0 · required by 1
 - `loom/maps/releases-map.js` (39 lines) — §0.60.41 RN1: the edges the source scanner cannot read in releases-in-Versionium (docs/2026-10-15-one-contract-raid-releases-phasemap.spec RN1). versionium/lib/releases.js is reached by a literal  
   exports mapReleases, FILES, CONSUMERS · requires 2 · required by 1
-- `loom/maps/run-state-map.js` (399 lines) — §0.60.50 CE1–CE5 + CE10: the edges the source scanner cannot read in the run state (docs/2026-10-15-code-tab-run-state-phasemap.spec). lib/run-state.js is reached by lazy require() inside functions  
+- `loom/maps/run-state-map.js` (409 lines) — §0.60.50 CE1–CE5 + CE10: the edges the source scanner cannot read in the run state (docs/2026-10-15-code-tab-run-state-phasemap.spec). lib/run-state.js is reached by lazy require() inside functions  
   exports mapRunState, FILES, CONSUMERS · requires 2 · required by 1
 - `loom/maps/session-2026-08-14-map.js` (471 lines) — maps the three genuinely NEW components this session created (lib/agent-system/contracts.js, submit.js,  
   exports mapSession20260814, FILES · requires 0 · required by 1

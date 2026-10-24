@@ -9,11 +9,11 @@ intent: null
 summary: P33_every_system_runs_its_node_registry (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852500752
+exported_at: 1792853455136
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852500752
-lastSeenAt: 1792852500752
+firstSeenAt: 1792853455136
+lastSeenAt: 1792853455136
 fingerprint: null
 payload:
   id: P33_every_system_runs_its_node_registry

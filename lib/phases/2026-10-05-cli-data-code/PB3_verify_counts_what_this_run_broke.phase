@@ -9,11 +9,11 @@ intent: null
 summary: PB3_verify_counts_what_this_run_broke (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852516522
+exported_at: 1792853470863
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852516522
-lastSeenAt: 1792852516522
+firstSeenAt: 1792853470863
+lastSeenAt: 1792853470863
 fingerprint: null
 payload:
   id: PB3_verify_counts_what_this_run_broke
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 2c3748ba8d24ac93
+    hash: c5267c83ad40d90b
     nodes:
       - path: idearium/api/index.js
         role: changes
@@ -102,10 +102,18 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: intelligence/spatial/lattice.js
+      - path: idearium/spec-compiler/compiler/index.js
         role: uses
         exists: true
-        system: intelligence
+        system: idearium
+      - path: idearium/spec-compiler/compiler/pipeline.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
+        role: uses
+        exists: true
+        system: idearium
       - path: lib/cos-run.js
         role: uses
         exists: true
@@ -118,15 +126,7 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/nexus-client.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/repo-agent.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/spec-collect.js
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -148,6 +148,18 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
+        to: lib/spec-compiler-port.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/pipeline.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
+        kind: requires
+      - from: idearium/api/index.js
         to: lib/data-home.js
         kind: requires
       - from: idearium/api/index.js
@@ -158,18 +170,6 @@ payload:
         kind: requires
       - from: idearium/api/index.js
         to: lib/economy/tokens.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/repo-agent.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/spec-collect.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/nexus-client.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: intelligence/spatial/lattice.js
         kind: requires
       - from: tests/modules/test-build-verify.test.js
         to: lib/build-verify.js
@@ -213,12 +213,6 @@ payload:
         fromSystem: lib
         toSystem: cos
         kind: upward
-        known: true
-      - from: idearium/api/index.js
-        to: intelligence/spatial/lattice.js
-        fromSystem: idearium
-        toSystem: intelligence
-        kind: system
         known: true
       - from: service/idearium-service.js
         to: idearium/api/index.js

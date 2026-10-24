@@ -9,11 +9,11 @@ intent: null
 summary: SF4_compile_on_collect (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792852534611
+exported_at: 1792853489680
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852534611
-lastSeenAt: 1792852534611
+firstSeenAt: 1792853489680
+lastSeenAt: 1792853489680
 fingerprint: null
 payload:
   id: SF4_compile_on_collect
@@ -23,7 +23,7 @@ payload:
   status: DONE (0.60.67)
   files:
     - lib/spec-collect.js
-    - emerge/compiler/index.js
+    - idearium/spec-compiler/compiler/index.js
     - lib/repo-inject.js
     - idearium/lib/config-core.cjs
     - idearium/api/index.js
@@ -35,12 +35,8 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: aadcbf4561eb1533
+    hash: 0b4c9a86f0e71150
     nodes:
-      - path: emerge/compiler/index.js
-        role: changes
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: changes
         exists: true
@@ -50,6 +46,10 @@ payload:
         exists: true
         system: idearium
       - path: idearium/lib/config-core.cjs
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/index.js
         role: changes
         exists: true
         system: idearium
@@ -69,10 +69,6 @@ payload:
         role: changes
         exists: true
         system: null
-      - path: emerge/verify.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/compiler-bridge.js
         role: used-by
         exists: true
@@ -82,6 +78,10 @@ payload:
         exists: true
         system: idearium
       - path: idearium/repo/code-api.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/verify.js
         role: used-by
         exists: true
         system: idearium
@@ -121,22 +121,22 @@ payload:
         role: uses
         exists: true
         system: cortex
-      - path: emerge/cortex-query/index.js
-        role: uses
-        exists: true
-        system: emerge
-      - path: emerge/cortex-query/writeback.js
-        role: uses
-        exists: true
-        system: emerge
-      - path: emerge/version.js
-        role: uses
-        exists: true
-        system: emerge
       - path: guardian/lib/code-artifact.js
         role: uses
         exists: true
         system: guardian
+      - path: idearium/spec-compiler/cortex-query/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/cortex-query/writeback.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/version.js
+        role: uses
+        exists: true
+        system: idearium
       - path: lib/change-entry.js
         role: uses
         exists: true
@@ -153,7 +153,7 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/repo-versions.js
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -172,14 +172,17 @@ payload:
       - from: lib/spec-collect.js
         to: lib/file-tree-plan.js
         kind: requires
-      - from: emerge/compiler/index.js
-        to: emerge/cortex-query/index.js
+      - from: lib/spec-collect.js
+        to: lib/spec-compiler-port.js
         kind: requires
-      - from: emerge/compiler/index.js
-        to: emerge/cortex-query/writeback.js
+      - from: idearium/spec-compiler/compiler/index.js
+        to: idearium/spec-compiler/cortex-query/index.js
         kind: requires
-      - from: emerge/compiler/index.js
-        to: emerge/version.js
+      - from: idearium/spec-compiler/compiler/index.js
+        to: idearium/spec-compiler/cortex-query/writeback.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/index.js
+        to: idearium/spec-compiler/version.js
         kind: requires
       - from: lib/repo-inject.js
         to: lib/node-export.js
@@ -199,20 +202,17 @@ payload:
       - from: lib/repo-inject.js
         to: lib/change-entry.js
         kind: requires
-      - from: lib/repo-inject.js
-        to: lib/repo-versions.js
-        kind: requires
       - from: lib/repo-prompt-blocks.js
         to: lib/spec-collect.js
         kind: requires
       - from: lib/step-gate.js
         to: lib/spec-collect.js
         kind: requires
-      - from: emerge/verify.js
-        to: emerge/compiler/index.js
-        kind: requires
       - from: idearium/compiler-bridge.js
-        to: emerge/compiler/index.js
+        to: idearium/spec-compiler/compiler/index.js
+        kind: requires
+      - from: idearium/spec-compiler/verify.js
+        to: idearium/spec-compiler/compiler/index.js
         kind: requires
       - from: idearium/repo/code-api.js
         to: lib/repo-inject.js
@@ -256,12 +256,6 @@ payload:
         fromSystem: lib
         toSystem: cortex
         kind: upward
-        known: true
-      - from: idearium/compiler-bridge.js
-        to: emerge/compiler/index.js
-        fromSystem: idearium
-        toSystem: emerge
-        kind: system
         known: true
     ready: true
     dag:

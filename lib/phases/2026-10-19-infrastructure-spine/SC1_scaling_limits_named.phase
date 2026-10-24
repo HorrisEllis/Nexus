@@ -7,11 +7,11 @@ intent: null
 summary: SC1_scaling_limits_named (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852546179
+exported_at: 1792853501186
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546179
-lastSeenAt: 1792852546179
+firstSeenAt: 1792853501186
+lastSeenAt: 1792853501186
 fingerprint: null
 payload:
   id: SC1_scaling_limits_named
@@ -29,7 +29,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 336b753926ee2771
+    hash: 9f6dce255b2382f9
     nodes:
       - path: idearium/repo/nexus-self.js
         role: changes
@@ -71,15 +71,15 @@ payload:
         role: used-by
         exists: true
         system: cortex
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: guardian/jaa-store.js
         role: used-by
         exists: true
         system: guardian
       - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -180,10 +180,10 @@ payload:
       - from: loom/bootstrap.js
         to: loom/scanners/spec-map.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: idearium/api/index.js
         to: lib/phase-dag.js
         kind: requires
-      - from: idearium/api/index.js
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-dag.js
         kind: requires
       - from: lib/build-queue.js

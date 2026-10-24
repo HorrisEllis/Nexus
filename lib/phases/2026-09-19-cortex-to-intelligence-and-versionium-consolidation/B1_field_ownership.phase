@@ -9,11 +9,11 @@ intent: null
 summary: B1_field_ownership (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852502806
+exported_at: 1792853457346
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852502806
-lastSeenAt: 1792852502806
+firstSeenAt: 1792853457346
+lastSeenAt: 1792853457346
 fingerprint: null
 payload:
   id: B1_field_ownership

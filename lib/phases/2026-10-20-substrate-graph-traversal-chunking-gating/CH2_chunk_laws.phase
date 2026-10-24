@@ -9,11 +9,11 @@ intent: null
 summary: CH2_chunk_laws (library) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792852548210
+exported_at: 1792853503272
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852548210
-lastSeenAt: 1792852548210
+firstSeenAt: 1792853503272
+lastSeenAt: 1792853503272
 fingerprint: null
 payload:
   id: CH2_chunk_laws

@@ -9,11 +9,11 @@ intent: null
 summary: P32_clearglass_enterprise_ui_scope (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852500747
+exported_at: 1792853455130
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852500747
-lastSeenAt: 1792852500747
+firstSeenAt: 1792853455130
+lastSeenAt: 1792853455130
 fingerprint: null
 payload:
   id: P32_clearglass_enterprise_ui_scope

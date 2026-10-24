@@ -3060,7 +3060,8 @@ function handleExtendedRoutes(req, res, url, method) {
       }
 
       try {
-        const t2 = require('../emerge/compiler/t2-gate');
+        // 0.60.239 EW2 — the spec compiler is Idearium's (idearium/spec-compiler); reached through the kernel's port, never required (a crossing)
+        const t2 = { run: (s, o, opts) => require('../lib/spec-compiler-port.js').t2(s, o, opts) };
         const outDir = outputDir || require('path').join(require('path').dirname(require.main?.filename || __dirname), 'output', name || 'build-' + Date.now());
 
         // If specText provided, write to temp file

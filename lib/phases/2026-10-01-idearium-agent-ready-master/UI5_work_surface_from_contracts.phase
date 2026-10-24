@@ -9,11 +9,11 @@ intent: null
 summary: UI5_work_surface_from_contracts (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852511788
+exported_at: 1792853466331
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852511788
-lastSeenAt: 1792852511788
+firstSeenAt: 1792853466331
+lastSeenAt: 1792853466331
 fingerprint: null
 payload:
   id: UI5_work_surface_from_contracts

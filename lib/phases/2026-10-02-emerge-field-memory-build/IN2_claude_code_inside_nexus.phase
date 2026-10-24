@@ -9,11 +9,11 @@ intent: null
 summary: IN2_claude_code_inside_nexus (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852513252
+exported_at: 1792853467705
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852513252
-lastSeenAt: 1792852513252
+firstSeenAt: 1792853467705
+lastSeenAt: 1792853467705
 fingerprint: null
 payload:
   id: IN2_claude_code_inside_nexus

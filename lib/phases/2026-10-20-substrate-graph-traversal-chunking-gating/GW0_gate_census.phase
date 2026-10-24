@@ -9,11 +9,11 @@ intent: null
 summary: GW0_gate_census (foundation) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852548213
+exported_at: 1792853503274
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852548213
-lastSeenAt: 1792852548213
+firstSeenAt: 1792853503274
+lastSeenAt: 1792853503274
 fingerprint: null
 payload:
   id: GW0_gate_census

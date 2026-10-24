@@ -9,11 +9,11 @@ intent: null
 summary: LM0_loom_wires_have_stable_ids (?) — 2 file(s)
 system: loom
 tags: []
-exported_at: 1792852528741
+exported_at: 1792853483484
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852528741
-lastSeenAt: 1792852528741
+firstSeenAt: 1792853483484
+lastSeenAt: 1792853483484
 fingerprint: null
 payload:
   id: LM0_loom_wires_have_stable_ids

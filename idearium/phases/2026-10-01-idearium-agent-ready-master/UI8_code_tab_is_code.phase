@@ -7,11 +7,11 @@ intent: null
 summary: UI8_code_tab_is_code (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792852511798
+exported_at: 1792853466341
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852511798
-lastSeenAt: 1792852511798
+firstSeenAt: 1792853466341
+lastSeenAt: 1792853466341
 fingerprint: null
 payload:
   id: UI8_code_tab_is_code

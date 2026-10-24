@@ -7,11 +7,11 @@ intent: null
 summary: DOD6_respects_axioms (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852495854
+exported_at: 1792853450220
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852495854
-lastSeenAt: 1792852495854
+firstSeenAt: 1792853450220
+lastSeenAt: 1792853450220
 fingerprint: null
 payload:
   id: DOD6_respects_axioms

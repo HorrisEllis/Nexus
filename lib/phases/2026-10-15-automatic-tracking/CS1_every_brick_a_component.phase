@@ -7,11 +7,11 @@ intent: null
 summary: CS1_every_brick_a_component (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852529164
+exported_at: 1792853483985
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852529164
-lastSeenAt: 1792852529164
+firstSeenAt: 1792853483985
+lastSeenAt: 1792853483985
 fingerprint: null
 payload:
   id: CS1_every_brick_a_component

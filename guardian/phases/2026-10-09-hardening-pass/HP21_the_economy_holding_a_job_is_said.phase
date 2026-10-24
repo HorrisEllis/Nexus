@@ -9,11 +9,11 @@ intent: null
 summary: HP21_the_economy_holding_a_job_is_said (?) — 3 file(s)
 system: guardian
 tags: []
-exported_at: 1792852522476
+exported_at: 1792853476912
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852522476
-lastSeenAt: 1792852522476
+firstSeenAt: 1792853476912
+lastSeenAt: 1792853476912
 fingerprint: null
 payload:
   id: HP21_the_economy_holding_a_job_is_said

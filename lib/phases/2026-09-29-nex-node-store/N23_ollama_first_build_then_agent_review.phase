@@ -9,11 +9,11 @@ intent: null
 summary: N23_ollama_first_build_then_agent_review (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852509985
+exported_at: 1792853464623
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852509985
-lastSeenAt: 1792852509985
+firstSeenAt: 1792853464623
+lastSeenAt: 1792853464623
 fingerprint: null
 payload:
   id: N23_ollama_first_build_then_agent_review

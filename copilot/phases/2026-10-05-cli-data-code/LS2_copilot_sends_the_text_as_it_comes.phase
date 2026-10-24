@@ -9,11 +9,11 @@ intent: null
 summary: LS2_copilot_sends_the_text_as_it_comes (?) — 3 file(s)
 system: copilot
 tags: []
-exported_at: 1792852516526
+exported_at: 1792853470867
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852516526
-lastSeenAt: 1792852516526
+firstSeenAt: 1792853470867
+lastSeenAt: 1792853470867
 fingerprint: null
 payload:
   id: LS2_copilot_sends_the_text_as_it_comes

@@ -7,11 +7,11 @@ intent: null
 summary: ID1_ideas_wired_through (interface) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852546595
+exported_at: 1792853501617
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546595
-lastSeenAt: 1792852546595
+firstSeenAt: 1792853501617
+lastSeenAt: 1792853501617
 fingerprint: null
 payload:
   id: ID1_ideas_wired_through

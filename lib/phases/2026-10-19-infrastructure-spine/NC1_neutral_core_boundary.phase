@@ -7,11 +7,11 @@ intent: null
 summary: NC1_neutral_core_boundary (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852546175
+exported_at: 1792853501182
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546175
-lastSeenAt: 1792852546175
+firstSeenAt: 1792853501182
+lastSeenAt: 1792853501182
 fingerprint: null
 payload:
   id: NC1_neutral_core_boundary
@@ -29,7 +29,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 8d22ecf041f86088
+    hash: adb3cf1b858ef3d8
     nodes:
       - path: lib/core/manifest.js
         role: changes
@@ -47,11 +47,11 @@ payload:
         role: changes
         exists: true
         system: lib
-      - path: emerge/compiler/phase-specs.js
+      - path: idearium/api/index.js
         role: used-by
         exists: true
-        system: emerge
-      - path: idearium/api/index.js
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -82,10 +82,10 @@ payload:
       - from: lib/project-registry.js
         to: lib/component-store.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: idearium/api/index.js
         to: lib/phase-dag.js
         kind: requires
-      - from: idearium/api/index.js
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-dag.js
         kind: requires
       - from: lib/build-queue.js

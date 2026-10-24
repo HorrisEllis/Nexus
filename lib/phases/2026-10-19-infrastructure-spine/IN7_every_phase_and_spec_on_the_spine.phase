@@ -9,11 +9,11 @@ intent: null
 summary: IN7_every_phase_and_spec_on_the_spine (library) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852546173
+exported_at: 1792853501181
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546173
-lastSeenAt: 1792852546173
+firstSeenAt: 1792853501181
+lastSeenAt: 1792853501181
 fingerprint: null
 payload:
   id: IN7_every_phase_and_spec_on_the_spine
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 3f98bf90b31ed6e9
+    hash: 3bd556434721ea73
     nodes:
       - path: idearium/repo/phase-mapping.js
         role: changes
@@ -45,15 +45,15 @@ payload:
         role: changes
         exists: true
         system: lib
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -96,10 +96,10 @@ payload:
       - from: idearium/repo/phase-mapping.js
         to: lib/phase-files.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: idearium/api/index.js
         to: lib/phase-dag.js
         kind: requires
-      - from: idearium/api/index.js
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-dag.js
         kind: requires
       - from: lib/build-queue.js

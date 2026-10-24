@@ -9,11 +9,11 @@ intent: null
 summary: FG2_token_budget_chunking (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852513798
+exported_at: 1792853468190
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852513798
-lastSeenAt: 1792852513798
+firstSeenAt: 1792853468190
+lastSeenAt: 1792853468190
 fingerprint: null
 payload:
   id: FG2_token_budget_chunking

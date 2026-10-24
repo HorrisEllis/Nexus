@@ -7,11 +7,11 @@ intent: null
 summary: SB4_template_fidelity (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792852515868
+exported_at: 1792853470241
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852515868
-lastSeenAt: 1792852515868
+firstSeenAt: 1792853470241
+lastSeenAt: 1792853470241
 fingerprint: null
 payload:
   id: SB4_template_fidelity
@@ -29,7 +29,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: b5cd3fe3d598abc0
+    hash: 1c94f2ce8f6fc54c
     nodes:
       - path: idearium/spec-engine/templates/architecture-spec.template.yaml
         role: changes
@@ -43,10 +43,6 @@ payload:
         role: changes
         exists: true
         system: lib
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -60,6 +56,10 @@ payload:
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -92,9 +92,6 @@ payload:
         exists: true
         system: lib
     edges:
-      - from: emerge/compiler/phase-specs.js
-        to: lib/nexus-self/systems.js
-        kind: requires
       - from: idearium/api/index.js
         to: lib/nexus-self/systems.js
         kind: requires
@@ -105,6 +102,9 @@ payload:
         to: lib/nexus-self/systems.js
         kind: requires
       - from: idearium/repo/phases.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: lib/atlas-generate.js

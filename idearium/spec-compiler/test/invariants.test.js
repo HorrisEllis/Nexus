@@ -18,7 +18,7 @@ const {
   violation, createInvariantsPipeline, INV, INVARIANT_VERSION,
 } = require('../compiler/invariants-engine');
 const { build } = require('../compiler/kg-builder');
-const { Event } = require('../siso');
+const { Event } = require('../../../emerge/siso');
 
 let p = 0, f = 0;
 function test(label, fn) {

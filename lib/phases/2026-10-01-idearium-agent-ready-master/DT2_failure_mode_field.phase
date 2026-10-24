@@ -7,11 +7,11 @@ intent: null
 summary: DT2_failure_mode_field (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852511763
+exported_at: 1792853466305
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852511763
-lastSeenAt: 1792852511763
+firstSeenAt: 1792853466305
+lastSeenAt: 1792853466305
 fingerprint: null
 payload:
   id: DT2_failure_mode_field

@@ -9,11 +9,11 @@ intent: null
 summary: CG8_devtools_screenshot_dom_archaeology (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852498333
+exported_at: 1792853452608
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852498333
-lastSeenAt: 1792852498333
+firstSeenAt: 1792853452608
+lastSeenAt: 1792853452608
 fingerprint: null
 payload:
   id: CG8_devtools_screenshot_dom_archaeology

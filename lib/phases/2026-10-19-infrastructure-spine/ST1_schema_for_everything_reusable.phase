@@ -9,11 +9,11 @@ intent: null
 summary: ST1_schema_for_everything_reusable (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852546179
+exported_at: 1792853501186
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546179
-lastSeenAt: 1792852546179
+firstSeenAt: 1792853501186
+lastSeenAt: 1792853501186
 fingerprint: null
 payload:
   id: ST1_schema_for_everything_reusable

@@ -9,11 +9,11 @@ intent: null
 summary: SB17_the_system_template_is_complete (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792852515901
+exported_at: 1792853470274
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852515901
-lastSeenAt: 1792852515901
+firstSeenAt: 1792853470274
+lastSeenAt: 1792853470274
 fingerprint: null
 payload:
   id: SB17_the_system_template_is_complete

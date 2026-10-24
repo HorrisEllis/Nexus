@@ -9,11 +9,11 @@ intent: null
 summary: SB37_the_working_set_signal_to_noise (?) — 6 file(s)
 system: copilot
 tags: []
-exported_at: 1792852515942
+exported_at: 1792853470313
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852515942
-lastSeenAt: 1792852515942
+firstSeenAt: 1792853470313
+lastSeenAt: 1792853470313
 fingerprint: null
 payload:
   id: SB37_the_working_set_signal_to_noise

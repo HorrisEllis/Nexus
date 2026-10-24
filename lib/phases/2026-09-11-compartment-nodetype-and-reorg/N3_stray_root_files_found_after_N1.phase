@@ -9,11 +9,11 @@ intent: null
 summary: N3_stray_root_files_found_after_N1 (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852500283
+exported_at: 1792853454595
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852500283
-lastSeenAt: 1792852500283
+firstSeenAt: 1792853454595
+lastSeenAt: 1792853454595
 fingerprint: null
 payload:
   id: N3_stray_root_files_found_after_N1
@@ -26,12 +26,8 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 61e7b884c0827a01
+    hash: 26ecb90da89e1f98
     nodes:
-      - path: emerge/cortex-query/writeback.js
-        role: changes
-        exists: true
-        system: emerge
       - path: emerge/emerge-ide.js
         role: changes
         exists: true

@@ -7,11 +7,11 @@ intent: null
 summary: PN2_dual_read (library) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852546180
+exported_at: 1792853501189
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546180
-lastSeenAt: 1792852546180
+firstSeenAt: 1792853501189
+lastSeenAt: 1792853501189
 fingerprint: null
 payload:
   id: PN2_dual_read
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 513d83c925413e21
+    hash: 91127d4a8e44fa8a
     nodes:
       - path: idearium/repo/phases.js
         role: changes
@@ -42,10 +42,6 @@ payload:
         role: changes
         exists: true
         system: loom
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/build-surface.js
         role: used-by
         exists: true
@@ -67,6 +63,10 @@ payload:
         exists: true
         system: idearium
       - path: idearium/repo/spec-plan.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -140,10 +140,10 @@ payload:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: idearium/api/index.js
         to: lib/phase-dag.js
         kind: requires
-      - from: idearium/api/index.js
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-dag.js
         kind: requires
       - from: lib/build-queue.js

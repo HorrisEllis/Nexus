@@ -27,13 +27,14 @@ function run() {
     assert.ok(!/emerge:\s*'emerge\/consumer\.js'/.test(src), 'the stale reference to the retired file should be gone');
   });
 
-  test('SCE-002', 'it now points at the real, current, kept core — emerge/compiler/pipeline.js', () => {
+  // 0.60.239 EW3 — James, 2026-10-24: "spec compiler, ide, and idearium": the compiler is idearium/spec-compiler; emerge's core is its kernel
+  test('SCE-002', 'it now points at the real, current core — emerge/emerge-kernel.js (the compiler moved to Idearium, EW3)', () => {
     const src = fs.readFileSync(path.join(ROOT, 'lib/system-check.js'), 'utf8');
-    assert.ok(/emerge:\s*'emerge\/compiler\/pipeline\.js'/.test(src));
+    assert.ok(/emerge:\s*'emerge\/emerge-kernel\.js'/.test(src));
   });
 
   test('SCE-003', 'the real, current entry file genuinely exists on disk — the fix points at something real, not another guess', () => {
-    assert.ok(fs.existsSync(path.join(ROOT, 'emerge/compiler/pipeline.js')));
+    assert.ok(fs.existsSync(path.join(ROOT, 'emerge/emerge-kernel.js')) && fs.existsSync(path.join(ROOT, 'idearium/spec-compiler/compiler/pipeline.js')));
   });
 
   test('SCE-004', 'the archived consumer.js is confirmed gone from its old live location — confirms the retirement this fix accounts for actually happened', () => {

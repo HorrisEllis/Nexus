@@ -7,11 +7,11 @@ intent: null
 summary: CS10_hats_bound_to_the_compartment (integration) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852552190
+exported_at: 1792853507421
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852552190
-lastSeenAt: 1792852552190
+firstSeenAt: 1792853507421
+lastSeenAt: 1792853507421
 fingerprint: null
 payload:
   id: CS10_hats_bound_to_the_compartment

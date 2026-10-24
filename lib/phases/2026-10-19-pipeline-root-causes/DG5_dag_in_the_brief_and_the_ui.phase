@@ -9,11 +9,11 @@ intent: null
 summary: DG5_dag_in_the_brief_and_the_ui (interface) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852546591
+exported_at: 1792853501613
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546591
-lastSeenAt: 1792852546591
+firstSeenAt: 1792853501613
+lastSeenAt: 1792853501613
 fingerprint: null
 payload:
   id: DG5_dag_in_the_brief_and_the_ui

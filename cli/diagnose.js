@@ -689,8 +689,8 @@ async function diagEmerge() {
     ['file: emerge/emerge-ide.js',              () => fileExists('emerge/emerge-ide.js')],
     ['file: emerge/emerge-kernel.js',           () => fileExists('emerge/emerge-kernel.js')],
     ['file: emerge/emerge.spec',                () => fileExists('emerge/emerge.spec')],
-    ['file: emerge/compiler/index.js',         () => fileExists('emerge/compiler/index.js')],
-    ['file: emerge/compiler/pipeline.js',      () => fileExists('emerge/compiler/pipeline.js')],
+    ['file: idearium/spec-compiler/compiler/index.js',         () => fileExists('idearium/spec-compiler/compiler/index.js')],
+    ['file: idearium/spec-compiler/compiler/pipeline.js',      () => fileExists('idearium/spec-compiler/compiler/pipeline.js')],
     ['file: emerge/siso/index.js',             () => fileExists('emerge/siso/index.js')],
     ['file: emerge/version.js',                () => fileExists('emerge/version.js')],
     ['emerge.spec: valid (parseable)',         () => {
@@ -707,8 +707,8 @@ async function diagEmerge() {
       const r = spawnSync('node',['--check','emerge/emerge-kernel.js'],{cwd:ROOT,encoding:'utf8',timeout:5000});
       return r.status === 0;
     }],
-    ['syntax: emerge/compiler/index.js',      () => {
-      const r = spawnSync('node',['--check','emerge/compiler/index.js'],{cwd:ROOT,encoding:'utf8',timeout:5000});
+    ['syntax: idearium/spec-compiler/compiler/index.js',      () => {
+      const r = spawnSync('node',['--check','idearium/spec-compiler/compiler/index.js'],{cwd:ROOT,encoding:'utf8',timeout:5000});
       return r.status === 0;
     }],
     ['kernel: loads spec without crash',       () => {

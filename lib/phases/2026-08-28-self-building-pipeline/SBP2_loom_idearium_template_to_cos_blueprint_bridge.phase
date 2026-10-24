@@ -9,11 +9,11 @@ intent: null
 summary: SBP2_loom_idearium_template_to_cos_blueprint_bridge (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852496469
+exported_at: 1792853450683
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852496469
-lastSeenAt: 1792852496469
+firstSeenAt: 1792853450683
+lastSeenAt: 1792853450683
 fingerprint: null
 payload:
   id: SBP2_loom_idearium_template_to_cos_blueprint_bridge

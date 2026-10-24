@@ -7,11 +7,11 @@ intent: null
 summary: EW1_emerge_and_warp_one_system (foundation) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792852553773
+exported_at: 1792853509008
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852553773
-lastSeenAt: 1792852553773
+firstSeenAt: 1792853509008
+lastSeenAt: 1792853509008
 fingerprint: null
 payload:
   id: EW1_emerge_and_warp_one_system
@@ -34,7 +34,7 @@ payload:
   blocks: []
   spec: docs/2026-10-17-system-drawbridge-phasemap.spec
   graph:
-    hash: 2fb9485892fe4a23
+    hash: 8c3f3e908d7f646a
     nodes:
       - path: lib/nexus-self/systems.js
         role: changes
@@ -60,10 +60,6 @@ payload:
         role: changes
         exists: true
         system: null
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -77,6 +73,10 @@ payload:
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -130,9 +130,6 @@ payload:
       - from: tests/modules/test-readme-generate.test.js
         to: clear-glass/src/driver/glass.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/nexus-self/systems.js
-        kind: requires
       - from: idearium/api/index.js
         to: lib/nexus-self/systems.js
         kind: requires
@@ -143,6 +140,9 @@ payload:
         to: lib/nexus-self/systems.js
         kind: requires
       - from: idearium/repo/phases.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: lib/atlas-generate.js

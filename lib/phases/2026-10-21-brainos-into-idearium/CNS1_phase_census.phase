@@ -7,11 +7,11 @@ intent: null
 summary: CNS1_phase_census (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852549386
+exported_at: 1792853504552
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852549386
-lastSeenAt: 1792852549386
+firstSeenAt: 1792853504552
+lastSeenAt: 1792853504552
 fingerprint: null
 payload:
   id: CNS1_phase_census
@@ -32,7 +32,7 @@ payload:
     - MOD-BX-PHASE-CENSUS
   spec: docs/brainos-in-idearium.spec
   graph:
-    hash: ac4aa4a9dde1d8b0
+    hash: e34ea13ebc2de9af
     nodes:
       - path: docs/idearium-phase-census.md
         role: changes
@@ -110,18 +110,18 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/lib/access.cjs
-        role: uses
-        exists: true
-        system: idearium
       - path: idearium/lib/config.js
         role: uses
         exists: true
         system: idearium
-      - path: lib/data-home.js
+      - path: idearium/spec-compiler/compiler/index.js
         role: uses
         exists: true
-        system: lib
+        system: idearium
+      - path: idearium/spec-compiler/compiler/pipeline.js
+        role: uses
+        exists: true
+        system: idearium
       - path: lib/nexus-client.js
         role: uses
         exists: true
@@ -142,7 +142,7 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/warp-rung.js
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -175,13 +175,13 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/data-home.js
+        to: lib/spec-compiler-port.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/warp-rung.js
+        to: idearium/spec-compiler/compiler/index.js
         kind: requires
       - from: idearium/api/index.js
-        to: idearium/lib/access.cjs
+        to: idearium/spec-compiler/compiler/pipeline.js
         kind: requires
       - from: diagnostic/tests/causality.test.js
         to: idearium/cli/route-commands.js

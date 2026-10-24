@@ -9,11 +9,11 @@ intent: null
 summary: IC10_diagnostic_own_real_system_structure (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852496984
+exported_at: 1792853451204
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852496984
-lastSeenAt: 1792852496984
+firstSeenAt: 1792853451204
+lastSeenAt: 1792853451204
 fingerprint: null
 payload:
   id: IC10_diagnostic_own_real_system_structure

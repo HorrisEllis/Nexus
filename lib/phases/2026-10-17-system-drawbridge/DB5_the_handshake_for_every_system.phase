@@ -9,11 +9,11 @@ intent: null
 summary: DB5_the_handshake_for_every_system (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852542826
+exported_at: 1792853497863
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852542826
-lastSeenAt: 1792852542826
+firstSeenAt: 1792853497863
+lastSeenAt: 1792853497863
 fingerprint: null
 payload:
   id: DB5_the_handshake_for_every_system

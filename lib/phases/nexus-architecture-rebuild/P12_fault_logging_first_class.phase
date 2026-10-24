@@ -7,11 +7,11 @@ intent: null
 summary: P12_fault_logging_first_class (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852559370
+exported_at: 1792853514782
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852559370
-lastSeenAt: 1792852559370
+firstSeenAt: 1792853514782
+lastSeenAt: 1792853514782
 fingerprint: null
 payload:
   id: P12_fault_logging_first_class

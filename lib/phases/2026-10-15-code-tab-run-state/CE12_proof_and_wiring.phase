@@ -7,11 +7,11 @@ intent: null
 summary: CE12_proof_and_wiring (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792852530883
+exported_at: 1792853485816
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852530883
-lastSeenAt: 1792852530883
+firstSeenAt: 1792853485816
+lastSeenAt: 1792853485816
 fingerprint: null
 payload:
   id: CE12_proof_and_wiring

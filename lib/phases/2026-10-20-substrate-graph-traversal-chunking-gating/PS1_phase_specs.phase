@@ -9,11 +9,11 @@ intent: null
 summary: PS1_phase_specs (library) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792852548215
+exported_at: 1792853503276
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852548215
-lastSeenAt: 1792852548215
+firstSeenAt: 1792853503276
+lastSeenAt: 1792853503276
 fingerprint: null
 payload:
   id: PS1_phase_specs
@@ -34,11 +34,11 @@ payload:
     - MOD-PHASE-SPECS
   spec: docs/substrate.spec
   graph:
-    hash: 77e8fe5e41ea6ccc
+    hash: 72454daea8310d40
     nodes:
       - path: emerge/compiler/phase-specs.js
         role: changes
-        exists: true
+        exists: false
         system: emerge
       - path: lib/pipeline-nodes.js
         role: changes
@@ -52,39 +52,15 @@ payload:
         role: used-by
         exists: true
         system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
+        role: used-by
+        exists: true
+        system: idearium
       - path: tests/modules/test-pipeline-nodes.test.js
         role: used-by
         exists: true
         system: null
-      - path: emerge/compiler/kg-builder.js
-        role: uses
-        exists: true
-        system: emerge
-      - path: lib/nexus-self/systems.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/node-export.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/phase-dag.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/phase-files.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/phase-graph.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/phase-map-auto.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/phase-plan.js
         role: uses
         exists: true
         system: lib
@@ -93,34 +69,16 @@ payload:
         exists: true
         system: lib
     edges:
-      - from: emerge/compiler/phase-specs.js
-        to: emerge/compiler/kg-builder.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-dag.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-files.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-map-auto.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-graph.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-plan.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/nexus-self/systems.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: lib/pipeline-nodes.js
         to: lib/node-export.js
         kind: requires
       - from: tests/modules/test-phase-specs.test.js
         to: lib/test-sandbox.js
         kind: requires
       - from: idearium/api/index.js
+        to: lib/pipeline-nodes.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/pipeline-nodes.js
         kind: requires
       - from: tests/modules/test-pipeline-nodes.test.js

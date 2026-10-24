@@ -9,11 +9,11 @@ intent: null
 summary: SB30_the_template_is_a_skeleton (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792852515925
+exported_at: 1792853470300
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852515925
-lastSeenAt: 1792852515925
+firstSeenAt: 1792853470300
+lastSeenAt: 1792853470300
 fingerprint: null
 payload:
   id: SB30_the_template_is_a_skeleton

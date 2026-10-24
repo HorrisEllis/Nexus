@@ -7,11 +7,11 @@ intent: null
 summary: EX2_vitals_from_every_process (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852521667
+exported_at: 1792853476123
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852521667
-lastSeenAt: 1792852521667
+firstSeenAt: 1792853476123
+lastSeenAt: 1792853476123
 fingerprint: null
 payload:
   id: EX2_vitals_from_every_process

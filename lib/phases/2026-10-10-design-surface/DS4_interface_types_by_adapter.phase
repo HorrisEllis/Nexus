@@ -7,11 +7,11 @@ intent: null
 summary: DS4_interface_types_by_adapter (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852524105
+exported_at: 1792853478671
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852524105
-lastSeenAt: 1792852524105
+firstSeenAt: 1792853478671
+lastSeenAt: 1792853478671
 fingerprint: null
 payload:
   id: DS4_interface_types_by_adapter

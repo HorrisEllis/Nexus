@@ -7,11 +7,11 @@ intent: null
 summary: D1_bridgeos_readme_template (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852498311
+exported_at: 1792853452584
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852498311
-lastSeenAt: 1792852498311
+firstSeenAt: 1792853452584
+lastSeenAt: 1792853452584
 fingerprint: null
 payload:
   id: D1_bridgeos_readme_template

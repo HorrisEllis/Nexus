@@ -7,11 +7,11 @@ intent: null
 summary: P5_faculties_as_tools (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852556966
+exported_at: 1792853512301
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852556966
-lastSeenAt: 1792852556966
+firstSeenAt: 1792853512301
+lastSeenAt: 1792853512301
 fingerprint: null
 payload:
   id: P5_faculties_as_tools
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 7ce0d0cbf1e459e5
+    hash: 0dc56f512117bd87
     nodes:
       - path: copilot/axiom-manager.js
         role: changes
@@ -62,10 +62,6 @@ payload:
         role: uses
         exists: true
         system: cortex
-      - path: emerge/compiler/pipeline.js
-        role: uses
-        exists: true
-        system: emerge
       - path: lib/component-registry.js
         role: uses
         exists: true
@@ -75,6 +71,10 @@ payload:
         exists: true
         system: lib
       - path: lib/loom-map.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -92,7 +92,7 @@ payload:
         to: copilot/lib/descriptor-projector.js
         kind: requires
       - from: copilot/module-builder.js
-        to: emerge/compiler/pipeline.js
+        to: lib/spec-compiler-port.js
         kind: requires
       - from: copilot/module-builder.js
         to: lib/event-types.js
@@ -113,12 +113,6 @@ payload:
         to: copilot/axiom-manager.js
         kind: requires
     crossings:
-      - from: copilot/module-builder.js
-        to: emerge/compiler/pipeline.js
-        fromSystem: copilot
-        toSystem: emerge
-        kind: system
-        known: true
       - from: copilot/module-builder.js
         to: cortex/memory/jaa-db.js
         fromSystem: copilot

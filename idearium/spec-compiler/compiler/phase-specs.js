@@ -1,7 +1,7 @@
 'use strict';
 /**
- * emerge/compiler/phase-specs.js — PS1: each phase specced again, with its DAG and its related files, beside the system that owns it.
- * comp_id: nexus.emerge.phase-specs
+ * idearium/spec-compiler/compiler/phase-specs.js (was emerge/compiler/, moved 0.60.239 EW3) — PS1: each phase specced again, with its DAG and its related files, beside the system that owns it.
+ * comp_id: nexus.emerge.phase-specs (the id it was registered under; kept so loom's history holds)
  * Lives in emerge (the spec compiler's system), not lib/: it compiles specs with emerge's kg-builder, and lib/ requiring emerge/ is
  * a new upward crossing (lib/system-boundary.js). From here its uses of lib/ are the allowed system-uses-kernel kind.
  * Spec: docs/substrate.spec MOD-PHASE-SPECS · Map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec PS1
@@ -31,7 +31,7 @@ const path = require('path');
 
 const MODULE_ID = 'nexus.emerge.phase-specs';
 const VERSION = '1.3.0';   // 1.1.0 PS2 --all · 1.2.0 PS3 bundles (one uuid; spec module link) · 1.3.0 PS4 one file per phase
-const ROOT = path.resolve(__dirname, '../..');
+const ROOT = path.resolve(__dirname, '../../..');   // 0.60.239 EW3: idearium/spec-compiler/compiler
 
 const _field = (body, k) => { const m = String(body || '').match(new RegExp(`^\\s{4}${k}:\\s*(.+)$`, 'm')); return m ? m[1].trim() : null; };
 const _list = (v) => (v ? v.replace(/^\[|\]$/g, '').split(',').map(s => s.trim()).filter(Boolean) : []);
@@ -104,9 +104,9 @@ function _ownerDir(owner, SYS) {
 
 /** derive(...) → per phase: the nodes to write, without writing them */
 function derive({ root = ROOT, map, mapsDir = path.join(root, 'docs') } = {}) {
-  const PD = require('../../lib/phase-dag.js'), PF = require('../../lib/phase-files.js'), PMA = require('../../lib/phase-map-auto.js');
-  const PG = require('../../lib/phase-graph.js'), PN = require('../../lib/pipeline-nodes.js'), PP = require('../../lib/phase-plan.js');
-  const SYS = require('../../lib/nexus-self/systems.js');
+  const PD = require('../../../lib/phase-dag.js'), PF = require('../../../lib/phase-files.js'), PMA = require('../../../lib/phase-map-auto.js');
+  const PG = require('../../../lib/phase-graph.js'), PN = require('../../../lib/pipeline-nodes.js'), PP = require('../../../lib/phase-plan.js');
+  const SYS = require('../../../lib/nexus-self/systems.js');
   const mapRel = path.relative(root, path.resolve(root, map)).split(path.sep).join('/');
   const mapText = fs.readFileSync(path.join(root, mapRel), 'utf8');
   const maps = fs.readdirSync(mapsDir).filter(f => f.endsWith('-phasemap.spec'))
@@ -155,7 +155,7 @@ function write(opts = {}) {
   const root = opts.root || ROOT, out = opts.out || root;   // out: where the nodes go (default the tree itself)
   return derive(opts).map(d => {
     const abs = path.join(out, d.dir);
-    const NE = require('../../lib/node-export.js');
+    const NE = require('../../../lib/node-export.js');
     const put = (env, file) => { NE.validate(env); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, NE.toYaml(env), 'utf8'); return file; };
     const phaseFile = put(d.phaseEnv, path.join(abs, `${d.phase}.phase`));
     // PS4: the phase's old graph/<phase>-<hash>.graph files are redundant now (the graph is inside the .phase; every earlier one is in git
@@ -165,7 +165,7 @@ function write(opts = {}) {
     // PS4: a phase lives with its system only. When its owner changes (0.60.237: warp's and emerge's phases became emerge's), the copy
     // under the old owner is the same phase's earlier node — moved, not kept twice (said in moved, and in git history)
     const moved = [];
-    const SYS = require('../../lib/nexus-self/systems.js');
+    const SYS = require('../../../lib/nexus-self/systems.js');
     const homes = new Set(['lib', ...SYS.SYSTEMS.map(s => _ownerDir(s.name, SYS))]);
     for (const h of homes) {
       const od = path.join(out, h, 'phases', path.basename(d.dir));
@@ -183,7 +183,7 @@ function write(opts = {}) {
 /** check(...) — re-derive; a .phase (with its graph inside) that differs from what the tree derives now is drift, said per phase */
 function check(opts = {}) {
   const root = opts.out || opts.root || ROOT;
-  const NE = require('../../lib/node-export.js');
+  const NE = require('../../../lib/node-export.js');
   return derive(opts).map(d => {
     const drift = [];
     const pf = path.join(root, d.dir, `${d.phase}.phase`);
@@ -212,11 +212,11 @@ function writeAll({ root = ROOT, check: dry = false } = {}) {
     try { rows = dry ? derive({ root, map }).map(d => ({ ...d, phaseFile: null })) : write({ root, map }); }
     catch (e) { sum.failed.push({ map, error: e.message.split('\n')[0] }); continue; }
     for (const r of rows) {
-      const spec = (r.phaseEnv ? r.phaseEnv.payload.spec : null) || (() => { try { return require('../../lib/node-export.js').fromYaml(fs.readFileSync(path.join(root, r.phaseFile), 'utf8')).payload.spec; } catch (_) { return null; } })();
+      const spec = (r.phaseEnv ? r.phaseEnv.payload.spec : null) || (() => { try { return require('../../../lib/node-export.js').fromYaml(fs.readFileSync(path.join(root, r.phaseFile), 'utf8')).payload.spec; } catch (_) { return null; } })();
       sum.phases++; if (!dry) sum.written++; if (r.ready) sum.ready++; if (r.blocks.missing.length) sum.blocksMissing++;
       const o = (sum.byOwner[r.owner] = sum.byOwner[r.owner] || { phases: 0, withSpec: 0 }); o.phases++;
       if (spec) { sum.withSpec++; o.withSpec++; } else sum.noSpec.push({ map, phase: r.phase, owner: r.owner });
-      const link = r.specLink !== undefined ? r.specLink : (() => { try { return require('../../lib/node-export.js').fromYaml(fs.readFileSync(path.join(root, r.phaseFile), 'utf8')).payload.specLink || null; } catch (_) { return null; } })();
+      const link = r.specLink !== undefined ? r.specLink : (() => { try { return require('../../../lib/node-export.js').fromYaml(fs.readFileSync(path.join(root, r.phaseFile), 'utf8')).payload.specLink || null; } catch (_) { return null; } })();
       if (link && link.how === 'discovered:path') { sum.discovered = (sum.discovered || 0) + 1; o.discovered = (o.discovered || 0) + 1; }
     }
   }
@@ -236,7 +236,7 @@ if (require.main === module && process.argv.includes('--all')) {
 
 if (require.main === module && !process.argv.includes('--all')) {
   const args = process.argv.slice(2); const map = args.find(a => !a.startsWith('--'));
-  if (!map) { console.error('usage: node emerge/compiler/phase-specs.js <map.spec> [--check]'); process.exit(2); }
+  if (!map) { console.error('usage: node idearium/spec-compiler/compiler/phase-specs.js <map.spec> [--check]'); process.exit(2); }
   const quiet = console.log; console.log = () => {};
   let rows; try { rows = args.includes('--check') ? check({ map }) : write({ map }); } finally { console.log = quiet; }
   for (const r of rows) console.log(r.drift ? `${r.drift.length ? '✗' : '✓'} ${r.phase}${r.drift.length ? `  ${r.drift.join(' · ')}` : ''}`

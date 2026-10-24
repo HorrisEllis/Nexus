@@ -1112,3 +1112,12 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   his sovereignty point, the coder also found that every node claimed to be Idearium's.
 - **Skill:** spotting a structural cause behind a symptom, and keeping the principle in view (a phase lives with its system).
 - **Checkable:** `CHANGELOG-0.60.238.md`; `git ls-files | grep -c '\.graph$'` gives 0 phase graphs; `tests/modules/test-phase-specs.test.js` PS-02, PS-07.
+
+### 2026-10-24 — 0.60.239: "we don't need to do anything that's not … redefining those boundaries"
+- **His words:** "spec compiler, ide, and idearium" · "I just want to get this, just get to the point where COS becomes, like where we could
+  get to the point where we could integrate COS, and then the Nexus would become immensely fucking easier to manage and more powerful."
+- **Context:** Shown everything left (sovereignty, the COS migration, agent fixes, a self-heal system and an OS still to design), he cut
+  scope to one thing, the boundaries, because they are what make COS possible. The compiler move followed: from another process, through
+  a route, it compiled its own spec.
+- **Skill:** prioritising. He sequenced by dependency (boundaries, then COS, then everything COS makes easier) instead of by appeal.
+- **Checkable:** `CHANGELOG-0.60.239.md`; `tests/modules/test-spec-compiler-port.test.js`; the closed list in `contracts/drawbridge-baseline.json`.

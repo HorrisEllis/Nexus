@@ -7,11 +7,11 @@ intent: null
 summary: BS19_copilot_atlas_guide (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852509506
+exported_at: 1792853464188
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852509506
-lastSeenAt: 1792852509506
+firstSeenAt: 1792853464188
+lastSeenAt: 1792853464188
 fingerprint: null
 payload:
   id: BS19_copilot_atlas_guide

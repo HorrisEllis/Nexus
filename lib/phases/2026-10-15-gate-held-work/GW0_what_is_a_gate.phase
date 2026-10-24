@@ -7,11 +7,11 @@ intent: null
 summary: GW0_what_is_a_gate (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852532096
+exported_at: 1792853487077
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852532096
-lastSeenAt: 1792852532096
+firstSeenAt: 1792853487077
+lastSeenAt: 1792853487077
 fingerprint: null
 payload:
   id: GW0_what_is_a_gate

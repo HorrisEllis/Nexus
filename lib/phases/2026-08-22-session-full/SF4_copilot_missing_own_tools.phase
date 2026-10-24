@@ -7,11 +7,11 @@ intent: null
 summary: SF4_copilot_missing_own_tools (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852494421
+exported_at: 1792853448748
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852494421
-lastSeenAt: 1792852494421
+firstSeenAt: 1792853448748
+lastSeenAt: 1792853448748
 fingerprint: null
 payload:
   id: SF4_copilot_missing_own_tools

@@ -7,11 +7,11 @@ intent: null
 summary: PC0c_who_cuts (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852542425
+exported_at: 1792853497452
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852542425
-lastSeenAt: 1792852542425
+firstSeenAt: 1792853497452
+lastSeenAt: 1792853497452
 fingerprint: null
 payload:
   id: PC0c_who_cuts
@@ -24,21 +24,21 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: ac450cd362cd9414
+    hash: 90d21c6c5a9f382a
     nodes:
       - path: lib/phase-map-auto.js
         role: changes
         exists: true
         system: lib
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -68,13 +68,13 @@ payload:
       - from: lib/phase-map-auto.js
         to: lib/code-intel/chunker.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-map-auto.js
-        kind: requires
       - from: idearium/api/index.js
         to: lib/phase-map-auto.js
         kind: requires
       - from: idearium/repo/phases.js
+        to: lib/phase-map-auto.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-map-auto.js
         kind: requires
       - from: lib/work-funnel.js

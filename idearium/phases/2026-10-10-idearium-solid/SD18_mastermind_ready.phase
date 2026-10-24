@@ -7,11 +7,11 @@ intent: null
 summary: SD18_mastermind_ready (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792852524920
+exported_at: 1792853479519
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852524920
-lastSeenAt: 1792852524920
+firstSeenAt: 1792853479519
+lastSeenAt: 1792853479519
 fingerprint: null
 payload:
   id: SD18_mastermind_ready
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 0605b1ba0a0ed196
+    hash: be96bcb10bd3f393
     nodes:
       - path: idearium/api/index.js
         role: changes
@@ -104,10 +104,6 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/core/index.js
-        role: uses
-        exists: true
-        system: idearium
       - path: idearium/lib/access.cjs
         role: uses
         exists: true
@@ -116,10 +112,18 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: intelligence/spatial/lattice.js
+      - path: idearium/spec-compiler/compiler/index.js
         role: uses
         exists: true
-        system: intelligence
+        system: idearium
+      - path: idearium/spec-compiler/compiler/pipeline.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
+        role: uses
+        exists: true
+        system: idearium
       - path: lib/data-home.js
         role: uses
         exists: true
@@ -128,15 +132,11 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/nexus-client.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/repo-agent.js
         role: uses
         exists: true
         system: lib
-      - path: lib/spec-collect.js
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -159,6 +159,18 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
+        to: lib/spec-compiler-port.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/pipeline.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
+        kind: requires
+      - from: idearium/api/index.js
         to: lib/data-home.js
         kind: requires
       - from: idearium/api/index.js
@@ -172,18 +184,6 @@ payload:
         kind: requires
       - from: idearium/api/index.js
         to: lib/repo-agent.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/spec-collect.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/nexus-client.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: intelligence/spatial/lattice.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/core/index.js
         kind: requires
       - from: idearium/repo/nexus-self.js
         to: lib/zip-ingest.js
@@ -222,12 +222,6 @@ payload:
         to: idearium/api/index.js
         kind: requires
     crossings:
-      - from: idearium/api/index.js
-        to: intelligence/spatial/lattice.js
-        fromSystem: idearium
-        toSystem: intelligence
-        kind: system
-        known: true
       - from: service/idearium-service.js
         to: idearium/api/index.js
         fromSystem: service

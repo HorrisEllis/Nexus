@@ -7,11 +7,11 @@ intent: null
 summary: P2_constitution_on_the_approve_path (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852562592
+exported_at: 1792853518192
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852562592
-lastSeenAt: 1792852562592
+firstSeenAt: 1792853518192
+lastSeenAt: 1792853518192
 fingerprint: null
 payload:
   id: P2_constitution_on_the_approve_path

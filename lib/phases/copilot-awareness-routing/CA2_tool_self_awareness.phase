@@ -7,11 +7,11 @@ intent: null
 summary: CA2_tool_self_awareness (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852555773
+exported_at: 1792853511070
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852555773
-lastSeenAt: 1792852555773
+firstSeenAt: 1792853511070
+lastSeenAt: 1792853511070
 fingerprint: null
 payload:
   id: CA2_tool_self_awareness

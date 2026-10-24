@@ -9,11 +9,11 @@ intent: null
 summary: P2_per_system_interaction_contracts (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852500720
+exported_at: 1792853455097
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852500720
-lastSeenAt: 1792852500720
+firstSeenAt: 1792853455097
+lastSeenAt: 1792853455097
 fingerprint: null
 payload:
   id: P2_per_system_interaction_contracts

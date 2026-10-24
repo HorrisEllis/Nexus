@@ -7,11 +7,11 @@ intent: null
 summary: RQ1_the_verifier_library (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792852527043
+exported_at: 1792853481656
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852527043
-lastSeenAt: 1792852527043
+firstSeenAt: 1792853481656
+lastSeenAt: 1792853481656
 fingerprint: null
 payload:
   id: RQ1_the_verifier_library
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: ce3d943947d62331
+    hash: a49333ae44615ce3
     nodes:
       - path: cos/runtime/run.js
         role: changes
@@ -53,15 +53,15 @@ payload:
         role: changes
         exists: true
         system: lib
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
         system: idearium
       - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/phase-specs.js
         role: used-by
         exists: true
         system: idearium
@@ -130,13 +130,13 @@ payload:
       - from: lib/code-edit.js
         to: lib/proposal-evidence.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-plan.js
-        kind: requires
       - from: idearium/api/index.js
         to: lib/phase-plan.js
         kind: requires
       - from: idearium/repo/phases.js
+        to: lib/phase-plan.js
+        kind: requires
+      - from: idearium/spec-compiler/compiler/phase-specs.js
         to: lib/phase-plan.js
         kind: requires
       - from: lib/capability-spec.js

@@ -7,11 +7,11 @@ intent: null
 summary: N7_views_yaml_and_nex (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792852509967
+exported_at: 1792853464608
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852509967
-lastSeenAt: 1792852509967
+firstSeenAt: 1792853464608
+lastSeenAt: 1792853464608
 fingerprint: null
 payload:
   id: N7_views_yaml_and_nex

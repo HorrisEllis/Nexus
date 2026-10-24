@@ -9,11 +9,11 @@ intent: null
 summary: GW8_causal_graph_and_failure_mode_field (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792852532115
+exported_at: 1792853487097
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852532115
-lastSeenAt: 1792852532115
+firstSeenAt: 1792853487097
+lastSeenAt: 1792853487097
 fingerprint: null
 payload:
   id: GW8_causal_graph_and_failure_mode_field

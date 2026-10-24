@@ -9,11 +9,11 @@ intent: null
 summary: GM6_crystallized_from_what_was_approved (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852544175
+exported_at: 1792853499127
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852544175
-lastSeenAt: 1792852544175
+firstSeenAt: 1792853499127
+lastSeenAt: 1792853499127
 fingerprint: null
 payload:
   id: GM6_crystallized_from_what_was_approved

@@ -7,11 +7,11 @@ intent: null
 summary: SL6_the_loop_counts_itself (library) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852552587
+exported_at: 1792853507817
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852552587
-lastSeenAt: 1792852552587
+firstSeenAt: 1792853507817
+lastSeenAt: 1792853507817
 fingerprint: null
 payload:
   id: SL6_the_loop_counts_itself

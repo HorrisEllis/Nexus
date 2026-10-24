@@ -7,11 +7,11 @@ intent: null
 summary: COSA10_compartment_window (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852531308
+exported_at: 1792853486266
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852531308
-lastSeenAt: 1792852531308
+firstSeenAt: 1792853486266
+lastSeenAt: 1792853486266
 fingerprint: null
 payload:
   id: COSA10_compartment_window
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: b221406d3e785772
+    hash: 8503960a6ca51eb2
     nodes:
       - path: cos/app/switch.js
         role: changes
@@ -52,15 +52,15 @@ payload:
         role: used-by
         exists: true
         system: cos
-      - path: emerge/compiler/phase-specs.js
-        role: used-by
-        exists: true
-        system: emerge
       - path: idearium/api/index.js
         role: used-by
         exists: true
         system: idearium
       - path: idearium/repo/living-spec.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/phases.js
         role: used-by
         exists: true
         system: idearium
@@ -203,7 +203,7 @@ payload:
       - from: tests/modules/test-versionium-repo-history.test.js
         to: idearium/repo/nexus-self.js
         kind: requires
-      - from: emerge/compiler/phase-specs.js
+      - from: idearium/repo/phases.js
         to: lib/nexus-self/systems.js
         kind: requires
     crossings:

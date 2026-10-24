@@ -313,7 +313,7 @@ Not read this session.
   exports answer, contextSummary · requires 2 · required by 0 · tested by `tests/modules/test-agent-hat-agnostic.test.js`
 - `copilot/lifeline.js` (745 lines) — copilot/lifeline.js spec: docs/copilot-expansion.spec  
   exports route, health, MODULE_ID, VERSION, CONFIDENCE_THRESHOLD, extractExplicitAgent +3 · requires 3 · required by 6 · tested by `tests/modules/copilot-confidence.test.js`, `tests/modules/lifeline-fluid-routing.test.js` +2
-- `copilot/module-builder.js` (738 lines) — copilot/module-builder.js spec: docs/copilot-expansion.spec  
+- `copilot/module-builder.js` (739 lines) — copilot/module-builder.js spec: docs/copilot-expansion.spec  
   exports build, map, generateSpec, runQC, registerCliCommand, _resolveExistingTarget +2 · requires 8 · required by 0
 - `copilot/movement-map.js` (126 lines) — OB3 + OB4 of the observability/tablet phasemap §PHASEMAP OB3 + OB4 (docs/nexus-observability-tablet-phasemap.spec, CHUNK F).  
   exports buildMovementGraph, detectBottlenecks, _registryNodes, _frictionFor, MODULE_ID, VERSION · requires 3 · required by 2

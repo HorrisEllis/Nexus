@@ -9,11 +9,11 @@ intent: null
 summary: AM8_lifeline_as_general_channel_and_reasoning_upgrade (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852554569
+exported_at: 1792853509825
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852554569
-lastSeenAt: 1792852554569
+firstSeenAt: 1792853509825
+lastSeenAt: 1792853509825
 fingerprint: null
 payload:
   id: AM8_lifeline_as_general_channel_and_reasoning_upgrade

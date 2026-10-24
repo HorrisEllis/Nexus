@@ -7,11 +7,11 @@ intent: null
 summary: IV1_invariant_kinds (foundation) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792852547810
+exported_at: 1792853502834
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852547810
-lastSeenAt: 1792852547810
+firstSeenAt: 1792853502834
+lastSeenAt: 1792853502834
 fingerprint: null
 payload:
   id: IV1_invariant_kinds

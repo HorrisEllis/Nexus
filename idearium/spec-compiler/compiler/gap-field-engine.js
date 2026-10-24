@@ -59,7 +59,7 @@
  * §1.3  Gaps are derived only. Never authored directly.
  */
 
-const { Event, Gate, Stream, StreamLog } = require('../siso');
+const { Event, Gate, Stream, StreamLog } = require('../../../emerge/siso');
 const { BOUNDARIES } = require('./tier-contract');
 
 // ── Event constants ───────────────────────────────────────────────────────────

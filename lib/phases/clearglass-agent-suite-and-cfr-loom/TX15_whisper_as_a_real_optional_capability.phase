@@ -9,11 +9,11 @@ intent: null
 summary: TX15_whisper_as_a_real_optional_capability (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792852554973
+exported_at: 1792853510239
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852554973
-lastSeenAt: 1792852554973
+firstSeenAt: 1792853510239
+lastSeenAt: 1792853510239
 fingerprint: null
 payload:
   id: TX15_whisper_as_a_real_optional_capability

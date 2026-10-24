@@ -9,11 +9,11 @@ intent: null
 summary: UM1_nexus_understands_james (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792852511816
+exported_at: 1792853466359
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852511816
-lastSeenAt: 1792852511816
+firstSeenAt: 1792853466359
+lastSeenAt: 1792853466359
 fingerprint: null
 payload:
   id: UM1_nexus_understands_james
