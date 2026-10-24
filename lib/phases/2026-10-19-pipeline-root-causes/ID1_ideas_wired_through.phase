@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::ID1_ideas_wired_through
 context: pipeline phase ID1_ideas_wired_through of docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
-summary: ID1_ideas_wired_through (interface) — 10 file(s)
+summary: ID1_ideas_wired_through (interface) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1792875541916
+exported_at: 1792875648130
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792875541916
-lastSeenAt: 1792875541916
+firstSeenAt: 1792875648130
+lastSeenAt: 1792875648130
 fingerprint: null
 payload:
   id: ID1_ideas_wired_through
@@ -26,6 +26,7 @@ payload:
     - tests/sp5-title.test.js
     - lib/path-guard.js
     - diagnostic/nexus-diagnostic.js
+    - data/diagnostic/escalated.json
     - docs/2026-10-21-brainos-into-idearium-phasemap.spec
     - loom/scanners/phasemap-map.js
     - lib/phase-dag.js
@@ -34,4 +35,4 @@ payload:
     - VF1_verify_first
   blocks: []
   spec: null
-  graph: a82e677be817a2bc
+  graph: d74f2fa08863805e
