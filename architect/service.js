@@ -53,7 +53,7 @@ function buildSpecFromSession(session) {
 
 
 
-const { HookRegistry }          = require('../lib/hook-registry'); // moved 2026-07-20, docs/hooks-migration.spec
+// 0.60.241 LM3: no HookRegistry here any more; the read view is Loom's routes (below). Was: require('../lib/hook-registry'), moved 2026-07-20
 const { Blueprint, SNRGate, Translate, scanTopology } = require('./src/spec/Blueprint');
 const { createCFRLedger }       = require('../intelligence/cfr');
 // Living hook registry — the canonical wire map for all NEXUS systems
@@ -224,18 +224,31 @@ async function boot() {
   // registry is repointed, so this is a read-surface correction, not a
   // storage migration.
   console.log('[architect] §3.1 Phase 2: Hook Registry (read view — loom owns writes)');
-  let hookJaa = jaa;
-  try {
-    hookJaa = require('../cortex/memory/jaa-db').jaaDB;
-  } catch (e) {
-    console.warn(`[architect] canonical hook store unavailable (${e.message}) — falling back to local store; hook counts may diverge from loom (§10.3)`);
-  }
-  const registry = new HookRegistry({ jaa: hookJaa, busEmit });
-  registry.init();
+  // 0.60.241 LM3 (docs/2026-10-24-loom-into-cos-phasemap.spec) — the canonical hook store is now Loom's OWN (loom/data/jaa, LM2), so
+  // the read view reads it through Loom's routes, never a store: still one truth (the §10.3 fix above), and no reach into another
+  // system's data. The summary is cached from Loom's answer for /health and the boot event; list and get are Loom's answers, as they come.
+  const LOOM_URL = process.env.LOOM_URL || 'http://127.0.0.1:3752';
+  const _loomGet = (p, timeout = 4000) => new Promise((resolve) => {
+    const u = new URL(p, LOOM_URL);
+    const rq = http.get({ hostname: u.hostname, port: u.port, path: u.pathname + u.search, timeout }, (r) => {
+      let b = ''; r.on('data', c => { b += c; }); r.on('end', () => { try { resolve({ status: r.statusCode, body: JSON.parse(b) }); } catch (_) { resolve({ status: 502, body: { ok: false, error: `loom answered ${r.statusCode} with no JSON` } }); } });
+    });
+    rq.on('timeout', () => { rq.destroy(); resolve({ status: 504, body: { ok: false, error: `loom did not answer ${p} in ${timeout} ms` } }); });
+    rq.on('error', (e) => resolve({ status: 503, body: { ok: false, error: `loom (the hook registry's owner) is not answering at ${LOOM_URL}: ${e.code || e.message}` } }));
+  });
+  let _hookSummary = { unknown: true, why: 'not asked yet' };
+  const registry = {
+    readFrom: `${LOOM_URL}/api/hooks`,
+    summary: () => _hookSummary,
+    list: async (search = '') => { const r = await _loomGet(`/api/hooks${search}`); if (r.body && r.body.summary) _hookSummary = r.body.summary; return r; },
+    get: async (id) => _loomGet(`/api/hooks/${encodeURIComponent(id)}`),
+  };
+  const _refreshHooks = () => registry.list().then((r) => { if (!(r.body && r.body.ok)) _hookSummary = { unknown: true, why: (r.body && r.body.error) || 'no answer' }; });
+  _refreshHooks(); setInterval(_refreshHooks, 30000).unref();
 
   // Phase 4 HARD: Spec Engine
   console.log('[architect] §3.1 Phase 3: Spec Engine');
-  const blueprint = new Blueprint({ jaa, hooks: registry, busEmit });
+  const blueprint = new Blueprint({ jaa, hooks: registry, busEmit });   // Blueprint keeps the ref and never calls it (see above)
   const snrGate   = new SNRGate({ jaa, busEmit });
   const translate  = new Translate();
   const handleCompileRoute = createCompileRoutes ? createCompileRoutes({ jaa, busEmit, architectRoot: __dirname }) : null;
@@ -317,13 +330,14 @@ async function boot() {
           if (type)    filter.type   = type;
           if (status_) filter.status = status_;
           if (layer)   filter.layer  = parseInt(layer);
-          return json(res, 200, { ok: true, hooks: registry.list(filter), summary: registry.summary() });
+          // 0.60.241 LM3 — Loom's answer, as it comes (the filter passed through; validate and graph are Loom's routes too)
+          const r = await registry.list(url.search || '');
+          return json(res, r.status, { ...r.body, readFrom: registry.readFrom });
         }
-        // GET /api/hooks/:id
+        // GET /api/hooks/:id (and :id = validate | graph, which Loom serves; the handlers below the 410 never ran)
         if (method === 'GET' && id) {
-          const hook = registry.get(id);
-          if (!hook) return json(res, 404, { ok: false, error: 'hook not found' });
-          return json(res, 200, { ok: true, hook });
+          const r = id === 'validate' || id === 'graph' ? await _loomGet(`/api/hooks/${id}${url.search || ''}`) : await registry.get(id);
+          return json(res, r.status, { ...r.body, readFrom: registry.readFrom });
         }
         // §MOVED 2026-07-20 — all hook mutations (register/update/deprecate/
         // remove/wire/unwire) live on LOOM :3752 now, the write authority

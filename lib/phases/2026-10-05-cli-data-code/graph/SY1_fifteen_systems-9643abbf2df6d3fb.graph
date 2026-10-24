@@ -1,0 +1,163 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SY1_fifteen_systems:9643abbf2df6d3fb
+type: graph
+id: phase:SY1_fifteen_systems:9643abbf2df6d3fb
+context: dependency graph of phase SY1_fifteen_systems
+intent: null
+summary: 18 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792879044190
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879044190
+lastSeenAt: 1792879044190
+fingerprint: null
+payload:
+  for: SY1_fifteen_systems
+  kind: phase
+  repo: null
+  hash: 9643abbf2df6d3fb
+  nodes:
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: tests/modules/test-loom-phasemap.js
+      role: changes
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/contract-queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phasemap-parse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/lib/store.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/scanners/phasemap-map.js
+      to: lib/phasemap-parse.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: loom/lib/store.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/contract-queue.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::HG8_raid_phases_belong_to_cortex
+    dependents:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::SY2_cos_its_own_system
+    upstream:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::HG8_raid_phases_belong_to_cortex
+    downstream:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::SY2_cos_its_own_system
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::SY2_cos_its_own_system
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): HG8_raid_phases_belong_to_cortex'
+      - 'needed by (1): SY2_cos_its_own_system · finishing it unlocks SY2_cos_its_own_system'
+    edges:
+      - from: docs/2026-10-05-cli-data-code-phasemap.spec::HG8_raid_phases_belong_to_cortex
+        kind: inferred

@@ -1,0 +1,277 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM2_loom_owns_its_tables:c652d2e89f2a7ef0
+type: graph
+id: phase:LM2_loom_owns_its_tables:c652d2e89f2a7ef0
+context: dependency graph of phase LM2_loom_owns_its_tables
+intent: null
+summary: 29 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792879045933
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879045933
+lastSeenAt: 1792879045933
+fingerprint: null
+payload:
+  for: LM2_loom_owns_its_tables
+  kind: phase
+  repo: null
+  hash: c652d2e89f2a7ef0
+  nodes:
+    - path: loom/lib/changelog.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/lib/store.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/server.js
+      role: changes
+      exists: true
+      system: loom
+    - path: tests/modules/test-hook-ownership.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-loom-into-cos.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/phase-files.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/test/phasemap-map.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/generate-atlases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/lib/mco05-loom-changelog.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-loom-phasemap-status.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/connections.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hook-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/config.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/contracts/index.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/ingest/index.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/schema/cortex-sync.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/templates/system-scaffold.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/contracts/index.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/schema/cortex-sync.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/ingest/index.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/templates/system-scaffold.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/connections.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/config.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/hook-registry.js
+      kind: requires
+    - from: tests/lib/mco05-loom-changelog.test.js
+      to: loom/lib/changelog.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/test/phasemap-map.test.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: scripts/generate-atlases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: tests/modules/test-loom-phasemap-status.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+    dependents:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+    upstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+    downstream:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): LM_D2_loom_owns_its_tables'
+      - >-
+        needed by (1): LM3_readers_through_its_routes · all downstream 3 · finishing it unlocks
+        LM3_readers_through_its_routes
+    edges:
+      - from: docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+        kind: declared

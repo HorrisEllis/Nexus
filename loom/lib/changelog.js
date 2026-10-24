@@ -13,8 +13,9 @@
 const TABLE = 'loom_changelog';
 
 function _getJAA() {
-  try { return require('../../cortex/memory/jaa-db').jaaDB; }
-  catch (e) { console.warn(`[loom/changelog] jaa-db unreachable: ${e.message}`); return null; }
+  // 0.60.241 LM2 — Loom's own store (loom/lib/store.js), not Cortex's
+  try { return require('./store.js').store(); }
+  catch (e) { console.warn(`[loom/changelog] loom's store unavailable: ${e.message}`); return null; }
 }
 
 /**

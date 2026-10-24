@@ -1,23 +1,23 @@
 envelope: 1
-uuid: nexus-export-graph-phase:LM23_atlas_history_versions_calendar:b046e3c5260253fb
+uuid: nexus-export-graph-phase:LM23_atlas_history_versions_calendar:0235a9d431822cbd
 type: graph
-id: phase:LM23_atlas_history_versions_calendar:b046e3c5260253fb
+id: phase:LM23_atlas_history_versions_calendar:0235a9d431822cbd
 context: dependency graph of phase LM23_atlas_history_versions_calendar
 intent: null
-summary: 17 node(s), 1 crossing(s)
+summary: 17 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877948527
+exported_at: 1792879042313
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877948527
-lastSeenAt: 1792877948527
+firstSeenAt: 1792879042313
+lastSeenAt: 1792879042313
 fingerprint: null
 payload:
   for: LM23_atlas_history_versions_calendar
   kind: phase
   repo: null
-  hash: b046e3c5260253fb
+  hash: 0235a9d431822cbd
   nodes:
     - path: data/changelog-snapshot.json
       role: changes
@@ -79,20 +79,20 @@ payload:
       role: used-by
       exists: true
       system: null
-    - path: cortex/memory/jaa-db.js
-      role: uses
-      exists: true
-      system: cortex
     - path: lib/contracts/SYSTEM-CONTRACTS.js
       role: uses
       exists: true
       system: lib
+    - path: loom/lib/store.js
+      role: uses
+      exists: true
+      system: loom
   edges:
     - from: lib/version.js
       to: lib/contracts/SYSTEM-CONTRACTS.js
       kind: requires
     - from: loom/lib/changelog.js
-      to: cortex/memory/jaa-db.js
+      to: loom/lib/store.js
       kind: requires
     - from: copilot/lib/nexus-awareness.js
       to: lib/version.js
@@ -124,13 +124,7 @@ payload:
     - from: tests/lib/mco05-loom-changelog.test.js
       to: loom/lib/changelog.js
       kind: requires
-  crossings:
-    - from: loom/lib/changelog.js
-      to: cortex/memory/jaa-db.js
-      fromSystem: loom
-      toSystem: cortex
-      kind: system
-      known: true
+  crossings: []
   ready: true
   dag:
     layer: 4
