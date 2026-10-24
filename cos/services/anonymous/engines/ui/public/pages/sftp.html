@@ -1,0 +1,26 @@
+<div class="card">
+  <div class="card-title">Connection details</div>
+  <div id="ftp-info"></div>
+  <div class="hint">This is plain FTP, scoped to the same tree the File Manager browses.
+    For an encrypted transfer, use SFTP through the OpenSSH server on the SSH Keys page.</div>
+</div>
+
+<div class="card">
+  <div class="card-title">FTP users</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Username</th><th>Root</th><th></th></tr></thead>
+      <tbody id="ftp-users"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Add a user</div>
+  <div class="frow c3">
+    <div><label for="ftp-user">Username</label><input id="ftp-user"></div>
+    <div><label for="ftp-pass">Password</label><input id="ftp-pass" type="password"></div>
+    <div style="display:flex;align-items:flex-end"><button onclick="panel.ftpAddUser()">Create user</button></div>
+  </div>
+  <div id="ftp-result" style="margin-top:10px;font-size:13px"></div>
+</div>

@@ -16,7 +16,7 @@ phases:
 
   SV0_the_engines_in_cos:
     layer: foundation
-    status: OPEN
+    status: DONE 0.60.235 — test-cos-services 4/4
     depends_on: []
     files: [cos/services/anonymous/nexus.js, cos/services/anonymous/engines/_engine.js, cos/services/anonymous/README.md, tests/modules/test-cos-services.test.js]
     spec: cos/spec/cos-services.spec
@@ -67,3 +67,14 @@ phases:
     does: "Routes, the `cos services` commands, and the COS screen's Services list (his order: backend, route, command, UI)."
     proof: "in Clear Glass, the Services list shows a stack's engines and ports and Down stops it"
 
+
+## ADDENDUM 2026-10-24 (0.60.235) — SV0 built
+James, 2026-10-24: "Continue"
+- cos/services/anonymous/: his kernel and 27 engines; engines, SDK and upstream files byte-identical (UPSTREAM.sha256); only nexus.js changed,
+  each change marked COS: (root from SERVICES_ROOT, not NEXUS_ROOT, which Nexus itself uses; per-root control pipe/socket; the sweep kills
+  only this root's recorded processes, checked by command line; db gates parsed by a strict grammar). His machine-wide sweep kept, unused.
+- Found, worse than the map said: the engines build gates from request input (auth.js `r => r.handle === '${handle}'` on login), and the
+  kernel ran them with new Function — a login's handle could run code in the kernel. The grammar reads exactly the 16 shapes the engines send
+  (SV-01 compares each with real JS) and refuses the rest. One upstream gate (auth.js:135, an arrow returning a template string) was already
+  broken: it is refused, so that API-key check fails closed; the engine is left as he wrote it, said here.
+- No conf, state, logs or key from the upload; defaults/ holds the vhost templates and the default site (what init does not make).

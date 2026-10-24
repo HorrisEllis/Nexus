@@ -1,0 +1,26 @@
+<div class="card">
+  <div class="card-title">Getting online</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:6px">
+    Three things have to be true before <span class="mono" id="wiz-domain"></span> is reachable
+    from the internet. This page checks each one against the running system.</p>
+</div>
+
+<div class="card">
+  <div class="card-title">1 — Engines are running</div>
+  <div id="wiz-engines" style="font-size:13px"></div>
+  <div class="hint">Start everything with <code>node nexus.js up</code>.</div>
+</div>
+
+<div class="card">
+  <div class="card-title">2 — DNS points here</div>
+  <div id="wiz-dns" style="font-size:13px"></div>
+  <div class="hint">At your registrar, set an A record for your domain to the address above.</div>
+</div>
+
+<div class="card">
+  <div class="card-title">3 — Certificates issued</div>
+  <div id="wiz-tls" style="font-size:13px"></div>
+  <div class="hint">Needs port 80 open so the certificate authority can verify the domain.</div>
+</div>
+
+<div class="actions"><button class="sec" onclick="panel.wizardRecheck()">Check again</button></div>

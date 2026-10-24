@@ -1,0 +1,18 @@
+<div class="card">
+  <div class="card-title">Checks</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>URL</th><th>Status</th><th>Latency</th></tr></thead>
+      <tbody id="monitor-table"></tbody>
+    </table>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Add a check</div>
+  <div class="frow c3">
+    <div><label for="mon-name">Name</label><input id="mon-name" placeholder="Public site"></div>
+    <div><label for="mon-url">URL</label><input id="mon-url" placeholder="https://example.com"></div>
+    <div><label for="mon-hook">Webhook on failure</label><input id="mon-hook" placeholder="optional"></div>
+  </div>
+  <div class="actions"><button onclick="panel.addMonitor()">Add check</button></div>
+</div>

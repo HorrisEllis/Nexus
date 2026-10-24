@@ -1,0 +1,25 @@
+<div class="card">
+  <div class="card-title">Mailboxes</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Address</th><th>Quota</th><th>Forwards to</th></tr></thead>
+      <tbody id="mailbox-table"></tbody>
+    </table>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Disposable address</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:12px">
+    Generate a throwaway address that forwards somewhere real and expires on its own.</p>
+  <div class="frow c2">
+    <div><label for="disp-fwd">Forward to</label><input id="disp-fwd" placeholder="you@example.com"></div>
+    <div><label for="disp-ttl">Expires after (hours)</label><input id="disp-ttl" type="number" value="24"></div>
+  </div>
+  <div class="actions"><button onclick="panel.createDisposable()">Create address</button></div>
+  <div class="mono" id="disp-result" style="margin-top:10px;color:var(--healthy)"></div>
+</div>
+<div class="card">
+  <div class="card-title">DKIM record</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:12px">Publish this TXT record so your mail is trusted.</p>
+  <div id="dkim-record"></div>
+</div>

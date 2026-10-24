@@ -100,6 +100,14 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-24: "i want to use those engines for test env, web servers, etc all of them" · "this is all the networking backend for
+  anything needed netwroking wise"** (0.60.235)
+  - **Context:** he brought his own self-hosting platform (27 engines: web, DNS, firewall, SMTP, TLS …) to become Nexus's networking
+    layer.
+  - **What it shows:** reusing his own earlier work as infrastructure. Bringing it in found a code-execution hole: a login's handle could
+    run code in the kernel. It was closed without changing a byte of his engines. His shipped config held live keys; none of it came in.
+  - **Evidence:** `CHANGELOG-0.60.235.md`; `tests/modules/test-cos-services.test.js` 4/4; `cos/services/anonymous/UPSTREAM.sha256`.
+
 - **2026-10-24: "Archive."** (0.60.232)
   - **Context:** the folders that turned out not to be systems.
   - **What it shows:** decluttering by evidence. Three folders that nothing needed were archived with their history kept. Every

@@ -113,7 +113,8 @@ const FILES = [
   ['lib/build-queue.js', I('lib/build-queue.js'), [I('lib/phase-dag.js')]],
   ['lib/phase-close.js', I('lib/phase-close.js'), [I('lib/test-map.js')]],
   ['lib/trust-rule.js', I('lib/trust-rule.js'), []],
-  ['lib/registry-draft.js', I('lib/registry-draft.js'), [I('lib/system-boundary.js')]],   // 0.60.229 DB16 a registry drafted for every system with none   // 0.60.225 SL5 his rule for what lands without him (B, his words: "yes do it.")
+  ['lib/registry-draft.js', I('lib/registry-draft.js'), [I('lib/system-boundary.js')]],
+  ['cos/services/anonymous/nexus.js', I('cos/services/anonymous/nexus.js'), []],   // 0.60.235 SV0 his engines' kernel in COS (spawns engines/<name>.js by name, newline-JSON IPC)   // 0.60.229 DB16 a registry drafted for every system with none   // 0.60.225 SL5 his rule for what lands without him (B, his words: "yes do it.")
   ['idearium/lib/autobuild.js', I('idearium/lib/autobuild.js'), []],   // 0.60.225 SL4 the loop: a state machine, every effect a dep   // 0.60.223 SL1 closes a proven, landed phase; 0.60.224 SL2 byEvidence (its own tests, through lib/test-map.js)   // 0.60.223 SL1 a proven, landed phase closes itself; a revert reopens it (the writer is passed in)   // 0.60.222 SL0 what can be built now, and why every other open phase cannot
   ['lib/change-entry.js', I('lib/change-entry.js'), [I('lib/nexus-self/inject-gate.js')]],
   ['lib/chat-ledger-client.js', I('lib/chat-ledger-client.js'), []],   // 0.60.192 Clear Glass's live chat ledgers read through its routes (:7702), never its code   // 0.60.190 APV1 an approved change's change-log entry (it rides on its Versionium commit)   // 0.60.188 CNS1 every phase judged against its evidence (commits, releases, files, proof)

@@ -30,3 +30,8 @@ copilot/data/worksets/
 guardian/data/nodes/*/_ledger.jsonl
 # test-boot-log-fixes BL7 leaves a ledger store per run here: test residue, not code
 data/ledger-store/bl7-*/
+
+# 0.60.235 SV0 — a stack's state is never code: the kernel run without SERVICES_ROOT would write these beside itself
+cos/services/anonymous/state/
+cos/services/anonymous/conf/
+cos/services/anonymous/logs/

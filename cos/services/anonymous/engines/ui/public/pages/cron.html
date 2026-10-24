@@ -1,0 +1,22 @@
+<div class="card">
+  <div class="card-title">Scheduled jobs</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Schedule</th><th>Runs</th><th>Last run</th><th></th></tr></thead>
+      <tbody id="cron-table"></tbody>
+    </table>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title">Schedule a job</div>
+  <div class="frow c2">
+    <div><label for="cron-name">Name</label><input id="cron-name" placeholder="nightly-backup"></div>
+    <div><label for="cron-expr">Schedule</label><input id="cron-expr" placeholder="0 3 * * *"></div>
+  </div>
+  <div class="frow c2">
+    <div><label for="cron-type">Action</label>
+      <select id="cron-type"><option value="command">Run a command</option><option value="webhook">Call a webhook</option></select></div>
+    <div><label for="cron-target">Command or URL</label><input id="cron-target"></div>
+  </div>
+  <div class="actions"><button onclick="panel.addCron()">Schedule job</button></div>
+</div>
