@@ -7,11 +7,11 @@ intent: null
 summary: SS4_seal_into_compartments (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792653394706
+exported_at: 1792820508078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394706
-lastSeenAt: 1792653394706
+firstSeenAt: 1792820508078
+lastSeenAt: 1792820508078
 fingerprint: null
 payload:
   id: SS4_seal_into_compartments
@@ -26,4 +26,4 @@ payload:
     - SS3_nodes_are_the_data
   blocks: []
   spec: null
-  graph: 369aaef9557e2030
+  graph: 510925df507d6f0a

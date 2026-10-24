@@ -1,0 +1,282 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB23_a_new_system_slots_in:bb7744f30f64e94a
+type: graph
+id: phase:SB23_a_new_system_slots_in:bb7744f30f64e94a
+context: dependency graph of phase SB23_a_new_system_slots_in
+intent: null
+summary: 29 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792820506881
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820506881
+lastSeenAt: 1792820506881
+fingerprint: null
+payload:
+  for: SB23_a_new_system_slots_in
+  kind: phase
+  repo: null
+  hash: bb7744f30f64e94a
+  nodes:
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/spec-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/templates/system-scaffold.js
+      role: changes
+      exists: true
+      system: loom
+    - path: nexus/autopilot.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: orchestrator/orchestrator.config.json
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/autopilot-intelligence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/bus-subscriptions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/error-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-sse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Event.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Stream.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/StreamLog.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: nexus/autopilot.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/ledger-fanin/boot.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/ledger-sse.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/error-log.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/autopilot-intelligence.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/Stream.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/StreamLog.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/Axiom.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/Event.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/bus-subscriptions.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/inject-gate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/store.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+  crossings:
+    - from: nexus/autopilot.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: nexus
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/Stream.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/StreamLog.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/Axiom.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/Event.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB22_every_component_capability_command_events_as_nodes
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB21_deterministic_parts_grow_with_the_system
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB24_loom_builds_a_new_system
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB19_atlases_per_component
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB21_deterministic_parts_grow_with_the_system
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB22_every_component_capability_command_events_as_nodes
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB24_loom_builds_a_new_system
+    blockedBy:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB22_every_component_capability_command_events_as_nodes
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB21_deterministic_parts_grow_with_the_system
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB4_template_fidelity
+        files:
+          - lib/nexus-self/systems.js
+    dangling: []
+    lines:
+      - >-
+        layer 5 · blocked by SB22_every_component_capability_command_events_as_nodes,
+        SB21_deterministic_parts_grow_with_the_system
+      - >-
+        depends on (2): SB22_every_component_capability_command_events_as_nodes,
+        SB21_deterministic_parts_grow_with_the_system · all upstream 7
+      - 'needed by (1): SB24_loom_builds_a_new_system'
+      - 'same files as SB4_template_fidelity with no order between them: lib/nexus-self/systems.js'
+    edges:
+      - from: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB22_every_component_capability_command_events_as_nodes
+        kind: declared
+      - from: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB21_deterministic_parts_grow_with_the_system
+        kind: declared

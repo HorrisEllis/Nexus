@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV5_erosmancer
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV5_erosmancer
+context: pipeline phase MV5_erosmancer of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV5_erosmancer (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792820476261
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476261
+lastSeenAt: 1792820476261
+fingerprint: null
+payload:
+  id: MV5_erosmancer
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - erosmancer/
+  depends_on:
+    - MV0_unplaced_homes
+  blocks: []
+  spec: null
+  graph: 449fe986edc42a2b

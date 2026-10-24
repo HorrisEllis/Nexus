@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV11_seams
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV11_seams
+context: pipeline phase MV11_seams of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV11_seams (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792820476275
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476275
+lastSeenAt: 1792820476275
+fingerprint: null
+payload:
+  id: MV11_seams
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - seams/
+  depends_on:
+    - MV0_unplaced_homes
+  blocks: []
+  spec: null
+  graph: cde977a3ee02d317

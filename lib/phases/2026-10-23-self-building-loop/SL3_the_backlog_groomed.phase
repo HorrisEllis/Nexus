@@ -7,11 +7,11 @@ intent: null
 summary: SL3_the_backlog_groomed (library) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678083
+exported_at: 1792820508263
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678083
-lastSeenAt: 1792787678083
+firstSeenAt: 1792820508263
+lastSeenAt: 1792820508263
 fingerprint: null
 payload:
   id: SL3_the_backlog_groomed
@@ -38,4 +38,4 @@ payload:
   blocks:
     - MOD-SL-GROOM
   spec: docs/self-building-loop.spec
-  graph: d984c6d6901fa316
+  graph: 9333226d9dad1360

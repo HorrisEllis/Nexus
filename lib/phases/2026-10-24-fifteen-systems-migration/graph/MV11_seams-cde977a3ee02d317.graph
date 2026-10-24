@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV11_seams:cde977a3ee02d317
+type: graph
+id: phase:MV11_seams:cde977a3ee02d317
+context: dependency graph of phase MV11_seams
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792820476275
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476275
+lastSeenAt: 1792820476275
+fingerprint: null
+payload:
+  for: MV11_seams
+  kind: phase
+  repo: null
+  hash: cde977a3ee02d317
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+    dependents: []
+    upstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by MV0_unplaced_homes
+      - 'depends on (1): MV0_unplaced_homes'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+        kind: declared

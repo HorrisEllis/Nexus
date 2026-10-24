@@ -7,11 +7,11 @@ intent: null
 summary: CE7_agents_and_commands (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677853
+exported_at: 1792820507981
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677853
-lastSeenAt: 1792787677853
+firstSeenAt: 1792820507981
+lastSeenAt: 1792820507981
 fingerprint: null
 payload:
   id: CE7_agents_and_commands
@@ -27,4 +27,4 @@ payload:
     - CE5_the_guest_file_tree
   blocks: []
   spec: null
-  graph: cc438bb660d2012c
+  graph: b55067f969093bc5

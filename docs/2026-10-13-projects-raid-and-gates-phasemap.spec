@@ -387,3 +387,18 @@ spec:
 # (applied one phase at a time, every step a version) is its demo. Built: docs/2026-10-16-repo-carve-phasemap.spec CV1, which copies
 # a part of Nexus into its own Idearium repo with everything it requires. The flight_recorder preset needs 217 files across 15
 # systems (loom, warp, guardian and emerge come along through requires): that report is RF0's first real input (CV2).
+
+# ## ADDENDUM 2026-10-24 (0.60.234): RF0 + RF1 built — the refactor tool reads and proposes; first input: the 15 systems
+# James, 2026-10-24: "need to make the refactor tool from the phgases. so we can make each system sovereignfor the cos migratoin" ·
+# "15 systems. the rest of the folders need to migrate." (his 2026-10-05: "There is only 15 systems. Not 27. Any system that's in idearium
+# is a system, nothing more.") Decision A (proposal engine, 2026-10-16) is what was built: lib/architecture-migrate.js
+#   read() RF0 — the 15 systems (lib/nexus-self/systems.js) and every top-level folder the boundary census counts outside them, with who
+#     uses it and what it uses (lib/system-boundary.js scan, the same crossings the ratchet counts)
+#   propose() RF1 — a home per folder by his axioms (code belongs to the system it serves; shared code is kernel): R1 one system uses it →
+#     that system; R2 lib/ or two systems → core (lib/<dir>/); R3 nothing uses it and it uses one place (not lib/) → there; R4 no evidence →
+#     unplaced, to confirm, never guessed. bottom-up dependsOn.
+#   phasemap() — the proposal as docs/2026-10-24-fifteen-systems-migration-phasemap.spec (22 folders, DAG-clean; 13 placed, 9 to confirm)
+# Doors: `node lib/architecture-migrate.js [--write f] [--json]`, row `system migrate`. Read only — nothing moved. Test
+# tests/modules/test-architecture-migrate.test.js 3/3. Narrowed from RF0's original scope (a repo's whole component architecture) to the
+# question he asked today (top-level folders → the 15 systems); the component-level read stays open in RF0. RF2 (apply, one phase at a
+# time, staged and undoable) is next, after the 9 homes are confirmed.

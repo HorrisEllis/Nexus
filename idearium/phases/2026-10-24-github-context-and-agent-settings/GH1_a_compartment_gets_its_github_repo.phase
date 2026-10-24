@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH1_a_compartment_gets_its_github_repo
+type: phase
+id: docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH1_a_compartment_gets_its_github_repo
+context: >-
+  pipeline phase GH1_a_compartment_gets_its_github_repo of
+  docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+intent: null
+summary: GH1_a_compartment_gets_its_github_repo (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792820475011
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820475011
+lastSeenAt: 1792820475011
+fingerprint: null
+payload:
+  id: GH1_a_compartment_gets_its_github_repo
+  map: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-github.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/repo-settings.js
+  depends_on:
+    - GC0a_one_github_repo_per_compartment
+    - GC0c_private_by_default
+  blocks: []
+  spec: null
+  graph: 8baa02e148376348

@@ -7,11 +7,11 @@ intent: null
 summary: GM8_agents_have_it (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677872
+exported_at: 1792820508003
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677872
-lastSeenAt: 1792787677872
+firstSeenAt: 1792820508003
+lastSeenAt: 1792820508003
 fingerprint: null
 payload:
   id: GM8_agents_have_it
@@ -27,4 +27,4 @@ payload:
     - GM7_the_context_panel_per_gate
   blocks: []
   spec: null
-  graph: 45a73d0250d2d055
+  graph: e98b0bbe016313f7

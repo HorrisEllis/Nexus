@@ -461,6 +461,11 @@ export const SPEC = [
       console.log(h.c.dim(`  matching genesis: ${(d.matches || []).join(', ') || '—'}`));
     } },
   // 0.60.133 IM1 — "need to get the systems soveriegn again": which systems are, and what stands in each one's way
+  // §0.60.234 RF0/RF1 — James, 2026-10-24: "15 systems. the rest of the folders need to migrate." The refactor tool's proposal: each top-level
+  // folder outside the 15 gets a home from its edges (lib/architecture-migrate.js), as a phasemap RF2 applies. Read only.
+  { key: 'system.migrate', repo: false, usage: 'system migrate [--write <file.spec>]', about: 'the refactor tool: every folder outside the 15 systems, who uses it, and the home its edges give it (one system → that system; lib/ or two systems → core; no evidence → to confirm); --write saves it as a phasemap',
+    local: async (a) => { const AM = require('../../lib/architecture-migrate.js'); const rows = AM.propose(AM.read({})); if (a.flags.write && a.flags.write !== true) require('fs').writeFileSync(String(a.flags.write), AM.phasemap(rows, { origin: 'system migrate' })); return { rows, written: a.flags.write && a.flags.write !== true ? String(a.flags.write) : null }; },
+    print: (d, a, h) => { for (const r of d.rows || []) console.log(`  ${r.dir.padEnd(18)} ${r.placed ? h.c.mint(`→ ${r.homeDir}`) : h.c.amber('→ ? (to confirm)')}  ${h.c.dim(`${r.rule} ${r.why}`)}`); if (d.written) console.log(h.c.mint(`  written: ${d.written}`)); } },
   { key: 'system.sovereign', repo: false, usage: 'system sovereign [<system>]', about: 'which systems are sovereign (nothing they require is in another system\'s folder; lib/ is the kernel) and, for each that is not, what is in the way: its data kept in cortex\'s store, a shared primitive in another system, or another system\'s capability required as a file',
     req: (a) => ({ method: 'GET', path: `/api/system/sovereign${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }),
     print: (d, a, h) => {

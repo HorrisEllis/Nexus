@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH3_sync_per_compartment
+type: phase
+id: docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH3_sync_per_compartment
+context: >-
+  pipeline phase GH3_sync_per_compartment of
+  docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+intent: null
+summary: GH3_sync_per_compartment (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792820475016
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820475016
+lastSeenAt: 1792820475016
+fingerprint: null
+payload:
+  id: GH3_sync_per_compartment
+  map: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-github.js
+    - lib/repo-agent.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/repo-settings.js
+  depends_on:
+    - GH2_the_context_brief_at_the_root
+    - AS1_one_resolver_global_then_repo
+  blocks: []
+  spec: null
+  graph: 6b8b11f5d9cc9458

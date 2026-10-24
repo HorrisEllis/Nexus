@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV16_tablet
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV16_tablet
+context: pipeline phase MV16_tablet of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV16_tablet (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792820476283
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476283
+lastSeenAt: 1792820476283
+fingerprint: null
+payload:
+  id: MV16_tablet
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tablet/
+  depends_on:
+    - MV0_unplaced_homes
+  blocks: []
+  spec: null
+  graph: 556c75f19fdd176f

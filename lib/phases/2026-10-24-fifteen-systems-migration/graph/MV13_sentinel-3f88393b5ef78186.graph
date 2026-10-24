@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MV13_sentinel:3f88393b5ef78186
+type: graph
+id: phase:MV13_sentinel:3f88393b5ef78186
+context: dependency graph of phase MV13_sentinel
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792820476278
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476278
+lastSeenAt: 1792820476278
+fingerprint: null
+payload:
+  for: MV13_sentinel
+  kind: phase
+  repo: null
+  hash: 3f88393b5ef78186
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+    dependents: []
+    upstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by MV0_unplaced_homes
+      - 'depends on (1): MV0_unplaced_homes'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+        kind: declared

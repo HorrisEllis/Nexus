@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH6_send_a_requested_file
+type: phase
+id: docs_2026-10-24-github-context-and-agent-settings-phasemap.spec::GH6_send_a_requested_file
+context: >-
+  pipeline phase GH6_send_a_requested_file of
+  docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+intent: null
+summary: GH6_send_a_requested_file (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792820475026
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820475026
+lastSeenAt: 1792820475026
+fingerprint: null
+payload:
+  id: GH6_send_a_requested_file
+  map: docs/2026-10-24-github-context-and-agent-settings-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/nexus/send-file.js
+    - lib/repo-agent.js
+    - guardian/lib/dispatcher.js
+  depends_on:
+    - GH5_a_github_agent_tool
+  blocks: []
+  spec: null
+  graph: b5163ccb719b6466

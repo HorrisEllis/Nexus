@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV14_service
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV14_service
+context: pipeline phase MV14_service of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: MV14_service (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792820476280
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792820476280
+lastSeenAt: 1792820476280
+fingerprint: null
+payload:
+  id: MV14_service
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - service/
+  depends_on:
+    - MV0_unplaced_homes
+  blocks: []
+  spec: null
+  graph: 10cac063cd8b5afd
