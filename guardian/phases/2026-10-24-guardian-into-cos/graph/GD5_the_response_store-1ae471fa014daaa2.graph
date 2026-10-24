@@ -1,0 +1,283 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GD5_the_response_store:1ae471fa014daaa2
+type: graph
+id: phase:GD5_the_response_store:1ae471fa014daaa2
+context: dependency graph of phase GD5_the_response_store
+intent: null
+summary: 29 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877325043
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325043
+lastSeenAt: 1792877325043
+fingerprint: null
+payload:
+  for: GD5_the_response_store
+  kind: phase
+  repo: null
+  hash: 1ae471fa014daaa2
+  nodes:
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/cli.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/chat-transcripts.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/code-artifact.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/response-sink.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: clear-glass/src/downloads/chat-ledger.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/download-capture.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-code-artifact.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-response-downloads.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-response-sink-passthrough.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/cli/commands/archetype.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/snapshot.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/extract-code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intake.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/languages.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reply-kind.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: lib/reply-kind.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: lib/run-state.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/cli/commands/archetype.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/host/index.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/cli/commands/snapshot.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/intake.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: lib/languages.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: lib/extract-code.js
+      kind: requires
+    - from: clear-glass/src/downloads/chat-ledger.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: clear-glass/src/providers/download-capture.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: tests/modules/test-code-artifact.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: tests/modules/test-response-sink-passthrough.test.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: tests/modules/test-response-downloads.test.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/cli/commands/create.js
+      fromSystem: clear-glass
+      toSystem: cos
+      kind: system
+      known: true
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/cli/commands/archetype.js
+      fromSystem: clear-glass
+      toSystem: cos
+      kind: system
+      known: true
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/host/index.js
+      fromSystem: clear-glass
+      toSystem: cos
+      kind: system
+      known: true
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: cos/cli/commands/snapshot.js
+      fromSystem: clear-glass
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/agent-memory.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+    - from: lib/context-atlas.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+    - from: lib/repo-agent.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D3_the_response_store
+    dependents:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
+    upstream:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D3_the_response_store
+    downstream:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
+    blockedBy:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D3_the_response_store
+    unlocks:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
+    conflicts:
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
+        files:
+          - guardian/cli.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by GD_D3_the_response_store
+      - 'depends on (1): GD_D3_the_response_store'
+      - 'needed by (1): GD6_the_ways_in · all downstream 3 · finishing it unlocks GD6_the_ways_in'
+      - 'same files as GD4_the_other_systems_by_route with no order between them: guardian/cli.js'
+    edges:
+      - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D3_the_response_store
+        kind: declared

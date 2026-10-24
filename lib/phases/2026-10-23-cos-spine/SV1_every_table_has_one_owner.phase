@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::SV1_every_table_has_one_owner
+context: pipeline phase SV1_every_table_has_one_owner of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: SV1_every_table_has_one_owner (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792877163823
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877163823
+lastSeenAt: 1792877163823
+fingerprint: null
+payload:
+  id: SV1_every_table_has_one_owner
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-store.js
+    - lib/table-owners.js
+    - lib/jaa-store.js
+    - cortex/memory/jaa-db.js
+    - cortex/boot.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - SV0_the_census_tells_the_truth
+  blocks: []
+  spec: null
+  graph: c212f0715f21a235

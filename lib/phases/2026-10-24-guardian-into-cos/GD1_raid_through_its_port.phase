@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD1_raid_through_its_port
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD1_raid_through_its_port
+context: pipeline phase GD1_raid_through_its_port of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD1_raid_through_its_port (backend) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325038
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325038
+lastSeenAt: 1792877325038
+fingerprint: null
+payload:
+  id: GD1_raid_through_its_port
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: >-
+    DONE 0.60.240 — lib/raid-port.js; test-raid-port 4/4; a booted Cortex answered through it;
+    guardian 27 → 20 ways out
+  files:
+    - lib/raid-port.js
+    - cortex/boot.js
+    - guardian/server.js
+    - guardian/api-dispatch.js
+    - guardian/lib/dispatcher.js
+    - tests/modules/test-raid-port.test.js
+  depends_on:
+    - GD_D0_raid_is_reached_never_loaded
+  blocks: []
+  spec: null
+  graph: 3d76f786d6650af3

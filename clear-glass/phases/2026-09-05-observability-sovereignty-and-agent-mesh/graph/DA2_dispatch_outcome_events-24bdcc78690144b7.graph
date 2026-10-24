@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787675765
+exported_at: 1792877321793
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675765
-lastSeenAt: 1792787675765
+firstSeenAt: 1792877321793
+lastSeenAt: 1792877321793
 fingerprint: null
 payload:
   for: DA2_dispatch_outcome_events
@@ -124,13 +124,11 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 6
+    layer: 4
     deps:
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
     dependents: []
     upstream:
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG1_ncp_events_real
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
@@ -142,8 +140,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 6 · ready
-      - 'depends on (1): DA1_fix_stale_guardian_coverage_gate · all upstream 7'
+      - layer 4 · ready
+      - 'depends on (1): DA1_fix_stale_guardian_coverage_gate · all upstream 5'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate

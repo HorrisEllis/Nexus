@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792875541730
+exported_at: 1792877324514
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792875541730
-lastSeenAt: 1792875541730
+firstSeenAt: 1792877324514
+lastSeenAt: 1792877324514
 fingerprint: null
 payload:
   for: DB9_every_repo_generates_its_registry
@@ -110,6 +110,7 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
     blockedBy:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
     unlocks: []
@@ -120,7 +121,7 @@ payload:
       - 'depends on (1): DB0c_reading · all upstream 4'
       - >-
         needed by (2): DB21_one_registry_schema_every_level,
-        DB10_shadow_and_negative_space_at_the_drawbridge · all downstream 30
+        DB10_shadow_and_negative_space_at_the_drawbridge · all downstream 31
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges:
       - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading

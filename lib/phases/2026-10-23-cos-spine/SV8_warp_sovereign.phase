@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::SV8_warp_sovereign
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::SV8_warp_sovereign
+context: pipeline phase SV8_warp_sovereign of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: SV8_warp_sovereign (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792876203208
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203208
+lastSeenAt: 1792876203208
+fingerprint: null
+payload:
+  id: SV8_warp_sovereign
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - warp
+  depends_on:
+    - CS19_warp_the_system
+    - SV7_intelligence_cos_cortex
+  blocks: []
+  spec: null
+  graph: ea9e031f0bbad4e9

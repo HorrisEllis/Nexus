@@ -7,11 +7,11 @@ intent: null
 summary: CN9_archive_the_non_systems (integration) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371414
+exported_at: 1792877325068
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371414
-lastSeenAt: 1792874371414
+firstSeenAt: 1792877325068
+lastSeenAt: 1792877325068
 fingerprint: null
 payload:
   id: CN9_archive_the_non_systems
@@ -25,4 +25,4 @@ payload:
     - CN0_the_rule_in_force
   blocks: []
   spec: null
-  graph: c3dbfe22c9ab0cdc
+  graph: 71a90857dd114940

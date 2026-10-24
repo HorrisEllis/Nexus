@@ -7,11 +7,11 @@ intent: null
 summary: FM3_run_it_in_cos (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677029
+exported_at: 1792877162289
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677029
-lastSeenAt: 1792787677029
+firstSeenAt: 1792877162289
+lastSeenAt: 1792877162289
 fingerprint: null
 payload:
   id: FM3_run_it_in_cos
@@ -27,4 +27,4 @@ payload:
     - FM2_a_failure_is_a_clip
   blocks: []
   spec: null
-  graph: 9c26dcce49a297be
+  graph: 528a150926267914

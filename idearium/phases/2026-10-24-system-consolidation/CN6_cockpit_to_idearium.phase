@@ -7,11 +7,11 @@ intent: null
 summary: CN6_cockpit_to_idearium (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371410
+exported_at: 1792877325065
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371410
-lastSeenAt: 1792874371410
+firstSeenAt: 1792877325065
+lastSeenAt: 1792877325065
 fingerprint: null
 payload:
   id: CN6_cockpit_to_idearium
@@ -26,4 +26,4 @@ payload:
     - CN0_the_rule_in_force
   blocks: []
   spec: null
-  graph: ce51d1857853636b
+  graph: 401f2605ae0fa9af

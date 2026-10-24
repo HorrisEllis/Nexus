@@ -7,11 +7,11 @@ intent: null
 summary: LP3_loom_section (?) — 13 file(s)
 system: idearium
 tags: []
-exported_at: 1792787921228
+exported_at: 1792877164147
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787921228
-lastSeenAt: 1792787921228
+firstSeenAt: 1792877164147
+lastSeenAt: 1792877164147
 fingerprint: null
 payload:
   id: LP3_loom_section
@@ -37,4 +37,4 @@ payload:
     - LP2_split_by_system
   blocks: []
   spec: null
-  graph: 73211575ee3c6f2a
+  graph: 319e0eb63b972e07

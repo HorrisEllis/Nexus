@@ -1574,7 +1574,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
               const VF0 = _require('../../lib/verify-first.js');
               const codeFiles = ((plan.order && plan.order.length) ? plan.order : plan.files.map(f => f.path)).filter(p => p !== testPath);
               let allPass = codeFiles.length > 0;
-              for (const f of codeFiles) { const v = await VF0.check({ root: _diskDir, file: f, plan, testPath }); if (v.verdict !== 'pass') { allPass = false; break; } }
+              for (const f of codeFiles) { const v = await VF0.check({ root: _diskDir, file: f, plan, testPath, runTarget: _require('../../cos/testenv/index.js').runTarget }); if (v.verdict !== 'pass') { allPass = false; break; } }
               if (allPass) existingTest = fs.readFileSync(t, 'utf8');
             }
           } catch (_) { existingTest = null; }
@@ -1636,7 +1636,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const _root = _repoDiskDir(target.uuid);
       const _tp = (plan.testFirst && plan.testFirst.path) || _require('../../lib/test-first.js').pathFor(plan, phase);
       let vf = null;
-      try { vf = await VF.check({ root: _root, file, plan, testPath: _tp }); } catch (e) { vf = { verdict: 'missing', checks: [{ name: 'verify-first', ok: false, why: e.message }] }; }
+      try { vf = await VF.check({ root: _root, file, plan, testPath: _tp, runTarget: _require('../../cos/testenv/index.js').runTarget }); } catch (e) { vf = { verdict: 'missing', checks: [{ name: 'verify-first', ok: false, why: e.message }] }; }
       appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-vf`, ...base, ...ck, state: vf.verdict === 'pass' ? 'verified' : 'verify-first', verdict: vf.verdict, snapshot: commitId,
         checks: vf.checks, note: vf.verdict === 'pass' ? `${file} meets its conditions as it is — no agent asked` : vf.verdict === 'missing' ? `${file} is new — built` : `${file} ${vf.verdict}: ${(vf.checks || []).filter(c => c.ok === false).map(c => c.name).join(', ') || 'no test to prove it'}`, error: null, ts: Date.now() });
       if (vf.verdict === 'pass') {
@@ -1772,7 +1772,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       if (!gate.parent) {
         const VF = _require('../../lib/verify-first.js'), CB = _require('../../lib/coder-brief.js');
         const tp = (plan.testFirst && plan.testFirst.path) || _require('../../lib/test-first.js').pathFor(plan, phase);
-        try { vfr = await VF.check({ root, file: f, plan, testPath: tp }); } catch (e) { vfr = { verdict: 'missing', checks: [{ name: 'verify-first', ok: false, why: e.message }] }; }
+        try { vfr = await VF.check({ root, file: f, plan, testPath: tp, runTarget: _require('../../cos/testenv/index.js').runTarget }); } catch (e) { vfr = { verdict: 'missing', checks: [{ name: 'verify-first', ok: false, why: e.message }] }; }
         appendRow('idearium_phase_runs', { uuid: `${runId}-${gate.id}-vf-${Date.now().toString(36)}`, ...base, ...ck, state: vfr.verdict === 'pass' ? 'verified' : 'verify-first', verdict: vfr.verdict, checks: vfr.checks, snapshot: commitId,
           note: vfr.verdict === 'pass' ? `${f} meets its conditions as it is — no agent asked` : vfr.verdict === 'missing' ? `${f} is new — built` : `${f} ${vfr.verdict}: ${(vfr.checks || []).filter(c => c.ok === false).map(c => c.name).join(', ') || 'no test to prove it'}`, error: null, ts: Date.now() });
         if (vfr.verdict === 'pass') {

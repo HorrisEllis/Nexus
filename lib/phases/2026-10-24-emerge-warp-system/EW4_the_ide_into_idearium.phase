@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+type: phase
+id: docs_2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+context: pipeline phase EW4_the_ide_into_idearium of docs/2026-10-24-emerge-warp-system-phasemap.spec
+intent: null
+summary: EW4_the_ide_into_idearium (backend) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325000
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325000
+lastSeenAt: 1792877325000
+fingerprint: null
+payload:
+  id: EW4_the_ide_into_idearium
+  map: docs/2026-10-24-emerge-warp-system-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - emerge/emerge-ide.js
+    - orchestrator/orchestrator.js
+    - loom/scanners/capability-map.js
+  depends_on:
+    - EW3_the_spec_compiler_into_idearium
+  blocks: []
+  spec: emerge/spec/emerge.spec
+  graph: d77b01a54ce1e48f

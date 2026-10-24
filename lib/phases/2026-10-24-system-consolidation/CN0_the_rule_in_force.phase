@@ -7,11 +7,11 @@ intent: null
 summary: CN0_the_rule_in_force (library) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371400
+exported_at: 1792877325056
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371400
-lastSeenAt: 1792874371400
+firstSeenAt: 1792877325056
+lastSeenAt: 1792877325056
 fingerprint: null
 payload:
   id: CN0_the_rule_in_force
@@ -26,4 +26,4 @@ payload:
     - CN_D1_what_is_a_system
   blocks: []
   spec: null
-  graph: d377f4167401c8b2
+  graph: a386abe25c196471

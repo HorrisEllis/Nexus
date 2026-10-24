@@ -675,10 +675,30 @@ function renderRepo() {
   for (const b of $('tabs').querySelectorAll('[data-tab]')) b.onclick = () => { CUR.tab = b.dataset.tab; render(); };
   const view = { agent: viewAgent, prompt: viewPrompt, hat: viewHat, env: viewEnv, system: viewSystem }[CUR.tab] || viewAgent;
   $('body').innerHTML = view(d);
+  if (CUR.tab === 'system' && _sysOf(r)) sovCard(_sysOf(r));
   for (const b of document.querySelectorAll('[data-open]')) b.onclick = () => go('repo', b.dataset.open);
   wire[CUR.tab] && wire[CUR.tab](d);
 }
 
+// 0.60.244 SV0 — James: "i want to get each system soveriegn and inside a cos compartment". The system's place on his road (CS_D7):
+// sovereign both ways (it loads no other system's code, and nothing loads its code) → its registry → its compartment → opened on demand.
+// Read only from the census route; nothing decided here.
+async function sovCard(sys) {
+  const body = $('body'); if (!body) return;
+  body.insertAdjacentHTML('afterbegin', '<div class="card" id="sov-card"><h3><span class="grow">Sovereignty</span></h3><div class="kv">reading…</div></div>');
+  const el = document.getElementById('sov-card');
+  let d; try { d = await api(`/api/system/sovereign?system=${encodeURIComponent(sys)}`); d = d.data || d; } catch (e) { el.innerHTML = `<h3><span class="grow">Sovereignty</span></h3><div class="empty">could not read it: ${esc(e.message)}</div>`; return; }
+  const r = (d.systems || [])[0];
+  if (!r) { el.innerHTML = `<h3><span class="grow">Sovereignty</span><span class="tag">core</span></h3><div class="kv">${esc(sys)} is not counted as a system by the census (core is the kernel).</div>`; return; }
+  const steps = ['crossings', 'registry', 'compartment', 'ready'];
+  const road = steps.map(s => `<span class="tag ${s === r.step ? 'warn' : steps.indexOf(s) < steps.indexOf(r.step) ? 'ok' : ''}">${s === 'crossings' ? 'sovereign' : s}</span>`).join(' → ');
+  const L = r.list || {}; const rows = ['data', 'primitive', 'capability'].flatMap(k => (L[k] || []).map(x => `<div class="d">${esc(k)} · ${esc(x.from)} → ${esc(x.to)}</div>`));
+  el.innerHTML = `<h3><span class="grow">Sovereignty</span><span class="tag ${r.sovereign ? 'ok' : 'warn'}">${r.sovereign ? 'sovereign' : 'not yet'}</span></h3>
+    <div class="kv">${road}</div>
+    <div class="kv">loads other systems' code: <b>${r.out}</b> · its code loaded by other systems: <b>${r.inFrom ? r.inFrom.systems : r.in}</b> · by core: <b>${r.inFrom ? r.inFrom.core : '?'}</b>
+      · registry ${r.registry ? '<span class="tag ok">yes</span>' : '<span class="tag warn">no</span>'} · compartment.json ${r.compartment ? '<span class="tag ok">yes</span>' : '<span class="tag warn">no</span>'}</div>
+    ${rows.length ? `<details><summary>what it loads from other systems (${rows.length})</summary>${rows.join('')}</details>` : ''}`;
+}
 function viewSystem(d) {
   const sys = _sysOf(d.repo);
   if (!sys) return '<div class="empty">This repo is not a Nexus system.</div>';

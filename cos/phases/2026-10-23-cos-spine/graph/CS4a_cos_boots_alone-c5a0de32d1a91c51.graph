@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841756197
+exported_at: 1792876203184
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841756197
-lastSeenAt: 1792841756197
+firstSeenAt: 1792876203184
+lastSeenAt: 1792876203184
 fingerprint: null
 payload:
   for: CS4a_cos_boots_alone
@@ -236,12 +236,19 @@ payload:
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-10-23-cos-spine-phasemap.spec::CS13_autopilot_to_orchestrator
+        files:
+          - cos/app/runtime.js
+          - lib/nexus/autopilot.js
     dangling: []
     lines:
       - layer 3 · blocked by CS_D7_sovereign_first
       - 'depends on (2): CS_D7_sovereign_first, COSA3_run_and_supervise · all upstream 4'
       - 'needed by (1): CS4_every_system_a_compartment · all downstream 8'
+      - >-
+        same files as CS13_autopilot_to_orchestrator with no order between them: cos/app/runtime.js,
+        lib/nexus/autopilot.js
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
         kind: declared

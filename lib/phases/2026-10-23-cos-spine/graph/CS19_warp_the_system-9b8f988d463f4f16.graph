@@ -1,0 +1,165 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS19_warp_the_system:9b8f988d463f4f16
+type: graph
+id: phase:CS19_warp_the_system:9b8f988d463f4f16
+context: dependency graph of phase CS19_warp_the_system
+intent: null
+summary: 16 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792876203198
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203198
+lastSeenAt: 1792876203198
+fingerprint: null
+payload:
+  for: CS19_warp_the_system
+  kind: phase
+  repo: null
+  hash: 9b8f988d463f4f16
+  nodes:
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: warp/compartment.json
+      role: changes
+      exists: false
+      system: null
+    - path: warp/registry-components.js
+      role: changes
+      exists: false
+      system: null
+    - path: warp/spec/warp.spec
+      role: changes
+      exists: false
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/api/index.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/inject-gate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/store.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS18_one_copy_of_the_primitives
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D11_warp_is_a_system
+    dependents:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS20_spec_compiler_and_ide_to_idearium
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS21_the_registry_at_every_level
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV8_warp_sovereign
+    upstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS18_one_copy_of_the_primitives
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D11_warp_is_a_system
+    downstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS20_spec_compiler_and_ide_to_idearium
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS21_the_registry_at_every_level
+      - docs/2026-10-23-cos-spine-phasemap.spec::SV8_warp_sovereign
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS18_one_copy_of_the_primitives
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D11_warp_is_a_system
+    unlocks:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS21_the_registry_at_every_level
+    conflicts:
+      - with: docs/2026-10-23-cos-spine-phasemap.spec::CS13_autopilot_to_orchestrator
+        files:
+          - lib/nexus-self/systems.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by CS18_one_copy_of_the_primitives, CS_D11_warp_is_a_system
+      - 'depends on (2): CS18_one_copy_of_the_primitives, CS_D11_warp_is_a_system · all upstream 3'
+      - >-
+        needed by (3): CS20_spec_compiler_and_ide_to_idearium, CS21_the_registry_at_every_level,
+        SV8_warp_sovereign · finishing it unlocks CS21_the_registry_at_every_level
+      - >-
+        same files as CS13_autopilot_to_orchestrator with no order between them:
+        lib/nexus-self/systems.js
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS18_one_copy_of_the_primitives
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D11_warp_is_a_system
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841753763
+exported_at: 1792877321859
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841753763
-lastSeenAt: 1792841753763
+firstSeenAt: 1792877321859
+lastSeenAt: 1792877321859
 fingerprint: null
 payload:
   for: RP1_repository_per_system
@@ -126,14 +126,12 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 5
+    layer: 3
     deps:
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
     dependents: []
     upstream:
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG1_ncp_events_real
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
@@ -148,10 +146,10 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 5 · blocked by DF2_cortex_and_versionium_off_root_data
+      - layer 3 · blocked by DF2_cortex_and_versionium_off_root_data
       - >-
         depends on (2): DF1_guardian_own_data_folder, DF2_cortex_and_versionium_off_root_data · all
-        upstream 9
+        upstream 7
       - 'needed by (0): —'
     edges:
       - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder

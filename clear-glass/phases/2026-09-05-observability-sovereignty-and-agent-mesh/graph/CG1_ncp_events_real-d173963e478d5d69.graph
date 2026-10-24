@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787675753
+exported_at: 1792877321774
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675753
-lastSeenAt: 1792787675753
+firstSeenAt: 1792877321774
+lastSeenAt: 1792877321774
 fingerprint: null
 payload:
   for: CG1_ncp_events_real
@@ -181,12 +181,7 @@ payload:
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
     downstream:
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR2_brainos_controls_agents
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA2_dispatch_outcome_events
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RP1_repository_per_system
     blockedBy: []
     unlocks:
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
@@ -196,7 +191,7 @@ payload:
       - layer 2 · ready
       - 'depends on (2): RF5_agent_registry_is_hardcoded, RF1_ncp_liveness_is_console_only'
       - >-
-        needed by (1): CG2_route_ncp_onto_guardian_sse · all downstream 6 · finishing it unlocks
+        needed by (1): CG2_route_ncp_onto_guardian_sse · finishing it unlocks
         CG2_route_ncp_onto_guardian_sse
     edges:
       - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded

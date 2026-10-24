@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
+context: pipeline phase GD6_the_ways_in of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD6_the_ways_in (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325044
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325044
+lastSeenAt: 1792877325044
+fingerprint: null
+payload:
+  id: GD6_the_ways_in
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - lib/agent-memory.js
+    - lib/pipeline-routing.js
+    - lib/repo-inject.js
+    - lib/system-control.js
+    - orchestrator/orchestrator.js
+  depends_on:
+    - GD5_the_response_store
+  blocks: []
+  spec: null
+  graph: edc099ae1304e884

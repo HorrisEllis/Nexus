@@ -1,0 +1,317 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DF1_guardian_own_data_folder:7a5af45b677d4f86
+type: graph
+id: phase:DF1_guardian_own_data_folder:7a5af45b677d4f86
+context: dependency graph of phase DF1_guardian_own_data_folder
+intent: null
+summary: 30 node(s), 11 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877321782
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877321782
+lastSeenAt: 1792877321782
+fingerprint: null
+payload:
+  for: DF1_guardian_own_data_folder
+  kind: phase
+  repo: null
+  hash: 7a5af45b677d4f86
+  nodes:
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: guardian/config.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/tools/clear-glass/dom-archaeology.js
+      role: changes
+      exists: true
+      system: lib
+    - path: run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/tools/identity/copilot-identity.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/switch-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chains.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/command-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/connections.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/intent-hat-router.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/grammar-fallback.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/config.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/spec-parser.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/grammar-fallback.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/copilot-identity.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/switch-agent.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/chains.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/command-builder.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/connections.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/intent-hat-router.js
+      to: copilot/lib/self-model.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/baseline.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/identity/copilot-identity.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/switch-agent.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/chains.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/command-builder.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/connections.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/constant-autonomy.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/intent-hat-router.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF2_shared_data_directory_is_the_root_of_the_crash
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+    dependents:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RP1_repository_per_system
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF2_shared_data_directory_is_the_root_of_the_crash
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+    downstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR2_brainos_controls_agents
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA2_dispatch_outcome_events
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RP1_repository_per_system
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - >-
+        depends on (2): RF2_shared_data_directory_is_the_root_of_the_crash,
+        RF5_agent_registry_is_hardcoded · all upstream 3
+      - >-
+        needed by (2): RP1_repository_per_system, DA1_fix_stale_guardian_coverage_gate · all
+        downstream 4 · finishing it unlocks DA1_fix_stale_guardian_coverage_gate
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF2_shared_data_directory_is_the_root_of_the_crash
+        kind: inferred
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+        kind: inferred

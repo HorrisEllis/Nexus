@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::SV2_core_files_go_home
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::SV2_core_files_go_home
+context: pipeline phase SV2_core_files_go_home of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: SV2_core_files_go_home (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792877163824
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877163824
+lastSeenAt: 1792877163824
+fingerprint: null
+payload:
+  id: SV2_core_files_go_home
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-boundary.js
+  depends_on:
+    - SV0_the_census_tells_the_truth
+    - CS12_the_mover_is_proven
+  blocks: []
+  spec: null
+  graph: df9037f29b99f5fd

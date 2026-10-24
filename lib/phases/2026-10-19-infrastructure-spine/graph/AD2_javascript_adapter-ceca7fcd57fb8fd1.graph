@@ -1,0 +1,192 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AD2_javascript_adapter:ceca7fcd57fb8fd1
+type: graph
+id: phase:AD2_javascript_adapter:ceca7fcd57fb8fd1
+context: dependency graph of phase AD2_javascript_adapter
+intent: null
+summary: 17 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792877163550
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877163550
+lastSeenAt: 1792877163550
+fingerprint: null
+payload:
+  for: AD2_javascript_adapter
+  kind: phase
+  repo: null
+  hash: ceca7fcd57fb8fd1
+  nodes:
+    - path: lib/adapters/javascript.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/coder-brief.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/verify-first.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/source-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/capability-spec.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/self-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/work-funnel.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/agent-memory-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-expectation-tests.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: idearium/api/index.js
+      to: lib/verify-first.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/capability-spec.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: tests/modules/test-expectation-tests.test.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/self-build-loop.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/agent-memory-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/self-build-loop.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+    dependents:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NT1_neutrality_test
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::FP1_feature_pilot
+      - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+    upstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+    downstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::FP1_feature_pilot
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NT1_neutrality_test
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+    blockedBy:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+        files:
+          - lib/phase-plan.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by AD1_adapter_contract
+      - 'depends on (1): AD1_adapter_contract · all upstream 4'
+      - >-
+        needed by (4): NT1_neutrality_test, FP1_feature_pilot, XD1_cross_domain_verification,
+        PRC1_phase_reality_check · all downstream 5
+      - >-
+        same files as IN7_every_phase_and_spec_on_the_spine with no order between them:
+        lib/phase-plan.js
+    edges:
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+        kind: declared

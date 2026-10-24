@@ -1,0 +1,254 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS15_changelogs_to_versionium:29690a3efeb6ffd8
+type: graph
+id: phase:CS15_changelogs_to_versionium:29690a3efeb6ffd8
+context: dependency graph of phase CS15_changelogs_to_versionium
+intent: null
+summary: 34 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792876203194
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203194
+lastSeenAt: 1792876203194
+fingerprint: null
+payload:
+  for: CS15_changelogs_to_versionium
+  kind: phase
+  repo: null
+  hash: 29690a3efeb6ffd8
+  nodes:
+    - path: docs/CLAUDE.md
+      role: changes
+      exists: true
+      system: null
+    - path: lib/checks/ck-253-versions.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus-releases.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-census.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/readme-generate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/release-notes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/spec-census.js
+      role: changes
+      exists: true
+      system: lib
+    - path: scripts/release-zip.js
+      role: changes
+      exists: true
+      system: null
+    - path: versionium/server.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/routes/opportunity.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cos/app/store.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/query/context-atlas.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/check-catalogue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-stream.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: scripts/generate-atlases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-connect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/config.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/causality.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/engine.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/http-utils.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/migrate-legacy-data.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/registry-components.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/routes/files.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/routes/system.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/routes/versionium.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: versionium/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/config.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/lib/causality.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/lib/http-utils.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/routes/system.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/routes/versionium.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/routes/files.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/registry-components.js
+      kind: requires
+    - from: versionium/server.js
+      to: lib/nexus/nexus-connect.js
+      kind: requires
+    - from: versionium/server.js
+      to: lib/node-registry.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/lib/migrate-legacy-data.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/release-notes.js
+      kind: requires
+    - from: cos/app/store.js
+      to: lib/release-version.js
+      kind: requires
+    - from: lib/check-catalogue.js
+      to: lib/checks/ck-253-versions.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: copilot/routes/opportunity.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/context-atlas.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-stream.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: scripts/generate-atlases.js
+      to: lib/readme-generate.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D13_changelogs_to_versionium
+    dependents: []
+    upstream:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D13_changelogs_to_versionium
+    downstream: []
+    blockedBy:
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS_D13_changelogs_to_versionium
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CS12_the_mover_is_proven, CS_D13_changelogs_to_versionium
+      - 'depends on (2): CS12_the_mover_is_proven, CS_D13_changelogs_to_versionium'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS12_the_mover_is_proven
+        kind: declared
+      - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D13_changelogs_to_versionium
+        kind: declared

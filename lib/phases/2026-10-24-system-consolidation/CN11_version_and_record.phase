@@ -7,11 +7,11 @@ intent: null
 summary: CN11_version_and_record (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792874371417
+exported_at: 1792877325070
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874371417
-lastSeenAt: 1792874371417
+firstSeenAt: 1792877325070
+lastSeenAt: 1792877325070
 fingerprint: null
 payload:
   id: CN11_version_and_record
@@ -36,4 +36,4 @@ payload:
     - CN10_leftovers_named
   blocks: []
   spec: null
-  graph: 40fb4237d6e2b96f
+  graph: 9fc917c50c3abf0b

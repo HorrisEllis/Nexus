@@ -4,14 +4,14 @@ type: phase
 id: docs_idearium-repository-overhaul-phasemap.spec::MCO-E_roadmap_ui
 context: pipeline phase MCO-E_roadmap_ui of docs/idearium-repository-overhaul-phasemap.spec
 intent: null
-summary: MCO-E_roadmap_ui (?) — 8 file(s)
+summary: MCO-E_roadmap_ui (?) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1792787921220
+exported_at: 1792877164110
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787921220
-lastSeenAt: 1792787921220
+firstSeenAt: 1792877164110
+lastSeenAt: 1792877164110
 fingerprint: null
 payload:
   id: MCO-E_roadmap_ui
@@ -22,6 +22,7 @@ payload:
   files:
     - idearium/repo/roadmap.js
     - loom/scanners/phasemap-map.js
+    - lib/phasemap-parse.js
     - architect/schemas/index.js
     - clear-glass/schemas/index.js
     - copilot/schemas/index.js
@@ -32,4 +33,4 @@ payload:
     - MCO-A_schemas
   blocks: []
   spec: null
-  graph: b86c0d6b1a69cd1d
+  graph: ea6ddef98cf13e15

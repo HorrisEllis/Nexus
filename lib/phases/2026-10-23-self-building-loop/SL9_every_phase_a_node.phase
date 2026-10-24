@@ -7,11 +7,11 @@ intent: null
 summary: SL9_every_phase_a_node (library) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792841756220
+exported_at: 1792877163851
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841756220
-lastSeenAt: 1792841756220
+firstSeenAt: 1792877163851
+lastSeenAt: 1792877163851
 fingerprint: null
 payload:
   id: SL9_every_phase_a_node
@@ -35,4 +35,4 @@ payload:
   blocks:
     - MOD-SL-NODES
   spec: docs/self-building-loop.spec
-  graph: 141be2f4892e64a0
+  graph: e52fc4da1922715e

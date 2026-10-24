@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD5_the_response_store
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD5_the_response_store
+context: pipeline phase GD5_the_response_store of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD5_the_response_store (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792877325043
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877325043
+lastSeenAt: 1792877325043
+fingerprint: null
+payload:
+  id: GD5_the_response_store
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - clear-glass/src/downloads/artifact-chat-index.js
+    - guardian/lib/response-sink.js
+    - guardian/lib/code-artifact.js
+    - guardian/lib/chat-transcripts.js
+    - guardian/cli.js
+  depends_on:
+    - GD_D3_the_response_store
+  blocks: []
+  spec: null
+  graph: 1ae471fa014daaa2

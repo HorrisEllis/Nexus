@@ -6,14 +6,14 @@ context: >-
   pipeline phase N3_stray_root_files_found_after_N1 of
   docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
 intent: null
-summary: N3_stray_root_files_found_after_N1 (?) — 8 file(s)
+summary: N3_stray_root_files_found_after_N1 (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792875538601
+exported_at: 1792876200058
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792875538601
-lastSeenAt: 1792875538601
+firstSeenAt: 1792876200058
+lastSeenAt: 1792876200058
 fingerprint: null
 payload:
   id: N3_stray_root_files_found_after_N1
@@ -24,7 +24,6 @@ payload:
   files:
     - ollama/ollama-runtime.js
     - orchestrator/lib/autonomous-loop.js
-    - emerge/emerge-ide.js
     - tests/modules/ollama-runtime.test.js
     - ollama/config.js
     - lib/blueprint-index.js
@@ -33,4 +32,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: bf79be723a025c25
+  graph: 9a3dab2da2e229cd

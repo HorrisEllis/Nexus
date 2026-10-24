@@ -7,11 +7,11 @@ intent: null
 summary: NC1_neutral_core_boundary (foundation) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792841755972
+exported_at: 1792877163548
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755972
-lastSeenAt: 1792841755972
+firstSeenAt: 1792877163548
+lastSeenAt: 1792877163548
 fingerprint: null
 payload:
   id: NC1_neutral_core_boundary
@@ -28,4 +28,4 @@ payload:
     - IN3_registry_is_the_spine
   blocks: []
   spec: null
-  graph: c1b78e3d13831930
+  graph: 2b30b13ce2a0866a

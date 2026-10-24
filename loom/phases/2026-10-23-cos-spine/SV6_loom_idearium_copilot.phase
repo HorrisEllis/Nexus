@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::SV6_loom_idearium_copilot
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::SV6_loom_idearium_copilot
+context: pipeline phase SV6_loom_idearium_copilot of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: SV6_loom_idearium_copilot (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792876203206
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203206
+lastSeenAt: 1792876203206
+fingerprint: null
+payload:
+  id: SV6_loom_idearium_copilot
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom
+    - idearium
+    - copilot
+  depends_on:
+    - SV5_clear_glass_guardian_orchestrator
+  blocks: []
+  spec: null
+  graph: a202c51cbb0636a5

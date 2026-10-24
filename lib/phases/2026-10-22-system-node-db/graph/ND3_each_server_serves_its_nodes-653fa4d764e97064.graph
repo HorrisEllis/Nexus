@@ -7,11 +7,11 @@ intent: null
 summary: 37 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841756188
+exported_at: 1792877163790
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841756188
-lastSeenAt: 1792841756188
+firstSeenAt: 1792877163790
+lastSeenAt: 1792877163790
 fingerprint: null
 payload:
   for: ND3_each_server_serves_its_nodes

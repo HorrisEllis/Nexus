@@ -7,11 +7,11 @@ intent: null
 summary: AD2_javascript_adapter (library) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792841755974
+exported_at: 1792877163550
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755974
-lastSeenAt: 1792841755974
+firstSeenAt: 1792877163550
+lastSeenAt: 1792877163550
 fingerprint: null
 payload:
   id: AD2_javascript_adapter
@@ -29,4 +29,4 @@ payload:
     - AD1_adapter_contract
   blocks: []
   spec: null
-  graph: f453fdb03f602fe5
+  graph: ceca7fcd57fb8fd1

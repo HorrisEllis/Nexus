@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-cos-spine-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+type: phase
+id: docs_2026-10-23-cos-spine-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+context: pipeline phase SV5_clear_glass_guardian_orchestrator of docs/2026-10-23-cos-spine-phasemap.spec
+intent: null
+summary: SV5_clear_glass_guardian_orchestrator (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792876203206
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792876203206
+lastSeenAt: 1792876203206
+fingerprint: null
+payload:
+  id: SV5_clear_glass_guardian_orchestrator
+  map: docs/2026-10-23-cos-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/compartment.json
+  depends_on:
+    - SV4_ollama_versionium_diagnostic
+  blocks: []
+  spec: null
+  graph: 40e63a26053eb2c4

@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792874367838
+exported_at: 1792877321790
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792874367838
-lastSeenAt: 1792874367838
+firstSeenAt: 1792877321790
+lastSeenAt: 1792877321790
 fingerprint: null
 payload:
   for: DA1_fix_stale_guardian_coverage_gate
@@ -196,15 +196,13 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 5
+    layer: 3
     deps:
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
     dependents:
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA2_dispatch_outcome_events
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR2_brainos_controls_agents
     upstream:
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG1_ncp_events_real
-      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
       - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF2_shared_data_directory_is_the_root_of_the_crash
@@ -218,8 +216,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 5
-      - 'depends on (1): DF1_guardian_own_data_folder · all upstream 6'
+      - layer 3
+      - 'depends on (1): DF1_guardian_own_data_folder · all upstream 4'
       - >-
         needed by (2): DA2_dispatch_outcome_events, BR2_brainos_controls_agents · finishing it
         unlocks DA2_dispatch_outcome_events

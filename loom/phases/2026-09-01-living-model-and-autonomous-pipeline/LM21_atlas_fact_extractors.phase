@@ -9,11 +9,11 @@ intent: null
 summary: LM21_atlas_fact_extractors (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792787918558
+exported_at: 1792877160248
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787918558
-lastSeenAt: 1792787918558
+firstSeenAt: 1792877160248
+lastSeenAt: 1792877160248
 fingerprint: null
 payload:
   id: LM21_atlas_fact_extractors
@@ -34,4 +34,4 @@ payload:
     - LM20_atlas_schema_and_deterministic_seed
   blocks: []
   spec: null
-  graph: 4fdac497540c63a7
+  graph: 57bfee1ee6236400

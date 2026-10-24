@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
+type: phase
+id: docs_2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
+context: >-
+  pipeline phase EW2_the_callers_outside_idearium of
+  docs/2026-10-24-emerge-warp-system-phasemap.spec
+intent: null
+summary: EW2_the_callers_outside_idearium (design) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792877324976
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792877324976
+lastSeenAt: 1792877324976
+fingerprint: null
+payload:
+  id: EW2_the_callers_outside_idearium
+  map: docs/2026-10-24-emerge-warp-system-phasemap.spec
+  repo: null
+  layer: design
+  status: >-
+    DONE 0.60.239 — lib/spec-compiler-port.js; the four callers through it; test-spec-compiler-port
+    4/4; a real boot compiled through the route
+  files:
+    - lib/build-pipeline.js
+    - lib/spec-collect.js
+    - guardian/server.js
+    - copilot/module-builder.js
+    - lib/spec-compiler-port.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-spec-compiler-port.test.js
+  depends_on:
+    - EW_D1_compiler_and_ide_with_idearium
+    - EW1_emerge_and_warp_one_system
+  blocks: []
+  spec: docs/2026-10-17-system-drawbridge-phasemap.spec
+  graph: 967bf1da44c8f314
