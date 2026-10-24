@@ -96,8 +96,9 @@ function register() {
     // Same gap as copilot: registered once, then invisible to
     // nexus-bus._sources. Nerve needs recurring presence data.
     try {
-      const { startHeartbeat } = require('../nexus/nexus-connect');
-      startHeartbeat(SYSTEM_ID, PORT);
+      // 0.60.236 — James: "We need the systems sovereign." The pulse straight from the kernel (lib/pulse.js); nexus-connect's
+      // startHeartbeat only handed off to it, and was ollama's one way out
+      require('../lib/pulse.js').createPulse({ systemId: SYSTEM_ID, port: PORT });
     } catch (_) {}
   });
   r.on('error', () => setTimeout(register, 5000));

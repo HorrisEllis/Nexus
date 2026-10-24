@@ -327,39 +327,17 @@
     }
   ],
   "sovereignty": {
-    "sovereign": false,
-    "out": 4,
+    "sovereign": true,
+    "out": 0,
     "in": 73,
     "blockers": {
-      "data": 1,
-      "primitive": 3,
+      "data": 0,
+      "primitive": 0,
       "capability": 0
     },
     "list": {
-      "data": [
-        {
-          "from": "cos/manager.js",
-          "to": "cortex/memory/jaa-db.js",
-          "system": "cortex"
-        }
-      ],
-      "primitive": [
-        {
-          "from": "cos/siso/index.js",
-          "to": "warp/core/Event.js",
-          "system": "warp"
-        },
-        {
-          "from": "cos/siso/index.js",
-          "to": "warp/core/Stream.js",
-          "system": "warp"
-        },
-        {
-          "from": "cos/siso/index.js",
-          "to": "warp/core/StreamLog.js",
-          "system": "warp"
-        }
-      ],
+      "data": [],
+      "primitive": [],
       "capability": []
     }
   },

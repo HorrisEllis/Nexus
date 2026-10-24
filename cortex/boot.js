@@ -112,7 +112,7 @@ const { jaaDB, uid } = require('./memory/jaa-db');
 // already replaced in Clear Glass this session — no latency tracking,
 // no miss detection, no online/offline transitions. Real, shared
 // createPulse() replaces it below, not left running alongside it.
-const { createPulse } = require('../orchestrator/lib/pulse.js');
+const { createPulse } = require('../lib/pulse.js')   // 0.60.236 the pulse lives with the kernel;
 // §GAP CLOSED 2026-07-19 — nexus-bus.js already existed at repo root, already
 // documented as "the common event fabric," and other systems (guardian,
 // orchestrator) were already POSTing to cortex's /api/event with it in mind

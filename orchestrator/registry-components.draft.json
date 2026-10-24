@@ -138,15 +138,6 @@
   },
   "reached_into": [
     {
-      "file": "orchestrator/lib/pulse.js",
-      "by": [
-        "clear-glass",
-        "cortex",
-        "idearium",
-        "nexus"
-      ]
-    },
-    {
       "file": "orchestrator/lib/grammar-misfire-tracker.js",
       "by": [
         "copilot"
@@ -192,7 +183,7 @@
   "sovereignty": {
     "sovereign": false,
     "out": 37,
-    "in": 11,
+    "in": 7,
     "blockers": {
       "data": 4,
       "primitive": 4,

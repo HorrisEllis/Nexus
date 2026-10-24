@@ -44,8 +44,8 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
     assert.strictEqual(cos.events.declared, Object.keys(require(path.join(ROOT, 'cos/event-taxonomy.js'))).length, 'counted, not copied');
     const host = cos.reached_into.find(r => r.file === 'cos/host/index.js');
     assert.ok(host && host.by.length >= 3, JSON.stringify(host));
-    assert.strictEqual(cos.sovereignty.sovereign, false);
-    assert.ok(cos.sovereignty.list.data.some(x => x.from === 'cos/manager.js' && x.to === 'cortex/memory/jaa-db.js'), 'its one data blocker is named');
+
+    assert.strictEqual(cos.sovereignty.sovereign, true, '0.60.236: its one way out (cortex/memory/jaa-db.js) is gone: cos is sovereign');
     assert.strictEqual(cos.draft, true);
   });
 
@@ -90,7 +90,7 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
 
   await test('RD-05', "his 2026-10-24 \"Aren't systems\": the eight are folded into their home or parked, never listed, never drafted", () => {
     const SB = require(path.join(ROOT, 'lib/system-boundary.js'));
-    assert.deepStrictEqual(Object.keys(SB.FOLDED).sort(), ['auth', 'jaa', 'mesh', 'siso'], 'remote-desktop and security archived (0.60.232); erosmancer moved into clear-glass (0.60.233); sentinel archived (0.60.234)');
+    assert.deepStrictEqual(Object.keys(SB.FOLDED).sort(), ['auth', 'jaa', 'mesh', 'siso', 'warp'], 'remote-desktop and security archived (0.60.232); erosmancer moved into clear-glass (0.60.233); sentinel archived (0.60.234); warp with the kernel (0.60.236)');
     assert.ok(!fs.existsSync(path.join(ROOT, 'erosmancer')) && fs.existsSync(path.join(ROOT, 'clear-glass/erosmancer-os/src/api/server.ts')), 'ErosmancerOS lives in Clear Glass');
     const sys = SB.systems(ROOT);
     for (const f of Object.keys(SB.FOLDED)) assert.ok(!sys.includes(f), `${f} is not a system`);   // the parts stay in the scan (crossings into hooks/ are real edges); they leave only the sovereignty list
@@ -116,8 +116,9 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
     assert.ok(sov.systems.every(r => folders.has(r.system)), 'only Idearium\'s systems are listed');
     assert.strictEqual(sov.systems.length, 14, 'the 14 with a folder (core is the kernel)');
     const unhomed = sov.notSystems.unhomed.map(u => u.folder);
-    for (const f of ['warp', 'nexus', 'meta', 'cli', 'cockpit', 'emerge']) assert.ok(unhomed.includes(f), `${f} is not a system: unhomed`);
-    assert.ok(sov.notSystems.unhomed.find(u => u.folder === 'warp').usedBy.cos > 0, 'with who uses it');
+    for (const f of ['nexus', 'meta', 'cli', 'cockpit', 'emerge']) assert.ok(unhomed.includes(f), `${f} is not a system: unhomed`);
+    assert.ok(!unhomed.includes('warp') && SB.FOLDED.warp === 'lib', '0.60.236: warp counts with the kernel');
+    assert.ok(Object.keys(sov.notSystems.unhomed.find(u => u.folder === 'nexus').usedBy).length > 3, 'with who uses it');
     for (const f of ['cli', 'cockpit', 'meta', 'nexus', 'warp']) assert.ok(!fs.existsSync(path.join(ROOT, f, 'registry-components.draft.json')), `${f}: its draft was withdrawn`);
     // 0.60.232 his "Archive.": kept in the archive, gone from the tree, never a system
     for (const f of ['remote-desktop', 'security', 'emergence', 'sentinel']) { assert.ok(!fs.existsSync(path.join(ROOT, f)), `${f} left the tree`); assert.ok(fs.existsSync(path.join(ROOT, '_archive/2026-10-24-not-systems', f)), `${f} is kept in the archive`); assert.ok(!unhomed.includes(f)); }

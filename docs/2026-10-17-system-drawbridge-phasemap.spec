@@ -509,3 +509,20 @@ the diagnostic system's now (one of his 15; the healer joined it in 0.60.136). T
   both run-all lists, said there), and test-adversarial-sim's AS-004..AS-006 (they tested that CLI). The spec stays in docs/, addended.
 - Found: test-sovereign-systems SV-08 used sentinel as its sovereign example; 0.60.230 broke it and it was not run then (the second test
   that change broke, after CT-03/04). Now components. Every test touching the census is being run (CHANGELOG-0.60.234.md).
+
+## ADDENDUM 2026-10-24 (0.60.236) — sovereign: components, ollama, cos (DB6 begun)
+James, 2026-10-24: "We need the systems sovereign."
+- **warp counts with the kernel** (lib/system-boundary.js FOLDED warp: 'lib'), as siso does: nine systems use warp/core, so inside idearium or
+  guardian (his earlier "warp would probably be idearium or guardian") every one would depend on that system and none could be sovereign.
+  Decided by his axioms for his goal; to confirm. The folder has not moved.
+- **The pulse moved to the kernel** (DB17): orchestrator/lib/pulse.js → lib/pulse.js (node built-ins only), the old path a one-line
+  re-export; cortex/boot.js, idearium/api, clear-glass/wire/nexus-wire.js, nexus/nexus-connect.js and orchestrator.js require lib/pulse.js.
+  Cortex, idearium and Clear Glass no longer reach into orchestrator for a heartbeat.
+- **ollama sovereign:** its one way out was nexus/nexus-connect.js startHeartbeat, which only handed off to the pulse; it takes the pulse
+  from the kernel.
+- **cos sovereign:** its one way out was cortex/memory/jaa-db.js's JaaDB class (a compartment's own store). CompartmentManager takes
+  openStore(dir) from whoever boots it, as it already takes jaaDB; without one it says so and uses the shared store (it fell back silently).
+- **Measured now:** sovereign components, ollama, cos. Next fewest ways out: loom 5 (3 data — cortex's jaa-db; 1 primitive — nexus-connect;
+  1 capability — ollama-client), architect 6, clear-glass 9. The two files most systems still reach for: cortex/memory/jaa-db.js (data) and
+  nexus/nexus-connect.js (it is not a pure primitive: it lazily requires intelligence/lattice; moving it into the kernel as it stands would
+  be an upward crossing, so it needs its lattice use cut first).

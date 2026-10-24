@@ -335,7 +335,7 @@ function startHeartbeat(systemId, port) {
   // (the earlier real migrations — clear-glass, cortex, idearium — each
   // had their OWN separate hand-rolled copy; this one function serving
   // 3 systems is a different, better-leveraged case).
-  const { createPulse } = require('../orchestrator/lib/pulse.js');
+  const { createPulse } = require('../lib/pulse.js');
   return createPulse({ systemId, port });
 }
 
