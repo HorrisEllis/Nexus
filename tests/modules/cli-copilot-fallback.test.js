@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('assert');
 const http = require('http');
-const { _copilotAsk } = require('../../cli/nexus-cli.js');
+const { _copilotAsk } = require('../../lib/cli/nexus-cli.js');
 let passed=0,failed=0;
 async function test(id,d,fn){try{await fn();console.log(`  ✓ ${id} ${d}`);passed++;}catch(e){console.error(`  ✗ ${id} ${d}\n    ${e.message}`);failed++;}}
 

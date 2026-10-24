@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
 context: pipeline phase COSA9_idearium_sync of docs/2026-10-15-cos-app-phasemap.spec
 intent: null
-summary: COSA9_idearium_sync (?) — 16 file(s)
+summary: COSA9_idearium_sync (?) — 15 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677531
+exported_at: 1792841755518
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677531
-lastSeenAt: 1792787677531
+firstSeenAt: 1792841755518
+lastSeenAt: 1792841755518
 fingerprint: null
 payload:
   id: COSA9_idearium_sync
@@ -24,7 +24,6 @@ payload:
     - lib/history-import-job.js
     - lib/zip-ingest.js
     - lib/nexus-self/store.js
-    - nexus/autopilot.js
     - lib/nexus-self/systems.js
     - idearium/lib/projects.cjs
     - idearium/ui/js/projects.js
@@ -41,4 +40,4 @@ payload:
     - COSA3_run_and_supervise
   blocks: []
   spec: null
-  graph: ddd57d8b3fb336bf
+  graph: 4e2d0d6d0315ae08

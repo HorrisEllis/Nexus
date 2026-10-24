@@ -7,11 +7,11 @@ intent: null
 summary: RS2_replay_rewind_branch (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677042
+exported_at: 1792841754943
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677042
-lastSeenAt: 1792787677042
+firstSeenAt: 1792841754943
+lastSeenAt: 1792841754943
 fingerprint: null
 payload:
   id: RS2_replay_rewind_branch
@@ -21,9 +21,9 @@ payload:
   status: OPEN
   files:
     - lib/generation-recorder.js
-    - emergence/vendor/rfr2/cfr-kernel/rewind.js
+    - lib/emergence/vendor/rfr2/cfr-kernel/rewind.js
   depends_on:
     - RS1_the_generation_recorder
   blocks: []
   spec: null
-  graph: ed0fd5754ecc8b3a
+  graph: 4e8721ae758a728b

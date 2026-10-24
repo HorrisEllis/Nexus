@@ -7,11 +7,11 @@ intent: null
 summary: 10 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792820507960
+exported_at: 1792841755868
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820507960
-lastSeenAt: 1792820507960
+firstSeenAt: 1792841755868
+lastSeenAt: 1792841755868
 fingerprint: null
 payload:
   for: DB17_files_stay_with_their_system
@@ -90,12 +90,11 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 2
+    layer: 1
     deps:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB1_the_census_and_the_ratchet
     dependents: []
     upstream:
-      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_how_it_is_enforced
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB1_the_census_and_the_ratchet
     downstream: []
     blockedBy: []
@@ -103,8 +102,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 2 · ready
-      - 'depends on (1): DB1_the_census_and_the_ratchet · all upstream 2'
+      - layer 1 · ready
+      - 'depends on (1): DB1_the_census_and_the_ratchet'
       - 'needed by (0): —'
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges:

@@ -1,0 +1,189 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R4_loom_ledger_awareness:062135e5d81eb31b
+type: graph
+id: phase:R4_loom_ledger_awareness:062135e5d81eb31b
+context: dependency graph of phase R4_loom_ledger_awareness
+intent: null
+summary: 19 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756549
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756549
+lastSeenAt: 1792841756549
+fingerprint: null
+payload:
+  for: R4_loom_ledger_awareness
+  kind: phase
+  repo: null
+  hash: 062135e5d81eb31b
+  nodes:
+    - path: lib/component-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/person-model/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cos/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/lib/diagnostic-contract.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/sigma.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/query/ambiguity-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/component-ledger.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-store.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: cos/kernel.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/lib/diagnostic-contract.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/cfr/sigma.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/component-registry.js
+      to: lib/component-ledger.js
+      kind: requires
+  crossings:
+    - from: lib/component-ledger.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+    dependents:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+    upstream:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+    downstream:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+    blockedBy: []
+    unlocks:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): R0_phasemap_history_in_cortex'
+      - >-
+        needed by (3): R5_loom_visual_map, R6_living_documentation, R10_relational_context_and_reuse
+        · finishing it unlocks R5_loom_visual_map, R6_living_documentation
+    edges:
+      - from: docs/repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+        kind: inferred

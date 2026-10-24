@@ -17,7 +17,7 @@
  */
 const assert = require('assert'), fs = require('fs'), path = require('path');
 const { homeLinks, ROOT, INDEX } = require('../helpers/home-page-source');
-const HOME = path.join(ROOT, 'ui/home');
+const HOME = path.join(ROOT, 'lib', 'ui', 'home');
 let passed = 0, failed = 0;
 function test(id, d, fn) { try { fn(); console.log(`  \u2713 ${id} ${d}`); passed++; } catch (e) { console.error(`  \u2717 ${id} ${d}\n    ${e.message}`); failed++; } }
 const list = dir => fs.readdirSync(path.join(HOME, dir)).sort();
@@ -35,7 +35,8 @@ function rulePairs(files) {
   assert.deepStrictEqual(css, js, `areas without a CSS pair: [${js.filter(a => !css.includes(a))}]; CSS without JS: [${css.filter(a => !js.includes(a))}]`);
 }
 function ruleLinked(links, onDisk) {
-  for (const u of links) assert.ok(fs.existsSync(path.join(ROOT, u.slice(1))), `linked but missing: ${u}`);
+  // /ui/* is served from lib/ui/ (guardian/server.js; ui/ moved into lib/ 2026-10-24, RF2)
+  for (const u of links) assert.ok(fs.existsSync(path.join(ROOT, 'lib', u.slice(1))), `linked but missing: ${u}`);
   for (const f of onDisk) {
     const n = links.filter(u => u === `/ui/home/${f}`).length;
     assert.strictEqual(n, 1, `/ui/home/${f} is linked ${n} times (expected exactly 1)`);

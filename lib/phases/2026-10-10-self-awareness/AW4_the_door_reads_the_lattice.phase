@@ -7,11 +7,11 @@ intent: null
 summary: AW4_the_door_reads_the_lattice (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677257
+exported_at: 1792841755143
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677257
-lastSeenAt: 1792787677257
+firstSeenAt: 1792841755143
+lastSeenAt: 1792841755143
 fingerprint: null
 payload:
   id: AW4_the_door_reads_the_lattice
@@ -27,4 +27,4 @@ payload:
     - AW3_the_field_hears_the_lifecycle
   blocks: []
   spec: null
-  graph: 4de82ab7f378354b
+  graph: bec3835d08d8355e

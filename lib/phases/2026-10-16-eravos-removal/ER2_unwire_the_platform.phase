@@ -7,11 +7,11 @@ intent: null
 summary: ER2_unwire_the_platform (?) — 22 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677698
+exported_at: 1792841755703
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677698
-lastSeenAt: 1792787677698
+firstSeenAt: 1792841755703
+lastSeenAt: 1792841755703
 fingerprint: null
 payload:
   id: ER2_unwire_the_platform
@@ -25,7 +25,7 @@ payload:
     - orchestrator/lib/contract-poller.js
     - orchestrator/lib/contract-handshake.js
     - orchestrator/lib/mcp-server.js
-    - nexus/autopilot.js
+    - lib/nexus/autopilot.js
     - lib/system-check.js
     - lib/nexus-self/systems.js
     - lib/blueprint-index.js
@@ -37,7 +37,7 @@ payload:
     - diagnostic/nexus-diagnostic.js
     - guardian/server.js
     - guardian/interaction-contract.json
-    - hooks/guardian.hooks.js
+    - lib/hooks/guardian.hooks.js
     - loom/maps/session-2026-08-14-map.js
     - loom/maps/cos-testenv-map.js
     - loom/scanners/capability-map.js
@@ -45,4 +45,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: eccf746a91d275e5
+  graph: 29c23ca726a65e52

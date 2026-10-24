@@ -29,8 +29,8 @@ async function test(id, desc, fn) {
 }
 
 const ROOT = path.join(__dirname, '../..');
-const ap = require('../../nexus/autopilot.js');
-const SRC = fs.readFileSync(path.join(ROOT, 'nexus', 'autopilot.js'), 'utf8');
+const ap = require('../../lib/nexus/autopilot.js');
+const SRC = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
 
 // Swap KERNELS in place (it is the same array the module reads) and restore
 // after, so no test leaks a fake kernel into another suite.
@@ -141,7 +141,7 @@ const IDLE = { cmd: process.execPath, args: ['-e', 'setTimeout(()=>{},9999)'] };
     // because the const was declared ~400 lines AFTER the runAll() call that
     // reads it. Nothing ran it automatically, and by hand the banner printed
     // before the crash — so it looked like it worked.
-    const src = fs.readFileSync(path.join(ROOT, 'cli/diagnose.js'), 'utf8');
+    const src = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'diagnose.js'), 'utf8');
     const declIdx = src.indexOf('const DEEP = process.argv.includes');
     const useIdx  = src.indexOf('if (DEEP) {');
     const callIdx = src.indexOf('runAll().catch(');
@@ -151,7 +151,7 @@ const IDLE = { cmd: process.execPath, args: ['-e', 'setTimeout(()=>{},9999)'] };
 
     // And prove it end-to-end: a real run must get past the banner into real checks.
     const { spawnSync } = require('child_process');
-    const r = spawnSync(process.execPath, [path.join(ROOT, 'cli/diagnose.js'), 'cortex'], { encoding: 'utf8', timeout: 60000, cwd: ROOT });
+    const r = spawnSync(process.execPath, [path.join(ROOT, 'lib', 'cli', 'diagnose.js'), 'cortex'], { encoding: 'utf8', timeout: 60000, cwd: ROOT });
     const out = (r.stdout || '') + (r.stderr || '');
     assert.ok(!/Cannot access 'DEEP'/.test(out), 'the TDZ crash must be gone');
     assert.ok(/\[1\/\d+\]/.test(out), `the tool must reach real numbered checks, not die after the banner — got: ${out.slice(0, 300)}`);

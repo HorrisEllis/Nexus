@@ -7,11 +7,11 @@ intent: null
 summary: RR4_governed_handshake_on_handoff (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678314
+exported_at: 1792841756519
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678314
-lastSeenAt: 1792787678314
+firstSeenAt: 1792841756519
+lastSeenAt: 1792841756519
 fingerprint: null
 payload:
   id: RR4_governed_handshake_on_handoff
@@ -31,4 +31,4 @@ payload:
     - RR2_contract_based_chunking
   blocks: []
   spec: null
-  graph: b031ed28511d3eae
+  graph: 4d83a6aef7b477d0

@@ -7,11 +7,11 @@ intent: null
 summary: CE2_the_task_header (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677502
+exported_at: 1792874370299
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677502
-lastSeenAt: 1792787677502
+firstSeenAt: 1792874370299
+lastSeenAt: 1792874370299
 fingerprint: null
 payload:
   id: CE2_the_task_header
@@ -26,4 +26,4 @@ payload:
     - CE1_the_run_state
   blocks: []
   spec: null
-  graph: 5cf233239ddf24a1
+  graph: da37f2cf893f5b76

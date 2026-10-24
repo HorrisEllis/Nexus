@@ -9,11 +9,11 @@ intent: null
 summary: UN1_nexus_surfaces_in_the_field (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677075
+exported_at: 1792841754977
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677075
-lastSeenAt: 1792787677075
+firstSeenAt: 1792841754977
+lastSeenAt: 1792841754977
 fingerprint: null
 payload:
   id: UN1_nexus_surfaces_in_the_field
@@ -24,9 +24,9 @@ payload:
   files:
     - clear-glass/src/page/field.js
     - lib/agent-tools/tools/clear-glass/browser.js
-    - ui/tv-shell/spotlight/spotlight.js
+    - lib/ui/tv-shell/spotlight/spotlight.js
   depends_on:
     - CM2_every_command_for_every_agent
   blocks: []
   spec: null
-  graph: 6a1c22a94c4ecbba
+  graph: c73f21eedd232bcc

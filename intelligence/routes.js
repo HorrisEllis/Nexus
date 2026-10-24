@@ -266,7 +266,7 @@ function createRoutes({ jaaDB, getField, intelligence, refreshMs = 1000, now = D
     '/api/intelligence/synthesis/history', '/api/intelligence/synthesis/fill', '/api/intelligence/synthesis/themes',
   ]);
   const liminal = require('./liminal-space');
-  const nexusBus = require('../nexus/nexus-bus');
+  const nexusBus = require('../lib/nexus/nexus-bus');
   const owns = (method, pathname) => {
     if (pathname === '/api/liminal-space/status' || pathname === '/api/liminal-space/list') return method === 'GET';
     if (pathname.startsWith('/api/intelligence/synthesis/gap/')) return method === 'GET';

@@ -20,7 +20,7 @@ async function test(id, desc, fn) {
 }
 
 async function run() {
-  const { DESCRIPTORS, registerAll } = require('../../cli/nexus-repl-descriptors');
+  const { DESCRIPTORS, registerAll } = require('../../lib/cli/nexus-repl-descriptors');
   const componentRegistry = require('../../lib/component-registry');
 
   await test('RD-01', 'descriptor shape passes component-registry\'s real validate()', () => {

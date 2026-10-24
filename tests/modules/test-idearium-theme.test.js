@@ -25,7 +25,7 @@ const vars = (body) => Object.fromEntries([...body.matchAll(/--([\w-]+):\s*([^;]
   console.log('\ntest-idearium-theme\n');
   try {
     const theme = read('idearium/ui/css/nexus-theme.css');
-    const main = vars(block(read('ui/themes/nexus-dark.css'), ':root'));
+    const main = vars(block(read('lib/ui/themes/nexus-dark.css'), ':root'));
     const nx = vars(block(theme, ':root, :root[data-theme="nexus"]'));
     const pairs = ['void', 'ink', 'plate', 'panel', 'edge', 'rim', 'muted', 'dim', 'text', 'bright', 'ok', 'err', 'warn'];
     const diff = pairs.filter(k => main[k] !== nx[`nx-${k}`]);

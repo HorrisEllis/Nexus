@@ -4,14 +4,14 @@ type: phase
 id: docs_nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
 context: pipeline phase SB1_schema_extension of docs/nexus-self-build-pipeline-phasemap.spec
 intent: null
-summary: SB1_schema_extension (?) — 19 file(s)
+summary: SB1_schema_extension (?) — 18 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678293
+exported_at: 1792841756495
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678293
-lastSeenAt: 1792787678293
+firstSeenAt: 1792841756495
+lastSeenAt: 1792841756495
 fingerprint: null
 payload:
   id: SB1_schema_extension
@@ -21,7 +21,6 @@ payload:
   status: OPEN
   files:
     - loom/test/schema.test.js
-    - warp/core/Gate.js
     - lib/loom-map.js
     - loom/scanners/source-map.js
     - loom/bootstrap.js
@@ -42,4 +41,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 72f0c5f1efbfffb5
+  graph: 97003ff20e17bae4

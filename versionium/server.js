@@ -85,7 +85,7 @@ function register() {
   }, () => {
     console.log('[versionium] registered');
     try {
-      const { startHeartbeat } = require('../nexus/nexus-connect');
+      const { startHeartbeat } = require('../lib/nexus/nexus-connect');
       startHeartbeat(SYSTEM_ID, PORT);
     } catch (_) {}
   });

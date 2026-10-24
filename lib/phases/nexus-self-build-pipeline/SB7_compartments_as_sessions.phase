@@ -7,11 +7,11 @@ intent: null
 summary: SB7_compartments_as_sessions (?) — 15 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678301
+exported_at: 1792841756503
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678301
-lastSeenAt: 1792787678301
+firstSeenAt: 1792841756503
+lastSeenAt: 1792841756503
 fingerprint: null
 payload:
   id: SB7_compartments_as_sessions
@@ -31,12 +31,12 @@ payload:
     - lib/uid/normalize.js
     - loom/templates/cos-compartment.js
     - cos/cli/commands/destroy.js
-    - cli/clear-idearium.js
     - cos/cli/commands/list.js
+    - lib/cli/clear-idearium.js
     - lib/end-state.js
     - lib/agent-tools/tools/sandbox/cos-compartment.js
   depends_on:
     - SB1_schema_extension
   blocks: []
   spec: null
-  graph: 61dd4a0cac5599fd
+  graph: 1d6cdd8bacad34a4

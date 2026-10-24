@@ -7,11 +7,11 @@ intent: null
 summary: BL7_emerge_files_to_emerge_folder (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675406
+exported_at: 1792841753335
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675406
-lastSeenAt: 1792787675406
+firstSeenAt: 1792841753335
+lastSeenAt: 1792841753335
 fingerprint: null
 payload:
   id: BL7_emerge_files_to_emerge_folder
@@ -20,15 +20,15 @@ payload:
   layer: null
   status: OPEN
   files:
-    - cli/boot-systems.js
-    - contracts/SYSTEM-CONTRACTS.js
     - tests/kernel.test.js
-    - cli/diagnose.js
-    - emerge/emerge-ide.js
+    - lib/cli/diagnose.js
+    - lib/emerge/emerge-ide.js
     - ollama/ollama-runtime.js
-    - emerge/emerge-kernel.js
-    - emerge/emerge-codegen-v2.js
+    - lib/cli/boot-systems.js
+    - lib/contracts/SYSTEM-CONTRACTS.js
+    - lib/emerge/emerge-kernel.js
+    - lib/emerge/emerge-codegen-v2.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 3ab7a1f57237920a
+  graph: ff2046ba236342e9

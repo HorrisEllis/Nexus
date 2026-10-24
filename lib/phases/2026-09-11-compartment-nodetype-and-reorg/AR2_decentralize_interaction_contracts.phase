@@ -9,11 +9,11 @@ intent: null
 summary: AR2_decentralize_interaction_contracts (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675853
+exported_at: 1792841753789
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675853
-lastSeenAt: 1792787675853
+firstSeenAt: 1792841753789
+lastSeenAt: 1792841753789
 fingerprint: null
 payload:
   id: AR2_decentralize_interaction_contracts
@@ -22,13 +22,13 @@ payload:
   layer: null
   status: OPEN
   files:
-    - contracts/nexus-interaction-contract.js
     - orchestrator/orchestrator.js
-    - contracts/SYSTEM-CONTRACTS.js
     - tests/modules/interaction-contract.test.js
     - tests/brutal.test.js
+    - lib/contracts/nexus-interaction-contract.js
+    - lib/contracts/SYSTEM-CONTRACTS.js
   depends_on:
     - D1_diagnostic_real_folder
   blocks: []
   spec: null
-  graph: 004da81f2aa79f85
+  graph: 1773c8ec1efb8050

@@ -1,0 +1,106 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OR6_old_code_out:ac041db7c1a7637f
+type: graph
+id: phase:OR6_old_code_out:ac041db7c1a7637f
+context: dependency graph of phase OR6_old_code_out
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755070
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755070
+lastSeenAt: 1792841755070
+fingerprint: null
+payload:
+  for: OR6_old_code_out
+  kind: phase
+  repo: null
+  hash: ac041db7c1a7637f
+  nodes:
+    - path: clear-glass/seam/watchdog-gates.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cos/archetype/genesis-catalog.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/security/e2e-channel.js
+      role: changes
+      exists: true
+      system: cos
+    - path: guardian/lib/command-registry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/ui/consent/consent-gate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: scripts/_register-session-hooks.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/test/watchdog.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/siso/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cos/archetype/nexus-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/command-registry.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cos/archetype/genesis-catalog.js
+      to: cos/archetype/nexus-system.js
+      kind: requires
+    - from: clear-glass/seam/watchdog-gates.js
+      to: clear-glass/siso/index.js
+      kind: requires
+    - from: clear-glass/seam/watchdog-gates.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/test/watchdog.test.js
+      to: clear-glass/seam/watchdog-gates.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
+    dependents: []
+    upstream:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): OR0_the_census'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
+        kind: declared

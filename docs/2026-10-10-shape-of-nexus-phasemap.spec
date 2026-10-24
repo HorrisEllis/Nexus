@@ -148,7 +148,7 @@ spec:
       status: "DONE (0.59.0)"
       james: '"maybe integrate it with nexus nerve"'
       depends_on: [FN2_nerve_sees_the_field]
-      files: [ui/tv-shell/nerve/nerve.js, ui/tv-shell/nerve/nerve.html, ui/tv-shell/nerve/nerve.css]
+      files: [lib/ui/tv-shell/nerve/nerve.js, lib/ui/tv-shell/nerve/nerve.html, lib/ui/tv-shell/nerve/nerve.css]
       does: >-
         Both ways. The nerve canvas shows where an agent's attention is: the browser node lights while a window's field is
         in use, and the HUD says it ("default · #3 Apply now · click"). And the canvas was invisible to the field — a canvas

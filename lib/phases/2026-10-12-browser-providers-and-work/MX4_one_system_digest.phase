@@ -7,11 +7,11 @@ intent: null
 summary: MX4_one_system_digest (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677326
+exported_at: 1792841755242
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677326
-lastSeenAt: 1792787677326
+firstSeenAt: 1792841755242
+lastSeenAt: 1792841755242
 fingerprint: null
 payload:
   id: MX4_one_system_digest
@@ -29,4 +29,4 @@ payload:
     - PV3_input_nodes
   blocks: []
   spec: null
-  graph: b1af60343305fd6c
+  graph: f138b394815f668d

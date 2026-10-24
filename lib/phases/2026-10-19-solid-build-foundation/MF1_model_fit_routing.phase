@@ -7,11 +7,11 @@ intent: null
 summary: MF1_model_fit_routing (foundation) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677942
+exported_at: 1792841756026
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677942
-lastSeenAt: 1792787677942
+firstSeenAt: 1792841756026
+lastSeenAt: 1792841756026
 fingerprint: null
 payload:
   id: MF1_model_fit_routing
@@ -26,4 +26,4 @@ payload:
   blocks:
     - '"model_fit"'
   spec: null
-  graph: 933ae7ea59a963fb
+  graph: b9bc0c93e9f9d779

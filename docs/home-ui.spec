@@ -3,7 +3,7 @@ spec:
     name:        home-ui
     version:     1.4.0
     uuid:        nexus-home-ui-v1-1000-2026-0617-jamesbrooks-001
-    file:        ui/home/index.html   # markup only since 1.4.0 -- JS/CSS in ui/home/areas/ (one JS + one CSS per area), ui/home/core/, ui/home/home.css (shared)
+    file:        lib/ui/home/index.html   # markup only since 1.4.0 -- JS/CSS in lib/ui/home/areas/ (one JS + one CSS per area), lib/ui/home/core/, lib/ui/home/home.css (shared)
     serves:      http://127.0.0.1:9000/
     purpose: >
       The NEXUS home screen. Sovereign OS overview surface.

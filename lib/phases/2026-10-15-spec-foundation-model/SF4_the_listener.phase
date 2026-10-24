@@ -7,11 +7,11 @@ intent: null
 summary: SF4_the_listener (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677624
+exported_at: 1792841755632
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677624
-lastSeenAt: 1792787677624
+firstSeenAt: 1792841755632
+lastSeenAt: 1792841755632
 fingerprint: null
 payload:
   id: SF4_the_listener
@@ -27,4 +27,4 @@ payload:
     - SF2_state_and_gate
   blocks: []
   spec: null
-  graph: 6ccc005b3e35e04e
+  graph: 12450e757df15576

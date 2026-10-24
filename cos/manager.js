@@ -7,7 +7,7 @@
 
 const crypto = require('crypto');
 const { Compartment, STATE, BIRTH_GATES } = require('./kernel');
-const { BusKernel } = require('../siso');
+const { BusKernel } = require('../lib/siso');
 
 class CompartmentManager {
   constructor({ kernel, jaaDB }) {

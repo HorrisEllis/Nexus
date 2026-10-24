@@ -7,11 +7,11 @@ intent: null
 summary: T1_loop (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675975
+exported_at: 1792841753902
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675975
-lastSeenAt: 1792787675975
+firstSeenAt: 1792841753902
+lastSeenAt: 1792841753902
 fingerprint: null
 payload:
   id: T1_loop
@@ -20,10 +20,10 @@ payload:
   layer: null
   status: OPEN
   files:
-    - contracts/nexus-interaction-contract.js
     - copilot/intents.js
     - copilot/lib/autonomy-router.js
+    - copilot/lib/grammar-router.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 528376a1fb70a883
+  graph: 2b262e7ed997a051

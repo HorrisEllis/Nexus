@@ -9,11 +9,11 @@ intent: null
 summary: AM6_perplexity_confidence_loop (?) — 21 file(s)
 system: idearium
 tags: []
-exported_at: 1792822478514
+exported_at: 1792841756290
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478514
-lastSeenAt: 1792822478514
+firstSeenAt: 1792841756290
+lastSeenAt: 1792841756290
 fingerprint: null
 payload:
   id: AM6_perplexity_confidence_loop
@@ -26,7 +26,6 @@ payload:
     - lib/emergence.js
     - lib/safe-apply.js
     - lib/fault-log.js
-    - meta/adversary-suite.js
     - cortex/push-recall.js
     - guardian/lib/dispatch-ladder.js
     - idearium/ui/js/app.js
@@ -43,9 +42,10 @@ payload:
     - lib/agent-tools/tools/sandbox/cos-compartment.js
     - loom/templates/cos-compartment.js
     - lib/agent-tools/tools/query/fault-log.js
+    - lib/meta/adversary-suite.js
   depends_on:
     - AM1_per_agent_learned_model
     - AM5_ambiguity_triggered_pull
   blocks: []
   spec: null
-  graph: adca06647d527ddd
+  graph: 3b7de8454696d887

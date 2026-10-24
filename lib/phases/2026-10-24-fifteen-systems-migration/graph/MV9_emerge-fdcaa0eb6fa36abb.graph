@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792822478483
+exported_at: 1792875542203
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478483
-lastSeenAt: 1792822478483
+firstSeenAt: 1792875542203
+lastSeenAt: 1792875542203
 fingerprint: null
 payload:
   for: MV9_emerge
@@ -36,16 +36,20 @@ payload:
       - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV11_warp
       - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV12_nexus
       - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_cli
-    blockedBy:
-      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_changelogs_to_docs
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_cockpit_to_idearium
+    blockedBy: []
     unlocks:
       - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV11_warp
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_cli
     conflicts: []
     dangling: []
     lines:
-      - layer 1 · blocked by MV7_siso
+      - layer 1
       - 'depends on (1): MV7_siso'
-      - 'needed by (2): MV11_warp, MV13_cli · all downstream 4 · finishing it unlocks MV11_warp'
+      - >-
+        needed by (2): MV11_warp, MV13_cli · all downstream 6 · finishing it unlocks MV11_warp,
+        MV13_cli
     edges:
       - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV7_siso
         kind: declared

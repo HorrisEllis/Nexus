@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792822478482
+exported_at: 1792842797983
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478482
-lastSeenAt: 1792822478482
+firstSeenAt: 1792842797983
+lastSeenAt: 1792842797983
 fingerprint: null
 payload:
   for: MV8_ui
@@ -33,7 +33,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 0 · ready
+      - layer 0
       - 'depends on (0): —'
       - 'needed by (0): —'
     edges: []

@@ -47,7 +47,7 @@ const S = (free) => ({ system: { freeMemPct: free, usedMemPct: 1 - free } });
     !t1.unloaded.length && /running/.test(t1.why) && !t2.unloaded.length && t3.unloaded.join() === 'qwen2.5-coder:7b' && !t4.unloaded.length && unloaded.length === 1, JSON.stringify({ t1, t2, t3, t4 }));
 
   // the wiring: every heavy job asks first
-  const AP = fs.readFileSync(path.join(ROOT, 'nexus/autopilot.js'), 'utf8'), CG = fs.readFileSync(path.join(ROOT, 'clear-glass/src/main/index.js'), 'utf8');
+  const AP = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8'), CG = fs.readFileSync(path.join(ROOT, 'clear-glass/src/main/index.js'), 'utf8');
   const ID = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8'), OF = fs.readFileSync(path.join(ROOT, 'cortex/core/raid/officiator.js'), 'utf8');
   const ES = fs.readFileSync(path.join(ROOT, 'cortex/self-heal/escalation.js'), 'utf8'), OS = fs.readFileSync(path.join(ROOT, 'ollama/server.js'), 'utf8');
   check('PV-06 the heavy jobs ask before they start: the loom refresh (and skips a fresh registry), the self-sync, the officiator, Eros and the hidden pre-warm; Ollama unloads idle; FAILURE_MODE writes a prevention',

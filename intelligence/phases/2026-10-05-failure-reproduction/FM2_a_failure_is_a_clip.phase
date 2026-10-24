@@ -7,11 +7,11 @@ intent: null
 summary: FM2_a_failure_is_a_clip (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677028
+exported_at: 1792841754926
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677028
-lastSeenAt: 1792787677028
+firstSeenAt: 1792841754926
+lastSeenAt: 1792841754926
 fingerprint: null
 payload:
   id: FM2_a_failure_is_a_clip
@@ -27,4 +27,4 @@ payload:
     - FM1_every_ledger_into_rfr2
   blocks: []
   spec: null
-  graph: a487cd62141f833a
+  graph: 4b57a227ef13b6f5

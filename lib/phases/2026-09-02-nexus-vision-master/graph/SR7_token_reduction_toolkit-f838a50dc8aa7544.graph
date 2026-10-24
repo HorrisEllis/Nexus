@@ -1,0 +1,216 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR7_token_reduction_toolkit:f838a50dc8aa7544
+type: graph
+id: phase:SR7_token_reduction_toolkit:f838a50dc8aa7544
+context: dependency graph of phase SR7_token_reduction_toolkit
+intent: null
+summary: 22 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792874367754
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874367754
+lastSeenAt: 1792874367754
+fingerprint: null
+payload:
+  for: SR7_token_reduction_toolkit
+  kind: phase
+  repo: null
+  hash: f838a50dc8aa7544
+  nodes:
+    - path: lib/chat-logger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/api-dispatch.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cli/semantic-dedup.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/semantic-dedup.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-vector-memory-embed-check.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/local-vector-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ollama-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: lib/local-vector-index.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: lib/ollama-activity.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/cli/semantic-dedup.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/context-builder.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/semantic-dedup.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: tests/modules/test-vector-memory-embed-check.test.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: lib/chat-logger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/chat-logger.js
+      kind: requires
+  crossings:
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+    - from: lib/chat-logger.js
+      to: intelligence/liminal/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/chat-logger.js
+      to: intelligence/bda/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/chat-logger.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR5_large_file_chunk_working_memory
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR5_large_file_chunk_working_memory
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR5_large_file_chunk_working_memory
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by SR5_large_file_chunk_working_memory
+      - 'depends on (1): SR5_large_file_chunk_working_memory'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-02-nexus-vision-master-phasemap.spec::SR5_large_file_chunk_working_memory
+        kind: inferred

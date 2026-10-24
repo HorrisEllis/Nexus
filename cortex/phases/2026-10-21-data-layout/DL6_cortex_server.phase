@@ -7,11 +7,11 @@ intent: null
 summary: DL6_cortex_server (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792822478402
+exported_at: 1792841756167
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478402
-lastSeenAt: 1792822478402
+firstSeenAt: 1792841756167
+lastSeenAt: 1792841756167
 fingerprint: null
 payload:
   id: DL6_cortex_server
@@ -29,4 +29,4 @@ payload:
   blocks:
     - MOD-CORTEX-SERVER
   spec: docs/data-layout.spec
-  graph: a8a702303bb02f47
+  graph: 17d05347142d4364

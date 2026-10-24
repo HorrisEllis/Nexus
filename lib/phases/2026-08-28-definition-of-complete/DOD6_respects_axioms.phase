@@ -7,11 +7,11 @@ intent: null
 summary: DOD6_respects_axioms (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675473
+exported_at: 1792874367420
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675473
-lastSeenAt: 1792787675473
+firstSeenAt: 1792874367420
+lastSeenAt: 1792874367420
 fingerprint: null
 payload:
   id: DOD6_respects_axioms
@@ -25,4 +25,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 0f8fab7681fae1d5
+  graph: 9b842d450f16cd50

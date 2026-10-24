@@ -9,11 +9,11 @@ intent: null
 summary: VS1_sovereign_folder_and_foundation (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792822476125
+exported_at: 1792841753679
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822476125
-lastSeenAt: 1792822476125
+firstSeenAt: 1792841753679
+lastSeenAt: 1792841753679
 fingerprint: null
 payload:
   id: VS1_sovereign_folder_and_foundation
@@ -27,4 +27,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: fd93dc1477f0e768
+  graph: b37bfd05674a4713

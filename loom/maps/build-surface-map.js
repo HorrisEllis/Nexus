@@ -43,7 +43,7 @@ const FILES = [
   ]],
   // 0.60.66 SF3 — a .spec in the compiler's format is checked at the code.write gate and collected when it lands
   ['lib/spec-collect.js', I('lib/spec-collect.js'), [
-    I('nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
+    I('lib/nexus/nexus-bus.js'),                                    // require — emit idearium.spec.collected
   ]],
   // 0.60.94 FN0 — James: "Every thing the agents do. Needs to determine dependancies, spec, phase, then chunk." No model.
   // §FR4a 0.60.118 — the flight recorder on its own (products/flight-recorder)
@@ -118,8 +118,8 @@ const FILES = [
   // 0.60.73 WB1/WB2 — James chose option 1: WARP around the agent the ladder and RAID already chose (cache, axiom gate, retain)
   ['lib/warp-rung.js', I('lib/warp-rung.js'), [
     I('lib/seam/adapters/warp-cascade.js'),                     // require — createWarpDispatch (unifiedDispatch, one provider, one attempt)
-    I('warp/plugins/crystallizer-flatfile.js'),                 // require — the exact cache (data/warp/rung-crystals.json)
-    I('warp/dispatch/population.js'),                           // require — retention and promotion after 3 passing results
+    I('lib/warp/plugins/crystallizer-flatfile.js'),                 // require — the exact cache (data/warp/rung-crystals.json)
+    I('lib/warp/dispatch/population.js'),                           // require — retention and promotion after 3 passing results
   ]],
   // 0.60.28 PF1 — ready before run: Guardian's facts per agent, and the build's pure check over its ladder
   ['guardian/lib/provider-ready.js', I('guardian/lib/provider-ready.js'), []],
@@ -141,7 +141,7 @@ const FILES = [
   [I('scripts/generate-atlases.js'), I('loom/scanners/phasemap-map.js'), '0.60.156 loadAll() handed to generate({ phasemaps })'],
   // §0.60.156 GM5 — context as a SISO stream: every source in the table asked at once, the residue named
   ['lib/context-sources.js', I('lib/context-sources.js'), [I('lib/context-atlas.js'), I('lib/component-store.js'), I('lib/gate-context.js'), I('lib/vector-memory.js'), I('lib/nexus-client.js')]],   // the rows' asks; intelligence and cortex by route
-  ['lib/context-stream.js', I('lib/context-stream.js'), [I('lib/context-sources.js'), I('siso/index.js'), I('lib/context-atlas.js')]],   // rows · Event/Gate/Stream/StreamLog (import()) · qtokens
+  ['lib/context-stream.js', I('lib/context-stream.js'), [I('lib/context-sources.js'), I('lib/siso/index.js'), I('lib/context-atlas.js')]],   // rows · Event/Gate/Stream/StreamLog (import()) · qtokens
   // §0.60.238 CG1 — James: "before an agent does anything. if confidence is lower than 75%, context must be obtained. build worksurface, compile list of dependancies, find the context, ask user last." The pre-dispatch gate; lazily composes repo-agent.contextFor (worksurface + find context) and context-atlas (the stores' graphs). Map: docs/2026-10-24-agent-orchestration-phasemap.spec.
   ['lib/agent-confidence-gate.js', I('lib/agent-confidence-gate.js'), [I('lib/repo-agent.js'), I('lib/context-atlas.js')]],
   [I('lib/repo-agent.js'), I('lib/agent-confidence-gate.js'), '§0.60.239 CG2 — _dispatch runs the gate after context is gathered, before the send; the decision on the record (ctxInfo.gate)'],
@@ -322,7 +322,7 @@ const CONSUMERS = [
   [I('lib/nerve/index.js'), I('clear-glass/src/ipc/agent-routes.js'), '§FN2 HTTP GET :7702/cli/attention → each window\'s focus in the snapshot'],
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/agent-routes.js'), '§FN1 HTTP POST :7702/cli/driver (field, fieldOff, at, spotlight, pointer) · GET /cli/attention'],
   [I('idearium/cli/route-commands.js'), I('cortex/boot.js'), '§FN2 HTTP GET /nerve/snapshot (`idearium nerve`)'],
-  [I('ui/tv-shell/nerve/nerve.js'), I('guardian/server.js'), '§FN3 HTTP /api/guardian/nerve/snapshot windows[].focus → the HUD and the browser node ring'],
+  [I('lib/ui/tv-shell/nerve/nerve.js'), I('guardian/server.js'), '§FN3 HTTP /api/guardian/nerve/snapshot windows[].focus → the HUD and the browser node ring'],
   [I('idearium/api/index.js'), I('idearium/lib/access.cjs'), '§IA0 decide() before every route (ROUTE_CAP); §IA1 /api/access/* — login, keys, revoke'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/accounts/idearium-login.js'), '§IA4 signIn({vault: passwordVault, cookies: session.defaultSession.cookies}) at start'],
   [I('idearium/ui/settings.html'), I('idearium/api/index.js'), '§IA3 Settings → Access: HTTP access/me, access/keys, config access.*'],
@@ -364,7 +364,7 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/prevention.js'), '0.60.123 MP _guardedSync heavyAllowedHere; GET /system/lean prevention; POST /system/prevention/clear'],
   [I('clear-glass/src/main/index.js'), I('lib/prevention.js'), '0.60.123 MP Eros and the NCP prewarm held under prevention'],
   [I('cortex/core/raid/officiator.js'), I('lib/prevention.js'), '0.60.123 MP the tick asks heavyAllowedHere'],
-  [I('nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],
+  [I('lib/nexus/autopilot.js'), I('lib/prevention.js'), '0.60.123 MP the loom refresh waits for heavyAllowed'],
   // SD20 0.60.203 — a starved machine does not spin (docs/2026-10-10-idearium-solid-phasemap.spec)
   [I('cortex/core/raid/worker.js'), I('lib/prevention.js'), 'SD20 0.60.203 the drain waits on heavyAllowedHere(raid-worker)'],
   [I('cortex/core/raid/officiator.js'), I('cortex/core/raid/contract-intake.js'), 'SD20 0.60.203 listQueue: sameGoal (no second contract for one goal) and failStreak (its own failing contracts hold synthesis)'],

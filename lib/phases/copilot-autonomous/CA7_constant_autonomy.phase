@@ -7,11 +7,11 @@ intent: null
 summary: CA7_constant_autonomy (?) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1792822478551
+exported_at: 1792841756328
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478551
-lastSeenAt: 1792822478551
+firstSeenAt: 1792841756328
+lastSeenAt: 1792841756328
 fingerprint: null
 payload:
   id: CA7_constant_autonomy
@@ -37,4 +37,4 @@ payload:
     - CA6_self_building_commands
   blocks: []
   spec: null
-  graph: fbcc8e9d8af7ed20
+  graph: 3d9bc5ba933dfd1f

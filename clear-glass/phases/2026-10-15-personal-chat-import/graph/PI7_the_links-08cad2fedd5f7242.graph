@@ -1,0 +1,271 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PI7_the_links:08cad2fedd5f7242
+type: graph
+id: phase:PI7_the_links:08cad2fedd5f7242
+context: dependency graph of phase PI7_the_links
+intent: null
+summary: 35 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755628
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755628
+lastSeenAt: 1792841755628
+fingerprint: null
+payload:
+  for: PI7_the_links
+  kind: phase
+  repo: null
+  hash: 08cad2fedd5f7242
+  nodes:
+    - path: clear-glass/src/automation/from-macro.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/chats/crawler.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/chats/ports.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/chats/service.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/chat-ledger.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/account-switch.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/shadow.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-chat-crawler.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-chat-ports.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-scroll-until.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/provider-account-sync.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/session-hub.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/signin-window-quiet.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/proof-run.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-230-shadow.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/drawbridge-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: clear-glass/src/automation/cron.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/dom.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/template.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/session-hub.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: intelligence/liminal-space/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/chat-crawl-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chat-crawl-settings.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-scroll-until.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: clear-glass/src/chats/crawler.js
+      to: lib/chat-crawl-plan.js
+      kind: requires
+    - from: clear-glass/src/chats/crawler.js
+      to: lib/chat-crawl-settings.js
+      kind: requires
+    - from: clear-glass/src/downloads/chat-ledger.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: clear-glass/src/downloads/chat-ledger.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/providers/account-switch.js
+      to: clear-glass/src/cookies/session-hub.js
+      kind: requires
+    - from: lib/shadow.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/shadow.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/shadow.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: clear-glass/src/automation/template.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: clear-glass/src/automation/cron.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: clear-glass/src/automation/dom.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/downloads/chat-ledger.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/downloads/chat-ledger.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/providers/account-switch.js
+      kind: requires
+    - from: clear-glass/test/provider-account-sync.test.js
+      to: clear-glass/src/providers/account-switch.js
+      kind: requires
+    - from: clear-glass/test/session-hub.test.js
+      to: clear-glass/src/providers/account-switch.js
+      kind: requires
+    - from: clear-glass/test/signin-window-quiet.test.js
+      to: clear-glass/src/providers/account-switch.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/repo/proof-run.js
+      to: lib/shadow.js
+      kind: requires
+    - from: lib/checks/ck-230-shadow.js
+      to: lib/shadow.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/shadow.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/shadow.js
+      kind: requires
+  crossings:
+    - from: lib/shadow.js
+      to: intelligence/liminal-space/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI5_the_crawler
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI3b_the_measured_patterns
+    dependents: []
+    upstream:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI0_where_it_is_read
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI0b_what_a_chat_may_become
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI3_the_intelligence_pass
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI3b_the_measured_patterns
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI5_the_crawler
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI5_the_crawler
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI3b_the_measured_patterns
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by PI5_the_crawler, PI3b_the_measured_patterns
+      - 'depends on (2): PI5_the_crawler, PI3b_the_measured_patterns · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-15-personal-chat-import-phasemap.spec::PI5_the_crawler
+        kind: declared
+      - from: docs/2026-10-15-personal-chat-import-phasemap.spec::PI3b_the_measured_patterns
+        kind: declared

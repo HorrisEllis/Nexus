@@ -7,11 +7,11 @@ intent: null
 summary: MCO4_hooks_wires_flows_tools (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678287
+exported_at: 1792841756486
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678287
-lastSeenAt: 1792787678287
+firstSeenAt: 1792841756486
+lastSeenAt: 1792841756486
 fingerprint: null
 payload:
   id: MCO4_hooks_wires_flows_tools
@@ -22,10 +22,10 @@ payload:
     'LATER — off the path — repository tools as nodes and full git come after (declutter
     2026-10-09)'
   files:
-    - ui/home/areas/agent-suite.js
+    - lib/ui/home/areas/agent-suite.js
     - idearium/repo/import-pipeline.js
   depends_on:
     - MCO1_graph_layer
   blocks: []
   spec: null
-  graph: acba9c545837ded9
+  graph: 21c6272ecb1ac076

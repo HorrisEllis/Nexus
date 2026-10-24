@@ -9,11 +9,11 @@ intent: null
 summary: IC11_agent_truth_fragmentation (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792814552780
+exported_at: 1792841753436
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792814552780
-lastSeenAt: 1792814552780
+firstSeenAt: 1792841753436
+lastSeenAt: 1792841753436
 fingerprint: null
 payload:
   id: IC11_agent_truth_fragmentation
@@ -27,10 +27,10 @@ payload:
     - clear-glass/renderer/selector-check.js
     - copilot/cli.js
     - cos/app/shell.js
-    - tests/modules/contract-intake-dependency-graph.test.js
+    - lib/ui/tv-shell/spotlight/spotlight.js
     - copilot/lib/self-model.js
     - clear-glass/src/mesh/agent-mesh.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 0a51b71bfcb6edc5
+  graph: 5946f6d511d85652

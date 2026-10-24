@@ -9,11 +9,11 @@ intent: null
 summary: PR1_the_announced_registry_is_the_list (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676774
+exported_at: 1792841754614
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676774
-lastSeenAt: 1792787676774
+firstSeenAt: 1792841754614
+lastSeenAt: 1792841754614
 fingerprint: null
 payload:
   id: PR1_the_announced_registry_is_the_list
@@ -23,9 +23,9 @@ payload:
   status: OPEN
   files:
     - orchestrator/orchestrator.js
-    - nexus/autopilot.js
+    - lib/nexus/autopilot.js
     - lib/expected-systems.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 641bbd05951e0d82
+  graph: 5ae40cd0d1efbd71

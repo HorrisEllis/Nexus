@@ -9,11 +9,11 @@ intent: null
 summary: GA1_guardian_nexus_reconciliation (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678172
+exported_at: 1792841756354
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678172
-lastSeenAt: 1792787678172
+firstSeenAt: 1792841756354
+lastSeenAt: 1792841756354
 fingerprint: null
 payload:
   id: GA1_guardian_nexus_reconciliation
@@ -24,9 +24,9 @@ payload:
   files:
     - guardian/lib/ncp.js
     - idearium/copilot-adapter/index.js
-    - ui/ncp.js
+    - lib/ui/ncp.js
     - lib/agent-tools/tools/identity/switch-agent.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 7d4f25c26f8d558f
+  graph: 97b520d35eb12e24

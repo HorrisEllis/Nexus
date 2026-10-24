@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-system-consolidation-phasemap.spec::CN8_erosmancer_to_clear_glass
+type: phase
+id: docs_2026-10-24-system-consolidation-phasemap.spec::CN8_erosmancer_to_clear_glass
+context: pipeline phase CN8_erosmancer_to_clear_glass of docs/2026-10-24-system-consolidation-phasemap.spec
+intent: null
+summary: CN8_erosmancer_to_clear_glass (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371412
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371412
+lastSeenAt: 1792874371412
+fingerprint: null
+payload:
+  id: CN8_erosmancer_to_clear_glass
+  map: docs/2026-10-24-system-consolidation-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - clear-glass/erosmancer-os
+  depends_on:
+    - CN0_the_rule_in_force
+    - CN_D4_erosmancer
+  blocks: []
+  spec: null
+  graph: ab40e267d8b386c6

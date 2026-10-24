@@ -9,11 +9,11 @@ intent: null
 summary: X3_nodes_route (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676065
+exported_at: 1792841754011
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676065
-lastSeenAt: 1792787676065
+firstSeenAt: 1792841754011
+lastSeenAt: 1792841754011
 fingerprint: null
 payload:
   id: X3_nodes_route
@@ -29,4 +29,4 @@ payload:
     - X2_guardian_hat_agent
   blocks: []
   spec: null
-  graph: c4340ed9cd3aa9e9
+  graph: 3dc386bdd08fbeb7

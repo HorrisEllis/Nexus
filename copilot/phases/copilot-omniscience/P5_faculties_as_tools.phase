@@ -7,11 +7,11 @@ intent: null
 summary: P5_faculties_as_tools (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678185
+exported_at: 1792841756373
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678185
-lastSeenAt: 1792787678185
+firstSeenAt: 1792841756373
+lastSeenAt: 1792841756373
 fingerprint: null
 payload:
   id: P5_faculties_as_tools
@@ -25,4 +25,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 7ce0d0cbf1e459e5
+  graph: 380e894c3c7c8ed5

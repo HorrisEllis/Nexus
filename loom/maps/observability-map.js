@@ -169,7 +169,7 @@ const FILES = [
     ['nexus.intelligence', 'nexus.intelligence.relational-field', 'nexus.intelligence.baseline', 'nexus.intelligence.snapshot-trigger', 'nexus.lib.ledger-fanin']],  // autopilot boot — wire+verify the whole intelligence substrate
   ['lib/ledger-fanin/boot.js',    'nexus.lib.ledger-fanin.boot',
     ['nexus.lib.ledger-fanin', 'nexus.lib.activity-log']],  // P1 — subscribes intelligence/autopilot/copilot/logging to the fan-in at boot  // subscribes the fan-in → persists all activity + errors to cortex  // the unified event fan-in — every system emits, every consumer subscribes once
-  ['ui/agents/gemini/code-suite.html', 'nexus.ui.gemini.code-suite',
+  ['lib/ui/agents/gemini/code-suite.html', 'nexus.ui.gemini.code-suite',
     ['nexus.lib.gemini-toolbox.routes']],  // the code suite UI → toolbox over HTTP
 ];
 

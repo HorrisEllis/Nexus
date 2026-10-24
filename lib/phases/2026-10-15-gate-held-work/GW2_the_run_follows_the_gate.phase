@@ -7,11 +7,11 @@ intent: null
 summary: GW2_the_run_follows_the_gate (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677548
+exported_at: 1792841755536
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677548
-lastSeenAt: 1792787677548
+firstSeenAt: 1792841755536
+lastSeenAt: 1792841755536
 fingerprint: null
 payload:
   id: GW2_the_run_follows_the_gate
@@ -33,4 +33,4 @@ payload:
     - GW0_what_is_a_gate
   blocks: []
   spec: null
-  graph: 8f78d99aa885a501
+  graph: 30061c05b767af4f

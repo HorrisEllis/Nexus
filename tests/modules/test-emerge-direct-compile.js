@@ -45,12 +45,12 @@ async function run() {
   });
 
   test('EM-003', 'build() now requires and calls emerge/compiler/pipeline.js\'s compile() directly', () => {
-    assert.ok(/require\(['"]\.\.\/emerge\/compiler\/pipeline['"]\)/.test(src));
+    assert.ok(/require\(['"]\.\.\/lib\/emerge\/compiler\/pipeline['"]\)/.test(src));
     assert.ok(/await compile\(specPath, buildDir/.test(src));
   });
 
   test('EM-004', 'emerge/consumer.js is genuinely gone from its live location', () => {
-    assert.ok(!fs.existsSync(path.join(__dirname, '../../emerge/consumer.js')), 'consumer.js should be removed, not just unused');
+    assert.ok(!fs.existsSync(path.join(__dirname, '..', '..', 'lib', 'emerge', 'consumer.js')), 'consumer.js should be removed, not just unused');
   });
 
   test('EM-005', 'emerge/consumer.js is archived, not deleted without a trace — §0.3', () => {
@@ -58,11 +58,11 @@ async function run() {
   });
 
   test('EM-006', 'emerge/compiler/ itself is untouched — the real, load-bearing part James said to keep', () => {
-    assert.ok(fs.existsSync(path.join(__dirname, '../../emerge/compiler/pipeline.js')));
+    assert.ok(fs.existsSync(path.join(__dirname, '..', '..', 'lib', 'emerge', 'compiler', 'pipeline.js')));
   });
 
   test('EM-007', 'autopilot.js no longer spawns emerge/consumer.js as a kernel', () => {
-    const apSrc = fs.readFileSync(path.join(__dirname, '../../nexus/autopilot.js'), 'utf8');
+    const apSrc = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'nexus', 'autopilot.js'), 'utf8');
     assert.ok(!/args:\s*\[['"]emerge\/consumer\.js['"]\]/.test(apSrc));
   });
 

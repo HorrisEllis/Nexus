@@ -7,11 +7,11 @@ intent: null
 summary: IM4_the_kernel_boundary (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677793
+exported_at: 1792841755810
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677793
-lastSeenAt: 1792787677793
+firstSeenAt: 1792841755810
+lastSeenAt: 1792841755810
 fingerprint: null
 payload:
   id: IM4_the_kernel_boundary
@@ -25,4 +25,4 @@ payload:
     - IM0d_lib_is_the_kernel
   blocks: []
   spec: null
-  graph: 2fa27fc4450f490d
+  graph: c147db605bdd2aa9

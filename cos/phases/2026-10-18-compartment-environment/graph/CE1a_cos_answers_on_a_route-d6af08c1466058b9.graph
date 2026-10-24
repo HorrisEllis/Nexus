@@ -1,0 +1,171 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE1a_cos_answers_on_a_route:d6af08c1466058b9
+type: graph
+id: phase:CE1a_cos_answers_on_a_route:d6af08c1466058b9
+context: dependency graph of phase CE1a_cos_answers_on_a_route
+intent: null
+summary: 17 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755883
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755883
+lastSeenAt: 1792841755883
+fingerprint: null
+payload:
+  for: CE1a_cos_answers_on_a_route
+  kind: phase
+  repo: null
+  hash: d6af08c1466058b9
+  nodes:
+    - path: cos/interaction-contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/registry-components.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/server.js
+      role: changes
+      exists: false
+      system: cos
+    - path: lib/system-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: diagnostic/healer/api/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/diagnostic/nexus-heal.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-status.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cli/compartments.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-registry.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-tunnel.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cos-bridge.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/system-registry.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/system-registry.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: diagnostic/healer/api/index.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/nexus-heal.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-status.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/cli/compartments.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-system-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-system-tunnel.test.js
+      to: lib/system-registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+    dependents:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+    upstream:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+    downstream:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE6_the_code_tab
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE7_agents_and_commands
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+      - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+    blockedBy:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+    unlocks:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CE0e_cos_answers_on_a_route
+      - 'depends on (1): CE0e_cos_answers_on_a_route'
+      - >-
+        needed by (1): CE1_the_compartment_machine · all downstream 16 · finishing it unlocks
+        CE1_the_compartment_machine
+    edges:
+      - from: docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+        kind: inferred

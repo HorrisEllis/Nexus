@@ -7,11 +7,11 @@ intent: null
 summary: RN2_cortex_is_the_bookkeeper (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677117
+exported_at: 1792841755012
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677117
-lastSeenAt: 1792787677117
+firstSeenAt: 1792841755012
+lastSeenAt: 1792841755012
 fingerprint: null
 payload:
   id: RN2_cortex_is_the_bookkeeper
@@ -26,4 +26,4 @@ payload:
     - LT1_provenance_lattice
   blocks: []
   spec: null
-  graph: 86535db74885de3a
+  graph: ce96f74583db38f9

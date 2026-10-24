@@ -25,7 +25,7 @@ spec:
   real_primitives:
     decomposition:
       what: "spec (of any size) -> KnowledgeGraph -> seam records, one per unit of work"
-      files: [emerge/compiler/pipeline.js, lib/seam/kg-seam-bridge.js]
+      files: [lib/emerge/compiler/pipeline.js, lib/seam/kg-seam-bridge.js]
       proof: "ran against runtime.spec itself — 61 real nodes, 52 module seam records, real computed generationReadiness/confidence/deps per node, not guessed"
 
     dispatch_pipeline:
@@ -35,7 +35,7 @@ spec:
 
     agnostic_llm_layer:
       what: "cache + population + cascade + retry, provider-agnostic by construction"
-      files: [warp/dispatch/index.js, warp/dispatch/cascade.js, warp/plugins/crystallizer-flatfile.js]
+      files: [lib/warp/dispatch/index.js, lib/warp/dispatch/cascade.js, lib/warp/plugins/crystallizer-flatfile.js]
       proof: "ollama/server.js wired as WARP's first production caller this session — 3 identical dispatches build population evidence, 4th+ serve from cache with zero model calls, proven not assumed"
       gap: "WARP itself never picks WHICH provider — that's RAID's job, and RAID isn't wired as ollama's provider-selector yet (see open_gaps)"
 
@@ -53,7 +53,7 @@ spec:
 
     self_learning:
       what: "(domain, verb, outcome) pattern crystallization, real success-rate tracking"
-      files: [meta/crystal-lattice.js]
+      files: [lib/meta/crystal-lattice.js]
       proof: "wired to copilot/intuition.js's real consumer this session — inserted a real crystal, got back the exact shape intuition has expected since it was written (precursor/outcome/count/confidence), where it used to silently render undefined/NaN"
       gap: "write side (compartment-engine.execute() -> crystal-lattice) traced to orchestrator's autonomous-loop, which requires a manual API call with hand-supplied params — not confirmed to fire automatically in production"
 

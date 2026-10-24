@@ -29,7 +29,7 @@ function test(id, desc, fn) {
   catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${e.message}`); failed++; }
 }
 
-const SRC = fs.readFileSync(path.join(__dirname, '../../ui/brainos/brainos-app.js'), 'utf8');
+const SRC = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'ui', 'brainos', 'brainos-app.js'), 'utf8');
 
 // Verbatim copy of the real, shipped _escapeHtml — verified identical
 // to the real source below (BOA-000), not trusted blind.

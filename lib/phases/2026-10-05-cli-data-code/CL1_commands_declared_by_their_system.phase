@@ -9,11 +9,11 @@ intent: null
 summary: CL1_commands_declared_by_their_system (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676969
+exported_at: 1792841754863
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676969
-lastSeenAt: 1792787676969
+firstSeenAt: 1792841754863
+lastSeenAt: 1792841754863
 fingerprint: null
 payload:
   id: CL1_commands_declared_by_their_system
@@ -26,8 +26,8 @@ payload:
     - idearium/cli/index.js
     - cos/cli/index.js
     - copilot/cli.js
-    - cli/nexus.js
+    - lib/cli/nexus.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 17ce5c8f22a70bb7
+  graph: 4c68a98014727ba7

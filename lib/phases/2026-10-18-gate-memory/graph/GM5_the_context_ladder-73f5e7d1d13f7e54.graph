@@ -1,0 +1,238 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GM5_the_context_ladder:73f5e7d1d13f7e54
+type: graph
+id: phase:GM5_the_context_ladder:73f5e7d1d13f7e54
+context: dependency graph of phase GM5_the_context_ladder
+intent: null
+summary: 27 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792874370853
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874370853
+lastSeenAt: 1792874370853
+fingerprint: null
+payload:
+  for: GM5_the_context_ladder
+  kind: phase
+  repo: null
+  hash: 73f5e7d1d13f7e54
+  nodes:
+    - path: lib/context-atlas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-stream.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/routes/opportunity.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/context-atlas.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cli/semantic-dedup.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/readme-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gate-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/local-vector-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ollama-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: lib/context-sources.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/gate-context.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: lib/local-vector-index.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: lib/ollama-activity.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/context-stream.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: copilot/routes/opportunity.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/context-atlas.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/readme-generate.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/cli/semantic-dedup.js
+      to: lib/vector-memory.js
+      kind: requires
+  crossings:
+    - from: lib/context-atlas.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/context-atlas.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM7_the_context_panel_per_gate
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM8_agents_have_it
+    upstream: []
+    downstream:
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM7_the_context_panel_per_gate
+      - docs/2026-10-18-gate-memory-phasemap.spec::GM8_agents_have_it
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (2): GM7_the_context_panel_per_gate, GM8_agents_have_it'
+    edges: []

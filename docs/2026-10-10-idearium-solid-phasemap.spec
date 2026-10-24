@@ -42,7 +42,7 @@ spec:
       status: "DONE (0.56.0) — found: versionium/lib/http-utils.js readRawBody destroyed the socket over its size limit, so the 413 never arrived and the sender read exactly \"read ECONNRESET\" (reproduced on 0.55.2; a clean 413 now). idearium/repo/snapshot.js _againWhileDown: limits/plan/stage tried again while versionium comes back (2·4·8·16·30 s), the refusal says how long it waited and what to start; commit and record are never repeated. Autopilot already restarts versionium with backoff. Whether his 12:46 reset was this or a crash is not known from here. test-idearium-solid SO-01..04."
       james: '"12:46:45 refused — no snapshot: the file layer was not available before commit — no snapshot was made: [nexus-client] versionium unreachable at 127.0.0.1:3754 — read ECONNRESET"'
       depends_on: []
-      files: [nexus/autopilot.js, versionium/server.js, lib/repo-layer.js]
+      files: [lib/nexus/autopilot.js, versionium/server.js, lib/repo-layer.js]
       does: >-
         Every repo write is refused when versionium (:3754) is down — correct (no unversioned write), but on his machine
         it reset mid-build and every write after it failed the same way. Check first: autopilot starts versionium as
@@ -72,7 +72,7 @@ spec:
       status: "DONE (0.56.0) — copilot/server.js _noAnswer: both /api/prompt lifeline handlers answer ok:false with lifeline's own reason when there is no text (live: 'Both Ollama and Guardian are unavailable. Check system health.'); the overview says it. SO-05."
       james: '"[unstructured response — keys: ok, requestId, sessionId, text, modelUsed, intent, channel, contextLayers, fromStream] via none" (his screenshot, the overview co-pilot)'
       depends_on: []
-      files: [copilot/server.js, copilot/lifeline.js, ui/tv-shell/index.html]
+      files: [copilot/server.js, copilot/lifeline.js, lib/ui/tv-shell/index.html]
       does: >-
         Copilot's /api/prompt returned ok:true with empty text and modelUsed 'none' — nothing answered and it called it
         success. 0.55.2 made the overview say so plainly; the fix is upstream: an answer with no text and no model is

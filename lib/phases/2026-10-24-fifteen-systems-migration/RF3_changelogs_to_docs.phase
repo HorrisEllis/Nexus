@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_changelogs_to_docs
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF3_changelogs_to_docs
+context: pipeline phase RF3_changelogs_to_docs of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: RF3_changelogs_to_docs (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792875542210
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875542210
+lastSeenAt: 1792875542210
+fingerprint: null
+payload:
+  id: RF3_changelogs_to_docs
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/version.js
+    - lib/release-notes.js
+    - lib/nexus-releases.js
+    - lib/release-version.js
+    - lib/context-atlas.js
+    - lib/phase-census.js
+    - lib/spec-census.js
+    - lib/readme-generate.js
+    - lib/checks/ck-253-versions.js
+    - lib/architecture-apply.js
+    - scripts/release-zip.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4799fa277b9f0e32

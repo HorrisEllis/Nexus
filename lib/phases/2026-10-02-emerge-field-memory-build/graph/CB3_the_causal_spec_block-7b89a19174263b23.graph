@@ -1,0 +1,191 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CB3_the_causal_spec_block:7b89a19174263b23
+type: graph
+id: phase:CB3_the_causal_spec_block:7b89a19174263b23
+context: dependency graph of phase CB3_the_causal_spec_block
+intent: null
+summary: 18 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754482
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754482
+lastSeenAt: 1792841754482
+fingerprint: null
+payload:
+  for: CB3_the_causal_spec_block
+  kind: phase
+  repo: null
+  hash: 7b89a19174263b23
+  nodes:
+    - path: idearium/spec-engine/blocks.yaml
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/cfr/contract-verifier.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/emerge/compiler/emit.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/compiler-bridge.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/cfr/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/cli/cfr-debug.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/test/gap-field.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/emerge/test/invariants.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/emerge/test/reply-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/emerge/verify.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/tier-contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/cortex-query/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/cortex-query/writeback.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/emerge/compiler/index.js
+      to: lib/emerge/cortex-query/index.js
+      kind: requires
+    - from: lib/emerge/compiler/index.js
+      to: lib/emerge/cortex-query/writeback.js
+      kind: requires
+    - from: lib/emerge/compiler/index.js
+      to: lib/emerge/version.js
+      kind: requires
+    - from: lib/emerge/compiler/emit.js
+      to: lib/emerge/compiler/tier-contract.js
+      kind: requires
+    - from: idearium/compiler-bridge.js
+      to: lib/emerge/compiler/index.js
+      kind: requires
+    - from: lib/emerge/verify.js
+      to: lib/emerge/compiler/index.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/emerge/compiler/index.js
+      kind: requires
+    - from: lib/emerge/compiler/pipeline.js
+      to: lib/emerge/compiler/emit.js
+      kind: requires
+    - from: lib/emerge/test/gap-field.test.js
+      to: lib/emerge/compiler/emit.js
+      kind: requires
+    - from: lib/emerge/test/invariants.test.js
+      to: lib/emerge/compiler/emit.js
+      kind: requires
+    - from: lib/emerge/test/reply-engine.test.js
+      to: lib/emerge/compiler/emit.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: intelligence/cfr/index.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+  crossings:
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+    unlocks:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+    conflicts:
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+        files:
+          - lib/emerge/compiler/index.js
+          - lib/emerge/compiler/emit.js
+    dangling: []
+    lines:
+      - layer 5 · blocked by EM2_warp_his_own, CF1_cfr_improved_with_rfr2
+      - 'depends on (2): EM2_warp_his_own, CF1_cfr_improved_with_rfr2 · all upstream 6'
+      - >-
+        needed by (1): WS6_workshop_parts_and_modes · finishing it unlocks
+        WS6_workshop_parts_and_modes
+      - >-
+        same files as GG1_graphs_generate_code with no order between them:
+        lib/emerge/compiler/index.js, lib/emerge/compiler/emit.js
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        kind: declared

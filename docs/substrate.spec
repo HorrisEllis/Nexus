@@ -239,7 +239,7 @@ spec:
 
     - id: IF-LATTICE
       name: crystal-lattice-edges
-      path: meta/crystal-lattice.js
+      path: lib/meta/crystal-lattice.js
       description: "lattice_edges — weighted edges between nodes, success up, failure down, decaying."
       exports: ["_edgeKey(from, to)", "lattice update after a compartment resolution"]
       behavioral_contracts: ["weight floor 0.05; decay every 6 h by LATTICE_DECAY_RATE"]
@@ -691,7 +691,7 @@ spec:
     - id: MOD-PHASE-SPECS
       name: phase-specs
       uuid: nexus-substrate-phase-specs-v1-0000-2026-1020-001
-      path: emerge/compiler/phase-specs.js
+      path: lib/emerge/compiler/phase-specs.js
       phase: PS1_phase_specs
       description: >-
         The step after a spec and its phases (his order: specs, then phases, then specced again with the dag and related files).

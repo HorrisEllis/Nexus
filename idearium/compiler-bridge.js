@@ -49,7 +49,7 @@ import os   from 'os';
 const require = createRequire(import.meta.url);
 
 // emerge/compiler/index.js is CJS — bridge it in via createRequire.
-const { compile } = require('../emerge/compiler/index.js');
+const { compile } = require('../lib/emerge/compiler/index.js');
 
 // ── Section lookup ───────────────────────────────────────────────────────────
 function _section(spec, id) {

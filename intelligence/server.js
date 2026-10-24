@@ -50,7 +50,7 @@ const { createFieldProvider } = require('./field-provider.js');
 const { createRoutes } = require('./routes.js');
 const fieldProvider = createFieldProvider({ url: config.ORCHESTRATOR_URL, intervalMs: config.FIELD_POLL_MS });
 const liminal = require('./liminal-space');
-const nexusBus = require('../nexus/nexus-bus');
+const nexusBus = require('../lib/nexus/nexus-bus');
 const { registerSelfRemote } = require('../lib/self-register-remote.js');
 
 // §BUILT 2026-09-19 — RAID: intelligence announces itself to RAID as a client
@@ -78,7 +78,7 @@ const routes = createRoutes({
   refreshMs: config.DB_REFRESH_MS,
 });
 
-const { Stream, Event } = require('../warp/core');
+const { Stream, Event } = require('../lib/warp/core');
 
 // ── Real event ledger — reused directly, not rebuilt (§8.6). onGap is a
 // real, already-existing extension point (confirmed by reading ledger.js
@@ -94,7 +94,7 @@ const ledger = createCFRLedger({
 // (intelligence/index.js's own real bus.emit — confirmed the only one
 // that exists) into the system stream, same reasoning as onGap above.
 try {
-  require('../nexus/nexus-bus').on('cortex.intelligence.pattern_crystallised', (data) => {
+  require('../lib/nexus/nexus-bus').on('cortex.intelligence.pattern_crystallised', (data) => {
     systemStream.emit(new Event('intelligence.pattern.crystallised', data));
   });
 } catch (e) { console.warn(`[intelligence] pattern-crystallisation relay unavailable: ${e.message}`); }
@@ -242,7 +242,7 @@ function start() {
     // on missed beats) — polling never told orchestrator it was there between
     // ticks, and never noticed a hang faster than the next poll interval.
     try {
-      const { startHeartbeat } = require('../nexus/nexus-connect');
+      const { startHeartbeat } = require('../lib/nexus/nexus-connect');
       startHeartbeat('intelligence', PORT);
     } catch (e) {
       console.warn(`[intelligence] pulse/heartbeat failed to start (non-fatal, falls back to orchestrator polling): ${e.message}`);

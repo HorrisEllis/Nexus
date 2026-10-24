@@ -7,11 +7,11 @@ intent: null
 summary: P1_per_agent_contracts (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678196
+exported_at: 1792841756387
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678196
-lastSeenAt: 1792787678196
+firstSeenAt: 1792841756387
+lastSeenAt: 1792841756387
 fingerprint: null
 payload:
   id: P1_per_agent_contracts
@@ -22,11 +22,11 @@ payload:
   files:
     - lib/gemini-toolbox/agent-contracts.js
     - lib/chunk-service.js
-    - contracts/nexus-interaction-contract.js
     - copilot/lib/lifeline-contracts.js
     - lib/agent-system/contracts.js
+    - lib/contracts/nexus-interaction-contract.js
     - lib/agent-router.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 0f2fd9ee83912663
+  graph: 2ca578531cd36a2e

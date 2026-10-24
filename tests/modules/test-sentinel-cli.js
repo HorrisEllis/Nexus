@@ -30,7 +30,7 @@ function test(id, desc, fn) {
 }
 
 const ROOT = path.join(__dirname, '../..');
-const CLI = path.join(ROOT, 'cli/sentinel.js');
+const CLI = path.join(ROOT, 'lib', 'cli', 'sentinel.js');
 const run = (args) => spawnSync(process.execPath, [CLI, ...args], { cwd: ROOT, encoding: 'utf8', timeout: 90000 });
 const runJson = (args) => {
   const r = run([...args, '--json']);
@@ -39,7 +39,7 @@ const runJson = (args) => {
 };
 
 test('SC-001', 'the contract exists, is valid JSON, and declares its own identity', () => {
-  const c = JSON.parse(fs.readFileSync(path.join(ROOT, 'sentinel/interaction-contract.json'), 'utf8'));
+  const c = JSON.parse(fs.readFileSync(path.join(ROOT, 'lib', 'sentinel', 'interaction-contract.json'), 'utf8'));
   assert.strictEqual(c.id, 'sentinel-v1');
   assert.ok(c.uuid && c.version, 'must carry a uuid and version (§5.1)');
   assert.ok(Array.isArray(c.commands) && c.commands.length > 0);
@@ -47,7 +47,7 @@ test('SC-001', 'the contract exists, is valid JSON, and declares its own identit
 });
 
 test('SC-002', 'DECLARED-vs-LIVE is explicit — routes not yet served say so rather than implying they work', () => {
-  const c = JSON.parse(fs.readFileSync(path.join(ROOT, 'sentinel/interaction-contract.json'), 'utf8'));
+  const c = JSON.parse(fs.readFileSync(path.join(ROOT, 'lib', 'sentinel', 'interaction-contract.json'), 'utf8'));
   for (const r of c.routes) {
     assert.ok(['LIVE', 'DECLARED'].includes(r.status),
       `route ${r.path} must state LIVE or DECLARED — a contract that implies unbuilt routes work is the same lie as a hardcoded diagram`);

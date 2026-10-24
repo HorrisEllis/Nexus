@@ -1,0 +1,197 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RA0_rca_says_what_it_does:317774385ec8c06d
+type: graph
+id: phase:RA0_rca_says_what_it_does:317774385ec8c06d
+context: dependency graph of phase RA0_rca_says_what_it_does
+intent: null
+summary: 22 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756072
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756072
+lastSeenAt: 1792841756072
+fingerprint: null
+payload:
+  for: RA0_rca_says_what_it_does
+  kind: phase
+  repo: null
+  hash: 317774385ec8c06d
+  nodes:
+    - path: intelligence/routes.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: orchestrator/lib/mcp-server.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/cli/nexus.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/mcp-stdio.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/intuition-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mastermind-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/nexus-full-audit.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/anomaly.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/intuition.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/mastermind.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/nexus/command.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-contract-check.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/lib/mcp-tools-tokensave.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/lib/mcp-server.js
+      to: lib/event-contract-check.js
+      kind: requires
+    - from: orchestrator/lib/mcp-server.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: orchestrator/lib/mcp-server.js
+      to: orchestrator/lib/mcp-tools-tokensave.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/intuition.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/gap/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/anomaly.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: lib/cli/nexus.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: orchestrator/lib/mcp-stdio.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: tests/nexus-full-audit.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/intuition-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/mastermind-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/routes.js
+      kind: requires
+  crossings:
+    - from: lib/cli/nexus.js
+      to: orchestrator/lib/mcp-server.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+    upstream: []
+    downstream:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+      - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): RA1_root_cause_through_provenance · all downstream 3'
+    edges: []

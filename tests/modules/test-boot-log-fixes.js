@@ -28,10 +28,10 @@ function testAsync(id, desc, fn) { _async.push([id, desc, fn]); }
 
 const ROOT = path.join(__dirname, '../..');
 const DIAG = fs.readFileSync(path.join(ROOT, 'diagnostic/nexus-diagnostic.js'), 'utf8');
-const CLI  = fs.readFileSync(path.join(ROOT, 'cli/diagnose.js'), 'utf8');
+const CLI  = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'diagnose.js'), 'utf8');
 const LEDG = fs.readFileSync(path.join(ROOT, 'lib/component-ledger.js'), 'utf8');
-const NC   = fs.readFileSync(path.join(ROOT, 'nexus', 'nexus-connect.js'), 'utf8');
-const AP   = fs.readFileSync(path.join(ROOT, 'nexus', 'autopilot.js'), 'utf8');
+const NC   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'nexus-connect.js'), 'utf8');
+const AP   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');
 
 // ── BUG 1: the diagnostic service never served /health ─────────────────────
 test('BL-001', 'CRITICAL: diagnostic serves /health — the route autopilot has ALWAYS gated it on', () => {
@@ -124,7 +124,7 @@ test('BL-008', 'a system that loses the registration race RETRIES — it previou
 
 testAsync('BL-009', 'REAL: a system registering BEFORE orchestrator exists still ends up registered', async () => {
   // Deliberately reproduces the exact race from the boot log.
-  const nc = require('../../nexus/nexus-connect.js');
+  const nc = require('../../lib/nexus/nexus-connect.js');
   let registered = null;
   const srv = http.createServer((q, s) => {
     let b = ''; q.on('data', c => b += c);

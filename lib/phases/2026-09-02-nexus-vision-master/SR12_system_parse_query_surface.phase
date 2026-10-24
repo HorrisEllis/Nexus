@@ -9,11 +9,11 @@ intent: null
 summary: SR12_system_parse_query_surface (?) — 13 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675728
+exported_at: 1792841753674
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675728
-lastSeenAt: 1792787675728
+firstSeenAt: 1792841753674
+lastSeenAt: 1792841753674
 fingerprint: null
 payload:
   id: SR12_system_parse_query_surface
@@ -24,11 +24,11 @@ payload:
   files:
     - lib/agent-tools/tools/query/nexus-map.js
     - lib/agent-system/contracts.js
-    - emergence/components/idea-store/index.js
     - lib/consumer-registry.js
     - lib/drawbridge-registry.js
-    - contracts/nexus-interaction-contract.js
+    - lib/emergence/components/idea-store/index.js
     - copilot/lib/lifeline-contracts.js
+    - lib/contracts/nexus-interaction-contract.js
     - lib/agent-tools/tools/query/read-file.js
     - lib/agent-tools/tools/query/search-files.js
     - lib/agent-tools/tools/query/file-tree.js
@@ -38,4 +38,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 8c16a48512a80c7c
+  graph: 7e8fd7afa9e313d2

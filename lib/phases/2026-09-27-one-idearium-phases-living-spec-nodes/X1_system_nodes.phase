@@ -9,11 +9,11 @@ intent: null
 summary: X1_system_nodes (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676063
+exported_at: 1792841754009
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676063
-lastSeenAt: 1792787676063
+firstSeenAt: 1792841754009
+lastSeenAt: 1792841754009
 fingerprint: null
 payload:
   id: X1_system_nodes
@@ -23,10 +23,10 @@ payload:
   status: OPEN
   files:
     - lib/system-nodes.js
-    - cli/nodes.js
+    - lib/cli/nodes.js
     - orchestrator/orchestrator.js
   depends_on:
     - C1_copilot_contract
   blocks: []
   spec: null
-  graph: 46e5cb034f4618e8
+  graph: f786be098cfe5731

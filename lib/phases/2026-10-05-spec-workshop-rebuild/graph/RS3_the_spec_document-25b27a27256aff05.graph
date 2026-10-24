@@ -1,0 +1,85 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RS3_the_spec_document:25b27a27256aff05
+type: graph
+id: phase:RS3_the_spec_document:25b27a27256aff05
+context: dependency graph of phase RS3_the_spec_document
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754944
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754944
+lastSeenAt: 1792841754944
+fingerprint: null
+payload:
+  for: RS3_the_spec_document
+  kind: phase
+  repo: null
+  hash: 25b27a27256aff05
+  nodes:
+    - path: idearium/spec-engine/templates/genesis.spec
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/emerge/emerge-kernel.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/spec-document.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/safe-watch.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/emerge/emerge-kernel.js
+      to: lib/safe-watch.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/spec-document.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: lib/spec-document.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS9_the_thread
+    upstream: []
+    downstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS10_the_phases_tab_rebuilt
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS11_workshop_and_phases_one_surface
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS5_the_template_picker
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS7_architect_and_blueprint_stations
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS8_what_converges_becomes_deterministic
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS9_the_thread
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS9_the_thread
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): RS4_the_pipeline_on_warp2, RS9_the_thread · all downstream 8 · finishing it
+        unlocks RS9_the_thread
+    edges: []

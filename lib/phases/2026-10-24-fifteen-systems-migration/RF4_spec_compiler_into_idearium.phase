@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_spec_compiler_into_idearium
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_spec_compiler_into_idearium
+context: >-
+  pipeline phase RF4_spec_compiler_into_idearium of
+  docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: RF4_spec_compiler_into_idearium (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792875542213
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875542213
+lastSeenAt: 1792875542213
+fingerprint: null
+payload:
+  id: RF4_spec_compiler_into_idearium
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/module-builder.js
+    - guardian/server.js
+  depends_on:
+    - RF4_emerge_into_warp
+  blocks: []
+  spec: null
+  graph: 2a92363805897587

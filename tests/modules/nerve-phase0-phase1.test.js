@@ -29,7 +29,7 @@ function test(desc, fn) {
   catch(e) { console.error(`  ✗ ${desc}\n    ${e.message}`); failed++; }
 }
 
-const hooks  = require(require('path').join(__dirname, '..', '..', 'hooks/index.js'));
+const hooks  = require(require('path').join(__dirname, '..', '..', 'lib', 'hooks', 'index.js'));
 const nerve  = require(require('path').join(__dirname, '..', '..', 'lib/nerve/index.js'));
 
 // ── Phase 0 — pulse hooks present ─────────────────────────────────────────────

@@ -15,10 +15,10 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '../..');
-const W = require(path.join(ROOT, 'warp'));
-const { attach } = require(path.join(ROOT, 'warp/adapters/siso-gates.js'));
-const { admitFrom } = require(path.join(ROOT, 'warp/adapters/emerge-field.js'));
-const E = require(path.join(ROOT, 'emerge/core'));
+const W = require(path.join(ROOT, 'lib', 'warp'));
+const { attach } = require(path.join(ROOT, 'lib', 'warp', 'adapters', 'siso-gates.js'));
+const { admitFrom } = require(path.join(ROOT, 'lib', 'warp', 'adapters', 'emerge-field.js'));
+const E = require(path.join(ROOT, 'lib', 'emerge', 'core'));
 
 let passed = 0, failed = 0;
 function test(id, desc, fn) {
@@ -91,7 +91,7 @@ test('W2-05', '1.x through the adapter: unchanged, and every event a link', () =
 
 test('W2-06', 'WARP 2\'s core files: no SISO shape, nothing from outside warp/, a verifying ledger', () => {
   for (const f of ['Link.js', 'Expectation.js', 'Ledger.js', 'Engine.js']) {
-    const src = fs.readFileSync(path.join(ROOT, 'warp/core', f), 'utf8').replace(/\/\/.*$/gm, '');
+    const src = fs.readFileSync(path.join(ROOT, 'lib/warp/core', f), 'utf8').replace(/\/\/.*$/gm, '');
     assert.ok(!/\b(Gate|Stream|StreamLog|Event)\b/.test(src), `${f} carries SISO's shape`);
     for (const m of src.matchAll(/require\('([^']+)'\)/g)) assert.ok(m[1].startsWith('./'), `${f} requires ${m[1]}`);
   }

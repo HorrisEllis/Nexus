@@ -360,8 +360,8 @@ async function run() {
     const { execFileSync } = require('child_process');
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'opp-cli-'));
     const env = { ...process.env, JAA_DATA_DIR: dir, NEXUS_TEST_SANDBOX: '' };
-    execFileSync(process.execPath, [path.join(__dirname, '../../cli/opportunity.js'), 'profile', 'set', 'skills=node,rust', 'minSalary=100000'], { env, stdio: 'pipe' });
-    const shown = JSON.parse(execFileSync(process.execPath, [path.join(__dirname, '../../cli/opportunity.js'), 'profile', 'show'], { env, stdio: 'pipe' }).toString().split('\n').filter(l => !l.startsWith('[')).join('\n'));
+    execFileSync(process.execPath, [path.join(__dirname, '..', '..', 'lib', 'cli', 'opportunity.js'), 'profile', 'set', 'skills=node,rust', 'minSalary=100000'], { env, stdio: 'pipe' });
+    const shown = JSON.parse(execFileSync(process.execPath, [path.join(__dirname, '..', '..', 'lib', 'cli', 'opportunity.js'), 'profile', 'show'], { env, stdio: 'pipe' }).toString().split('\n').filter(l => !l.startsWith('[')).join('\n'));
     assert.deepStrictEqual([shown.skills, shown.minSalary], [['node', 'rust'], 100000]);
   });
 

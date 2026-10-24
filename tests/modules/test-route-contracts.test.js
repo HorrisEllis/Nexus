@@ -44,16 +44,16 @@ test('RC-03', 'cos, emerge and warp: each contract matches its code', () => {
   }
   assert.strictEqual(R.checkSystem(ROOT, 'cos').served.length, 7);
   assert.strictEqual(R.checkSystem(ROOT, 'warp').served.length, 0, 'warp is a library');
-  const codegen = JSON.parse(fs.readFileSync(path.join(ROOT, 'emerge/interaction-contract.json'), 'utf8')).routes.find(r => r.path === '/api/codegen');
+  const codegen = JSON.parse(fs.readFileSync(path.join(ROOT, 'lib', 'emerge', 'interaction-contract.json'), 'utf8')).routes.find(r => r.path === '/api/codegen');
   assert.strictEqual(codegen.reachable, false, 'declared, and said to be unreachable');
 });
 
 test('RC-04', 'wired: the CLI verb and loom', () => {
-  const cli = fs.readFileSync(path.join(ROOT, 'cli/nexus.js'), 'utf8');
-  assert.ok(cli.includes("require('../lib/route-contract-check.js')"), 'nexus contracts check runs it');
+  const cli = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'nexus.js'), 'utf8');
+  assert.ok(cli.includes("require('../route-contract-check.js')"), 'nexus contracts check runs it');
   const reg = JSON.parse(fs.readFileSync(path.join(ROOT, 'loom/data/registry.json'), 'utf8'));
   assert.ok(reg.component['nexus.lib.route-contract-check'], 'a loom component');
-  assert.ok(Object.values(reg.wire).some(w => w.from_hook_id === 'nexus.lib.route-contract-check.export' && w.to_hook_id === 'nexus.cli.nexus.import'), 'wired to the CLI');
+  assert.ok(Object.values(reg.wire).some(w => w.from_hook_id === 'nexus.lib.route-contract-check.export' && w.to_hook_id === 'nexus.lib.cli.nexus.import'), 'wired to the CLI');
 });
 
 console.log(`\n  ${passed} passed, ${failed} failed`);

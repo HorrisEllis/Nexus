@@ -9,11 +9,11 @@ intent: null
 summary: BC3_what_a_build_was_sent_as_a_node (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676856
+exported_at: 1792841754678
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676856
-lastSeenAt: 1792787676856
+firstSeenAt: 1792841754678
+lastSeenAt: 1792841754678
 fingerprint: null
 payload:
   id: BC3_what_a_build_was_sent_as_a_node
@@ -28,4 +28,4 @@ payload:
     - BC2_the_build_agent_gets_all_of_the_hat_and_repo_context
   blocks: []
   spec: null
-  graph: c3fd5f52e2545073
+  graph: cbb512503f381392

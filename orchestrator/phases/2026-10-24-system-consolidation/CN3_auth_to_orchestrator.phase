@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-system-consolidation-phasemap.spec::CN3_auth_to_orchestrator
+type: phase
+id: docs_2026-10-24-system-consolidation-phasemap.spec::CN3_auth_to_orchestrator
+context: pipeline phase CN3_auth_to_orchestrator of docs/2026-10-24-system-consolidation-phasemap.spec
+intent: null
+summary: CN3_auth_to_orchestrator (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371405
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371405
+lastSeenAt: 1792874371405
+fingerprint: null
+payload:
+  id: CN3_auth_to_orchestrator
+  map: docs/2026-10-24-system-consolidation-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - orchestrator/auth
+  depends_on:
+    - CN0_the_rule_in_force
+  blocks: []
+  spec: null
+  graph: 7cb8c45400aafd69

@@ -22,8 +22,8 @@ function test(id, desc, fn) {
 const ROOT = path.join(__dirname, '../..');
 
 function run() {
-  const html = fs.readFileSync(path.join(ROOT, 'ui/brainos/index.html'), 'utf8');
-  const appJs = fs.readFileSync(path.join(ROOT, 'ui/brainos/brainos-app.js'), 'utf8');
+  const html = fs.readFileSync(path.join(ROOT, 'lib', 'ui', 'brainos', 'index.html'), 'utf8');
+  const appJs = fs.readFileSync(path.join(ROOT, 'lib', 'ui', 'brainos', 'brainos-app.js'), 'utf8');
   const cortexSrc = fs.readFileSync(path.join(ROOT, 'cortex/boot.js'), 'utf8');
   const preloadSrc = fs.readFileSync(path.join(ROOT, 'clear-glass/src/preload/index.js'), 'utf8');
 

@@ -285,11 +285,11 @@ lost. can you do that? what about specs, then phases then specced again with dag
 The order, for every new capability:
 1. **A full spec** in emerge's module format (emerge/SPEC_COMPILER.spec is the reference): schemas with fields and validity rules;
    interfaces for everything it stands on, with their real exports; modules with path, exports (signatures), gate pipeline,
-   behavioral contracts, error paths and acceptance. It must compile in emerge/compiler/kg-builder.js with every module and schema
+   behavioral contracts, error paths and acceptance. It must compile in lib/emerge/compiler/kg-builder.js (emerge/ moved into lib/ 2026-10-24, RF2) with every module and schema
    at specDepth 1.0, no BLACK node, and the invariants engine valid — the bar for "can be rebuilt if lost". Examples:
    docs/substrate.spec, docs/belief-loop.spec. Checked by tests/modules/test-substrate-spec.test.js.
 2. **Phases** in a phasemap, each naming `spec:` and the module ids it builds in `blocks:` (DAG-checked, lib/phase-dag.js).
-3. **Each phase specced again**: `node emerge/compiler/phase-specs.js <map>` writes <owner>/phases/<map-id>/<phase>.phase (what is
+3. **Each phase specced again**: `node lib/emerge/compiler/phase-specs.js <map>` writes <owner>/phases/<map-id>/<phase>.phase (what is
    authored) and graph/<phase>-<hash>.graph (its related files with roles, crossings, and its slice of the whole DAG), beside the
    system that owns it (the handoff's PN1 layout). `--check` reports drift.
 Only then is code written, and a phase's code is built against its .phase, its .graph and its spec modules.

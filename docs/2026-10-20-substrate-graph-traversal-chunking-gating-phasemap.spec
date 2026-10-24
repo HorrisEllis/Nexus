@@ -308,7 +308,7 @@ phases:
     layer: library
     status: OPEN
     depends_on: []
-    files: [emerge/compiler/phase-specs.js, lib/pipeline-nodes.js, lib/node-schemas/schema.graph, tests/modules/test-phase-specs.test.js]
+    files: [lib/emerge/compiler/phase-specs.js, lib/pipeline-nodes.js, lib/node-schemas/schema.graph, tests/modules/test-phase-specs.test.js]
     spec: docs/substrate.spec
     blocks: [MOD-PHASE-SPECS]
     does: >-

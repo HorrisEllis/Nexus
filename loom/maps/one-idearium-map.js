@@ -52,7 +52,7 @@ const BOUNDARY_EXPORTS = [
   'nexus.idearium.repo.roadmap', 'nexus.idearium.repo.nexus-self', 'nexus.lib.repo-agent-node',
   'nexus.guardian.command-index', 'nexus.ollama.command-index',
   // §0.39.283 N30 — cli/import-history.js is run as a child process, never require()d, so nothing gave it an export hook
-  I('cli/import-history.js'), I('lib/history-import-job.js'),
+  I('lib/cli/import-history.js'), I('lib/history-import-job.js'),
   // §0.39.284 W3 — the work surface is reached only by `await import()` from idearium/api (index.js, build-surface.js)
   I('idearium/repo/work-surface.js'), I('idearium/repo/architecture.js'),
   // §0.39.286 RG1 — the routing policy, reached through createRequire from ESM (idearium/api, chunk-dispatch, the CLI)
@@ -81,7 +81,7 @@ const CONSUMERS = [
   ['nexus.idearium.api', I('idearium/repo/nexus-self.js'), 'idearium/api/index.js _ensureIndexed — syncing(uuid) (await import); runImportPipeline when no index'],
   // §0.39.283 N30 — the archive drop box: idearium runs the import as a background job, the job spawns the CLI
   ['nexus.idearium.api', I('lib/history-import-job.js'),    'idearium/api/index.js history.import.* — start/status/upload behind /archive-import.html'],
-  [I('lib/history-import-job.js'), I('cli/import-history.js'), 'lib/history-import-job.js start() — spawn(node cli/import-history.js --jsonl --list), a real edge the scanner cannot see'],
+  [I('lib/history-import-job.js'), I('lib/cli/import-history.js'), 'lib/history-import-job.js start() — spawn(node cli/import-history.js --jsonl --list), a real edge the scanner cannot see'],
   // §0.39.284 W3 — the work surface: GET /api/repos/:uuid/worksurface, and each plan run's toolsBrief
   ['nexus.idearium.api', I('idearium/repo/work-surface.js'), 'idearium/api/index.js repo.worksurface + build-surface.js specPlan toolsBrief (await import)'],
   // §0.39.284 W7 — the repo's component registry + wiring map (GET|POST /api/repos/:uuid/architecture), over lib/code-intel

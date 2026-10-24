@@ -1,0 +1,110 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MR10_the_field_between_james_and_the_agents:727ed92f6cab8eaa
+type: graph
+id: phase:MR10_the_field_between_james_and_the_agents:727ed92f6cab8eaa
+context: dependency graph of phase MR10_the_field_between_james_and_the_agents
+intent: null
+summary: 8 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754465
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754465
+lastSeenAt: 1792841754465
+fingerprint: null
+payload:
+  for: MR10_the_field_between_james_and_the_agents
+  kind: phase
+  repo: null
+  hash: 727ed92f6cab8eaa
+  nodes:
+    - path: lib/emergence/vendor/rfr2/field/relational.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/emergence/vendor/rfr2/field/ALKModule.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/emergence/vendor/rfr2/field/relational.js
+      to: lib/emergence/vendor/rfr2/field/ALKModule.js
+      kind: requires
+    - from: lib/repo-hat-memory.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-hat.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+  crossings:
+    - from: lib/repo-hat-memory.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream: []
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+        files:
+          - lib/repo-hat-memory.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by MR9_liminal_on_the_agents
+      - 'depends on (1): MR9_liminal_on_the_agents · all upstream 7'
+      - 'needed by (0): —'
+      - 'same files as MR7_recipes with no order between them: lib/repo-hat-memory.js'
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+        kind: declared

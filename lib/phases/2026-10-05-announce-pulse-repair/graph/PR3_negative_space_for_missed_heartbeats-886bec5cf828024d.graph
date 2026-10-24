@@ -1,0 +1,95 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PR3_negative_space_for_missed_heartbeats:886bec5cf828024d
+type: graph
+id: phase:PR3_negative_space_for_missed_heartbeats:886bec5cf828024d
+context: dependency graph of phase PR3_negative_space_for_missed_heartbeats
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754615
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754615
+lastSeenAt: 1792841754615
+fingerprint: null
+payload:
+  for: PR3_negative_space_for_missed_heartbeats
+  kind: phase
+  repo: null
+  hash: 886bec5cf828024d
+  nodes:
+    - path: lib/pulse-listener.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/warp/core/Engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: diagnostic/lib/pulse-watch.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: lib/warp/core/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/warp/core/Expectation.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Link.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/warp/core/Engine.js
+      to: lib/warp/core/Link.js
+      kind: requires
+    - from: lib/warp/core/Engine.js
+      to: lib/warp/core/Expectation.js
+      kind: requires
+    - from: lib/warp/core/Engine.js
+      to: lib/warp/core/Ledger.js
+      kind: requires
+    - from: diagnostic/lib/pulse-watch.js
+      to: lib/warp/core/Engine.js
+      kind: requires
+    - from: lib/warp/core/index.js
+      to: lib/warp/core/Engine.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
+    dependents:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR4_deviation_raises_the_bpm
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR5_repair_for_real
+    upstream:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR1_the_announced_registry_is_the_list
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
+    downstream:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR4_deviation_raises_the_bpm
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR5_repair_for_real
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR4_deviation_raises_the_bpm
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR5_repair_for_real
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): PR2_the_diagnostic_listens_not_polls · all upstream 2'
+      - >-
+        needed by (2): PR4_deviation_raises_the_bpm, PR5_repair_for_real · finishing it unlocks
+        PR4_deviation_raises_the_bpm, PR5_repair_for_real
+    edges:
+      - from: docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
+        kind: declared

@@ -43,8 +43,8 @@
 
 import { createRequire } from 'module';
 import { createWarpDispatch } from '../../lib/seam/adapters/warp-cascade.js';
-import { FlatFileCrystallizer } from '../../warp/plugins/crystallizer-flatfile.js';
-import { PopulationStore } from '../../warp/dispatch/population.js';
+import { FlatFileCrystallizer } from '../../lib/warp/plugins/crystallizer-flatfile.js';
+import { PopulationStore } from '../../lib/warp/dispatch/population.js';
 import { pollGuardianJob } from './chunk-dispatch.js';
 import { extractCode } from '../../lib/extract-code.js';
 import path from 'path';

@@ -7,11 +7,11 @@ intent: null
 summary: SB23_a_new_system_slots_in (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792820506881
+exported_at: 1792841754724
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820506881
-lastSeenAt: 1792820506881
+firstSeenAt: 1792841754724
+lastSeenAt: 1792841754724
 fingerprint: null
 payload:
   id: SB23_a_new_system_slots_in
@@ -21,7 +21,7 @@ payload:
   status: OPEN
   files:
     - lib/nexus-self/systems.js
-    - nexus/autopilot.js
+    - lib/nexus/autopilot.js
     - orchestrator/orchestrator.config.json
     - loom/scanners/spec-map.js
     - loom/templates/system-scaffold.js
@@ -30,4 +30,4 @@ payload:
     - SB21_deterministic_parts_grow_with_the_system
   blocks: []
   spec: null
-  graph: bb7744f30f64e94a
+  graph: 30563b5922e5f549

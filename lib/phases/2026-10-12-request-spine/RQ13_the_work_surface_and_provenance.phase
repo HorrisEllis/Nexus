@@ -7,11 +7,11 @@ intent: null
 summary: RQ13_the_work_surface_and_provenance (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677365
+exported_at: 1792841755291
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677365
-lastSeenAt: 1792787677365
+firstSeenAt: 1792841755291
+lastSeenAt: 1792841755291
 fingerprint: null
 payload:
   id: RQ13_the_work_surface_and_provenance
@@ -30,4 +30,4 @@ payload:
     - RQ10_anchors_and_the_diff_reconciled
   blocks: []
   spec: null
-  graph: 26d29fe3a64d548b
+  graph: 31e8000ebe1e326e

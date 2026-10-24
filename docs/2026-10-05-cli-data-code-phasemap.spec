@@ -77,7 +77,7 @@ spec:
       status: OPEN
       path: 'step 3 — each system''s verbs, owned by it (declutter 2026-10-09)'
       depends_on: []
-      files: [lib/command-registry.js, guardian/commands, idearium/cli/index.js, cos/cli/index.js, copilot/cli.js, cli/nexus.js]
+      files: [lib/command-registry.js, guardian/commands, idearium/cli/index.js, cos/cli/index.js, copilot/cli.js, lib/cli/nexus.js]
       does: >-
         Each system declares its CLI verbs as `.command` nodes it owns (lib/node-export.js envelope: name, system, args
         with types, route, writes, confirm, help). lib/command-registry.js reads the union; cli/nexus.js dispatches from
@@ -361,7 +361,7 @@ spec:
       value: { score: 2, cost: S, for: [quality], why: "a handful of real stale paths and tests of files that are gone" }
       status: "DONE (0.39.355) — cli/run-supervised.js → orchestrator/orchestrator.js; erosmancer-os/tests/run.js archived (superseded by tests/suite.ts). 13 left, all tests of modules that are gone — listed below, his call. PB-05."
       depends_on: [PB4_imports_inside_text_are_not_imports]
-      files: [cli/run-supervised.js, erosmancer/erosmancer-os/tests/run.js, tests/_archive/]
+      files: [lib/cli/run-supervised.js, erosmancer/erosmancer-os/tests/run.js, tests/_archive/]
       does: >-
         Fix the paths that moved (cli/run-supervised.js → orchestrator/orchestrator.js); erosmancer-os's old runner is
         archived (§0.3) — tests/suite.ts replaced it and its paths moved to src/registry, src/behavior, src/dispatcher.

@@ -7,11 +7,11 @@ intent: null
 summary: SS1_system_store_adoption (library) — 20 file(s)
 system: idearium
 tags: []
-exported_at: 1792822704354
+exported_at: 1792841756002
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822704354
-lastSeenAt: 1792822704354
+firstSeenAt: 1792841756002
+lastSeenAt: 1792841756002
 fingerprint: null
 payload:
   id: SS1_system_store_adoption
@@ -36,14 +36,14 @@ payload:
     - guardian/artifact-upload.js
     - lib/seam/queue.js
     - service/guardian-service.js
-    - cli/clear-idearium.js
-    - cli/diagnose.js
-    - cli/session.js
-    - contracts/nodes/ledgers.node.js
-    - contracts/nodes/systems.node.js
+    - lib/cli/clear-idearium.js
+    - lib/cli/diagnose.js
+    - lib/cli/session.js
+    - lib/contracts/nodes/ledgers.node.js
+    - lib/contracts/nodes/systems.node.js
     - diagnostic/nexus-diagnostic.js
   depends_on:
     - RC1_watchers_never_kill_a_kernel
   blocks: []
   spec: null
-  graph: f53b8db610c7dc2d
+  graph: e25a76a6e4bc1227

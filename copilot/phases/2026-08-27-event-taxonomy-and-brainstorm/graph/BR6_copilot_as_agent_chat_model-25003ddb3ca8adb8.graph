@@ -1,0 +1,249 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BR6_copilot_as_agent_chat_model:25003ddb3ca8adb8
+type: graph
+id: phase:BR6_copilot_as_agent_chat_model:25003ddb3ca8adb8
+context: dependency graph of phase BR6_copilot_as_agent_chat_model
+intent: null
+summary: 26 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792875538104
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875538104
+lastSeenAt: 1792875538104
+fingerprint: null
+payload:
+  for: BR6_copilot_as_agent_chat_model
+  kind: phase
+  repo: null
+  hash: 25003ddb3ca8adb8
+  nodes:
+    - path: bridge/router.js
+      role: changes
+      exists: false
+      system: bridge
+    - path: copilot/lib/user-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/user-model.js
+      role: changes
+      exists: false
+      system: lib
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/governance/ask-james.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-user-model-radiate.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/user-model.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/intuition.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/copilot-context.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/expectation-watcher.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/inject-config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/config.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/inject-config.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/copilot-context.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/recursive-diagnose.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/expectation-watcher.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intuition.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/governance/ask-james.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: tests/modules/test-user-model-radiate.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: tests/modules/user-model.test.js
+      to: copilot/lib/user-model.js
+      kind: requires
+  crossings:
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/governance/ask-james.js
+      to: copilot/lib/user-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: orchestrator/lib/request-handler.js
+      to: copilot/lib/user-model.js
+      fromSystem: orchestrator
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: copilot/lib/user-model.js
+      fromSystem: orchestrator
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+    dependents: []
+    upstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET2_guardian_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET3_clearglass_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET4_orchestrator_autopilot_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+    downstream: []
+    blockedBy:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+    unlocks: []
+    conflicts:
+      - with: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::SS3_unified_living_model_system_plus_person
+        files:
+          - lib/user-model.js
+          - copilot/lib/user-model.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by ET5_loom_event_taxonomy_map
+      - 'depends on (1): ET5_loom_event_taxonomy_map · all upstream 5'
+      - 'needed by (0): —'
+      - >-
+        same files as SS3_unified_living_model_system_plus_person with no order between them:
+        lib/user-model.js, copilot/lib/user-model.js
+    edges:
+      - from: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+        kind: declared

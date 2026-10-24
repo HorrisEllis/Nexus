@@ -7,11 +7,11 @@ intent: null
 summary: VP2_adversarial_review (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677055
+exported_at: 1792841754957
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677055
-lastSeenAt: 1792787677055
+firstSeenAt: 1792841754957
+lastSeenAt: 1792841754957
 fingerprint: null
 payload:
   id: VP2_adversarial_review
@@ -22,9 +22,9 @@ payload:
   files:
     - lib/agent-council.js
     - copilot/lifeline.js
-    - meta/adversary-suite.js
+    - lib/meta/adversary-suite.js
   depends_on:
     - VP1_confidence_from_evidence
   blocks: []
   spec: null
-  graph: 861894593ce759d9
+  graph: 11237e7e9ea3ece7

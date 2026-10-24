@@ -9,11 +9,11 @@ intent: null
 summary: N2_root_nexus_js_to_nexus_folder (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675844
+exported_at: 1792841753784
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675844
-lastSeenAt: 1792787675844
+firstSeenAt: 1792841753784
+lastSeenAt: 1792841753784
 fingerprint: null
 payload:
   id: N2_root_nexus_js_to_nexus_folder
@@ -22,14 +22,14 @@ payload:
   layer: null
   status: OPEN
   files:
-    - nexus/nexus-bus.js
-    - nexus/nexus-connect.js
-    - nexus/nexus-query.js
-    - nexus/nexus-knowledge.js
-    - nexus/nexus-cfr-influence.js
+    - lib/nexus/nexus-bus.js
+    - lib/nexus/nexus-connect.js
+    - lib/nexus/nexus-query.js
+    - lib/nexus/nexus-knowledge.js
+    - lib/nexus/nexus-cfr-influence.js
     - ollama/ollama-runtime.js
     - loom/templates/system-scaffold.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 6088de94a4c19d4b
+  graph: e64dfede833b74b8

@@ -150,7 +150,7 @@ async function main() {
   const SHDL = fs.readFileSync(path.join(ROOT, 'clear-glass', 'renderer', 'shell', 'downloads.js'), 'utf8');
   check('the Downloads dropdown it replaced is gone; the ⬇ panel is a view of the same store that opens the Library (no second download manager)',
     !/_renderDownloadsPanel/.test(BROWSER) && !/id="downloads-panel"/.test(BHTML) && /cg\(\)\.downloads\.list\(/.test(SHDL) && /library\('downloads'\)/.test(SHDL) && !/new DownloadsStore|downloads\/store/.test(SHDL));
-  check('ui/library/ is retired — one Library', !fs.existsSync(path.join(ROOT, 'ui', 'library')));
+  check('ui/library/ is retired — one Library', !fs.existsSync(path.join(ROOT, 'lib', 'ui', 'library')));
 
   // ── jsdom: the list-search mode really filters and keeps the area ─────
   let JSDOM; try { ({ JSDOM } = require('jsdom')); } catch (_) {}

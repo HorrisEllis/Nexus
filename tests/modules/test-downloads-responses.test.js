@@ -181,7 +181,7 @@ const wait = async (fn, ms = 3000) => { const t = Date.now() + ms; while (!fn())
     const js = fs.readFileSync(path.join(ROOT, 'clear-glass/renderer/library/sections/responses.js'), 'utf8');
     assert.ok(/\/cli\/downloads\/responses/.test(js) && /section\(\{\s*id: 'responses'/.test(js));
     assert.ok(fs.existsSync(path.join(ROOT, 'clear-glass/renderer/library/sections/responses.css')));
-    assert.ok(!fs.existsSync(path.join(ROOT, 'ui/library')), 'ui/library/ is retired — one Library, not two');
+    assert.ok(!fs.existsSync(path.join(ROOT, 'lib', 'ui', 'library')), 'ui/library/ is retired — one Library, not two');
   });
 
   try { fs.unlinkSync(file); } catch (_) {}

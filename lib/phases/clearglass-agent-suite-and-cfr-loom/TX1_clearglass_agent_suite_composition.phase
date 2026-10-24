@@ -9,11 +9,11 @@ intent: null
 summary: TX1_clearglass_agent_suite_composition (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678121
+exported_at: 1792841756301
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678121
-lastSeenAt: 1792787678121
+firstSeenAt: 1792841756301
+lastSeenAt: 1792841756301
 fingerprint: null
 payload:
   id: TX1_clearglass_agent_suite_composition
@@ -25,7 +25,7 @@ payload:
     - architect/schemas/index.js
     - clear-glass/renderer/settings/sections/mesh.js
     - clear-glass/renderer/shell/agents.js
-    - ui/home/areas/agent-suite.js
+    - lib/ui/home/areas/agent-suite.js
     - lib/account-registry.js
     - lib/agent-router.js
     - lib/agent-tools/tools/identity/hat-forge.js
@@ -33,4 +33,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 19b14f384dffbacc
+  graph: cc545a630ff47485

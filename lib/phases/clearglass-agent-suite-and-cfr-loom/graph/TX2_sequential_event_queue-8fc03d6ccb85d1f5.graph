@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TX2_sequential_event_queue:8fc03d6ccb85d1f5
+type: graph
+id: phase:TX2_sequential_event_queue:8fc03d6ccb85d1f5
+context: dependency graph of phase TX2_sequential_event_queue
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756302
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756302
+lastSeenAt: 1792841756302
+fingerprint: null
+payload:
+  for: TX2_sequential_event_queue
+  kind: phase
+  repo: null
+  hash: 8fc03d6ccb85d1f5
+  nodes:
+    - path: lib/error-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/ledger-sse.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/error-log.js
+      to: lib/ledger-sse.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/error-log.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

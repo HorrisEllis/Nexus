@@ -9,11 +9,11 @@ intent: null
 summary: IN2_claude_code_inside_nexus (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676696
+exported_at: 1792874369050
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676696
-lastSeenAt: 1792787676696
+firstSeenAt: 1792874369050
+lastSeenAt: 1792874369050
 fingerprint: null
 payload:
   id: IN2_claude_code_inside_nexus
@@ -32,4 +32,4 @@ payload:
     - SH1_shadow_space
   blocks: []
   spec: null
-  graph: 26136e2c5eed6fe6
+  graph: e59de1f4ca2c14da

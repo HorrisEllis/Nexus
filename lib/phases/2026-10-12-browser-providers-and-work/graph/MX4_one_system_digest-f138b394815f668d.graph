@@ -1,0 +1,207 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MX4_one_system_digest:f138b394815f668d
+type: graph
+id: phase:MX4_one_system_digest:f138b394815f668d
+context: dependency graph of phase MX4_one_system_digest
+intent: null
+summary: 23 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755242
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755242
+lastSeenAt: 1792841755242
+fingerprint: null
+payload:
+  for: MX4_one_system_digest
+  kind: phase
+  repo: null
+  hash: f138b394815f668d
+  nodes:
+    - path: lib/activity-log/compartment.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/command.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/error-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/ledger-writer.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/fault-log.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/naming.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/idearium/code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-sse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/ledger-writer.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/ledger-writer.js
+      to: lib/data-home.js
+      kind: requires
+    - from: lib/error-log.js
+      to: lib/ledger-sse.js
+      kind: requires
+    - from: lib/activity-log/compartment.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/command.js
+      to: lib/agent-tools/naming.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/command.js
+      to: lib/agent-tools/tools/idearium/code.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/command.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/error-log.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/fault-log.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-activity.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-versions.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+  crossings:
+    - from: lib/activity-log/compartment.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB3_tabs_are_compartments
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV3_input_nodes
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV2_hats_are_nodes
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV3_input_nodes
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB0_the_webview_session_proved
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB3_tabs_are_compartments
+    downstream: []
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB3_tabs_are_compartments
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV3_input_nodes
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by TB3_tabs_are_compartments, PV3_input_nodes
+      - 'depends on (2): TB3_tabs_are_compartments, PV3_input_nodes · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB3_tabs_are_compartments
+        kind: declared
+      - from: docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV3_input_nodes
+        kind: declared

@@ -9,11 +9,11 @@ intent: null
 summary: AM10_thinking_partner_rename_and_ui_builder (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678117
+exported_at: 1792841756296
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678117
-lastSeenAt: 1792787678117
+firstSeenAt: 1792841756296
+lastSeenAt: 1792841756296
 fingerprint: null
 payload:
   id: AM10_thinking_partner_rename_and_ui_builder
@@ -32,4 +32,4 @@ payload:
     - AM7_agent_switch_continuity_and_chat_recall
   blocks: []
   spec: null
-  graph: c0328146fae33b3e
+  graph: 0304b8ec3f70eeb5

@@ -9,11 +9,11 @@ intent: null
 summary: EV0_contracts_for_every_system (?) — 13 file(s)
 system: idearium
 tags: []
-exported_at: 1792787919479
+exported_at: 1792841754412
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787919479
-lastSeenAt: 1792787919479
+firstSeenAt: 1792841754412
+lastSeenAt: 1792841754412
 fingerprint: null
 payload:
   id: EV0_contracts_for_every_system
@@ -28,15 +28,15 @@ payload:
     - loom/event-taxonomy.js
     - copilot/event-taxonomy.js
     - cos/event-taxonomy.js
-    - emerge/event-taxonomy.js
+    - lib/emerge/event-taxonomy.js
     - warp/event-taxonomy.js
     - cos/interaction-contract.json
-    - warp/interaction-contract.json
-    - emerge/interaction-contract.json
+    - lib/warp/interaction-contract.json
+    - lib/emerge/interaction-contract.json
     - loom/scanners/phasemap-map.js
     - lib/event-taxonomy-pattern.js
   depends_on:
     - EM0_ground
   blocks: []
   spec: null
-  graph: effdf129b11ae306
+  graph: f2b96c818a452887

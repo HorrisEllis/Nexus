@@ -7,11 +7,11 @@ intent: null
 summary: SP1_one_spotlight (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677076
+exported_at: 1792841754978
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677076
-lastSeenAt: 1792787677076
+firstSeenAt: 1792841754978
+lastSeenAt: 1792841754978
 fingerprint: null
 payload:
   id: SP1_one_spotlight
@@ -20,10 +20,10 @@ payload:
   layer: null
   status: OPEN
   files:
-    - ui/tv-shell/spotlight/spotlight.js
+    - lib/ui/tv-shell/spotlight/spotlight.js
     - clear-glass/src/page/field.js
   depends_on:
     - UN1_nexus_surfaces_in_the_field
   blocks: []
   spec: null
-  graph: 094a82781d95acdc
+  graph: 1489057ae11e2f3d

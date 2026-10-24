@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
+context: >-
+  pipeline phase DB26_the_ui_floats_on_the_registry of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB26_the_ui_floats_on_the_registry (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792875541768
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875541768
+lastSeenAt: 1792875541768
+fingerprint: null
+payload:
+  id: DB26_the_ui_floats_on_the_registry
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/desktop.html
+    - idearium/ui/js/registry-view.js
+  depends_on:
+    - DB25_the_lifecycle_verbs
+    - DB12_the_ui_handshake
+  blocks: []
+  spec: null
+  graph: 3a5be043adcc6def

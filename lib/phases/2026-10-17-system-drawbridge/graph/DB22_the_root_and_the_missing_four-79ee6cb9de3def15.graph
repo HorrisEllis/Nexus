@@ -1,0 +1,78 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB22_the_root_and_the_missing_four:79ee6cb9de3def15
+type: graph
+id: phase:DB22_the_root_and_the_missing_four:79ee6cb9de3def15
+context: dependency graph of phase DB22_the_root_and_the_missing_four
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792875541760
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875541760
+lastSeenAt: 1792875541760
+fingerprint: null
+payload:
+  for: DB22_the_root_and_the_missing_four
+  kind: phase
+  repo: null
+  hash: 79ee6cb9de3def15
+  nodes:
+    - path: components/registry-components.js
+      role: changes
+      exists: false
+      system: components
+    - path: cos/registry-components.js
+      role: changes
+      exists: false
+      system: cos
+    - path: lib/registry-components.js
+      role: changes
+      exists: false
+      system: lib
+    - path: orchestrator/registry-components.js
+      role: changes
+      exists: false
+      system: orchestrator
+    - path: registry-components.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+    dependents:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB24_cos_reads_only_the_registry
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB24_cos_reads_only_the_registry
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
+    blockedBy:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 8 · blocked by DB21_one_registry_schema_every_level
+      - 'depends on (1): DB21_one_registry_schema_every_level · all upstream 11'
+      - 'needed by (1): DB24_cos_reads_only_the_registry · all downstream 3'
+    edges:
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+        kind: declared

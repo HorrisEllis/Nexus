@@ -115,7 +115,7 @@ phases:
     layer: foundation
     status: OPEN
     depends_on: []
-    files: [lib/crystal.js, lib/node-schemas/schema.crystal, meta/crystal-lattice.js, intelligence/liminal-space/index.js]
+    files: [lib/crystal.js, lib/node-schemas/schema.crystal, lib/meta/crystal-lattice.js, intelligence/liminal-space/index.js]
     spec: docs/belief-loop.spec
     blocks: [MOD-CRYSTAL]
     does: >-
@@ -236,7 +236,7 @@ phases:
     layer: service
     status: OPEN
     depends_on: [CF1_confidence_from_evidence, GW1_gate_primitive]
-    files: [lib/adversarial-review.js, meta/adversary-suite.js, intelligence/adversarial.js, copilot/lifeline.js]
+    files: [lib/adversarial-review.js, lib/meta/adversary-suite.js, intelligence/adversarial.js, copilot/lifeline.js]
     spec: docs/belief-loop.spec
     blocks: [MOD-ADVERSARIAL-REVIEW]
     does: >-

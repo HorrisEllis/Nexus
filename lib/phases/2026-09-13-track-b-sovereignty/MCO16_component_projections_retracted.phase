@@ -9,11 +9,11 @@ intent: null
 summary: MCO16_component_projections_retracted (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675944
+exported_at: 1792841753871
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675944
-lastSeenAt: 1792787675944
+firstSeenAt: 1792841753871
+lastSeenAt: 1792841753871
 fingerprint: null
 payload:
   id: MCO16_component_projections_retracted
@@ -24,8 +24,8 @@ payload:
   files:
     - lib/component-registry.js
     - cortex/memory/jaa-db.js
-    - contracts/SYSTEM-CONTRACTS.js
+    - lib/contracts/SYSTEM-CONTRACTS.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 4e9c11ff0b4b91af
+  graph: 5979ee368ba8e2b9

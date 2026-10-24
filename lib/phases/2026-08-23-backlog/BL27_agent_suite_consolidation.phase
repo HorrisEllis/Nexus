@@ -7,11 +7,11 @@ intent: null
 summary: BL27_agent_suite_consolidation (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675439
+exported_at: 1792841753371
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675439
-lastSeenAt: 1792787675439
+firstSeenAt: 1792841753371
+lastSeenAt: 1792841753371
 fingerprint: null
 payload:
   id: BL27_agent_suite_consolidation
@@ -22,7 +22,7 @@ payload:
   files:
     - copilot/server.js
     - copilot/lib/self-model.js
-    - ui/home/areas/agent-suite.js
+    - lib/ui/home/areas/agent-suite.js
     - lib/agent-tools/tools/identity/hat-forge.js
     - lib/hat-forge.js
   depends_on:
@@ -30,4 +30,4 @@ payload:
     - BL26_account_agent_window_uuid_linking
   blocks: []
   spec: null
-  graph: 5312857a8c56f41a
+  graph: c84f5385b444bac3

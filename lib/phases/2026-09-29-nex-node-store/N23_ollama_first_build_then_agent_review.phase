@@ -9,11 +9,11 @@ intent: null
 summary: N23_ollama_first_build_then_agent_review (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676286
+exported_at: 1792874368564
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676286
-lastSeenAt: 1792787676286
+firstSeenAt: 1792874368564
+lastSeenAt: 1792874368564
 fingerprint: null
 payload:
   id: N23_ollama_first_build_then_agent_review
@@ -31,4 +31,4 @@ payload:
     - N21_no_empty_generation_event_gates
   blocks: []
   spec: null
-  graph: 5beb3a63e79bdd5f
+  graph: bd044769866af442

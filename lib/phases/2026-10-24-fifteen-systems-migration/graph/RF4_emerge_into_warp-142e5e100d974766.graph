@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RF4_emerge_into_warp:142e5e100d974766
+type: graph
+id: phase:RF4_emerge_into_warp:142e5e100d974766
+context: dependency graph of phase RF4_emerge_into_warp
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792875542212
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875542212
+lastSeenAt: 1792875542212
+fingerprint: null
+payload:
+  for: RF4_emerge_into_warp
+  kind: phase
+  repo: null
+  hash: 142e5e100d974766
+  nodes:
+    - path: lib/emerge/emerge-kernel.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/safe-watch.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/emerge/emerge-kernel.js
+      to: lib/safe-watch.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_primitives_one_copy
+    dependents:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_spec_compiler_into_idearium
+    upstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_primitives_one_copy
+    downstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_spec_compiler_into_idearium
+    blockedBy:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_primitives_one_copy
+    unlocks:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_spec_compiler_into_idearium
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by RF4_primitives_one_copy
+      - 'depends on (1): RF4_primitives_one_copy'
+      - >-
+        needed by (1): RF4_spec_compiler_into_idearium · finishing it unlocks
+        RF4_spec_compiler_into_idearium
+    edges:
+      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_primitives_one_copy
+        kind: declared

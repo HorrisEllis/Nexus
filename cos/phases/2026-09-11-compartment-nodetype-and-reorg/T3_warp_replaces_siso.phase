@@ -6,14 +6,14 @@ context: >-
   pipeline phase T3_warp_replaces_siso of
   docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
 intent: null
-summary: T3_warp_replaces_siso (?) — 12 file(s)
+summary: T3_warp_replaces_siso (?) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675824
+exported_at: 1792841753771
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675824
-lastSeenAt: 1792787675824
+firstSeenAt: 1792841753771
+lastSeenAt: 1792841753771
 fingerprint: null
 payload:
   id: T3_warp_replaces_siso
@@ -23,18 +23,15 @@ payload:
   status: OPEN
   files:
     - cos/siso/Stream.js
-    - warp/core/index.js
     - cos/siso/index.js
-    - warp/core/Stream.js
-    - warp/core/StreamLog.js
     - cos/cli/commands/create.js
     - cos/compartment/process-runner.js
     - cos/host/event-bus.js
     - cos/host/index.js
-    - cli/nexus-cli.js
     - cos/test/test.js
-    - emerge/compiler/ring-buffer.js
+    - lib/cli/nexus-cli.js
+    - lib/emerge/compiler/ring-buffer.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 4a279856f4f7d1cc
+  graph: b309585d5c4c520c

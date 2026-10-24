@@ -9,11 +9,11 @@ intent: null
 summary: VS4_active_drift_enforcement (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675736
+exported_at: 1792841753681
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675736
-lastSeenAt: 1792787675736
+firstSeenAt: 1792841753681
+lastSeenAt: 1792841753681
 fingerprint: null
 payload:
   id: VS4_active_drift_enforcement
@@ -23,10 +23,10 @@ payload:
   status: OPEN
   files:
     - orchestrator/lib/spec-drift.js
-    - ui/home/areas/agent-suite.js
+    - lib/ui/home/areas/agent-suite.js
     - clear-glass/src/mesh/agent-mesh.js
   depends_on:
     - VS1_sovereign_folder_and_foundation
   blocks: []
   spec: null
-  graph: 225162f916d418e1
+  graph: 59da4bd24faeb0a0

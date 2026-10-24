@@ -9,11 +9,11 @@ intent: null
 summary: N26_work_surface_and_tv_ui_from_contracts (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676292
+exported_at: 1792841754182
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676292
-lastSeenAt: 1792787676292
+firstSeenAt: 1792841754182
+lastSeenAt: 1792841754182
 fingerprint: null
 payload:
   id: N26_work_surface_and_tv_ui_from_contracts
@@ -27,4 +27,4 @@ payload:
     - N25_manage_button_enterprise
   blocks: []
   spec: null
-  graph: 642ec62479f9e52c
+  graph: b7fde31682dae160

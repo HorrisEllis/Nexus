@@ -7,11 +7,11 @@ intent: null
 summary: GW3_a_contract_is_traced (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677549
+exported_at: 1792841755539
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677549
-lastSeenAt: 1792787677549
+firstSeenAt: 1792841755539
+lastSeenAt: 1792841755539
 fingerprint: null
 payload:
   id: GW3_a_contract_is_traced
@@ -32,4 +32,4 @@ payload:
     - GW2_the_run_follows_the_gate
   blocks: []
   spec: null
-  graph: 7ee6767772d2310d
+  graph: c12c67f35dae6aa5

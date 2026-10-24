@@ -1,0 +1,69 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DS0_one_token_source:5388abf58caa0eb3
+type: graph
+id: phase:DS0_one_token_source:5388abf58caa0eb3
+context: dependency graph of phase DS0_one_token_source
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755080
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755080
+lastSeenAt: 1792841755080
+fingerprint: null
+payload:
+  for: DS0_one_token_source
+  kind: phase
+  repo: null
+  hash: 5388abf58caa0eb3
+  nodes:
+    - path: eravos/ui/index.html
+      role: changes
+      exists: false
+      system: null
+    - path: idearium/ui/css/nexus-theme.css
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/ui/themes/nexus-dark.css
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/ui/themes/nexus-light.css
+      role: changes
+      exists: true
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS1_tokens_edited_live
+      - docs/2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+    upstream: []
+    downstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS1_tokens_edited_live
+      - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+      - docs/2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+      - docs/2026-10-10-design-surface-phasemap.spec::DS4_interface_types_by_adapter
+      - docs/2026-10-10-design-surface-phasemap.spec::DS5_the_agents_design_too
+      - docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+      - docs/2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+      - docs/2026-10-10-design-surface-phasemap.spec::DS8_the_registry_routes_the_ui_reflects
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS1_tokens_edited_live
+      - docs/2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): DS1_tokens_edited_live, DS3_components_are_mods · all downstream 8 ·
+        finishing it unlocks DS1_tokens_edited_live, DS3_components_are_mods
+    edges: []

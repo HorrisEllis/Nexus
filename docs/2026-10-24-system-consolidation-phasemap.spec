@@ -161,10 +161,23 @@ order: >-
   CN0 first (the rule in force, no moves). Then CN1–CN10 each independent (one folder each, its own commit, reversible), gated by CN0.
   CN11 last (the record, after every move). emerge (CN5) waits on his CN_D3 choice. Nothing moves until he okays this map.
 
-## ADDENDUM 2026-10-24 (BC_D1) — emerge home decided: a system, warp folded in
-James, 2026-10-24: "okay warp and emerge." (confirmed, answering the brave-cori reconciliation — docs/2026-10-24-brave-cori-reconciliation.spec BC_D1).
-CN_D3 above was OPEN (the coder recommended lib/emerge; James proposed idearium/emerge). It is now DECIDED, and neither reading won: emerge is its
-OWN SYSTEM with warp folded into it (docs/2026-10-24-emerge-warp-system-phasemap.spec, ported from the brave-cori line). This SUPERSEDES CN5 (emerge
-→ lib/emerge) and the RF2 plan's "emerge, warp → core" (lib/version.js 0.60.235 line); both are kept (§0.3). Consequences: emerge comes off the
-archive/core list; RF2's remaining "12 folders into lib" must EXCLUDE emerge and warp; warp is no longer CN1 (warp → lib/warp) but folds into emerge
-(EW1). The build of this lands through the reconciliation's BCR3, not CN5.
+## ADDENDUM 2026-10-24 (BC_D1) — emerge home: his in-session confirmation is "a system, warp folded in"
+James, 2026-10-24: "okay warp and emerge." — confirmed in the brave-cori reconciliation (docs/2026-10-24-brave-cori-reconciliation.spec BC_D1),
+where, asked "a system with warp folded in, or into core/lib?", he chose "A system, warp folded in". CN_D3 above was OPEN; this closes it: emerge
+is its OWN SYSTEM with warp folded into it (docs/2026-10-24-emerge-warp-system-phasemap.spec, ported from the brave-cori line).
+
+### CONFLICT SURFACED (§0.3 keep both, §1.2 say it, USER_AUTONOMY his to settle) — two readings of his words, acted on in parallel:
+- This reconciliation (the brave-cori line) read "okay warp and emerge" as: emerge is a top-level SYSTEM, warp folded in. He CONFIRMED it in-session (BC_D1).
+- Another session's RF2 batch 2 (0.60.241, the addendum below) read "emerge and warp consolidated. spec compiler and idearium consolidate." as:
+  move emerge and warp INTO core — and ALREADY DID IT (emerge is at lib/emerge on main now, warp at lib/warp).
+These contradict. By his later, explicit in-session word, emerge is a system and would be pulled back OUT of lib (the EW1 build, via BCR2/BCR3). But
+RF2 is also his, and a 424-file move is not silently reversed — so this is SURFACED to him as a problem to settle, not resolved by the coder. Until he
+settles it, emerge stays where RF2 put it (lib/emerge) and this conflict stands on the record. The merge that joined the two lines (0.60.243) keeps both.
+
+# ## ADDENDUM 2026-10-24 (0.60.241) — RF2 applied the folding first; this map stays as his placement record
+# The same day, another session's RF2 (docs/2026-10-24-fifteen-systems-migration-phasemap.spec) moved every folder, after James said
+# "15 systems. the rest of the folders need to migrate." and "yes start rf2, security goes with remote desktop". Already done there:
+# CN1 (lib/warp), CN2 (lib/siso), CN3 (orchestrator/auth), CN4's mesh (guardian/mesh). Where they differ, his words decide.
+# The differences are listed in that map's ADDENDUM (b), which also carries the phases that close them (RF3_cockpit_to_idearium,
+# RF3_erosmancer_os). His CN_D3 answer came 2026-10-24: "emerge and warp consolidated. spec compiler and idearium consolidate."
+# (RF4_* there.) Nothing here is deleted (§0.3).

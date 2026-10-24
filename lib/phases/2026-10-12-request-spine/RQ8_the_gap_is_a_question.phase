@@ -7,11 +7,11 @@ intent: null
 summary: RQ8_the_gap_is_a_question (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677356
+exported_at: 1792841755280
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677356
-lastSeenAt: 1792787677356
+firstSeenAt: 1792841755280
+lastSeenAt: 1792841755280
 fingerprint: null
 payload:
   id: RQ8_the_gap_is_a_question
@@ -28,4 +28,4 @@ payload:
     - RQ7_the_context_obligations
   blocks: []
   spec: null
-  graph: 103a81b4f5d8cf1c
+  graph: 39e7d5c90fcdbadd

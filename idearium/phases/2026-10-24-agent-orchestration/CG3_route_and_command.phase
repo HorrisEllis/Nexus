@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-agent-orchestration-phasemap.spec::CG3_route_and_command
+type: phase
+id: docs_2026-10-24-agent-orchestration-phasemap.spec::CG3_route_and_command
+context: pipeline phase CG3_route_and_command of docs/2026-10-24-agent-orchestration-phasemap.spec
+intent: null
+summary: CG3_route_and_command (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371315
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371315
+lastSeenAt: 1792874371315
+fingerprint: null
+payload:
+  id: CG3_route_and_command
+  map: docs/2026-10-24-agent-orchestration-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.240
+  files:
+    - lib/repo-agent.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - CG2_the_gate_on_every_dispatch
+  blocks: []
+  spec: docs/brainos-in-idearium.spec
+  graph: 095112dc157b2607
