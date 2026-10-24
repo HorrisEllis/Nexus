@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+context: >-
+  pipeline phase DB21_one_registry_schema_every_level of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB21_one_registry_schema_every_level (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792875541759
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875541759
+lastSeenAt: 1792875541759
+fingerprint: null
+payload:
+  id: DB21_one_registry_schema_every_level
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/templates/registry-level.spec
+    - lib/registry-level.js
+    - tests/modules/test-registry-level.test.js
+  depends_on:
+    - DB16_a_registry_for_each_system
+    - DB9_every_repo_generates_its_registry
+  blocks: []
+  spec: null
+  graph: 488d0276e0a5e3e5

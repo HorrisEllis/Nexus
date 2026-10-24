@@ -1,0 +1,69 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB26_the_ui_floats_on_the_registry:3a5be043adcc6def
+type: graph
+id: phase:DB26_the_ui_floats_on_the_registry:3a5be043adcc6def
+context: dependency graph of phase DB26_the_ui_floats_on_the_registry
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792875541768
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875541768
+lastSeenAt: 1792875541768
+fingerprint: null
+payload:
+  for: DB26_the_ui_floats_on_the_registry
+  kind: phase
+  repo: null
+  hash: 3a5be043adcc6def
+  nodes:
+    - path: idearium/ui/desktop.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/registry-view.js
+      role: changes
+      exists: false
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 11
+    deps:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+    dependents: []
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB24_cos_reads_only_the_registry
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+    downstream: []
+    blockedBy:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 11 · blocked by DB25_the_lifecycle_verbs, DB12_the_ui_handshake
+      - 'depends on (2): DB25_the_lifecycle_verbs, DB12_the_ui_handshake · all upstream 14'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+        kind: declared
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+        kind: declared

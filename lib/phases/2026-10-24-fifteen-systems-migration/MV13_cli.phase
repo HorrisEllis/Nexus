@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::MV13_cli
 context: pipeline phase MV13_cli of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
 intent: null
-summary: MV13_cli (?) — 3 file(s)
+summary: MV13_cli (?) — 19 file(s)
 system: idearium
 tags: []
-exported_at: 1792842797988
+exported_at: 1792875542207
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792842797988
-lastSeenAt: 1792842797988
+firstSeenAt: 1792875542207
+lastSeenAt: 1792875542207
 fingerprint: null
 payload:
   id: MV13_cli
@@ -23,6 +23,22 @@ payload:
     - cli/
     - lib/cli/
     - lib/architecture-apply.js
+    - docs/CLAUDE.md
+    - docs/2026-10-24-system-consolidation-phasemap.spec
+    - lib/version.js
+    - lib/release-notes.js
+    - lib/nexus-releases.js
+    - lib/release-version.js
+    - lib/context-atlas.js
+    - lib/phase-census.js
+    - lib/spec-census.js
+    - lib/readme-generate.js
+    - lib/checks/ck-253-versions.js
+    - scripts/release-zip.js
+    - lib/emerge/compiler/kg-builder.js
+    - lib/emerge/compiler/phase-specs.js
+    - idearium/spec-engine/compiler-t0.js
+    - lib/agent-tools/tools/query/context-atlas.js
   depends_on:
     - MV1_cockpit
     - MV9_emerge
@@ -30,4 +46,4 @@ payload:
     - MV7_siso
   blocks: []
   spec: null
-  graph: 2893b77afa4e8dc4
+  graph: e3798304bb45d657

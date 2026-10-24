@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_emerge_into_warp
+type: phase
+id: docs_2026-10-24-fifteen-systems-migration-phasemap.spec::RF4_emerge_into_warp
+context: pipeline phase RF4_emerge_into_warp of docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+intent: null
+summary: RF4_emerge_into_warp (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792875542212
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792875542212
+lastSeenAt: 1792875542212
+fingerprint: null
+payload:
+  id: RF4_emerge_into_warp
+  map: docs/2026-10-24-fifteen-systems-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/emerge
+    - lib/warp
+    - lib/emerge/emerge-kernel.js
+  depends_on:
+    - RF4_primitives_one_copy
+  blocks: []
+  spec: null
+  graph: 142e5e100d974766
