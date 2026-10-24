@@ -1,6 +1,7 @@
 'use strict';
 /**
- * clear-glass/src/autofill/learn-pick.js — JA3 (0.60.230): the element picker on a missed field.
+ * clear-glass/src/autofill/learn-pick.js — JA3 (0.60.230): the element picker on a missed field. JA4 (0.60.231): what was learned,
+ * listed, and forgotten. JA5 (0.60.232): the pick is also a macro and an automation node (his "as a macro or automation").
  * comp_id: nexus.clear-glass.src.autofill.learn-pick
  * UUID: cg-autofill-learn-pick-v1-0000-2026-1024-jamesbrooks-001
  * Map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec JA3_the_picker_on_a_miss
@@ -25,7 +26,7 @@ const { FIELD_TYPES, EXTRA_FIELDS } = require('./store.js');
 const M = require('./matcher.js');
 
 const MODULE_ID = 'clear-glass.autofill.learn-pick';
-const VERSION = '1.0.0';
+const VERSION = '1.2.0';   // 1.2.0 (0.60.232 JA5): the macro · 1.1.0 (0.60.231 JA4): list / forget
 const NOT_TEXT = new Set(['submit', 'button', 'hidden', 'checkbox', 'radio', 'file', 'image', 'reset']);   // the same exclusion matchFields makes
 const FIELD_TYPE_SET = new Set([...Object.values(FIELD_TYPES), ...Object.values(EXTRA_FIELDS), 'linkedin', 'portfolio', 'cover-letter']);
 
@@ -99,7 +100,8 @@ function listLearned(siteSettings, url = null) {
   const out = [];
   for (const o of origins) {
     let origin = o; try { origin = new URL(o).origin; } catch (_) {}
-    for (const [fieldKey, fieldType] of Object.entries(M.learnedFromSettings(siteSettings.getAllForOrigin(o)))) out.push({ origin, fieldKey, fieldType });
+    const all = siteSettings.getAllForOrigin(o);
+    for (const [fieldKey, fieldType] of Object.entries(M.learnedFromSettings(all))) out.push({ origin, fieldKey, fieldType, selector: all['autofill.selector.' + fieldKey] || null, macro: macroName(o) });
   }
   return out.sort((a, b) => a.origin.localeCompare(b.origin) || a.fieldKey.localeCompare(b.fieldKey));
 }
@@ -109,6 +111,7 @@ function forgetLearned(siteSettings, url, fieldKey) {
   if (!url || !fieldKey) return { ok: false, error: 'url and fieldKey are required' };
   let origin = url; try { origin = new URL(url).origin; } catch (_) {}
   if (!siteSettings.deleteKey(url, M.learnKey(fieldKey))) return { ok: false, error: `nothing learned as "${fieldKey}" for ${origin}` };
+  try { siteSettings.deleteKey(url, SELECTOR_PREFIX + fieldKey); } catch (_) {}   // §JA5 — its selector goes with it
   return { ok: true, origin, fieldKey, learned: M.learnedFromSettings(siteSettings.getAllForOrigin(url)) };
 }
 
@@ -132,9 +135,56 @@ function resolveScript(xpath) {
   if (!f && el.tagName === 'LABEL') f = el.control || null;
   if (!f) { const inner = el.querySelectorAll('input, textarea, select'); if (inner.length === 1) f = inner[0]; }
   if (!f) return { error: 'that is a <' + el.tagName.toLowerCase() + '>, not a field you type into — pick the box itself' };
+  // the box's own positional xpath, counted by localName the way selector-check.js resolveXPath walks it (JA5: its selector)
+  const xp = []; for (let n = f; n && n.nodeType === 1; n = n.parentElement) { const same = n.parentElement ? [...n.parentElement.children].filter(c => c.localName === n.localName) : [n]; xp.unshift(n.localName + '[' + (same.indexOf(n) + 1) + ']'); }
   f.setAttribute('data-cg-learn-pick', '1');
-  try { return window.__cgDomMesh.queryOne('[data-cg-learn-pick]'); } finally { f.removeAttribute('data-cg-learn-pick'); }
+  try { const rec = window.__cgDomMesh.queryOne('[data-cg-learn-pick]'); return rec ? { ...rec, xpath: '/' + xp.join('/') } : rec; } finally { f.removeAttribute('data-cg-learn-pick'); }
 })()`;
+}
+
+/**
+ * §JA5 0.60.232 — James, 2026-10-19: "saves to per site settings, and as a macro or automation" · 2026-10-24: "yes make the macro too."
+ * The pick's CSS selector comes from renderer/selector-check.js (key 'input': exactly one match, the editable box picked) and is kept per
+ * site as autofill.selector.<fieldKey>. A site's macro is built from its learned fields that have one, saved through macro.js's own create,
+ * and exported as a .macro node (the automation form). The profile's values never enter the macro: each step types a {{param}}.
+ */
+const SELECTOR_PREFIX = 'autofill.selector.';
+const paramOf = (fieldType) => String(fieldType).replace(/[^\w]/g, '_');
+function _checker() {
+  try { return fs.readFileSync(path.join(__dirname, '..', '..', 'renderer', 'selector-check.js'), 'utf8'); } catch (_) { return null; }
+}
+/** selectorScript(checkerSource, xpath) → the page's selector-check for that box, as an editable input: { ok, selector, matched } | { ok:false, why } */
+function selectorScript(checkerSource, xpath) {
+  return `(() => { ${checkerSource}\n;return window.__cgSelectorCheck ? window.__cgSelectorCheck.check(${JSON.stringify({ xpath: String(xpath), key: 'input' })}) : { ok: false, why: 'the selector check did not load' }; })()`;
+}
+function macroName(url) { let host = url; try { host = new URL(url).host; } catch (_) {} return `autofill ${host}`; }
+/** macroFor(siteSettings, url) → { name, urlPattern, steps, params, description, left } — pure over the store (left: learned fields with no selector) */
+function macroFor(siteSettings, url) {
+  const all = siteSettings.getAllForOrigin(url) || {};
+  let origin = url; try { origin = new URL(url).origin; } catch (_) {}
+  const steps = [], params = [], left = [];
+  for (const [fieldKey, fieldType] of Object.entries(M.learnedFromSettings(all)).sort(([a], [b]) => a.localeCompare(b))) {
+    const selector = all[SELECTOR_PREFIX + fieldKey];
+    if (!selector) { left.push(fieldKey); continue; }
+    const param = paramOf(fieldType);
+    steps.push({ action: 'type', data: { selector: String(selector), text: `{{${param}}}`, clearFirst: true } });
+    if (!params.includes(param)) params.push(param);
+  }
+  return { name: macroName(url), urlPattern: `${origin}/*`, steps, params, left,
+    description: `Autofill's learned fields for ${origin} (Clear Glass, from the element picker). Each step types a profile value given at run.` };
+}
+/** saveMacro(macroTool, siteSettings, url, { nodesDir }) → { ok, name, steps, params, left, node?, removed? } | { ok:false, error } — replaces the site's macro */
+async function saveMacro(macroTool, siteSettings, url, { nodesDir = null } = {}) {
+  if (!macroTool) return { ok: false, error: 'macro tool not available' };
+  const m = macroFor(siteSettings, url);
+  const had = await macroTool.execute({ action: 'get', name: m.name });
+  if (had && had.ok) { const d = await macroTool.execute({ action: 'delete', name: m.name }); if (d && d.error) return { ok: false, error: `could not replace macro "${m.name}": ${d.error}` }; }
+  if (!m.steps.length) return { ok: true, name: m.name, steps: 0, params: [], left: m.left, removed: !!(had && had.ok) };
+  const c = await macroTool.execute({ action: 'create', name: m.name, urlPattern: m.urlPattern, steps: m.steps, params: m.params, description: m.description });
+  if (!c || c.error) return { ok: false, error: `macro "${m.name}" not saved: ${(c && c.error) || 'no answer'}` };
+  let node = null;
+  if (nodesDir) { try { const x = await macroTool.execute({ action: 'export', name: m.name, dir: nodesDir }); node = (x && x.file) || null; } catch (_) {} }
+  return { ok: true, name: m.name, steps: m.steps.length, params: m.params, left: m.left, node };
 }
 
 /**
@@ -142,7 +192,7 @@ function resolveScript(xpath) {
  *   → { ok:true, fieldType, fieldKey, stable, cgId, origin, learned, fill? } | { ok:false, cancelled?, error }
  * wc: the application tab's webContents (executeJavaScript / getURL). fill (default true): fill the page again with the new map.
  */
-async function pickAndLearn({ wc, dom, autofillStore, siteSettings, fieldType, agentId = 'default', profileId, label, fill = true, minConfidence = 'medium', pickerSource } = {}) {
+async function pickAndLearn({ wc, dom, autofillStore, siteSettings, fieldType, agentId = 'default', profileId, label, fill = true, minConfidence = 'medium', pickerSource, checkerSource, macroTool = null, nodesDir = null } = {}) {
   fieldType = String(fieldType || '').trim();
   if (!FIELD_TYPE_SET.has(fieldType)) return { ok: false, error: `unknown fieldType "${fieldType}" (GET /cli/autofill/field-types lists them)` };
   if (!wc || typeof wc.executeJavaScript !== 'function') return { ok: false, error: 'no tab to pick in (open the application in a tab)' };
@@ -174,6 +224,14 @@ async function pickAndLearn({ wc, dom, autofillStore, siteSettings, fieldType, a
   if (!saved.ok) return saved;
   const out = { ok: true, fieldType, fieldKey: k.key, stable: k.stable, cgId: field.id, origin: saved.origin, learned: saved.learned,
     ...(k.stable ? {} : { warning: `"${k.key}" looks generated by the page — it may change, and then this field is asked again` }) };
+
+  // §JA5 — the box's selector (selector-check.js, as an input), kept per site; then the site's macro is rebuilt with it
+  const chk = checkerSource === undefined ? _checker() : checkerSource;
+  let sel = null;
+  if (chk && field.xpath) { try { sel = await wc.executeJavaScript(selectorScript(chk, field.xpath), true); } catch (e) { sel = { ok: false, why: e.message }; } }
+  if (sel && sel.ok && sel.selector) { siteSettings.set(url, SELECTOR_PREFIX + k.key, sel.selector); out.selector = sel.selector; }
+  else { try { siteSettings.deleteKey(url, SELECTOR_PREFIX + k.key); } catch (_) {} out.selectorWhy = (sel && sel.why) || (chk ? 'the box gave no xpath' : 'selector-check.js could not be read'); }
+  if (macroTool) out.macro = await saveMacro(macroTool, siteSettings, url, { nodesDir });
   if (fill && dom && autofillStore) {
     try { out.fill = await M.fillFields(dom, autofillStore, { agentId, profileId, minConfidence, learned: saved.learned }); }
     catch (e) { out.fill = { error: e.message }; }
@@ -181,4 +239,4 @@ async function pickAndLearn({ wc, dom, autofillStore, siteSettings, fieldType, a
   return out;
 }
 
-module.exports = { MODULE_ID, VERSION, FIELD_TYPE_SET, isFillable, needsPick, chooseKey, saveLearned, listLearned, forgetLearned, pickScript, resolveScript, pickAndLearn };
+module.exports = { MODULE_ID, VERSION, FIELD_TYPE_SET, SELECTOR_PREFIX, isFillable, needsPick, chooseKey, saveLearned, listLearned, forgetLearned, pickScript, resolveScript, selectorScript, macroName, macroFor, saveMacro, pickAndLearn };

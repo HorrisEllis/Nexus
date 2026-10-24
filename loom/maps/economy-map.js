@@ -70,6 +70,10 @@ const CONSUMERS = [
   [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/learn-pick.js'), '_autofillPick -> pickAndLearn; /cli/autofill/learn -> saveLearned (one save path)'],
   [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/renderer/guardian-picker.js'), 'pickScript: the Guardian picker source run in the tab, field mode (pickField)'],
   [I('clear-glass/src/autofill/matcher.js'), I('clear-glass/src/autofill/learn-pick.js'), 'fillFields/detectFields -> needsPick (lazy require: learn-pick requires matcher)'],
+  // §JA5 0.60.232 — the pick is also a macro (James: "saves to per site settings, and as a macro or automation")
+  [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/renderer/selector-check.js'), 'selectorScript: selector-check.js source run in the tab, key input (the box\'s selector)'],
+  [I('clear-glass/src/ipc/bridge.js'), I('lib/agent-tools/tools/clear-glass/macro.js'), '0.60.232 _autofillMacroDoor: learn-pick saveMacro -> macroTool get/delete/create/export'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/mesh/automation-engine.js'), '0.60.232 _autofillMacroDoor: NODES_DIR, where the site macro\'s .macro node goes'],
   // §JA4 0.60.231 — the learn-loop on screen: the panel → preload → IPC → learn-pick
   [I('clear-glass/renderer/settings/sections/autofill.js'), I('clear-glass/src/preload/index.js'), '0.60.231 cg.autofill.pick / learned / forget (Pick buttons; Fields it learned, Forget)'],
   [I('clear-glass/src/preload/index.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.231 IPC autofill:pick | autofill:learned | autofill:forget'],

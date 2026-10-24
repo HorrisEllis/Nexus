@@ -35,15 +35,24 @@ const page = () => [
 
 // the page's autofill.pick / learned / forget → the real learn-pick.js; the pick's tab answers with a pick of the code-profile box
 async function wire(pg, store, { cancel = false } = {}) {
-  const wc = { getURL: () => URL_, async executeJavaScript(src) { return /pickField/.test(src) ? (cancel ? { cancelled: true } : { xpath: '/html/body/input[2]' }) : page()[1]; } };
+  const wc = { getURL: () => URL_, async executeJavaScript(src) {
+    if (/pickField/.test(src)) return cancel ? { cancelled: true } : { xpath: '/html/body/input[2]' };
+    if (/__cgSelectorCheck/.test(src)) return { ok: true, selector: 'input[aria-label="Your code profile"]', matched: 1 };   // JA5: the box's selector
+    return { ...page()[1], xpath: '/html[1]/body[1]/input[2]' }; } };
+  const rows = new Map(); const macroTool = { async execute(a) {   // JA5: macro.js's get/delete/create rule, in memory
+    if (a.action === 'get') return rows.has(a.name) ? { ok: true } : { error: 'none' };
+    if (a.action === 'delete') { rows.delete(a.name); return { ok: true }; }
+    if (a.action === 'create') { if (rows.has(a.name)) return { error: 'exists' }; rows.set(a.name, a); return { ok: true }; }
+    return { ok: true }; } };
   const dom = { _getWebContents: () => wc, async handleQuery() { return page(); }, async handleMutate() { return { ok: true }; } };
   await pg.exposeFunction('__af', async (op, a) => {
-    if (op === 'pick') return LP.pickAndLearn({ wc, dom, autofillStore: { getProfile: () => profile }, siteSettings: store, ...a[0], pickerSource: 'x' });
+    if (op === 'pick') return LP.pickAndLearn({ wc, dom, autofillStore: { getProfile: () => profile }, siteSettings: store, ...a[0], pickerSource: 'x', checkerSource: 'y', macroTool });
     if (op === 'learned') return { ok: true, learned: LP.listLearned(store, a[0] || null) };
     return LP.forgetLearned(store, a[0], a[1]);
   });
   await pg.addInitScript(`(() => { const f = (op) => (...a) => window.__af(op, a); Object.assign(window.ClearGlass.autofill, { pick: f('pick'), learned: f('learned'), forget: f('forget') }); })();`);
 }
+const core = (l) => l.map(({ origin, fieldKey, fieldType }) => ({ origin, fieldKey, fieldType }));   // JA5 adds selector/macro to each entry
 const fillAnswer = () => { const matches = M.matchFields(page(), profile); return { profileId: 'p1', totalFields: 2, filled: matches.map(m => ({ cgId: m.cgId, fieldType: m.fieldType })), skipped: [], failed: [], needsPick: LP.needsPick(page(), profile, matches) }; };
 const answers = () => ({ 'autofill.listProfiles': [profile], 'api.get': {}, 'window.list': { windows: ['apply'] }, 'bgTabs.list': [], 'autofill.fill': fillAnswer(),
   'toolbar.commands': [], 'bookmarks.list': [], 'plugins.list': [], 'options.get': {}, 'providers.list': [] });
@@ -56,7 +65,7 @@ const bodyText = (pg) => pg.evaluate(() => document.body.innerText);
     const s = memStore();
     s.set(URL_, M.learnKey('your code profile'), 'github'); s.set(URL_, 'autofill.enabled', true);
     s.set('https://mercor.com/x', M.learnKey('linked'), 'linkedin');
-    assert.deepStrictEqual(LP.listLearned(s), [{ origin: 'https://mercor.com', fieldKey: 'linked', fieldType: 'linkedin' }, { origin: 'https://micro1.ai', fieldKey: 'your code profile', fieldType: 'github' }]);
+    assert.deepStrictEqual(core(LP.listLearned(s)), [{ origin: 'https://mercor.com', fieldKey: 'linked', fieldType: 'linkedin' }, { origin: 'https://micro1.ai', fieldKey: 'your code profile', fieldType: 'github' }]);
     assert.deepStrictEqual(LP.listLearned(s, URL_).map(l => l.fieldKey), ['your code profile']);
     const r = LP.forgetLearned(s, URL_, 'Your Code Profile');
     assert.deepStrictEqual([r.ok, r.origin, r.fieldKey], [true, 'https://micro1.ai', 'your code profile']);
@@ -82,12 +91,14 @@ const bodyText = (pg) => pg.evaluate(() => document.body.innerText);
       assert.ok(/Not placed on this page \(1\): GitHub URL/.test(await bodyText(pg)));
       await clickText(pg, '.modal button', 'Pick GitHub URL');
       await pg.waitForFunction(() => /Learned for https:\/\/micro1\.ai: "your code profile" is GitHub URL/.test(document.body.innerText), null, { timeout: 5000 });
-      assert.deepStrictEqual(LP.listLearned(store), [{ origin: 'https://micro1.ai', fieldKey: 'your code profile', fieldType: 'github' }], 'saved in the real store');
+      assert.ok(/Saved in the macro \u201Cautofill micro1\.ai\u201D \(1 step\)/.test(await bodyText(pg)), 'JA5: the Pick says the macro it went in');
+      assert.deepStrictEqual(core(LP.listLearned(store)), [{ origin: 'https://micro1.ai', fieldKey: 'your code profile', fieldType: 'github' }], 'saved in the real store');
       assert.ok(!(await pg.evaluate(() => [...document.querySelectorAll('.modal button')].some(b => b.textContent === 'Pick GitHub URL'))), 'its Pick goes once placed');
       await pg.evaluate(() => [...document.querySelectorAll('.modal button')].find(b => /close|✕|×|Cancel|Done/i.test(b.textContent) || b.getAttribute('aria-label') === 'Close')?.click());
       await pg.keyboard.press('Escape');
       await pg.waitForFunction(() => /“your code profile”/.test(document.body.innerText), null, { timeout: 5000 });
       assert.ok(/https:\/\/micro1\.ai/.test(await bodyText(pg)) && /is GitHub URL/.test(await bodyText(pg)), 'the learned pane lists it by site');
+      assert.ok(/in the macro \u201Cautofill micro1\.ai\u201D/.test(await bodyText(pg)), 'JA5: and that it is a step in the site\'s macro');
       assert.deepStrictEqual(errors, []); await pg.close();
     });
 

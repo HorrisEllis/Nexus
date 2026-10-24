@@ -90,7 +90,9 @@
       if (!r.ok) { status.className = `af-line ${r.cancelled ? '' : 'bad'}`.trim(); status.textContent = r.cancelled ? `Cancelled — nothing saved for ${typeLabel(t)}.` : `Not saved: ${r.error}`; return; }
       const filled = (r.fill && r.fill.filled) ? r.fill.filled.length : 0;
       status.className = 'af-line ok';
-      status.textContent = `Learned for ${r.origin}: "${r.fieldKey}" is ${typeLabel(t)} — filled ${filled} field(s).${r.warning ? ` ${r.warning}` : ''}`;
+      // §JA5 — and where it went as a macro (his "as a macro or automation"): in the site's macro, or why not
+      const mac = r.macro ? (r.macro.ok ? (r.selector ? ` Saved in the macro \u201C${r.macro.name}\u201D (${r.macro.steps} step${r.macro.steps === 1 ? '' : 's'}).` : ` Not in the macro: ${r.selectorWhy}.`) : ` The macro was not saved: ${r.macro.error}.`) : '';
+      status.textContent = `Learned for ${r.origin}: "${r.fieldKey}" is ${typeLabel(t)} — filled ${filled} field(s).${mac}${r.warning ? ` ${r.warning}` : ''}`;
       paint(((r.fill && r.fill.needsPick) ? r.fill.needsPick.unplaced : list.filter(x => x !== t)));
       if (onLearned) onLearned();
     }), 'sm')));
@@ -318,7 +320,7 @@
     const rows = []; let origin = null;
     for (const l of learned) {
       if (l.origin !== origin) { origin = l.origin; rows.push(h('div', { class: 'af-site', text: origin })); }
-      rows.push(row(`\u201C${l.fieldKey}\u201D`, `is ${typeLabel(l.fieldType)}`,
+      rows.push(row(`\u201C${l.fieldKey}\u201D`, `is ${typeLabel(l.fieldType)}${l.selector ? ` \u00B7 in the macro \u201C${l.macro}\u201D` : ' \u00B7 not in the macro (no stable selector)'}`,
         btn('Forget', async () => {
           if (!(await confirmDo(`Forget \u201C${l.fieldKey}\u201D on ${l.origin}?`, 'The next fill on this site asks for it again.', 'Forget'))) return;
           const r = await busy(null, () => call(() => cg.autofill.forget(l.origin, l.fieldKey), 'forget'));
@@ -326,7 +328,7 @@
           toast('Forgotten'); rerender();
         }, 'sm danger')));
     }
-    return pane({ title: 'Fields it learned', sub: 'Boxes you picked (or taught by name) on a site the autofill could not read. Each fills on that site every time.', flush: true,
+    return pane({ title: 'Fields it learned', sub: 'Boxes you picked (or taught by name) on a site the autofill could not read. Each fills on that site every time, and is a step in that site\u2019s macro (Settings \u203A Macros).', flush: true,
       body: rows.length ? rows : empty('Nothing learned yet. When a fill leaves a field unplaced, Pick the box for it in the Fill dialog.') });
   }
 
