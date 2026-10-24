@@ -135,7 +135,7 @@
   "guardian/lib/ncp.js -> intelligence/gap/predicate.js",
   "guardian/lib/response-sink.js -> clear-glass/src/downloads/artifact-chat-index.js",
   "guardian/routes/autonomous-loop.js -> copilot/tool-runtime.js",
-  "guardian/routes/mesh.js -> mesh/install.js",
+  "guardian/routes/mesh.js -> guardian/mesh/install.js",
   "guardian/server.js -> cockpit/forge",
   "guardian/server.js -> cortex/core/raid/contract-intake.js",
   "guardian/server.js -> cortex/core/raid/index.js",

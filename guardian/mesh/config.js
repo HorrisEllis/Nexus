@@ -11,7 +11,7 @@
 const path = require('path');
 
 module.exports = {
-  DATA_DIR: path.join(__dirname, '..', 'data', 'mesh'),
+  DATA_DIR: path.join(__dirname, '..', '..', 'data', 'mesh'),
 
   // Key rotation intervals — carried over from BrainOS's bridge defaults.
   KEY_INTERVALS: {
