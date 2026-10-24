@@ -866,3 +866,12 @@ spec:
       Moving self-heal without re-establishing liminal-space's subscription.
       The scan found this; shipping it anyway would be worse than never
       having scanned.
+
+
+# ADDENDUM 2026-10-24 (0.60.234) — superseded by the diagnostic system, and archived
+# James, 2026-10-24, asked what Sentinel is: "I'm not sure what Sentinel is, dude … I don't think that got mixed in to this project." Told it
+# is his 2026-07-24 plan for one diagnostic-and-repair authority, that only S1 was built (sentinel/interaction-contract.json with routes
+# declared and never served, and cli/sentinel.js), and that the job became the diagnostic system's (one of Idearium's 15; the healer joined it
+# in 0.60.136), he said: "Yeah archive it."
+# Archived to _archive/2026-10-24-not-systems/sentinel/ (git mv): the folder, cli/sentinel.js, tests/modules/test-sentinel-cli.js, and
+# test-adversarial-sim's AS-004..AS-006. This spec stays where it is, as the record of the plan (§0.3). Its successor is diagnostic/.

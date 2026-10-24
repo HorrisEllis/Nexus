@@ -229,7 +229,7 @@ const SUITES = [
   'test-ledger-schema.js',
   'test-health-authority.js',
   'test-intelligence-causal.js',
-  'test-sentinel-cli.js',
+  // 'test-sentinel-cli.js' — archived with Sentinel, 0.60.234 (_archive/2026-10-24-not-systems/sentinel/tests/)
   'test-adversarial-sim.js',
   'test-boot-log-fixes.js',
   'test-autopilot-warp-spine.js',

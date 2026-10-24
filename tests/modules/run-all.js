@@ -515,7 +515,7 @@ const SUITES = [
   'test-code-tab.test.js',   // 0.39.349 CT3 — the Code tab is the work surface; 0.39.351 CT5 — hooked into the Plan (Clear Glass)
   'test-model-door.test.js',   // 0.39.346 CT1 — copilot is the one door for which model; the pages ask through it, it learns and switches   // 0.39.344 — the setup job settles on its result, not on its process exiting   // 0.39.342 PR1/PR3 — systems known from their first beat; a missed heartbeat is negative space (WARP 2 expectations)
   'test-intelligence-causal.js',
-  'test-sentinel-cli.js',
+  // 'test-sentinel-cli.js' — archived with Sentinel, 0.60.234 (_archive/2026-10-24-not-systems/sentinel/tests/)
   'test-adversarial-sim.js',
   'test-boot-log-fixes.js',
   'test-autopilot-warp-spine.js',

@@ -90,7 +90,7 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
 
   await test('RD-05', "his 2026-10-24 \"Aren't systems\": the eight are folded into their home or parked, never listed, never drafted", () => {
     const SB = require(path.join(ROOT, 'lib/system-boundary.js'));
-    assert.deepStrictEqual(Object.keys(SB.FOLDED).sort(), ['auth', 'jaa', 'mesh', 'sentinel', 'siso'], 'remote-desktop and security archived (0.60.232); erosmancer moved into clear-glass (0.60.233)');
+    assert.deepStrictEqual(Object.keys(SB.FOLDED).sort(), ['auth', 'jaa', 'mesh', 'siso'], 'remote-desktop and security archived (0.60.232); erosmancer moved into clear-glass (0.60.233); sentinel archived (0.60.234)');
     assert.ok(!fs.existsSync(path.join(ROOT, 'erosmancer')) && fs.existsSync(path.join(ROOT, 'clear-glass/erosmancer-os/src/api/server.ts')), 'ErosmancerOS lives in Clear Glass');
     const sys = SB.systems(ROOT);
     for (const f of Object.keys(SB.FOLDED)) assert.ok(!sys.includes(f), `${f} is not a system`);   // the parts stay in the scan (crossings into hooks/ are real edges); they leave only the sovereignty list
@@ -120,7 +120,7 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
     assert.ok(sov.notSystems.unhomed.find(u => u.folder === 'warp').usedBy.cos > 0, 'with who uses it');
     for (const f of ['cli', 'cockpit', 'meta', 'nexus', 'warp']) assert.ok(!fs.existsSync(path.join(ROOT, f, 'registry-components.draft.json')), `${f}: its draft was withdrawn`);
     // 0.60.232 his "Archive.": kept in the archive, gone from the tree, never a system
-    for (const f of ['remote-desktop', 'security', 'emergence']) { assert.ok(!fs.existsSync(path.join(ROOT, f)), `${f} left the tree`); assert.ok(fs.existsSync(path.join(ROOT, '_archive/2026-10-24-not-systems', f)), `${f} is kept in the archive`); assert.ok(!unhomed.includes(f)); }
+    for (const f of ['remote-desktop', 'security', 'emergence', 'sentinel']) { assert.ok(!fs.existsSync(path.join(ROOT, f)), `${f} left the tree`); assert.ok(fs.existsSync(path.join(ROOT, '_archive/2026-10-24-not-systems', f)), `${f} is kept in the archive`); assert.ok(!unhomed.includes(f)); }
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`);

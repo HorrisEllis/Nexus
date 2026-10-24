@@ -499,3 +499,13 @@ James, 2026-10-24: "move erosmancer to either clearglass or guardian"
   the atlases, the spec registry); history (CHANGELOGs, version lines, older maps) left as written. lib/system-boundary.js FOLDED no longer
   needs an entry for it. Clear Glass's electron-builder config excludes it from the app.
 - **Left:** sentinel, still parked (its CLI and two tests).
+
+## ADDENDUM 2026-10-24 (0.60.234) — Sentinel archived
+James, 2026-10-24: "I'm not sure what Sentinel is, dude. Is that, like, tell me, I don't think that got mixed in to this project." The coder
+read docs/nexus-sentinel.spec and its history: his 2026-07-24 plan (quoted three times in it) to merge four diagnostic surfaces into one
+diagnostic-and-repair authority; only S1 was built (a contract whose routes were declared and never served, and cli/sentinel.js); its job is
+the diagnostic system's now (one of his 15; the healer joined it in 0.60.136). The coder recommended archiving it. He: "Yeah archive it."
+- Archived (git mv) to _archive/2026-10-24-not-systems/sentinel/: the folder, cli/sentinel.js, tests/modules/test-sentinel-cli.js (out of
+  both run-all lists, said there), and test-adversarial-sim's AS-004..AS-006 (they tested that CLI). The spec stays in docs/, addended.
+- Found: test-sovereign-systems SV-08 used sentinel as its sovereign example; 0.60.230 broke it and it was not run then (the second test
+  that change broke, after CT-03/04). Now components. Every test touching the census is being run (CHANGELOG-0.60.234.md).
