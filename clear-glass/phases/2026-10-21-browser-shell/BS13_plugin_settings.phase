@@ -7,11 +7,11 @@ intent: null
 summary: BS13_plugin_settings (integration) — 6 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852549787
+exported_at: 1792853504984
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852549787
-lastSeenAt: 1792852549787
+firstSeenAt: 1792853504984
+lastSeenAt: 1792853504984
 fingerprint: null
 payload:
   id: BS13_plugin_settings

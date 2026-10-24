@@ -7,11 +7,11 @@ intent: null
 summary: FM2_a_failure_is_a_clip (?) — 3 file(s)
 system: intelligence
 tags: []
-exported_at: 1792852517768
+exported_at: 1792853472098
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852517768
-lastSeenAt: 1792852517768
+firstSeenAt: 1792853472098
+lastSeenAt: 1792853472098
 fingerprint: null
 payload:
   id: FM2_a_failure_is_a_clip

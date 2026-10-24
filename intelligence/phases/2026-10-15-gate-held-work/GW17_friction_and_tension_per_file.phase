@@ -7,11 +7,11 @@ intent: null
 summary: GW17_friction_and_tension_per_file (?) — 4 file(s)
 system: intelligence
 tags: []
-exported_at: 1792852532127
+exported_at: 1792853487107
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852532127
-lastSeenAt: 1792852532127
+firstSeenAt: 1792853487107
+lastSeenAt: 1792853487107
 fingerprint: null
 payload:
   id: GW17_friction_and_tension_per_file

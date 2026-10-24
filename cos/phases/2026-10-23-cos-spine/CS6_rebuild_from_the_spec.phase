@@ -7,11 +7,11 @@ intent: null
 summary: CS6_rebuild_from_the_spec (integration) — 5 file(s)
 system: cos
 tags: []
-exported_at: 1792852552188
+exported_at: 1792853507419
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852552188
-lastSeenAt: 1792852552188
+firstSeenAt: 1792853507419
+lastSeenAt: 1792853507419
 fingerprint: null
 payload:
   id: CS6_rebuild_from_the_spec
@@ -33,7 +33,7 @@ payload:
     - MOD-CS-REBUILD
   spec: cos/spec/cos-spine.spec
   graph:
-    hash: 2027a2ea6546f0e2
+    hash: 6c15fcfff9d71cca
     nodes:
       - path: cos/spine/rebuild.js
         role: changes
@@ -49,44 +49,16 @@ payload:
         system: cos
       - path: emerge/compiler/kg-builder.js
         role: changes
-        exists: true
+        exists: false
         system: emerge
       - path: emerge/compiler/phase-specs.js
         role: changes
-        exists: true
+        exists: false
         system: emerge
       - path: cos/workspace/vm-control.js
         role: used-by
         exists: true
         system: cos
-      - path: emerge/compiler/pipeline.js
-        role: used-by
-        exists: true
-        system: emerge
-      - path: emerge/test/gap-field.test.js
-        role: used-by
-        exists: true
-        system: null
-      - path: emerge/test/invariants.test.js
-        role: used-by
-        exists: true
-        system: null
-      - path: emerge/test/kg.test.js
-        role: used-by
-        exists: true
-        system: null
-      - path: emerge/test/propagation.test.js
-        role: used-by
-        exists: true
-        system: null
-      - path: emerge/test/reply-engine.test.js
-        role: used-by
-        exists: true
-        system: null
-      - path: emerge/test/tier-contract.test.js
-        role: used-by
-        exists: true
-        system: null
       - path: lib/cos-bridge.js
         role: used-by
         exists: true
@@ -111,38 +83,6 @@ payload:
         role: uses
         exists: true
         system: cos
-      - path: emerge/chunk/index.js
-        role: uses
-        exists: true
-        system: emerge
-      - path: emerge/siso/index.js
-        role: uses
-        exists: true
-        system: emerge
-      - path: lib/phase-dag.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/phase-files.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/phase-graph.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/phase-map-auto.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/phase-plan.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/pipeline-nodes.js
-        role: uses
-        exists: true
-        system: lib
     edges:
       - from: cos/workspace/index.js
         to: cos/compartment/qemu-runtime.js
@@ -156,30 +96,6 @@ payload:
       - from: cos/workspace/index.js
         to: cos/compartment/guest-agent.js
         kind: requires
-      - from: emerge/compiler/kg-builder.js
-        to: emerge/siso/index.js
-        kind: requires
-      - from: emerge/compiler/kg-builder.js
-        to: emerge/chunk/index.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-dag.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-files.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-map-auto.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-graph.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/pipeline-nodes.js
-        kind: requires
-      - from: emerge/compiler/phase-specs.js
-        to: lib/phase-plan.js
-        kind: requires
       - from: cos/workspace/vm-control.js
         to: cos/workspace/index.js
         kind: requires
@@ -188,27 +104,6 @@ payload:
         kind: requires
       - from: lib/shadow-space.js
         to: cos/workspace/index.js
-        kind: requires
-      - from: emerge/compiler/pipeline.js
-        to: emerge/compiler/kg-builder.js
-        kind: requires
-      - from: emerge/test/gap-field.test.js
-        to: emerge/compiler/kg-builder.js
-        kind: requires
-      - from: emerge/test/invariants.test.js
-        to: emerge/compiler/kg-builder.js
-        kind: requires
-      - from: emerge/test/kg.test.js
-        to: emerge/compiler/kg-builder.js
-        kind: requires
-      - from: emerge/test/propagation.test.js
-        to: emerge/compiler/kg-builder.js
-        kind: requires
-      - from: emerge/test/reply-engine.test.js
-        to: emerge/compiler/kg-builder.js
-        kind: requires
-      - from: emerge/test/tier-contract.test.js
-        to: emerge/compiler/kg-builder.js
         kind: requires
     crossings:
       - from: lib/cos-bridge.js

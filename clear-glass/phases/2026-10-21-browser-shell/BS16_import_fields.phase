@@ -7,11 +7,11 @@ intent: null
 summary: BS16_import_fields (integration) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852549789
+exported_at: 1792853504985
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852549789
-lastSeenAt: 1792852549789
+firstSeenAt: 1792853504985
+lastSeenAt: 1792853504985
 fingerprint: null
 payload:
   id: BS16_import_fields

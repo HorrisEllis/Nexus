@@ -9,11 +9,11 @@ intent: null
 summary: LS1_the_bridge_job_holds_what_is_written_so_far (?) — 2 file(s)
 system: ollama-bridge
 tags: []
-exported_at: 1792852516525
+exported_at: 1792853470866
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852516525
-lastSeenAt: 1792852516525
+firstSeenAt: 1792853470866
+lastSeenAt: 1792853470866
 fingerprint: null
 payload:
   id: LS1_the_bridge_job_holds_what_is_written_so_far

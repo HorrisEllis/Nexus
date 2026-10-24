@@ -7,11 +7,11 @@ intent: null
 summary: CD1_magnet_parse (foundation) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852550197
+exported_at: 1792853505391
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852550197
-lastSeenAt: 1792852550197
+firstSeenAt: 1792853505391
+lastSeenAt: 1792853505391
 fingerprint: null
 payload:
   id: CD1_magnet_parse

@@ -7,11 +7,11 @@ intent: null
 summary: BS1_firefox_import (library) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852549781
+exported_at: 1792853504977
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852549781
-lastSeenAt: 1792852549781
+firstSeenAt: 1792853504977
+lastSeenAt: 1792853504977
 fingerprint: null
 payload:
   id: BS1_firefox_import

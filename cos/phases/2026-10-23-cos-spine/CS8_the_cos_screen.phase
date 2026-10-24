@@ -7,11 +7,11 @@ intent: null
 summary: CS8_the_cos_screen (ui) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792852552191
+exported_at: 1792853507422
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852552191
-lastSeenAt: 1792852552191
+firstSeenAt: 1792853507422
+lastSeenAt: 1792853507422
 fingerprint: null
 payload:
   id: CS8_the_cos_screen

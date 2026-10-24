@@ -7,11 +7,11 @@ intent: null
 summary: DB20_sealed_archetype (?) — 2 file(s)
 system: cos
 tags: []
-exported_at: 1792852542845
+exported_at: 1792853497883
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852542845
-lastSeenAt: 1792852542845
+firstSeenAt: 1792853497883
+lastSeenAt: 1792853497883
 fingerprint: null
 payload:
   id: DB20_sealed_archetype

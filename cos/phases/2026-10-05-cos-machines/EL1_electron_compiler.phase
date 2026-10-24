@@ -7,11 +7,11 @@ intent: null
 summary: EL1_electron_compiler (?) — 2 file(s)
 system: cos
 tags: []
-exported_at: 1792852517371
+exported_at: 1792853471685
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852517371
-lastSeenAt: 1792852517371
+firstSeenAt: 1792853471685
+lastSeenAt: 1792853471685
 fingerprint: null
 payload:
   id: EL1_electron_compiler

@@ -7,11 +7,11 @@ intent: null
 summary: CN1_canvas_archetype (?) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792852535454
+exported_at: 1792853490508
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852535454
-lastSeenAt: 1792852535454
+firstSeenAt: 1792853490508
+lastSeenAt: 1792853490508
 fingerprint: null
 payload:
   id: CN1_canvas_archetype

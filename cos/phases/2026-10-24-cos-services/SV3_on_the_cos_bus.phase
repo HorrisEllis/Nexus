@@ -7,11 +7,11 @@ intent: null
 summary: SV3_on_the_cos_bus (integration) — 1 file(s)
 system: cos
 tags: []
-exported_at: 1792852553378
+exported_at: 1792853508606
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852553378
-lastSeenAt: 1792852553378
+firstSeenAt: 1792853508606
+lastSeenAt: 1792853508606
 fingerprint: null
 payload:
   id: SV3_on_the_cos_bus

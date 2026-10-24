@@ -7,11 +7,11 @@ intent: null
 summary: M2 (?) — 2 file(s)
 system: ollama-bridge
 tags: []
-exported_at: 1792852505743
+exported_at: 1792853460279
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852505743
-lastSeenAt: 1792852505743
+firstSeenAt: 1792853460279
+lastSeenAt: 1792853460279
 fingerprint: null
 payload:
   id: M2

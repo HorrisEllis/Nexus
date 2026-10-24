@@ -7,11 +7,11 @@ intent: null
 summary: AW3_the_field_hears_the_lifecycle (?) — 2 file(s)
 system: intelligence
 tags: []
-exported_at: 1792852525359
+exported_at: 1792853479965
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852525359
-lastSeenAt: 1792852525359
+firstSeenAt: 1792853479965
+lastSeenAt: 1792853479965
 fingerprint: null
 payload:
   id: AW3_the_field_hears_the_lifecycle

@@ -9,11 +9,11 @@ intent: null
 summary: IN5_architect_mirrors_the_registry (interface) — 2 file(s)
 system: architect
 tags: []
-exported_at: 1792852546172
+exported_at: 1792853501180
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852546172
-lastSeenAt: 1792852546172
+firstSeenAt: 1792853501180
+lastSeenAt: 1792853501180
 fingerprint: null
 payload:
   id: IN5_architect_mirrors_the_registry

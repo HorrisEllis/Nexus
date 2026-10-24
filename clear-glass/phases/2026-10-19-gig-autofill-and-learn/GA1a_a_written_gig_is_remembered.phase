@@ -9,11 +9,11 @@ intent: null
 summary: GA1a_a_written_gig_is_remembered (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852545375
+exported_at: 1792853500374
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852545375
-lastSeenAt: 1792852545375
+firstSeenAt: 1792853500374
+lastSeenAt: 1792853500374
 fingerprint: null
 payload:
   id: GA1a_a_written_gig_is_remembered

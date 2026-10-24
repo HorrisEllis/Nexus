@@ -7,11 +7,11 @@ intent: null
 summary: BX10_float (surface) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852549392
+exported_at: 1792853504558
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852549392
-lastSeenAt: 1792852549392
+firstSeenAt: 1792853504558
+lastSeenAt: 1792853504558
 fingerprint: null
 payload:
   id: BX10_float

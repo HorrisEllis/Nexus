@@ -9,11 +9,11 @@ intent: null
 summary: CG2_one_source_of_truth_for_the_browser (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852525750
+exported_at: 1792853480379
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852525750
-lastSeenAt: 1792852525750
+firstSeenAt: 1792853480379
+lastSeenAt: 1792853480379
 fingerprint: null
 payload:
   id: CG2_one_source_of_truth_for_the_browser

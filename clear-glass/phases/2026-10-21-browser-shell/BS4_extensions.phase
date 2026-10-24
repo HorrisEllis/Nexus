@@ -7,11 +7,11 @@ intent: null
 summary: BS4_extensions (integration) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852549783
+exported_at: 1792853504979
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852549783
-lastSeenAt: 1792852549783
+firstSeenAt: 1792853504979
+lastSeenAt: 1792853504979
 fingerprint: null
 payload:
   id: BS4_extensions

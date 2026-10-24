@@ -7,11 +7,11 @@ intent: null
 summary: SD8_an_agent_can_see_and_fix_a_tab (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852524908
+exported_at: 1792853479508
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852524908
-lastSeenAt: 1792852524908
+firstSeenAt: 1792853479508
+lastSeenAt: 1792853479508
 fingerprint: null
 payload:
   id: SD8_an_agent_can_see_and_fix_a_tab

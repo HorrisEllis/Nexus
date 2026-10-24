@@ -7,11 +7,11 @@ intent: null
 summary: VM1_control_like_vmware (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792852517367
+exported_at: 1792853471680
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852517367
-lastSeenAt: 1792852517367
+firstSeenAt: 1792853471680
+lastSeenAt: 1792853471680
 fingerprint: null
 payload:
   id: VM1_control_like_vmware
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 6722ac63e2d3dd68
+    hash: 2cf44122260348ed
     nodes:
       - path: cos/cli/commands/vm.js
         role: changes
@@ -114,11 +114,19 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/lib/access.cjs
+      - path: idearium/lib/config.js
         role: uses
         exists: true
         system: idearium
-      - path: idearium/lib/config.js
+      - path: idearium/spec-compiler/compiler/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/pipeline.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
         role: uses
         exists: true
         system: idearium
@@ -126,15 +134,7 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/economy/tokens.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/repo-agent.js
-        role: uses
-        exists: true
-        system: lib
-      - path: lib/spec-collect.js
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -162,22 +162,22 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
+        to: lib/spec-compiler-port.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/pipeline.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
+        kind: requires
+      - from: idearium/api/index.js
         to: lib/data-home.js
         kind: requires
       - from: idearium/api/index.js
         to: lib/warp-rung.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/lib/access.cjs
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/economy/tokens.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/repo-agent.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/spec-collect.js
         kind: requires
       - from: cos/compartment/process-runner.js
         to: cos/compartment/qemu-runtime.js

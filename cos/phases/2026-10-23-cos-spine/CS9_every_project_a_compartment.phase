@@ -7,11 +7,11 @@ intent: null
 summary: CS9_every_project_a_compartment (integration) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792852552189
+exported_at: 1792853507420
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852552189
-lastSeenAt: 1792852552189
+firstSeenAt: 1792853507420
+lastSeenAt: 1792853507420
 fingerprint: null
 payload:
   id: CS9_every_project_a_compartment

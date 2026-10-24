@@ -9,11 +9,11 @@ intent: null
 summary: GW24_the_gate_holds_the_agent_gets_a_projection (?) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792852532132
+exported_at: 1792853487112
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852532132
-lastSeenAt: 1792852532132
+firstSeenAt: 1792853487112
+lastSeenAt: 1792853487112
 fingerprint: null
 payload:
   id: GW24_the_gate_holds_the_agent_gets_a_projection
@@ -34,7 +34,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 80b3bd80f12d4cc4
+    hash: a152acc083542276
     nodes:
       - path: cortex/core/raid/contract-gates.js
         role: changes
@@ -100,10 +100,6 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/core/index.js
-        role: uses
-        exists: true
-        system: idearium
       - path: idearium/lib/access.cjs
         role: uses
         exists: true
@@ -112,14 +108,18 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/spec-engine/index.js
+      - path: idearium/spec-compiler/compiler/index.js
         role: uses
         exists: true
         system: idearium
-      - path: intelligence/spatial/lattice.js
+      - path: idearium/spec-compiler/compiler/pipeline.js
         role: uses
         exists: true
-        system: intelligence
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
+        role: uses
+        exists: true
+        system: idearium
       - path: lib/data-home.js
         role: uses
         exists: true
@@ -128,15 +128,15 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/nexus-client.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/repo-agent.js
         role: uses
         exists: true
         system: lib
       - path: lib/spec-collect.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -150,6 +150,18 @@ payload:
         kind: requires
       - from: idearium/api/index.js
         to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-compiler-port.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/pipeline.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
         kind: requires
       - from: idearium/api/index.js
         to: lib/data-home.js
@@ -168,18 +180,6 @@ payload:
         kind: requires
       - from: idearium/api/index.js
         to: lib/spec-collect.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: lib/nexus-client.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: intelligence/spatial/lattice.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/core/index.js
-        kind: requires
-      - from: idearium/api/index.js
-        to: idearium/spec-engine/index.js
         kind: requires
       - from: cortex/core/raid/contract-adapters.js
         to: cortex/core/raid/contract-gates.js
@@ -218,12 +218,6 @@ payload:
         to: idearium/api/index.js
         kind: requires
     crossings:
-      - from: idearium/api/index.js
-        to: intelligence/spatial/lattice.js
-        fromSystem: idearium
-        toSystem: intelligence
-        kind: system
-        known: true
       - from: idearium/cli/route-commands.js
         to: cortex/core/raid/contract-gates.js
         fromSystem: idearium

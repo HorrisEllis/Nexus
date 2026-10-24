@@ -9,11 +9,11 @@ intent: null
 summary: NV1_words_to_elements (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852527915
+exported_at: 1792853482600
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852527915
-lastSeenAt: 1792852527915
+firstSeenAt: 1792853482600
+lastSeenAt: 1792853482600
 fingerprint: null
 payload:
   id: NV1_words_to_elements

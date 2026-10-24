@@ -7,11 +7,11 @@ intent: null
 summary: CN2_tool_archetypes (?) — 5 file(s)
 system: cos
 tags: []
-exported_at: 1792852535455
+exported_at: 1792853490509
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852535455
-lastSeenAt: 1792852535455
+firstSeenAt: 1792853490509
+lastSeenAt: 1792853490509
 fingerprint: null
 payload:
   id: CN2_tool_archetypes

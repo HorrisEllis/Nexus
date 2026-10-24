@@ -7,11 +7,11 @@ intent: null
 summary: NP3_apply_to_electron (?) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792852529986
+exported_at: 1792853484905
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852529986
-lastSeenAt: 1792852529986
+firstSeenAt: 1792853484905
+lastSeenAt: 1792853484905
 fingerprint: null
 payload:
   id: NP3_apply_to_electron

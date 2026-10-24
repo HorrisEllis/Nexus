@@ -7,11 +7,11 @@ intent: null
 summary: GW12_desktop_is_optional (?) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792852532120
+exported_at: 1792853487102
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852532120
-lastSeenAt: 1792852532120
+firstSeenAt: 1792853487102
+lastSeenAt: 1792853487102
 fingerprint: null
 payload:
   id: GW12_desktop_is_optional

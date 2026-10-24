@@ -9,11 +9,11 @@ intent: null
 summary: DK1_desktop_image_and_login (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792852511776
+exported_at: 1792853466319
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792852511776
-lastSeenAt: 1792852511776
+firstSeenAt: 1792853466319
+lastSeenAt: 1792853466319
 fingerprint: null
 payload:
   id: DK1_desktop_image_and_login
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 0ce31841af1a7c24
+    hash: be1ba0619f7da84f
     nodes:
       - path: cos/testenv/setup-job.js
         role: changes
@@ -124,23 +124,23 @@ payload:
         role: uses
         exists: true
         system: idearium
-      - path: idearium/lib/access.cjs
-        role: uses
-        exists: true
-        system: idearium
       - path: idearium/lib/config.js
         role: uses
         exists: true
         system: idearium
-      - path: lib/data-home.js
+      - path: idearium/spec-compiler/compiler/index.js
         role: uses
         exists: true
-        system: lib
-      - path: lib/economy/tokens.js
+        system: idearium
+      - path: idearium/spec-compiler/compiler/pipeline.js
         role: uses
         exists: true
-        system: lib
-      - path: lib/warp-rung.js
+        system: idearium
+      - path: idearium/spec-compiler/compiler/t2-gate.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: lib/spec-compiler-port.js
         role: uses
         exists: true
         system: lib
@@ -170,16 +170,16 @@ payload:
         to: idearium/lib/config.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/data-home.js
+        to: lib/spec-compiler-port.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/warp-rung.js
+        to: idearium/spec-compiler/compiler/index.js
         kind: requires
       - from: idearium/api/index.js
-        to: idearium/lib/access.cjs
+        to: idearium/spec-compiler/compiler/pipeline.js
         kind: requires
       - from: idearium/api/index.js
-        to: lib/economy/tokens.js
+        to: idearium/spec-compiler/compiler/t2-gate.js
         kind: requires
       - from: idearium/api/build-surface.js
         to: cos/testenv/setup-job.js
