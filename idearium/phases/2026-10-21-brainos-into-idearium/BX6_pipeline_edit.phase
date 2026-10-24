@@ -7,11 +7,11 @@ intent: null
 summary: BX6_pipeline_edit (surface) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792853504555
+exported_at: 1792854094300
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504555
-lastSeenAt: 1792853504555
+firstSeenAt: 1792854094300
+lastSeenAt: 1792854094300
 fingerprint: null
 payload:
   id: BX6_pipeline_edit
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX4_agents_layer
@@ -57,7 +57,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 5 · blocked by BX4_agents_layer
+        - DAG a0036d89ebc520f8 · layer 5 · blocked by BX4_agents_layer
         - 'depends on (1): BX4_agents_layer · all upstream 5'
         - 'needed by (1): BX9_retire'
   uuid: 56c7891f-61fb-596e-855c-287ccfb50430

@@ -9,11 +9,11 @@ intent: null
 summary: P13_interaction_contract_plus_handshake_for_every_cross_system_call (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853455110
+exported_at: 1792854045170
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853455110
-lastSeenAt: 1792853455110
+firstSeenAt: 1792854045170
+lastSeenAt: 1792854045170
 fingerprint: null
 payload:
   id: P13_interaction_contract_plus_handshake_for_every_cross_system_call
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -43,7 +43,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

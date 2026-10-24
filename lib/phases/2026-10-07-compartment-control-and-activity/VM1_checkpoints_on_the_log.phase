@@ -9,11 +9,11 @@ intent: null
 summary: VM1_checkpoints_on_the_log (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853474147
+exported_at: 1792854064218
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853474147
-lastSeenAt: 1792853474147
+firstSeenAt: 1792854064218
+lastSeenAt: 1792854064218
 fingerprint: null
 payload:
   id: VM1_checkpoints_on_the_log
@@ -131,7 +131,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DT1_desktop_into_the_log
@@ -146,7 +146,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (1): DT1_desktop_into_the_log · all upstream 3'
         - 'needed by (0): —'
   uuid: 6681e12d-8b51-5e15-9e2c-b94ff3ceb266

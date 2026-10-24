@@ -9,11 +9,11 @@ intent: null
 summary: SB36_every_agent_can_use_the_tools (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853470311
+exported_at: 1792854060373
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470311
-lastSeenAt: 1792853470311
+firstSeenAt: 1792854060373
+lastSeenAt: 1792854060373
 fingerprint: null
 payload:
   id: SB36_every_agent_can_use_the_tools
@@ -234,7 +234,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB35_the_index_is_there_when_the_agent_asks
@@ -258,7 +258,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 7
+        - DAG a0036d89ebc520f8 · layer 7
         - 'depends on (1): SB35_the_index_is_there_when_the_agent_asks · all upstream 7'
         - >-
           needed by (1): SB37_the_working_set_signal_to_noise · all downstream 3 · finishing it

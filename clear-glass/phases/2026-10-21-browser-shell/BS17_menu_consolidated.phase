@@ -7,11 +7,11 @@ intent: null
 summary: BS17_menu_consolidated (surface) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853504986
+exported_at: 1792854094764
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504986
-lastSeenAt: 1792853504986
+firstSeenAt: 1792854094764
+lastSeenAt: 1792854094764
 fingerprint: null
 payload:
   id: BS17_menu_consolidated
@@ -42,7 +42,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS3_menus
@@ -59,7 +59,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): BS3_menus · all upstream 2'
         - 'needed by (1): BS18_chrome_context_menus · finishing it unlocks BS18_chrome_context_menus'
   uuid: 81dc3bc1-609a-5615-a799-fad1b0c4967b

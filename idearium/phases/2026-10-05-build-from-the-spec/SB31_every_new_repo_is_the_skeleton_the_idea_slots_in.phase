@@ -9,11 +9,11 @@ intent: null
 summary: SB31_every_new_repo_is_the_skeleton_the_idea_slots_in (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470302
+exported_at: 1792854060362
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470302
-lastSeenAt: 1792853470302
+firstSeenAt: 1792854060362
+lastSeenAt: 1792854060362
 fingerprint: null
 payload:
   id: SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
@@ -226,7 +226,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB30_the_template_is_a_skeleton
@@ -252,7 +252,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4
+        - DAG a0036d89ebc520f8 · layer 4
         - 'depends on (1): SB30_the_template_is_a_skeleton · all upstream 4'
         - >-
           needed by (1): SB42_a_repo_expands_from_its_spec · all downstream 8 · finishing it unlocks

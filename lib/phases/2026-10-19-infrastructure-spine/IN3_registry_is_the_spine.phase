@@ -7,11 +7,11 @@ intent: null
 summary: IN3_registry_is_the_spine (library) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853501179
+exported_at: 1792854090877
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501179
-lastSeenAt: 1792853501179
+firstSeenAt: 1792854090877
+lastSeenAt: 1792854090877
 fingerprint: null
 payload:
   id: IN3_registry_is_the_spine
@@ -225,7 +225,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
@@ -287,6 +287,7 @@ payload:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
         - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
         - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
       blockedBy:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
       unlocks:
@@ -306,12 +307,12 @@ payload:
             - lib/project-registry.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ON THE CRITICAL PATH · blocked by IN0_baseline
+        - DAG a0036d89ebc520f8 · layer 1 · ON THE CRITICAL PATH · blocked by IN0_baseline
         - 'depends on (1): IN0_baseline'
         - >-
           needed by (5): IN4_retire_hand_maps, IN5_architect_mirrors_the_registry,
           IN7_every_phase_and_spec_on_the_spine, NC1_neutral_core_boundary,
-          CS3_the_registry_is_the_bridge · all downstream 49 · finishing it unlocks
+          CS3_the_registry_is_the_bridge · all downstream 50 · finishing it unlocks
           IN4_retire_hand_maps, IN5_architect_mirrors_the_registry,
           IN7_every_phase_and_spec_on_the_spine, NC1_neutral_core_boundary
         - 'same files as IN8_any_size with no order between them: loom/bootstrap.js'

@@ -7,11 +7,11 @@ intent: null
 summary: SB13_each_component_chunked (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470260
+exported_at: 1792854060320
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470260
-lastSeenAt: 1792853470260
+firstSeenAt: 1792854060320
+lastSeenAt: 1792854060320
 fingerprint: null
 payload:
   id: SB13_each_component_chunked
@@ -216,7 +216,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB12_the_registry_is_the_component_list
@@ -261,7 +261,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 6 · ready
+        - DAG a0036d89ebc520f8 · layer 6 · ready
         - 'depends on (1): SB12_the_registry_is_the_component_list · all upstream 6'
         - 'needed by (1): SB14_reuse_compounds'
         - >-

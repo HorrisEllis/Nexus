@@ -7,11 +7,11 @@ intent: null
 summary: FMR4_the_macro_bundle (?) — 4 file(s)
 system: cortex
 tags: []
-exported_at: 1792853496610
+exported_at: 1792854086204
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853496610
-lastSeenAt: 1792853496610
+firstSeenAt: 1792854086204
+lastSeenAt: 1792854086204
 fingerprint: null
 payload:
   id: FMR4_the_macro_bundle
@@ -187,7 +187,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR1_every_ledger_into_rfr2
@@ -213,7 +213,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by FMR1_every_ledger_into_rfr2
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by FMR1_every_ledger_into_rfr2
         - 'depends on (2): FMR1_every_ledger_into_rfr2, FMR3_the_report · all upstream 4'
         - >-
           needed by (1): FMR5_replay_routes · all downstream 6 · finishing it unlocks

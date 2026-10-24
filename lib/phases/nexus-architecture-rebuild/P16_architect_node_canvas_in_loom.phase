@@ -7,11 +7,11 @@ intent: null
 summary: P16_architect_node_canvas_in_loom (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853514785
+exported_at: 1792854105360
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853514785
-lastSeenAt: 1792853514785
+firstSeenAt: 1792854105360
+lastSeenAt: 1792854105360
 fingerprint: null
 payload:
   id: P16_architect_node_canvas_in_loom
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -44,7 +44,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (1): P17_blueprint_builder_onto_canvas · finishing it unlocks

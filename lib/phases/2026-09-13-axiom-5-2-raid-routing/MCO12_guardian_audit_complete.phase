@@ -9,11 +9,11 @@ intent: null
 summary: MCO12_guardian_audit_complete (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853455635
+exported_at: 1792854045652
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853455635
-lastSeenAt: 1792853455635
+firstSeenAt: 1792854045652
+lastSeenAt: 1792854045652
 fingerprint: null
 payload:
   id: MCO12_guardian_audit_complete
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: ff11ef686e0084e9
+    hash: 4f8eb5938f0fba15
     nodes:
       - path: cortex/core/raid/contract-boundary.js
         role: changes
@@ -49,6 +49,10 @@ payload:
         role: changes
         exists: true
         system: guardian
+      - path: lib/raid-port.js
+        role: changes
+        exists: true
+        system: lib
       - path: cortex/boot.js
         role: used-by
         exists: true
@@ -65,15 +69,7 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: guardian/api-dispatch.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: guardian/dropzone.js
-        role: used-by
-        exists: true
-        system: guardian
-      - path: guardian/lib/dispatcher.js
         role: used-by
         exists: true
         system: guardian
@@ -90,6 +86,14 @@ payload:
         exists: true
         system: lib
       - path: lib/agent-tools/index.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/autonomous-repair.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/nexus-client.js
         role: used-by
         exists: true
         system: lib
@@ -200,12 +204,6 @@ payload:
       - from: diagnostic/lib/heal-loop.js
         to: cortex/core/raid/index.js
         kind: requires
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        kind: requires
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        kind: requires
       - from: idearium/spec-engine/chunk-dispatch.js
         to: cortex/core/raid/index.js
         kind: requires
@@ -216,6 +214,12 @@ payload:
         to: cortex/core/raid/index.js
         kind: requires
       - from: lib/agent-tools/index.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/autonomous-repair.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/nexus-client.js
         to: cortex/core/raid/index.js
         kind: requires
     crossings:
@@ -249,18 +253,6 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/spec-engine/chunk-dispatch.js
         to: cortex/core/raid/index.js
         fromSystem: idearium
@@ -285,9 +277,21 @@ payload:
         toSystem: cortex
         kind: upward
         known: true
+      - from: lib/autonomous-repair.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/nexus-client.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO12_guardian_list_was_unreliable
@@ -300,7 +304,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): MCO12_guardian_list_was_unreliable'
         - 'needed by (0): —'
   uuid: 79605e9e-5354-57fc-8fe8-b2cd42dd3f68

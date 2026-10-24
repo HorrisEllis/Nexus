@@ -7,11 +7,11 @@ intent: null
 summary: OP2_the_system_settings_in_its_repo (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853480374
+exported_at: 1792854070499
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853480374
-lastSeenAt: 1792853480374
+firstSeenAt: 1792854070499
+lastSeenAt: 1792854070499
 fingerprint: null
 payload:
   id: OP2_the_system_settings_in_its_repo
@@ -215,7 +215,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP1_every_system_declares_its_options
@@ -236,7 +236,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by OP1_every_system_declares_its_options
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by OP1_every_system_declares_its_options
         - 'depends on (1): OP1_every_system_declares_its_options · all upstream 2'
         - >-
           needed by (2): OP3_copilot_reads_and_sets_options, SH2_explain_this_anywhere · finishing

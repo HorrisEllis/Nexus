@@ -7,11 +7,11 @@ intent: null
 summary: ME9_the_layers_below_report (?) — 6 file(s)
 system: guardian
 tags: []
-exported_at: 1792853477362
+exported_at: 1792854067583
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853477362
-lastSeenAt: 1792853477362
+firstSeenAt: 1792854067583
+lastSeenAt: 1792854067583
 fingerprint: null
 payload:
   id: ME9_the_layers_below_report
@@ -32,7 +32,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: cd11715c75119ecd
+    hash: c1635c13edf1a0e0
     nodes:
       - path: clear-glass/src/providers/host.js
         role: changes
@@ -106,10 +106,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/core/raid/index.js
-        role: uses
-        exists: true
-        system: cortex
       - path: guardian/clear-glass-bridge.js
         role: uses
         exists: true
@@ -150,6 +146,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/raid-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: ollama/lib/model-inventory.js
         role: uses
         exists: true
@@ -171,7 +171,7 @@ payload:
         to: guardian/lib/chat-transcripts.js
         kind: requires
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
+        to: lib/raid-port.js
         kind: requires
       - from: guardian/lib/dispatcher.js
         to: guardian/clear-glass-bridge.js
@@ -229,12 +229,6 @@ payload:
         kind: requires
     crossings:
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
         to: ollama/lib/model-inventory.js
         fromSystem: guardian
         toSystem: ollama
@@ -254,7 +248,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
@@ -276,7 +270,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 4 · blocked by ME1_one_failure_list,
+          DAG a0036d89ebc520f8 · layer 4 · blocked by ME1_one_failure_list,
           ME3_one_engine_one_budget
         - 'depends on (2): ME1_one_failure_list, ME3_one_engine_one_budget · all upstream 4'
         - 'needed by (1): ME10_nested_ladders_folded'

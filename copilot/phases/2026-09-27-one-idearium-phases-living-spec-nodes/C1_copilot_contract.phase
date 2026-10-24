@@ -9,11 +9,11 @@ intent: null
 summary: C1_copilot_contract (?) — 2 file(s)
 system: copilot
 tags: []
-exported_at: 1792853462380
+exported_at: 1792854052324
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853462380
-lastSeenAt: 1792853462380
+firstSeenAt: 1792854052324
+lastSeenAt: 1792854052324
 fingerprint: null
 payload:
   id: C1_copilot_contract
@@ -56,7 +56,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -75,7 +75,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): X1_system_nodes, Z1_release · all downstream 4 · finishing it unlocks

@@ -7,11 +7,11 @@ intent: null
 summary: R3_autonomous_repair_trigger (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853519026
+exported_at: 1792854109516
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853519026
-lastSeenAt: 1792853519026
+firstSeenAt: 1792854109516
+lastSeenAt: 1792854109516
 fingerprint: null
 payload:
   id: R3_autonomous_repair_trigger
@@ -252,7 +252,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/repair-contract-and-loom-hub-phasemap.spec::R1_repair_contract_schema
@@ -269,7 +269,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by R2
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by R2
         - 'depends on (2): R1_repair_contract_schema, R2 · all upstream 3'
         - 'needed by (0): —'
   uuid: ac825707-7cf0-50b3-8eac-344434851fd0

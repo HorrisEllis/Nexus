@@ -7,11 +7,11 @@ intent: null
 summary: RQ11_spec_and_registry_reconciled (?) — 5 file(s)
 system: loom
 tags: []
-exported_at: 1792853481672
+exported_at: 1792854071808
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481672
-lastSeenAt: 1792853481672
+firstSeenAt: 1792854071808
+lastSeenAt: 1792854071808
 fingerprint: null
 payload:
   id: RQ11_spec_and_registry_reconciled
@@ -140,7 +140,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
@@ -165,7 +165,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by RQ9_the_chunked_contract
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by RQ9_the_chunked_contract
         - 'depends on (1): RQ9_the_chunked_contract · all upstream 5'
         - 'needed by (1): RQ14_the_spine_end_to_end · all downstream 6'
   uuid: 3c68ccc7-2de6-5554-a73c-1f52f0f39258

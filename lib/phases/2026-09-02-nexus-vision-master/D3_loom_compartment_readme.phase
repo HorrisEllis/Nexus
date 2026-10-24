@@ -7,11 +7,11 @@ intent: null
 summary: D3_loom_compartment_readme (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853452588
+exported_at: 1792854042768
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853452588
-lastSeenAt: 1792853452588
+firstSeenAt: 1792854042768
+lastSeenAt: 1792854042768
 fingerprint: null
 payload:
   id: D3_loom_compartment_readme
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::D1_bridgeos_readme_template
@@ -45,7 +45,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by D1_bridgeos_readme_template
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by D1_bridgeos_readme_template
         - 'depends on (1): D1_bridgeos_readme_template'
         - 'needed by (0): —'
   uuid: 496aae0b-8816-5f2e-bc4a-feac064feac2

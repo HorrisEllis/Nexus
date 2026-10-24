@@ -7,11 +7,11 @@ intent: null
 summary: DL5_memory_in_cortex (integration) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792853505780
+exported_at: 1792854095617
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853505780
-lastSeenAt: 1792853505780
+firstSeenAt: 1792854095617
+lastSeenAt: 1792854095617
 fingerprint: null
 payload:
   id: DL5_memory_in_cortex
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
@@ -240,7 +240,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by DL3_rewire_writers
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by DL3_rewire_writers
         - 'depends on (1): DL3_rewire_writers · all upstream 6'
         - 'needed by (0): —'
   uuid: bfa57e92-1cf2-5b5a-a8a5-6582e4f27778

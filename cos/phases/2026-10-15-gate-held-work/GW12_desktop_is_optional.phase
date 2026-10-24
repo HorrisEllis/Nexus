@@ -7,11 +7,11 @@ intent: null
 summary: GW12_desktop_is_optional (?) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792853487102
+exported_at: 1792854076768
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853487102
-lastSeenAt: 1792853487102
+firstSeenAt: 1792854076768
+lastSeenAt: 1792854076768
 fingerprint: null
 payload:
   id: GW12_desktop_is_optional
@@ -99,7 +99,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -119,7 +119,7 @@ payload:
             - cos/testenv/detect.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - 'same files as GW13_the_sandbox_door with no order between them: cos/testenv/provision.js'

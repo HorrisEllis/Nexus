@@ -7,11 +7,11 @@ intent: null
 summary: GW3_a_contract_is_traced (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792853487091
+exported_at: 1792854076755
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853487091
-lastSeenAt: 1792853487091
+firstSeenAt: 1792854076755
+lastSeenAt: 1792854076755
 fingerprint: null
 payload:
   id: GW3_a_contract_is_traced
@@ -246,7 +246,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
@@ -292,7 +292,7 @@ payload:
             - cortex/core/raid/contract-gates.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by GW2_the_run_follows_the_gate
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by GW2_the_run_follows_the_gate
         - 'depends on (1): GW2_the_run_follows_the_gate · all upstream 3'
         - >-
           needed by (7): GW6_the_intelligence_system_on_every_gate, GW7_failure_macro_and_rewind,

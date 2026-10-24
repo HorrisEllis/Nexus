@@ -7,11 +7,11 @@ intent: null
 summary: BS2_shell_rebuild (surface) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853504978
+exported_at: 1792854094750
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504978
-lastSeenAt: 1792853504978
+firstSeenAt: 1792854094750
+lastSeenAt: 1792854094750
 fingerprint: null
 payload:
   id: BS2_shell_rebuild
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -89,7 +89,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (7): BS3_menus, BS4_extensions, BS5_downloads_panel, BS6_float_cli,

@@ -7,11 +7,11 @@ intent: null
 summary: RC6_unowned_ollama_load (foundation) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853501613
+exported_at: 1792854091315
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501613
-lastSeenAt: 1792853501613
+firstSeenAt: 1792854091315
+lastSeenAt: 1792854091315
 fingerprint: null
 payload:
   id: RC6_unowned_ollama_load
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): RC7_every_run_names_its_starter · all downstream 4 · finishing it unlocks

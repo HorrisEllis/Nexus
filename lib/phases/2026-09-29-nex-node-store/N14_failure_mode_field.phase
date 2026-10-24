@@ -7,11 +7,11 @@ intent: null
 summary: N14_failure_mode_field (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853464615
+exported_at: 1792854054563
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853464615
-lastSeenAt: 1792853464615
+firstSeenAt: 1792854054563
+lastSeenAt: 1792854054563
 fingerprint: null
 payload:
   id: N14_failure_mode_field
@@ -38,7 +38,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
@@ -69,7 +69,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by N5_kinds_edge_and_lattice, N6_time
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by N5_kinds_edge_and_lattice, N6_time
         - 'depends on (2): N5_kinds_edge_and_lattice, N6_time · all upstream 6'
         - >-
           needed by (3): N15_contract_history, N21_no_empty_generation_event_gates,

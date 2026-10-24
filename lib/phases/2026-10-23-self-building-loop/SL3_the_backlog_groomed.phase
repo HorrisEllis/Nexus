@@ -7,11 +7,11 @@ intent: null
 summary: SL3_the_backlog_groomed (library) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853507815
+exported_at: 1792854097718
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853507815
-lastSeenAt: 1792853507815
+firstSeenAt: 1792854097718
+lastSeenAt: 1792854097718
 fingerprint: null
 payload:
   id: SL3_the_backlog_groomed
@@ -123,7 +123,7 @@ payload:
         known: false
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
@@ -136,7 +136,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): SL0_what_can_be_built_now'
         - 'needed by (0): —'
   uuid: cb62474f-ffe0-5b5e-b8c1-170895fddb87

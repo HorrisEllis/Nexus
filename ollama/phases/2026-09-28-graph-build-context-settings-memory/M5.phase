@@ -7,11 +7,11 @@ intent: null
 summary: M5 (?) — 2 file(s)
 system: ollama-bridge
 tags: []
-exported_at: 1792853463286
+exported_at: 1792854053241
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853463286
-lastSeenAt: 1792853463286
+firstSeenAt: 1792854053241
+lastSeenAt: 1792854053241
 fingerprint: null
 payload:
   id: M5
@@ -153,7 +153,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
@@ -170,7 +170,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by M0, R0
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by M0, R0
         - 'depends on (2): M0, R0'
         - 'needed by (0): —'
   uuid: a3f2806f-a761-5997-8d37-d5fba92274e8

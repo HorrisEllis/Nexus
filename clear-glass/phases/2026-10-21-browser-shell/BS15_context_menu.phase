@@ -7,11 +7,11 @@ intent: null
 summary: BS15_context_menu (surface) — 6 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853504985
+exported_at: 1792854094760
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504985
-lastSeenAt: 1792853504985
+firstSeenAt: 1792854094760
+lastSeenAt: 1792854094760
 fingerprint: null
 payload:
   id: BS15_context_menu
@@ -167,7 +167,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
@@ -187,7 +187,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): BS8_design_system · all upstream 2'
         - >-
           needed by (2): BS18_chrome_context_menus, BS19_ctx_point_from_page · finishing it unlocks

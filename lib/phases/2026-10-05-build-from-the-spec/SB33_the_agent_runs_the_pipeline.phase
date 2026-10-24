@@ -9,11 +9,11 @@ intent: null
 summary: SB33_the_agent_runs_the_pipeline (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853470306
+exported_at: 1792854060366
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470306
-lastSeenAt: 1792853470306
+firstSeenAt: 1792854060366
+lastSeenAt: 1792854060366
 fingerprint: null
 payload:
   id: SB33_the_agent_runs_the_pipeline
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB32_context_is_never_optional
@@ -246,7 +246,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4
+        - DAG a0036d89ebc520f8 · layer 4
         - 'depends on (1): SB32_context_is_never_optional · all upstream 4'
         - >-
           needed by (1): SB34_context_is_the_code_tab_the_graphs_and_memory · all downstream 6 ·

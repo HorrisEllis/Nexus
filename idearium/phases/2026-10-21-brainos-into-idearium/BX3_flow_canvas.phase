@@ -7,11 +7,11 @@ intent: null
 summary: BX3_flow_canvas (surface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792853504553
+exported_at: 1792854094299
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504553
-lastSeenAt: 1792853504553
+firstSeenAt: 1792854094299
+lastSeenAt: 1792854094299
 fingerprint: null
 payload:
   id: BX3_flow_canvas
@@ -52,7 +52,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
@@ -78,7 +78,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by BX2_flow_sources
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by BX2_flow_sources
         - 'depends on (1): BX2_flow_sources · all upstream 3'
         - >-
           needed by (2): BX4_agents_layer, BX5_node_controls · all downstream 6 · finishing it

@@ -7,11 +7,11 @@ intent: null
 summary: RA1_root_cause_through_provenance (library) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853502838
+exported_at: 1792854092616
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853502838
-lastSeenAt: 1792853502838
+firstSeenAt: 1792854092616
+lastSeenAt: 1792854092616
 fingerprint: null
 payload:
   id: RA1_root_cause_through_provenance
@@ -157,7 +157,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
@@ -196,7 +196,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 6 · blocked by PV1_provenance_on_every_claim,
+          DAG a0036d89ebc520f8 · layer 6 · blocked by PV1_provenance_on_every_claim,
           TV1_traversal_primitive, EW1_evidence_record_and_weights, RA0_rca_says_what_it_does
         - >-
           depends on (4): PV1_provenance_on_every_claim, TV1_traversal_primitive,

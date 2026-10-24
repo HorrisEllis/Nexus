@@ -9,11 +9,11 @@ intent: null
 summary: BC3_what_a_build_was_sent_as_a_node (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853470267
+exported_at: 1792854060328
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470267
-lastSeenAt: 1792853470267
+firstSeenAt: 1792854060328
+lastSeenAt: 1792854060328
 fingerprint: null
 payload:
   id: BC3_what_a_build_was_sent_as_a_node
@@ -212,7 +212,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::BC2_the_build_agent_gets_all_of_the_hat_and_repo_context
@@ -250,7 +250,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - DAG a0036d89ebc520f8 · layer 2 · ready
         - 'depends on (1): BC2_the_build_agent_gets_all_of_the_hat_and_repo_context · all upstream 2'
         - 'needed by (0): —'
         - >-

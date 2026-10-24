@@ -9,11 +9,11 @@ intent: null
 summary: WB2_raid_bricks_and_officiator_through_warp (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792853489676
+exported_at: 1792854079235
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853489676
-lastSeenAt: 1792853489676
+firstSeenAt: 1792854079235
+lastSeenAt: 1792854079235
 fingerprint: null
 payload:
   id: WB2_raid_bricks_and_officiator_through_warp
@@ -33,7 +33,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: c5988e845eadf750
+    hash: 8b824aaf1ef4c90d
     nodes:
       - path: copilot/lifeline.js
         role: changes
@@ -79,10 +79,6 @@ payload:
         role: used-by
         exists: true
         system: cortex
-      - path: guardian/server.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -104,6 +100,10 @@ payload:
         exists: true
         system: null
       - path: tests/modules/mco19-clearglass-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/mco4-stage-transitions.test.js
         role: used-by
         exists: true
         system: null
@@ -207,9 +207,6 @@ payload:
       - from: cortex/self-heal/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        kind: requires
       - from: idearium/api/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
@@ -226,6 +223,9 @@ payload:
         to: cortex/core/raid/contract-intake.js
         kind: requires
       - from: tests/modules/mco19-clearglass-dispatch.test.js
+        to: cortex/core/raid/contract-intake.js
+        kind: requires
+      - from: tests/modules/mco4-stage-transitions.test.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
     crossings:
@@ -271,12 +271,6 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: cortex/core/raid/contract-intake.js
         fromSystem: idearium
@@ -285,7 +279,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB1_warp_at_the_rung
@@ -299,7 +293,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): WB1_warp_at_the_rung · all upstream 2'
         - 'needed by (0): —'
   uuid: 8dd6d684-132f-5426-8165-8c55f342824d

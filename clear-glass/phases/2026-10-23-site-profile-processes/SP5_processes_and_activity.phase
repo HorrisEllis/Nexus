@@ -7,11 +7,11 @@ intent: null
 summary: SP5_processes_and_activity (backend) — 7 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853508202
+exported_at: 1792854098124
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853508202
-lastSeenAt: 1792853508202
+firstSeenAt: 1792854098124
+lastSeenAt: 1792854098124
 fingerprint: null
 payload:
   id: SP5_processes_and_activity
@@ -237,7 +237,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D3_person_ends_processes
@@ -254,7 +254,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by SP_D3_person_ends_processes
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by SP_D3_person_ends_processes
         - 'depends on (1): SP_D3_person_ends_processes'
         - 'needed by (1): SP6_the_processes_screen · finishing it unlocks SP6_the_processes_screen'
   uuid: 9d7ffcbe-8abe-5b18-8dae-f5ab4c3b4179

@@ -7,11 +7,11 @@ intent: null
 summary: CON4_safety_gate (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853491330
+exported_at: 1792854080884
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853491330
-lastSeenAt: 1792853491330
+firstSeenAt: 1792854080884
+lastSeenAt: 1792854080884
 fingerprint: null
 payload:
   id: CON4_safety_gate
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by CON1_one_door_client
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by CON1_one_door_client
         - 'depends on (1): CON1_one_door_client'
         - 'needed by (1): CON9_configure'
   uuid: 2bedadd8-14b0-5ec5-bc63-da0b3dcc9532

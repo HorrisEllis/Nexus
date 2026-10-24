@@ -9,11 +9,11 @@ intent: null
 summary: HP21_the_economy_holding_a_job_is_said (?) — 3 file(s)
 system: guardian
 tags: []
-exported_at: 1792853476912
+exported_at: 1792854067136
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853476912
-lastSeenAt: 1792853476912
+firstSeenAt: 1792854067136
+lastSeenAt: 1792854067136
 fingerprint: null
 payload:
   id: HP21_the_economy_holding_a_job_is_said
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 987bfbb18c496d42
+    hash: 1c7abc6f5f43fc69
     nodes:
       - path: guardian/ask.js
         role: changes
@@ -76,10 +76,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/core/raid/index.js
-        role: uses
-        exists: true
-        system: cortex
       - path: guardian/clear-glass-bridge.js
         role: uses
         exists: true
@@ -120,6 +116,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/raid-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: ollama/lib/model-inventory.js
         role: uses
         exists: true
@@ -141,7 +141,7 @@ payload:
         to: guardian/lib/chat-transcripts.js
         kind: requires
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
+        to: lib/raid-port.js
         kind: requires
       - from: guardian/lib/dispatcher.js
         to: guardian/clear-glass-bridge.js
@@ -187,12 +187,6 @@ payload:
         kind: requires
     crossings:
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
         to: ollama/lib/model-inventory.js
         fromSystem: guardian
         toSystem: ollama
@@ -206,7 +200,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
@@ -219,7 +213,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): HP16_a_job_nobody_waits_for_is_not_sent_later'
         - 'needed by (0): —'
   uuid: 2cada06a-343c-5d74-b146-5953e34d6fbd

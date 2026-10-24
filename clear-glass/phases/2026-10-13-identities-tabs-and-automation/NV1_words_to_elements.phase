@@ -9,11 +9,11 @@ intent: null
 summary: NV1_words_to_elements (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853482600
+exported_at: 1792854072654
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853482600
-lastSeenAt: 1792853482600
+firstSeenAt: 1792854072654
+lastSeenAt: 1792854072654
 fingerprint: null
 payload:
   id: NV1_words_to_elements
@@ -119,7 +119,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -136,7 +136,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (2): NV2_tell_clear_glass_what_to_do, MC1_steps_as_events_and_snapshots ·

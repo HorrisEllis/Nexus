@@ -7,11 +7,11 @@ intent: null
 summary: BS16_import_fields (integration) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853504985
+exported_at: 1792854094763
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504985
-lastSeenAt: 1792853504985
+firstSeenAt: 1792854094763
+lastSeenAt: 1792854094763
 fingerprint: null
 payload:
   id: BS16_import_fields
@@ -157,7 +157,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS13_plugin_settings
@@ -178,7 +178,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (1): BS13_plugin_settings · all upstream 3'
         - >-
           needed by (2): AB5_import, SF8_host_import · finishing it unlocks AB5_import,

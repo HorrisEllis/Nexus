@@ -9,11 +9,11 @@ intent: null
 summary: WK4_the_void_feeds_the_workshop (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853472901
+exported_at: 1792854062920
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853472901
-lastSeenAt: 1792853472901
+firstSeenAt: 1792854062920
+lastSeenAt: 1792854062920
 fingerprint: null
 payload:
   id: WK4_the_void_feeds_the_workshop
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK1_the_workshop_is_blocks_from_the_templates
@@ -238,7 +238,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): WK1_the_workshop_is_blocks_from_the_templates'
         - 'needed by (0): —'
         - >-

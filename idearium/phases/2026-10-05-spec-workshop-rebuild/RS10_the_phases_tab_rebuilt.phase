@@ -7,11 +7,11 @@ intent: null
 summary: RS10_the_phases_tab_rebuilt (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853473333
+exported_at: 1792854063335
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853473333
-lastSeenAt: 1792853473333
+firstSeenAt: 1792854063335
+lastSeenAt: 1792854063335
 fingerprint: null
 payload:
   id: RS10_the_phases_tab_rebuilt
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS9_the_thread
@@ -57,7 +57,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): RS9_the_thread · all upstream 2'
         - 'needed by (1): RS11_workshop_and_phases_one_surface'
   uuid: e7fa91d3-284a-5978-a350-1114fca99bef

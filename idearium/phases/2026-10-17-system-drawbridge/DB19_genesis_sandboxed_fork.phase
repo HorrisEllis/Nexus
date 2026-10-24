@@ -7,11 +7,11 @@ intent: null
 summary: DB19_genesis_sandboxed_fork (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853497882
+exported_at: 1792854087537
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853497882
-lastSeenAt: 1792853497882
+firstSeenAt: 1792854087537
+lastSeenAt: 1792854087537
 fingerprint: null
 payload:
   id: DB19_genesis_sandboxed_fork
@@ -62,7 +62,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
@@ -78,7 +78,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): DB13_the_tunnel'
         - 'needed by (1): DB20_sealed_archetype · finishing it unlocks DB20_sealed_archetype'
   uuid: 53792b2a-b12b-54a6-8fb2-0043f93eb102

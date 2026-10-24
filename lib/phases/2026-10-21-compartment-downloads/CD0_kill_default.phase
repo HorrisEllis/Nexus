@@ -7,11 +7,11 @@ intent: null
 summary: CD0_kill_default (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853505389
+exported_at: 1792854095197
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853505389
-lastSeenAt: 1792853505389
+firstSeenAt: 1792854095197
+lastSeenAt: 1792854095197
 fingerprint: null
 payload:
   id: CD0_kill_default
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -46,7 +46,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks

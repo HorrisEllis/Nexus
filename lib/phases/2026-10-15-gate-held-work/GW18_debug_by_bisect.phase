@@ -7,11 +7,11 @@ intent: null
 summary: GW18_debug_by_bisect (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853487109
+exported_at: 1792854076775
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853487109
-lastSeenAt: 1792853487109
+firstSeenAt: 1792854076775
+lastSeenAt: 1792854076775
 fingerprint: null
 payload:
   id: GW18_debug_by_bisect
@@ -237,7 +237,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
@@ -263,7 +263,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 6 · blocked by GW7_failure_macro_and_rewind,
+          DAG a0036d89ebc520f8 · layer 6 · blocked by GW7_failure_macro_and_rewind,
           GW11_a_snapshot_per_gate
         - 'depends on (2): GW7_failure_macro_and_rewind, GW11_a_snapshot_per_gate · all upstream 10'
         - 'needed by (0): —'

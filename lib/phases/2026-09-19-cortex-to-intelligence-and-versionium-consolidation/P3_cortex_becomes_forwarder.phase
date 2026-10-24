@@ -9,11 +9,11 @@ intent: null
 summary: P3_cortex_becomes_forwarder (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853457357
+exported_at: 1792854047323
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853457357
-lastSeenAt: 1792853457357
+firstSeenAt: 1792854047323
+lastSeenAt: 1792854047323
 fingerprint: null
 payload:
   id: P3_cortex_becomes_forwarder
@@ -34,7 +34,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P2_intelligence_gains_routes
@@ -59,7 +59,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by P2_intelligence_gains_routes
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by P2_intelligence_gains_routes
         - 'depends on (2): P2_intelligence_gains_routes, D2 · all upstream 6'
         - >-
           needed by (1): P4_repoint_callers · all downstream 3 · finishing it unlocks

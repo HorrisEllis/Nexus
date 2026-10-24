@@ -7,11 +7,11 @@ intent: null
 summary: DP4_every_ledger_into_rfr2 (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853496202
+exported_at: 1792854085737
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853496202
-lastSeenAt: 1792853496202
+firstSeenAt: 1792854085737
+lastSeenAt: 1792854085737
 fingerprint: null
 payload:
   id: DP4_every_ledger_into_rfr2
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -45,7 +45,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): DP6_reproduce_in_cos · all downstream 3'
         - >-

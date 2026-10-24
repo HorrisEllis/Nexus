@@ -7,11 +7,11 @@ intent: null
 summary: SL4_the_loop (integration) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792853507816
+exported_at: 1792854097719
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853507816
-lastSeenAt: 1792853507816
+firstSeenAt: 1792854097719
+lastSeenAt: 1792854097719
 fingerprint: null
 payload:
   id: SL4_the_loop
@@ -237,7 +237,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
@@ -267,7 +267,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 5 · blocked by FR10_stop_the_ladder
+        - DAG a0036d89ebc520f8 · layer 5 · blocked by FR10_stop_the_ladder
         - >-
           depends on (5): SL1_a_proven_phase_closes_itself, SL0_what_can_be_built_now,
           AB1_autobuild_loop_and_resume, FR10_stop_the_ladder, SL5_when_a_proven_change_lands_alone

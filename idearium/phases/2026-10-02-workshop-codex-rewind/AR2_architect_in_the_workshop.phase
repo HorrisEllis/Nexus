@@ -9,11 +9,11 @@ intent: null
 summary: AR2_architect_in_the_workshop (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792853469408
+exported_at: 1792854059426
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853469408
-lastSeenAt: 1792853469408
+firstSeenAt: 1792854059426
+lastSeenAt: 1792854059426
 fingerprint: null
 payload:
   id: AR2_architect_in_the_workshop
@@ -243,7 +243,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW1_spec_workshop
@@ -269,7 +269,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by CX0_codex_component_store
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by CX0_codex_component_store
         - 'depends on (2): SW1_spec_workshop, CX0_codex_component_store'
         - >-
           needed by (3): AR3_one_architect_canvas, PL1_one_entry_point, UI12_workshop_surface · all

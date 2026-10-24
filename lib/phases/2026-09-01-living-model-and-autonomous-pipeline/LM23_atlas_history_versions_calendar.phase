@@ -9,11 +9,11 @@ intent: null
 summary: LM23_atlas_history_versions_calendar (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853451692
+exported_at: 1792854041898
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853451692
-lastSeenAt: 1792853451692
+firstSeenAt: 1792854041898
+lastSeenAt: 1792854041898
 fingerprint: null
 payload:
   id: LM23_atlas_history_versions_calendar
@@ -137,7 +137,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM21_atlas_fact_extractors
@@ -163,7 +163,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 4 · blocked by LM21_atlas_fact_extractors,
+          DAG a0036d89ebc520f8 · layer 4 · blocked by LM21_atlas_fact_extractors,
           LM22_atlas_structure_ledger
         - 'depends on (2): LM21_atlas_fact_extractors, LM22_atlas_structure_ledger · all upstream 6'
         - 'needed by (2): LM25_atlas_living_update, LM26_atlas_completeness_and_release_gate'

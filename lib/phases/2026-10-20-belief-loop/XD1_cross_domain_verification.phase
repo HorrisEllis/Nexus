@@ -7,11 +7,11 @@ intent: null
 summary: XD1_cross_domain_verification (integration) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853502839
+exported_at: 1792854092617
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853502839
-lastSeenAt: 1792853502839
+firstSeenAt: 1792854092617
+lastSeenAt: 1792854092617
 fingerprint: null
 payload:
   id: XD1_cross_domain_verification
@@ -40,7 +40,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
@@ -78,7 +78,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 6 · blocked by EW1_evidence_record_and_weights,
+          DAG a0036d89ebc520f8 · layer 6 · blocked by EW1_evidence_record_and_weights,
           GR2_graph_views, AD2_javascript_adapter, PRC1_phase_reality_check
         - >-
           depends on (4): EW1_evidence_record_and_weights, GR2_graph_views, AD2_javascript_adapter,

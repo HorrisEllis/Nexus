@@ -7,11 +7,11 @@ intent: null
 summary: CE2_the_shell_is_declared (?) — 2 file(s)
 system: cos
 tags: []
-exported_at: 1792853498282
+exported_at: 1792854087960
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853498282
-lastSeenAt: 1792853498282
+firstSeenAt: 1792854087960
+lastSeenAt: 1792854087960
 fingerprint: null
 payload:
   id: CE2_the_shell_is_declared
@@ -132,7 +132,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
@@ -157,6 +157,7 @@ payload:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
         - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
         - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
       blockedBy:
         - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
       unlocks:
@@ -164,9 +165,9 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by CE1_the_compartment_machine
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by CE1_the_compartment_machine
         - 'depends on (1): CE1_the_compartment_machine · all upstream 2'
         - >-
-          needed by (1): CE3_the_handshake · all downstream 15 · finishing it unlocks
+          needed by (1): CE3_the_handshake · all downstream 16 · finishing it unlocks
           CE3_the_handshake
   uuid: f4191513-741c-5057-b5ea-8a399edf5040

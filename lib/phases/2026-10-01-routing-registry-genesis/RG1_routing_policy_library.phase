@@ -9,11 +9,11 @@ intent: null
 summary: RG1_routing_policy_library (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853466803
+exported_at: 1792854056773
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466803
-lastSeenAt: 1792853466803
+firstSeenAt: 1792854056773
+lastSeenAt: 1792854056773
 fingerprint: null
 payload:
   id: RG1_routing_policy_library
@@ -121,7 +121,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG0_map
@@ -140,7 +140,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): RG0_map'
         - >-
           needed by (1): RG2_routing_config_api_cli · all downstream 4 · finishing it unlocks

@@ -7,11 +7,11 @@ intent: null
 summary: SF6_addenda_view (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853489260
+exported_at: 1792854078831
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853489260
-lastSeenAt: 1792853489260
+firstSeenAt: 1792854078831
+lastSeenAt: 1792854078831
 fingerprint: null
 payload:
   id: SF6_addenda_view
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
@@ -45,7 +45,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by SF1_foundation_field
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by SF1_foundation_field
         - 'depends on (1): SF1_foundation_field'
         - 'needed by (0): —'
   uuid: d8584af3-a6e6-586f-9b20-5355b1b0f27a

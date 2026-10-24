@@ -9,11 +9,11 @@ intent: null
 summary: P6_versionium_residue (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853457360
+exported_at: 1792854047325
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853457360
-lastSeenAt: 1792853457360
+firstSeenAt: 1792854047325
+lastSeenAt: 1792854047325
 fingerprint: null
 payload:
   id: P6_versionium_residue
@@ -68,7 +68,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P0_map
@@ -83,7 +83,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): P0_map'
         - 'needed by (1): P7_hostile_verify_and_ship'
   uuid: f93ac058-1e5a-53aa-a233-2d927a819ffb

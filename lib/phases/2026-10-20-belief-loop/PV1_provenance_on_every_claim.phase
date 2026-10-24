@@ -7,11 +7,11 @@ intent: null
 summary: PV1_provenance_on_every_claim (foundation) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853502835
+exported_at: 1792854092614
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853502835
-lastSeenAt: 1792853502835
+firstSeenAt: 1792854092614
+lastSeenAt: 1792854092614
 fingerprint: null
 payload:
   id: PV1_provenance_on_every_claim
@@ -38,7 +38,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
@@ -71,7 +71,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by GR1_graph_primitive, NM1_one_name_per_file
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by GR1_graph_primitive, NM1_one_name_per_file
         - 'depends on (2): GR1_graph_primitive, NM1_one_name_per_file · all upstream 6'
         - >-
           needed by (2): EW1_evidence_record_and_weights, RA1_root_cause_through_provenance · all

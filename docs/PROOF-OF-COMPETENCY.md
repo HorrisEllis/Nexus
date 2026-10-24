@@ -1121,3 +1121,12 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   a route, it compiled its own spec.
 - **Skill:** prioritising. He sequenced by dependency (boundaries, then COS, then everything COS makes easier) instead of by appeal.
 - **Checkable:** `CHANGELOG-0.60.239.md`; `tests/modules/test-spec-compiler-port.test.js`; the closed list in `contracts/drawbridge-baseline.json`.
+
+### 2026-10-24 — 0.60.240: "maybe start with one at a time? like guardian?"
+- **His words:** "focus on just decoupling so we can get every system in a cos compartment. maybe start with one at a time? like guardian?"
+- **Context:** Facing twelve systems still coupled, he chose to go one at a time, and to start with Guardian, the system everything sends its
+  agent work through. Mapping Guardian's 33 crossings found that it ran a second copy of RAID inside itself. Removing it fixed three silent
+  defects, among them /build, which had never reached RAID.
+- **Skill:** incremental migration. Proving each system's isolation completely before the next keeps every step checkable. Decoupling
+  also surfaces hidden defects, because a copy that "works" in-process stops looking like it works once it has to go through a contract.
+- **Checkable:** `CHANGELOG-0.60.240.md`; `tests/modules/test-raid-port.test.js`; `docs/2026-10-24-guardian-into-cos-phasemap.spec` (census:).

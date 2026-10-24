@@ -9,11 +9,11 @@ intent: null
 summary: DT3_failure_modes_routes_and_preflight (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853466307
+exported_at: 1792854056269
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466307
-lastSeenAt: 1792853466307
+firstSeenAt: 1792854056269
+lastSeenAt: 1792854056269
 fingerprint: null
 payload:
   id: DT3_failure_modes_routes_and_preflight
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
@@ -255,7 +255,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - DAG a0036d89ebc520f8 · layer 3 · ready
         - 'depends on (1): DT2_failure_mode_field · all upstream 3'
         - >-
           needed by (1): CX1_context_cascade · all downstream 4 · finishing it unlocks

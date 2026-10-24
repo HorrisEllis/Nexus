@@ -7,11 +7,11 @@ intent: null
 summary: NP10_browser_surface (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853484911
+exported_at: 1792854074702
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853484911
-lastSeenAt: 1792853484911
+firstSeenAt: 1792854074702
+lastSeenAt: 1792854074702
 fingerprint: null
 payload:
   id: NP10_browser_surface
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by NP9_cli_first
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by NP9_cli_first
         - 'depends on (1): NP9_cli_first'
         - 'needed by (1): NP13_settings_html'
   uuid: 324e4546-bbab-504f-881a-3c36a9658d6f

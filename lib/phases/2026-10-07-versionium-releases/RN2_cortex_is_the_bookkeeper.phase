@@ -7,11 +7,11 @@ intent: null
 summary: RN2_cortex_is_the_bookkeeper (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853476500
+exported_at: 1792854066727
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853476500
-lastSeenAt: 1792853476500
+firstSeenAt: 1792854066727
+lastSeenAt: 1792854066727
 fingerprint: null
 payload:
   id: RN2_cortex_is_the_bookkeeper
@@ -99,7 +99,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-07-versionium-releases-phasemap.spec::RN1_release_is_a_node_and_a_tag
@@ -120,7 +120,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 2 · blocked by RN1_release_is_a_node_and_a_tag,
+          DAG a0036d89ebc520f8 · layer 2 · blocked by RN1_release_is_a_node_and_a_tag,
           LT1_provenance_lattice
         - 'depends on (2): RN1_release_is_a_node_and_a_tag, LT1_provenance_lattice · all upstream 3'
         - 'needed by (1): RN3_releases_section'

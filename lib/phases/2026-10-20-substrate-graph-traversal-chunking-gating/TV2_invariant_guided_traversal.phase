@@ -9,11 +9,11 @@ intent: null
 summary: TV2_invariant_guided_traversal (library) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853503269
+exported_at: 1792854093030
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503269
-lastSeenAt: 1792853503269
+firstSeenAt: 1792854093030
+lastSeenAt: 1792854093030
 fingerprint: null
 payload:
   id: TV2_invariant_guided_traversal
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
@@ -73,7 +73,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 7 · blocked by TV1_traversal_primitive, IV2_invariant_miner,
+          DAG a0036d89ebc520f8 · layer 7 · blocked by TV1_traversal_primitive, IV2_invariant_miner,
           TV3_traversal_as_context
         - >-
           depends on (3): TV1_traversal_primitive, IV2_invariant_miner, TV3_traversal_as_context ·

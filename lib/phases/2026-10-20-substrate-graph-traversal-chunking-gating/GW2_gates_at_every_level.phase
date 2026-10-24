@@ -9,11 +9,11 @@ intent: null
 summary: GW2_gates_at_every_level (library) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853503275
+exported_at: 1792854093036
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503275
-lastSeenAt: 1792853503275
+firstSeenAt: 1792854093036
+lastSeenAt: 1792854093036
 fingerprint: null
 payload:
   id: GW2_gates_at_every_level
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
@@ -283,7 +283,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 7 · blocked by GW1_gate_primitive,
+          DAG a0036d89ebc520f8 · layer 7 · blocked by GW1_gate_primitive,
           CH1_strategies_behind_the_contract, DK1_dynamic_chunking, CH3_chunk_inspector
         - >-
           depends on (4): GW1_gate_primitive, CH1_strategies_behind_the_contract,

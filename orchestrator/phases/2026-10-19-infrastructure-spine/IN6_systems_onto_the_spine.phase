@@ -7,11 +7,11 @@ intent: null
 summary: IN6_systems_onto_the_spine (integration) — 12 file(s)
 system: orchestrator
 tags: []
-exported_at: 1792853501180
+exported_at: 1792854090879
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501180
-lastSeenAt: 1792853501180
+firstSeenAt: 1792854090879
+lastSeenAt: 1792854090879
 fingerprint: null
 payload:
   id: IN6_systems_onto_the_spine
@@ -121,7 +121,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN4_retire_hand_maps
@@ -137,7 +137,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by IN4_retire_hand_maps
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by IN4_retire_hand_maps
         - 'depends on (1): IN4_retire_hand_maps · all upstream 3'
         - 'needed by (0): —'
   uuid: 7823d8c9-9024-570b-90a8-aa0dcbd6a74b

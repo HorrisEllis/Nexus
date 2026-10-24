@@ -9,11 +9,11 @@ intent: null
 summary: BR1_brainos_cross_system_relay (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853453632
+exported_at: 1792854043743
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853453632
-lastSeenAt: 1792853453632
+firstSeenAt: 1792854043743
+lastSeenAt: 1792854043743
 fingerprint: null
 payload:
   id: BR1_brainos_cross_system_relay
@@ -58,7 +58,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG3_relay_into_cortex_sse
@@ -72,7 +72,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by CG3_relay_into_cortex_sse
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by CG3_relay_into_cortex_sse
         - 'depends on (1): CG3_relay_into_cortex_sse'
         - 'needed by (0): —'
   uuid: 0950a98a-dc7c-5a9a-aa06-e91425364f14

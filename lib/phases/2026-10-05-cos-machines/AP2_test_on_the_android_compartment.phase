@@ -7,11 +7,11 @@ intent: null
 summary: AP2_test_on_the_android_compartment (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853471684
+exported_at: 1792854061737
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853471684
-lastSeenAt: 1792853471684
+firstSeenAt: 1792854061737
+lastSeenAt: 1792854061737
 fingerprint: null
 payload:
   id: AP2_test_on_the_android_compartment
@@ -184,7 +184,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-05-cos-machines-phasemap.spec::AP1_android_build_compartment
@@ -210,7 +210,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 4 · blocked by AP1_android_build_compartment,
+          DAG a0036d89ebc520f8 · layer 4 · blocked by AP1_android_build_compartment,
           OS1_compartments_as_operating_systems
         - >-
           depends on (2): AP1_android_build_compartment, OS1_compartments_as_operating_systems · all

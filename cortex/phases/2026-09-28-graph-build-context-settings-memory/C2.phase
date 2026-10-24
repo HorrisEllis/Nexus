@@ -7,11 +7,11 @@ intent: null
 summary: C2 (?) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792853463276
+exported_at: 1792854053233
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853463276
-lastSeenAt: 1792853463276
+firstSeenAt: 1792854053233
+lastSeenAt: 1792854053233
 fingerprint: null
 payload:
   id: C2
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: b34cbf403596480b
+    hash: 714a1e97bc04b580
     nodes:
       - path: copilot/lifeline.js
         role: changes
@@ -66,10 +66,6 @@ payload:
         role: used-by
         exists: true
         system: cortex
-      - path: guardian/server.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -87,6 +83,10 @@ payload:
         exists: true
         system: null
       - path: tests/modules/contract-intake-tangible-file.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/mco19-clearglass-dispatch.test.js
         role: used-by
         exists: true
         system: null
@@ -193,9 +193,6 @@ payload:
       - from: cortex/self-heal/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        kind: requires
       - from: idearium/api/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
@@ -209,6 +206,9 @@ payload:
         to: cortex/core/raid/contract-intake.js
         kind: requires
       - from: tests/modules/contract-intake-tangible-file.test.js
+        to: cortex/core/raid/contract-intake.js
+        kind: requires
+      - from: tests/modules/mco19-clearglass-dispatch.test.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
     crossings:
@@ -254,12 +254,6 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: cortex/core/raid/contract-intake.js
         fromSystem: idearium
@@ -268,7 +262,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C1
@@ -284,7 +278,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by C1
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by C1
         - 'depends on (1): C1 · all upstream 3'
         - 'needed by (0): —'
   uuid: 2b98f736-bb5a-5604-a4ad-5bfcb6a10bb7

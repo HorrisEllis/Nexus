@@ -9,11 +9,11 @@ intent: null
 summary: SD12_a_spec_starts_from_its_primitives (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853479512
+exported_at: 1792854069608
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853479512
-lastSeenAt: 1792853479512
+firstSeenAt: 1792854069608
+lastSeenAt: 1792854069608
 fingerprint: null
 payload:
   id: SD12_a_spec_starts_from_its_primitives
@@ -223,7 +223,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-10-idearium-solid-phasemap.spec::SD6_an_idea_logged_asked_expanded
@@ -244,7 +244,7 @@ payload:
             - idearium/spec-engine/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by SD6_an_idea_logged_asked_expanded
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by SD6_an_idea_logged_asked_expanded
         - 'depends on (1): SD6_an_idea_logged_asked_expanded'
         - >-
           needed by (1): SD14_chunks_cut_at_primitives · finishing it unlocks

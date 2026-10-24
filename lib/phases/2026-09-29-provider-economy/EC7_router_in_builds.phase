@@ -7,11 +7,11 @@ intent: null
 summary: EC7_router_in_builds (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853465072
+exported_at: 1792854055010
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853465072
-lastSeenAt: 1792853465072
+firstSeenAt: 1792854055010
+lastSeenAt: 1792854055010
 fingerprint: null
 payload:
   id: EC7_router_in_builds
@@ -120,7 +120,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-09-29-provider-economy-phasemap.spec::EC4_learning_router
@@ -139,7 +139,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (1): EC4_learning_router · all upstream 4'
         - 'needed by (1): EC11_release · finishing it unlocks EC11_release'
   uuid: fb182d12-0bd1-57d4-bd8e-ffef89d51f1b

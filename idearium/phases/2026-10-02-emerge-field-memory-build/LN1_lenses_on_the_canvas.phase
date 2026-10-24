@@ -7,11 +7,11 @@ intent: null
 summary: LN1_lenses_on_the_canvas (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853467686
+exported_at: 1792854057646
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467686
-lastSeenAt: 1792853467686
+firstSeenAt: 1792854057646
+lastSeenAt: 1792854057646
 fingerprint: null
 payload:
   id: LN1_lenses_on_the_canvas
@@ -42,7 +42,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
@@ -69,7 +69,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 7 · blocked by RF1_relational_field,
+          DAG a0036d89ebc520f8 · layer 7 · blocked by RF1_relational_field,
           MR5_fractal_levels_with_the_field
         - 'depends on (2): RF1_relational_field, MR5_fractal_levels_with_the_field · all upstream 8'
         - 'needed by (0): —'

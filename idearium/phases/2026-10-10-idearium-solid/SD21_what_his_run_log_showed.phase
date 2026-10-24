@@ -7,11 +7,11 @@ intent: null
 summary: SD21_what_his_run_log_showed (?) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792853479523
+exported_at: 1792854069620
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853479523
-lastSeenAt: 1792853479523
+firstSeenAt: 1792854069620
+lastSeenAt: 1792854069620
 fingerprint: null
 payload:
   id: SD21_what_his_run_log_showed
@@ -263,7 +263,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-10-idearium-solid-phasemap.spec::SD20_a_starved_machine_does_not_spin
@@ -282,7 +282,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4
+        - DAG a0036d89ebc520f8 · layer 4
         - 'depends on (1): SD20_a_starved_machine_does_not_spin · all upstream 4'
         - >-
           needed by (1): SD22_a_wrapped_repo_lifts_to_its_root · finishing it unlocks

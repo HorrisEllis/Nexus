@@ -9,11 +9,11 @@ intent: null
 summary: MR10_the_field_between_james_and_the_agents (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853467668
+exported_at: 1792854057627
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467668
-lastSeenAt: 1792853467668
+firstSeenAt: 1792854057627
+lastSeenAt: 1792854057627
 fingerprint: null
 payload:
   id: MR10_the_field_between_james_and_the_agents
@@ -84,7 +84,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
@@ -107,7 +107,7 @@ payload:
             - lib/repo-hat-memory.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 6 · blocked by MR9_liminal_on_the_agents
+        - DAG a0036d89ebc520f8 · layer 6 · blocked by MR9_liminal_on_the_agents
         - 'depends on (1): MR9_liminal_on_the_agents · all upstream 7'
         - 'needed by (0): —'
         - 'same files as MR7_recipes with no order between them: lib/repo-hat-memory.js'

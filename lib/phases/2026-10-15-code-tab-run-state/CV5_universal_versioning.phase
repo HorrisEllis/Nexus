@@ -7,11 +7,11 @@ intent: null
 summary: CV5_universal_versioning (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853485820
+exported_at: 1792854075534
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853485820
-lastSeenAt: 1792853485820
+firstSeenAt: 1792854075534
+lastSeenAt: 1792854075534
 fingerprint: null
 payload:
   id: CV5_universal_versioning
@@ -165,7 +165,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV4_tagged_history
@@ -183,7 +183,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 6 · ready
+        - DAG a0036d89ebc520f8 · layer 6 · ready
         - 'depends on (1): CV4_tagged_history · all upstream 6'
         - 'needed by (0): —'
   uuid: b7b2ab96-ebf5-5782-86f4-b4d49c8a5658

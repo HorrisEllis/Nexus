@@ -7,11 +7,11 @@ intent: null
 summary: SB4_template_fidelity (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470241
+exported_at: 1792854060302
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470241
-lastSeenAt: 1792853470241
+firstSeenAt: 1792854060302
+lastSeenAt: 1792854060302
 fingerprint: null
 payload:
   id: SB4_template_fidelity
@@ -131,7 +131,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
@@ -157,7 +157,7 @@ payload:
             - lib/nexus-self/systems.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - DAG a0036d89ebc520f8 · layer 3 · ready
         - 'depends on (1): SB17_the_system_template_is_complete · all upstream 3'
         - >-
           needed by (1): SB5_nexus_rebuilds_a_system_from_its_spec · all downstream 3 · finishing it

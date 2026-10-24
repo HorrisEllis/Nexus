@@ -9,11 +9,11 @@ intent: null
 summary: CX0_codex_component_store (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853467733
+exported_at: 1792854057695
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467733
-lastSeenAt: 1792853467733
+firstSeenAt: 1792854057695
+lastSeenAt: 1792854057695
 fingerprint: null
 payload:
   id: CX0_codex_component_store
@@ -122,7 +122,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
@@ -137,7 +137,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): EM0_ground'
         - 'needed by (1): CL1_the_component_lab'
   uuid: b139eda0-394f-5f99-94a8-f61911d6cf6f

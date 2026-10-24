@@ -7,11 +7,11 @@ intent: null
 summary: ND1_every_system_has_its_database (foundation) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853506992
+exported_at: 1792854096884
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853506992
-lastSeenAt: 1792853506992
+firstSeenAt: 1792854096884
+lastSeenAt: 1792854096884
 fingerprint: null
 payload:
   id: ND1_every_system_has_its_database
@@ -215,7 +215,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
@@ -234,7 +234,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): P33b_each_system_runs_its_listener'
         - 'needed by (1): ND2_one_node_route_for_every_system · all downstream 5'
   uuid: 0174707c-46b7-5b85-876b-e51bbac943f0

@@ -7,11 +7,11 @@ intent: null
 summary: NP15_kill_switch (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853484916
+exported_at: 1792854074706
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853484916
-lastSeenAt: 1792853484916
+firstSeenAt: 1792854074706
+lastSeenAt: 1792854074706
 fingerprint: null
 payload:
   id: NP15_kill_switch
@@ -76,7 +76,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
@@ -101,7 +101,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 1 · blocked by NP1_compartment, NP3_apply_to_electron,
+          DAG a0036d89ebc520f8 · layer 1 · blocked by NP1_compartment, NP3_apply_to_electron,
           NP5_leak_test
         - 'depends on (3): NP1_compartment, NP3_apply_to_electron, NP5_leak_test'
         - >-

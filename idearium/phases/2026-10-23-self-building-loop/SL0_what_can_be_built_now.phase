@@ -7,11 +7,11 @@ intent: null
 summary: SL0_what_can_be_built_now (library) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792853507813
+exported_at: 1792854097715
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853507813
-lastSeenAt: 1792853507813
+firstSeenAt: 1792854097715
+lastSeenAt: 1792854097715
 fingerprint: null
 payload:
   id: SL0_what_can_be_built_now
@@ -232,7 +232,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -258,7 +258,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (5): SL1_a_proven_phase_closes_itself, SL2_done_by_evidence,

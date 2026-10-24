@@ -7,11 +7,11 @@ intent: null
 summary: PR4_deviation_raises_the_bpm (?) — 2 file(s)
 system: orchestrator
 tags: []
-exported_at: 1792853469816
+exported_at: 1792854059842
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853469816
-lastSeenAt: 1792853469816
+firstSeenAt: 1792854059842
+lastSeenAt: 1792854059842
 fingerprint: null
 payload:
   id: PR4_deviation_raises_the_bpm
@@ -168,7 +168,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
@@ -183,7 +183,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - DAG a0036d89ebc520f8 · layer 3 · ready
         - 'depends on (1): PR3_negative_space_for_missed_heartbeats · all upstream 3'
         - 'needed by (0): —'
   uuid: d403c0d2-420c-58fe-b10f-3be4b234df0d

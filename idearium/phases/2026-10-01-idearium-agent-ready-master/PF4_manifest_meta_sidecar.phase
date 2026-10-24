@@ -9,11 +9,11 @@ intent: null
 summary: PF4_manifest_meta_sidecar (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792853466294
+exported_at: 1792854056256
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466294
-lastSeenAt: 1792853466294
+firstSeenAt: 1792854056256
+lastSeenAt: 1792854056256
 fingerprint: null
 payload:
   id: PF4_manifest_meta_sidecar
@@ -217,7 +217,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -228,7 +228,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

@@ -7,11 +7,11 @@ intent: null
 summary: CE10_lost_jobs_fall_back (?) — 3 file(s)
 system: guardian
 tags: []
-exported_at: 1792853485815
+exported_at: 1792854075529
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853485815
-lastSeenAt: 1792853485815
+firstSeenAt: 1792854075529
+lastSeenAt: 1792854075529
 fingerprint: null
 payload:
   id: CE10_lost_jobs_fall_back
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 75cbbf1b8a77a1aa
+    hash: 077fff6ff3297765
     nodes:
       - path: guardian/lib/dispatcher.js
         role: changes
@@ -90,10 +90,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/core/raid/index.js
-        role: uses
-        exists: true
-        system: cortex
       - path: guardian/clear-glass-bridge.js
         role: uses
         exists: true
@@ -134,6 +130,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/raid-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: ollama/lib/model-inventory.js
         role: uses
         exists: true
@@ -155,7 +155,7 @@ payload:
         to: guardian/lib/chat-transcripts.js
         kind: requires
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
+        to: lib/raid-port.js
         kind: requires
       - from: guardian/lib/dispatcher.js
         to: guardian/clear-glass-bridge.js
@@ -213,12 +213,6 @@ payload:
         kind: requires
     crossings:
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
         to: ollama/lib/model-inventory.js
         fromSystem: guardian
         toSystem: ollama
@@ -238,7 +232,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
@@ -251,7 +245,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): CE1_the_run_state'
         - 'needed by (0): —'
   uuid: 85eb1dbe-f342-5f68-b3fd-357e722f0d55

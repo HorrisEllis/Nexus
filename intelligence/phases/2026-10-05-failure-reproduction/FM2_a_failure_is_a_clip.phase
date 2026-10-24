@@ -7,11 +7,11 @@ intent: null
 summary: FM2_a_failure_is_a_clip (?) — 3 file(s)
 system: intelligence
 tags: []
-exported_at: 1792853472098
+exported_at: 1792854062153
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853472098
-lastSeenAt: 1792853472098
+firstSeenAt: 1792854062153
+lastSeenAt: 1792854062153
 fingerprint: null
 payload:
   id: FM2_a_failure_is_a_clip
@@ -149,7 +149,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-05-failure-reproduction-phasemap.spec::FM1_every_ledger_into_rfr2
@@ -167,7 +167,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by FM1_every_ledger_into_rfr2
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by FM1_every_ledger_into_rfr2
         - 'depends on (1): FM1_every_ledger_into_rfr2'
         - >-
           needed by (1): FM3_run_it_in_cos · all downstream 2 · finishing it unlocks

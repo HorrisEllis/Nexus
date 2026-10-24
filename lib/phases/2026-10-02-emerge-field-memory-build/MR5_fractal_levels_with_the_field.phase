@@ -9,11 +9,11 @@ intent: null
 summary: MR5_fractal_levels_with_the_field (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853467657
+exported_at: 1792854057618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467657
-lastSeenAt: 1792853467657
+firstSeenAt: 1792854057618
+lastSeenAt: 1792854057618
 fingerprint: null
 payload:
   id: MR5_fractal_levels_with_the_field
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
@@ -64,7 +64,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 6 · blocked by RF1_relational_field
+        - DAG a0036d89ebc520f8 · layer 6 · blocked by RF1_relational_field
         - 'depends on (1): RF1_relational_field · all upstream 7'
         - 'needed by (2): CB2_analysis_then_synthesis, LN1_lenses_on_the_canvas · all downstream 5'
   uuid: 1ad0dc36-a554-5ce0-8990-be3ff1a69f9e

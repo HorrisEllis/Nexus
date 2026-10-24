@@ -7,11 +7,11 @@ intent: null
 summary: EP2_cos_is_the_empirical_layer (?) — 2 file(s)
 system: cos
 tags: []
-exported_at: 1792853480381
+exported_at: 1792854070507
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853480381
-lastSeenAt: 1792853480381
+firstSeenAt: 1792854070507
+lastSeenAt: 1792854070507
 fingerprint: null
 payload:
   id: EP2_cos_is_the_empirical_layer
@@ -90,7 +90,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-10-shape-of-nexus-phasemap.spec::EP1_every_claim_says_how_it_is_known
@@ -104,7 +104,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by EP1_every_claim_says_how_it_is_known
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by EP1_every_claim_says_how_it_is_known
         - 'depends on (1): EP1_every_claim_says_how_it_is_known'
         - 'needed by (0): —'
   uuid: af076bb2-c8b0-5451-8782-1fcc9e5bb075

@@ -9,11 +9,11 @@ intent: null
 summary: P2_phases_model (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853462374
+exported_at: 1792854052318
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853462374
-lastSeenAt: 1792853462374
+firstSeenAt: 1792854052318
+lastSeenAt: 1792854052318
 fingerprint: null
 payload:
   id: P2_phases_model
@@ -228,7 +228,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P1_phasemap_list_form
@@ -248,7 +248,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): P1_phasemap_list_form'
         - >-
           needed by (2): P3_phase_build, P4_phases_ui · all downstream 3 · finishing it unlocks

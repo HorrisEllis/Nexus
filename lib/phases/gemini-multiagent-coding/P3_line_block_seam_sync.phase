@@ -7,11 +7,11 @@ intent: null
 summary: P3_line_block_seam_sync (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853513158
+exported_at: 1792854103566
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853513158
-lastSeenAt: 1792853513158
+firstSeenAt: 1792854103566
+lastSeenAt: 1792854103566
 fingerprint: null
 payload:
   id: P3_line_block_seam_sync
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
@@ -46,7 +46,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): P1_per_agent_contracts'
         - 'needed by (1): P5_autonomous_multiagent_loop'
   uuid: 56057e8a-1e77-56a6-9f9d-0f1e360d51da

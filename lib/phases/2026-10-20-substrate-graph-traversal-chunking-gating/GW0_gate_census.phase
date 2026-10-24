@@ -9,11 +9,11 @@ intent: null
 summary: GW0_gate_census (foundation) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853503274
+exported_at: 1792854093034
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503274
-lastSeenAt: 1792853503274
+firstSeenAt: 1792854093034
+lastSeenAt: 1792854093034
 fingerprint: null
 payload:
   id: GW0_gate_census
@@ -43,7 +43,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -68,7 +68,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): GW1_gate_primitive · all downstream 13'
   uuid: 06d6ca70-6e8d-5ba7-911f-e903072ae85b

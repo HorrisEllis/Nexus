@@ -7,11 +7,11 @@ intent: null
 summary: RA2_learned_source_trust (library) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853502838
+exported_at: 1792854092616
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853502838
-lastSeenAt: 1792853502838
+firstSeenAt: 1792854092616
+lastSeenAt: 1792854092616
 fingerprint: null
 payload:
   id: RA2_learned_source_trust
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
@@ -65,7 +65,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by RA1_root_cause_through_provenance
+        - DAG a0036d89ebc520f8 · layer 7 · blocked by RA1_root_cause_through_provenance
         - 'depends on (1): RA1_root_cause_through_provenance · all upstream 15'
         - 'needed by (0): —'
   uuid: 61b684ed-0922-5355-8579-b9bbbdcd4eae

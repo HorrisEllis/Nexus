@@ -7,11 +7,11 @@ intent: null
 summary: P3_diagnostic_kernel (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853515203
+exported_at: 1792854105799
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853515203
-lastSeenAt: 1792853515203
+firstSeenAt: 1792854105799
+lastSeenAt: 1792854105799
 fingerprint: null
 payload:
   id: P3_diagnostic_kernel
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 3c77a0982f684eca
+    hash: 11a915af74a33627
     nodes:
       - path: copilot/lib/nexus-awareness.js
         role: changes
@@ -124,6 +124,10 @@ payload:
         role: uses
         exists: true
         system: cortex
+      - path: cortex/core/raid/index.js
+        role: uses
+        exists: true
+        system: cortex
       - path: cortex/memory/jaa-db.js
         role: uses
         exists: true
@@ -136,10 +140,6 @@ payload:
         role: uses
         exists: true
         system: hooks
-      - path: lib/component-registry.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/data-home.js
         role: uses
         exists: true
@@ -197,13 +197,13 @@ payload:
         to: lib/migrate-ledger-per-system.js
         kind: requires
       - from: cortex/boot.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/boot.js
         to: lib/nerve/index.js
         kind: requires
       - from: cortex/boot.js
         to: hooks/index.js
-        kind: requires
-      - from: cortex/boot.js
-        to: lib/component-registry.js
         kind: requires
       - from: tests/modules/test-gap-finder.js
         to: cortex/gap-finder/index.js
@@ -262,7 +262,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/nexus-live-mind-phasemap.spec::P1_nervous_system_live
@@ -282,7 +282,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (2): P1_nervous_system_live, P2_snapshot_on_sigma'
         - >-
           needed by (1): P4_copilot_awareness · all downstream 3 · finishing it unlocks

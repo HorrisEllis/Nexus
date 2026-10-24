@@ -7,11 +7,11 @@ intent: null
 summary: IH3_routers_read_the_chain (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792853493029
+exported_at: 1792854082488
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853493029
-lastSeenAt: 1792853493029
+firstSeenAt: 1792854082488
+lastSeenAt: 1792854082488
 fingerprint: null
 payload:
   id: IH3_routers_read_the_chain
@@ -236,7 +236,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
@@ -251,7 +251,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by IH1_intent_nodes_point_at_hats
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by IH1_intent_nodes_point_at_hats
         - 'depends on (1): IH1_intent_nodes_point_at_hats · all upstream 2'
         - 'needed by (0): —'
   uuid: 0a170992-3a71-5ecb-b6df-5cd5a4251fa4

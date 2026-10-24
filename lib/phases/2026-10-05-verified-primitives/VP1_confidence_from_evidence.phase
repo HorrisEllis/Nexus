@@ -7,11 +7,11 @@ intent: null
 summary: VP1_confidence_from_evidence (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853473755
+exported_at: 1792854063781
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853473755
-lastSeenAt: 1792853473755
+firstSeenAt: 1792854063781
+lastSeenAt: 1792854063781
 fingerprint: null
 payload:
   id: VP1_confidence_from_evidence
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-05-verified-primitives-phasemap.spec::VP0_map_and_atlas
@@ -58,7 +58,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): VP0_map_and_atlas'
         - >-
           needed by (3): VP2_adversarial_review, VP4_the_primitive_field,

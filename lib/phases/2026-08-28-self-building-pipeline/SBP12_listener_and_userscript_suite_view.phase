@@ -9,11 +9,11 @@ intent: null
 summary: SBP12_listener_and_userscript_suite_view (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853450683
+exported_at: 1792854040825
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853450683
-lastSeenAt: 1792853450683
+firstSeenAt: 1792854040825
+lastSeenAt: 1792854040825
 fingerprint: null
 payload:
   id: SBP12_listener_and_userscript_suite_view
@@ -251,7 +251,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP9_hat_forge_real_hats
@@ -264,7 +264,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): SBP9_hat_forge_real_hats'
         - 'needed by (0): —'
   uuid: a7ad953a-4bf7-542a-860a-1f32d1810476

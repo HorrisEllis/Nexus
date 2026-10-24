@@ -7,11 +7,11 @@ intent: null
 summary: SY2_cos_its_own_system (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853470859
+exported_at: 1792854060880
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470859
-lastSeenAt: 1792853470859
+firstSeenAt: 1792854060880
+lastSeenAt: 1792854060880
 fingerprint: null
 payload:
   id: SY2_cos_its_own_system
@@ -130,7 +130,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-05-cli-data-code-phasemap.spec::SY1_fifteen_systems
@@ -143,7 +143,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): SY1_fifteen_systems'
         - 'needed by (0): —'
   uuid: 4d47a3ee-b6bb-5fe3-82de-b408fdbdcccb

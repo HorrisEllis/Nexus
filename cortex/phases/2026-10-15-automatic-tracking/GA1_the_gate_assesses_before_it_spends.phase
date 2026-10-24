@@ -9,11 +9,11 @@ intent: null
 summary: GA1_the_gate_assesses_before_it_spends (?) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792853483981
+exported_at: 1792854073873
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853483981
-lastSeenAt: 1792853483981
+firstSeenAt: 1792854073873
+lastSeenAt: 1792854073873
 fingerprint: null
 payload:
   id: GA1_the_gate_assesses_before_it_spends
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 8219e00f69d5db25
+    hash: c30a2eb19fa5da83
     nodes:
       - path: cortex/core/raid/contract-gates.js
         role: changes
@@ -72,10 +72,6 @@ payload:
         role: used-by
         exists: true
         system: cortex
-      - path: guardian/server.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: idearium/cli/route-commands.js
         role: used-by
         exists: true
@@ -89,6 +85,10 @@ payload:
         exists: true
         system: null
       - path: scripts/mco6-ic9-kill-and-restart.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/contract-intake-dependency-graph.test.js
         role: used-by
         exists: true
         system: null
@@ -204,13 +204,13 @@ payload:
       - from: cortex/self-heal/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        kind: requires
       - from: scripts/mco5-one-real-job.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
       - from: scripts/mco6-ic9-kill-and-restart.js
+        to: cortex/core/raid/contract-intake.js
+        kind: requires
+      - from: tests/modules/contract-intake-dependency-graph.test.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
     crossings:
@@ -268,15 +268,9 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-automatic-tracking-phasemap.spec::GT2_each_gate_tags_and_reports
@@ -289,7 +283,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): GT2_each_gate_tags_and_reports'
         - 'needed by (0): —'
   uuid: db042d42-3665-51ff-9f8f-d675c60f5b13

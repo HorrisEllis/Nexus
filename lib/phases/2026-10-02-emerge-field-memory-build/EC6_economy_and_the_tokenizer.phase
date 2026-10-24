@@ -9,11 +9,11 @@ intent: null
 summary: EC6_economy_and_the_tokenizer (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792853467688
+exported_at: 1792854057648
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467688
-lastSeenAt: 1792853467688
+firstSeenAt: 1792854057648
+lastSeenAt: 1792854057648
 fingerprint: null
 payload:
   id: EC6_economy_and_the_tokenizer
@@ -115,7 +115,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
@@ -136,7 +136,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - DAG a0036d89ebc520f8 · layer 3 · ready
         - 'depends on (2): EM1_emerge_core, EV0_contracts_for_every_system · all upstream 3'
         - 'needed by (2): FV1_client_jobs, AC1_accounts_into_agents · all downstream 3'
   uuid: 8e7f57d7-7d4a-5417-9b89-305b895a2117

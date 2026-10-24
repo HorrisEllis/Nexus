@@ -7,11 +7,11 @@ intent: null
 summary: CG1_the_field_injects_once (?) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853480377
+exported_at: 1792854070503
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853480377
-lastSeenAt: 1792853480377
+firstSeenAt: 1792854070503
+lastSeenAt: 1792854070503
 fingerprint: null
 payload:
   id: CG1_the_field_injects_once
@@ -164,7 +164,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -181,7 +181,7 @@ payload:
             - clear-glass/src/page/field.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): TU1_the_nexus_tutorial · all downstream 2'
         - >-

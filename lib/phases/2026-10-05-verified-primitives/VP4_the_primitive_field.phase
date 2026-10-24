@@ -7,11 +7,11 @@ intent: null
 summary: VP4_the_primitive_field (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853473758
+exported_at: 1792854063783
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853473758
-lastSeenAt: 1792853473758
+firstSeenAt: 1792854063783
+lastSeenAt: 1792854063783
 fingerprint: null
 payload:
   id: VP4_the_primitive_field
@@ -121,7 +121,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-05-verified-primitives-phasemap.spec::VP1_confidence_from_evidence
@@ -143,7 +143,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 3 · blocked by VP1_confidence_from_evidence,
+          DAG a0036d89ebc520f8 · layer 3 · blocked by VP1_confidence_from_evidence,
           VP2_adversarial_review
         - 'depends on (2): VP1_confidence_from_evidence, VP2_adversarial_review · all upstream 3'
         - 'needed by (1): VP5_provenance · finishing it unlocks VP5_provenance'

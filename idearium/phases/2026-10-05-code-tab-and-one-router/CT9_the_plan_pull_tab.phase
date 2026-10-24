@@ -7,11 +7,11 @@ intent: null
 summary: CT9_the_plan_pull_tab (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853471287
+exported_at: 1792854061315
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853471287
-lastSeenAt: 1792853471287
+firstSeenAt: 1792854061315
+lastSeenAt: 1792854061315
 fingerprint: null
 payload:
   id: CT9_the_plan_pull_tab
@@ -46,7 +46,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT7_the_plan_shows_current_work
@@ -63,7 +63,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 5
+        - DAG a0036d89ebc520f8 · layer 5
         - 'depends on (1): CT7_the_plan_shows_current_work · all upstream 5'
         - 'needed by (0): —'
   uuid: 4b1bc593-207f-5cde-83d0-a31069338198

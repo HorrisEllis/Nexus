@@ -9,11 +9,11 @@ intent: null
 summary: SF3_collect_the_spec (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792853489679
+exported_at: 1792854079237
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853489679
-lastSeenAt: 1792853489679
+firstSeenAt: 1792854079237
+lastSeenAt: 1792854079237
 fingerprint: null
 payload:
   id: SF3_collect_the_spec
@@ -252,7 +252,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF2_spec_framework_block
@@ -269,7 +269,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): SF2_spec_framework_block · all upstream 2'
         - 'needed by (1): SF4_compile_on_collect · finishing it unlocks SF4_compile_on_collect'
   uuid: 1cd43912-2b9b-584e-a9ac-fd2f38e52bc5

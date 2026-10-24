@@ -7,11 +7,11 @@ intent: null
 summary: DT1_persistence_census (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853466304
+exported_at: 1792854056266
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466304
-lastSeenAt: 1792853466304
+firstSeenAt: 1792854056266
+lastSeenAt: 1792854056266
 fingerprint: null
 payload:
   id: DT1_persistence_census
@@ -126,7 +126,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
@@ -165,7 +165,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): M0_map'
         - >-
           needed by (4): DT2_failure_mode_field, DT4_registry_block_to_nodes,

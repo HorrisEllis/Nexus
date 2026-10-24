@@ -7,11 +7,11 @@ intent: null
 summary: FN4_the_screen (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853490118
+exported_at: 1792854079660
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853490118
-lastSeenAt: 1792853490118
+firstSeenAt: 1792854079660
+lastSeenAt: 1792854079660
 fingerprint: null
 payload:
   id: FN4_the_screen
@@ -43,7 +43,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN1_every_door_goes_through_it
@@ -58,7 +58,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by FN1_every_door_goes_through_it
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by FN1_every_door_goes_through_it
         - 'depends on (1): FN1_every_door_goes_through_it · all upstream 2'
         - 'needed by (0): —'
   uuid: cbc0348c-50d0-5ece-bebf-719febe14ef0

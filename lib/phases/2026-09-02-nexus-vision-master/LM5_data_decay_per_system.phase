@@ -7,11 +7,11 @@ intent: null
 summary: LM5_data_decay_per_system (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853452627
+exported_at: 1792854042805
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853452627
-lastSeenAt: 1792853452627
+firstSeenAt: 1792854042805
+lastSeenAt: 1792854042805
 fingerprint: null
 payload:
   id: LM5_data_decay_per_system
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 19ff1fb16470c7dc
+    hash: 4ddb06fcf55b9a19
     nodes:
       - path: cortex/boot.js
         role: changes
@@ -46,6 +46,10 @@ payload:
         role: uses
         exists: true
         system: cortex
+      - path: cortex/core/raid/index.js
+        role: uses
+        exists: true
+        system: cortex
       - path: cortex/memory/jaa-db.js
         role: uses
         exists: true
@@ -58,10 +62,6 @@ payload:
         role: uses
         exists: true
         system: cortex
-      - path: hooks/index.js
-        role: uses
-        exists: true
-        system: hooks
       - path: lib/data-home.js
         role: uses
         exists: true
@@ -122,10 +122,10 @@ payload:
         to: lib/migrate-ledger-per-system.js
         kind: requires
       - from: cortex/boot.js
-        to: lib/nerve/index.js
+        to: cortex/core/raid/index.js
         kind: requires
       - from: cortex/boot.js
-        to: hooks/index.js
+        to: lib/nerve/index.js
         kind: requires
       - from: service/cortex-service.js
         to: cortex/boot.js
@@ -140,12 +140,6 @@ payload:
         toSystem: nexus
         kind: system
         known: true
-      - from: cortex/boot.js
-        to: hooks/index.js
-        fromSystem: cortex
-        toSystem: hooks
-        kind: system
-        known: true
       - from: service/cortex-service.js
         to: cortex/boot.js
         fromSystem: service
@@ -154,7 +148,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -165,7 +159,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 9ed21b47-5465-53d6-917a-466025acc951

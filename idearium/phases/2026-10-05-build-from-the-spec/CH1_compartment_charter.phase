@@ -7,11 +7,11 @@ intent: null
 summary: CH1_compartment_charter (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470340
+exported_at: 1792854060401
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470340
-lastSeenAt: 1792853470340
+firstSeenAt: 1792854060401
+lastSeenAt: 1792854060401
 fingerprint: null
 payload:
   id: CH1_compartment_charter
@@ -226,7 +226,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB52_proven_on_the_proposed_code
@@ -243,7 +243,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): SB52_proven_on_the_proposed_code · all upstream 2'
         - >-
           needed by (1): WS1_agents_use_the_work_surface · finishing it unlocks

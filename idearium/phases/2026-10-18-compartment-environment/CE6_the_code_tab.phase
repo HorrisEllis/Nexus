@@ -7,11 +7,11 @@ intent: null
 summary: CE6_the_code_tab (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792853498284
+exported_at: 1792854087963
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853498284
-lastSeenAt: 1792853498284
+firstSeenAt: 1792854087963
+lastSeenAt: 1792854087963
 fingerprint: null
 payload:
   id: CE6_the_code_tab
@@ -57,7 +57,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
@@ -79,7 +79,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 5 · blocked by CE4_the_terminal_bridge,
+          DAG a0036d89ebc520f8 · layer 5 · blocked by CE4_the_terminal_bridge,
           CE5_the_guest_file_tree
         - 'depends on (2): CE4_the_terminal_bridge, CE5_the_guest_file_tree · all upstream 6'
         - 'needed by (0): —'

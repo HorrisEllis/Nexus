@@ -9,11 +9,11 @@ intent: null
 summary: ET3_clearglass_event_taxonomy (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853449789
+exported_at: 1792854039612
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853449789
-lastSeenAt: 1792853449789
+firstSeenAt: 1792854039612
+lastSeenAt: 1792854039612
 fingerprint: null
 payload:
   id: ET3_clearglass_event_taxonomy
@@ -55,7 +55,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
@@ -73,7 +73,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by ET1_event_taxonomy_pattern
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by ET1_event_taxonomy_pattern
         - 'depends on (1): ET1_event_taxonomy_pattern'
         - 'needed by (1): ET5_loom_event_taxonomy_map · all downstream 3'
   uuid: c69977a1-67b3-5622-933e-3e7f66d8a08b

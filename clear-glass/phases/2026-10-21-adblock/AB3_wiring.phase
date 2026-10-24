@@ -7,11 +7,11 @@ intent: null
 summary: AB3_wiring (integration) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853503679
+exported_at: 1792854093440
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503679
-lastSeenAt: 1792853503679
+firstSeenAt: 1792854093440
+lastSeenAt: 1792854093440
 fingerprint: null
 payload:
   id: AB3_wiring
@@ -165,7 +165,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-21-adblock-phasemap.spec::AB2_lists
@@ -188,7 +188,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (2): AB2_lists, BS13_plugin_settings · all upstream 6'
         - 'needed by (1): AB4_surface · all downstream 2 · finishing it unlocks AB4_surface'
   uuid: db077973-7a2f-5ceb-ae65-0df2b35bb922

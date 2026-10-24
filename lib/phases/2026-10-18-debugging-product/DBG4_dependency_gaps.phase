@@ -7,11 +7,11 @@ intent: null
 summary: DBG4_dependency_gaps (?) — 11 file(s)
 system: core
 tags: []
-exported_at: 1792853498718
+exported_at: 1792854088368
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853498718
-lastSeenAt: 1792853498718
+firstSeenAt: 1792854088368
+lastSeenAt: 1792854088368
 fingerprint: null
 payload:
   id: DBG4_dependency_gaps
@@ -260,7 +260,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-18-debugging-product-phasemap.spec::DBG0b_dependencies_map_gaps
@@ -283,7 +283,7 @@ payload:
             - idearium/cli/route-commands.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): DBG0b_dependencies_map_gaps'
         - 'needed by (0): —'
         - 'same files as DBG1_the_key with no order between them: idearium/api/index.js'

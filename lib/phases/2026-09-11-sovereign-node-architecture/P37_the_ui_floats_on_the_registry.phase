@@ -9,11 +9,11 @@ intent: null
 summary: P37_the_ui_floats_on_the_registry (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853455140
+exported_at: 1792854045195
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853455140
-lastSeenAt: 1792853455140
+firstSeenAt: 1792854045195
+lastSeenAt: 1792854045195
 fingerprint: null
 payload:
   id: P37_the_ui_floats_on_the_registry
@@ -34,7 +34,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P8_per_system_component_registry
@@ -52,7 +52,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 2 · blocked by P8_per_system_component_registry,
+          DAG a0036d89ebc520f8 · layer 2 · blocked by P8_per_system_component_registry,
           P36_an_event_ledger_per_registry
         - 'depends on (2): P8_per_system_component_registry, P36_an_event_ledger_per_registry'
         - 'needed by (0): —'

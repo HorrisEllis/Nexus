@@ -9,11 +9,11 @@ intent: null
 summary: DK1_dynamic_chunking (library) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792853503273
+exported_at: 1792854093034
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503273
-lastSeenAt: 1792853503273
+firstSeenAt: 1792854093034
+lastSeenAt: 1792854093034
 fingerprint: null
 payload:
   id: DK1_dynamic_chunking
@@ -97,7 +97,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
@@ -131,7 +131,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 6 · blocked by CH1_strategies_behind_the_contract,
+          DAG a0036d89ebc520f8 · layer 6 · blocked by CH1_strategies_behind_the_contract,
           DC1_dynamic_chunk_at_plan
         - >-
           depends on (3): CH1_strategies_behind_the_contract, DC1_dynamic_chunk_at_plan,

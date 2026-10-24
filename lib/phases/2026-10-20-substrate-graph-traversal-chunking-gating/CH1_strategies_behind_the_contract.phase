@@ -9,11 +9,11 @@ intent: null
 summary: CH1_strategies_behind_the_contract (library) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792853503270
+exported_at: 1792854093032
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503270
-lastSeenAt: 1792853503270
+firstSeenAt: 1792854093032
+lastSeenAt: 1792854093032
 fingerprint: null
 payload:
   id: CH1_strategies_behind_the_contract
@@ -112,7 +112,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
@@ -150,7 +150,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 5 · blocked by CH0_chunk_census_and_contract,
+          DAG a0036d89ebc520f8 · layer 5 · blocked by CH0_chunk_census_and_contract,
           AD1_adapter_contract
         - 'depends on (2): CH0_chunk_census_and_contract, AD1_adapter_contract · all upstream 8'
         - >-

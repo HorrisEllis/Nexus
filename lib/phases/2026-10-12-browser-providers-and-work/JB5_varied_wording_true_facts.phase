@@ -9,11 +9,11 @@ intent: null
 summary: JB5_varied_wording_true_facts (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853481215
+exported_at: 1792854071366
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481215
-lastSeenAt: 1792853481215
+firstSeenAt: 1792854071366
+lastSeenAt: 1792854071366
 fingerprint: null
 payload:
   id: JB5_varied_wording_true_facts
@@ -75,7 +75,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -88,7 +88,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): JB7_the_follow_up'
         - >-

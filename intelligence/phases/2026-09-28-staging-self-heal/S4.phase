@@ -7,11 +7,11 @@ intent: null
 summary: S4 (?) — 4 file(s)
 system: intelligence
 tags: []
-exported_at: 1792853463768
+exported_at: 1792854053712
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853463768
-lastSeenAt: 1792853463768
+firstSeenAt: 1792854053712
+lastSeenAt: 1792854053712
 fingerprint: null
 payload:
   id: S4
@@ -230,7 +230,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-09-28-staging-self-heal-phasemap.spec::S3
@@ -260,7 +260,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by S3
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by S3
         - 'depends on (2): S3, C1 · all upstream 5'
         - 'needed by (4): S5, L1, A1, X1 · all downstream 6 · finishing it unlocks S5'
   uuid: 9fadeb20-02fc-580a-b27a-899e8a8ee3d7

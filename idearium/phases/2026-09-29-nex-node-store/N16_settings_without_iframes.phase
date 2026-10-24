@@ -7,11 +7,11 @@ intent: null
 summary: N16_settings_without_iframes (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853464616
+exported_at: 1792854054566
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853464616
-lastSeenAt: 1792853464616
+firstSeenAt: 1792854054566
+lastSeenAt: 1792854054566
 fingerprint: null
 payload:
   id: N16_settings_without_iframes
@@ -46,7 +46,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N15_contract_history
@@ -70,7 +70,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by N15_contract_history
+        - DAG a0036d89ebc520f8 · layer 7 · blocked by N15_contract_history
         - 'depends on (1): N15_contract_history · all upstream 11'
         - 'needed by (0): —'
   uuid: b943767f-c30e-5451-8793-1f00a56acde5

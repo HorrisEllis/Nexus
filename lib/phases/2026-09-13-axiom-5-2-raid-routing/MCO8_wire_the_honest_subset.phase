@@ -7,11 +7,11 @@ intent: null
 summary: MCO8_wire_the_honest_subset (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853455632
+exported_at: 1792854045649
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853455632
-lastSeenAt: 1792853455632
+firstSeenAt: 1792854045649
+lastSeenAt: 1792854045649
 fingerprint: null
 payload:
   id: MCO8_wire_the_honest_subset
@@ -255,7 +255,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO7_map_real_proxy_traffic
@@ -271,7 +271,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): MCO7_map_real_proxy_traffic'
         - >-
           needed by (1): MCO12_architect_remaining_routes · finishing it unlocks

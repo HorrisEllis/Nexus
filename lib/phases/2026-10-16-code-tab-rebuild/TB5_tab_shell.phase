@@ -7,11 +7,11 @@ intent: null
 summary: TB5_tab_shell (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853490911
+exported_at: 1792854080458
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853490911
-lastSeenAt: 1792853490911
+firstSeenAt: 1792854080458
+lastSeenAt: 1792854080458
 fingerprint: null
 payload:
   id: TB5_tab_shell
@@ -35,7 +35,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
@@ -58,7 +58,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by TB1_read_model_per_tab
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by TB1_read_model_per_tab
         - 'depends on (1): TB1_read_model_per_tab · all upstream 2'
         - >-
           needed by (3): TB6_files_changes_plans_cos_tabs, TB7_runs_tab, TB7c_graph_and_zoom · all

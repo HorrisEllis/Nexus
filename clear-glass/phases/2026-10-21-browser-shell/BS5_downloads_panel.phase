@@ -7,11 +7,11 @@ intent: null
 summary: BS5_downloads_panel (surface) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853504979
+exported_at: 1792854094752
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504979
-lastSeenAt: 1792853504979
+firstSeenAt: 1792854094752
+lastSeenAt: 1792854094752
 fingerprint: null
 payload:
   id: BS5_downloads_panel
@@ -38,7 +38,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
@@ -59,7 +59,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4
+        - DAG a0036d89ebc520f8 · layer 4
         - 'depends on (2): BS2_shell_rebuild, CD5_surface · all upstream 8'
         - 'needed by (0): —'
   uuid: 82a13baf-925d-59a7-8b7a-9f3cf76f5176

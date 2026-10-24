@@ -7,11 +7,11 @@ intent: null
 summary: SF7_bridge_automatic (integration) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853506596
+exported_at: 1792854096486
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853506596
-lastSeenAt: 1792853506596
+firstSeenAt: 1792854096486
+lastSeenAt: 1792854096486
 fingerprint: null
 payload:
   id: SF7_bridge_automatic
@@ -167,7 +167,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF2_bridge_sources
@@ -189,7 +189,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4
+        - DAG a0036d89ebc520f8 · layer 4
         - 'depends on (2): SF2_bridge_sources, SF6_surface · all upstream 6'
         - 'needed by (1): SF9_install_in_use · finishing it unlocks SF9_install_in_use'
   uuid: 825815d4-cb1b-532b-990a-4573d863dda3

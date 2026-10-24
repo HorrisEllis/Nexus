@@ -9,11 +9,11 @@ intent: null
 summary: SR10_iterative_prompt_optimization_loop (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853452655
+exported_at: 1792854042827
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853452655
-lastSeenAt: 1792853452655
+firstSeenAt: 1792854042827
+lastSeenAt: 1792854042827
 fingerprint: null
 payload:
   id: SR10_iterative_prompt_optimization_loop
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
@@ -236,7 +236,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (2): SR3_artifact_extraction_introspect_bridge, B1_full_build_contract_schema'
         - 'needed by (0): —'
   uuid: 9d1a5fdf-3572-5967-9681-03917fd5dee1

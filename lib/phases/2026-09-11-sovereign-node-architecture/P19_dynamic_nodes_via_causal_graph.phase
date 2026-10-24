@@ -9,11 +9,11 @@ intent: null
 summary: P19_dynamic_nodes_via_causal_graph (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853455115
+exported_at: 1792854045174
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853455115
-lastSeenAt: 1792853455115
+firstSeenAt: 1792854045174
+lastSeenAt: 1792854045174
 fingerprint: null
 payload:
   id: P19_dynamic_nodes_via_causal_graph
@@ -99,7 +99,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -112,7 +112,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): P34_nodes_in_the_lattice'
         - >-

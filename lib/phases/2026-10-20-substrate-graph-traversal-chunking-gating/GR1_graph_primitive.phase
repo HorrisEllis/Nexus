@@ -9,11 +9,11 @@ intent: null
 summary: GR1_graph_primitive (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853503266
+exported_at: 1792854093028
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503266
-lastSeenAt: 1792853503266
+firstSeenAt: 1792854093028
+lastSeenAt: 1792854093028
 fingerprint: null
 payload:
   id: GR1_graph_primitive
@@ -44,7 +44,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
@@ -102,7 +102,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 3 · ON THE CRITICAL PATH · blocked by GR0_graph_census,
+          DAG a0036d89ebc520f8 · layer 3 · ON THE CRITICAL PATH · blocked by GR0_graph_census,
           NC1_neutral_core_boundary, NM1_one_name_per_file
         - >-
           depends on (3): GR0_graph_census, NC1_neutral_core_boundary, NM1_one_name_per_file · all

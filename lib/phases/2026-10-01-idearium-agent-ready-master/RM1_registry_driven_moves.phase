@@ -9,11 +9,11 @@ intent: null
 summary: RM1_registry_driven_moves (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853466315
+exported_at: 1792854056275
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466315
-lastSeenAt: 1792853466315
+firstSeenAt: 1792854056275
+lastSeenAt: 1792854056275
 fingerprint: null
 payload:
   id: RM1_registry_driven_moves
@@ -156,7 +156,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
@@ -178,7 +178,7 @@ payload:
             - idearium/repo/architecture.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by DT4_registry_block_to_nodes
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by DT4_registry_block_to_nodes
         - 'depends on (1): DT4_registry_block_to_nodes · all upstream 3'
         - >-
           needed by (1): UI7_phasemaps_out_of_files_and_tree_ops · finishing it unlocks

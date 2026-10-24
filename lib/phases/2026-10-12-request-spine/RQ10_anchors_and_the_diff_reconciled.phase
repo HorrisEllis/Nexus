@@ -7,11 +7,11 @@ intent: null
 summary: RQ10_anchors_and_the_diff_reconciled (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853481670
+exported_at: 1792854071805
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481670
-lastSeenAt: 1792853481670
+firstSeenAt: 1792854071805
+lastSeenAt: 1792854071805
 fingerprint: null
 payload:
   id: RQ10_anchors_and_the_diff_reconciled
@@ -219,7 +219,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
@@ -248,7 +248,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by RQ9_the_chunked_contract
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by RQ9_the_chunked_contract
         - 'depends on (1): RQ9_the_chunked_contract · all upstream 5'
         - >-
           needed by (3): RQ13_the_work_surface_and_provenance, RQ14_the_spine_end_to_end,

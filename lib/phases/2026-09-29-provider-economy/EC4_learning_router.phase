@@ -7,11 +7,11 @@ intent: null
 summary: EC4_learning_router (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853465070
+exported_at: 1792854055008
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853465070
-lastSeenAt: 1792853465070
+firstSeenAt: 1792854055008
+lastSeenAt: 1792854055008
 fingerprint: null
 payload:
   id: EC4_learning_router
@@ -59,7 +59,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-09-29-provider-economy-phasemap.spec::EC0_policy_model
@@ -80,7 +80,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (3): EC0_policy_model, EC1_usage_ledger, EC3_token_constraints'
         - >-
           needed by (1): EC7_router_in_builds · all downstream 2 · finishing it unlocks

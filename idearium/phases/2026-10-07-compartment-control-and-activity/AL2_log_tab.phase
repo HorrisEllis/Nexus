@@ -7,11 +7,11 @@ intent: null
 summary: AL2_log_tab (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853474145
+exported_at: 1792854064216
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853474145
-lastSeenAt: 1792853474145
+firstSeenAt: 1792854064216
+lastSeenAt: 1792854064216
 fingerprint: null
 payload:
   id: AL2_log_tab
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
@@ -55,7 +55,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): AL1_activity_log · all upstream 2'
         - 'needed by (0): —'
   uuid: fc5a6c6d-7e1f-5312-9c66-eb01527a4445

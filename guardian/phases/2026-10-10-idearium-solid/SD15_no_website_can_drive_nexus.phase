@@ -7,11 +7,11 @@ intent: null
 summary: SD15_no_website_can_drive_nexus (?) — 5 file(s)
 system: guardian
 tags: []
-exported_at: 1792853479515
+exported_at: 1792854069612
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853479515
-lastSeenAt: 1792853479515
+firstSeenAt: 1792854069612
+lastSeenAt: 1792854069612
 fingerprint: null
 payload:
   id: SD15_no_website_can_drive_nexus
@@ -253,7 +253,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -267,7 +267,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - 'same files as SD13_the_machine_is_cos with no order between them: idearium/api/index.js'

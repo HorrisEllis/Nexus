@@ -7,11 +7,11 @@ intent: null
 summary: BS19_ctx_point_from_page (integration) — 5 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853504988
+exported_at: 1792854094765
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504988
-lastSeenAt: 1792853504988
+firstSeenAt: 1792854094765
+lastSeenAt: 1792854094765
 fingerprint: null
 payload:
   id: BS19_ctx_point_from_page
@@ -71,7 +71,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS15_context_menu
@@ -86,7 +86,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (1): BS15_context_menu · all upstream 3'
         - 'needed by (0): —'
   uuid: 7d5e65f0-aa47-5ad7-aa59-93bf26ac4e42

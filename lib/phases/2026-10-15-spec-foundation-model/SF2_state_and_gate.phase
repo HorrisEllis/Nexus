@@ -7,11 +7,11 @@ intent: null
 summary: SF2_state_and_gate (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853489257
+exported_at: 1792854078829
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853489257
-lastSeenAt: 1792853489257
+firstSeenAt: 1792854078829
+lastSeenAt: 1792854078829
 fingerprint: null
 payload:
   id: SF2_state_and_gate
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
@@ -52,7 +52,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by SF1_foundation_field
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by SF1_foundation_field
         - 'depends on (1): SF1_foundation_field'
         - >-
           needed by (2): SF3_evidence_not_claims, SF4_the_listener · all downstream 3 · finishing it

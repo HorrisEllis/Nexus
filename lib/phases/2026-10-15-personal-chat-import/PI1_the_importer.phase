@@ -7,11 +7,11 @@ intent: null
 summary: PI1_the_importer (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853488450
+exported_at: 1792854078032
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853488450
-lastSeenAt: 1792853488450
+firstSeenAt: 1792854078032
+lastSeenAt: 1792854078032
 fingerprint: null
 payload:
   id: PI1_the_importer
@@ -177,7 +177,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-personal-chat-import-phasemap.spec::PI0_where_it_is_read
@@ -206,7 +206,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by PI0_where_it_is_read
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by PI0_where_it_is_read
         - 'depends on (1): PI0_where_it_is_read'
         - >-
           needed by (4): PI2_the_listener, PI3_the_intelligence_pass, PI5_the_sync, PI5_the_crawler

@@ -7,11 +7,11 @@ intent: null
 summary: SV1_a_stack_per_root (backend) — 2 file(s)
 system: cos
 tags: []
-exported_at: 1792853508605
+exported_at: 1792854098536
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853508605
-lastSeenAt: 1792853508605
+firstSeenAt: 1792854098536
+lastSeenAt: 1792854098536
 fingerprint: null
 payload:
   id: SV1_a_stack_per_root
@@ -49,7 +49,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
@@ -69,7 +69,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): SV0_the_engines_in_cos'
         - >-
           needed by (3): SV2_into_a_compartment, SV3_on_the_cos_bus, SV4_the_doors · finishing it

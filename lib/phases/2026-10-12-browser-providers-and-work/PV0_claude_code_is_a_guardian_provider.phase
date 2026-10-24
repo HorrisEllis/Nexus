@@ -9,11 +9,11 @@ intent: null
 summary: PV0_claude_code_is_a_guardian_provider (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792853481200
+exported_at: 1792854071351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481200
-lastSeenAt: 1792853481200
+firstSeenAt: 1792854071351
+lastSeenAt: 1792854071351
 fingerprint: null
 payload:
   id: PV0_claude_code_is_a_guardian_provider
@@ -32,7 +32,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 700deffb992647b8
+    hash: d971a53e4c69aaf0
     nodes:
       - path: guardian/lib/dispatcher.js
         role: changes
@@ -94,10 +94,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/core/raid/index.js
-        role: uses
-        exists: true
-        system: cortex
       - path: guardian/clear-glass-bridge.js
         role: uses
         exists: true
@@ -138,6 +134,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/raid-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: ollama/lib/model-inventory.js
         role: uses
         exists: true
@@ -159,7 +159,7 @@ payload:
         to: guardian/lib/chat-transcripts.js
         kind: requires
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
+        to: lib/raid-port.js
         kind: requires
       - from: guardian/lib/dispatcher.js
         to: guardian/clear-glass-bridge.js
@@ -217,12 +217,6 @@ payload:
         kind: requires
     crossings:
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
         to: ollama/lib/model-inventory.js
         fromSystem: guardian
         toSystem: ollama
@@ -236,7 +230,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: null
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV1_providers_read_from_nodes
@@ -255,7 +249,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer — · blocked by PV1_providers_read_from_nodes
+        - DAG a0036d89ebc520f8 · layer — · blocked by PV1_providers_read_from_nodes
         - 'depends on (1): PV1_providers_read_from_nodes · all upstream 2'
         - >-
           needed by (1): PV1_providers_read_from_nodes · all downstream 2 · finishing it unlocks

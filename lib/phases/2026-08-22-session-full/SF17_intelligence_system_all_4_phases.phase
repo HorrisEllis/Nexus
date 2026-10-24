@@ -7,11 +7,11 @@ intent: null
 summary: SF17_intelligence_system_all_4_phases (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853448767
+exported_at: 1792854038516
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853448767
-lastSeenAt: 1792853448767
+firstSeenAt: 1792854038516
+lastSeenAt: 1792854038516
 fingerprint: null
 payload:
   id: SF17_intelligence_system_all_4_phases
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 2253b39fd81794ef
+    hash: 88c57b2c2aef0a70
     nodes:
       - path: cortex/boot.js
         role: changes
@@ -66,6 +66,10 @@ payload:
         role: uses
         exists: true
         system: cortex
+      - path: cortex/core/raid/index.js
+        role: uses
+        exists: true
+        system: cortex
       - path: cortex/memory/jaa-db.js
         role: uses
         exists: true
@@ -78,10 +82,6 @@ payload:
         role: uses
         exists: true
         system: hooks
-      - path: lib/component-registry.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/data-home.js
         role: uses
         exists: true
@@ -139,13 +139,13 @@ payload:
         to: lib/migrate-ledger-per-system.js
         kind: requires
       - from: cortex/boot.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/boot.js
         to: lib/nerve/index.js
         kind: requires
       - from: cortex/boot.js
         to: hooks/index.js
-        kind: requires
-      - from: cortex/boot.js
-        to: lib/component-registry.js
         kind: requires
       - from: service/cortex-service.js
         to: cortex/boot.js
@@ -192,7 +192,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -207,7 +207,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): SF18_intelligence_becomes_a_real_system · all downstream 2 · finishing it

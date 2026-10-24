@@ -7,11 +7,11 @@ intent: null
 summary: SB19_atlases_per_component (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853470278
+exported_at: 1792854060340
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470278
-lastSeenAt: 1792853470278
+firstSeenAt: 1792854060340
+lastSeenAt: 1792854060340
 fingerprint: null
 payload:
   id: SB19_atlases_per_component
@@ -138,7 +138,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
@@ -160,7 +160,7 @@ payload:
             - lib/atlas-generate.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - DAG a0036d89ebc520f8 · layer 3 · ready
         - 'depends on (1): SB17_the_system_template_is_complete · all upstream 3'
         - 'needed by (1): SB21_deterministic_parts_grow_with_the_system · all downstream 3'
         - >-

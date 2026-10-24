@@ -7,11 +7,11 @@ intent: null
 summary: SD8_an_agent_can_see_and_fix_a_tab (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853479508
+exported_at: 1792854069603
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853479508
-lastSeenAt: 1792853479508
+firstSeenAt: 1792854069603
+lastSeenAt: 1792854069603
 fingerprint: null
 payload:
   id: SD8_an_agent_can_see_and_fix_a_tab
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -231,7 +231,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 2d362a99-bddd-518f-b45d-beacdb64f4f7

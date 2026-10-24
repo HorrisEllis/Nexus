@@ -7,11 +7,11 @@ intent: null
 summary: CNS1_phase_census (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853504552
+exported_at: 1792854094297
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504552
-lastSeenAt: 1792853504552
+firstSeenAt: 1792854094297
+lastSeenAt: 1792854094297
 fingerprint: null
 payload:
   id: CNS1_phase_census
@@ -240,7 +240,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX0e_true_map_first
@@ -253,7 +253,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): BX0e_true_map_first'
         - 'needed by (0): —'
   uuid: f3b6e465-cd58-5ebc-ac6f-494c04e934ab

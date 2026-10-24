@@ -9,11 +9,11 @@ intent: null
 summary: SB5_nexus_rebuilds_a_system_from_its_spec (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853470243
+exported_at: 1792854060304
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470243
-lastSeenAt: 1792853470243
+firstSeenAt: 1792854060304
+lastSeenAt: 1792854060304
 fingerprint: null
 payload:
   id: SB5_nexus_rebuilds_a_system_from_its_spec
@@ -196,7 +196,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB4_template_fidelity
@@ -223,7 +223,7 @@ payload:
             - lib/cos-run.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by SB4_template_fidelity
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by SB4_template_fidelity
         - 'depends on (1): SB4_template_fidelity · all upstream 4'
         - >-
           needed by (1): SB6_hundreds_of_specs · all downstream 2 · finishing it unlocks

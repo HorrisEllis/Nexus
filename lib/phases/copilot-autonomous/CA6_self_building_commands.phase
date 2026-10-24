@@ -7,11 +7,11 @@ intent: null
 summary: CA6_self_building_commands (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853510636
+exported_at: 1792854101048
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853510636
-lastSeenAt: 1792853510636
+firstSeenAt: 1792854101048
+lastSeenAt: 1792854101048
 fingerprint: null
 payload:
   id: CA6_self_building_commands
@@ -212,7 +212,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
@@ -231,7 +231,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (2): CA1_scheduler, CA3_pipeline_chains · all upstream 3'
         - 'needed by (1): CA7_constant_autonomy · finishing it unlocks CA7_constant_autonomy'
   uuid: f241f23c-1ec4-55f5-b9e8-71d267ad68c4

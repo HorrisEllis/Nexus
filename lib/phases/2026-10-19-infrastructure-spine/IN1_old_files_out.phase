@@ -7,11 +7,11 @@ intent: null
 summary: IN1_old_files_out (foundation) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853501177
+exported_at: 1792854090876
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501177
-lastSeenAt: 1792853501177
+firstSeenAt: 1792854090876
+lastSeenAt: 1792854090876
 fingerprint: null
 payload:
   id: IN1_old_files_out
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
@@ -51,7 +51,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by IN0_baseline
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by IN0_baseline
         - 'depends on (1): IN0_baseline'
         - 'needed by (0): —'
   uuid: 36761c21-36ac-5fc9-8bd9-3ba76e8cf9af

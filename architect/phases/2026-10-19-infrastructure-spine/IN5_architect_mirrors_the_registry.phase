@@ -9,11 +9,11 @@ intent: null
 summary: IN5_architect_mirrors_the_registry (interface) — 2 file(s)
 system: architect
 tags: []
-exported_at: 1792853501180
+exported_at: 1792854090878
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501180
-lastSeenAt: 1792853501180
+firstSeenAt: 1792854090878
+lastSeenAt: 1792854090878
 fingerprint: null
 payload:
   id: IN5_architect_mirrors_the_registry
@@ -159,7 +159,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
@@ -174,7 +174,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by IN3_registry_is_the_spine
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by IN3_registry_is_the_spine
         - 'depends on (1): IN3_registry_is_the_spine · all upstream 2'
         - 'needed by (0): —'
   uuid: 9d2f0882-55cb-5f51-a689-32d08ba165c3

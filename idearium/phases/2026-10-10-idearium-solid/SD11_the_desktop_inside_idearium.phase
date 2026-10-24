@@ -7,11 +7,11 @@ intent: null
 summary: SD11_the_desktop_inside_idearium (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792853479511
+exported_at: 1792854069607
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853479511
-lastSeenAt: 1792853479511
+firstSeenAt: 1792854069607
+lastSeenAt: 1792854069607
 fingerprint: null
 payload:
   id: SD11_the_desktop_inside_idearium
@@ -111,7 +111,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -126,7 +126,7 @@ payload:
             - cos/workspace/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

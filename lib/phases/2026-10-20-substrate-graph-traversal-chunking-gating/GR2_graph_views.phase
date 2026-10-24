@@ -9,11 +9,11 @@ intent: null
 summary: GR2_graph_views (library) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792853503267
+exported_at: 1792854093028
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503267
-lastSeenAt: 1792853503267
+firstSeenAt: 1792854093028
+lastSeenAt: 1792854093028
 fingerprint: null
 payload:
   id: GR2_graph_views
@@ -57,7 +57,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
@@ -87,7 +87,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by GR1_graph_primitive, AD1_adapter_contract
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by GR1_graph_primitive, AD1_adapter_contract
         - 'depends on (2): GR1_graph_primitive, AD1_adapter_contract · all upstream 7'
         - 'needed by (2): XD1_cross_domain_verification, GR3_graph_query_surface · all downstream 6'
   uuid: 29fb5d92-f39c-57d9-a93e-3fb2fb8c239d

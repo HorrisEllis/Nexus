@@ -9,11 +9,11 @@ intent: null
 summary: CE1a_cos_answers_on_a_route (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792853498280
+exported_at: 1792854087958
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853498280
-lastSeenAt: 1792853498280
+firstSeenAt: 1792854087958
+lastSeenAt: 1792854087958
 fingerprint: null
 payload:
   id: CE1a_cos_answers_on_a_route
@@ -143,7 +143,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -167,15 +167,16 @@ payload:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
         - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
         - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
       blockedBy: []
       unlocks:
         - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - >-
-          needed by (1): CE1_the_compartment_machine · all downstream 17 · finishing it unlocks
+          needed by (1): CE1_the_compartment_machine · all downstream 18 · finishing it unlocks
           CE1_the_compartment_machine
   uuid: 399b0a59-710a-57b9-a9b9-a5d3bb8e2dda

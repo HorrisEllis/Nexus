@@ -9,11 +9,11 @@ intent: null
 summary: SB27_expanding_a_repo_keeps_its_spec_and_phases_current (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470295
+exported_at: 1792854060355
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470295
-lastSeenAt: 1792853470295
+firstSeenAt: 1792854060355
+lastSeenAt: 1792854060355
 fingerprint: null
 payload:
   id: SB27_expanding_a_repo_keeps_its_spec_and_phases_current
@@ -245,7 +245,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB26_an_imported_project_shows_its_progress
@@ -288,7 +288,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by SB26_an_imported_project_shows_its_progress
+        - DAG a0036d89ebc520f8 · layer 7 · blocked by SB26_an_imported_project_shows_its_progress
         - 'depends on (1): SB26_an_imported_project_shows_its_progress · all upstream 9'
         - 'needed by (0): —'
         - >-

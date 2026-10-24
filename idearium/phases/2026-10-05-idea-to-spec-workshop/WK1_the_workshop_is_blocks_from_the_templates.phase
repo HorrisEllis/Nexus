@@ -9,11 +9,11 @@ intent: null
 summary: WK1_the_workshop_is_blocks_from_the_templates (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853472899
+exported_at: 1792854062916
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853472899
-lastSeenAt: 1792853472899
+firstSeenAt: 1792854062916
+lastSeenAt: 1792854062916
 fingerprint: null
 payload:
   id: WK1_the_workshop_is_blocks_from_the_templates
@@ -227,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -251,7 +251,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (4): WK2_templates_edited_saved_removed, WK3_the_agent_drafts_every_block,

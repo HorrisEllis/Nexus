@@ -7,11 +7,11 @@ intent: null
 summary: PI2_the_listener (?) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853488451
+exported_at: 1792854078033
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853488451
-lastSeenAt: 1792853488451
+firstSeenAt: 1792854078033
+lastSeenAt: 1792854078033
 fingerprint: null
 payload:
   id: PI2_the_listener
@@ -102,7 +102,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
@@ -120,7 +120,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by PI1_the_importer
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by PI1_the_importer
         - 'depends on (1): PI1_the_importer · all upstream 2'
         - 'needed by (1): PI6_the_firefox_script · finishing it unlocks PI6_the_firefox_script'
   uuid: 00c21a6b-768c-55df-a680-db0bb4fc8409

@@ -7,11 +7,11 @@ intent: null
 summary: IN0_baseline (foundation) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853501177
+exported_at: 1792854090876
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501177
-lastSeenAt: 1792853501177
+firstSeenAt: 1792854090876
+lastSeenAt: 1792854090876
 fingerprint: null
 payload:
   id: IN0_baseline
@@ -35,7 +35,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -105,6 +105,7 @@ payload:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
         - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
         - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
       blockedBy: []
       unlocks:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN1_old_files_out
@@ -115,11 +116,11 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ON THE CRITICAL PATH · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ON THE CRITICAL PATH · ready
         - 'depends on (0): —'
         - >-
           needed by (5): IN1_old_files_out, IN2_quotes_ledger, IN3_registry_is_the_spine,
-          IN8_any_size, ST1_schema_for_everything_reusable · all downstream 59 · finishing it
+          IN8_any_size, ST1_schema_for_everything_reusable · all downstream 60 · finishing it
           unlocks IN1_old_files_out, IN2_quotes_ledger, IN3_registry_is_the_spine, IN8_any_size,
           ST1_schema_for_everything_reusable
   uuid: e5e3a90d-13ca-531a-b584-351a95ee86c6

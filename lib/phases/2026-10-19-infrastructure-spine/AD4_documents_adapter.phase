@@ -7,11 +7,11 @@ intent: null
 summary: AD4_documents_adapter (library) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853501184
+exported_at: 1792854090885
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501184
-lastSeenAt: 1792853501184
+firstSeenAt: 1792854090885
+lastSeenAt: 1792854090885
 fingerprint: null
 payload:
   id: AD4_documents_adapter
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
@@ -55,7 +55,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by AD1_adapter_contract
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by AD1_adapter_contract
         - 'depends on (1): AD1_adapter_contract · all upstream 4'
         - 'needed by (1): NT1_neutrality_test'
   uuid: 17262faf-86ab-5cc6-aae1-54cfe79a6b32

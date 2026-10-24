@@ -7,11 +7,11 @@ intent: null
 summary: CS11_raid_in_the_exe (backend) — 7 file(s)
 system: cos
 tags: []
-exported_at: 1792853507421
+exported_at: 1792854097305
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853507421
-lastSeenAt: 1792853507421
+firstSeenAt: 1792854097305
+lastSeenAt: 1792854097305
 fingerprint: null
 payload:
   id: CS11_raid_in_the_exe
@@ -200,7 +200,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
@@ -244,7 +244,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 6 · blocked by CS4_every_system_a_compartment,
+          DAG a0036d89ebc520f8 · layer 6 · blocked by CS4_every_system_a_compartment,
           DB6_move_the_crossings, IM6_cortex_unclumped, CS_D8_raid_home
         - >-
           depends on (4): CS4_every_system_a_compartment, DB6_move_the_crossings,

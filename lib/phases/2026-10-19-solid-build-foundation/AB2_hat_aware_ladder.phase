@@ -7,11 +7,11 @@ intent: null
 summary: AB2_hat_aware_ladder (automation) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853502035
+exported_at: 1792854091779
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853502035
-lastSeenAt: 1792853502035
+firstSeenAt: 1792854091779
+lastSeenAt: 1792854091779
 fingerprint: null
 payload:
   id: AB2_hat_aware_ladder
@@ -167,7 +167,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
@@ -180,7 +180,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): MF1_model_fit_routing'
         - 'needed by (0): —'
   uuid: c21cfbbb-e15e-5e07-bb32-2140493c80ad

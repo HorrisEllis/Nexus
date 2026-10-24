@@ -7,11 +7,11 @@ intent: null
 summary: CD5_surface (surface) — 5 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853505393
+exported_at: 1792854095202
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853505393
-lastSeenAt: 1792853505393
+firstSeenAt: 1792854095202
+lastSeenAt: 1792854095202
 fingerprint: null
 payload:
   id: CD5_surface
@@ -221,7 +221,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
@@ -242,7 +242,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (1): CD4_kill_on_disconnect · all upstream 6'
         - 'needed by (1): BS5_downloads_panel · finishing it unlocks BS5_downloads_panel'
   uuid: 7f1756b0-c242-5fec-9bf9-ee9000bcbdfc

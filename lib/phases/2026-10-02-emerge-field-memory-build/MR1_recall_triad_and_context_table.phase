@@ -9,11 +9,11 @@ intent: null
 summary: MR1_recall_triad_and_context_table (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853467648
+exported_at: 1792854057609
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467648
-lastSeenAt: 1792853467648
+firstSeenAt: 1792854057609
+lastSeenAt: 1792854057609
 fingerprint: null
 payload:
   id: MR1_recall_triad_and_context_table
@@ -172,7 +172,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
@@ -208,7 +208,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - DAG a0036d89ebc520f8 · layer 2 · ready
         - 'depends on (2): EM0_ground, EV0_contracts_for_every_system'
         - >-
           needed by (5): MR2_vector_space_for_the_field, MR3_gap_driven_search,

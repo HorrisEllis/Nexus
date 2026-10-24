@@ -7,11 +7,11 @@ intent: null
 summary: CY3_belief_panel (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853502840
+exported_at: 1792854092618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853502840
-lastSeenAt: 1792853502840
+firstSeenAt: 1792854092618
+lastSeenAt: 1792854092618
 fingerprint: null
 payload:
   id: CY3_belief_panel
@@ -224,7 +224,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 8
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
@@ -265,7 +265,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 8 · blocked by CY1_lifecycle_and_injection,
+          DAG a0036d89ebc520f8 · layer 8 · blocked by CY1_lifecycle_and_injection,
           CF1_confidence_from_evidence, RA1_root_cause_through_provenance, TB1_toolbox
         - >-
           depends on (4): CY1_lifecycle_and_injection, CF1_confidence_from_evidence,

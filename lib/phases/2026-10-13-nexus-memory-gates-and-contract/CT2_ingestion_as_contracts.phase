@@ -9,11 +9,11 @@ intent: null
 summary: CT2_ingestion_as_contracts (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853483032
+exported_at: 1792854073060
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853483032
-lastSeenAt: 1792853483032
+firstSeenAt: 1792854073060
+lastSeenAt: 1792854073060
 fingerprint: null
 payload:
   id: CT2_ingestion_as_contracts
@@ -115,7 +115,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT1_dynamic_chunking
@@ -129,7 +129,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - DAG a0036d89ebc520f8 · layer 2 · ready
         - 'depends on (1): CT1_dynamic_chunking · all upstream 2'
         - 'needed by (0): —'
   uuid: e2e08685-7fdc-5396-a919-53a6e671b9a8

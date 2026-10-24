@@ -7,11 +7,11 @@ intent: null
 summary: PM6_nerve_feel (integration) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853502434
+exported_at: 1792854092192
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853502434
-lastSeenAt: 1792853502434
+firstSeenAt: 1792854092192
+lastSeenAt: 1792854092192
 fingerprint: null
 payload:
   id: PM6_nerve_feel
@@ -94,7 +94,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
@@ -117,7 +117,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 5
+        - DAG a0036d89ebc520f8 · layer 5
         - 'depends on (1): PM5_tools_routes_commands · all upstream 8'
         - 'needed by (1): PM7_live_injected_map · finishing it unlocks PM7_live_injected_map'
   uuid: c6a4b0d4-d02c-522b-b622-7132b218cee9

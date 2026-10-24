@@ -9,11 +9,11 @@ intent: null
 summary: P2_intelligence_gains_routes (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853457356
+exported_at: 1792854047322
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853457356
-lastSeenAt: 1792853457356
+firstSeenAt: 1792854047322
+lastSeenAt: 1792854047322
 fingerprint: null
 payload:
   id: P2_intelligence_gains_routes
@@ -135,7 +135,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
@@ -161,7 +161,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by P1_characterization, D4_names
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by P1_characterization, D4_names
         - 'depends on (3): P1_characterization, D1, D4_names · all upstream 4'
         - >-
           needed by (1): P3_cortex_becomes_forwarder · all downstream 4 · finishing it unlocks

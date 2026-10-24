@@ -7,11 +7,11 @@ intent: null
 summary: OB6_continuous_ollama_injection (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853515610
+exported_at: 1792854106206
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853515610
-lastSeenAt: 1792853515610
+firstSeenAt: 1792854106206
+lastSeenAt: 1792854106206
 fingerprint: null
 payload:
   id: OB6_continuous_ollama_injection
@@ -45,7 +45,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -56,7 +56,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

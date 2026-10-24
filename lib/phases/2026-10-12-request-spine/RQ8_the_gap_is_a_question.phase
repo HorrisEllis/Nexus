@@ -7,11 +7,11 @@ intent: null
 summary: RQ8_the_gap_is_a_question (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792853481667
+exported_at: 1792854071802
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481667
-lastSeenAt: 1792853481667
+firstSeenAt: 1792854071802
+lastSeenAt: 1792854071802
 fingerprint: null
 payload:
   id: RQ8_the_gap_is_a_question
@@ -233,7 +233,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
@@ -257,7 +257,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by RQ7_the_context_obligations
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by RQ7_the_context_obligations
         - 'depends on (1): RQ7_the_context_obligations · all upstream 4'
         - 'needed by (1): RQ14_the_spine_end_to_end · all downstream 6'
   uuid: 3af316dd-5a83-57fc-8d14-f8b7ef72490f

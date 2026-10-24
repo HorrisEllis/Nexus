@@ -7,11 +7,11 @@ intent: null
 summary: RS4_the_pipeline_on_warp2 (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853473328
+exported_at: 1792854063331
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853473328
-lastSeenAt: 1792853473328
+firstSeenAt: 1792854063331
+lastSeenAt: 1792854063331
 fingerprint: null
 payload:
   id: RS4_the_pipeline_on_warp2
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
@@ -246,7 +246,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by RS1_the_generation_recorder
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by RS1_the_generation_recorder
         - 'depends on (2): RS1_the_generation_recorder, RS3_the_spec_document'
         - >-
           needed by (2): RS5_the_template_picker, RS8_what_converges_becomes_deterministic · all

@@ -7,11 +7,11 @@ intent: null
 summary: MS1_mental_simulation (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853467719
+exported_at: 1792854057679
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467719
-lastSeenAt: 1792853467719
+firstSeenAt: 1792854057679
+lastSeenAt: 1792854057679
 fingerprint: null
 payload:
   id: MS1_mental_simulation
@@ -38,7 +38,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
@@ -68,7 +68,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 7 · blocked by FM1_mining_failure_modes,
+          DAG a0036d89ebc520f8 · layer 7 · blocked by FM1_mining_failure_modes,
           LB1_the_end_state_lab
         - 'depends on (2): FM1_mining_failure_modes, LB1_the_end_state_lab · all upstream 11'
         - 'needed by (0): —'

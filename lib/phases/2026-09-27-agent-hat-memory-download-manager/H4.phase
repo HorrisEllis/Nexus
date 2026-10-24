@@ -7,11 +7,11 @@ intent: null
 summary: H4 (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853460274
+exported_at: 1792854050277
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853460274
-lastSeenAt: 1792853460274
+firstSeenAt: 1792854050277
+lastSeenAt: 1792854050277
 fingerprint: null
 payload:
   id: H4
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 3e25fcd3222e73f8
+    hash: bfac5ff7752e234a
     nodes:
       - path: cortex/core/raid/contract-intake.js
         role: changes
@@ -60,10 +60,6 @@ payload:
         role: used-by
         exists: true
         system: cortex
-      - path: guardian/server.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -77,6 +73,10 @@ payload:
         exists: true
         system: null
       - path: tests/modules/contract-intake-dependency-graph.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/contract-intake-tangible-file.test.js
         role: used-by
         exists: true
         system: null
@@ -190,9 +190,6 @@ payload:
       - from: cortex/self-heal/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        kind: requires
       - from: idearium/api/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
@@ -203,6 +200,9 @@ payload:
         to: cortex/core/raid/contract-intake.js
         kind: requires
       - from: tests/modules/contract-intake-dependency-graph.test.js
+        to: cortex/core/raid/contract-intake.js
+        kind: requires
+      - from: tests/modules/contract-intake-tangible-file.test.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
     crossings:
@@ -248,12 +248,6 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: cortex/core/raid/contract-intake.js
         fromSystem: idearium
@@ -262,7 +256,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -276,7 +270,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): X1 · finishing it unlocks X1'
         - >-

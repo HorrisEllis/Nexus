@@ -9,11 +9,11 @@ intent: null
 summary: KT1_observations_on_a_semantic_tree (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853483982
+exported_at: 1792854073874
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853483982
-lastSeenAt: 1792853483982
+firstSeenAt: 1792854073874
+lastSeenAt: 1792854073874
 fingerprint: null
 payload:
   id: KT1_observations_on_a_semantic_tree
@@ -178,7 +178,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-automatic-tracking-phasemap.spec::GT2_each_gate_tags_and_reports
@@ -199,7 +199,7 @@ payload:
             - lib/component-store.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): GT2_each_gate_tags_and_reports'
         - >-
           needed by (1): CX1_context_from_the_dependencies · all downstream 3 · finishing it unlocks

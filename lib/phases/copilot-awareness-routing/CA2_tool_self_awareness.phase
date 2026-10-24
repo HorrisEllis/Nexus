@@ -7,11 +7,11 @@ intent: null
 summary: CA2_tool_self_awareness (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853511070
+exported_at: 1792854101461
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853511070
-lastSeenAt: 1792853511070
+firstSeenAt: 1792854101461
+lastSeenAt: 1792854101461
 fingerprint: null
 payload:
   id: CA2_tool_self_awareness
@@ -214,7 +214,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -225,7 +225,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

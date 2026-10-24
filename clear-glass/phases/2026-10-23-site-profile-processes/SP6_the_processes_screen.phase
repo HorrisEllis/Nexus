@@ -7,11 +7,11 @@ intent: null
 summary: SP6_the_processes_screen (ui) — 10 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853508203
+exported_at: 1792854098124
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853508203
-lastSeenAt: 1792853508203
+firstSeenAt: 1792854098124
+lastSeenAt: 1792854098124
 fingerprint: null
 payload:
   id: SP6_the_processes_screen
@@ -203,7 +203,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-23-site-profile-processes-phasemap.spec::SP5_processes_and_activity
@@ -217,7 +217,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): SP5_processes_and_activity · all upstream 2'
         - 'needed by (0): —'
   uuid: 650ced49-6baf-537b-bac0-a9b386cf83d7

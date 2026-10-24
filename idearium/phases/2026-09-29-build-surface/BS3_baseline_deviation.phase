@@ -7,11 +7,11 @@ intent: null
 summary: BS3_baseline_deviation (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853464178
+exported_at: 1792854054116
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853464178
-lastSeenAt: 1792853464178
+firstSeenAt: 1792854054116
+lastSeenAt: 1792854054116
 fingerprint: null
 payload:
   id: BS3_baseline_deviation
@@ -62,7 +62,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-29-build-surface-phasemap.spec::BS2_file_states
@@ -83,7 +83,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): BS2_file_states'
         - 'needed by (1): BS7_api · all downstream 6 · finishing it unlocks BS7_api'
   uuid: e66c7f8e-778f-518a-84d3-8b91bb8a7562

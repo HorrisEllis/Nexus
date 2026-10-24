@@ -7,11 +7,11 @@ intent: null
 summary: SV3 (?) — 7 file(s)
 system: guardian
 tags: []
-exported_at: 1792853463272
+exported_at: 1792854053230
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853463272
-lastSeenAt: 1792853463272
+firstSeenAt: 1792854053230
+lastSeenAt: 1792854053230
 fingerprint: null
 payload:
   id: SV3
@@ -32,7 +32,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 221b311c3eb9b080
+    hash: 57a326cd104ef8dd
     nodes:
       - path: cortex/core/raid/contract-intake.js
         role: changes
@@ -62,10 +62,6 @@ payload:
         role: used-by
         exists: true
         system: cortex
-      - path: guardian/server.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: idearium/api/index.js
         role: used-by
         exists: true
@@ -83,6 +79,10 @@ payload:
         exists: true
         system: null
       - path: tests/modules/contract-intake-tangible-file.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/mco19-clearglass-dispatch.test.js
         role: used-by
         exists: true
         system: null
@@ -189,9 +189,6 @@ payload:
       - from: cortex/self-heal/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        kind: requires
       - from: idearium/api/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
@@ -205,6 +202,9 @@ payload:
         to: cortex/core/raid/contract-intake.js
         kind: requires
       - from: tests/modules/contract-intake-tangible-file.test.js
+        to: cortex/core/raid/contract-intake.js
+        kind: requires
+      - from: tests/modules/mco19-clearglass-dispatch.test.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
     crossings:
@@ -250,12 +250,6 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: cortex/core/raid/contract-intake.js
         fromSystem: idearium
@@ -264,7 +258,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV1
@@ -282,7 +276,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 5 · blocked by SV1
+        - DAG a0036d89ebc520f8 · layer 5 · blocked by SV1
         - 'depends on (1): SV1 · all upstream 5'
         - 'needed by (0): —'
   uuid: c09069bb-ba28-5d0b-b8a5-9a3a9677acd7

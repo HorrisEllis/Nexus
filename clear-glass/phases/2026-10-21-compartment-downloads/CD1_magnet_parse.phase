@@ -7,11 +7,11 @@ intent: null
 summary: CD1_magnet_parse (foundation) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853505391
+exported_at: 1792854095199
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853505391
-lastSeenAt: 1792853505391
+firstSeenAt: 1792854095199
+lastSeenAt: 1792854095199
 fingerprint: null
 payload:
   id: CD1_magnet_parse
@@ -43,7 +43,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -63,7 +63,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): CD2_quarantine_downloads, CD3_verified_handoff · all downstream 5 ·

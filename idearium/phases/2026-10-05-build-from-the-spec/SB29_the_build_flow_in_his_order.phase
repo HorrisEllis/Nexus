@@ -9,11 +9,11 @@ intent: null
 summary: SB29_the_build_flow_in_his_order (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470298
+exported_at: 1792854060359
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470298
-lastSeenAt: 1792853470298
+firstSeenAt: 1792854060359
+lastSeenAt: 1792854060359
 fingerprint: null
 payload:
   id: SB29_the_build_flow_in_his_order
@@ -233,7 +233,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB26_an_imported_project_shows_its_progress
@@ -272,7 +272,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by SB26_an_imported_project_shows_its_progress
+        - DAG a0036d89ebc520f8 · layer 7 · blocked by SB26_an_imported_project_shows_its_progress
         - >-
           depends on (2): SB26_an_imported_project_shows_its_progress,
           SB12_the_registry_is_the_component_list · all upstream 9

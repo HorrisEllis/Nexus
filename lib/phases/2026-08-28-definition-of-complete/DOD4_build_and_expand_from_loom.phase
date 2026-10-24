@@ -9,11 +9,11 @@ intent: null
 summary: DOD4_build_and_expand_from_loom (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853450219
+exported_at: 1792854040200
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853450219
-lastSeenAt: 1792853450219
+firstSeenAt: 1792854040200
+lastSeenAt: 1792854040200
 fingerprint: null
 payload:
   id: DOD4_build_and_expand_from_loom
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 9838b082-d50e-56a3-947a-653899e0e461

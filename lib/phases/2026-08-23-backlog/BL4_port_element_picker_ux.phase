@@ -7,11 +7,11 @@ intent: null
 summary: BL4_port_element_picker_ux (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853449275
+exported_at: 1792854039026
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853449275
-lastSeenAt: 1792853449275
+firstSeenAt: 1792854039026
+lastSeenAt: 1792854039026
 fingerprint: null
 payload:
   id: BL4_port_element_picker_ux
@@ -70,7 +70,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-08-23-backlog-phasemap.spec::BL2_guardian_zip_mining_report
@@ -83,7 +83,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): BL2_guardian_zip_mining_report'
         - 'needed by (0): —'
   uuid: 5b855fa6-529b-5c00-9d81-21c13d8c7c1a

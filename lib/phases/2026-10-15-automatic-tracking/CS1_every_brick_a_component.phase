@@ -7,11 +7,11 @@ intent: null
 summary: CS1_every_brick_a_component (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853483985
+exported_at: 1792854073878
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853483985
-lastSeenAt: 1792853483985
+firstSeenAt: 1792854073878
+lastSeenAt: 1792854073878
 fingerprint: null
 payload:
   id: CS1_every_brick_a_component
@@ -139,7 +139,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-automatic-tracking-phasemap.spec::GT2_each_gate_tags_and_reports
@@ -161,7 +161,7 @@ payload:
             - cortex/core/raid/contract-adapters.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): GT2_each_gate_tags_and_reports'
         - 'needed by (0): —'
         - >-

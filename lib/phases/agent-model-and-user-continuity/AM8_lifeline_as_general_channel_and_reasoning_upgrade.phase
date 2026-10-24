@@ -9,11 +9,11 @@ intent: null
 summary: AM8_lifeline_as_general_channel_and_reasoning_upgrade (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853509825
+exported_at: 1792854100143
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853509825
-lastSeenAt: 1792853509825
+firstSeenAt: 1792854100143
+lastSeenAt: 1792854100143
 fingerprint: null
 payload:
   id: AM8_lifeline_as_general_channel_and_reasoning_upgrade
@@ -282,7 +282,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
@@ -300,7 +300,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 1 · blocked by AM1_per_agent_learned_model,
+          DAG a0036d89ebc520f8 · layer 1 · blocked by AM1_per_agent_learned_model,
           AM7_agent_switch_continuity_and_chat_recall
         - 'depends on (2): AM1_per_agent_learned_model, AM7_agent_switch_continuity_and_chat_recall'
         - 'needed by (0): —'

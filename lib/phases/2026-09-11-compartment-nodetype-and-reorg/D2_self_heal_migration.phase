@@ -9,11 +9,11 @@ intent: null
 summary: D2_self_heal_migration (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853454586
+exported_at: 1792854044707
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853454586
-lastSeenAt: 1792853454586
+firstSeenAt: 1792854044707
+lastSeenAt: 1792854044707
 fingerprint: null
 payload:
   id: D2_self_heal_migration
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 5f98a58f11bf4291
+    hash: 426d370028334f52
     nodes:
       - path: cortex/core/raid/contract-boundary.js
         role: changes
@@ -73,10 +73,10 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: guardian/server.js
+      - path: idearium/api/index.js
         role: used-by
         exists: true
-        system: guardian
+        system: idearium
       - path: intelligence/gap/predicate.js
         role: used-by
         exists: true
@@ -207,7 +207,7 @@ payload:
       - from: cortex/core/raid/worker.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
-      - from: guardian/server.js
+      - from: idearium/api/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
     crossings:
@@ -271,15 +271,15 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/server.js
+      - from: idearium/api/index.js
         to: cortex/core/raid/contract-intake.js
-        fromSystem: guardian
+        fromSystem: idearium
         toSystem: cortex
         kind: system
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
@@ -294,7 +294,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by D1_diagnostic_real_folder
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by D1_diagnostic_real_folder
         - 'depends on (1): D1_diagnostic_real_folder · all upstream 2'
         - 'needed by (0): —'
   uuid: 448c1c72-3039-5f52-a251-73eeb7e219d5

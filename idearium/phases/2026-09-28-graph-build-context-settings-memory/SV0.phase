@@ -7,11 +7,11 @@ intent: null
 summary: SV0 (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853463269
+exported_at: 1792854053227
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853463269
-lastSeenAt: 1792853463269
+firstSeenAt: 1792854053227
+lastSeenAt: 1792854053227
 fingerprint: null
 payload:
   id: SV0
@@ -79,7 +79,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G2
@@ -100,7 +100,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by G2
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by G2
         - 'depends on (1): G2 · all upstream 3'
         - 'needed by (1): SV1 · all downstream 3 · finishing it unlocks SV1'
   uuid: b67e9a46-40e9-5a4d-91de-5b6c5deced96

@@ -7,11 +7,11 @@ intent: null
 summary: SW1_spec_workshop (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792853469405
+exported_at: 1792854059424
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853469405
-lastSeenAt: 1792853469405
+firstSeenAt: 1792854059424
+lastSeenAt: 1792854059424
 fingerprint: null
 payload:
   id: SW1_spec_workshop
@@ -224,7 +224,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -251,7 +251,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (5): SW2_workshop_page_in_the_voids_style, AR2_architect_in_the_workshop,

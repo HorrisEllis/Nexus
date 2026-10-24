@@ -1,0 +1,336 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
+context: pipeline phase GD7_the_bus_and_connect of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD7_the_bus_and_connect (foundation) — 3 file(s)
+system: core
+tags: []
+exported_at: 1792854099323
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792854099323
+lastSeenAt: 1792854099323
+fingerprint: null
+payload:
+  id: GD7_the_bus_and_connect
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - guardian/server.js
+    - nexus/nexus-bus.js
+    - nexus/nexus-connect.js
+  depends_on:
+    - GD6_the_ways_in
+  blocks: []
+  spec: null
+  graph:
+    hash: 5073beaddfe03678
+    nodes:
+      - path: guardian/server.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: nexus/nexus-bus.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: nexus/nexus-connect.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: guardian/dropzone.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: intelligence/alk/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/gap/predicate.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/routes.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/server.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/agent-tools/tools/execution/run-pipeline.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/compartment-engine.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/component-ledger.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: service/guardian-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: guardian/config.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/event-taxonomy.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/ncp.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: intelligence/baseline.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/ledger.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/gap/hunter.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/event-taxonomy-pattern.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/queue.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/seam/detector.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/seam/queue.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/seam/spec-parser.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: guardian/server.js
+        to: lib/data-home.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/config.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/event-taxonomy.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/event-taxonomy-pattern.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/lib/ncp.js
+        kind: requires
+      - from: guardian/server.js
+        to: intelligence/cfr/ledger.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/detector.js
+        kind: requires
+      - from: guardian/server.js
+        to: intelligence/gap/hunter.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/queue.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/spec-parser.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/queue.js
+        kind: requires
+      - from: guardian/server.js
+        to: intelligence/baseline.js
+        kind: requires
+      - from: guardian/dropzone.js
+        to: guardian/server.js
+        kind: requires
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        kind: requires
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/alk/index.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/gap/predicate.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/index.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/routes.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/server.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/agent-tools/tools/execution/run-pipeline.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/compartment-engine.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/component-ledger.js
+        to: nexus/nexus-bus.js
+        kind: requires
+    crossings:
+      - from: guardian/server.js
+        to: intelligence/cfr/ledger.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: guardian/server.js
+        to: intelligence/gap/hunter.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: guardian/server.js
+        to: intelligence/baseline.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        fromSystem: service
+        toSystem: guardian
+        kind: system
+        known: true
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        fromSystem: cortex
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: cortex/core/raid/contract-intake.js
+        to: nexus/nexus-bus.js
+        fromSystem: cortex
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/alk/index.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/gap/predicate.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/index.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/routes.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/server.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: lib/agent-tools/tools/execution/run-pipeline.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+      - from: lib/compartment-engine.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+      - from: lib/component-ledger.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: a0036d89ebc520f8
+      layer: 3
+      deps:
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
+      dependents:
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
+      upstream:
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5_the_response_store
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D3_the_response_store
+      downstream:
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
+      blockedBy:
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD2_primitives_to_the_kernel
+          files:
+            - guardian/server.js
+        - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD3_intelligence_by_route
+          files:
+            - guardian/server.js
+        - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
+          files:
+            - guardian/server.js
+      dangling: []
+      lines:
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by GD6_the_ways_in
+        - 'depends on (1): GD6_the_ways_in · all upstream 3'
+        - 'needed by (1): GD8_guardian_in_its_compartment'
+        - 'same files as GD2_primitives_to_the_kernel with no order between them: guardian/server.js'
+        - 'same files as GD3_intelligence_by_route with no order between them: guardian/server.js'
+        - >-
+          same files as GD4_the_other_systems_by_route with no order between them:
+          guardian/server.js
+  uuid: b64365a0-5abb-5d94-9bd6-5cbf2861d7a0

@@ -9,11 +9,11 @@ intent: null
 summary: D1_diagnostic_real_folder (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853454583
+exported_at: 1792854044706
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853454583
-lastSeenAt: 1792853454583
+firstSeenAt: 1792854044706
+lastSeenAt: 1792854044706
 fingerprint: null
 payload:
   id: D1_diagnostic_real_folder
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 326872f5777c2e88
+    hash: dd087d94948ab770
     nodes:
       - path: architect/service.js
         role: changes
@@ -109,18 +109,6 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: guardian/api-dispatch.js
-        role: used-by
-        exists: true
-        system: guardian
-      - path: guardian/lib/dispatcher.js
-        role: used-by
-        exists: true
-        system: guardian
-      - path: guardian/server.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: idearium/spec-engine/chunk-dispatch.js
         role: used-by
         exists: true
@@ -137,6 +125,18 @@ payload:
         role: used-by
         exists: true
         system: lib
+      - path: lib/autonomous-repair.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/nexus-client.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: orchestrator/lib/request-handler.js
+        role: used-by
+        exists: true
+        system: orchestrator
       - path: cortex/contract/index.js
         role: uses
         exists: true
@@ -237,15 +237,6 @@ payload:
       - from: diagnostic/lib/heal-loop.js
         to: cortex/core/raid/index.js
         kind: requires
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        kind: requires
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        kind: requires
-      - from: guardian/server.js
-        to: cortex/core/raid/index.js
-        kind: requires
       - from: idearium/spec-engine/chunk-dispatch.js
         to: cortex/core/raid/index.js
         kind: requires
@@ -256,6 +247,15 @@ payload:
         to: cortex/core/raid/index.js
         kind: requires
       - from: lib/agent-tools/index.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/autonomous-repair.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/nexus-client.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: orchestrator/lib/request-handler.js
         to: cortex/core/raid/index.js
         kind: requires
     crossings:
@@ -274,24 +274,6 @@ payload:
       - from: diagnostic/lib/heal-loop.js
         to: cortex/core/raid/index.js
         fromSystem: diagnostic
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/server.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
         toSystem: cortex
         kind: system
         known: true
@@ -319,9 +301,27 @@ payload:
         toSystem: cortex
         kind: upward
         known: true
+      - from: lib/autonomous-repair.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/nexus-client.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: orchestrator/lib/request-handler.js
+        to: cortex/core/raid/index.js
+        fromSystem: orchestrator
+        toSystem: cortex
+        kind: system
+        known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
@@ -340,7 +340,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): T1_extend_system_scaffold'
         - >-
           needed by (2): D2_self_heal_migration, AR2_decentralize_interaction_contracts · finishing

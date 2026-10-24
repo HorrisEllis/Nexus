@@ -7,11 +7,11 @@ intent: null
 summary: CS4a_cos_boots_alone (foundation) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792853507418
+exported_at: 1792854097301
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853507418
-lastSeenAt: 1792853507418
+firstSeenAt: 1792854097301
+lastSeenAt: 1792854097301
 fingerprint: null
 payload:
   id: CS4a_cos_boots_alone
@@ -227,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
@@ -254,7 +254,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by CS_D7_sovereign_first
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by CS_D7_sovereign_first
         - 'depends on (2): CS_D7_sovereign_first, COSA3_run_and_supervise · all upstream 4'
         - 'needed by (1): CS4_every_system_a_compartment · all downstream 8'
   uuid: ead2cc32-b252-5fe8-b9cd-f208597cbd4e

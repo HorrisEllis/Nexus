@@ -7,11 +7,11 @@ intent: null
 summary: BL13_cortex_component_registry_move (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853449289
+exported_at: 1792854039035
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853449289
-lastSeenAt: 1792853449289
+firstSeenAt: 1792854039035
+lastSeenAt: 1792854039035
 fingerprint: null
 payload:
   id: BL13_cortex_component_registry_move
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 8039d8caee432d43
+    hash: d74cf4b17bdd0a8a
     nodes:
       - path: copilot/server.js
         role: changes
@@ -98,6 +98,10 @@ payload:
         role: uses
         exists: true
         system: cortex
+      - path: cortex/core/raid/index.js
+        role: uses
+        exists: true
+        system: cortex
       - path: cortex/memory/jaa-db.js
         role: uses
         exists: true
@@ -110,10 +114,6 @@ payload:
         role: uses
         exists: true
         system: hooks
-      - path: lib/consumer-registry.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/data-home.js
         role: uses
         exists: true
@@ -171,13 +171,13 @@ payload:
         to: lib/migrate-ledger-per-system.js
         kind: requires
       - from: cortex/boot.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/boot.js
         to: lib/nerve/index.js
         kind: requires
       - from: cortex/boot.js
         to: hooks/index.js
-        kind: requires
-      - from: cortex/boot.js
-        to: lib/consumer-registry.js
         kind: requires
       - from: service/cortex-service.js
         to: cortex/boot.js
@@ -248,7 +248,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -259,7 +259,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 82bbf6ce-cef7-565a-b758-19dda6549e57

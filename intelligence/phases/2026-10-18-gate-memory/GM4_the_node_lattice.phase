@@ -7,11 +7,11 @@ intent: null
 summary: GM4_the_node_lattice (?) — 3 file(s)
 system: intelligence
 tags: []
-exported_at: 1792853499126
+exported_at: 1792854088807
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853499126
-lastSeenAt: 1792853499126
+firstSeenAt: 1792854088807
+lastSeenAt: 1792854088807
 fingerprint: null
 payload:
   id: GM4_the_node_lattice
@@ -170,7 +170,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -181,7 +181,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 6fa08322-42eb-5fd0-bdbf-11675081c5d1

@@ -9,11 +9,11 @@ intent: null
 summary: CS1_capability_spec_and_surface_check (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853484446
+exported_at: 1792854074282
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853484446
-lastSeenAt: 1792853484446
+firstSeenAt: 1792854074282
+lastSeenAt: 1792854074282
 fingerprint: null
 payload:
   id: CS1_capability_spec_and_surface_check
@@ -108,7 +108,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -125,7 +125,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): CS2_spec_the_unspecced, CS3_feature_starts_as_a_spec · finishing it unlocks

@@ -9,11 +9,11 @@ intent: null
 summary: BK2_phase_build_writes_code (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853466336
+exported_at: 1792854056298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466336
-lastSeenAt: 1792853466336
+firstSeenAt: 1792854056298
+lastSeenAt: 1792854056298
 fingerprint: null
 payload:
   id: BK2_phase_build_writes_code
@@ -223,7 +223,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
@@ -260,7 +260,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 4 · blocked by BK1_blocked_is_actionable,
+          DAG a0036d89ebc520f8 · layer 4 · blocked by BK1_blocked_is_actionable,
           CI1_compounding_iterate
         - 'depends on (2): BK1_blocked_is_actionable, CI1_compounding_iterate · all upstream 6'
         - 'needed by (0): —'

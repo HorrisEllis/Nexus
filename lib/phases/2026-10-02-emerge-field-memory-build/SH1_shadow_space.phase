@@ -7,11 +7,11 @@ intent: null
 summary: SH1_shadow_space (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853467690
+exported_at: 1792854057650
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467690
-lastSeenAt: 1792853467690
+firstSeenAt: 1792854057650
+lastSeenAt: 1792854057650
 fingerprint: null
 payload:
   id: SH1_shadow_space
@@ -133,7 +133,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
@@ -181,7 +181,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - DAG a0036d89ebc520f8 · layer 2 · ready
         - 'depends on (2): EM0_ground, EV0_contracts_for_every_system'
         - >-
           needed by (4): EM2_warp_his_own, BT1_build_teams, IN2_claude_code_inside_nexus,

@@ -7,11 +7,11 @@ intent: null
 summary: SV3_on_the_cos_bus (integration) — 1 file(s)
 system: cos
 tags: []
-exported_at: 1792853508606
+exported_at: 1792854098538
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853508606
-lastSeenAt: 1792853508606
+firstSeenAt: 1792854098538
+lastSeenAt: 1792854098538
 fingerprint: null
 payload:
   id: SV3_on_the_cos_bus
@@ -38,7 +38,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
@@ -65,7 +65,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 5 · blocked by SV1_a_stack_per_root,
+          DAG a0036d89ebc520f8 · layer 5 · blocked by SV1_a_stack_per_root,
           CS3_the_registry_is_the_bridge
         - 'depends on (2): SV1_a_stack_per_root, CS3_the_registry_is_the_bridge · all upstream 11'
         - 'needed by (0): —'

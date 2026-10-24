@@ -7,11 +7,11 @@ intent: null
 summary: CE3_the_handshake (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853498282
+exported_at: 1792854087960
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853498282
-lastSeenAt: 1792853498282
+firstSeenAt: 1792854087960
+lastSeenAt: 1792854087960
 fingerprint: null
 payload:
   id: CE3_the_handshake
@@ -60,7 +60,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
@@ -87,6 +87,7 @@ payload:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
         - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
         - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
       blockedBy:
         - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
       unlocks:
@@ -95,11 +96,11 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by CE2_the_shell_is_declared
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by CE2_the_shell_is_declared
         - 'depends on (1): CE2_the_shell_is_declared · all upstream 3'
         - >-
           needed by (3): CE4_the_terminal_bridge, CE5_the_guest_file_tree,
-          CS3_the_registry_is_the_bridge · all downstream 14 · finishing it unlocks
+          CS3_the_registry_is_the_bridge · all downstream 15 · finishing it unlocks
           CE4_the_terminal_bridge, CE5_the_guest_file_tree
   uuid: 7aac077c-74c2-5649-aff2-a21e369af354
   specLink:

@@ -7,11 +7,11 @@ intent: null
 summary: DOD6_respects_axioms (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853450220
+exported_at: 1792854040201
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853450220
-lastSeenAt: 1792853450220
+firstSeenAt: 1792854040201
+lastSeenAt: 1792854040201
 fingerprint: null
 payload:
   id: DOD6_respects_axioms
@@ -85,7 +85,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -96,7 +96,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 149c1c4d-cf56-56c8-aedc-b4800ef436b8

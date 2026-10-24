@@ -9,11 +9,11 @@ intent: null
 summary: HP16_a_job_nobody_waits_for_is_not_sent_later (?) — 3 file(s)
 system: guardian
 tags: []
-exported_at: 1792853476908
+exported_at: 1792854067133
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853476908
-lastSeenAt: 1792853476908
+firstSeenAt: 1792854067133
+lastSeenAt: 1792854067133
 fingerprint: null
 payload:
   id: HP16_a_job_nobody_waits_for_is_not_sent_later
@@ -29,7 +29,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: a7728a57ce56fd56
+    hash: fcda0bc3bd2ac8fe
     nodes:
       - path: guardian/ask.js
         role: changes
@@ -79,10 +79,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/core/raid/index.js
-        role: uses
-        exists: true
-        system: cortex
       - path: guardian/clear-glass-bridge.js
         role: uses
         exists: true
@@ -123,6 +119,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/raid-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: ollama/lib/model-inventory.js
         role: uses
         exists: true
@@ -156,7 +156,7 @@ payload:
         to: guardian/lib/chat-transcripts.js
         kind: requires
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
+        to: lib/raid-port.js
         kind: requires
       - from: guardian/lib/dispatcher.js
         to: guardian/clear-glass-bridge.js
@@ -193,12 +193,6 @@ payload:
         kind: requires
     crossings:
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
         to: ollama/lib/model-inventory.js
         fromSystem: guardian
         toSystem: ollama
@@ -212,7 +206,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -233,7 +227,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (3): HP17_no_tab_is_said_in_seconds, HP19_the_simulator_stays,

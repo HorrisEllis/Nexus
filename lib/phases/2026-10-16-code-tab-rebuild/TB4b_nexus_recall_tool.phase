@@ -7,11 +7,11 @@ intent: null
 summary: TB4b_nexus_recall_tool (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853490919
+exported_at: 1792854080466
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853490919
-lastSeenAt: 1792853490919
+firstSeenAt: 1792854080466
+lastSeenAt: 1792854080466
 fingerprint: null
 payload:
   id: TB4b_nexus_recall_tool
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
@@ -48,7 +48,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by TB3a_tool_calls_saved
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by TB3a_tool_calls_saved
         - 'depends on (1): TB3a_tool_calls_saved · all upstream 4'
         - 'needed by (0): —'
   uuid: 7e2c2f42-2e24-5ce9-b0de-26bd4ac38cd1

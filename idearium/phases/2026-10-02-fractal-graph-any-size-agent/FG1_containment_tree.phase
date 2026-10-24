@@ -7,11 +7,11 @@ intent: null
 summary: FG1_containment_tree (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853468189
+exported_at: 1792854058150
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853468189
-lastSeenAt: 1792853468189
+firstSeenAt: 1792854058150
+lastSeenAt: 1792854058150
 fingerprint: null
 payload:
   id: FG1_containment_tree
@@ -82,7 +82,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -105,7 +105,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (3): FG2_token_budget_chunking, FG3_summaries_up_the_tree,

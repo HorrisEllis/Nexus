@@ -7,11 +7,11 @@ intent: null
 summary: NP17_hold_primitive (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853484918
+exported_at: 1792854074710
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853484918
-lastSeenAt: 1792853484918
+firstSeenAt: 1792854074710
+lastSeenAt: 1792854074710
 fingerprint: null
 payload:
   id: NP17_hold_primitive
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
@@ -50,7 +50,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by NP15_kill_switch
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by NP15_kill_switch
         - 'depends on (1): NP15_kill_switch · all upstream 4'
         - 'needed by (1): NP18_freeze_plugin'
   uuid: a2ec81ce-f395-5601-8a43-712695295457

@@ -9,11 +9,11 @@ intent: null
 summary: TX3_talk_to_agent_launcher (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853510227
+exported_at: 1792854100613
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853510227
-lastSeenAt: 1792853510227
+firstSeenAt: 1792854100613
+lastSeenAt: 1792854100613
 fingerprint: null
 payload:
   id: TX3_talk_to_agent_launcher
@@ -103,7 +103,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -118,7 +118,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (1): TX4_provider_tab_tool_loop · all downstream 2 · finishing it unlocks

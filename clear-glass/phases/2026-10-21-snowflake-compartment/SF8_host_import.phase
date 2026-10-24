@@ -7,11 +7,11 @@ intent: null
 summary: SF8_host_import (integration) — 6 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853506596
+exported_at: 1792854096487
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853506596
-lastSeenAt: 1792853506596
+firstSeenAt: 1792854096487
+lastSeenAt: 1792854096487
 fingerprint: null
 payload:
   id: SF8_host_import
@@ -231,7 +231,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF6_surface
@@ -254,7 +254,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4
+        - DAG a0036d89ebc520f8 · layer 4
         - 'depends on (2): SF6_surface, BS16_import_fields · all upstream 10'
         - 'needed by (0): —'
   uuid: c030c783-3bca-5f50-89ff-ba512f31302c

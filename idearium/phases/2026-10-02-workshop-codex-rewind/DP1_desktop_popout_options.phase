@@ -7,11 +7,11 @@ intent: null
 summary: DP1_desktop_popout_options (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853469412
+exported_at: 1792854059431
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853469412
-lastSeenAt: 1792853469412
+firstSeenAt: 1792854059431
+lastSeenAt: 1792854059431
 fingerprint: null
 payload:
   id: DP1_desktop_popout_options
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::RW1_rewind_engine_vm_snapshots
@@ -240,7 +240,7 @@ payload:
             - idearium/ui/js/app.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by RW1_rewind_engine_vm_snapshots
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by RW1_rewind_engine_vm_snapshots
         - 'depends on (1): RW1_rewind_engine_vm_snapshots'
         - 'needed by (0): —'
         - 'same files as PL1_one_entry_point with no order between them: idearium/api/index.js'

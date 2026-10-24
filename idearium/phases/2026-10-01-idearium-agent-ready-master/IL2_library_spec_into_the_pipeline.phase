@@ -9,11 +9,11 @@ intent: null
 summary: IL2_library_spec_into_the_pipeline (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792853466362
+exported_at: 1792854056324
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466362
-lastSeenAt: 1792853466362
+firstSeenAt: 1792854056324
+lastSeenAt: 1792854056324
 fingerprint: null
 payload:
   id: IL2_library_spec_into_the_pipeline
@@ -232,7 +232,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
@@ -253,7 +253,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 6
+        - DAG a0036d89ebc520f8 · layer 6
         - 'depends on (1): IL1_spec_library_as_ideas · all upstream 7'
         - 'needed by (1): CP1_copilot_drives_idearium_and_talks_to_its_agents'
   uuid: 93f0368b-cb5c-51b8-9851-7b26589e01d1

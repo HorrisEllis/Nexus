@@ -7,11 +7,11 @@ intent: null
 summary: EC6_guardian_enforcement (?) — 4 file(s)
 system: guardian
 tags: []
-exported_at: 1792853465072
+exported_at: 1792854055010
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853465072
-lastSeenAt: 1792853465072
+firstSeenAt: 1792854055010
+lastSeenAt: 1792854055010
 fingerprint: null
 payload:
   id: EC6_guardian_enforcement
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: f302afba554cf0ff
+    hash: 6f36719f240bcbfd
     nodes:
       - path: guardian/lib/dispatcher.js
         role: changes
@@ -77,10 +77,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/core/raid/index.js
-        role: uses
-        exists: true
-        system: cortex
       - path: guardian/clear-glass-bridge.js
         role: uses
         exists: true
@@ -121,6 +117,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/raid-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: ollama/lib/model-inventory.js
         role: uses
         exists: true
@@ -154,7 +154,7 @@ payload:
         to: guardian/lib/chat-transcripts.js
         kind: requires
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
+        to: lib/raid-port.js
         kind: requires
       - from: guardian/lib/dispatcher.js
         to: guardian/clear-glass-bridge.js
@@ -185,12 +185,6 @@ payload:
         kind: requires
     crossings:
       - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
         to: ollama/lib/model-inventory.js
         fromSystem: guardian
         toSystem: ollama
@@ -204,7 +198,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-09-29-provider-economy-phasemap.spec::EC1_usage_ledger
@@ -228,7 +222,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (3): EC1_usage_ledger, EC2_gate, EC3_token_constraints · all upstream 4'
         - >-
           needed by (2): EC8_economy_console, EC11_release · finishing it unlocks

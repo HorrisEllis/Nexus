@@ -1,0 +1,279 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
+context: pipeline phase GD4_the_other_systems_by_route of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD4_the_other_systems_by_route (backend) — 5 file(s)
+system: guardian
+tags: []
+exported_at: 1792854099321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792854099321
+lastSeenAt: 1792854099321
+fingerprint: null
+payload:
+  id: GD4_the_other_systems_by_route
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - guardian/lib/dispatcher.js
+    - guardian/routes/autonomous-loop.js
+    - guardian/cli.js
+    - guardian/server.js
+    - cortex/boot.js
+  depends_on:
+    - GD_D2_stateful_capabilities_by_route
+  blocks: []
+  spec: null
+  graph:
+    hash: 6343bf47489891a8
+    nodes:
+      - path: cortex/boot.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: guardian/cli.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: guardian/lib/dispatcher.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: guardian/routes/autonomous-loop.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: guardian/dropzone.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/index.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: service/cortex-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: service/guardian-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: tests/dispatcher-ping-gate.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/dispatcher-stale-socket.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/cortex-sse-broadcast.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/mco04-executor-cos-migration.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-dispatcher-deepseek-ncp.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-guardian-mesh-client.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-guardian-stack-sim.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: guardian/ask.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/clear-glass-bridge.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/chat-transcripts.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/dispatch-pool.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/ncp.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/profile-lanes.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/provider-login.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/provider-routing.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/options.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: intelligence/alk/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/raid-port.js
+        role: uses
+        exists: true
+        system: lib
+      - path: ollama/lib/model-inventory.js
+        role: uses
+        exists: true
+        system: ollama
+    edges:
+      - from: guardian/lib/dispatcher.js
+        to: guardian/lib/dispatch-pool.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: guardian/lib/profile-lanes.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: guardian/options.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: guardian/lib/ncp.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: guardian/lib/chat-transcripts.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: lib/raid-port.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: guardian/clear-glass-bridge.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: ollama/lib/model-inventory.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: guardian/lib/provider-routing.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: guardian/lib/provider-login.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: intelligence/alk/index.js
+        kind: requires
+      - from: guardian/routes/autonomous-loop.js
+        to: guardian/ask.js
+        kind: requires
+      - from: guardian/lib/index.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/dispatcher-ping-gate.test.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/dispatcher-stale-socket.test.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/modules/test-dispatcher-deepseek-ncp.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/modules/test-guardian-mesh-client.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/modules/test-guardian-stack-sim.test.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/modules/mco04-executor-cos-migration.test.js
+        to: guardian/routes/autonomous-loop.js
+        kind: requires
+      - from: guardian/dropzone.js
+        to: guardian/server.js
+        kind: requires
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        kind: requires
+      - from: service/cortex-service.js
+        to: cortex/boot.js
+        kind: requires
+      - from: tests/modules/cortex-sse-broadcast.test.js
+        to: cortex/boot.js
+        kind: requires
+    crossings:
+      - from: guardian/lib/dispatcher.js
+        to: ollama/lib/model-inventory.js
+        fromSystem: guardian
+        toSystem: ollama
+        kind: system
+        known: true
+      - from: guardian/lib/dispatcher.js
+        to: intelligence/alk/index.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        fromSystem: service
+        toSystem: guardian
+        kind: system
+        known: true
+      - from: service/cortex-service.js
+        to: cortex/boot.js
+        fromSystem: service
+        toSystem: cortex
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: a0036d89ebc520f8
+      layer: 1
+      deps:
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D2_stateful_capabilities_by_route
+      dependents: []
+      upstream:
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D2_stateful_capabilities_by_route
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD2_primitives_to_the_kernel
+          files:
+            - guardian/server.js
+        - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD3_intelligence_by_route
+          files:
+            - guardian/lib/dispatcher.js
+            - guardian/server.js
+        - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5_the_response_store
+          files:
+            - guardian/cli.js
+        - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
+          files:
+            - guardian/server.js
+      dangling: []
+      lines:
+        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - 'depends on (1): GD_D2_stateful_capabilities_by_route'
+        - 'needed by (0): —'
+        - 'same files as GD2_primitives_to_the_kernel with no order between them: guardian/server.js'
+        - >-
+          same files as GD3_intelligence_by_route with no order between them:
+          guardian/lib/dispatcher.js, guardian/server.js
+        - 'same files as GD5_the_response_store with no order between them: guardian/cli.js'
+        - 'same files as GD7_the_bus_and_connect with no order between them: guardian/server.js'
+  uuid: fbc2d26a-d250-578c-bcd7-0673cc353fbe

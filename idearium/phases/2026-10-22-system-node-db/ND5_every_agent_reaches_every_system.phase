@@ -9,11 +9,11 @@ intent: null
 summary: ND5_every_agent_reaches_every_system (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853506995
+exported_at: 1792854096886
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853506995
-lastSeenAt: 1792853506995
+firstSeenAt: 1792854096886
+lastSeenAt: 1792854096886
 fingerprint: null
 payload:
   id: ND5_every_agent_reaches_every_system
@@ -237,7 +237,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-22-system-node-db-phasemap.spec::ND4_commands_and_capabilities_from_the_schemas
@@ -269,7 +269,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 5 · blocked by
+          DAG a0036d89ebc520f8 · layer 5 · blocked by
           ND4_commands_and_capabilities_from_the_schemas, P35_copilot_reads_edits_creates_nodes
         - >-
           depends on (2): ND4_commands_and_capabilities_from_the_schemas,

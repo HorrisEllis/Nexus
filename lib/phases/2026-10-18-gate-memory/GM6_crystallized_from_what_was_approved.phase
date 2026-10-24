@@ -9,11 +9,11 @@ intent: null
 summary: GM6_crystallized_from_what_was_approved (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853499127
+exported_at: 1792854088809
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853499127
-lastSeenAt: 1792853499127
+firstSeenAt: 1792854088809
+lastSeenAt: 1792854088809
 fingerprint: null
 payload:
   id: GM6_crystallized_from_what_was_approved
@@ -97,7 +97,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-18-gate-memory-phasemap.spec::GM3_the_fulfilled_contract_index
@@ -133,7 +133,7 @@ payload:
         - path)
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 7 · blocked by GM3_the_fulfilled_contract_index,
+          DAG a0036d89ebc520f8 · layer 7 · blocked by GM3_the_fulfilled_contract_index,
           FMR10_it_compounds
         - 'depends on (2): GM3_the_fulfilled_contract_index, FMR10_it_compounds · all upstream 13'
         - 'needed by (0): —'

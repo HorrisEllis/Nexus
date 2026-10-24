@@ -7,11 +7,11 @@ intent: null
 summary: PB1_the_product_boundary (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853495424
+exported_at: 1792854084932
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853495424
-lastSeenAt: 1792853495424
+firstSeenAt: 1792854084932
+lastSeenAt: 1792854084932
 fingerprint: null
 payload:
   id: PB1_the_product_boundary
@@ -227,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
@@ -244,7 +244,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by CV2_untangle_with_rf0
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by CV2_untangle_with_rf0
         - 'depends on (1): CV2_untangle_with_rf0 · all upstream 2'
         - 'needed by (1): FR4_stands_alone'
   uuid: 6ffbf686-af6c-564e-9098-64d9e4944b87

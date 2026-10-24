@@ -7,11 +7,11 @@ intent: null
 summary: PL1_one_entry_point (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853469411
+exported_at: 1792854059429
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853469411
-lastSeenAt: 1792853469411
+firstSeenAt: 1792854059429
+lastSeenAt: 1792854059429
 fingerprint: null
 payload:
   id: PL1_one_entry_point
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW1_spec_workshop
@@ -246,7 +246,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by BP1_destroy_and_rebuild_blueprint
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by BP1_destroy_and_rebuild_blueprint
         - >-
           depends on (3): SW1_spec_workshop, AR2_architect_in_the_workshop,
           BP1_destroy_and_rebuild_blueprint · all upstream 4

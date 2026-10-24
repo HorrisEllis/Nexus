@@ -7,11 +7,11 @@ intent: null
 summary: AL1_activity_log (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853474145
+exported_at: 1792854064216
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853474145
-lastSeenAt: 1792853474145
+firstSeenAt: 1792854064216
+lastSeenAt: 1792854064216
 fingerprint: null
 payload:
   id: AL1_activity_log
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CC1_claude_code_lands_like_every_agent
@@ -257,7 +257,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): CC1_claude_code_lands_like_every_agent'
         - >-
           needed by (4): AL2_log_tab, DT1_desktop_into_the_log, NC2_nexus_systems_as_compartments,

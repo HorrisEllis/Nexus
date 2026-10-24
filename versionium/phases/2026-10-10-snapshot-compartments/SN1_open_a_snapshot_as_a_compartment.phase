@@ -9,11 +9,11 @@ intent: null
 summary: SN1_open_a_snapshot_as_a_compartment (?) — 3 file(s)
 system: versionium
 tags: []
-exported_at: 1792853480793
+exported_at: 1792854070952
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853480793
-lastSeenAt: 1792853480793
+firstSeenAt: 1792854070952
+lastSeenAt: 1792854070952
 fingerprint: null
 payload:
   id: SN1_open_a_snapshot_as_a_compartment
@@ -200,7 +200,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
@@ -222,7 +222,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by SN0_one_branch
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by SN0_one_branch
         - 'depends on (1): SN0_one_branch'
         - >-
           needed by (2): SN2_run_in_parallel, CS2_test_every_version · all downstream 5 · finishing

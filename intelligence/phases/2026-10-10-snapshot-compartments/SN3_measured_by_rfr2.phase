@@ -7,11 +7,11 @@ intent: null
 summary: SN3_measured_by_rfr2 (?) — 3 file(s)
 system: intelligence
 tags: []
-exported_at: 1792853480795
+exported_at: 1792854070953
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853480795
-lastSeenAt: 1792853480795
+firstSeenAt: 1792854070953
+lastSeenAt: 1792854070953
 fingerprint: null
 payload:
   id: SN3_measured_by_rfr2
@@ -108,7 +108,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN2_run_in_parallel
@@ -127,7 +127,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by SN2_run_in_parallel
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by SN2_run_in_parallel
         - 'depends on (1): SN2_run_in_parallel · all upstream 3'
         - 'needed by (1): SN4_benchmarks_teach · finishing it unlocks SN4_benchmarks_teach'
   uuid: a3709a1f-a1ec-54a8-aa74-04681b6c6ba2

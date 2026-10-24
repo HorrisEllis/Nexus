@@ -9,11 +9,11 @@ intent: null
 summary: FG2_token_budget_chunking (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853468190
+exported_at: 1792854058150
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853468190
-lastSeenAt: 1792853468190
+firstSeenAt: 1792854058150
+lastSeenAt: 1792854058150
 fingerprint: null
 payload:
   id: FG2_token_budget_chunking
@@ -118,7 +118,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
@@ -136,7 +136,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by FG1_containment_tree
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by FG1_containment_tree
         - 'depends on (1): FG1_containment_tree'
         - 'needed by (1): FG4_context_for_any_agent · all downstream 3'
   uuid: 170c6b03-9ca7-5b7a-867d-96e87b0736ec

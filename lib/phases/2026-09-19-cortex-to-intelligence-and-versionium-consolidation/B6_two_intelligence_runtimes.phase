@@ -9,11 +9,11 @@ intent: null
 summary: B6_two_intelligence_runtimes (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853457351
+exported_at: 1792854047317
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853457351
-lastSeenAt: 1792853457351
+firstSeenAt: 1792854047317
+lastSeenAt: 1792854047317
 fingerprint: null
 payload:
   id: B6_two_intelligence_runtimes
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: dab0a371316d260f
+    hash: ca00f4b12ce3bba5
     nodes:
       - path: cortex/boot.js
         role: changes
@@ -48,6 +48,10 @@ payload:
         role: uses
         exists: true
         system: cortex
+      - path: cortex/core/raid/index.js
+        role: uses
+        exists: true
+        system: cortex
       - path: cortex/memory/jaa-db.js
         role: uses
         exists: true
@@ -60,10 +64,6 @@ payload:
         role: uses
         exists: true
         system: hooks
-      - path: lib/component-registry.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/data-home.js
         role: uses
         exists: true
@@ -121,13 +121,13 @@ payload:
         to: lib/migrate-ledger-per-system.js
         kind: requires
       - from: cortex/boot.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/boot.js
         to: lib/nerve/index.js
         kind: requires
       - from: cortex/boot.js
         to: hooks/index.js
-        kind: requires
-      - from: cortex/boot.js
-        to: lib/component-registry.js
         kind: requires
       - from: service/cortex-service.js
         to: cortex/boot.js
@@ -156,7 +156,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -167,7 +167,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

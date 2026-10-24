@@ -9,11 +9,11 @@ intent: null
 summary: CG3_ublock_style_adblocker (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853453096
+exported_at: 1792854043291
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853453096
-lastSeenAt: 1792853453096
+firstSeenAt: 1792854043291
+lastSeenAt: 1792854043291
 fingerprint: null
 payload:
   id: CG3_ublock_style_adblocker
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -43,7 +43,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: d2b7ac95-8d0c-5a21-a194-9391aa10f2d9

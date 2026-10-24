@@ -9,11 +9,11 @@ intent: null
 summary: AM11_per_agent_tasks_automation (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853452598
+exported_at: 1792854042776
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853452598
-lastSeenAt: 1792853452598
+firstSeenAt: 1792854042776
+lastSeenAt: 1792854042776
 fingerprint: null
 payload:
   id: AM11_per_agent_tasks_automation
@@ -235,7 +235,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::AM7_agent_suite_welcome_ui
@@ -252,7 +252,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by AM7_agent_suite_welcome_ui
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by AM7_agent_suite_welcome_ui
         - 'depends on (1): AM7_agent_suite_welcome_ui'
         - >-
           needed by (1): WF1_workflow_automation_engine · finishing it unlocks

@@ -7,11 +7,11 @@ intent: null
 summary: OR5_it_stays_decluttered (?) — 2 file(s)
 system: loom
 tags: []
-exported_at: 1792853477800
+exported_at: 1792854068010
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853477800
-lastSeenAt: 1792853477800
+firstSeenAt: 1792854068010
+lastSeenAt: 1792854068010
 fingerprint: null
 payload:
   id: OR5_it_stays_decluttered
@@ -270,7 +270,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
@@ -289,7 +289,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 3 · blocked by OR1_five_answers_for_an_open_phase,
+          DAG a0036d89ebc520f8 · layer 3 · blocked by OR1_five_answers_for_an_open_phase,
           OR4_one_roadmap_in_idearium
         - >-
           depends on (2): OR1_five_answers_for_an_open_phase, OR4_one_roadmap_in_idearium · all

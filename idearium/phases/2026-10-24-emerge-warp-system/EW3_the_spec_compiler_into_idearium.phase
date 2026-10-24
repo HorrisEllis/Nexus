@@ -9,11 +9,11 @@ intent: null
 summary: EW3_the_spec_compiler_into_idearium (backend) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1792853509011
+exported_at: 1792854098933
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853509011
-lastSeenAt: 1792853509011
+firstSeenAt: 1792854098933
+lastSeenAt: 1792854098933
 fingerprint: null
 payload:
   id: EW3_the_spec_compiler_into_idearium
@@ -233,7 +233,7 @@ payload:
         known: false
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
@@ -254,7 +254,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (1): EW2_the_callers_outside_idearium · all upstream 5'
         - >-
           needed by (1): EW4_the_ide_into_idearium · all downstream 2 · finishing it unlocks

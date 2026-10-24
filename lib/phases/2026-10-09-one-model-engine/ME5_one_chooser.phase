@@ -7,11 +7,11 @@ intent: null
 summary: ME5_one_chooser (?) — 13 file(s)
 system: core
 tags: []
-exported_at: 1792853477358
+exported_at: 1792854067579
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853477358
-lastSeenAt: 1792853477358
+firstSeenAt: 1792854067579
+lastSeenAt: 1792854067579
 fingerprint: null
 payload:
   id: ME5_one_chooser
@@ -38,7 +38,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: c19c4acf0d80ec8c
+    hash: aa25b14f82941050
     nodes:
       - path: clear-glass/src/mesh/agent-mesh.js
         role: changes
@@ -108,18 +108,6 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: guardian/api-dispatch.js
-        role: used-by
-        exists: true
-        system: guardian
-      - path: guardian/lib/dispatcher.js
-        role: used-by
-        exists: true
-        system: guardian
-      - path: guardian/server.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: lib/agent-system/submit.js
         role: used-by
         exists: true
@@ -140,6 +128,18 @@ payload:
         role: used-by
         exists: true
         system: lib
+      - path: orchestrator/lib/request-handler.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/modules/idearium-guardian-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/raid-approve-tool.test.js
+        role: used-by
+        exists: true
+        system: null
       - path: cortex/contract/index.js
         role: uses
         exists: true
@@ -237,15 +237,6 @@ payload:
       - from: diagnostic/lib/heal-loop.js
         to: cortex/core/raid/index.js
         kind: requires
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        kind: requires
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        kind: requires
-      - from: guardian/server.js
-        to: cortex/core/raid/index.js
-        kind: requires
       - from: lib/agent-system/submit.js
         to: cortex/core/raid/index.js
         kind: requires
@@ -259,6 +250,15 @@ payload:
         to: cortex/core/raid/index.js
         kind: requires
       - from: lib/nexus-client.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: orchestrator/lib/request-handler.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: tests/modules/idearium-guardian-dispatch.test.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: tests/modules/raid-approve-tool.test.js
         to: cortex/core/raid/index.js
         kind: requires
     crossings:
@@ -286,24 +286,6 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/server.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
       - from: lib/agent-system/submit.js
         to: cortex/core/raid/index.js
         fromSystem: lib
@@ -334,9 +316,15 @@ payload:
         toSystem: cortex
         kind: upward
         known: true
+      - from: orchestrator/lib/request-handler.js
+        to: cortex/core/raid/index.js
+        fromSystem: orchestrator
+        toSystem: cortex
+        kind: system
+        known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
@@ -371,7 +359,7 @@ payload:
             - lib/pipeline-routing.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by ME3_one_engine_one_budget
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by ME3_one_engine_one_budget
         - 'depends on (1): ME3_one_engine_one_budget · all upstream 4'
         - >-
           needed by (4): ME6_one_learner, ME8_the_drainers_run_the_engine,

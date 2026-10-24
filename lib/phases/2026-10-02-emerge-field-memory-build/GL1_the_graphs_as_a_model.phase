@@ -9,11 +9,11 @@ intent: null
 summary: GL1_the_graphs_as_a_model (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853467725
+exported_at: 1792854057685
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467725
-lastSeenAt: 1792853467725
+firstSeenAt: 1792854057685
+lastSeenAt: 1792854057685
 fingerprint: null
 payload:
   id: GL1_the_graphs_as_a_model
@@ -35,7 +35,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
@@ -65,7 +65,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 7 · blocked by RF1_relational_field, MR7_recipes,
+          DAG a0036d89ebc520f8 · layer 7 · blocked by RF1_relational_field, MR7_recipes,
           FM1_mining_failure_modes
         - >-
           depends on (3): RF1_relational_field, MR7_recipes, FM1_mining_failure_modes · all upstream

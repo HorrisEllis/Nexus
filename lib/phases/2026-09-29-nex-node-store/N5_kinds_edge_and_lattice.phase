@@ -7,11 +7,11 @@ intent: null
 summary: N5_kinds_edge_and_lattice (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853464606
+exported_at: 1792854054552
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853464606
-lastSeenAt: 1792853464606
+firstSeenAt: 1792854054552
+lastSeenAt: 1792854054552
 fingerprint: null
 payload:
   id: N5_kinds_edge_and_lattice
@@ -46,7 +46,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
@@ -80,7 +80,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by N3_projection_and_indexes
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by N3_projection_and_indexes
         - 'depends on (1): N3_projection_and_indexes · all upstream 4'
         - 'needed by (2): N7_views_yaml_and_nex, N14_failure_mode_field · all downstream 15'
   uuid: 0a1b4b7c-0323-5b67-9a90-bc75b6f288f5

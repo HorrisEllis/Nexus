@@ -9,11 +9,11 @@ intent: null
 summary: PR3_negative_space_for_missed_heartbeats (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853469815
+exported_at: 1792854059842
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853469815
-lastSeenAt: 1792853469815
+firstSeenAt: 1792854059842
+lastSeenAt: 1792854059842
 fingerprint: null
 payload:
   id: PR3_negative_space_for_missed_heartbeats
@@ -78,7 +78,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
@@ -98,7 +98,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): PR2_the_diagnostic_listens_not_polls · all upstream 2'
         - >-
           needed by (2): PR4_deviation_raises_the_bpm, PR5_repair_for_real · finishing it unlocks

@@ -7,11 +7,11 @@ intent: null
 summary: JB4_resume_import (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853481214
+exported_at: 1792854071365
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481214
-lastSeenAt: 1792853481214
+firstSeenAt: 1792854071365
+lastSeenAt: 1792854071365
 fingerprint: null
 payload:
   id: JB4_resume_import
@@ -83,7 +83,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB0_gig_files
@@ -100,7 +100,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): JB0_gig_files'
         - >-
           needed by (1): JB6_the_application_ledger · all downstream 2 · finishing it unlocks

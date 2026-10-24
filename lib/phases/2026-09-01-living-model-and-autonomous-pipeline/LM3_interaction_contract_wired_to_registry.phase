@@ -9,11 +9,11 @@ intent: null
 summary: LM3_interaction_contract_wired_to_registry (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853451671
+exported_at: 1792854041877
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853451671
-lastSeenAt: 1792853451671
+firstSeenAt: 1792854041877
+lastSeenAt: 1792854041877
 fingerprint: null
 payload:
   id: LM3_interaction_contract_wired_to_registry
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
@@ -53,7 +53,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by LM2_registry_as_hub_with_watchdog
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by LM2_registry_as_hub_with_watchdog
         - 'depends on (1): LM2_registry_as_hub_with_watchdog · all upstream 2'
         - >-
           needed by (1): LM6_who_creates_contracts · all downstream 3 · finishing it unlocks

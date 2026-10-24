@@ -7,11 +7,11 @@ intent: null
 summary: DBG6_cases_crystallize (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853498719
+exported_at: 1792854088370
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853498719
-lastSeenAt: 1792853498719
+firstSeenAt: 1792854088370
+lastSeenAt: 1792854088370
 fingerprint: null
 payload:
   id: DBG6_cases_crystallize
@@ -224,7 +224,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
@@ -244,7 +244,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 4 · blocked by DBG2_the_case,
+          DAG a0036d89ebc520f8 · layer 4 · blocked by DBG2_the_case,
           DBG3_deviation_and_friction_per_run
         - 'depends on (2): DBG2_the_case, DBG3_deviation_and_friction_per_run · all upstream 4'
         - 'needed by (0): —'

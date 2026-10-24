@@ -9,11 +9,11 @@ intent: null
 summary: RQ4_escalate_on_the_checks_and_keep_the_lesson (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792853481661
+exported_at: 1792854071797
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481661
-lastSeenAt: 1792853481661
+firstSeenAt: 1792854071797
+lastSeenAt: 1792854071797
 fingerprint: null
 payload:
   id: RQ4_escalate_on_the_checks_and_keep_the_lesson
@@ -206,7 +206,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ3_repair_with_the_checks_own_words
@@ -236,7 +236,7 @@ payload:
             - lib/component-store.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by RQ3_repair_with_the_checks_own_words
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by RQ3_repair_with_the_checks_own_words
         - 'depends on (1): RQ3_repair_with_the_checks_own_words · all upstream 4'
         - >-
           needed by (1): RQ5_the_small_model_baseline · all downstream 7 · finishing it unlocks

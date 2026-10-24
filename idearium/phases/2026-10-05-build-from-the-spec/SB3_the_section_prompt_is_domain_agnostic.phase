@@ -9,11 +9,11 @@ intent: null
 summary: SB3_the_section_prompt_is_domain_agnostic (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470240
+exported_at: 1792854060300
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470240
-lastSeenAt: 1792853470240
+firstSeenAt: 1792854060300
+lastSeenAt: 1792854060300
 fingerprint: null
 payload:
   id: SB3_the_section_prompt_is_domain_agnostic
@@ -218,7 +218,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
@@ -245,7 +245,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): SB1_templates_are_the_default_frame · all upstream 2'
         - >-
           needed by (2): SB6_hundreds_of_specs, SB32_context_is_never_optional · all downstream 10 ·

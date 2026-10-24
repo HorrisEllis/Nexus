@@ -7,11 +7,11 @@ intent: null
 summary: C4 (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853461167
+exported_at: 1792854051090
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853461167
-lastSeenAt: 1792853461167
+firstSeenAt: 1792854051090
+lastSeenAt: 1792854051090
 fingerprint: null
 payload:
   id: C4
@@ -225,7 +225,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -236,7 +236,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

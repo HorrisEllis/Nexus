@@ -7,11 +7,11 @@ intent: null
 summary: X1 (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853459854
+exported_at: 1792854049875
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853459854
-lastSeenAt: 1792853459854
+firstSeenAt: 1792854049875
+lastSeenAt: 1792854049875
 fingerprint: null
 payload:
   id: X1
@@ -98,7 +98,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
@@ -117,7 +117,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by T1
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by T1
         - 'depends on (1): T1 · all upstream 6'
         - 'needed by (0): —'
   uuid: 5bb012ea-ead6-55bd-be6d-c75c9ecc4d2d

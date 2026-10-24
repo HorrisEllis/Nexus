@@ -7,11 +7,11 @@ intent: null
 summary: ME8_the_drainers_run_the_engine (?) — 5 file(s)
 system: cortex
 tags: []
-exported_at: 1792853477361
+exported_at: 1792854067582
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853477361
-lastSeenAt: 1792853477361
+firstSeenAt: 1792854067582
+lastSeenAt: 1792854067582
 fingerprint: null
 payload:
   id: ME8_the_drainers_run_the_engine
@@ -32,7 +32,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: a10cd5fa948ace2c
+    hash: 095f9632131bfd94
     nodes:
       - path: architect/service.js
         role: changes
@@ -70,10 +70,6 @@ payload:
         role: used-by
         exists: true
         system: cortex
-      - path: guardian/server.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: scripts/mco5-one-real-job.js
         role: used-by
         exists: true
@@ -99,6 +95,10 @@ payload:
         exists: true
         system: null
       - path: tests/modules/mco6-reconcile-on-boot.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/raid-retry-escalation.test.js
         role: used-by
         exists: true
         system: null
@@ -199,9 +199,6 @@ payload:
       - from: cortex/self-heal/index.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        kind: requires
       - from: scripts/mco5-one-real-job.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
@@ -221,6 +218,9 @@ payload:
         to: cortex/core/raid/contract-intake.js
         kind: requires
       - from: tests/modules/mco6-reconcile-on-boot.test.js
+        to: cortex/core/raid/contract-intake.js
+        kind: requires
+      - from: tests/modules/raid-retry-escalation.test.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
     crossings:
@@ -260,15 +260,9 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/server.js
-        to: cortex/core/raid/contract-intake.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-09-one-model-engine-phasemap.spec::ME0_the_inventory_proved
@@ -294,7 +288,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 5 · blocked by ME0_the_inventory_proved,
+          DAG a0036d89ebc520f8 · layer 5 · blocked by ME0_the_inventory_proved,
           ME3_one_engine_one_budget, ME5_one_chooser
         - >-
           depends on (3): ME0_the_inventory_proved, ME3_one_engine_one_budget, ME5_one_chooser · all

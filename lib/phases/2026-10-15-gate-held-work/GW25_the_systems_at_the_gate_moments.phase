@@ -9,11 +9,11 @@ intent: null
 summary: GW25_the_systems_at_the_gate_moments (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853487113
+exported_at: 1792854076780
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853487113
-lastSeenAt: 1792853487113
+firstSeenAt: 1792854076780
+lastSeenAt: 1792854076780
 fingerprint: null
 payload:
   id: GW25_the_systems_at_the_gate_moments
@@ -185,7 +185,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
@@ -207,7 +207,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 4 · blocked by
+          DAG a0036d89ebc520f8 · layer 4 · blocked by
           GW24_the_gate_holds_the_agent_gets_a_projection, GW6_the_intelligence_system_on_every_gate
         - >-
           depends on (2): GW24_the_gate_holds_the_agent_gets_a_projection,

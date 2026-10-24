@@ -9,11 +9,11 @@ intent: null
 summary: JB1_the_agent_writes_the_gig_file (?) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853481210
+exported_at: 1792854071360
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481210
-lastSeenAt: 1792853481210
+firstSeenAt: 1792854071360
+lastSeenAt: 1792854071360
 fingerprint: null
 payload:
   id: JB1_the_agent_writes_the_gig_file
@@ -80,7 +80,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB0_gig_files
@@ -99,7 +99,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by JB2_the_copilot_hat_agent_and_account
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by JB2_the_copilot_hat_agent_and_account
         - 'depends on (2): JB0_gig_files, JB2_the_copilot_hat_agent_and_account · all upstream 5'
         - 'needed by (0): —'
   uuid: d46fe77f-0852-56b1-aa4e-286e5d21edde

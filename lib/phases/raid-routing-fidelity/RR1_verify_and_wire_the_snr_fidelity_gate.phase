@@ -9,11 +9,11 @@ intent: null
 summary: RR1_verify_and_wire_the_snr_fidelity_gate (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853517760
+exported_at: 1792854108263
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853517760
-lastSeenAt: 1792853517760
+firstSeenAt: 1792854108263
+lastSeenAt: 1792854108263
 fingerprint: null
 payload:
   id: RR1_verify_and_wire_the_snr_fidelity_gate
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 811ac85b77bfb21d
+    hash: 353f28a6143e5fdd
     nodes:
       - path: cortex/core/raid/index.js
         role: changes
@@ -64,22 +64,22 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: guardian/api-dispatch.js
-        role: used-by
-        exists: true
-        system: guardian
-      - path: guardian/lib/dispatcher.js
-        role: used-by
-        exists: true
-        system: guardian
-      - path: guardian/server.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: idearium/spec-engine/chunk-dispatch.js
         role: used-by
         exists: true
         system: idearium
+      - path: lib/agent-system/submit.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/generate-agent-nodes.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/index.js
+        role: used-by
+        exists: true
+        system: lib
       - path: lib/agent-tools/tools/governance/raid-snr.js
         role: used-by
         exists: true
@@ -187,16 +187,16 @@ payload:
       - from: diagnostic/lib/heal-loop.js
         to: cortex/core/raid/index.js
         kind: requires
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        kind: requires
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        kind: requires
-      - from: guardian/server.js
-        to: cortex/core/raid/index.js
-        kind: requires
       - from: idearium/spec-engine/chunk-dispatch.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-system/submit.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-tools/generate-agent-nodes.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-tools/index.js
         to: cortex/core/raid/index.js
         kind: requires
     crossings:
@@ -230,33 +230,33 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/server.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/spec-engine/chunk-dispatch.js
         to: cortex/core/raid/index.js
         fromSystem: idearium
         toSystem: cortex
         kind: system
         known: true
+      - from: lib/agent-system/submit.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/agent-tools/generate-agent-nodes.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/agent-tools/index.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -288,7 +288,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (3): RR2_contract_based_chunking, RR3_per_agent_config_in_cortex,

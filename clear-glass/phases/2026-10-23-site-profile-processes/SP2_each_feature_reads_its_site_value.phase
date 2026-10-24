@@ -9,11 +9,11 @@ intent: null
 summary: SP2_each_feature_reads_its_site_value (integration) — 13 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853508201
+exported_at: 1792854098122
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853508201
-lastSeenAt: 1792853508201
+firstSeenAt: 1792854098122
+lastSeenAt: 1792854098122
 fingerprint: null
 payload:
   id: SP2_each_feature_reads_its_site_value
@@ -269,7 +269,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
@@ -287,7 +287,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): SP1_one_resolver_for_every_feature · all upstream 3'
         - >-
           needed by (1): SP3_the_site_settings_screen · finishing it unlocks

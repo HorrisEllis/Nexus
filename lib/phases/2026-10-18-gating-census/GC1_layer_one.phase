@@ -7,11 +7,11 @@ intent: null
 summary: GC1_layer_one (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792853499557
+exported_at: 1792854089252
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853499557
-lastSeenAt: 1792853499557
+firstSeenAt: 1792854089252
+lastSeenAt: 1792854089252
 fingerprint: null
 payload:
   id: GC1_layer_one
@@ -265,7 +265,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-18-gating-census-phasemap.spec::GC0_the_census
@@ -278,7 +278,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): GC0_the_census'
         - 'needed by (0): —'
   uuid: cca59fef-45c5-5420-bced-3712e79e1bd6

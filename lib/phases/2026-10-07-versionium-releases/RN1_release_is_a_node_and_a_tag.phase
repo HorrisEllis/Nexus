@@ -9,11 +9,11 @@ intent: null
 summary: RN1_release_is_a_node_and_a_tag (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853476499
+exported_at: 1792854066726
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853476499
-lastSeenAt: 1792853476499
+firstSeenAt: 1792854066726
+lastSeenAt: 1792854066726
 fingerprint: null
 payload:
   id: RN1_release_is_a_node_and_a_tag
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
@@ -49,7 +49,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): VR1_every_change_a_commit'
         - 'needed by (1): RN2_cortex_is_the_bookkeeper · all downstream 2'
   uuid: e0ba58e4-978c-54e3-901d-26563c80fd07

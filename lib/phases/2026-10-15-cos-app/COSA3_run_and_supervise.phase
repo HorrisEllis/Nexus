@@ -7,11 +7,11 @@ intent: null
 summary: COSA3_run_and_supervise (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853486260
+exported_at: 1792854075944
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853486260
-lastSeenAt: 1792853486260
+firstSeenAt: 1792854075944
+lastSeenAt: 1792854075944
 fingerprint: null
 payload:
   id: COSA3_run_and_supervise
@@ -213,7 +213,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
@@ -251,7 +251,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): COSA2_runtime_and_dependencies · all upstream 2'
         - >-
           needed by (4): COSA4_switch_and_rollback, COSA8_other_projects, COSA9_idearium_sync,

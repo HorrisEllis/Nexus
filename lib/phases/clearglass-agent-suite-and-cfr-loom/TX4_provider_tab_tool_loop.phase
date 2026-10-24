@@ -9,11 +9,11 @@ intent: null
 summary: TX4_provider_tab_tool_loop (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853510228
+exported_at: 1792854100614
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853510228
-lastSeenAt: 1792853510228
+firstSeenAt: 1792854100614
+lastSeenAt: 1792854100614
 fingerprint: null
 payload:
   id: TX4_provider_tab_tool_loop
@@ -243,7 +243,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX3_talk_to_agent_launcher
@@ -260,7 +260,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by TX3_talk_to_agent_launcher
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by TX3_talk_to_agent_launcher
         - 'depends on (1): TX3_talk_to_agent_launcher'
         - >-
           needed by (1): TX6_stop_using_this_chat_migration · finishing it unlocks

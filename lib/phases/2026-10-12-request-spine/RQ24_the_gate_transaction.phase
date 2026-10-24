@@ -7,11 +7,11 @@ intent: null
 summary: RQ24_the_gate_transaction (?) — 8 file(s)
 system: core
 tags: []
-exported_at: 1792853481693
+exported_at: 1792854071825
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481693
-lastSeenAt: 1792853481693
+firstSeenAt: 1792854071825
+lastSeenAt: 1792854071825
 fingerprint: null
 payload:
   id: RQ24_the_gate_transaction
@@ -252,7 +252,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ21_the_contract_file_is_its_record
@@ -281,7 +281,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 5 · blocked by RQ21_the_contract_file_is_its_record,
+          DAG a0036d89ebc520f8 · layer 5 · blocked by RQ21_the_contract_file_is_its_record,
           RQ23_acceptance_conditions_that_cannot_be_moved,
           RQ2_the_generation_failure_vocabulary_and_index, RQ10_anchors_and_the_diff_reconciled
         - >-

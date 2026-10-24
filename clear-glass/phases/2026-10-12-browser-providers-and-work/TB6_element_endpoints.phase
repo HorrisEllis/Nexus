@@ -7,11 +7,11 @@ intent: null
 summary: TB6_element_endpoints (?) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853481198
+exported_at: 1792854071348
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481198
-lastSeenAt: 1792853481198
+firstSeenAt: 1792854071348
+lastSeenAt: 1792854071348
 fingerprint: null
 payload:
   id: TB6_element_endpoints
@@ -88,7 +88,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB5_site_and_account_nodes
@@ -109,7 +109,7 @@ payload:
             - guardian/userscript-field-map.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by TB5_site_and_account_nodes
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by TB5_site_and_account_nodes
         - 'depends on (1): TB5_site_and_account_nodes · all upstream 4'
         - 'needed by (0): —'
         - >-

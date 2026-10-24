@@ -9,11 +9,11 @@ intent: null
 summary: SB34_context_is_the_code_tab_the_graphs_and_memory (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853470307
+exported_at: 1792854060368
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470307
-lastSeenAt: 1792853470307
+firstSeenAt: 1792854060368
+lastSeenAt: 1792854060368
 fingerprint: null
 payload:
   id: SB34_context_is_the_code_tab_the_graphs_and_memory
@@ -227,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB33_the_agent_runs_the_pipeline
@@ -251,7 +251,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 5
+        - DAG a0036d89ebc520f8 · layer 5
         - 'depends on (1): SB33_the_agent_runs_the_pipeline · all upstream 5'
         - >-
           needed by (1): SB35_the_index_is_there_when_the_agent_asks · all downstream 5 · finishing

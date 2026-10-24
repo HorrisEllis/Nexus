@@ -7,11 +7,11 @@ intent: null
 summary: FV0_fulfil_a_taken_order (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792853467699
+exported_at: 1792854057659
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467699
-lastSeenAt: 1792853467699
+firstSeenAt: 1792854057659
+lastSeenAt: 1792854057659
 fingerprint: null
 payload:
   id: FV0_fulfil_a_taken_order
@@ -226,7 +226,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
@@ -269,7 +269,7 @@ payload:
             - idearium/repo/proof-run.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - DAG a0036d89ebc520f8 · layer 3 · ready
         - >-
           depends on (2): PR1_proof_run_the_delivery_checker, PH1_phase_runs_end_in_proof · all
           upstream 3

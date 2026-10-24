@@ -7,11 +7,11 @@ intent: null
 summary: CV2_a_version_per_diff (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853485818
+exported_at: 1792854075532
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853485818
-lastSeenAt: 1792853485818
+firstSeenAt: 1792854075532
+lastSeenAt: 1792854075532
 fingerprint: null
 payload:
   id: CV2_a_version_per_diff
@@ -142,7 +142,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE7_ai_assisted_editing
@@ -165,7 +165,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4
+        - DAG a0036d89ebc520f8 · layer 4
         - 'depends on (1): CE7_ai_assisted_editing · all upstream 4'
         - >-
           needed by (2): CV3_file_rewind, CV4_tagged_history · all downstream 3 · finishing it

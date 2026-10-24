@@ -7,11 +7,11 @@ intent: null
 summary: IM1_ideas_and_notes_as_one (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853500775
+exported_at: 1792854090448
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853500775
-lastSeenAt: 1792853500775
+firstSeenAt: 1792854090448
+lastSeenAt: 1792854090448
 fingerprint: null
 payload:
   id: IM1_ideas_and_notes_as_one
@@ -73,7 +73,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-19-idearium-control-phasemap.spec::IX1_everything_linked
@@ -95,7 +95,7 @@ payload:
             - idearium/ui/index.html
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by IX1_everything_linked
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by IX1_everything_linked
         - 'depends on (1): IX1_everything_linked'
         - >-
           needed by (2): IM2_promote_to_phase, IM3_ideas_mapped_to_nexus · finishing it unlocks

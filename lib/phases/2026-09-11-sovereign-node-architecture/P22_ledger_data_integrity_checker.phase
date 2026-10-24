@@ -9,11 +9,11 @@ intent: null
 summary: P22_ledger_data_integrity_checker (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853455120
+exported_at: 1792854045177
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853455120
-lastSeenAt: 1792853455120
+firstSeenAt: 1792854045177
+lastSeenAt: 1792854045177
 fingerprint: null
 payload:
   id: P22_ledger_data_integrity_checker
@@ -92,7 +92,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -103,7 +103,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

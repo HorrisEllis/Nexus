@@ -7,11 +7,11 @@ intent: null
 summary: CV4_tagged_history (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853485820
+exported_at: 1792854075534
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853485820
-lastSeenAt: 1792853485820
+firstSeenAt: 1792854075534
+lastSeenAt: 1792854075534
 fingerprint: null
 payload:
   id: CV4_tagged_history
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV2_a_version_per_diff
@@ -240,7 +240,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 5
+        - DAG a0036d89ebc520f8 · layer 5
         - 'depends on (1): CV2_a_version_per_diff · all upstream 5'
         - 'needed by (1): CV5_universal_versioning · finishing it unlocks CV5_universal_versioning'
   uuid: 7d782357-74b7-5949-90bb-d18e7c829d10

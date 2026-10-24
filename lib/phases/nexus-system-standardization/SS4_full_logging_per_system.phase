@@ -7,11 +7,11 @@ intent: null
 summary: SS4_full_logging_per_system (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853517317
+exported_at: 1792854107861
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853517317
-lastSeenAt: 1792853517317
+firstSeenAt: 1792854107861
+lastSeenAt: 1792854107861
 fingerprint: null
 payload:
   id: SS4_full_logging_per_system
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
@@ -58,7 +58,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 3 · blocked by SS1_system_manifest,
+          DAG a0036d89ebc520f8 · layer 3 · blocked by SS1_system_manifest,
           SS3_event_driven_handshake_contracts
         - 'depends on (2): SS1_system_manifest, SS3_event_driven_handshake_contracts · all upstream 3'
         - >-

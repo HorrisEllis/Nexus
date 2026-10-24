@@ -7,11 +7,11 @@ intent: null
 summary: A1 (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853463773
+exported_at: 1792854053716
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853463773
-lastSeenAt: 1792853463773
+firstSeenAt: 1792854053716
+lastSeenAt: 1792854053716
 fingerprint: null
 payload:
   id: A1
@@ -59,7 +59,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-09-28-staging-self-heal-phasemap.spec::S0
@@ -98,7 +98,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by S2, S3, S4, S5, S6, S7
+        - DAG a0036d89ebc520f8 · layer 7 · blocked by S2, S3, S4, S5, S6, S7
         - 'depends on (10): S0, S1, S2, S3, C0, C1, S4, S5, S6, S7'
         - 'needed by (1): X1'
   uuid: 6d944818-ba80-565d-b78c-e763f3b6398f

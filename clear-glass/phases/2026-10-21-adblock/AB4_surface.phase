@@ -7,11 +7,11 @@ intent: null
 summary: AB4_surface (surface) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853503680
+exported_at: 1792854093441
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503680
-lastSeenAt: 1792853503680
+firstSeenAt: 1792854093441
+lastSeenAt: 1792854093441
 fingerprint: null
 payload:
   id: AB4_surface
@@ -215,7 +215,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
@@ -237,7 +237,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4
+        - DAG a0036d89ebc520f8 · layer 4
         - 'depends on (1): AB3_wiring · all upstream 7'
         - 'needed by (1): AB5_import · finishing it unlocks AB5_import'
   uuid: d316ed98-7f9f-57ba-9981-e4d74ac8589b

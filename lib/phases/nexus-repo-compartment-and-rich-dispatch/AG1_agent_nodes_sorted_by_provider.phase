@@ -9,11 +9,11 @@ intent: null
 summary: AG1_agent_nodes_sorted_by_provider (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853516021
+exported_at: 1792854106603
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853516021
-lastSeenAt: 1792853516021
+firstSeenAt: 1792854106603
+lastSeenAt: 1792854106603
 fingerprint: null
 payload:
   id: AG1_agent_nodes_sorted_by_provider
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -233,7 +233,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

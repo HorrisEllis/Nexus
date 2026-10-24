@@ -7,11 +7,11 @@ intent: null
 summary: PL6_global_links_seen (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853483476
+exported_at: 1792854073463
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853483476
-lastSeenAt: 1792853483476
+firstSeenAt: 1792854073463
+lastSeenAt: 1792854073463
 fingerprint: null
 payload:
   id: PL6_global_links_seen
@@ -132,7 +132,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: null
       deps:
         - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RF0_architecture_read
@@ -156,7 +156,7 @@ payload:
             - lib/project-decompose.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer — · blocked by RF0_architecture_read
+        - DAG a0036d89ebc520f8 · layer — · blocked by RF0_architecture_read
         - 'depends on (1): RF0_architecture_read · all upstream 5'
         - 'needed by (1): RF0_architecture_read · finishing it unlocks RF0_architecture_read'
         - 'CYCLE: PL6_global_links_seen → RF0_architecture_read'

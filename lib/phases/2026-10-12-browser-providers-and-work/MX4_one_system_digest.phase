@@ -7,11 +7,11 @@ intent: null
 summary: MX4_one_system_digest (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853481221
+exported_at: 1792854071373
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481221
-lastSeenAt: 1792853481221
+firstSeenAt: 1792854071373
+lastSeenAt: 1792854071373
 fingerprint: null
 payload:
   id: MX4_one_system_digest
@@ -191,7 +191,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB3_tabs_are_compartments
@@ -211,7 +211,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by TB3_tabs_are_compartments, PV3_input_nodes
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by TB3_tabs_are_compartments, PV3_input_nodes
         - 'depends on (2): TB3_tabs_are_compartments, PV3_input_nodes · all upstream 5'
         - 'needed by (0): —'
   uuid: e8067c7b-b2c4-5269-9e6e-6abd6c3bb615

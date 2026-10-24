@@ -9,11 +9,11 @@ intent: null
 summary: CG2_one_source_of_truth_for_the_browser (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853480379
+exported_at: 1792854070505
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853480379
-lastSeenAt: 1792853480379
+firstSeenAt: 1792854070505
+lastSeenAt: 1792854070505
 fingerprint: null
 payload:
   id: CG2_one_source_of_truth_for_the_browser
@@ -42,7 +42,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -57,7 +57,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (2): TU1_the_nexus_tutorial, CG3_the_fiverr_tutorial_in_the_browser'
   uuid: 8515ec60-d34d-59fe-9b9d-e60ca03308f5

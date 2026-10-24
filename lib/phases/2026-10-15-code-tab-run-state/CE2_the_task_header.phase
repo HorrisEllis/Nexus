@@ -7,11 +7,11 @@ intent: null
 summary: CE2_the_task_header (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853485807
+exported_at: 1792854075522
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853485807
-lastSeenAt: 1792853485807
+firstSeenAt: 1792854075522
+lastSeenAt: 1792854075522
 fingerprint: null
 payload:
   id: CE2_the_task_header
@@ -194,7 +194,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
@@ -207,7 +207,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): CE1_the_run_state'
         - 'needed by (0): —'
   uuid: 2c3c3b65-7c41-5ad7-9d79-5936a9851c66

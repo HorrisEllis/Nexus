@@ -9,11 +9,11 @@ intent: null
 summary: DF2_cortex_and_versionium_off_root_data (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853453658
+exported_at: 1792854043754
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853453658
-lastSeenAt: 1792853453658
+firstSeenAt: 1792854043754
+lastSeenAt: 1792854043754
 fingerprint: null
 payload:
   id: DF2_cortex_and_versionium_off_root_data
@@ -226,7 +226,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
@@ -242,7 +242,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): VSB1_fix_versionium_split_brain'
         - 'needed by (1): RP1_repository_per_system · finishing it unlocks RP1_repository_per_system'
   uuid: 9d482e1b-10f1-57b9-8ffa-cbab44d478de

@@ -9,11 +9,11 @@ intent: null
 summary: NV2_tell_clear_glass_what_to_do (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853482600
+exported_at: 1792854072655
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853482600
-lastSeenAt: 1792853482600
+firstSeenAt: 1792854072655
+lastSeenAt: 1792854072655
 fingerprint: null
 payload:
   id: NV2_tell_clear_glass_what_to_do
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::NV1_words_to_elements
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by NV1_words_to_elements
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by NV1_words_to_elements
         - 'depends on (1): NV1_words_to_elements'
         - 'needed by (0): —'
   uuid: fe7e3c6a-c36b-5089-9a6f-7d80c4dc1604

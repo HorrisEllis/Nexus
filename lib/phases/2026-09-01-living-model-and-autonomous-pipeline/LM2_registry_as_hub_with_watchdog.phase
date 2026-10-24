@@ -9,11 +9,11 @@ intent: null
 summary: LM2_registry_as_hub_with_watchdog (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853451670
+exported_at: 1792854041876
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853451670
-lastSeenAt: 1792853451670
+firstSeenAt: 1792854041876
+lastSeenAt: 1792854041876
 fingerprint: null
 payload:
   id: LM2_registry_as_hub_with_watchdog
@@ -44,7 +44,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
@@ -69,7 +69,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by LM1_spec_as_living_model
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by LM1_spec_as_living_model
         - 'depends on (1): LM1_spec_as_living_model'
         - >-
           needed by (3): LM3_interaction_contract_wired_to_registry, LM14_components_store,

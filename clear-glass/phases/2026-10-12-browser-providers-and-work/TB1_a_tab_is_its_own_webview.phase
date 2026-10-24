@@ -9,11 +9,11 @@ intent: null
 summary: TB1_a_tab_is_its_own_webview (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853481191
+exported_at: 1792854071342
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481191
-lastSeenAt: 1792853481191
+firstSeenAt: 1792854071342
+lastSeenAt: 1792854071342
 fingerprint: null
 payload:
   id: TB1_a_tab_is_its_own_webview
@@ -43,7 +43,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB0_the_webview_session_proved
@@ -70,7 +70,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by TB0_the_webview_session_proved
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by TB0_the_webview_session_proved
         - 'depends on (1): TB0_the_webview_session_proved'
         - >-
           needed by (2): TB2_a_tab_runs_as_an_account, TB3_tabs_are_compartments · all downstream 9

@@ -9,11 +9,11 @@ intent: null
 summary: UI11_nav_and_look_restored (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853466342
+exported_at: 1792854056304
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466342
-lastSeenAt: 1792853466342
+firstSeenAt: 1792854056304
+lastSeenAt: 1792854056304
 fingerprint: null
 payload:
   id: UI11_nav_and_look_restored
@@ -44,7 +44,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
@@ -81,7 +81,7 @@ payload:
             - idearium/ui/js/app.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by UI8_code_tab_is_code
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by UI8_code_tab_is_code
         - 'depends on (1): UI8_code_tab_is_code · all upstream 2'
         - 'needed by (0): —'
         - >-

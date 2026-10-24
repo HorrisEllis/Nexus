@@ -7,11 +7,11 @@ intent: null
 summary: BS11_copilot_pane (surface) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853504983
+exported_at: 1792854094757
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504983
-lastSeenAt: 1792853504983
+firstSeenAt: 1792854094757
+lastSeenAt: 1792854094757
 fingerprint: null
 payload:
   id: BS11_copilot_pane
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
@@ -54,7 +54,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): BS8_design_system · all upstream 2'
         - 'needed by (1): BS12_context_automatic · finishing it unlocks BS12_context_automatic'
   uuid: eedc0341-31bd-5cdc-bbf9-c92b11ee7c1a

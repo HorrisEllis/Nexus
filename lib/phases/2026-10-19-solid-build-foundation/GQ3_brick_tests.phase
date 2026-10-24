@@ -7,11 +7,11 @@ intent: null
 summary: GQ3_brick_tests (library) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853502033
+exported_at: 1792854091776
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853502033
-lastSeenAt: 1792853502033
+firstSeenAt: 1792854091776
+lastSeenAt: 1792854091776
 fingerprint: null
 payload:
   id: GQ3_brick_tests
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
@@ -58,7 +58,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by GQ1_quality_stream
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by GQ1_quality_stream
         - 'depends on (1): GQ1_quality_stream · all upstream 2'
         - 'needed by (1): GQ2_brick_gate_runs_the_test · all downstream 5'
   uuid: cc14bd51-4096-5eae-99ee-17f5b2535ed8

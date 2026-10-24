@@ -9,11 +9,11 @@ intent: null
 summary: CS3_clear_glass_users_as_plugins (?) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853485364
+exported_at: 1792854075120
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853485364
-lastSeenAt: 1792853485364
+firstSeenAt: 1792854075120
+lastSeenAt: 1792854075120
 fingerprint: null
 payload:
   id: CS3_clear_glass_users_as_plugins
@@ -87,7 +87,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS2_settings_providers_and_accounts
@@ -102,7 +102,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by CS2_settings_providers_and_accounts
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by CS2_settings_providers_and_accounts
         - 'depends on (1): CS2_settings_providers_and_accounts · all upstream 2'
         - 'needed by (0): —'
   uuid: 985c6969-5133-581f-b635-bbee3d3ae0b1

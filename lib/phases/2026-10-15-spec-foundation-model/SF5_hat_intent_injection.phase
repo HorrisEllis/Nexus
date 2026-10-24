@@ -7,11 +7,11 @@ intent: null
 summary: SF5_hat_intent_injection (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853489259
+exported_at: 1792854078831
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853489259
-lastSeenAt: 1792853489259
+firstSeenAt: 1792854078831
+lastSeenAt: 1792854078831
 fingerprint: null
 payload:
   id: SF5_hat_intent_injection
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by SF4_the_listener
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by SF4_the_listener
         - 'depends on (1): SF4_the_listener · all upstream 3'
         - 'needed by (0): —'
   uuid: e9ed8c0f-19aa-5f66-9dd8-353950538134

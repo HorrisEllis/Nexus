@@ -9,11 +9,11 @@ intent: null
 summary: EV0_contracts_for_every_system (?) — 13 file(s)
 system: emerge
 tags: []
-exported_at: 1792853467633
+exported_at: 1792854057592
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467633
-lastSeenAt: 1792853467633
+firstSeenAt: 1792854057592
+lastSeenAt: 1792854057592
 fingerprint: null
 payload:
   id: EV0_contracts_for_every_system
@@ -270,7 +270,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
@@ -339,7 +339,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): EM0_ground'
         - >-
           needed by (8): EM1_emerge_core, MR1_recall_triad_and_context_table,

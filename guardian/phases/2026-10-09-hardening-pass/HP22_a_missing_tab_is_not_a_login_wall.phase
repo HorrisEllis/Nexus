@@ -9,11 +9,11 @@ intent: null
 summary: HP22_a_missing_tab_is_not_a_login_wall (?) — 3 file(s)
 system: guardian
 tags: []
-exported_at: 1792853476913
+exported_at: 1792854067137
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853476913
-lastSeenAt: 1792853476913
+firstSeenAt: 1792854067137
+lastSeenAt: 1792854067137
 fingerprint: null
 payload:
   id: HP22_a_missing_tab_is_not_a_login_wall
@@ -180,7 +180,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
@@ -194,7 +194,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): HP17_no_tab_is_said_in_seconds · all upstream 2'
         - 'needed by (0): —'
   uuid: 4e80df73-70fe-5d63-acdc-22569be0047e

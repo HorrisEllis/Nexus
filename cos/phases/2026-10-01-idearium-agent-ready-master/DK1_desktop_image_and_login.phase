@@ -9,11 +9,11 @@ intent: null
 summary: DK1_desktop_image_and_login (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792853466319
+exported_at: 1792854056281
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466319
-lastSeenAt: 1792853466319
+firstSeenAt: 1792854056281
+lastSeenAt: 1792854056281
 fingerprint: null
 payload:
   id: DK1_desktop_image_and_login
@@ -244,7 +244,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -261,7 +261,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): DK2_desktop_setup_popup · all downstream 4 · finishing it unlocks

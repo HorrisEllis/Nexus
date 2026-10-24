@@ -7,11 +7,11 @@ intent: null
 summary: BL27_agent_suite_consolidation (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853449313
+exported_at: 1792854039051
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853449313
-lastSeenAt: 1792853449313
+firstSeenAt: 1792854039051
+lastSeenAt: 1792854039051
 fingerprint: null
 payload:
   id: BL27_agent_suite_consolidation
@@ -274,7 +274,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-08-23-backlog-phasemap.spec::BL21_agent_mesh_real_connection
@@ -289,7 +289,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (2): BL21_agent_mesh_real_connection, BL26_account_agent_window_uuid_linking'
         - 'needed by (0): —'
   uuid: 4ebdf8f0-3283-5089-94d3-da89c1ea1f31

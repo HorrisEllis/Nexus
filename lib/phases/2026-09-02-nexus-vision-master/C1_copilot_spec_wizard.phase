@@ -7,11 +7,11 @@ intent: null
 summary: C1_copilot_spec_wizard (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853452579
+exported_at: 1792854042759
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853452579
-lastSeenAt: 1792853452579
+firstSeenAt: 1792854042759
+lastSeenAt: 1792854042759
 fingerprint: null
 payload:
   id: C1_copilot_spec_wizard
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -46,7 +46,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (2): C4_build_wizard_two_modes, D4_spec_bulk_import · finishing it unlocks

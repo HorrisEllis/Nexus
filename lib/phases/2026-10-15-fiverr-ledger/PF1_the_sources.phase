@@ -7,11 +7,11 @@ intent: null
 summary: PF1_the_sources (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853486681
+exported_at: 1792854076347
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853486681
-lastSeenAt: 1792853486681
+firstSeenAt: 1792854076347
+lastSeenAt: 1792854076347
 fingerprint: null
 payload:
   id: PF1_the_sources
@@ -177,7 +177,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF0_the_ledger
@@ -194,7 +194,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): PF0_the_ledger'
         - >-
           needed by (1): PF2_the_slots_into_a_gig · all downstream 2 · finishing it unlocks

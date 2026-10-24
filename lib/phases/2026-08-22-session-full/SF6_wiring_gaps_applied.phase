@@ -7,11 +7,11 @@ intent: null
 summary: SF6_wiring_gaps_applied (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853448756
+exported_at: 1792854038507
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853448756
-lastSeenAt: 1792853448756
+firstSeenAt: 1792854038507
+lastSeenAt: 1792854038507
 fingerprint: null
 payload:
   id: SF6_wiring_gaps_applied
@@ -147,7 +147,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-08-22-session-full-phasemap.spec::SF5_wiring_gap_bridge
@@ -160,7 +160,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): SF5_wiring_gap_bridge'
         - 'needed by (0): —'
   uuid: 4efd2f9a-d3aa-5cb1-8dc1-7e5a75174df6

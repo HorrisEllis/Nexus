@@ -7,11 +7,11 @@ intent: null
 summary: GM5_the_context_ladder (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853499127
+exported_at: 1792854088808
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853499127
-lastSeenAt: 1792853499127
+firstSeenAt: 1792854088808
+lastSeenAt: 1792854088808
 fingerprint: null
 payload:
   id: GM5_the_context_ladder
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -237,7 +237,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (2): GM7_the_context_panel_per_gate, GM8_agents_have_it'
   uuid: fb785cf0-4cb4-5de1-9767-7cd8609e8921

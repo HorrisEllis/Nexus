@@ -9,11 +9,11 @@ intent: null
 summary: RD1_raid_complete_or_build (?) — 3 file(s)
 system: copilot
 tags: []
-exported_at: 1792853467721
+exported_at: 1792854057681
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467721
-lastSeenAt: 1792853467721
+firstSeenAt: 1792854057681
+lastSeenAt: 1792854057681
 fingerprint: null
 payload:
   id: RD1_raid_complete_or_build
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 3aaf92a635841a37
+    hash: d255ad09d055563a
     nodes:
       - path: copilot/capability-extend.js
         role: changes
@@ -69,18 +69,6 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: guardian/api-dispatch.js
-        role: used-by
-        exists: true
-        system: guardian
-      - path: guardian/lib/dispatcher.js
-        role: used-by
-        exists: true
-        system: guardian
-      - path: guardian/server.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: idearium/spec-engine/chunk-dispatch.js
         role: used-by
         exists: true
@@ -90,6 +78,18 @@ payload:
         exists: true
         system: lib
       - path: lib/agent-tools/generate-agent-nodes.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/index.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/autonomous-repair.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/nexus-client.js
         role: used-by
         exists: true
         system: lib
@@ -189,15 +189,6 @@ payload:
       - from: diagnostic/lib/heal-loop.js
         to: cortex/core/raid/index.js
         kind: requires
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        kind: requires
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        kind: requires
-      - from: guardian/server.js
-        to: cortex/core/raid/index.js
-        kind: requires
       - from: idearium/spec-engine/chunk-dispatch.js
         to: cortex/core/raid/index.js
         kind: requires
@@ -205,6 +196,15 @@ payload:
         to: cortex/core/raid/index.js
         kind: requires
       - from: lib/agent-tools/generate-agent-nodes.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/autonomous-repair.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/nexus-client.js
         to: cortex/core/raid/index.js
         kind: requires
     crossings:
@@ -226,24 +226,6 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/server.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/spec-engine/chunk-dispatch.js
         to: cortex/core/raid/index.js
         fromSystem: idearium
@@ -262,9 +244,27 @@ payload:
         toSystem: cortex
         kind: upward
         known: true
+      - from: lib/agent-tools/index.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/autonomous-repair.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/nexus-client.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
@@ -303,7 +303,7 @@ payload:
             - idearium/repo/proof-run.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by LB1_the_end_state_lab
+        - DAG a0036d89ebc520f8 · layer 7 · blocked by LB1_the_end_state_lab
         - >-
           depends on (2): PR1_proof_run_the_delivery_checker, LB1_the_end_state_lab · all upstream
           10

@@ -7,11 +7,11 @@ intent: null
 summary: ND6_the_nodes_screen (ui) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853506995
+exported_at: 1792854096887
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853506995
-lastSeenAt: 1792853506995
+firstSeenAt: 1792854096887
+lastSeenAt: 1792854096887
 fingerprint: null
 payload:
   id: ND6_the_nodes_screen
@@ -42,7 +42,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
@@ -69,7 +69,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 6 · blocked by ND5_every_agent_reaches_every_system
+        - DAG a0036d89ebc520f8 · layer 6 · blocked by ND5_every_agent_reaches_every_system
         - 'depends on (1): ND5_every_agent_reaches_every_system · all upstream 14'
         - 'needed by (0): —'
   uuid: aa58ac18-3e6c-5d70-886c-06486b62dbee

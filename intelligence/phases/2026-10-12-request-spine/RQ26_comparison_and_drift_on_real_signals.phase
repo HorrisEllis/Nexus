@@ -9,11 +9,11 @@ intent: null
 summary: RQ26_comparison_and_drift_on_real_signals (?) — 7 file(s)
 system: intelligence
 tags: []
-exported_at: 1792853481696
+exported_at: 1792854071828
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853481696
-lastSeenAt: 1792853481696
+firstSeenAt: 1792854071828
+lastSeenAt: 1792854071828
 fingerprint: null
 payload:
   id: RQ26_comparison_and_drift_on_real_signals
@@ -35,7 +35,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 4f918005e469cb46
+    hash: 6dc499667cacbc38
     nodes:
       - path: cortex/core/raid/index.js
         role: changes
@@ -89,18 +89,18 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: guardian/api-dispatch.js
+      - path: idearium/spec-engine/chunk-dispatch.js
         role: used-by
         exists: true
-        system: guardian
-      - path: guardian/lib/dispatcher.js
+        system: idearium
+      - path: lib/agent-system/submit.js
         role: used-by
         exists: true
-        system: guardian
-      - path: guardian/server.js
+        system: lib
+      - path: lib/agent-tools/generate-agent-nodes.js
         role: used-by
         exists: true
-        system: guardian
+        system: lib
       - path: lib/agent-tools/tools/execution/run-pipeline.js
         role: used-by
         exists: true
@@ -221,13 +221,13 @@ payload:
       - from: diagnostic/lib/heal-loop.js
         to: cortex/core/raid/index.js
         kind: requires
-      - from: guardian/api-dispatch.js
+      - from: idearium/spec-engine/chunk-dispatch.js
         to: cortex/core/raid/index.js
         kind: requires
-      - from: guardian/lib/dispatcher.js
+      - from: lib/agent-system/submit.js
         to: cortex/core/raid/index.js
         kind: requires
-      - from: guardian/server.js
+      - from: lib/agent-tools/generate-agent-nodes.js
         to: cortex/core/raid/index.js
         kind: requires
     crossings:
@@ -255,27 +255,27 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/api-dispatch.js
+      - from: idearium/spec-engine/chunk-dispatch.js
         to: cortex/core/raid/index.js
-        fromSystem: guardian
+        fromSystem: idearium
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/lib/dispatcher.js
+      - from: lib/agent-system/submit.js
         to: cortex/core/raid/index.js
-        fromSystem: guardian
+        fromSystem: lib
         toSystem: cortex
-        kind: system
+        kind: upward
         known: true
-      - from: guardian/server.js
+      - from: lib/agent-tools/generate-agent-nodes.js
         to: cortex/core/raid/index.js
-        fromSystem: guardian
+        fromSystem: lib
         toSystem: cortex
-        kind: system
+        kind: upward
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
@@ -303,7 +303,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 5 · blocked by RQ0_the_inventory_proved,
+          DAG a0036d89ebc520f8 · layer 5 · blocked by RQ0_the_inventory_proved,
           RQ23_acceptance_conditions_that_cannot_be_moved
         - >-
           depends on (2): RQ0_the_inventory_proved, RQ23_acceptance_conditions_that_cannot_be_moved

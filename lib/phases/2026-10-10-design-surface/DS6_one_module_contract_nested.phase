@@ -7,11 +7,11 @@ intent: null
 summary: DS6_one_module_contract_nested (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853478672
+exported_at: 1792854068795
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853478672
-lastSeenAt: 1792853478672
+firstSeenAt: 1792854068795
+lastSeenAt: 1792854068795
 fingerprint: null
 payload:
   id: DS6_one_module_contract_nested
@@ -125,7 +125,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -143,7 +143,7 @@ payload:
             - eravos/ui/runtime/mod-factory.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (1): DS7_tools_are_mods · all downstream 2 · finishing it unlocks

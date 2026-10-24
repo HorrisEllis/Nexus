@@ -7,11 +7,11 @@ intent: null
 summary: BS8_files_ui (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853464181
+exported_at: 1792854054120
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853464181
-lastSeenAt: 1792853464181
+firstSeenAt: 1792854054120
+lastSeenAt: 1792854054120
 fingerprint: null
 payload:
   id: BS8_files_ui
@@ -46,7 +46,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
@@ -67,7 +67,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (1): BS7_api · all upstream 6'
         - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
   uuid: 68679f8a-77fe-555d-b9b4-488b7586a0a7

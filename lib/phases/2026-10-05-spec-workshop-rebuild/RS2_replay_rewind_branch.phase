@@ -7,11 +7,11 @@ intent: null
 summary: RS2_replay_rewind_branch (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853473326
+exported_at: 1792854063329
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853473326
-lastSeenAt: 1792853473326
+firstSeenAt: 1792854063329
+lastSeenAt: 1792854063329
 fingerprint: null
 payload:
   id: RS2_replay_rewind_branch
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
@@ -60,7 +60,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by RS1_the_generation_recorder
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by RS1_the_generation_recorder
         - 'depends on (1): RS1_the_generation_recorder'
         - >-
           needed by (1): RS6_the_workshop_as_the_editor · all downstream 3 · finishing it unlocks

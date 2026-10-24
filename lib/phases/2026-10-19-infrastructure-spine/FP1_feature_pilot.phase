@@ -7,11 +7,11 @@ intent: null
 summary: FP1_feature_pilot (integration) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853501185
+exported_at: 1792854090885
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501185
-lastSeenAt: 1792853501185
+firstSeenAt: 1792854090885
+lastSeenAt: 1792854090885
 fingerprint: null
 payload:
   id: FP1_feature_pilot
@@ -47,7 +47,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
@@ -68,7 +68,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 5 · blocked by NC1_neutral_core_boundary,
+          DAG a0036d89ebc520f8 · layer 5 · blocked by NC1_neutral_core_boundary,
           AD2_javascript_adapter
         - 'depends on (2): NC1_neutral_core_boundary, AD2_javascript_adapter · all upstream 5'
         - 'needed by (0): —'

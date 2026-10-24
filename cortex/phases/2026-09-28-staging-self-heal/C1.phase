@@ -7,11 +7,11 @@ intent: null
 summary: C1 (?) — 7 file(s)
 system: cortex
 tags: []
-exported_at: 1792853463767
+exported_at: 1792854053711
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853463767
-lastSeenAt: 1792853463767
+firstSeenAt: 1792854053711
+lastSeenAt: 1792854053711
 fingerprint: null
 payload:
   id: C1
@@ -123,7 +123,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-28-staging-self-heal-phasemap.spec::C0
@@ -148,7 +148,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): C0'
         - 'needed by (5): S4, S7, L1, A1, X1 · all downstream 7'
   uuid: 7e612f8f-b73e-510b-b727-3de7f9e4e9e9

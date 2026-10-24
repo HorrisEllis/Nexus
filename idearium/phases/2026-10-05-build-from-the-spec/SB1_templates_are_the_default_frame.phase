@@ -9,11 +9,11 @@ intent: null
 summary: SB1_templates_are_the_default_frame (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470235
+exported_at: 1792854060296
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470235
-lastSeenAt: 1792853470235
+firstSeenAt: 1792854060296
+lastSeenAt: 1792854060296
 fingerprint: null
 payload:
   id: SB1_templates_are_the_default_frame
@@ -223,7 +223,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
@@ -273,7 +273,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): SB0_map'
         - >-
           needed by (5): SB2_his_words_seed_the_spec, SB3_the_section_prompt_is_domain_agnostic,

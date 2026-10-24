@@ -9,11 +9,11 @@ intent: null
 summary: SR8_deterministic_claude_replication (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853452652
+exported_at: 1792854042823
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853452652
-lastSeenAt: 1792853452652
+firstSeenAt: 1792854042823
+lastSeenAt: 1792854042823
 fingerprint: null
 payload:
   id: SR8_deterministic_claude_replication
@@ -34,7 +34,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
@@ -49,7 +49,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (2): SR3_artifact_extraction_introspect_bridge, B1_full_build_contract_schema'
         - 'needed by (0): —'
   uuid: e3e81fc8-db02-58a5-9cf1-a0ecc09e1263

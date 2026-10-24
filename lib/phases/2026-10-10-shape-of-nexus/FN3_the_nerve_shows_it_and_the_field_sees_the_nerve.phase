@@ -9,11 +9,11 @@ intent: null
 summary: FN3_the_nerve_shows_it_and_the_field_sees_the_nerve (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853480379
+exported_at: 1792854070505
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853480379
-lastSeenAt: 1792853480379
+firstSeenAt: 1792854070505
+lastSeenAt: 1792854070505
 fingerprint: null
 payload:
   id: FN3_the_nerve_shows_it_and_the_field_sees_the_nerve
@@ -48,7 +48,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-10-shape-of-nexus-phasemap.spec::FN2_nerve_sees_the_field
@@ -62,7 +62,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (1): FN2_nerve_sees_the_field · all upstream 2'
         - 'needed by (0): —'
   uuid: 559bfbf1-8f56-5191-b28b-f4f6d3197e15

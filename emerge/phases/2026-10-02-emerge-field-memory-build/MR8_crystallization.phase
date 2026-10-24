@@ -7,11 +7,11 @@ intent: null
 summary: MR8_crystallization (?) — 2 file(s)
 system: emerge
 tags: []
-exported_at: 1792853467664
+exported_at: 1792854057623
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467664
-lastSeenAt: 1792853467664
+firstSeenAt: 1792854057623
+lastSeenAt: 1792854057623
 fingerprint: null
 payload:
   id: MR8_crystallization
@@ -133,7 +133,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
@@ -159,7 +159,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by MR7_recipes, EM2_warp_his_own
+        - DAG a0036d89ebc520f8 · layer 7 · blocked by MR7_recipes, EM2_warp_his_own
         - 'depends on (2): MR7_recipes, EM2_warp_his_own · all upstream 9'
         - 'needed by (1): FV1_client_jobs'
   uuid: 9f0bf26a-e28f-52b2-9102-8a53dda0cee0

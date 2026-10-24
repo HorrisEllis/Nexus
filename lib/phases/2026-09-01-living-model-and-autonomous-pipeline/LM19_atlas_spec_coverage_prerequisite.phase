@@ -9,11 +9,11 @@ intent: null
 summary: LM19_atlas_spec_coverage_prerequisite (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853451688
+exported_at: 1792854041893
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853451688
-lastSeenAt: 1792853451688
+firstSeenAt: 1792854041893
+lastSeenAt: 1792854041893
 fingerprint: null
 payload:
   id: LM19_atlas_spec_coverage_prerequisite
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
@@ -264,7 +264,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 1 · blocked by LM1_spec_as_living_model,
+          DAG a0036d89ebc520f8 · layer 1 · blocked by LM1_spec_as_living_model,
           LM18_atlas_map_each_system_first
         - 'depends on (2): LM1_spec_as_living_model, LM18_atlas_map_each_system_first'
         - >-

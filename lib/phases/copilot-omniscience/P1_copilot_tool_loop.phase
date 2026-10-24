@@ -7,11 +7,11 @@ intent: null
 summary: P1_copilot_tool_loop (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853512298
+exported_at: 1792854102753
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853512298
-lastSeenAt: 1792853512298
+firstSeenAt: 1792854102753
+lastSeenAt: 1792854102753
 fingerprint: null
 payload:
   id: P1_copilot_tool_loop
@@ -200,7 +200,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -211,7 +211,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

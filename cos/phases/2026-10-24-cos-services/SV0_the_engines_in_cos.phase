@@ -7,11 +7,11 @@ intent: null
 summary: SV0_the_engines_in_cos (foundation) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792853508604
+exported_at: 1792854098534
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853508604
-lastSeenAt: 1792853508604
+firstSeenAt: 1792854098534
+lastSeenAt: 1792854098534
 fingerprint: null
 payload:
   id: SV0_the_engines_in_cos
@@ -144,7 +144,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -161,7 +161,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): SV1_a_stack_per_root · all downstream 4 · finishing it unlocks

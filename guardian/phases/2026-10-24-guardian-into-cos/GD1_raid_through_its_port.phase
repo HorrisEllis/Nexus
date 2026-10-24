@@ -1,0 +1,267 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD1_raid_through_its_port
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD1_raid_through_its_port
+context: pipeline phase GD1_raid_through_its_port of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD1_raid_through_its_port (backend) — 6 file(s)
+system: guardian
+tags: []
+exported_at: 1792854099319
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792854099319
+lastSeenAt: 1792854099319
+fingerprint: null
+payload:
+  id: GD1_raid_through_its_port
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: >-
+    DONE 0.60.240 — lib/raid-port.js; test-raid-port 4/4; a booted Cortex answered through it;
+    guardian 27 → 20 ways out
+  files:
+    - lib/raid-port.js (new)
+    - cortex/boot.js
+    - guardian/server.js
+    - guardian/api-dispatch.js
+    - guardian/lib/dispatcher.js
+    - tests/modules/test-raid-port.test.js (new)
+  depends_on:
+    - GD_D0_raid_is_reached_never_loaded
+  blocks: []
+  spec: null
+  graph:
+    hash: 9a0eba22d933b995
+    nodes:
+      - path: cortex/boot.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: guardian/api-dispatch.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: guardian/lib/dispatcher.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/raid-port.js
+        role: changes
+        exists: true
+        system: lib
+      - path: tests/modules/test-raid-port.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: guardian/dropzone.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/index.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: service/cortex-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: service/guardian-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: tests/dispatcher-ping-gate.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/dispatcher-stale-socket.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/cortex-sse-broadcast.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-dispatcher-deepseek-ncp.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-guardian-mesh-client.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-guardian-stack-sim.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/config.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/index.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/push-recall.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/lean-mode.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/migrate-ledger-per-system.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nerve/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/systems.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/pulse.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/version.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: lib/raid-port.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/data-home.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/config.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/version.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/pulse.js
+        kind: requires
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/lean-mode.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/push-recall.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/migrate-ledger-per-system.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/nerve/index.js
+        kind: requires
+      - from: service/cortex-service.js
+        to: cortex/boot.js
+        kind: requires
+      - from: tests/modules/cortex-sse-broadcast.test.js
+        to: cortex/boot.js
+        kind: requires
+      - from: guardian/dropzone.js
+        to: guardian/server.js
+        kind: requires
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: guardian/api-dispatch.js
+        kind: requires
+      - from: guardian/lib/index.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/dispatcher-ping-gate.test.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/dispatcher-stale-socket.test.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/modules/test-dispatcher-deepseek-ncp.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/modules/test-guardian-mesh-client.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+      - from: tests/modules/test-guardian-stack-sim.test.js
+        to: guardian/lib/dispatcher.js
+        kind: requires
+    crossings:
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        fromSystem: cortex
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: service/cortex-service.js
+        to: cortex/boot.js
+        fromSystem: service
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        fromSystem: service
+        toSystem: guardian
+        kind: system
+        known: true
+      - from: orchestrator/orchestrator.js
+        to: guardian/api-dispatch.js
+        fromSystem: orchestrator
+        toSystem: guardian
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: a0036d89ebc520f8
+      layer: 1
+      deps:
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D0_raid_is_reached_never_loaded
+      dependents: []
+      upstream:
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D0_raid_is_reached_never_loaded
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG a0036d89ebc520f8 · layer 1
+        - 'depends on (1): GD_D0_raid_is_reached_never_loaded'
+        - 'needed by (0): —'
+  uuid: 5eb61324-6d30-55eb-90b1-8490769523db

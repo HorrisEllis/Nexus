@@ -7,11 +7,11 @@ intent: null
 summary: BS11_plan_panel (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853464183
+exported_at: 1792854054122
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853464183
-lastSeenAt: 1792853464183
+firstSeenAt: 1792854054122
+lastSeenAt: 1792854054122
 fingerprint: null
 payload:
   id: BS11_plan_panel
@@ -47,7 +47,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
@@ -70,7 +70,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4
+        - DAG a0036d89ebc520f8 · layer 4
         - 'depends on (2): BS7_api, BS9_spec_and_phase_build_ui · all upstream 7'
         - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
   uuid: 78173ef1-302d-5c27-82a1-f86f5afb75eb

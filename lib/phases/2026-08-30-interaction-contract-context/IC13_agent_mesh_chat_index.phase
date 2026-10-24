@@ -9,11 +9,11 @@ intent: null
 summary: IC13_agent_mesh_chat_index (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853451207
+exported_at: 1792854041414
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853451207
-lastSeenAt: 1792853451207
+firstSeenAt: 1792854041414
+lastSeenAt: 1792854041414
 fingerprint: null
 payload:
   id: IC13_agent_mesh_chat_index
@@ -181,7 +181,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC11_agent_truth_fragmentation
@@ -194,7 +194,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): IC11_agent_truth_fragmentation'
         - 'needed by (0): —'
   uuid: 65e1290f-7943-5c57-8ae6-4bc820dab371

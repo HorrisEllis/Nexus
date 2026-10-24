@@ -7,11 +7,11 @@ intent: null
 summary: UI12_workshop_surface (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853469413
+exported_at: 1792854059431
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853469413
-lastSeenAt: 1792853469413
+firstSeenAt: 1792854059431
+lastSeenAt: 1792854059431
 fingerprint: null
 payload:
   id: UI12_workshop_surface
@@ -49,7 +49,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW1_spec_workshop
@@ -75,7 +75,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 3 · blocked by BP1_destroy_and_rebuild_blueprint,
+          DAG a0036d89ebc520f8 · layer 3 · blocked by BP1_destroy_and_rebuild_blueprint,
           PL1_one_entry_point
         - >-
           depends on (4): SW1_spec_workshop, AR2_architect_in_the_workshop,

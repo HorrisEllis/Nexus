@@ -9,11 +9,11 @@ intent: null
 summary: IN7_every_phase_and_spec_on_the_spine (library) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853501181
+exported_at: 1792854090879
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501181
-lastSeenAt: 1792853501181
+firstSeenAt: 1792854090879
+lastSeenAt: 1792854090879
 fingerprint: null
 payload:
   id: IN7_every_phase_and_spec_on_the_spine
@@ -132,7 +132,7 @@ payload:
         known: false
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
@@ -165,7 +165,7 @@ payload:
             - lib/phase-dag.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by IN3_registry_is_the_spine
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by IN3_registry_is_the_spine
         - 'depends on (1): IN3_registry_is_the_spine · all upstream 2'
         - 'needed by (0): —'
         - 'same files as NC1_neutral_core_boundary with no order between them: lib/phase-dag.js'

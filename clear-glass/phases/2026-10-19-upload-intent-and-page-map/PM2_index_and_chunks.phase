@@ -7,11 +7,11 @@ intent: null
 summary: PM2_index_and_chunks (library) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853502431
+exported_at: 1792854092189
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853502431
-lastSeenAt: 1792853502431
+firstSeenAt: 1792854092189
+lastSeenAt: 1792854092189
 fingerprint: null
 payload:
   id: PM2_index_and_chunks
@@ -55,7 +55,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM1_blocks
@@ -76,7 +76,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): PM1_blocks'
         - >-
           needed by (1): PM3_synthesized_map_that_learns · all downstream 6 · finishing it unlocks

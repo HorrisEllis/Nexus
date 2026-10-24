@@ -9,11 +9,11 @@ intent: null
 summary: GL1_gate_verify_fix_loop (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792853466353
+exported_at: 1792854056313
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466353
-lastSeenAt: 1792853466353
+firstSeenAt: 1792854056313
+lastSeenAt: 1792854056313
 fingerprint: null
 payload:
   id: GL1_gate_verify_fix_loop
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
@@ -256,7 +256,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by CI1_compounding_iterate
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by CI1_compounding_iterate
         - 'depends on (2): DT2_failure_mode_field, CI1_compounding_iterate · all upstream 4'
         - 'needed by (0): —'
   uuid: ac79ea69-8d98-51a2-8c9b-65371f071ce2

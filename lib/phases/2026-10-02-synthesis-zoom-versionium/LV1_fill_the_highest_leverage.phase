@@ -9,11 +9,11 @@ intent: null
 summary: LV1_fill_the_highest_leverage (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853468986
+exported_at: 1792854059040
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853468986
-lastSeenAt: 1792853468986
+firstSeenAt: 1792854059040
+lastSeenAt: 1792854059040
 fingerprint: null
 payload:
   id: LV1_fill_the_highest_leverage
@@ -98,7 +98,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec::SY1_gap_synthesis_engine
@@ -111,7 +111,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): SY1_gap_synthesis_engine'
         - 'needed by (0): —'
   uuid: 25e173e9-0e14-5066-bbc6-57329ee43147

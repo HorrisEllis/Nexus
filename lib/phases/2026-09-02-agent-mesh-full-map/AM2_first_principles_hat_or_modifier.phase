@@ -9,11 +9,11 @@ intent: null
 summary: AM2_first_principles_hat_or_modifier (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853452151
+exported_at: 1792854042343
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853452151
-lastSeenAt: 1792853452151
+firstSeenAt: 1792854042343
+lastSeenAt: 1792854042343
 fingerprint: null
 payload:
   id: AM2_first_principles_hat_or_modifier
@@ -100,7 +100,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-02-agent-mesh-full-map-phasemap.spec::AM1_raid_intent_contracts_per_agent
@@ -114,7 +114,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by AM1_raid_intent_contracts_per_agent
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by AM1_raid_intent_contracts_per_agent
         - 'depends on (1): AM1_raid_intent_contracts_per_agent'
         - 'needed by (0): —'
   uuid: 88563deb-7978-574b-815b-4c3425e06ca9

@@ -9,11 +9,11 @@ intent: null
 summary: LM7_agent_mesh_intent_programming (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853451674
+exported_at: 1792854041882
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853451674
-lastSeenAt: 1792853451674
+firstSeenAt: 1792854041882
+lastSeenAt: 1792854041882
 fingerprint: null
 payload:
   id: LM7_agent_mesh_intent_programming
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
@@ -53,7 +53,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by LM6_who_creates_contracts
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by LM6_who_creates_contracts
         - 'depends on (1): LM6_who_creates_contracts · all upstream 4'
         - 'needed by (1): LM8_full_pipeline_wiring · finishing it unlocks LM8_full_pipeline_wiring'
   uuid: 529d925a-1b86-50f7-9f8c-3d19623eddce

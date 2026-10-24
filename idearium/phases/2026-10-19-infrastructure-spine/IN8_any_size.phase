@@ -7,11 +7,11 @@ intent: null
 summary: IN8_any_size (foundation) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792853501181
+exported_at: 1792854090881
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501181
-lastSeenAt: 1792853501181
+firstSeenAt: 1792854090881
+lastSeenAt: 1792854090881
 fingerprint: null
 payload:
   id: IN8_any_size
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
@@ -254,7 +254,7 @@ payload:
             - loom/bootstrap.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by IN0_baseline
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by IN0_baseline
         - 'depends on (1): IN0_baseline'
         - 'needed by (1): SC1_scaling_limits_named · finishing it unlocks SC1_scaling_limits_named'
         - 'same files as IN3_registry_is_the_spine with no order between them: loom/bootstrap.js'

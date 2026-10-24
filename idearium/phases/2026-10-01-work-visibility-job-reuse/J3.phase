@@ -7,11 +7,11 @@ intent: null
 summary: J3 (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853467223
+exported_at: 1792854057173
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467223
-lastSeenAt: 1792853467223
+firstSeenAt: 1792854057173
+lastSeenAt: 1792854057173
 fingerprint: null
 payload:
   id: J3
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::J0
@@ -238,7 +238,7 @@ payload:
             - idearium/spec-engine/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by J0
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by J0
         - 'depends on (1): J0'
         - 'needed by (0): —'
         - 'same files as J6 with no order between them: idearium/spec-engine/index.js'

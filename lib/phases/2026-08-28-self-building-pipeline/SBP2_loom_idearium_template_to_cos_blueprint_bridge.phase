@@ -9,11 +9,11 @@ intent: null
 summary: SBP2_loom_idearium_template_to_cos_blueprint_bridge (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853450683
+exported_at: 1792854040826
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853450683
-lastSeenAt: 1792853450683
+firstSeenAt: 1792854040826
+lastSeenAt: 1792854040826
 fingerprint: null
 payload:
   id: SBP2_loom_idearium_template_to_cos_blueprint_bridge
@@ -104,7 +104,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-08-28-self-building-pipeline-phasemap.spec::SBP1_reconcile_repo_layer_vs_cos_compartment
@@ -117,7 +117,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): SBP1_reconcile_repo_layer_vs_cos_compartment'
         - 'needed by (0): —'
   uuid: 03621a30-ba97-51de-8f09-5a1aaab62d13

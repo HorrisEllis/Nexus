@@ -9,11 +9,11 @@ intent: null
 summary: LS4_live_in_the_code_tab_and_the_work_surface (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470869
+exported_at: 1792854060890
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470869
-lastSeenAt: 1792853470869
+firstSeenAt: 1792854060890
+lastSeenAt: 1792854060890
 fingerprint: null
 payload:
   id: LS4_live_in_the_code_tab_and_the_work_surface
@@ -48,7 +48,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-05-cli-data-code-phasemap.spec::LS3_one_feed_for_every_agent
@@ -63,7 +63,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (1): LS3_one_feed_for_every_agent · all upstream 3'
         - 'needed by (0): —'
   uuid: 3e0f6310-d65e-54d7-a47f-8f6595300aab

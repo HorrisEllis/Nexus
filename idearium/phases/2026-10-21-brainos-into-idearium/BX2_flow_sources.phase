@@ -7,11 +7,11 @@ intent: null
 summary: BX2_flow_sources (library) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853504553
+exported_at: 1792854094298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853504553
-lastSeenAt: 1792853504553
+firstSeenAt: 1792854094298
+lastSeenAt: 1792854094298
 fingerprint: null
 payload:
   id: BX2_flow_sources
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
@@ -248,7 +248,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by BX1_census
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by BX1_census
         - 'depends on (1): BX1_census · all upstream 2'
         - >-
           needed by (2): BX3_flow_canvas, BX10_float · all downstream 8 · finishing it unlocks

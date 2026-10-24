@@ -9,11 +9,11 @@ intent: null
 summary: DB2_the_registry_says_what_it_offers (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853497860
+exported_at: 1792854087513
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853497860
-lastSeenAt: 1792853497860
+firstSeenAt: 1792854087513
+lastSeenAt: 1792854087513
 fingerprint: null
 payload:
   id: DB2_the_registry_says_what_it_offers
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -43,7 +43,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

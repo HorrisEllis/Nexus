@@ -9,11 +9,11 @@ intent: null
 summary: MCO12_guardian_list_was_unreliable (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853455634
+exported_at: 1792854045651
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853455634
-lastSeenAt: 1792853455634
+firstSeenAt: 1792854045651
+lastSeenAt: 1792854045651
 fingerprint: null
 payload:
   id: MCO12_guardian_list_was_unreliable
@@ -158,7 +158,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -172,7 +172,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): MCO12_guardian_audit_complete · finishing it unlocks

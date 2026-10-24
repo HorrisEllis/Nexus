@@ -7,11 +7,11 @@ intent: null
 summary: GW9_the_contract_panel (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853487099
+exported_at: 1792854076764
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853487099
-lastSeenAt: 1792853487099
+firstSeenAt: 1792854076764
+lastSeenAt: 1792854076764
 fingerprint: null
 payload:
   id: GW9_the_contract_panel
@@ -47,7 +47,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
@@ -69,7 +69,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 4 · blocked by GW3_a_contract_is_traced,
+          DAG a0036d89ebc520f8 · layer 4 · blocked by GW3_a_contract_is_traced,
           GW7_failure_macro_and_rewind
         - 'depends on (2): GW3_a_contract_is_traced, GW7_failure_macro_and_rewind · all upstream 6'
         - 'needed by (0): —'

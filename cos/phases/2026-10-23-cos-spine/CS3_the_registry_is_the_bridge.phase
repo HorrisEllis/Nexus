@@ -7,11 +7,11 @@ intent: null
 summary: CS3_the_registry_is_the_bridge (integration) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792853507417
+exported_at: 1792854097298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853507417
-lastSeenAt: 1792853507417
+firstSeenAt: 1792854097298
+lastSeenAt: 1792854097298
 fingerprint: null
 payload:
   id: CS3_the_registry_is_the_bridge
@@ -120,7 +120,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
@@ -131,6 +131,7 @@ payload:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
         - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
         - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
       upstream:
         - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
         - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
@@ -150,6 +151,7 @@ payload:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
         - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
         - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+        - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD8_guardian_in_its_compartment
       blockedBy:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
@@ -163,14 +165,14 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 4 · blocked by CS_D1_registry_is_the_bridge,
+          DAG a0036d89ebc520f8 · layer 4 · blocked by CS_D1_registry_is_the_bridge,
           IN3_registry_is_the_spine, CE3_the_handshake, DB16_a_registry_for_each_system
         - >-
           depends on (4): CS_D1_registry_is_the_bridge, IN3_registry_is_the_spine,
           CE3_the_handshake, DB16_a_registry_for_each_system · all upstream 8
         - >-
-          needed by (3): CS4_every_system_a_compartment, CS10_hats_bound_to_the_compartment,
-          SV3_on_the_cos_bus · all downstream 9
+          needed by (4): CS4_every_system_a_compartment, CS10_hats_bound_to_the_compartment,
+          SV3_on_the_cos_bus, GD8_guardian_in_its_compartment · all downstream 10
         - >-
           same files as CS1_a_version_is_a_system_state with no order between them:
           idearium/repo/snapshot.js

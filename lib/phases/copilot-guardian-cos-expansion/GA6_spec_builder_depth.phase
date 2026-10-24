@@ -7,11 +7,11 @@ intent: null
 summary: GA6_spec_builder_depth (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853511888
+exported_at: 1792854102345
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853511888
-lastSeenAt: 1792853511888
+firstSeenAt: 1792854102345
+lastSeenAt: 1792854102345
 fingerprint: null
 payload:
   id: GA6_spec_builder_depth
@@ -53,7 +53,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: null
       deps:
         - docs/copilot-guardian-cos-expansion-phasemap.spec::GA9_cos_expansion_via_copilot
@@ -72,7 +72,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer — · blocked by GA9_cos_expansion_via_copilot
+        - DAG a0036d89ebc520f8 · layer — · blocked by GA9_cos_expansion_via_copilot
         - 'depends on (1): GA9_cos_expansion_via_copilot · all upstream 2'
         - >-
           needed by (1): GA9_cos_expansion_via_copilot · all downstream 2 · finishing it unlocks

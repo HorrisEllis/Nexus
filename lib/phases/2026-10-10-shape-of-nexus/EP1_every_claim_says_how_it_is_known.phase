@@ -9,11 +9,11 @@ intent: null
 summary: EP1_every_claim_says_how_it_is_known (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853480381
+exported_at: 1792854070507
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853480381
-lastSeenAt: 1792853480381
+firstSeenAt: 1792854070507
+lastSeenAt: 1792854070507
 fingerprint: null
 payload:
   id: EP1_every_claim_says_how_it_is_known
@@ -100,7 +100,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -114,7 +114,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (1): EP2_cos_is_the_empirical_layer · finishing it unlocks

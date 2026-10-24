@@ -9,11 +9,11 @@ intent: null
 summary: CE0d_what_the_handshake_verifies (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853498278
+exported_at: 1792854087956
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853498278
-lastSeenAt: 1792853498278
+firstSeenAt: 1792854087956
+lastSeenAt: 1792854087956
 fingerprint: null
 payload:
   id: CE0d_what_the_handshake_verifies
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -43,7 +43,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: a70b1817-952a-59a1-9ce7-b1046746fc2c

@@ -7,11 +7,11 @@ intent: null
 summary: CE4_reply_kind_and_tags (?) — 3 file(s)
 system: guardian
 tags: []
-exported_at: 1792853485809
+exported_at: 1792854075524
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853485809
-lastSeenAt: 1792853485809
+firstSeenAt: 1792854075524
+lastSeenAt: 1792854075524
 fingerprint: null
 payload:
   id: CE4_reply_kind_and_tags
@@ -199,7 +199,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
@@ -215,7 +215,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): CE1_the_run_state'
         - 'needed by (1): CE9_the_panels · finishing it unlocks CE9_the_panels'
   uuid: df1e6326-69f3-5860-9c21-2be2755f544a

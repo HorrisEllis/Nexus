@@ -7,11 +7,11 @@ intent: null
 summary: SS1_system_manifest (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853517315
+exported_at: 1792854107859
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853517315
-lastSeenAt: 1792853517315
+firstSeenAt: 1792854107859
+lastSeenAt: 1792854107859
 fingerprint: null
 payload:
   id: SS1_system_manifest
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/nexus-system-standardization-phasemap.spec::SS0_clear_clutter
@@ -59,7 +59,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by SS0_clear_clutter
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by SS0_clear_clutter
         - 'depends on (1): SS0_clear_clutter'
         - >-
           needed by (4): SS3_unified_living_model_system_plus_person, SS2_config_per_system,

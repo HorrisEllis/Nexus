@@ -9,11 +9,11 @@ intent: null
 summary: P34_nodes_in_the_lattice (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853455137
+exported_at: 1792854045192
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853455137
-lastSeenAt: 1792853455137
+firstSeenAt: 1792854045192
+lastSeenAt: 1792854045192
 fingerprint: null
 payload:
   id: P34_nodes_in_the_lattice
@@ -34,7 +34,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
@@ -54,7 +54,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 2 · blocked by P33_every_system_runs_its_node_registry,
+          DAG a0036d89ebc520f8 · layer 2 · blocked by P33_every_system_runs_its_node_registry,
           P19_dynamic_nodes_via_causal_graph
         - >-
           depends on (2): P33_every_system_runs_its_node_registry,

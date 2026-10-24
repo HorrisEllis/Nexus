@@ -7,11 +7,11 @@ intent: null
 summary: TB3a_tool_calls_saved (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853490917
+exported_at: 1792854080464
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853490917
-lastSeenAt: 1792853490917
+firstSeenAt: 1792854080464
+lastSeenAt: 1792854080464
 fingerprint: null
 payload:
   id: TB3a_tool_calls_saved
@@ -56,7 +56,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
@@ -79,7 +79,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by TB2_persistence_audit
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by TB2_persistence_audit
         - 'depends on (1): TB2_persistence_audit · all upstream 3'
         - >-
           needed by (2): TB4a_recall_in_the_dispatcher, TB4b_nexus_recall_tool · all downstream 3 ·

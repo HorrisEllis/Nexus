@@ -9,11 +9,11 @@ intent: null
 summary: P8_per_system_component_registry (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853455104
+exported_at: 1792854045164
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853455104
-lastSeenAt: 1792853455104
+firstSeenAt: 1792854045164
+lastSeenAt: 1792854045164
 fingerprint: null
 payload:
   id: P8_per_system_component_registry
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -50,7 +50,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (3): P36_an_event_ledger_per_registry, P37_the_ui_floats_on_the_registry,

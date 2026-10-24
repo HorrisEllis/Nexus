@@ -7,11 +7,11 @@ intent: null
 summary: OR2_how_done_is_checked (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853477796
+exported_at: 1792854068006
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853477796
-lastSeenAt: 1792853477796
+firstSeenAt: 1792854068006
+lastSeenAt: 1792854068006
 fingerprint: null
 payload:
   id: OR2_how_done_is_checked
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
@@ -49,7 +49,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): OR0_the_census'
         - 'needed by (0): —'
   uuid: 4d7ac099-00a8-5bde-af06-b9c0803aa3de

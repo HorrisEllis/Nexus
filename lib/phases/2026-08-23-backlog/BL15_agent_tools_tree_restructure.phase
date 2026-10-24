@@ -7,11 +7,11 @@ intent: null
 summary: BL15_agent_tools_tree_restructure (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853449292
+exported_at: 1792854039038
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853449292
-lastSeenAt: 1792853449292
+firstSeenAt: 1792854039038
+lastSeenAt: 1792854039038
 fingerprint: null
 payload:
   id: BL15_agent_tools_tree_restructure
@@ -191,7 +191,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
@@ -204,7 +204,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): BL0_macro_system'
         - 'needed by (0): —'
   uuid: 30f10d74-dde9-5ddd-8ca5-8dbb0fc53b39

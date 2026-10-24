@@ -9,11 +9,11 @@ intent: null
 summary: LS1_the_bridge_job_holds_what_is_written_so_far (?) — 2 file(s)
 system: ollama-bridge
 tags: []
-exported_at: 1792853470866
+exported_at: 1792854060887
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470866
-lastSeenAt: 1792853470866
+firstSeenAt: 1792854060887
+lastSeenAt: 1792854060887
 fingerprint: null
 payload:
   id: LS1_the_bridge_job_holds_what_is_written_so_far
@@ -187,7 +187,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -203,7 +203,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): LS2_copilot_sends_the_text_as_it_comes · all downstream 3 · finishing it

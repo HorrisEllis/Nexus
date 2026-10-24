@@ -9,11 +9,11 @@ intent: null
 summary: ET2_guardian_event_taxonomy (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853449787
+exported_at: 1792854039611
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853449787
-lastSeenAt: 1792853449787
+firstSeenAt: 1792854039611
+lastSeenAt: 1792854039611
 fingerprint: null
 payload:
   id: ET2_guardian_event_taxonomy
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
@@ -238,7 +238,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by ET1_event_taxonomy_pattern
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by ET1_event_taxonomy_pattern
         - 'depends on (1): ET1_event_taxonomy_pattern'
         - 'needed by (1): ET5_loom_event_taxonomy_map · all downstream 3'
   uuid: 4f5557b3-3fab-5a49-ad5f-2f23ec0105fa

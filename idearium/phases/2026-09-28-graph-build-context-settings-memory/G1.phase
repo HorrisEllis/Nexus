@@ -7,11 +7,11 @@ intent: null
 summary: G1 (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792853463262
+exported_at: 1792854053220
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853463262
-lastSeenAt: 1792853463262
+firstSeenAt: 1792854053220
+lastSeenAt: 1792854053220
 fingerprint: null
 payload:
   id: G1
@@ -78,7 +78,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G0
@@ -106,7 +106,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): G0'
         - 'needed by (2): G2, B3 · all downstream 12 · finishing it unlocks G2'
   uuid: b4a836ec-17d3-578b-9d05-e0575b8174d7

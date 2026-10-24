@@ -9,11 +9,11 @@ intent: null
 summary: CP2_copilot_versionium_awareness (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853453667
+exported_at: 1792854043767
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853453667
-lastSeenAt: 1792853453667
+firstSeenAt: 1792854043767
+lastSeenAt: 1792854043767
 fingerprint: null
 payload:
   id: CP2_copilot_versionium_awareness
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
@@ -46,7 +46,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): VSB1_fix_versionium_split_brain'
         - 'needed by (0): —'
   uuid: 8f0c1683-fb35-5506-9b6c-8904db728393

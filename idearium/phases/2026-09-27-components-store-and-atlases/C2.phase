@@ -7,11 +7,11 @@ intent: null
 summary: C2 (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792853461166
+exported_at: 1792854051089
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853461166
-lastSeenAt: 1792853461166
+firstSeenAt: 1792854051089
+lastSeenAt: 1792854051089
 fingerprint: null
 payload:
   id: C2
@@ -214,7 +214,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-27-components-store-and-atlases-phasemap.spec::C1
@@ -227,7 +227,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): C1'
         - 'needed by (0): —'
   uuid: 2397249e-2326-5a93-b49e-0da7e0ea1c57

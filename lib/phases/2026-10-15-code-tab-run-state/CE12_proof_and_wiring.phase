@@ -7,11 +7,11 @@ intent: null
 summary: CE12_proof_and_wiring (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792853485816
+exported_at: 1792854075530
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853485816
-lastSeenAt: 1792853485816
+firstSeenAt: 1792854075530
+lastSeenAt: 1792854075530
 fingerprint: null
 payload:
   id: CE12_proof_and_wiring
@@ -122,7 +122,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
@@ -135,7 +135,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): CE1_the_run_state'
         - 'needed by (0): —'
   uuid: e38c6c5f-5766-536a-be14-9e5d490a37ec

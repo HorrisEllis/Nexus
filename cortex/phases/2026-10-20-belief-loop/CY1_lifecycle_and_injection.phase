@@ -7,11 +7,11 @@ intent: null
 summary: CY1_lifecycle_and_injection (library) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792853502832
+exported_at: 1792854092611
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853502832
-lastSeenAt: 1792853502832
+firstSeenAt: 1792854092611
+lastSeenAt: 1792854092611
 fingerprint: null
 payload:
   id: CY1_lifecycle_and_injection
@@ -122,7 +122,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
@@ -157,7 +157,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 7 · ON THE CRITICAL PATH · blocked by CY0_one_crystal_schema,
+          DAG a0036d89ebc520f8 · layer 7 · ON THE CRITICAL PATH · blocked by CY0_one_crystal_schema,
           CF1_confidence_from_evidence
         - 'depends on (2): CY0_one_crystal_schema, CF1_confidence_from_evidence · all upstream 14'
         - 'needed by (2): CY2_invariants_are_crystals, CY3_belief_panel · all downstream 3'

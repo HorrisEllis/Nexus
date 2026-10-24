@@ -9,11 +9,11 @@ intent: null
 summary: RS6_the_workshop_as_the_editor (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853473330
+exported_at: 1792854063332
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853473330
-lastSeenAt: 1792853473330
+firstSeenAt: 1792854063332
+lastSeenAt: 1792854063332
 fingerprint: null
 payload:
   id: RS6_the_workshop_as_the_editor
@@ -44,7 +44,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS5_the_template_picker
@@ -69,7 +69,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by RS2_replay_rewind_branch
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by RS2_replay_rewind_branch
         - 'depends on (2): RS5_the_template_picker, RS2_replay_rewind_branch · all upstream 5'
         - >-
           needed by (2): RS7_architect_and_blueprint_stations, RS11_workshop_and_phases_one_surface

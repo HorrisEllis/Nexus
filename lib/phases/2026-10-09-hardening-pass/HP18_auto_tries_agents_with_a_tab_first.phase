@@ -9,11 +9,11 @@ intent: null
 summary: HP18_auto_tries_agents_with_a_tab_first (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853476910
+exported_at: 1792854067134
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853476910
-lastSeenAt: 1792853476910
+firstSeenAt: 1792854067134
+lastSeenAt: 1792854067134
 fingerprint: null
 payload:
   id: HP18_auto_tries_agents_with_a_tab_first
@@ -206,7 +206,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -220,7 +220,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): HP19_the_simulator_stays · finishing it unlocks HP19_the_simulator_stays'
   uuid: 0e461f2e-f542-5057-9acd-2f6660b2af66

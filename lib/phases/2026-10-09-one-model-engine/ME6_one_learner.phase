@@ -7,11 +7,11 @@ intent: null
 summary: ME6_one_learner (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792853477359
+exported_at: 1792854067580
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853477359
-lastSeenAt: 1792853477359
+firstSeenAt: 1792854067580
+lastSeenAt: 1792854067580
 fingerprint: null
 payload:
   id: ME6_one_learner
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: a3c93c03d487932a
+    hash: f947ab6d2e1583d9
     nodes:
       - path: cortex/core/raid/index.js
         role: changes
@@ -73,14 +73,6 @@ payload:
         role: used-by
         exists: true
         system: diagnostic
-      - path: guardian/api-dispatch.js
-        role: used-by
-        exists: true
-        system: guardian
-      - path: guardian/lib/dispatcher.js
-        role: used-by
-        exists: true
-        system: guardian
       - path: guardian/server.js
         role: used-by
         exists: true
@@ -90,6 +82,14 @@ payload:
         exists: true
         system: idearium
       - path: lib/agent-system/submit.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/generate-agent-nodes.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/index.js
         role: used-by
         exists: true
         system: lib
@@ -203,16 +203,16 @@ payload:
       - from: diagnostic/lib/heal-loop.js
         to: cortex/core/raid/index.js
         kind: requires
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        kind: requires
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        kind: requires
       - from: idearium/spec-engine/chunk-dispatch.js
         to: cortex/core/raid/index.js
         kind: requires
       - from: lib/agent-system/submit.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-tools/generate-agent-nodes.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-tools/index.js
         to: cortex/core/raid/index.js
         kind: requires
     crossings:
@@ -234,18 +234,6 @@ payload:
         toSystem: cortex
         kind: system
         known: true
-      - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/lib/dispatcher.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/spec-engine/chunk-dispatch.js
         to: cortex/core/raid/index.js
         fromSystem: idearium
@@ -258,9 +246,21 @@ payload:
         toSystem: cortex
         kind: upward
         known: true
+      - from: lib/agent-tools/generate-agent-nodes.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/agent-tools/index.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 5
       deps:
         - docs/2026-10-09-one-model-engine-phasemap.spec::ME4_one_attempt_record
@@ -284,7 +284,7 @@ payload:
             - cortex/core/raid/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 5 · blocked by ME4_one_attempt_record, ME5_one_chooser
+        - DAG a0036d89ebc520f8 · layer 5 · blocked by ME4_one_attempt_record, ME5_one_chooser
         - 'depends on (2): ME4_one_attempt_record, ME5_one_chooser · all upstream 6'
         - 'needed by (0): —'
         - 'same files as ME7_raid_spine_joins with no order between them: cortex/core/raid/index.js'

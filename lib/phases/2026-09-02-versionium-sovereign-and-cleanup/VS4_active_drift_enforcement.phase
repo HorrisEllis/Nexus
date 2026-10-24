@@ -9,11 +9,11 @@ intent: null
 summary: VS4_active_drift_enforcement (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853453094
+exported_at: 1792854043289
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853453094
-lastSeenAt: 1792853453094
+firstSeenAt: 1792854043289
+lastSeenAt: 1792854043289
 fingerprint: null
 payload:
   id: VS4_active_drift_enforcement
@@ -189,7 +189,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::VS1_sovereign_folder_and_foundation
@@ -203,7 +203,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by VS1_sovereign_folder_and_foundation
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by VS1_sovereign_folder_and_foundation
         - 'depends on (1): VS1_sovereign_folder_and_foundation'
         - 'needed by (0): —'
   uuid: 065f4b75-b1ef-5208-8a97-214e3f7bc3fd

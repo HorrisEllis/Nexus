@@ -7,11 +7,11 @@ intent: null
 summary: SF2_bridge_sources (library) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853506592
+exported_at: 1792854096483
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853506592
-lastSeenAt: 1792853506592
+firstSeenAt: 1792854096483
+lastSeenAt: 1792854096483
 fingerprint: null
 payload:
   id: SF2_bridge_sources
@@ -50,7 +50,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -74,7 +74,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (3): SF1_honest_detection, SF6_surface, SF7_bridge_automatic · all downstream 7

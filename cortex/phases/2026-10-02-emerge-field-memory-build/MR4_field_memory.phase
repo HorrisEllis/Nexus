@@ -7,11 +7,11 @@ intent: null
 summary: MR4_field_memory (?) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792853467655
+exported_at: 1792854057616
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467655
-lastSeenAt: 1792853467655
+firstSeenAt: 1792854057616
+lastSeenAt: 1792854057616
 fingerprint: null
 payload:
   id: MR4_field_memory
@@ -128,7 +128,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
@@ -151,7 +151,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by OT1_one_write_path, CF1_cfr_improved_with_rfr2
+        - DAG a0036d89ebc520f8 · layer 7 · blocked by OT1_one_write_path, CF1_cfr_improved_with_rfr2
         - 'depends on (2): OT1_one_write_path, CF1_cfr_improved_with_rfr2 · all upstream 8'
         - 'needed by (0): —'
   uuid: 0fcceb37-faa6-59bf-95d9-be9018b88c9e

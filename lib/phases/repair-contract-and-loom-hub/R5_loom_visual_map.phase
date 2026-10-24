@@ -7,11 +7,11 @@ intent: null
 summary: R5_loom_visual_map (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853519027
+exported_at: 1792854109518
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853519027
-lastSeenAt: 1792853519027
+firstSeenAt: 1792854109518
+lastSeenAt: 1792854109518
 fingerprint: null
 payload:
   id: R5_loom_visual_map
@@ -123,7 +123,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
@@ -139,7 +139,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): R4_loom_ledger_awareness'
         - 'needed by (1): R6_living_documentation · finishing it unlocks R6_living_documentation'
   uuid: d918700f-1d84-55c0-b4bf-752b5ae34ccd

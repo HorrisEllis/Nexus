@@ -9,11 +9,11 @@ intent: null
 summary: DK2_learned_granularity (library) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792853503274
+exported_at: 1792854093034
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503274
-lastSeenAt: 1792853503274
+firstSeenAt: 1792854093034
+lastSeenAt: 1792854093034
 fingerprint: null
 payload:
   id: DK2_learned_granularity
@@ -39,7 +39,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
@@ -64,7 +64,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by DK1_dynamic_chunking
+        - DAG a0036d89ebc520f8 · layer 7 · blocked by DK1_dynamic_chunking
         - 'depends on (1): DK1_dynamic_chunking · all upstream 12'
         - 'needed by (0): —'
   uuid: 5fb8f0ea-576e-5fb2-ada2-31546dfbc3db

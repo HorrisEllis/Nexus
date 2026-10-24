@@ -7,11 +7,11 @@ intent: null
 summary: OR1_five_answers_for_an_open_phase (?) — 1 file(s)
 system: loom
 tags: []
-exported_at: 1792853477796
+exported_at: 1792854068006
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853477796
-lastSeenAt: 1792853477796
+firstSeenAt: 1792854068006
+lastSeenAt: 1792854068006
 fingerprint: null
 payload:
   id: OR1_five_answers_for_an_open_phase
@@ -201,7 +201,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
@@ -222,7 +222,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): OR0_the_census'
         - >-
           needed by (3): OR2_the_proposal, OR4_one_roadmap_in_idearium, OR5_it_stays_decluttered ·

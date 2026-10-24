@@ -7,11 +7,11 @@ intent: null
 summary: SB11_each_block_chunked (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470256
+exported_at: 1792854060316
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470256
-lastSeenAt: 1792853470256
+firstSeenAt: 1792854060316
+lastSeenAt: 1792854060316
 fingerprint: null
 payload:
   id: SB11_each_block_chunked
@@ -214,7 +214,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB10_reuse_first_keyed_on_the_contract
@@ -248,7 +248,7 @@ payload:
             - idearium/spec-engine/index.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by SB10_reuse_first_keyed_on_the_contract
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by SB10_reuse_first_keyed_on_the_contract
         - 'depends on (1): SB10_reuse_first_keyed_on_the_contract · all upstream 4'
         - >-
           needed by (2): SB8_promote_with_full_block_options,

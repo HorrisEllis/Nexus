@@ -7,11 +7,11 @@ intent: null
 summary: CON2_grammar_and_completion (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853491329
+exported_at: 1792854080883
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853491329
-lastSeenAt: 1792853491329
+firstSeenAt: 1792854080883
+lastSeenAt: 1792854080883
 fingerprint: null
 payload:
   id: CON2_grammar_and_completion
@@ -166,7 +166,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
@@ -183,7 +183,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by CON1_one_door_client
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by CON1_one_door_client
         - 'depends on (1): CON1_one_door_client'
         - 'needed by (1): CON5_pane · finishing it unlocks CON5_pane'
   uuid: ba8be548-b4c0-5856-814c-4b1ce4f30fd6

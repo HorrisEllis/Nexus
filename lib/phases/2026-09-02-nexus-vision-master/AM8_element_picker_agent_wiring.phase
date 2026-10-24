@@ -9,11 +9,11 @@ intent: null
 summary: AM8_element_picker_agent_wiring (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853452594
+exported_at: 1792854042772
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853452594
-lastSeenAt: 1792853452594
+firstSeenAt: 1792854042772
+lastSeenAt: 1792854042772
 fingerprint: null
 payload:
   id: AM8_element_picker_agent_wiring
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -43,7 +43,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: c642a3cd-5b5b-50f2-a0f6-c00506b9a1cd

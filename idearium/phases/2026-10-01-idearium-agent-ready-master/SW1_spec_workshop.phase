@@ -7,11 +7,11 @@ intent: null
 summary: SW1_spec_workshop (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792853466363
+exported_at: 1792854056325
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853466363
-lastSeenAt: 1792853466363
+firstSeenAt: 1792854056325
+lastSeenAt: 1792854056325
 fingerprint: null
 payload:
   id: SW1_spec_workshop
@@ -88,7 +88,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 6
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
@@ -115,7 +115,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 6 · blocked by CX1_context_cascade,
+          DAG a0036d89ebc520f8 · layer 6 · blocked by CX1_context_cascade,
           UM1_nexus_understands_james
         - >-
           depends on (3): IL1_spec_library_as_ideas, CX1_context_cascade,

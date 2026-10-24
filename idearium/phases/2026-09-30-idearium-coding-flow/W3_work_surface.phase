@@ -7,11 +7,11 @@ intent: null
 summary: W3_work_surface (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792853465897
+exported_at: 1792854055812
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853465897
-lastSeenAt: 1792853465897
+firstSeenAt: 1792854055812
+lastSeenAt: 1792854055812
 fingerprint: null
 payload:
   id: W3_work_surface
@@ -240,7 +240,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W2_plan_always_lands
@@ -261,7 +261,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (1): W2_plan_always_lands · all upstream 3'
         - 'needed by (1): W4_navigation · all downstream 4 · finishing it unlocks W4_navigation'
   uuid: 4c88cdee-d355-5c60-a7de-bf886fab7f49

@@ -7,11 +7,11 @@ intent: null
 summary: CP1_the_contract_panel (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853483984
+exported_at: 1792854073877
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853483984
-lastSeenAt: 1792853483984
+firstSeenAt: 1792854073877
+lastSeenAt: 1792854073877
 fingerprint: null
 payload:
   id: CP1_the_contract_panel
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-15-automatic-tracking-phasemap.spec::CX1_context_from_the_dependencies
@@ -236,7 +236,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by CX1_context_from_the_dependencies
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by CX1_context_from_the_dependencies
         - 'depends on (1): CX1_context_from_the_dependencies · all upstream 3'
         - 'needed by (0): —'
   uuid: 60e7a326-6506-5da9-8ce3-81903715797d

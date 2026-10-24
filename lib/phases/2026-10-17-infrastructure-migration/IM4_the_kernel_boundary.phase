@@ -7,11 +7,11 @@ intent: null
 summary: IM4_the_kernel_boundary (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853497031
+exported_at: 1792854086631
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853497031
-lastSeenAt: 1792853497031
+firstSeenAt: 1792854086631
+lastSeenAt: 1792854086631
 fingerprint: null
 payload:
   id: IM4_the_kernel_boundary
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM0d_lib_is_the_kernel
@@ -235,7 +235,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): IM0d_lib_is_the_kernel'
         - 'needed by (1): IM5_each_system_to_the_template'
   uuid: 338faeeb-63a6-5905-8b71-656b211a6c5e

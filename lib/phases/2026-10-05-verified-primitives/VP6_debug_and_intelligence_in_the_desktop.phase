@@ -9,11 +9,11 @@ intent: null
 summary: VP6_debug_and_intelligence_in_the_desktop (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792853473760
+exported_at: 1792854063785
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853473760
-lastSeenAt: 1792853473760
+firstSeenAt: 1792854063785
+lastSeenAt: 1792854063785
 fingerprint: null
 payload:
   id: VP6_debug_and_intelligence_in_the_desktop
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-05-verified-primitives-phasemap.spec::VP1_confidence_from_evidence
@@ -246,7 +246,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by VP1_confidence_from_evidence
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by VP1_confidence_from_evidence
         - 'depends on (1): VP1_confidence_from_evidence · all upstream 2'
         - 'needed by (0): —'
   uuid: 400af5d9-ef88-53d1-b97b-82f2a4bec588

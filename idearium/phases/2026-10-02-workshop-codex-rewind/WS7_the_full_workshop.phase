@@ -7,11 +7,11 @@ intent: null
 summary: WS7_the_full_workshop (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792853469414
+exported_at: 1792854059432
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853469414
-lastSeenAt: 1792853469414
+firstSeenAt: 1792854059432
+lastSeenAt: 1792854059432
 fingerprint: null
 payload:
   id: WS7_the_full_workshop
@@ -232,7 +232,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW1_spec_workshop
@@ -247,7 +247,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (2): SW1_spec_workshop, SW2_workshop_page_in_the_voids_style'
         - 'needed by (0): —'
   uuid: 8a8bc84e-55ac-51c4-bc30-d0ca30971861

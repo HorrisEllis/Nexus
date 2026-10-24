@@ -9,11 +9,11 @@ intent: null
 summary: SB38_prerequisites_the_questions_first (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853470316
+exported_at: 1792854060377
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470316
-lastSeenAt: 1792853470316
+firstSeenAt: 1792854060377
+lastSeenAt: 1792854060377
 fingerprint: null
 payload:
   id: SB38_prerequisites_the_questions_first
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 9
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB37_the_working_set_signal_to_noise
@@ -246,7 +246,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 9
+        - DAG a0036d89ebc520f8 · layer 9
         - 'depends on (1): SB37_the_working_set_signal_to_noise · all upstream 9'
         - >-
           needed by (1): SB39_the_checklist_builds_the_working_set · finishing it unlocks

@@ -9,11 +9,11 @@ intent: null
 summary: GR0_graph_census (foundation) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853503265
+exported_at: 1792854093027
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503265
-lastSeenAt: 1792853503265
+firstSeenAt: 1792854093027
+lastSeenAt: 1792854093027
 fingerprint: null
 payload:
   id: GR0_graph_census
@@ -43,7 +43,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -83,7 +83,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): GR1_graph_primitive · all downstream 28'
   uuid: e44a5e1b-f0b9-5b62-b73f-64e163531d5f

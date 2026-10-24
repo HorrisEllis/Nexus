@@ -7,11 +7,11 @@ intent: null
 summary: R1 (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853463266
+exported_at: 1792854053225
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853463266
-lastSeenAt: 1792853463266
+firstSeenAt: 1792854053225
+lastSeenAt: 1792854053225
 fingerprint: null
 payload:
   id: R1
@@ -62,7 +62,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
@@ -76,7 +76,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by R0
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by R0
         - 'depends on (1): R0'
         - 'needed by (0): —'
   uuid: 04a888a6-e5df-5a45-9880-beb4f94cda74

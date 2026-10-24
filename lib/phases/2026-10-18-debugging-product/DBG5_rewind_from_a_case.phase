@@ -7,11 +7,11 @@ intent: null
 summary: DBG5_rewind_from_a_case (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853498719
+exported_at: 1792854088369
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853498719
-lastSeenAt: 1792853498719
+firstSeenAt: 1792854088369
+lastSeenAt: 1792854088369
 fingerprint: null
 payload:
   id: DBG5_rewind_from_a_case
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
@@ -53,7 +53,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by DBG2_the_case, TL4_rewind_to_a_gate
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by DBG2_the_case, TL4_rewind_to_a_gate
         - 'depends on (2): DBG2_the_case, TL4_rewind_to_a_gate · all upstream 6'
         - 'needed by (0): —'
   uuid: a3ab08c0-2fe7-53e1-b866-419045b861b7

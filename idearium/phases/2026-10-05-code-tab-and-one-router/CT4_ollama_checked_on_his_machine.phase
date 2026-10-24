@@ -9,11 +9,11 @@ intent: null
 summary: CT4_ollama_checked_on_his_machine (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792853471283
+exported_at: 1792854061311
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853471283
-lastSeenAt: 1792853471283
+firstSeenAt: 1792854061311
+lastSeenAt: 1792854061311
 fingerprint: null
 payload:
   id: CT4_ollama_checked_on_his_machine
@@ -217,7 +217,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT1_one_door_for_models
@@ -230,7 +230,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): CT1_one_door_for_models'
         - 'needed by (0): —'
   uuid: 08703a2e-8811-5309-888a-49ceab87f376

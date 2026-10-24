@@ -7,11 +7,11 @@ intent: null
 summary: SB14_reuse_compounds (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853470262
+exported_at: 1792854060322
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853470262
-lastSeenAt: 1792853470262
+firstSeenAt: 1792854060322
+lastSeenAt: 1792854060322
 fingerprint: null
 payload:
   id: SB14_reuse_compounds
@@ -138,7 +138,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 7
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB13_each_component_chunked
@@ -170,7 +170,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 7 · blocked by SB13_each_component_chunked,
+          DAG a0036d89ebc520f8 · layer 7 · blocked by SB13_each_component_chunked,
           SB6_hundreds_of_specs
         - 'depends on (2): SB13_each_component_chunked, SB6_hundreds_of_specs · all upstream 13'
         - 'needed by (0): —'

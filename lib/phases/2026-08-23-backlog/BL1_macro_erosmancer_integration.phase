@@ -7,11 +7,11 @@ intent: null
 summary: BL1_macro_erosmancer_integration (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853449271
+exported_at: 1792854039022
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853449271
-lastSeenAt: 1792853449271
+firstSeenAt: 1792854039022
+lastSeenAt: 1792854039022
 fingerprint: null
 payload:
   id: BL1_macro_erosmancer_integration
@@ -56,7 +56,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
@@ -69,7 +69,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): BL0_macro_system'
         - 'needed by (0): —'
   uuid: dd052c41-dd5e-5974-b6fa-3adb33d4a9be

@@ -9,11 +9,11 @@ intent: null
 summary: MP2_automatic_in_every_repo (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792853489685
+exported_at: 1792854079244
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853489685
-lastSeenAt: 1792853489685
+firstSeenAt: 1792854079244
+lastSeenAt: 1792854079244
 fingerprint: null
 payload:
   id: MP2_automatic_in_every_repo
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::MP1_nexus_maps_every_phase
@@ -259,7 +259,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3
+        - DAG a0036d89ebc520f8 · layer 3
         - 'depends on (1): MP1_nexus_maps_every_phase · all upstream 3'
         - >-
           needed by (2): MP3_builds_get_the_mapped_context, MP4_a_model_only_where_nothing_maps ·

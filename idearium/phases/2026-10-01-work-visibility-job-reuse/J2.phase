@@ -7,11 +7,11 @@ intent: null
 summary: J2 (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792853467222
+exported_at: 1792854057172
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467222
-lastSeenAt: 1792853467222
+firstSeenAt: 1792854057172
+lastSeenAt: 1792854057172
 fingerprint: null
 payload:
   id: J2
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::J0
@@ -238,7 +238,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by J0
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by J0
         - 'depends on (1): J0'
         - 'needed by (1): J6 · finishing it unlocks J6'
   uuid: e522df7e-eb9a-5957-9ef9-4930606c18a2

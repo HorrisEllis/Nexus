@@ -7,11 +7,11 @@ intent: null
 summary: FN3_every_answer_a_node (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853490117
+exported_at: 1792854079660
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853490117
-lastSeenAt: 1792853490117
+firstSeenAt: 1792854079660
+lastSeenAt: 1792854079660
 fingerprint: null
 payload:
   id: FN3_every_answer_a_node
@@ -154,7 +154,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN0_the_funnel_as_data
@@ -170,7 +170,7 @@ payload:
             - lib/work-funnel.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): FN0_the_funnel_as_data'
         - 'needed by (0): —'
         - >-

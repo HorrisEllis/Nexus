@@ -7,11 +7,11 @@ intent: null
 summary: DBG8_in_the_product (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853498721
+exported_at: 1792854088372
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853498721
-lastSeenAt: 1792853498721
+firstSeenAt: 1792854088372
+lastSeenAt: 1792854088372
 fingerprint: null
 payload:
   id: DBG8_in_the_product
@@ -82,7 +82,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 3
       deps:
         - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
@@ -101,7 +101,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by DBG2_the_case, DBG0c_which_product
+        - DAG a0036d89ebc520f8 · layer 3 · blocked by DBG2_the_case, DBG0c_which_product
         - 'depends on (2): DBG2_the_case, DBG0c_which_product · all upstream 4'
         - 'needed by (0): —'
   uuid: ea241f0c-fc08-5809-bc51-495c4bfaff26

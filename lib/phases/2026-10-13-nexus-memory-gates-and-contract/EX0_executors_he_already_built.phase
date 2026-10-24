@@ -9,11 +9,11 @@ intent: null
 summary: EX0_executors_he_already_built (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853483033
+exported_at: 1792854073062
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853483033
-lastSeenAt: 1792853483033
+firstSeenAt: 1792854073062
+lastSeenAt: 1792854073062
 fingerprint: null
 payload:
   id: EX0_executors_he_already_built
@@ -90,7 +90,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::SC0_scheduler
@@ -103,7 +103,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): SC0_scheduler'
         - 'needed by (0): —'
   uuid: d9649fc4-21a8-57ad-a736-cfb702f93dcc

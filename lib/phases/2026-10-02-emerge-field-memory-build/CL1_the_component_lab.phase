@@ -7,11 +7,11 @@ intent: null
 summary: CL1_the_component_lab (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792853467731
+exported_at: 1792854057693
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467731
-lastSeenAt: 1792853467731
+firstSeenAt: 1792854057693
+lastSeenAt: 1792854057693
 fingerprint: null
 payload:
   id: CL1_the_component_lab
@@ -167,7 +167,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
@@ -209,7 +209,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 4 · blocked by GG1_graphs_generate_code,
+          DAG a0036d89ebc520f8 · layer 4 · blocked by GG1_graphs_generate_code,
           CX0_codex_component_store
         - >-
           depends on (3): PH1_phase_runs_end_in_proof, GG1_graphs_generate_code,

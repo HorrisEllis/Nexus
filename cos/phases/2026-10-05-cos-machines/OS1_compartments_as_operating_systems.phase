@@ -7,11 +7,11 @@ intent: null
 summary: OS1_compartments_as_operating_systems (?) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792853471681
+exported_at: 1792854061731
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853471681
-lastSeenAt: 1792853471681
+firstSeenAt: 1792854061731
+lastSeenAt: 1792854061731
 fingerprint: null
 payload:
   id: OS1_compartments_as_operating_systems
@@ -116,7 +116,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
@@ -141,7 +141,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): VM1_control_like_vmware'
         - >-
           needed by (3): OS2_images_downloaded_and_kept_current,

@@ -7,11 +7,11 @@ intent: null
 summary: RS9_the_thread (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792853473332
+exported_at: 1792854063335
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853473332
-lastSeenAt: 1792853473332
+firstSeenAt: 1792854063335
+lastSeenAt: 1792854063335
 fingerprint: null
 payload:
   id: RS9_the_thread
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
@@ -248,7 +248,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1
+        - DAG a0036d89ebc520f8 · layer 1
         - 'depends on (1): RS3_the_spec_document'
         - >-
           needed by (1): RS10_the_phases_tab_rebuilt · all downstream 2 · finishing it unlocks

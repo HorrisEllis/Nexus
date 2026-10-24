@@ -9,11 +9,11 @@ intent: null
 summary: P26_unify_conversation_logging (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853455126
+exported_at: 1792854045183
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853455126
-lastSeenAt: 1792853455126
+firstSeenAt: 1792854045183
+lastSeenAt: 1792854045183
 fingerprint: null
 payload:
   id: P26_unify_conversation_logging
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 7982b62872445e26
+    hash: c6edc1855804607d
     nodes:
       - path: clear-glass/src/page/nexus-chat.js
         role: changes
@@ -76,10 +76,6 @@ payload:
         role: used-by
         exists: true
         system: orchestrator
-      - path: cortex/core/raid/index.js
-        role: uses
-        exists: true
-        system: cortex
       - path: guardian/lib/code-artifact.js
         role: uses
         exists: true
@@ -120,6 +116,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/raid-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: lib/seam/detector.js
         role: uses
         exists: true
@@ -153,7 +153,7 @@ payload:
         to: guardian/lib/response-sink.js
         kind: requires
       - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
+        to: lib/raid-port.js
         kind: requires
       - from: guardian/api-dispatch.js
         to: intelligence/liminal/index.js
@@ -187,12 +187,6 @@ payload:
         kind: system
         known: true
       - from: guardian/api-dispatch.js
-        to: cortex/core/raid/index.js
-        fromSystem: guardian
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: guardian/api-dispatch.js
         to: intelligence/liminal/index.js
         fromSystem: guardian
         toSystem: intelligence
@@ -206,7 +200,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -217,7 +211,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - DAG a0036d89ebc520f8 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

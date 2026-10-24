@@ -9,11 +9,11 @@ intent: null
 summary: GW1_gate_primitive (foundation) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792853503275
+exported_at: 1792854093035
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853503275
-lastSeenAt: 1792853503275
+firstSeenAt: 1792854093035
+lastSeenAt: 1792854093035
 fingerprint: null
 payload:
   id: GW1_gate_primitive
@@ -42,7 +42,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
@@ -84,7 +84,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG 83f93cbcbb0fa46f · layer 4 · ON THE CRITICAL PATH · blocked by GW0_gate_census,
+          DAG a0036d89ebc520f8 · layer 4 · ON THE CRITICAL PATH · blocked by GW0_gate_census,
           GR1_graph_primitive, GQ1_quality_stream
         - 'depends on (3): GW0_gate_census, GR1_graph_primitive, GQ1_quality_stream · all upstream 9'
         - >-

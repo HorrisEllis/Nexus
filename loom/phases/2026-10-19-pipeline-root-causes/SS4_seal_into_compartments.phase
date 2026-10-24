@@ -7,11 +7,11 @@ intent: null
 summary: SS4_seal_into_compartments (integration) — 2 file(s)
 system: loom
 tags: []
-exported_at: 1792853501608
+exported_at: 1792854091308
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853501608
-lastSeenAt: 1792853501608
+firstSeenAt: 1792854091308
+lastSeenAt: 1792854091308
 fingerprint: null
 payload:
   id: SS4_seal_into_compartments
@@ -125,7 +125,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS3_nodes_are_the_data
@@ -142,7 +142,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by SS3_nodes_are_the_data
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by SS3_nodes_are_the_data
         - 'depends on (1): SS3_nodes_are_the_data · all upstream 4'
         - 'needed by (0): —'
   uuid: d851cbf5-0008-5d0b-949c-1a68c04240bc

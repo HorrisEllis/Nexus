@@ -9,11 +9,11 @@ intent: null
 summary: GA3_the_pick_is_saved_three_ways (?) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792853500376
+exported_at: 1792854090032
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853500376
-lastSeenAt: 1792853500376
+firstSeenAt: 1792854090032
+lastSeenAt: 1792854090032
 fingerprint: null
 payload:
   id: GA3_the_pick_is_saved_three_ways
@@ -179,7 +179,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA2_a_missed_field_asks_the_picker
@@ -203,7 +203,7 @@ payload:
             - clear-glass/src/ipc/bridge.js
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by GA2_a_missed_field_asks_the_picker
+        - DAG a0036d89ebc520f8 · layer 2 · blocked by GA2_a_missed_field_asks_the_picker
         - 'depends on (1): GA2_a_missed_field_asks_the_picker · all upstream 2'
         - >-
           needed by (2): GA4_the_matcher_learns, GA5_commands_and_the_panel · finishing it unlocks

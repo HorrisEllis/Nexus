@@ -9,11 +9,11 @@ intent: null
 summary: DA2_dispatch_outcome_events (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853453629
+exported_at: 1792854043741
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853453629
-lastSeenAt: 1792853453629
+firstSeenAt: 1792854043741
+lastSeenAt: 1792854043741
 fingerprint: null
 payload:
   id: DA2_dispatch_outcome_events
@@ -134,7 +134,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
@@ -147,7 +147,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - DAG a0036d89ebc520f8 · layer 1 · ready
         - 'depends on (1): DA1_fix_stale_guardian_coverage_gate'
         - 'needed by (0): —'
   uuid: f36d7fab-41e4-5e8b-8c88-090724b0f28d

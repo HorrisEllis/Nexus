@@ -103,6 +103,7 @@ const FILES = [
   ['lib/data-clearup.js', I('lib/data-clearup.js'), []],   // §0.60.177 DL0/DL1 census + clear-up tool; its rules are docs/data-layout.spec ownership: (read at run time, not a require)
   ['idearium/spec-compiler/compiler/phase-specs.js', I('idearium/spec-compiler/compiler/phase-specs.js'), [I('idearium/spec-compiler/compiler/kg-builder.js'), I('lib/phase-dag.js'), I('lib/phase-graph.js'), I('lib/phase-map-auto.js'), I('lib/pipeline-nodes.js'), I('lib/phase-plan.js')]],   // §0.60.176 PS1 each phase specced again: .phase + .graph (dag slice) beside its owner
   ['lib/spec-compiler-port.js', I('lib/spec-compiler-port.js'), [I('lib/nexus-self/systems.js')]],   // 0.60.239 EW2 the kernel's one door to Idearium's spec compiler (in-process when provided, else its route)
+  ['lib/raid-port.js', I('lib/raid-port.js'), [I('lib/nexus-self/systems.js')]],   // 0.60.240 GD1 the one door to RAID for every system that is not Cortex (in-process when provided, else Cortex's routes)
   ['lib/upload-placement.js', I('lib/upload-placement.js'), []],   // §0.60.173 UP1/UP2 a zip's files placed against a repo (strip, exists, same bytes, folders, intent, his learned rules); requires/requiredBy
   ['idearium/ui/js/upload-intent.js', I('idearium/ui/js/upload-intent.js'), [I('idearium/ui/js/code-tab-panels.js')]],   // §0.60.173 UP4 the Code tab's upload panel (page globals: CX, _cxPaintPanel, api)
   ['lib/phase-dag.js', I('lib/phase-dag.js'), [I('loom/scanners/phasemap-map.js')]],   // §0.60.172 DG3 the whole DAG of every phasemap
@@ -147,6 +148,11 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('idearium/spec-compiler/compiler/t2-gate.js'), '0.60.239 EW3 the provided t2 (lazy require)'],
   [I('idearium/api/index.js'), I('idearium/spec-compiler/compiler/pipeline.js'), '0.60.239 EW3 the provided pipeline (lazy require)'],
   [I('idearium/api/index.js'), I('idearium/spec-compiler/compiler/index.js'), '0.60.239 EW3 the provided compile (lazy require)'],
+  [I('cortex/boot.js'), I('lib/raid-port.js'), '0.60.240 GD1 provide() at boot: RAID\'s approveTool, decide, outcome, listQueue in-process'],
+  [I('lib/raid-port.js'), I('cortex/boot.js'), '0.60.240 GD1 over HTTP from another process: POST /api/raid/approve-tool, GET /api/raid/decide, POST /api/raid/feedback, GET /api/raid/queue (not a require)'],
+  [I('guardian/server.js'), I('lib/raid-port.js'), '0.60.240 GD1 approveTool (/build, forge, chunking, chat), decide (raw dispatch), listQueue (/api/intake)'],
+  [I('guardian/api-dispatch.js'), I('lib/raid-port.js'), '0.60.240 GD1 outcome (was recordOutcome with a job id as the agent)'],
+  [I('guardian/lib/dispatcher.js'), I('lib/raid-port.js'), '0.60.240 GD1 approveTool for browser jobs (fails closed)'],
   [I('idearium/api/index.js'), I('lib/upload-placement.js'), '§0.60.173 UP3 repo.uploads.{create,list,get,answer}: plan → needs-you; his answer → repo-inject propose/apply (text) and writeSourceBytes (binaries); learn()'],
   [I('idearium/api/index.js'), I('lib/zip-ingest.js'), '§0.60.173 UP3 the uploaded zip read with the importer\'s own bounds (project-import.config ZIP)'],
   [I('idearium/api/index.js'), I('lib/repo-inject.js'), '§0.60.173 UP3 an upload\'s text files land through propose() and apply() — the one door'],

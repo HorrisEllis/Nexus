@@ -7,11 +7,11 @@ intent: null
 summary: SR6_per_output_build_surface (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792853452649
+exported_at: 1792854042821
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853452649
-lastSeenAt: 1792853452649
+firstSeenAt: 1792854042821
+lastSeenAt: 1792854042821
 fingerprint: null
 payload:
   id: SR6_per_output_build_surface
@@ -49,7 +49,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::C3_component_import_decomposition
@@ -63,7 +63,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by C3_component_import_decomposition
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by C3_component_import_decomposition
         - 'depends on (1): C3_component_import_decomposition'
         - 'needed by (0): —'
   uuid: 2280f876-5df1-5915-b8a1-4ad5cc453eb1

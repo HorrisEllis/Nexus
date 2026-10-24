@@ -9,11 +9,11 @@ intent: null
 summary: IR0_intent_routing_for_reasoning (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792853482599
+exported_at: 1792854072653
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853482599
-lastSeenAt: 1792853482599
+firstSeenAt: 1792854072653
+lastSeenAt: 1792854072653
 fingerprint: null
 payload:
   id: IR0_intent_routing_for_reasoning
@@ -242,7 +242,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents: []
@@ -253,7 +253,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

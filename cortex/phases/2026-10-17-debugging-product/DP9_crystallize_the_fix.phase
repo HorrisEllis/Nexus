@@ -7,11 +7,11 @@ intent: null
 summary: DP9_crystallize_the_fix (?) — 2 file(s)
 system: cortex
 tags: []
-exported_at: 1792853496205
+exported_at: 1792854085741
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853496205
-lastSeenAt: 1792853496205
+firstSeenAt: 1792854085741
+lastSeenAt: 1792854085741
 fingerprint: null
 payload:
   id: DP9_crystallize_the_fix
@@ -76,7 +76,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 4
       deps:
         - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
@@ -94,7 +94,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by DP8_a_proven_fix
+        - DAG a0036d89ebc520f8 · layer 4 · blocked by DP8_a_proven_fix
         - 'depends on (1): DP8_a_proven_fix · all upstream 5'
         - 'needed by (0): —'
   uuid: 55af2238-5232-5e71-b190-a714ea601432

@@ -7,11 +7,11 @@ intent: null
 summary: DP5_the_case (?) — 2 file(s)
 system: diagnostic
 tags: []
-exported_at: 1792853496202
+exported_at: 1792854085738
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853496202
-lastSeenAt: 1792853496202
+firstSeenAt: 1792854085738
+lastSeenAt: 1792854085738
 fingerprint: null
 payload:
   id: DP5_the_case
@@ -94,7 +94,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 1
       deps:
         - docs/2026-10-17-debugging-product-phasemap.spec::DP2_one_gap_door
@@ -115,7 +115,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by DP2_one_gap_door
+        - DAG a0036d89ebc520f8 · layer 1 · blocked by DP2_one_gap_door
         - 'depends on (1): DP2_one_gap_door'
         - >-
           needed by (2): DP6_reproduce_in_cos, DP7_back_to_known_good · all downstream 4 · finishing

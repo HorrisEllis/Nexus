@@ -9,11 +9,11 @@ intent: null
 summary: GA1_guardian_source_of_truth (?) — 8 file(s)
 system: guardian
 tags: []
-exported_at: 1792853467692
+exported_at: 1792854057652
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853467692
-lastSeenAt: 1792853467692
+firstSeenAt: 1792854057652
+lastSeenAt: 1792854057652
 fingerprint: null
 payload:
   id: GA1_guardian_source_of_truth
@@ -171,7 +171,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 2
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
@@ -199,7 +199,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 2
+        - DAG a0036d89ebc520f8 · layer 2
         - 'depends on (2): EM0_ground, EV0_contracts_for_every_system'
         - >-
           needed by (5): BT1_build_teams, IN1_nexus_as_claude_codes_toolbox,

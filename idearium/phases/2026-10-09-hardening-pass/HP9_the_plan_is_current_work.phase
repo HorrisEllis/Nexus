@@ -7,11 +7,11 @@ intent: null
 summary: HP9_the_plan_is_current_work (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792853476903
+exported_at: 1792854067127
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792853476903
-lastSeenAt: 1792853476903
+firstSeenAt: 1792854067127
+lastSeenAt: 1792854067127
 fingerprint: null
 payload:
   id: HP9_the_plan_is_current_work
@@ -93,7 +93,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: 83f93cbcbb0fa46f
+      dagHash: a0036d89ebc520f8
       layer: 0
       deps: []
       dependents:
@@ -107,7 +107,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG 83f93cbcbb0fa46f · layer 0
+        - DAG a0036d89ebc520f8 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): HP10_the_work_surface_in_view · finishing it unlocks
