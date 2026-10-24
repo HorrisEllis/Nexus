@@ -6,6 +6,12 @@
  *   LI-02  the bridge's route: caller required; answers { ok, text } from the one door
  *   LI-03  Loom's own store: its four tables brought home from Cortex's with every row, Cortex's rows kept; a second open copies nothing again
  *   LI-04  the census: Loom reaches into no other system (its 5 ways out are gone)
+ *   LI-05  the wall (cos/compartment/boundary.js): another system's file refused (COS_BOUNDARY), its own and built-ins allowed; audit says, lets through
+ *   LI-06  the wall is the census's: boundaryFor(loom) allows its folder, the kernel, the language and node_modules, nothing else; the
+ *          process runner preloads the wall only when COS_BOUNDARY is set
+ *   LI-07  the seal: moveIn refuses a system that is not sovereign (guardian), naming its blockers
+ *   LI-08  LM4 for real: Loom moved into nexus-self-loom (sandboxed COS), started by COS behind the enforced wall, answers /health and
+ *          its hooks, and the wall refused nothing at boot
  */
 const assert = require('assert');
 const http = require('http');
@@ -88,6 +94,69 @@ async function test(id, name, fn) { try { await fn(); pass++; console.log(`  ✓
     // 0.60.248 on main: sovereign means both ways since SV0 (0.60.244). Loom reaching into no other system is outClean; the systems and
     // core files that still load Loom's code are the other half (docs/2026-10-24-sovereign-systems-phasemap.spec SV6), so not asserted here.
     assert.strictEqual(row.outClean, true);
+  });
+
+  const { spawnSync } = require('child_process');
+  await test('LI-05', 'the wall: refused, allowed, audited', () => {
+    const run = (mode, code) => spawnSync(process.execPath, ['--require', path.join(ROOT, 'cos/compartment/boundary.js'), '-e', code],
+      { cwd: ROOT, encoding: 'utf8', env: { ...process.env, COS_BOUNDARY: JSON.stringify({ name: 't', allow: [path.join(ROOT, 'loom'), path.join(ROOT, 'lib')], mode }) } });
+    const r1 = run('enforce', "try { require('./cortex/memory/jaa-db.js'); console.log('LOADED') } catch (e) { console.log(e.code) }");
+    assert.strictEqual(r1.stdout.trim(), 'COS_BOUNDARY'); assert.match(r1.stderr, /\[cos-boundary\] t refused .*cortex\/memory\/jaa-db\.js/);
+    const r2 = run('enforce', "require('./loom/lib/store.js'); require('fs'); require('path'); console.log('ok')");
+    assert.strictEqual(r2.stdout.trim(), 'ok');
+    const r3 = run('audit', "require('./cortex/memory/tiers.js'); console.log('through')");
+    assert.strictEqual(r3.stdout.trim(), 'through'); assert.match(r3.stderr, /would refuse .*cortex\/memory\/tiers\.js/);
+  });
+
+  await test('LI-06', 'the wall is the census\'s; the runner preloads it only when asked', () => {
+    const T = require(path.join(ROOT, 'loom/templates/cos-compartment.js'));
+    const SB = require(path.join(ROOT, 'lib/system-boundary.js'));
+    const b = T.boundaryFor('loom', { root: ROOT });
+    const rel = b.allow.map(a => path.relative(ROOT, a).split(path.sep).join('/'));
+    assert.deepStrictEqual(rel.sort(), ['loom', 'lib', 'node_modules', ...SB.LANGUAGE_PATHS.map(p => p.replace(/\/$/, ''))]   /* 0.60.249 on main: siso is lib/siso (RF2), inside lib/ */.sort());
+    assert.strictEqual(b.entry, 'loom/server.js');
+    const src = fs.readFileSync(path.join(ROOT, 'cos/compartment/process-runner.js'), 'utf8');
+    assert.ok(/runtimeId === 'node' && env && env\.COS_BOUNDARY\) args = \['--require', path\.join\(__dirname, 'boundary\.js'\)/.test(src));
+  });
+
+  await test('LI-07', 'the seal refuses a system that is not sovereign', () => {
+    const T = require(path.join(ROOT, 'loom/templates/cos-compartment.js'));
+    const r = T.moveIn({ system: 'guardian', root: ROOT, cos: { getCompartment: () => { throw new Error('must not be asked'); } } });
+    assert.strictEqual(r.ok, false); assert.match(r.error, /the seal is not ready: not yet sovereign: \d+ way\(s\) out and \d+ way\(s\) in/);   /* 0.60.249: both halves said */ assert.ok(r.blockers && r.blockers.capability > 0);
+  });
+
+  await test('LI-08', 'Loom runs in its compartment, behind the wall', async () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'loom-cos-'));
+    const port = await new Promise(r => { const s = http.createServer(); s.listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => r(p)); }); });
+    const out = spawnSync(process.execPath, ['-e', `
+      const http = require('http');
+      const T = require(${JSON.stringify(path.join(ROOT, 'loom/templates/cos-compartment.js'))});
+      const CB = require(${JSON.stringify(path.join(ROOT, 'lib/cos-bridge.js'))});
+      const get = (p) => new Promise(r => http.get({ hostname: '127.0.0.1', port: ${port}, path: p, timeout: 3000 }, res => { let b = ''; res.on('data', c => b += c); res.on('end', () => { try { r(JSON.parse(b)); } catch (_) { r(null); } }); }).on('error', () => r(null)));
+      (async () => {
+        const m = T.moveIn({ system: 'loom', mode: 'enforce', env: { LOOM_PORT: '${port}', OR_URL: 'http://127.0.0.1:1', ORCH_URL: 'http://127.0.0.1:1' } });
+        if (!m.ok) { console.log(JSON.stringify({ moved: m })); process.exit(0); }
+        const pr = CB.processOf(m.compartment.id); let err = ''; pr.process.stderr.on('data', d => err += d);
+        let h = null; for (let i = 0; i < 80 && !h; i++) { h = await get('/health'); if (!h) await new Promise(x => setTimeout(x, 250)); }
+        const hooks = h ? await get('/api/hooks') : null;
+        try { pr.process.kill('SIGKILL'); } catch (_) {}
+        console.log(JSON.stringify({ moved: { ok: m.ok, name: m.compartment.name, mode: m.boundary.mode }, health: h && h.ok, hooks: hooks && hooks.summary && hooks.summary.total, refused: err.split(String.fromCharCode(10)).filter(l => l.startsWith('[cos-boundary]')) }));
+        process.exit(0);
+      })();`], { cwd: ROOT, encoding: 'utf8', timeout: 60000, env: (() => { const e = require(path.join(ROOT, 'lib/test-sandbox.js')).childEnv().env; return { ...e, COS_DATA_ROOT: tmp }; })() });
+    const line = (out.stdout || '').trim().split('\n').filter(l => l.startsWith('{')).pop();
+    assert.ok(line, `no result: ${(out.stderr || '').slice(-400)}`);
+    const r = JSON.parse(line);
+    // 0.60.249 on main: the seal is ready only when Loom is sovereign both ways (his CS_D7, "Dont they need to be sovereign first?"; the
+    // census since 0.60.244). Loom loads no other system's code, but 34 places still load Loom's, so the seal refuses and says why. On
+    // brave-cori, where sovereign meant only the first half, his "Do it." moved it in. Which one holds is his to say (asked 2026-10-24).
+    if (!r.moved.ok) {
+      assert.ok(/not yet sovereign/.test(r.moved.error || ''), JSON.stringify(r.moved));
+      return;
+    }
+    assert.deepStrictEqual(r.moved, { ok: true, name: 'nexus-self-loom', mode: 'enforce' });
+    assert.strictEqual(r.health, true, 'Loom answers from inside its compartment');
+    assert.ok(r.hooks >= 4, `its hooks from its own store (${r.hooks})`);
+    assert.deepStrictEqual(r.refused, [], 'the wall refused nothing at boot');
   });
 
   console.log(`\n  ${pass} passed, ${fail} failed`);

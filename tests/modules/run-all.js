@@ -477,7 +477,7 @@ const SUITES = [
   'test-cos-services.test.js',          // 0.60.245 BCR1 (from brave-cori's 0.60.235 SV0) — his engines in COS: the gate grammar (no IPC string run as code), two kernels side by side, upstream unchanged, no secret carried in
   'test-substrate-spec.test.js',        // 0.60.176 — docs/substrate.spec, docs/belief-loop.spec, emerge SPEC_COMPILER compile at full depth, tied to their phases; emerge build order topological
   'test-phase-specs.test.js',           // 0.60.176 PS1 — each phase specced again with its DAG and related files beside its owner; drift checked
-  'test-loom-into-cos.test.js',         // 0.60.248 (from brave-cori 0.60.241 LM0–LM3) — Loom reaches into no other system: pulse, Ollama through its bridge, its own store, readers through its routes
+  'test-loom-into-cos.test.js',         // 0.60.248 (from brave-cori 0.60.241 LM0–LM3) and 0.60.249 LM4 — Loom reaches into no other system, and runs in its COS compartment behind the wall (LI-08 the real move-in)
   'test-data-clearup.test.js',          // 0.60.177 DL0/DL1 — every data file placed by docs/data-layout.spec; moved by hash with a manifest; rolled back byte for byte
   'test-readme-generate.test.js',    // 0.60.153 — the README: every system, module and file; every phase; the data; Idearium; every release; under 512 KiB
   'test-ui-editor.test.js',           // 0.60.122 UE0/UE1 — the UI editor: GrapesJS vendored, a repo page opened, edited, saved back (Clear Glass)

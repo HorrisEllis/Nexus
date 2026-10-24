@@ -215,6 +215,9 @@ function createHost(opts = {}) {
     bus,
     sysmap,
     version: COS_VERSION,
+    // 0.60.249 LM4 — a compartment's live process, read by COS itself. lib/cos-bridge.js asks the host instead of loading
+    // cos/compartment/process-runner.js from core, which would be a crossing up into COS.
+    processOf: (compartmentId) => { try { return require('../compartment/process-runner.js').getProcess(compartmentId) || null; } catch (_) { return null; } },
   };
 
   bus.emit(HOST.MAP_UPDATED, { source: 'boot', version: COS_VERSION });

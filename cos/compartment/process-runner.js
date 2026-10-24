@@ -213,6 +213,9 @@ function spawnProcess(opts) {
     }
   } else {
     ({ bin, args } = resolveRuntime(runtimeId, entryFile));
+    // 0.60.242 LM4 — the wall (compartment/boundary.js): a node compartment whose env carries COS_BOUNDARY gets it preloaded, so a
+    // require() outside what the compartment allows is refused. Without COS_BOUNDARY nothing changes.
+    if (runtimeId === 'node' && env && env.COS_BOUNDARY) args = ['--require', path.join(__dirname, 'boundary.js'), ...args];
   }
   const fullArgs = [...args, ...entryArgs];
 

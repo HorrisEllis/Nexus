@@ -1,0 +1,170 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB24_cos_reads_only_the_registry:eed209f2f43ef905
+type: graph
+id: phase:DB24_cos_reads_only_the_registry:eed209f2f43ef905
+context: dependency graph of phase DB24_cos_reads_only_the_registry
+intent: null
+summary: 16 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792879718673
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879718673
+lastSeenAt: 1792879718673
+fingerprint: null
+payload:
+  for: DB24_cos_reads_only_the_registry
+  kind: phase
+  repo: null
+  hash: eed209f2f43ef905
+  nodes:
+    - path: cos/compartment/process-runner.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/kernel.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/cli/commands/run.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/status.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/foundation/snapshot.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/gates/process.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/watchdog/monitor.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Event.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/siso/index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager.js
+      to: lib/siso/index.js
+      kind: requires
+    - from: cos/kernel.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/siso/Event.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/cli/commands/run.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/cli/commands/status.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/host/gates/process.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/test/test.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/watchdog/monitor.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 9
+    deps:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+    dependents:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+    downstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB26_the_ui_floats_on_the_registry
+    blockedBy:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+    unlocks:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB25_the_lifecycle_verbs
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 9 · blocked by DB22_the_root_and_the_missing_four, DB11_cos_compartment_per_system
+      - >-
+        depends on (2): DB22_the_root_and_the_missing_four, DB11_cos_compartment_per_system · all
+        upstream 12
+      - >-
+        needed by (1): DB25_the_lifecycle_verbs · all downstream 2 · finishing it unlocks
+        DB25_the_lifecycle_verbs
+    edges:
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB22_the_root_and_the_missing_four
+        kind: declared
+      - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
+        kind: declared
