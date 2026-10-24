@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP1_stale_spreads_along_dependencies
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP1_stale_spreads_along_dependencies
+context: >-
+  pipeline phase HP1_stale_spreads_along_dependencies of
+  docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP1_stale_spreads_along_dependencies (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997237
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997237
+lastSeenAt: 1792829997237
+fingerprint: null
+payload:
+  id: HP1_stale_spreads_along_dependencies
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/thread.js
+    - idearium/ui/js/phases.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9df169732afe005e

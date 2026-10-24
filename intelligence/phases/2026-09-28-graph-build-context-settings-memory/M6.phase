@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::M6
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::M6
+context: pipeline phase M6 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: M6 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829984166
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984166
+lastSeenAt: 1792829984166
+fingerprint: null
+payload:
+  id: M6
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence (crystallisation)
+    - interstitial_spaces writer
+  depends_on:
+    - M1
+  blocks: []
+  spec: null
+  graph: 11c7f177b88ab4a1

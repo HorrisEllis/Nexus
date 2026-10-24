@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DS1_tokens_edited_live:8d477dcf2270ac45
+type: graph
+id: phase:DS1_tokens_edited_live:8d477dcf2270ac45
+context: dependency graph of phase DS1_tokens_edited_live
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829998864
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998864
+lastSeenAt: 1792829998864
+fingerprint: null
+payload:
+  for: DS1_tokens_edited_live
+  kind: phase
+  repo: null
+  hash: 8d477dcf2270ac45
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+    dependents:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+    upstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+    downstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+      - docs/2026-10-10-design-surface-phasemap.spec::DS4_interface_types_by_adapter
+      - docs/2026-10-10-design-surface-phasemap.spec::DS5_the_agents_design_too
+    blockedBy:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+    unlocks:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by DS0_one_token_source
+      - 'depends on (1): DS0_one_token_source'
+      - >-
+        needed by (1): DS2_pick_and_edit_any_page · all downstream 3 · finishing it unlocks
+        DS2_pick_and_edit_any_page

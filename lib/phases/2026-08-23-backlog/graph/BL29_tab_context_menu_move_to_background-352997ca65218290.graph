@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL29_tab_context_menu_move_to_background:352997ca65218290
+type: graph
+id: phase:BL29_tab_context_menu_move_to_background:352997ca65218290
+context: dependency graph of phase BL29_tab_context_menu_move_to_background
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829971275
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971275
+lastSeenAt: 1792829971275
+fingerprint: null
+payload:
+  for: BL29_tab_context_menu_move_to_background
+  kind: phase
+  repo: null
+  hash: 352997ca65218290
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

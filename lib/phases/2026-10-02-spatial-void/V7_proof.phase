@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-spatial-void-phasemap.spec::V7_proof
+type: phase
+id: docs_2026-10-02-spatial-void-phasemap.spec::V7_proof
+context: pipeline phase V7_proof of docs/2026-10-02-spatial-void-phasemap.spec
+intent: null
+summary: V7_proof (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829989370
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829989370
+lastSeenAt: 1792829989370
+fingerprint: null
+payload:
+  id: V7_proof
+  map: docs/2026-10-02-spatial-void-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/modules/test-spatial-void.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c207baa9194ab90d

@@ -1,0 +1,66 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS2_the_plan_panel_holds_it:7c79a17a177f132e
+type: graph
+id: phase:OS2_the_plan_panel_holds_it:7c79a17a177f132e
+context: dependency graph of phase OS2_the_plan_panel_holds_it
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829995350
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829995350
+lastSeenAt: 1792829995350
+fingerprint: null
+payload:
+  for: OS2_the_plan_panel_holds_it
+  kind: phase
+  repo: null
+  hash: 7c79a17a177f132e
+  nodes:
+    - path: clear-glass/src/processes/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: idearium/ui/js/plan-panel.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/repo-tasks.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/processes/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/processes/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

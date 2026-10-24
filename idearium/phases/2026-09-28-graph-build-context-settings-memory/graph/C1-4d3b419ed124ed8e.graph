@@ -1,0 +1,218 @@
+envelope: 1
+uuid: nexus-export-graph-phase:C1:4d3b419ed124ed8e
+type: graph
+id: phase:C1:4d3b419ed124ed8e
+context: dependency graph of phase C1
+intent: null
+summary: 22 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829984155
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984155
+lastSeenAt: 1792829984155
+fingerprint: null
+payload:
+  for: C1
+  kind: phase
+  repo: null
+  hash: 4d3b419ed124ed8e
+  nodes:
+    - path: idearium/spec-engine/warp-build-dispatch.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/idearium-warp-cache.test.mjs
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-agent-provider.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/spec-engine/chunk-dispatch.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/idearium/code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/extract-code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/adapters/warp-cascade.js
+      role: uses
+      exists: true
+      system: lib
+    - path: warp/dispatch/population.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/plugins/crystallizer-flatfile.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: lib/seam/adapters/warp-cascade.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/plugins/crystallizer-flatfile.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/dispatch/population.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: idearium/spec-engine/chunk-dispatch.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: lib/extract-code.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/idearium/code.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/nexus/tool-layers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/warp-build-dispatch.js
+      kind: requires
+    - from: tests/modules/idearium-warp-cache.test.mjs
+      to: idearium/spec-engine/warp-build-dispatch.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/spec-engine/warp-build-dispatch.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-repo-agent-provider.js
+      to: lib/repo-agent.js
+      kind: requires
+  crossings:
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/plugins/crystallizer-flatfile.js
+      fromSystem: idearium
+      toSystem: warp
+      kind: system
+      known: true
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/dispatch/population.js
+      fromSystem: idearium
+      toSystem: warp
+      kind: system
+      known: true
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C0
+    dependents:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C3
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B3
+    upstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
+    downstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B3
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B4
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C3
+    blockedBy:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C0
+    unlocks:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C3
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by C0
+      - 'depends on (1): C0 · all upstream 2'
+      - 'needed by (3): C2, C3, B3 · all downstream 4 · finishing it unlocks C2, C3'

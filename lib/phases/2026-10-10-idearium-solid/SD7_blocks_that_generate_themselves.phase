@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD7_blocks_that_generate_themselves
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD7_blocks_that_generate_themselves
+context: pipeline phase SD7_blocks_that_generate_themselves of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD7_blocks_that_generate_themselves (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999651
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999651
+lastSeenAt: 1792829999651
+fingerprint: null
+payload:
+  id: SD7_blocks_that_generate_themselves
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/spec-document.js
+    - idearium/spec-engine/index.js
+  depends_on:
+    - SD6_an_idea_logged_asked_expanded
+  blocks: []
+  spec: null
+  graph: 0d8df190210c4970

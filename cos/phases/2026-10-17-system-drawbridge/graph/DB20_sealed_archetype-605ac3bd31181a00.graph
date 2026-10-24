@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB20_sealed_archetype:605ac3bd31181a00
+type: graph
+id: phase:DB20_sealed_archetype:605ac3bd31181a00
+context: dependency graph of phase DB20_sealed_archetype
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830016898
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016898
+lastSeenAt: 1792830016898
+fingerprint: null
+payload:
+  for: DB20_sealed_archetype
+  kind: phase
+  repo: null
+  hash: 605ac3bd31181a00
+  nodes:
+    - path: cos/archetype/genesis-catalog.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/archetype/registry.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/components/index.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/archetype/nexus-system.js
+      to: cos/archetype/components/index.js
+      kind: requires
+    - from: cos/archetype/registry.js
+      to: cos/archetype/nexus-system.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
+    dependents: []
+    upstream:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
+    downstream: []
+    blockedBy:
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by DB19_genesis_sandboxed_fork
+      - 'depends on (1): DB19_genesis_sandboxed_fork · all upstream 2'
+      - 'needed by (0): —'

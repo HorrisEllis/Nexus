@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB12_the_registry_is_the_component_list
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB12_the_registry_is_the_component_list
+context: >-
+  pipeline phase SB12_the_registry_is_the_component_list of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB12_the_registry_is_the_component_list (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990940
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990940
+lastSeenAt: 1792829990940
+fingerprint: null
+payload:
+  id: SB12_the_registry_is_the_component_list
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - lib/file-tree-plan.js
+    - idearium/repo/architecture.js
+    - lib/node-export.js
+    - idearium/repo/proof-run.js
+  depends_on:
+    - SB11_each_block_chunked
+  blocks: []
+  spec: null
+  graph: 663b7c8d93d31c6f

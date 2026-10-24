@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gate-memory-phasemap.spec::GM0c_what_a_record_holds
+type: phase
+id: docs_2026-10-18-gate-memory-phasemap.spec::GM0c_what_a_record_holds
+context: pipeline phase GM0c_what_a_record_holds of docs/2026-10-18-gate-memory-phasemap.spec
+intent: null
+summary: GM0c_what_a_record_holds (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830018088
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830018088
+lastSeenAt: 1792830018088
+fingerprint: null
+payload:
+  id: GM0c_what_a_record_holds
+  map: docs/2026-10-18-gate-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: bbf34222eed05044

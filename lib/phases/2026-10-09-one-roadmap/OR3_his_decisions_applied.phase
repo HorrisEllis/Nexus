@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-roadmap-phasemap.spec::OR3_his_decisions_applied
+type: phase
+id: docs_2026-10-09-one-roadmap-phasemap.spec::OR3_his_decisions_applied
+context: pipeline phase OR3_his_decisions_applied of docs/2026-10-09-one-roadmap-phasemap.spec
+intent: null
+summary: OR3_his_decisions_applied (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829998098
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998098
+lastSeenAt: 1792829998098
+fingerprint: null
+payload:
+  id: OR3_his_decisions_applied
+  map: docs/2026-10-09-one-roadmap-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/*-phasemap.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f52f9193180a26cb

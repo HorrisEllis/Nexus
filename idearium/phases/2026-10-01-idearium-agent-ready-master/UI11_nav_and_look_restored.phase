@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI11_nav_and_look_restored
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI11_nav_and_look_restored
+context: >-
+  pipeline phase UI11_nav_and_look_restored of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: UI11_nav_and_look_restored (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987091
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987091
+lastSeenAt: 1792829987091
+fingerprint: null
+payload:
+  id: UI11_nav_and_look_restored
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/index.html
+    - idearium/ui/css/
+    - idearium/ui/js/app.js
+  depends_on:
+    - UI8_code_tab_is_code
+  blocks: []
+  spec: null
+  graph: bf1ee50b5fb1fd60

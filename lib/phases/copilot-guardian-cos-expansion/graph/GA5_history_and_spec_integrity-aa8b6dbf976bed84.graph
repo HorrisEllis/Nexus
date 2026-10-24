@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GA5_history_and_spec_integrity:aa8b6dbf976bed84
+type: graph
+id: phase:GA5_history_and_spec_integrity:aa8b6dbf976bed84
+context: dependency graph of phase GA5_history_and_spec_integrity
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792830029758
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830029758
+lastSeenAt: 1792830029758
+fingerprint: null
+payload:
+  for: GA5_history_and_spec_integrity
+  kind: phase
+  repo: null
+  hash: aa8b6dbf976bed84
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

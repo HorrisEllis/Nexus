@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+context: pipeline phase TB2_persistence_audit of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB2_persistence_audit (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830010167
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010167
+lastSeenAt: 1792830010167
+fingerprint: null
+payload:
+  id: TB2_persistence_audit
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TB1_read_model_per_tab
+  blocks: []
+  spec: null
+  graph: dc51aa7374ac0e10

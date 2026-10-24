@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::AM7_agent_suite_welcome_ui
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::AM7_agent_suite_welcome_ui
+context: pipeline phase AM7_agent_suite_welcome_ui of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: AM7_agent_suite_welcome_ui (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974295
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974295
+lastSeenAt: 1792829974295
+fingerprint: null
+payload:
+  id: AM7_agent_suite_welcome_ui
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 59238d82bfcf4964

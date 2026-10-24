@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::EP1_every_claim_says_how_it_is_known
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::EP1_every_claim_says_how_it_is_known
+context: >-
+  pipeline phase EP1_every_claim_says_how_it_is_known of
+  docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: EP1_every_claim_says_how_it_is_known (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792830000469
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000469
+lastSeenAt: 1792830000469
+fingerprint: null
+payload:
+  id: EP1_every_claim_says_how_it_is_known
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/node-schemas
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 518303ecd7d85d85

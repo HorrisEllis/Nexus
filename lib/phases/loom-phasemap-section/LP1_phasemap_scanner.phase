@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_loom-phasemap-section-phasemap.spec::LP1_phasemap_scanner
+type: phase
+id: docs_loom-phasemap-section-phasemap.spec::LP1_phasemap_scanner
+context: pipeline phase LP1_phasemap_scanner of docs/loom-phasemap-section-phasemap.spec
+intent: null
+summary: LP1_phasemap_scanner (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830032131
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830032131
+lastSeenAt: 1792830032131
+fingerprint: null
+payload:
+  id: LP1_phasemap_scanner
+  map: docs/loom-phasemap-section-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4959567292bb0430

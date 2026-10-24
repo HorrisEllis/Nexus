@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IM0b_root_files:b08632fab89cee9e
+type: graph
+id: phase:IM0b_root_files:b08632fab89cee9e
+context: dependency graph of phase IM0b_root_files
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830016030
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016030
+lastSeenAt: 1792830016030
+fingerprint: null
+payload:
+  for: IM0b_root_files
+  kind: phase
+  repo: null
+  hash: b08632fab89cee9e
+  nodes:
+    - path: docs/2026-10-17-decisions-by-the-axioms.spec
+      role: changes
+      exists: true
+      system: null
+    - path: scripts/release-zip.js
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM2_clean_the_redundant
+    upstream: []
+    downstream:
+      - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM2_clean_the_redundant
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): IM2_clean_the_redundant'

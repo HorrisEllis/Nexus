@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF2_providerhost_stopall_missing
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF2_providerhost_stopall_missing
+context: pipeline phase SF2_providerhost_stopall_missing of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF2_providerhost_stopall_missing (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829970770
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829970770
+lastSeenAt: 1792829970770
+fingerprint: null
+payload:
+  id: SF2_providerhost_stopall_missing
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 28f6c81204f42cea

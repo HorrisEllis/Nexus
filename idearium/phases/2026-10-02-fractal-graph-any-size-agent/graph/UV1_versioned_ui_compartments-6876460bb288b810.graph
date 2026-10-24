@@ -1,0 +1,125 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UV1_versioned_ui_compartments:6876460bb288b810
+type: graph
+id: phase:UV1_versioned_ui_compartments:6876460bb288b810
+context: dependency graph of phase UV1_versioned_ui_compartments
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829988950
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988950
+lastSeenAt: 1792829988950
+fingerprint: null
+payload:
+  for: UV1_versioned_ui_compartments
+  kind: phase
+  repo: null
+  hash: 6876460bb288b810
+  nodes:
+    - path: cos/host/gates/compartment.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: cos/cli/commands/create.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playgrounds/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/foundation/axioms.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/intent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/runtime-enum.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/types.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Event.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Gate.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/host/gates/compartment.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: cos/host/gates/compartment.js
+      to: cos/siso/Gate.js
+      kind: requires
+    - from: cos/host/gates/compartment.js
+      to: cos/siso/Event.js
+      kind: requires
+    - from: cos/host/gates/compartment.js
+      to: cos/foundation/types.js
+      kind: requires
+    - from: cos/host/gates/compartment.js
+      to: cos/foundation/axioms.js
+      kind: requires
+    - from: cos/host/gates/compartment.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/host/gates/compartment.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/host/gates/compartment.js
+      to: cos/foundation/runtime-enum.js
+      kind: requires
+    - from: cos/cli/commands/create.js
+      to: cos/host/gates/compartment.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/compartment.js
+      kind: requires
+    - from: cos/playgrounds/kernel.js
+      to: cos/host/gates/compartment.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

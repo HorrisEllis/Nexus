@@ -1,0 +1,104 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM5_tool_forge_real_usage_audit:6e14d076e28a13e6
+type: graph
+id: phase:AM5_tool_forge_real_usage_audit:6e14d076e28a13e6
+context: dependency graph of phase AM5_tool_forge_real_usage_audit
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829973863
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973863
+lastSeenAt: 1792829973863
+fingerprint: null
+payload:
+  for: AM5_tool_forge_real_usage_audit
+  kind: phase
+  repo: null
+  hash: 6e14d076e28a13e6
+  nodes:
+    - path: lib/agent-tools/tools/execution/forge-tool.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/loop-topology.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/schema/cortex-sync.js
+      role: changes
+      exists: true
+      system: loom
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/schema/registry.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-engines.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/loop-topology.js
+      to: lib/diagnostic-engines.js
+      kind: requires
+    - from: lib/loop-topology.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: loom/schema/cortex-sync.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: loom/schema/cortex-sync.js
+      to: lib/data-home.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-forge.js
+      kind: requires
+    - from: loom/schema/registry.js
+      to: loom/schema/cortex-sync.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/schema/cortex-sync.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

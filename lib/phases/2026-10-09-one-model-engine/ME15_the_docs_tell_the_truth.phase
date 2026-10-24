@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME15_the_docs_tell_the_truth
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME15_the_docs_tell_the_truth
+context: pipeline phase ME15_the_docs_tell_the_truth of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME15_the_docs_tell_the_truth (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997700
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997700
+lastSeenAt: 1792829997700
+fingerprint: null
+payload:
+  id: ME15_the_docs_tell_the_truth
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/spec/copilot.spec
+    - docs/copilot.spec
+    - guardian/spec/guardian.spec
+    - docs/nexus.spec
+    - docs/idearium.spec
+    - idearium/spec/idearium.spec
+    - docs/atlases/copilot-atlas.md
+    - docs/atlases/guardian-atlas.md
+    - docs/atlases/idearium-atlas.md
+    - docs/atlases/nexus-atlas.md
+    - copilot/registry-components.js
+  depends_on:
+    - ME0_the_inventory_proved
+  blocks: []
+  spec: null
+  graph: e4a2663f9650838b

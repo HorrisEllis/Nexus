@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-surfaces-phasemap.spec::CS3_clear_glass_users_as_plugins
+type: phase
+id: docs_2026-10-15-clear-glass-surfaces-phasemap.spec::CS3_clear_glass_users_as_plugins
+context: >-
+  pipeline phase CS3_clear_glass_users_as_plugins of
+  docs/2026-10-15-clear-glass-surfaces-phasemap.spec
+intent: null
+summary: CS3_clear_glass_users_as_plugins (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005035
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005035
+lastSeenAt: 1792830005035
+fingerprint: null
+payload:
+  id: CS3_clear_glass_users_as_plugins
+  map: docs/2026-10-15-clear-glass-surfaces-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/plugins/host.js
+  depends_on:
+    - CS2_settings_providers_and_accounts
+  blocks: []
+  spec: null
+  graph: 65f150cb1b4a6789

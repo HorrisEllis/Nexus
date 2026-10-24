@@ -7,11 +7,11 @@ intent: null
 summary: CY0_one_crystal_schema (foundation) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792456303338
+exported_at: 1792830021761
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303338
-lastSeenAt: 1792456303338
+firstSeenAt: 1792830021761
+lastSeenAt: 1792830021761
 fingerprint: null
 payload:
   id: CY0_one_crystal_schema

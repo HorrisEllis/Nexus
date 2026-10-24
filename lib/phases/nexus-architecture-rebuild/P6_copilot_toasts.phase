@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P6_copilot_toasts
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P6_copilot_toasts
+context: pipeline phase P6_copilot_toasts of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P6_copilot_toasts (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830032517
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830032517
+lastSeenAt: 1792830032517
+fingerprint: null
+payload:
+  id: P6_copilot_toasts
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a09fd4021c8e4d8e

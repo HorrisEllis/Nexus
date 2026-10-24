@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+type: phase
+id: docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+context: >-
+  pipeline phase X1_system_nodes of
+  docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+intent: null
+summary: X1_system_nodes (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829983321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829983321
+lastSeenAt: 1792829983321
+fingerprint: null
+payload:
+  id: X1_system_nodes
+  map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/system-nodes.js
+    - cli/nodes.js
+    - orchestrator/orchestrator.js
+  depends_on:
+    - C1_copilot_contract
+  blocks: []
+  spec: null
+  graph: 46e5cb034f4618e8

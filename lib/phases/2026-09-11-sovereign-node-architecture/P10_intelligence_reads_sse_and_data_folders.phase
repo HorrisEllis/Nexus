@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P10_intelligence_reads_sse_and_data_folders
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P10_intelligence_reads_sse_and_data_folders
+context: >-
+  pipeline phase P10_intelligence_reads_sse_and_data_folders of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P10_intelligence_reads_sse_and_data_folders (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976504
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976504
+lastSeenAt: 1792829976504
+fingerprint: null
+payload:
+  id: P10_intelligence_reads_sse_and_data_folders
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7adf7e1b825e4987

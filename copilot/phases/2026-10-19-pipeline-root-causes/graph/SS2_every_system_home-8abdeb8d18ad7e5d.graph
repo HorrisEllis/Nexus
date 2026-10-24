@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 11 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792653394704
+exported_at: 1792830020474
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394704
-lastSeenAt: 1792653394704
+firstSeenAt: 1792830020474
+lastSeenAt: 1792830020474
 fingerprint: null
 payload:
   for: SS2_every_system_home
@@ -212,7 +212,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 4470939bf8678599
+    dagHash: 2f8ddd0afd383c4f
     layer: 2
     deps:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
@@ -224,14 +224,13 @@ payload:
     downstream:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS3_nodes_are_the_data
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS4_seal_into_compartments
-    blockedBy:
-      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+    blockedBy: []
     unlocks:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS3_nodes_are_the_data
     conflicts: []
     dangling: []
     lines:
-      - DAG 4470939bf8678599 · layer 2 · blocked by SS1_system_store_adoption
+      - DAG 2f8ddd0afd383c4f · layer 2 · ready
       - 'depends on (1): SS1_system_store_adoption · all upstream 2'
       - >-
         needed by (1): SS3_nodes_are_the_data · all downstream 2 · finishing it unlocks

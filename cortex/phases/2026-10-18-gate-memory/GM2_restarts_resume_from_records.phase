@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gate-memory-phasemap.spec::GM2_restarts_resume_from_records
+type: phase
+id: docs_2026-10-18-gate-memory-phasemap.spec::GM2_restarts_resume_from_records
+context: pipeline phase GM2_restarts_resume_from_records of docs/2026-10-18-gate-memory-phasemap.spec
+intent: null
+summary: GM2_restarts_resume_from_records (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830018090
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830018090
+lastSeenAt: 1792830018090
+fingerprint: null
+payload:
+  id: GM2_restarts_resume_from_records
+  map: docs/2026-10-18-gate-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/gate-record.js
+    - lib/run-state.js
+    - idearium/repo/run-reconcile.js
+  depends_on:
+    - GM1_the_gate_record
+  blocks: []
+  spec: null
+  graph: 2cab55cf6b2e5f35

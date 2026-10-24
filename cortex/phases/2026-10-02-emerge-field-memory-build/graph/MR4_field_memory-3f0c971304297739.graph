@@ -1,0 +1,144 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MR4_field_memory:3f0c971304297739
+type: graph
+id: phase:MR4_field_memory:3f0c971304297739
+context: dependency graph of phase MR4_field_memory
+intent: null
+summary: 12 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829988432
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988432
+lastSeenAt: 1792829988432
+fingerprint: null
+payload:
+  for: MR4_field_memory
+  kind: phase
+  repo: null
+  hash: 3f0c971304297739
+  nodes:
+    - path: cortex/memory/decay.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/memory/relevance.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/memory/tiers.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cli/dedup.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/table-compactor.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: orchestrator/lib/sigma-compaction.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-sigma-compaction.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-table-compactor.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: cortex/memory/decay.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/decay.js
+      kind: requires
+    - from: cli/dedup.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: cortex/memory/table-compactor.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: orchestrator/lib/sigma-compaction.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: tests/modules/test-sigma-compaction.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: tests/modules/test-table-compactor.js
+      to: cortex/memory/tiers.js
+      kind: requires
+  crossings:
+    - from: cli/dedup.js
+      to: cortex/memory/tiers.js
+      fromSystem: cli
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: orchestrator/lib/sigma-compaction.js
+      to: cortex/memory/tiers.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: cortex/memory/tiers.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 7
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream: []
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 7 · blocked by OT1_one_write_path, CF1_cfr_improved_with_rfr2
+      - 'depends on (2): OT1_one_write_path, CF1_cfr_improved_with_rfr2 · all upstream 8'
+      - 'needed by (0): —'

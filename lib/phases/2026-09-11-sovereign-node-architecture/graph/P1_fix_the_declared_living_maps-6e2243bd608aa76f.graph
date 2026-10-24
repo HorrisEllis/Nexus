@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P1_fix_the_declared_living_maps:6e2243bd608aa76f
+type: graph
+id: phase:P1_fix_the_declared_living_maps:6e2243bd608aa76f
+context: dependency graph of phase P1_fix_the_declared_living_maps
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976490
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976490
+lastSeenAt: 1792829976490
+fingerprint: null
+payload:
+  for: P1_fix_the_declared_living_maps
+  kind: phase
+  repo: null
+  hash: 6e2243bd608aa76f
+  nodes:
+    - path: docs/nexus.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

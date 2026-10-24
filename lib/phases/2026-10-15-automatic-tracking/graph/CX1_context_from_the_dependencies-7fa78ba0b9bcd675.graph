@@ -1,0 +1,105 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CX1_context_from_the_dependencies:7fa78ba0b9bcd675
+type: graph
+id: phase:CX1_context_from_the_dependencies:7fa78ba0b9bcd675
+context: dependency graph of phase CX1_context_from_the_dependencies
+intent: null
+summary: 6 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830003812
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830003812
+lastSeenAt: 1792830003812
+fingerprint: null
+payload:
+  for: CX1_context_from_the_dependencies
+  kind: phase
+  repo: null
+  hash: 7fa78ba0b9bcd675
+  nodes:
+    - path: cortex/core/raid/contract-adapters.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/contract-context.js
+      role: changes
+      exists: false
+      system: lib
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::KT1_observations_on_a_semantic_tree
+    dependents:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::CP1_the_contract_panel
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::RT2_routed_by_intent_account_and_fallback
+    upstream:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::GT2_each_gate_tags_and_reports
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::KT1_observations_on_a_semantic_tree
+    downstream:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::CP1_the_contract_panel
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::RT2_routed_by_intent_account_and_fallback
+    blockedBy:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::KT1_observations_on_a_semantic_tree
+    unlocks:
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::CP1_the_contract_panel
+      - docs/2026-10-15-automatic-tracking-phasemap.spec::RT2_routed_by_intent_account_and_fallback
+    conflicts:
+      - with: docs/2026-10-15-automatic-tracking-phasemap.spec::CS1_every_brick_a_component
+        files:
+          - cortex/core/raid/contract-adapters.js
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by KT1_observations_on_a_semantic_tree
+      - 'depends on (1): KT1_observations_on_a_semantic_tree · all upstream 2'
+      - >-
+        needed by (2): CP1_the_contract_panel, RT2_routed_by_intent_account_and_fallback · finishing
+        it unlocks CP1_the_contract_panel, RT2_routed_by_intent_account_and_fallback
+      - >-
+        same files as CS1_every_brick_a_component with no order between them:
+        cortex/core/raid/contract-adapters.js

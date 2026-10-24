@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::IS1_intent_settings_per_repo
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::IS1_intent_settings_per_repo
+context: >-
+  pipeline phase IS1_intent_settings_per_repo of
+  docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: IS1_intent_settings_per_repo (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792830009027
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830009027
+lastSeenAt: 1792830009027
+fingerprint: null
+payload:
+  id: IS1_intent_settings_per_repo
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-inject.js
+    - lib/repo-prompt-blocks.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/repo-settings.js
+    - loom/maps/observability-map.js
+    - tests/modules/test-intent-settings.test.js (new)
+  depends_on:
+    - SF1_intent_blocks
+  blocks: []
+  spec: null
+  graph: 6e793c69f386d367

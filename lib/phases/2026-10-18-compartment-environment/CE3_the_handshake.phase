@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+type: phase
+id: docs_2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+context: pipeline phase CE3_the_handshake of docs/2026-10-18-compartment-environment-phasemap.spec
+intent: null
+summary: CE3_the_handshake (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830017328
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830017328
+lastSeenAt: 1792830017328
+fingerprint: null
+payload:
+  id: CE3_the_handshake
+  map: docs/2026-10-18-compartment-environment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/contract-handshake.js
+    - orchestrator/lib/contract-handshake.js
+    - lib/drawbridge.js
+  depends_on:
+    - CE2_the_shell_is_declared
+  blocks: []
+  spec: null
+  graph: aa79fe09a96f799d

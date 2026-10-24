@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::S1_living_spec
+type: phase
+id: docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::S1_living_spec
+context: >-
+  pipeline phase S1_living_spec of
+  docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+intent: null
+summary: S1_living_spec (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829983317
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829983317
+lastSeenAt: 1792829983317
+fingerprint: null
+payload:
+  id: S1_living_spec
+  map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/living-spec.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 54457ecfb317ec4d

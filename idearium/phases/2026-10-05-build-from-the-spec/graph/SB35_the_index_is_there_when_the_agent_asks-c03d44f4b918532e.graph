@@ -1,0 +1,260 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB35_the_index_is_there_when_the_agent_asks:c03d44f4b918532e
+type: graph
+id: phase:SB35_the_index_is_there_when_the_agent_asks:c03d44f4b918532e
+context: dependency graph of phase SB35_the_index_is_there_when_the_agent_asks
+intent: null
+summary: 29 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829990994
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990994
+lastSeenAt: 1792829990994
+fingerprint: null
+payload:
+  for: SB35_the_index_is_there_when_the_agent_asks
+  kind: phase
+  repo: null
+  hash: c03d44f4b918532e
+  nodes:
+    - path: guardian/jaa-store.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/lib/db.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/lib/account-routing.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-adversarial-sim.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-bus-subscriptions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-hook-ownership.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-deletes-stick.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-flush-lock.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-selective-load.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sigma-compaction.js
+      role: used-by
+      exists: true
+      system: null
+    - path: architecture-spec/registry/nexus-atlas-aggregate.js
+      role: uses
+      exists: true
+      system: architecture-spec
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/graph.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/cos-bridge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-writer.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip-ingest.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: guardian/jaa-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: idearium/lib/db.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/zip-ingest.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: architecture-spec/registry/nexus-atlas-aggregate.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: guardian/lib/account-routing.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-adversarial-sim.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-bus-subscriptions.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-hook-ownership.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-deletes-stick.test.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-flush-lock.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-selective-load.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-sigma-compaction.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: idearium/index.js
+      to: idearium/lib/db.js
+      kind: requires
+    - from: idearium/lib/config.js
+      to: idearium/lib/db.js
+      kind: requires
+  crossings:
+    - from: idearium/lib/db.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: architecture-spec/registry/nexus-atlas-aggregate.js
+      fromSystem: idearium
+      toSystem: architecture-spec
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 6
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB34_context_is_the_code_tab_the_graphs_and_memory
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB32_context_is_never_optional
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB33_the_agent_runs_the_pipeline
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB34_context_is_the_code_tab_the_graphs_and_memory
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB3_the_section_prompt_is_domain_agnostic
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB37_the_working_set_signal_to_noise
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB39_the_checklist_builds_the_working_set
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 6
+      - 'depends on (1): SB34_context_is_the_code_tab_the_graphs_and_memory · all upstream 6'
+      - >-
+        needed by (1): SB36_every_agent_can_use_the_tools · all downstream 4 · finishing it unlocks
+        SB36_every_agent_can_use_the_tools

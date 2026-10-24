@@ -1,0 +1,238 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DBG6_cases_crystallize:84f9d57bd845faf7
+type: graph
+id: phase:DBG6_cases_crystallize:84f9d57bd845faf7
+context: dependency graph of phase DBG6_cases_crystallize
+intent: null
+summary: 24 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830017717
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830017717
+lastSeenAt: 1792830017717
+fingerprint: null
+payload:
+  for: DBG6_cases_crystallize
+  kind: phase
+  repo: null
+  hash: 84f9d57bd845faf7
+  nodes:
+    - path: intelligence/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/debug-case.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/fault-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-model.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/coordination/intelligence-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/fault-log.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/diagnostic-report.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/intelligence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-intelligence-core-wired.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/config.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/lib/domain-nodes.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/causality/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/self-register.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: intelligence/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/index.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/lib/domain-nodes.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/config.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/self-register.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/index.js
+      to: intelligence/rfr2/causality/index.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/fault-log.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/index.js
+      kind: requires
+    - from: lib/diagnostic-report.js
+      to: intelligence/index.js
+      kind: requires
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/index.js
+      kind: requires
+    - from: tests/modules/intelligence.test.js
+      to: intelligence/index.js
+      kind: requires
+    - from: tests/modules/test-intelligence-core-wired.js
+      to: intelligence/index.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/fault-log.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/fault-log.js
+      kind: requires
+  crossings:
+    - from: intelligence/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: intelligence/index.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/diagnostic-report.js
+      to: intelligence/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG3_deviation_and_friction_per_run
+    dependents: []
+    upstream:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG0a_synchronized_ids
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG1_the_key
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG3_deviation_and_friction_per_run
+    downstream: []
+    blockedBy:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG3_deviation_and_friction_per_run
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 4 · blocked by DBG2_the_case,
+        DBG3_deviation_and_friction_per_run
+      - 'depends on (2): DBG2_the_case, DBG3_deviation_and_friction_per_run · all upstream 4'
+      - 'needed by (0): —'

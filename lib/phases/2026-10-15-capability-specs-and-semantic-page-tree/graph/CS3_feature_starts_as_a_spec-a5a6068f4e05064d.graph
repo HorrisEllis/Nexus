@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS3_feature_starts_as_a_spec:a5a6068f4e05064d
+type: graph
+id: phase:CS3_feature_starts_as_a_spec:a5a6068f4e05064d
+context: dependency graph of phase CS3_feature_starts_as_a_spec
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792830004197
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830004197
+lastSeenAt: 1792830004197
+fingerprint: null
+payload:
+  for: CS3_feature_starts_as_a_spec
+  kind: phase
+  repo: null
+  hash: a5a6068f4e05064d
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS1_capability_spec_and_surface_check
+    dependents: []
+    upstream:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::CS1_capability_spec_and_surface_check
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · ready
+      - 'depends on (1): CS1_capability_spec_and_surface_check'
+      - 'needed by (0): —'

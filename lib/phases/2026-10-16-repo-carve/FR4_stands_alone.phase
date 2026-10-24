@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::FR4_stands_alone
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::FR4_stands_alone
+context: pipeline phase FR4_stands_alone of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: FR4_stands_alone (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830014484
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830014484
+lastSeenAt: 1792830014484
+fingerprint: null
+payload:
+  id: FR4_stands_alone
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "PARTLY BUILT 0.60.118 — FR4a built (test-flight-recorder-standalone 6/6, run from a carved
+    copy); FR4b (server and page) open"
+  files: []
+  depends_on:
+    - CV2_untangle_with_rf0
+    - PB1_the_product_boundary
+  blocks: []
+  spec: null
+  graph: 7733ba9685bafc07

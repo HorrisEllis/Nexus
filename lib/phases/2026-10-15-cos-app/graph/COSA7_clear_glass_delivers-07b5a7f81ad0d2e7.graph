@@ -1,0 +1,66 @@
+envelope: 1
+uuid: nexus-export-graph-phase:COSA7_clear_glass_delivers:07b5a7f81ad0d2e7
+type: graph
+id: phase:COSA7_clear_glass_delivers:07b5a7f81ad0d2e7
+context: dependency graph of phase COSA7_clear_glass_delivers
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830005847
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005847
+lastSeenAt: 1792830005847
+fingerprint: null
+payload:
+  for: COSA7_clear_glass_delivers
+  kind: phase
+  repo: null
+  hash: 07b5a7f81ad0d2e7
+  nodes:
+    - path: clear-glass/src/releases/deliver.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/installer.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/releases/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: clear-glass/src/net/installer.js
+      to: clear-glass/src/releases/deliver.js
+      kind: requires
+    - from: clear-glass/src/releases/service.js
+      to: clear-glass/src/releases/deliver.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: clear-glass/src/releases/deliver.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+    dependents: []
+    upstream:
+      - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1
+      - 'depends on (1): COSA1_version_store_and_import'
+      - 'needed by (0): —'

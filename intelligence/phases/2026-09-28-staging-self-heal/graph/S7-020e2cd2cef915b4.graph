@@ -1,0 +1,95 @@
+envelope: 1
+uuid: nexus-export-graph-phase:S7:020e2cd2cef915b4
+type: graph
+id: phase:S7:020e2cd2cef915b4
+context: dependency graph of phase S7
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829984591
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984591
+lastSeenAt: 1792829984591
+fingerprint: null
+payload:
+  for: S7
+  kind: phase
+  repo: null
+  hash: 020e2cd2cef915b4
+  nodes:
+    - path: intelligence/causal/compound.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/lib/domain-nodes.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: intelligence/causal/compound.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/causal/compound.js
+      to: intelligence/lib/domain-nodes.js
+      kind: requires
+    - from: intelligence/causal/index.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/compound.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 6
+    deps:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+    dependents:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    upstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::C1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S3
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+    downstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    blockedBy:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 6 · blocked by S6
+      - 'depends on (2): S6, C1 · all upstream 8'
+      - 'needed by (3): L1, A1, X1'

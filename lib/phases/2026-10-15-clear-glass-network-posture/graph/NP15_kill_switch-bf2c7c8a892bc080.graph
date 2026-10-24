@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NP15_kill_switch:bf2c7c8a892bc080
+type: graph
+id: phase:NP15_kill_switch:bf2c7c8a892bc080
+context: dependency graph of phase NP15_kill_switch
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829786793
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829786793
+lastSeenAt: 1792829786793
+fingerprint: null
+payload:
+  for: NP15_kill_switch
+  kind: phase
+  repo: null
+  hash: bf2c7c8a892bc080
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 746f60cbfacbcde1
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primitive
+    upstream: []
+    downstream:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primitive
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP18_freeze_plugin
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primitive
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 746f60cbfacbcde1 · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): NP17_hold_primitive · all downstream 2 · finishing it unlocks
+        NP17_hold_primitive
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

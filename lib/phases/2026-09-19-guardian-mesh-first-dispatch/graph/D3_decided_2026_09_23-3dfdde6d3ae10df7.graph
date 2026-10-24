@@ -1,0 +1,276 @@
+envelope: 1
+uuid: nexus-export-graph-phase:D3_decided_2026_09_23:3dfdde6d3ae10df7
+type: graph
+id: phase:D3_decided_2026_09_23:3dfdde6d3ae10df7
+context: dependency graph of phase D3_decided_2026_09_23
+intent: null
+summary: 38 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829978967
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978967
+lastSeenAt: 1792829978967
+fingerprint: null
+payload:
+  for: D3_decided_2026_09_23
+  kind: phase
+  repo: null
+  hash: 3dfdde6d3ae10df7
+  nodes:
+    - path: clear-glass/src/accounts/login-portal.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/page-resolver.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/dom-transport.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/page/agent-page.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/agent-registry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/cg-account-authority.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatch-ladder.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/mesh-client.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp-handler.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/wake-hint.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/nexus-hey-claude.user.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/userscript-chatgpt.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/userscript-claude.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: clear-glass/src/dom/archaeology.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/login-portal-elsewhere.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/signin-window-quiet.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/test-guardian-dispatch-ladder.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-wake.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-mesh-chat-reload.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-mesh-dom-transport.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/cookies/session-hub.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/route-graph.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/network/install.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/introspect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/accounts/login-portal.js
+      to: clear-glass/src/cookies/session-hub.js
+      kind: requires
+    - from: guardian/lib/agent-registry.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/lib/dispatch-ladder.js
+      to: guardian/options.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/route-graph.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/automation-engine.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/network/install.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/introspect.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/cg-account-authority.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/accounts/login-portal.js
+      kind: requires
+    - from: clear-glass/test/login-portal-elsewhere.test.js
+      to: clear-glass/src/accounts/login-portal.js
+      kind: requires
+    - from: clear-glass/test/signin-window-quiet.test.js
+      to: clear-glass/src/accounts/login-portal.js
+      kind: requires
+    - from: tests/modules/test-guardian-dispatch-ladder.js
+      to: guardian/lib/agent-registry.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/agent-registry.js
+      kind: requires
+    - from: tests/modules/test-guardian-wake.js
+      to: guardian/lib/agent-registry.js
+      kind: requires
+    - from: tests/modules/test-mesh-chat-reload.test.js
+      to: clear-glass/src/mesh/dom-transport.js
+      kind: requires
+    - from: tests/modules/test-mesh-dom-transport.js
+      to: clear-glass/src/mesh/dom-transport.js
+      kind: requires
+    - from: clear-glass/src/dom/archaeology.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

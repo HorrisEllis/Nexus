@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-google-signin-phasemap.spec::GS6_proxy
+type: phase
+id: docs_2026-10-16-google-signin-phasemap.spec::GS6_proxy
+context: pipeline phase GS6_proxy of docs/2026-10-16-google-signin-phasemap.spec
+intent: null
+summary: GS6_proxy (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830011718
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830011718
+lastSeenAt: 1792830011718
+fingerprint: null
+payload:
+  id: GS6_proxy
+  map: docs/2026-10-16-google-signin-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.108
+  files:
+    - clear-glass/src/net/policy.js
+    - clear-glass/src/tls/proxy.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: aea64bd8ae7f3973

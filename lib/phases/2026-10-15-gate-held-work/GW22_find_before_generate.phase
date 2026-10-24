@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW22_find_before_generate
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW22_find_before_generate
+context: pipeline phase GW22_find_before_generate of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW22_find_before_generate (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792830006654
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006654
+lastSeenAt: 1792830006654
+fingerprint: null
+payload:
+  id: GW22_find_before_generate
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/clear-glass/search-engine.js
+    - lib/component-store.js
+    - lib/agent-tools/tools/query/
+    - idearium/cli/route-commands.js
+    - lib/agent-memory.js
+  depends_on:
+    - GW5_agents_are_copilot
+    - GW13_the_sandbox_door
+  blocks: []
+  spec: null
+  graph: ebd47dffa0a8bc56

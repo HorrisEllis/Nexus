@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::CV1_carve_backend_route_command_ui
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::CV1_carve_backend_route_command_ui
+context: pipeline phase CV1_carve_backend_route_command_ui of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: CV1_carve_backend_route_command_ui (library) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792830014477
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830014477
+lastSeenAt: 1792830014477
+fingerprint: null
+payload:
+  id: CV1_carve_backend_route_command_ui
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: library
+  status: >-
+    "BUILT 0.60.112 — test-repo-carve 8/8; preset flight_recorder 217 files (63 named, 154 pulled
+    in), 15 systems, carved in 0.8 s"
+  files:
+    - lib/repo-carve.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/projects.js
+    - tests/modules/test-repo-carve.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e3edbcdf3d659991

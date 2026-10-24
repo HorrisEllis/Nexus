@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DP7_back_to_known_good:ad47526edc616bb2
+type: graph
+id: phase:DP7_back_to_known_good:ad47526edc616bb2
+context: dependency graph of phase DP7_back_to_known_good
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830015260
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830015260
+lastSeenAt: 1792830015260
+fingerprint: null
+payload:
+  for: DP7_back_to_known_good
+  kind: phase
+  repo: null
+  hash: ad47526edc616bb2
+  nodes:
+    - path: diagnostic/lib/known-good.js
+      role: changes
+      exists: false
+      system: diagnostic
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+    dependents: []
+    upstream:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP2_one_gap_door
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+    downstream: []
+    blockedBy:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by DP5_the_case
+      - 'depends on (1): DP5_the_case · all upstream 2'
+      - 'needed by (0): —'

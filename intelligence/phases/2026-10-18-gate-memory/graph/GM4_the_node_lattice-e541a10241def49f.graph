@@ -1,0 +1,176 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GM4_the_node_lattice:e541a10241def49f
+type: graph
+id: phase:GM4_the_node_lattice:e541a10241def49f
+context: dependency graph of phase GM4_the_node_lattice
+intent: null
+summary: 20 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830018091
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830018091
+lastSeenAt: 1792830018091
+fingerprint: null
+payload:
+  for: GM4_the_node_lattice
+  kind: phase
+  repo: null
+  hash: e541a10241def49f
+  nodes:
+    - path: intelligence/lattice/node-lattice.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/registry-components.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/coordination/intelligence-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/intuition-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mastermind-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk-perception/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/anomaly.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/intuition.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/mastermind.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/lattice/node-lattice.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/intuition.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/gap/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/anomaly.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk-perception/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/intuition-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/mastermind-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/registry-components.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/registry-components.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

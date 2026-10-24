@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792757382219
+exported_at: 1792830026218
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382219
-lastSeenAt: 1792757382219
+firstSeenAt: 1792830026218
+lastSeenAt: 1792830026218
 fingerprint: null
 payload:
   for: CS7_spawn_despawn_and_balance
@@ -35,7 +35,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 3351ce8a7e938b5b
+    dagHash: 2f8ddd0afd383c4f
     layer: 7
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
@@ -76,6 +76,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 3351ce8a7e938b5b · layer 7 · blocked by CS5_caps_per_compartment, CS11_raid_in_the_exe
+      - DAG 2f8ddd0afd383c4f · layer 7 · blocked by CS5_caps_per_compartment, CS11_raid_in_the_exe
       - 'depends on (2): CS5_caps_per_compartment, CS11_raid_in_the_exe · all upstream 24'
       - 'needed by (1): CS8_the_cos_screen'

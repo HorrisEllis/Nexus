@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-creative-repo-overhaul-phasemap.spec::MCO-E_roadmap_ui
+type: phase
+id: docs_idearium-creative-repo-overhaul-phasemap.spec::MCO-E_roadmap_ui
+context: pipeline phase MCO-E_roadmap_ui of docs/idearium-creative-repo-overhaul-phasemap.spec
+intent: null
+summary: MCO-E_roadmap_ui (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830031358
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830031358
+lastSeenAt: 1792830031358
+fingerprint: null
+payload:
+  id: MCO-E_roadmap_ui
+  map: docs/idearium-creative-repo-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: '"NOT STARTED"'
+  files: []
+  depends_on:
+    - MCO-A_schemas
+  blocks: []
+  spec: null
+  graph: 2258bb8a5d931465

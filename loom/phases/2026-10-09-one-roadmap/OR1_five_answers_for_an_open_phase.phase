@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+type: phase
+id: docs_2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+context: pipeline phase OR1_five_answers_for_an_open_phase of docs/2026-10-09-one-roadmap-phasemap.spec
+intent: null
+summary: OR1_five_answers_for_an_open_phase (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829998096
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998096
+lastSeenAt: 1792829998096
+fingerprint: null
+payload:
+  id: OR1_five_answers_for_an_open_phase
+  map: docs/2026-10-09-one-roadmap-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+  depends_on:
+    - OR0_the_census
+  blocks: []
+  spec: null
+  graph: dc0983a787d924ad

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM15_master_settings
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM15_master_settings
+context: >-
+  pipeline phase LM15_master_settings of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM15_master_settings (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829973400
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973400
+lastSeenAt: 1792829973400
+fingerprint: null
+payload:
+  id: LM15_master_settings
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8efc35ac45481212

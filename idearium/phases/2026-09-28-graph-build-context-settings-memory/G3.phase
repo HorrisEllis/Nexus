@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::G3
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::G3
+context: pipeline phase G3 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: G3 (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829984144
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984144
+lastSeenAt: 1792829984144
+fingerprint: null
+payload:
+  id: G3
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/graph.js (reads_table / writes_table)
+  depends_on:
+    - G2
+  blocks: []
+  spec: null
+  graph: 528cf353349dea70

@@ -7,11 +7,11 @@ intent: null
 summary: CD0_magnet_client (?) — 0 file(s)
 system: idearium
 tags: []
-exported_at: 1792481794254
+exported_at: 1792830024192
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792481794254
-lastSeenAt: 1792481794254
+firstSeenAt: 1792830024192
+lastSeenAt: 1792830024192
 fingerprint: null
 payload:
   id: CD0_magnet_client

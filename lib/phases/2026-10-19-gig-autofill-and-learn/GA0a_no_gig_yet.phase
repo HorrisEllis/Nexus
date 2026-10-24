@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA0a_no_gig_yet
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA0a_no_gig_yet
+context: pipeline phase GA0a_no_gig_yet of docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: GA0a_no_gig_yet (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830019244
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830019244
+lastSeenAt: 1792830019244
+fingerprint: null
+payload:
+  id: GA0a_no_gig_yet
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1f984d645c393eed

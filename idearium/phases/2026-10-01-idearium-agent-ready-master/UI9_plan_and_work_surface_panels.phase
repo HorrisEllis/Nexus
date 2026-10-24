@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI9_plan_and_work_surface_panels
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI9_plan_and_work_surface_panels
+context: >-
+  pipeline phase UI9_plan_and_work_surface_panels of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: UI9_plan_and_work_surface_panels (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987092
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987092
+lastSeenAt: 1792829987092
+fingerprint: null
+payload:
+  id: UI9_plan_and_work_surface_panels
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/plan-panel.js
+    - idearium/ui/js/work-surface.js
+    - idearium/ui/css/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6013a07a8ca625f2

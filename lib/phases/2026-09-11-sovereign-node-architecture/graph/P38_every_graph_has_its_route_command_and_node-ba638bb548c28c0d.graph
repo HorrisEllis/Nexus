@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P38_every_graph_has_its_route_command_and_node:ba638bb548c28c0d
+type: graph
+id: phase:P38_every_graph_has_its_route_command_and_node:ba638bb548c28c0d
+context: dependency graph of phase P38_every_graph_has_its_route_command_and_node
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976533
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976533
+lastSeenAt: 1792829976533
+fingerprint: null
+payload:
+  for: P38_every_graph_has_its_route_command_and_node
+  kind: phase
+  repo: null
+  hash: ba638bb548c28c0d
+  nodes:
+    - path: docs/2026-10-22-system-node-db-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/system-node-db.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P2_per_system_interaction_contracts
+    dependents: []
+    upstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P2_per_system_interaction_contracts
+    downstream: []
+    blockedBy:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P2_per_system_interaction_contracts
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by P2_per_system_interaction_contracts
+      - 'depends on (1): P2_per_system_interaction_contracts'
+      - 'needed by (0): —'

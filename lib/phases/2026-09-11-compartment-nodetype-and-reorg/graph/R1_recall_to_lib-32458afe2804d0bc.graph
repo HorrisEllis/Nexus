@@ -1,0 +1,96 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R1_recall_to_lib:32458afe2804d0bc
+type: graph
+id: phase:R1_recall_to_lib:32458afe2804d0bc
+context: dependency graph of phase R1_recall_to_lib
+intent: null
+summary: 9 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976056
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976056
+lastSeenAt: 1792829976056
+fingerprint: null
+payload:
+  for: R1_recall_to_lib
+  kind: phase
+  repo: null
+  hash: 32458afe2804d0bc
+  nodes:
+    - path: cortex/memory/bep-lookup.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/memory/causal-lookup.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/memory/fix-map.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/failure-report.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: cortex/memory/bep-lookup.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/memory/causal-lookup.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/self-heal/failure-report.js
+      to: cortex/memory/fix-map.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/memory/fix-map.js
+      kind: requires
+  crossings:
+    - from: cortex/memory/causal-lookup.js
+      to: intelligence/cfr/graph.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

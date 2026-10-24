@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-full-capability-phasemap.spec::P9_meta_systems_toolkit
+type: phase
+id: docs_copilot-full-capability-phasemap.spec::P9_meta_systems_toolkit
+context: pipeline phase P9_meta_systems_toolkit of docs/copilot-full-capability-phasemap.spec
+intent: null
+summary: P9_meta_systems_toolkit (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830029357
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830029357
+lastSeenAt: 1792830029357
+fingerprint: null
+payload:
+  id: P9_meta_systems_toolkit
+  map: docs/copilot-full-capability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fb6fd4c9b63c1f34

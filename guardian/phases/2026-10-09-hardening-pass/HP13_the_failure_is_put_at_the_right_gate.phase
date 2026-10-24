@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP13_the_failure_is_put_at_the_right_gate
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP13_the_failure_is_put_at_the_right_gate
+context: >-
+  pipeline phase HP13_the_failure_is_put_at_the_right_gate of
+  docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP13_the_failure_is_put_at_the_right_gate (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997246
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997246
+lastSeenAt: 1792829997246
+fingerprint: null
+payload:
+  id: HP13_the_failure_is_put_at_the_right_gate
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/gate-trail.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 17395f231ced9d63

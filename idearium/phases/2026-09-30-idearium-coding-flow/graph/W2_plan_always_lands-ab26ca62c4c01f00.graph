@@ -1,0 +1,191 @@
+envelope: 1
+uuid: nexus-export-graph-phase:W2_plan_always_lands:ab26ca62c4c01f00
+type: graph
+id: phase:W2_plan_always_lands:ab26ca62c4c01f00
+context: dependency graph of phase W2_plan_always_lands
+intent: null
+summary: 19 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829986649
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829986649
+lastSeenAt: 1792829986649
+fingerprint: null
+payload:
+  for: W2_plan_always_lands
+  kind: phase
+  repo: null
+  hash: ab26ca62c4c01f00
+  nodes:
+    - path: idearium/api/build-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/living-spec.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/phases.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-pipeline-nodes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/testenv/environment.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/repo/deviation.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/file-state.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-document.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: lib/spec-document.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot-files.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/file-state.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/deviation.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/setup-job.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/shadow.js
+      kind: requires
+    - from: tests/modules/test-pipeline-nodes.test.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/api/build-surface.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/setup-job.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W1_idearium_never_blocks_on_git
+    dependents:
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W3_work_surface
+    upstream:
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W0_map
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W1_idearium_never_blocks_on_git
+    downstream:
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W3_work_surface
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W4_navigation
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W5_theme_and_css
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W6_release
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W7_next_mapped_2026_09_30
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W3_work_surface
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2
+      - 'depends on (1): W1_idearium_never_blocks_on_git · all upstream 2'
+      - 'needed by (1): W3_work_surface · all downstream 5 · finishing it unlocks W3_work_surface'

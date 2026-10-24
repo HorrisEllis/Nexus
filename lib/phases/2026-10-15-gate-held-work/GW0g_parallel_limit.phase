@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW0g_parallel_limit
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW0g_parallel_limit
+context: pipeline phase GW0g_parallel_limit of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW0g_parallel_limit (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830006625
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006625
+lastSeenAt: 1792830006625
+fingerprint: null
+payload:
+  id: GW0g_parallel_limit
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "DECIDED 2026-10-18 by his axioms (D19, docs/2026-10-17-decisions-by-the-axioms.spec addendum
+    c): coder_recommends, as written. Was: OPEN"
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 774d9d0c690dce59

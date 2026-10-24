@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR3_dialog
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR3_dialog
+context: pipeline phase MR3_dialog of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR3_dialog (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007069
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007069
+lastSeenAt: 1792830007069
+fingerprint: null
+payload:
+  id: MR3_dialog
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT-0.60.57-unverified-in-electron
+  files:
+    - clear-glass/renderer/settings/sections/macros.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d48a589841854876

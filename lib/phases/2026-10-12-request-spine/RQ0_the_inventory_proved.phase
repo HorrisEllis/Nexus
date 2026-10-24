@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+context: pipeline phase RQ0_the_inventory_proved of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ0_the_inventory_proved (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001702
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001702
+lastSeenAt: 1792830001702
+fingerprint: null
+payload:
+  id: RQ0_the_inventory_proved
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-12-request-spine-phasemap.spec
+    - tests/modules/test-request-spine-inventory.js (new)
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 12cd112c5dccb7ef

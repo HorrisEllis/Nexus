@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P38_every_graph_has_its_route_command_and_node
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P38_every_graph_has_its_route_command_and_node
+context: >-
+  pipeline phase P38_every_graph_has_its_route_command_and_node of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P38_every_graph_has_its_route_command_and_node (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976533
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976533
+lastSeenAt: 1792829976533
+fingerprint: null
+payload:
+  id: P38_every_graph_has_its_route_command_and_node
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P2_per_system_interaction_contracts
+  blocks: []
+  spec: null
+  graph: ba638bb548c28c0d

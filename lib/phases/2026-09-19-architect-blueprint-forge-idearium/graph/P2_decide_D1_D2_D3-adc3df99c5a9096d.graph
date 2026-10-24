@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P2_decide_D1_D2_D3:adc3df99c5a9096d
+type: graph
+id: phase:P2_decide_D1_D2_D3:adc3df99c5a9096d
+context: dependency graph of phase P2_decide_D1_D2_D3
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829978159
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978159
+lastSeenAt: 1792829978159
+fingerprint: null
+payload:
+  for: P2_decide_D1_D2_D3
+  kind: phase
+  repo: null
+  hash: adc3df99c5a9096d
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P3_architect_canvas_onto_loom_registry
+      - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P6_idearium_build_authority
+    upstream: []
+    downstream:
+      - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P3_architect_canvas_onto_loom_registry
+      - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P4_blueprint_as_canvas_mode
+      - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P5_forge_as_phasemap_view
+      - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P6_idearium_build_authority
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P3_architect_canvas_onto_loom_registry
+      - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P6_idearium_build_authority
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): P3_architect_canvas_onto_loom_registry, P6_idearium_build_authority · all
+        downstream 4 · finishing it unlocks P3_architect_canvas_onto_loom_registry,
+        P6_idearium_build_authority

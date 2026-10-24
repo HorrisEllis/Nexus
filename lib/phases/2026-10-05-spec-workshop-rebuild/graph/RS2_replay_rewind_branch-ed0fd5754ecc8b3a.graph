@@ -1,0 +1,64 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RS2_replay_rewind_branch:ed0fd5754ecc8b3a
+type: graph
+id: phase:RS2_replay_rewind_branch:ed0fd5754ecc8b3a
+context: dependency graph of phase RS2_replay_rewind_branch
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829993787
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829993787
+lastSeenAt: 1792829993787
+fingerprint: null
+payload:
+  for: RS2_replay_rewind_branch
+  kind: phase
+  repo: null
+  hash: ed0fd5754ecc8b3a
+  nodes:
+    - path: emergence/vendor/rfr2/cfr-kernel/rewind.js
+      role: changes
+      exists: true
+      system: emergence
+    - path: lib/generation-recorder.js
+      role: changes
+      exists: false
+      system: lib
+    - path: emergence/vendor/rfr2/cfr-kernel/index.js
+      role: used-by
+      exists: true
+      system: emergence
+  edges:
+    - from: emergence/vendor/rfr2/cfr-kernel/index.js
+      to: emergence/vendor/rfr2/cfr-kernel/rewind.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
+    dependents:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+    upstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
+    downstream:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS11_workshop_and_phases_one_surface
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS7_architect_and_blueprint_stations
+    blockedBy:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
+    unlocks:
+      - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by RS1_the_generation_recorder
+      - 'depends on (1): RS1_the_generation_recorder'
+      - >-
+        needed by (1): RS6_the_workshop_as_the_editor · all downstream 3 · finishing it unlocks
+        RS6_the_workshop_as_the_editor

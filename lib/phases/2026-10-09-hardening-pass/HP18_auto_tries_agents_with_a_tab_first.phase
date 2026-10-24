@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP18_auto_tries_agents_with_a_tab_first
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP18_auto_tries_agents_with_a_tab_first
+context: >-
+  pipeline phase HP18_auto_tries_agents_with_a_tab_first of
+  docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP18_auto_tries_agents_with_a_tab_first (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997250
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997250
+lastSeenAt: 1792829997250
+fingerprint: null
+payload:
+  id: HP18_auto_tries_agents_with_a_tab_first
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - lib/model-door.js
+    - copilot/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f11a7f42d67241f0

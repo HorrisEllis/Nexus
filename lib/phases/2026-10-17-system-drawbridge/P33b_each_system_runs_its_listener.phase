@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
+context: >-
+  pipeline phase P33b_each_system_runs_its_listener of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: P33b_each_system_runs_its_listener (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830016896
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016896
+lastSeenAt: 1792830016896
+fingerprint: null
+payload:
+  id: P33b_each_system_runs_its_listener
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3ce0f2acd4816129

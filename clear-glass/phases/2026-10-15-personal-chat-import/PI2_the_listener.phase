@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-personal-chat-import-phasemap.spec::PI2_the_listener
+type: phase
+id: docs_2026-10-15-personal-chat-import-phasemap.spec::PI2_the_listener
+context: pipeline phase PI2_the_listener of docs/2026-10-15-personal-chat-import-phasemap.spec
+intent: null
+summary: PI2_the_listener (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007879
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007879
+lastSeenAt: 1792830007879
+fingerprint: null
+payload:
+  id: PI2_the_listener
+  map: docs/2026-10-15-personal-chat-import-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/page/personal-chat.js
+    - clear-glass/renderer/settings/sections/privacy.js
+    - clear-glass/src/options/store.js
+  depends_on:
+    - PI1_the_importer
+  blocks: []
+  spec: null
+  graph: d65ed1a624638d21

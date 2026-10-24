@@ -1,0 +1,77 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF10_agent_notes:2d100608bc826abf
+type: graph
+id: phase:SF10_agent_notes:2d100608bc826abf
+context: dependency graph of phase SF10_agent_notes
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829970786
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829970786
+lastSeenAt: 1792829970786
+fingerprint: null
+payload:
+  for: SF10_agent_notes
+  kind: phase
+  repo: null
+  hash: 2d100608bc826abf
+  nodes:
+    - path: lib/agent-capability-profile.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-notes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/coordination/agent-notes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/coordination/agent-capability.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-capability-profile.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/agent-capability.js
+      to: lib/agent-capability-profile.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/coordination/agent-notes.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-22-session-full-phasemap.spec::SF13_orchestrator_agent_pipeline
+    upstream: []
+    downstream:
+      - docs/2026-08-22-session-full-phasemap.spec::SF13_orchestrator_agent_pipeline
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-22-session-full-phasemap.spec::SF13_orchestrator_agent_pipeline
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): SF13_orchestrator_agent_pipeline · finishing it unlocks
+        SF13_orchestrator_agent_pipeline

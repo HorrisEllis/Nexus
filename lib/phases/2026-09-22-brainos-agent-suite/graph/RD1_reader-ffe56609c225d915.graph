@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RD1_reader:ffe56609c225d915
+type: graph
+id: phase:RD1_reader:ffe56609c225d915
+context: dependency graph of phase RD1_reader
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829979379
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829979379
+lastSeenAt: 1792829979379
+fingerprint: null
+payload:
+  for: RD1_reader
+  kind: phase
+  repo: null
+  hash: ffe56609c225d915
+  nodes:
+    - path: docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

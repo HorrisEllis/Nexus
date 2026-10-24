@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CV6_phases_in_idearium
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CV6_phases_in_idearium
+context: pipeline phase CV6_phases_in_idearium of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CV6_phases_in_idearium (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005444
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005444
+lastSeenAt: 1792830005444
+fingerprint: null
+payload:
+  id: CV6_phases_in_idearium
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: '"BUILT 0.60.82 (systems already read by PT1/PT2; open_decisions entries now kind: decision)"'
+  files:
+    - loom/scanners/phasemap-map.js
+    - idearium/repo/thread.js
+    - idearium/ui/js/phases.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 46e06b29cc567261

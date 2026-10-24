@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::PL6_global_links_seen
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::PL6_global_links_seen
+context: pipeline phase PL6_global_links_seen of docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: PL6_global_links_seen (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830003406
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830003406
+lastSeenAt: 1792830003406
+fingerprint: null
+payload:
+  id: PL6_global_links_seen
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-store.js
+    - lib/project-decompose.js
+  depends_on:
+    - RF0_architecture_read
+  blocks: []
+  spec: null
+  graph: 6de7335bc19156aa

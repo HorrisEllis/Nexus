@@ -1,0 +1,156 @@
+envelope: 1
+uuid: nexus-export-graph-phase:H1:d8a53b79e9f88d89
+type: graph
+id: phase:H1:d8a53b79e9f88d89
+context: dependency graph of phase H1
+intent: null
+summary: 13 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829983715
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829983715
+lastSeenAt: 1792829983715
+fingerprint: null
+payload:
+  for: H1
+  kind: phase
+  repo: null
+  hash: d8a53b79e9f88d89
+  nodes:
+    - path: loom/scanners/source-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/self-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/agent-memory-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/build-context-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/build-surface-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/chat-ledger-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/compartment-activity-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/component-intake-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/cos-testenv-map.js
+      role: used-by
+      exists: true
+      system: loom
+  edges:
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/self-build-loop.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/agent-memory-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/build-context-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/build-surface-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/chat-ledger-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/compartment-activity-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/component-intake-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/cos-testenv-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/self-build-loop.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-27-registry-harness-and-stability-phasemap.spec::H2
+    upstream: []
+    downstream:
+      - docs/2026-09-27-registry-harness-and-stability-phasemap.spec::H2
+      - docs/2026-09-27-registry-harness-and-stability-phasemap.spec::H3
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-registry-harness-and-stability-phasemap.spec::H2
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): H2 · all downstream 2 · finishing it unlocks H2'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

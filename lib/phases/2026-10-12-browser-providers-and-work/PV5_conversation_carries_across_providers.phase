@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV5_conversation_carries_across_providers
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV5_conversation_carries_across_providers
+context: >-
+  pipeline phase PV5_conversation_carries_across_providers of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: PV5_conversation_carries_across_providers (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001272
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001272
+lastSeenAt: 1792830001272
+fingerprint: null
+payload:
+  id: PV5_conversation_carries_across_providers
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent.js
+    - lib/repo-prompt-blocks.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 221b5ffcc46bedbf

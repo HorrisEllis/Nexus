@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-debugging-product-phasemap.spec::DP10_the_report_and_the_debug_tab
+type: phase
+id: docs_2026-10-17-debugging-product-phasemap.spec::DP10_the_report_and_the_debug_tab
+context: >-
+  pipeline phase DP10_the_report_and_the_debug_tab of
+  docs/2026-10-17-debugging-product-phasemap.spec
+intent: null
+summary: DP10_the_report_and_the_debug_tab (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830015262
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830015262
+lastSeenAt: 1792830015262
+fingerprint: null
+payload:
+  id: DP10_the_report_and_the_debug_tab
+  map: docs/2026-10-17-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7b6dac6f7055e661

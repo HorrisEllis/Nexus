@@ -1,0 +1,221 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM18_atlas_map_each_system_first:3e1939e10f908db4
+type: graph
+id: phase:LM18_atlas_map_each_system_first:3e1939e10f908db4
+context: dependency graph of phase LM18_atlas_map_each_system_first
+intent: null
+summary: 21 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829973403
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973403
+lastSeenAt: 1792829973403
+fingerprint: null
+payload:
+  for: LM18_atlas_map_each_system_first
+  kind: phase
+  repo: null
+  hash: 3e1939e10f908db4
+  nodes:
+    - path: copilot/diagnostic-sweep.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/diagnostics.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: docs/2026-08-28-definition-of-complete-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: service/nexus-diagnostic.js
+      role: changes
+      exists: false
+      system: service
+    - path: copilot/optimizer.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/cli.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/server.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: copilot/movement-map.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/system-status.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: diagnostic/lib/wire-integrity.js
+      role: uses
+      exists: true
+      system: diagnostic
+    - path: intelligence/baseline.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/diagnostic-engines.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ico.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: copilot/diagnostics.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/diagnostics.js
+      to: copilot/system-status.js
+      kind: requires
+    - from: copilot/diagnostics.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: copilot/diagnostics.js
+      to: copilot/movement-map.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/data-home.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ico.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: diagnostic/lib/wire-integrity.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/diagnostic-engines.js
+      kind: requires
+    - from: copilot/optimizer.js
+      to: copilot/diagnostics.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/diagnostics.js
+      kind: requires
+    - from: diagnostic/cli.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+    - from: diagnostic/server.js
+      to: diagnostic/nexus-diagnostic.js
+      kind: requires
+  crossings:
+    - from: copilot/diagnostics.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/diagnostics.js
+      to: intelligence/cfr/field.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/baseline.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: loom/schema/index.js
+      fromSystem: diagnostic
+      toSystem: loom
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/telemetry-codec/index.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+    upstream: []
+    downstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM21_atlas_fact_extractors
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM22_atlas_structure_ledger
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM23_atlas_history_versions_calendar
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM24_atlas_prose_layer
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM25_atlas_living_update
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM26_atlas_completeness_and_release_gate
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): LM19_atlas_spec_coverage_prerequisite,
+        LM20_atlas_schema_and_deterministic_seed · all downstream 8 · finishing it unlocks
+        LM20_atlas_schema_and_deterministic_seed

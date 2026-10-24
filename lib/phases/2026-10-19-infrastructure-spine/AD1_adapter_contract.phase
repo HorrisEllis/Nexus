@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+context: pipeline phase AD1_adapter_contract of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: AD1_adapter_contract (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792830020056
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020056
+lastSeenAt: 1792830020056
+fingerprint: null
+payload:
+  id: AD1_adapter_contract
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/adapters/contract.js
+  depends_on:
+    - NC1_neutral_core_boundary
+  blocks: []
+  spec: null
+  graph: e91a444c6f2283f5

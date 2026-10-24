@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-infrastructure-migration-phasemap.spec::IM2_clean_the_redundant
+type: phase
+id: docs_2026-10-17-infrastructure-migration-phasemap.spec::IM2_clean_the_redundant
+context: pipeline phase IM2_clean_the_redundant of docs/2026-10-17-infrastructure-migration-phasemap.spec
+intent: null
+summary: IM2_clean_the_redundant (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830016033
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016033
+lastSeenAt: 1792830016033
+fingerprint: null
+payload:
+  id: IM2_clean_the_redundant
+  map: docs/2026-10-17-infrastructure-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - IM0a_state_in_git
+    - IM0b_root_files
+    - IM1_the_shape_census_as_a_command
+  blocks: []
+  spec: null
+  graph: 072ba52c90e90175

@@ -1,0 +1,225 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB3_tabs_are_compartments:91b6321036f635ee
+type: graph
+id: phase:TB3_tabs_are_compartments:91b6321036f635ee
+context: dependency graph of phase TB3_tabs_are_compartments
+intent: null
+summary: 27 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830001258
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001258
+lastSeenAt: 1792830001258
+fingerprint: null
+payload:
+  for: TB3_tabs_are_compartments
+  kind: phase
+  repo: null
+  hash: 91b6321036f635ee
+  nodes:
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cos/host/gates/compartment.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/activity-log/compartment.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/create.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playgrounds/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/fault-log.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: clear-glass/src/contexts/google-signin.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/vault.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/compartment-window.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/sse/server.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tls/proxy.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/main/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/sse/server.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/tls/proxy.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/manager.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: cos/cli/commands/create.js
+      to: cos/host/gates/compartment.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/host/gates/compartment.js
+      kind: requires
+    - from: cos/playgrounds/kernel.js
+      to: cos/host/gates/compartment.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/fault-log.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-activity.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-versions.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+    dependents:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX4_one_system_digest
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB0_the_webview_session_proved
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+    downstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX4_one_system_digest
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by TB1_a_tab_is_its_own_webview
+      - 'depends on (1): TB1_a_tab_is_its_own_webview · all upstream 2'
+      - 'needed by (1): MX4_one_system_digest'

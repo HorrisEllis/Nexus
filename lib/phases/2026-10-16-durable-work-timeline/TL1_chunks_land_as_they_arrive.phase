@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-durable-work-timeline-phasemap.spec::TL1_chunks_land_as_they_arrive
+type: phase
+id: docs_2026-10-16-durable-work-timeline-phasemap.spec::TL1_chunks_land_as_they_arrive
+context: >-
+  pipeline phase TL1_chunks_land_as_they_arrive of
+  docs/2026-10-16-durable-work-timeline-phasemap.spec
+intent: null
+summary: TL1_chunks_land_as_they_arrive (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792830010936
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010936
+lastSeenAt: 1792830010936
+fingerprint: null
+payload:
+  id: TL1_chunks_land_as_they_arrive
+  map: docs/2026-10-16-durable-work-timeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/work-journal.js (new)
+    - lib/node-export.js
+    - idearium/spec-engine/index.js
+    - idearium/lib/chunk-nodes.js
+    - lib/spec-collect.js
+    - guardian/lib/response-sink.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fc57def6c545d13a

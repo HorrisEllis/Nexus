@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792757382224
+exported_at: 1792830026219
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382224
-lastSeenAt: 1792757382224
+firstSeenAt: 1792830026219
+lastSeenAt: 1792830026219
 fingerprint: null
 payload:
   for: CS11_raid_in_the_exe
@@ -181,7 +181,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 3351ce8a7e938b5b
+    dagHash: 2f8ddd0afd383c4f
     layer: 6
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
@@ -225,7 +225,7 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 3351ce8a7e938b5b · layer 6 · blocked by CS4_every_system_a_compartment,
+        DAG 2f8ddd0afd383c4f · layer 6 · blocked by CS4_every_system_a_compartment,
         DB6_move_the_crossings, IM6_cortex_unclumped, CS_D8_raid_home
       - >-
         depends on (4): CS4_every_system_a_compartment, DB6_move_the_crossings,

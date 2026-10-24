@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IDU1_idearium_homepage_and_repo_browser:59239d65a2593d97
+type: graph
+id: phase:IDU1_idearium_homepage_and_repo_browser:59239d65a2593d97
+context: dependency graph of phase IDU1_idearium_homepage_and_repo_browser
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829975228
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975228
+lastSeenAt: 1792829975228
+fingerprint: null
+payload:
+  for: IDU1_idearium_homepage_and_repo_browser
+  kind: phase
+  repo: null
+  hash: 59239d65a2593d97
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+    dependents: []
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
+    downstream: []
+    blockedBy:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+    unlocks: []
+    conflicts: []
+    dangling:
+      - REPO_PAGE1
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 2 · blocked by
+        ID2_verify_idearium_reconciliation_reads_right_store
+      - 'depends on (1): ID2_verify_idearium_reconciliation_reads_right_store · all upstream 2'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: REPO_PAGE1'

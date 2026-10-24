@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NP16_quarantine_pipeline:b0bc67bd790e5635
+type: graph
+id: phase:NP16_quarantine_pipeline:b0bc67bd790e5635
+context: dependency graph of phase NP16_quarantine_pipeline
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829786791
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829786791
+lastSeenAt: 1792829786791
+fingerprint: null
+payload:
+  for: NP16_quarantine_pipeline
+  kind: phase
+  repo: null
+  hash: b0bc67bd790e5635
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 746f60cbfacbcde1
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 746f60cbfacbcde1 · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

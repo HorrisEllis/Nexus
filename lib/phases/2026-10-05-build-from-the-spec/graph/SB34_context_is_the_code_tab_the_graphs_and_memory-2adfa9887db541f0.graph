@@ -1,0 +1,244 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB34_context_is_the_code_tab_the_graphs_and_memory:2adfa9887db541f0
+type: graph
+id: phase:SB34_context_is_the_code_tab_the_graphs_and_memory:2adfa9887db541f0
+context: dependency graph of phase SB34_context_is_the_code_tab_the_graphs_and_memory
+intent: null
+summary: 28 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829990992
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990992
+lastSeenAt: 1792829990992
+fingerprint: null
+payload:
+  for: SB34_context_is_the_code_tab_the_graphs_and_memory
+  kind: phase
+  repo: null
+  hash: 2adfa9887db541f0
+  nodes:
+    - path: lib/code-intel/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/context-prereqs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-agent-provider.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/idearium/code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-prompt-blocks.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/idearium/code.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/nexus/tool-layers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/context-prereqs.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-prompt-blocks.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/economy/store.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-repo-agent-provider.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: lib/repo-context.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/context-atlas.js
+      kind: requires
+  crossings:
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 5
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB33_the_agent_runs_the_pipeline
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB35_the_index_is_there_when_the_agent_asks
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB32_context_is_never_optional
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB33_the_agent_runs_the_pipeline
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB3_the_section_prompt_is_domain_agnostic
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB35_the_index_is_there_when_the_agent_asks
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB37_the_working_set_signal_to_noise
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB39_the_checklist_builds_the_working_set
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB35_the_index_is_there_when_the_agent_asks
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 5
+      - 'depends on (1): SB33_the_agent_runs_the_pipeline · all upstream 5'
+      - >-
+        needed by (1): SB35_the_index_is_there_when_the_agent_asks · all downstream 5 · finishing it
+        unlocks SB35_the_index_is_there_when_the_agent_asks

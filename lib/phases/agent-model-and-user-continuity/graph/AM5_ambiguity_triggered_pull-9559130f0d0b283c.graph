@@ -1,0 +1,249 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM5_ambiguity_triggered_pull:9559130f0d0b283c
+type: graph
+id: phase:AM5_ambiguity_triggered_pull:9559130f0d0b283c
+context: dependency graph of phase AM5_ambiguity_triggered_pull
+intent: null
+summary: 31 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830027821
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830027821
+lastSeenAt: 1792830027821
+fingerprint: null
+payload:
+  for: AM5_ambiguity_triggered_pull
+  kind: phase
+  repo: null
+  hash: 9559130f0d0b283c
+  nodes:
+    - path: cortex/push-recall.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/agent-model.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-pull.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-system/contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/browser-action.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/module-builder.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-system/submit.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-map.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chains.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/scheduler.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/triggers.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/bep-lookup.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/causal-lookup.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/fix-map.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chunk-service.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gemini-toolbox/agent-contracts.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/capability-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/schema/driver.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/agent-pull.js
+      to: lib/gemini-toolbox/agent-contracts.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/chunk-service.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/agent-system/contracts.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: cortex/push-recall.js
+      to: cortex/memory/fix-map.js
+      kind: requires
+    - from: cortex/push-recall.js
+      to: cortex/memory/bep-lookup.js
+      kind: requires
+    - from: cortex/push-recall.js
+      to: cortex/memory/causal-lookup.js
+      kind: requires
+    - from: lib/loom-map.js
+      to: loom/schema/driver.js
+      kind: requires
+    - from: lib/loom-map.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/loom-map.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/chains.js
+      to: lib/agent-pull.js
+      kind: requires
+    - from: lib/scheduler.js
+      to: lib/agent-pull.js
+      kind: requires
+    - from: lib/triggers.js
+      to: lib/agent-pull.js
+      kind: requires
+    - from: lib/agent-system/submit.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-map.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+  crossings:
+    - from: lib/agent-pull.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/loom-map.js
+      to: loom/schema/driver.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+    upstream: []
+    downstream:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): AM6_perplexity_confidence_loop'

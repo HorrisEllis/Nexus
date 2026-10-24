@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P15_redundant_file_purge
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P15_redundant_file_purge
+context: >-
+  pipeline phase P15_redundant_file_purge of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P15_redundant_file_purge (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976509
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976509
+lastSeenAt: 1792829976509
+fingerprint: null
+payload:
+  id: P15_redundant_file_purge
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 879b6ff1790cef09

@@ -1,0 +1,113 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SP1_semantic_page_tree:8a8b6900ce74fa3b
+type: graph
+id: phase:SP1_semantic_page_tree:8a8b6900ce74fa3b
+context: dependency graph of phase SP1_semantic_page_tree
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830004198
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830004198
+lastSeenAt: 1792830004198
+fingerprint: null
+payload:
+  for: SP1_semantic_page_tree
+  kind: phase
+  repo: null
+  hash: 8a8b6900ce74fa3b
+  nodes:
+    - path: clear-glass/src/page/reader.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/blocks.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/attention.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/host.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/google-signin.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-agent-surface.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-opportunity.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/contexts/google-signin.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/page/semantic-tree.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/page/blocks.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/providers/attention.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/test/google-signin.test.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: tests/modules/clear-glass-agent-surface.test.js
+      to: clear-glass/src/page/reader.js
+      kind: requires
+    - from: tests/modules/test-opportunity.test.js
+      to: clear-glass/src/page/reader.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP2_semantic_addresses_for_the_field_map
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP3_the_browser_agent_reads_the_tree
+    upstream: []
+    downstream:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP2_semantic_addresses_for_the_field_map
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP3_the_browser_agent_reads_the_tree
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP2_semantic_addresses_for_the_field_map
+      - docs/2026-10-15-capability-specs-and-semantic-page-tree-phasemap.spec::SP3_the_browser_agent_reads_the_tree
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): SP2_semantic_addresses_for_the_field_map,
+        SP3_the_browser_agent_reads_the_tree · finishing it unlocks
+        SP2_semantic_addresses_for_the_field_map, SP3_the_browser_agent_reads_the_tree
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-idearium-one-surface-phasemap.spec::OS3_the_code_tab_knows_its_history
+type: phase
+id: docs_2026-10-07-idearium-one-surface-phasemap.spec::OS3_the_code_tab_knows_its_history
+context: >-
+  pipeline phase OS3_the_code_tab_knows_its_history of
+  docs/2026-10-07-idearium-one-surface-phasemap.spec
+intent: null
+summary: OS3_the_code_tab_knows_its_history (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829995350
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829995350
+lastSeenAt: 1792829995350
+fingerprint: null
+payload:
+  id: OS3_the_code_tab_knows_its_history
+  map: docs/2026-10-07-idearium-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0b3333775435ecb5

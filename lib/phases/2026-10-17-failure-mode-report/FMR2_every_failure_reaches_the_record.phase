@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-failure-mode-report-phasemap.spec::FMR2_every_failure_reaches_the_record
+type: phase
+id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR2_every_failure_reaches_the_record
+context: >-
+  pipeline phase FMR2_every_failure_reaches_the_record of
+  docs/2026-10-17-failure-mode-report-phasemap.spec
+intent: null
+summary: FMR2_every_failure_reaches_the_record (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830015647
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830015647
+lastSeenAt: 1792830015647
+fingerprint: null
+payload:
+  id: FMR2_every_failure_reaches_the_record
+  map: docs/2026-10-17-failure-mode-report-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8f581bc3e9fff14b

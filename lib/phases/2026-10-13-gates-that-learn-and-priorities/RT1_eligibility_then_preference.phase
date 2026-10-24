@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-gates-that-learn-and-priorities-phasemap.spec::RT1_eligibility_then_preference
+type: phase
+id: docs_2026-10-13-gates-that-learn-and-priorities-phasemap.spec::RT1_eligibility_then_preference
+context: >-
+  pipeline phase RT1_eligibility_then_preference of
+  docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
+intent: null
+summary: RT1_eligibility_then_preference (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002151
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002151
+lastSeenAt: 1792830002151
+fingerprint: null
+payload:
+  id: RT1_eligibility_then_preference
+  map: docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c6cc15254d40778a

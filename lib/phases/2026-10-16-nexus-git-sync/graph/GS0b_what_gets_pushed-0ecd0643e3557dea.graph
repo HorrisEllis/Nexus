@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GS0b_what_gets_pushed:0ecd0643e3557dea
+type: graph
+id: phase:GS0b_what_gets_pushed:0ecd0643e3557dea
+context: dependency graph of phase GS0b_what_gets_pushed
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792830012970
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830012970
+lastSeenAt: 1792830012970
+fingerprint: null
+payload:
+  for: GS0b_what_gets_pushed
+  kind: phase
+  repo: null
+  hash: 0ecd0643e3557dea
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

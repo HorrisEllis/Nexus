@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::MC1_macros_from_repeats
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::MC1_macros_from_repeats
+context: pipeline phase MC1_macros_from_repeats of docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: MC1_macros_from_repeats (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830003815
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830003815
+lastSeenAt: 1792830003815
+fingerprint: null
+payload:
+  id: MC1_macros_from_repeats
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/macro-miner.js (new)
+    - lib/activity-log/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 611c1e68d8c1dd1b

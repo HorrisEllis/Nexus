@@ -1,0 +1,127 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HG4_scripts_inside_the_sandbox:a8510e63e202d6f6
+type: graph
+id: phase:HG4_scripts_inside_the_sandbox:a8510e63e202d6f6
+context: dependency graph of phase HG4_scripts_inside_the_sandbox
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829991457
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991457
+lastSeenAt: 1792829991457
+fingerprint: null
+payload:
+  for: HG4_scripts_inside_the_sandbox
+  kind: phase
+  repo: null
+  hash: a8510e63e202d6f6
+  nodes:
+    - path: lib/test-sandbox.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/workset.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/foundation/constants.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/lib/code-artifact.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/data-dir.cjs
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/alk/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/chat-logger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: clear-glass/src/mesh/automation-engine.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: copilot/lib/workset.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/foundation/constants.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/lib/data-dir.cjs
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/chat-logger.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/component-store.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

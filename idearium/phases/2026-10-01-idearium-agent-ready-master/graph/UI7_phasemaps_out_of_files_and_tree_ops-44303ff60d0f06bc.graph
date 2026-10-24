@@ -1,0 +1,121 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UI7_phasemaps_out_of_files_and_tree_ops:44303ff60d0f06bc
+type: graph
+id: phase:UI7_phasemaps_out_of_files_and_tree_ops:44303ff60d0f06bc
+context: dependency graph of phase UI7_phasemaps_out_of_files_and_tree_ops
+intent: null
+summary: 10 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987087
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987087
+lastSeenAt: 1792829987087
+fingerprint: null
+payload:
+  for: UI7_phasemaps_out_of_files_and_tree_ops
+  kind: phase
+  repo: null
+  hash: 44303ff60d0f06bc
+  nodes:
+    - path: idearium/repo/phases.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/repo/phases.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/phases.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/phases.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+    dependents: []
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+    downstream: []
+    blockedBy:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
+        files:
+          - idearium/repo/phases.js
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 4 · blocked by RM1_registry_driven_moves
+      - 'depends on (1): RM1_registry_driven_moves · all upstream 4'
+      - 'needed by (0): —'
+      - >-
+        same files as BK2_phase_build_writes_code with no order between them:
+        idearium/repo/phases.js

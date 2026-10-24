@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MR11_rewind_the_mind:7408928bead323c8
+type: graph
+id: phase:MR11_rewind_the_mind:7408928bead323c8
+context: dependency graph of phase MR11_rewind_the_mind
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829988449
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988449
+lastSeenAt: 1792829988449
+fingerprint: null
+payload:
+  for: MR11_rewind_the_mind
+  kind: phase
+  repo: null
+  hash: 7408928bead323c8
+  nodes:
+    - path: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 7
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream: []
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 7 · blocked by CF1_cfr_improved_with_rfr2, OT1_one_write_path
+      - 'depends on (2): CF1_cfr_improved_with_rfr2, OT1_one_write_path · all upstream 8'
+      - 'needed by (0): —'

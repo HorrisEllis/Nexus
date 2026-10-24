@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM20_atlas_schema_and_deterministic_seed
+context: >-
+  pipeline phase LM20_atlas_schema_and_deterministic_seed of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM20_atlas_schema_and_deterministic_seed (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829973405
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973405
+lastSeenAt: 1792829973405
+fingerprint: null
+payload:
+  id: LM20_atlas_schema_and_deterministic_seed
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - LM18_atlas_map_each_system_first
+  blocks: []
+  spec: null
+  graph: 601c13a899ed4574

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP2_loom_idearium_template_to_cos_blueprint_bridge
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP2_loom_idearium_template_to_cos_blueprint_bridge
+context: >-
+  pipeline phase SBP2_loom_idearium_template_to_cos_blueprint_bridge of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP2_loom_idearium_template_to_cos_blueprint_bridge (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829972555
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972555
+lastSeenAt: 1792829972555
+fingerprint: null
+payload:
+  id: SBP2_loom_idearium_template_to_cos_blueprint_bridge
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - SBP1_reconcile_repo_layer_vs_cos_compartment
+  blocks: []
+  spec: null
+  graph: dea73234c887a0ea

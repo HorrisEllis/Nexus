@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT8_live_agent_activity
+type: phase
+id: docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT8_live_agent_activity
+context: pipeline phase CT8_live_agent_activity of docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+intent: null
+summary: CT8_live_agent_activity (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991873
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991873
+lastSeenAt: 1792829991873
+fingerprint: null
+payload:
+  id: CT8_live_agent_activity
+  map: docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/index.js
+    - copilot/server.js
+    - lib/repo-agent.js
+    - idearium/api/index.js
+    - idearium/ui/js/code-surface.js
+  depends_on:
+    - CT5_hooked_into_the_plan
+  blocks: []
+  spec: null
+  graph: d4a3a275c6d63391

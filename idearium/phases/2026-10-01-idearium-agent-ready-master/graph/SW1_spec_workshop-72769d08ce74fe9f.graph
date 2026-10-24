@@ -1,0 +1,107 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SW1_spec_workshop:72769d08ce74fe9f
+type: graph
+id: phase:SW1_spec_workshop:72769d08ce74fe9f
+context: dependency graph of phase SW1_spec_workshop
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987115
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987115
+lastSeenAt: 1792829987115
+fingerprint: null
+payload:
+  for: SW1_spec_workshop
+  kind: phase
+  repo: null
+  hash: 72769d08ce74fe9f
+  nodes:
+    - path: architect/src/ui/spec-builder.html
+      role: changes
+      exists: true
+      system: architect
+    - path: idearium/lib/idea-workbench.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/spec-library.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/spec-library-import.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/test/idea-workbench.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-spec-library.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/zip.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/spec-library.js
+      to: lib/zip.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/idea-workbench.js
+      kind: requires
+    - from: idearium/test/idea-workbench.test.js
+      to: idearium/lib/idea-workbench.js
+      kind: requires
+    - from: idearium/lib/spec-library-import.js
+      to: lib/spec-library.js
+      kind: requires
+    - from: tests/modules/test-spec-library.test.js
+      to: lib/spec-library.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 6
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+    dependents: []
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DI1_chunking_for_data_ingestion
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+    downstream: []
+    blockedBy:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 6 · blocked by CX1_context_cascade, UM1_nexus_understands_james
+      - >-
+        depends on (3): IL1_spec_library_as_ideas, CX1_context_cascade, UM1_nexus_understands_james
+        · all upstream 10
+      - 'needed by (0): —'

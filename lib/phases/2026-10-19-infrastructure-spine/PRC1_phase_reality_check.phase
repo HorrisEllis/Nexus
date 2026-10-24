@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+context: pipeline phase PRC1_phase_reality_check of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: PRC1_phase_reality_check (library) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792830020062
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020062
+lastSeenAt: 1792830020062
+fingerprint: null
+payload:
+  id: PRC1_phase_reality_check
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/phase-reality.js
+    - lib/phase-dag.js
+    - lib/verify-first.js
+    - lib/project-registry.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9f4c582a3218a9d7

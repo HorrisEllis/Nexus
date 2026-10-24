@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::DP1_desktop_popout_options
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::DP1_desktop_popout_options
+context: pipeline phase DP1_desktop_popout_options of docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: DP1_desktop_popout_options (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990144
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990144
+lastSeenAt: 1792829990144
+fingerprint: null
+payload:
+  id: DP1_desktop_popout_options
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/desktop.html
+    - idearium/api/index.js
+    - idearium/ui/js/app.js
+  depends_on:
+    - RW1_rewind_engine_vm_snapshots
+  blocks: []
+  spec: null
+  graph: e73c4e98f5f196a7

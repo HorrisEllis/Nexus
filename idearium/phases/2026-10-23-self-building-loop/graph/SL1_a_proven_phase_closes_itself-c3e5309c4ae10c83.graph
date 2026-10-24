@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792828414782
+exported_at: 1792830026602
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792828414782
-lastSeenAt: 1792828414782
+firstSeenAt: 1792830026602
+lastSeenAt: 1792830026602
 fingerprint: null
 payload:
   for: SL1_a_proven_phase_closes_itself
@@ -231,7 +231,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 746f60cbfacbcde1
+    dagHash: 2f8ddd0afd383c4f
     layer: 1
     deps:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
@@ -249,7 +249,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 746f60cbfacbcde1 · layer 1
+      - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): SL0_what_can_be_built_now'
       - >-
         needed by (2): SL4_the_loop, SL5_when_a_proven_change_lands_alone · finishing it unlocks

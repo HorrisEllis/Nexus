@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-compartment-control-and-activity-phasemap.spec::SP1_one_spotlight
+type: phase
+id: docs_2026-10-07-compartment-control-and-activity-phasemap.spec::SP1_one_spotlight
+context: pipeline phase SP1_one_spotlight of docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+intent: null
+summary: SP1_one_spotlight (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829994588
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829994588
+lastSeenAt: 1792829994588
+fingerprint: null
+payload:
+  id: SP1_one_spotlight
+  map: docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ui/tv-shell/spotlight/spotlight.js
+    - clear-glass/src/page/field.js
+  depends_on:
+    - UN1_nexus_surfaces_in_the_field
+  blocks: []
+  spec: null
+  graph: 094a82781d95acdc

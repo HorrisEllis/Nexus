@@ -1,0 +1,204 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AG1_coding_agent_provider:7098e6ab122046fe
+type: graph
+id: phase:AG1_coding_agent_provider:7098e6ab122046fe
+context: dependency graph of phase AG1_coding_agent_provider
+intent: null
+summary: 23 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987064
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987064
+lastSeenAt: 1792829987064
+fingerprint: null
+payload:
+  for: AG1_coding_agent_provider
+  kind: phase
+  repo: null
+  hash: 7098e6ab122046fe
+  nodes:
+    - path: guardian/lib/jobs.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/spec-engine/chunk-dispatch.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-providers.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-capability-profile.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-chat.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/generate-tool-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/economy/store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intent-hat-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/jobs.js
+      to: lib/intent-hat-router.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-capability-profile.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-chat.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-tools/generate-tool-nodes.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/economy/store.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-providers.js
+      kind: requires
+  crossings:
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+    dependents: []
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+    downstream: []
+    blockedBy:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 4 · blocked by CI1_compounding_iterate
+      - 'depends on (2): DT2_failure_mode_field, CI1_compounding_iterate · all upstream 4'
+      - 'needed by (0): —'

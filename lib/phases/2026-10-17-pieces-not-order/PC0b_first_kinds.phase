@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::PC0b_first_kinds
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::PC0b_first_kinds
+context: pipeline phase PC0b_first_kinds of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: PC0b_first_kinds (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830016434
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016434
+lastSeenAt: 1792830016434
+fingerprint: null
+payload:
+  id: PC0b_first_kinds
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "DECIDED 2026-10-17 by his axioms (applied by the coder) — D9: spec_section, function, test,
+    wire, doc (§16.4, §0.5) — his answer was \"[No preference]\"; see
+    docs/2026-10-17-decisions-by-the-axioms.spec"
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e526cfe32978bf86

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::FV0_fulfil_a_taken_order
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::FV0_fulfil_a_taken_order
+context: pipeline phase FV0_fulfil_a_taken_order of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: FV0_fulfil_a_taken_order (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988476
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988476
+lastSeenAt: 1792829988476
+fingerprint: null
+payload:
+  id: FV0_fulfil_a_taken_order
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/orders.js
+    - idearium/api/index.js
+    - idearium/ui/js/orders.js
+    - idearium/repo/proof-run.js
+  depends_on:
+    - PR1_proof_run_the_delivery_checker
+    - PH1_phase_runs_end_in_proof
+  blocks: []
+  spec: null
+  graph: 848e1bff5519633a

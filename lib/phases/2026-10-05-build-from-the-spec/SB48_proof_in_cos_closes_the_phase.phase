@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB48_proof_in_cos_closes_the_phase
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB48_proof_in_cos_closes_the_phase
+context: >-
+  pipeline phase SB48_proof_in_cos_closes_the_phase of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB48_proof_in_cos_closes_the_phase (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991014
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991014
+lastSeenAt: 1792829991014
+fingerprint: null
+payload:
+  id: SB48_proof_in_cos_closes_the_phase
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/registry-plan.js
+    - idearium/api/index.js
+    - lib/repo-expand.js
+  depends_on:
+    - SB47_built_and_run_in_cos
+  blocks: []
+  spec: null
+  graph: 054d76a838a4463d

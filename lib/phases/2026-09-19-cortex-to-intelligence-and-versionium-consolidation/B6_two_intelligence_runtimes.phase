@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B6_two_intelligence_runtimes
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B6_two_intelligence_runtimes
+context: >-
+  pipeline phase B6_two_intelligence_runtimes of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: B6_two_intelligence_runtimes (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829978557
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978557
+lastSeenAt: 1792829978557
+fingerprint: null
+payload:
+  id: B6_two_intelligence_runtimes
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0258dad07ec7a2de

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::CG8_devtools_screenshot_dom_archaeology
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CG8_devtools_screenshot_dom_archaeology
+context: >-
+  pipeline phase CG8_devtools_screenshot_dom_archaeology of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: CG8_devtools_screenshot_dom_archaeology (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974313
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974313
+lastSeenAt: 1792829974313
+fingerprint: null
+payload:
+  id: CG8_devtools_screenshot_dom_archaeology
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 08ddcfae15dfe9b5

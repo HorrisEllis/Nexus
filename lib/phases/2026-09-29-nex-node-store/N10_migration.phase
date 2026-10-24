@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N10_migration
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N10_migration
+context: pipeline phase N10_migration of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N10_migration (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985430
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985430
+lastSeenAt: 1792829985430
+fingerprint: null
+payload:
+  id: N10_migration
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/migrate.js
+  depends_on:
+    - N8_service
+  blocks: []
+  spec: null
+  graph: 22105d4423c79d62

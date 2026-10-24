@@ -100,6 +100,15 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-24: "spec per component/capability/etc its in the specs. deocmpose all of the phases into .phase nodes including dag per
+  phase."** (0.60.227)
+  - **Context:** 2,046 phases across 166 maps, of which only 175 had been written as nodes.
+  - **What it shows:** making a large backlog machine-readable, and holding the work to his own rule. Every phase is now a node with its
+    place in the dependency graph. The measurement says plainly how far "spec first" reaches: 133 phases have a spec, and 1,107 open ones
+    do not. Writing every node also surfaced a parser fault that had silently replaced 11 real phases with notes about them.
+  - **Evidence:** `CHANGELOG-0.60.227.md`; `docs/2026-10-24-phase-nodes-spec-coverage.md`; `tests/modules/test-phase-specs.test.js` PS-05,
+    PS-06.
+
 - **2026-10-24: "This is a few days old. But does this help. A project that had auto built 5 phases"** (0.60.226)
   - **Context:** the day the self-building loop was finished, he brought back a run of his own. Five phases were built automatically,
     with an independent error report on what they actually were.

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-idearium-one-surface-phasemap.spec::OS5_settings_without_iframes
+type: phase
+id: docs_2026-10-07-idearium-one-surface-phasemap.spec::OS5_settings_without_iframes
+context: pipeline phase OS5_settings_without_iframes of docs/2026-10-07-idearium-one-surface-phasemap.spec
+intent: null
+summary: OS5_settings_without_iframes (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829995351
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829995351
+lastSeenAt: 1792829995351
+fingerprint: null
+payload:
+  id: OS5_settings_without_iframes
+  map: docs/2026-10-07-idearium-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 17bd8eab79f40c3b

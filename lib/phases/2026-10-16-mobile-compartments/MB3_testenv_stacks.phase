@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-mobile-compartments-phasemap.spec::MB3_testenv_stacks
+type: phase
+id: docs_2026-10-16-mobile-compartments-phasemap.spec::MB3_testenv_stacks
+context: pipeline phase MB3_testenv_stacks of docs/2026-10-16-mobile-compartments-phasemap.spec
+intent: null
+summary: MB3_testenv_stacks (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830012563
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830012563
+lastSeenAt: 1792830012563
+fingerprint: null
+payload:
+  id: MB3_testenv_stacks
+  map: docs/2026-10-16-mobile-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e76b4664f81e1e35

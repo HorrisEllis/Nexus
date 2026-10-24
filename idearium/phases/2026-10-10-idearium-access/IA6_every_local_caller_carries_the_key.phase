@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-access-phasemap.spec::IA6_every_local_caller_carries_the_key
+type: phase
+id: docs_2026-10-10-idearium-access-phasemap.spec::IA6_every_local_caller_carries_the_key
+context: >-
+  pipeline phase IA6_every_local_caller_carries_the_key of
+  docs/2026-10-10-idearium-access-phasemap.spec
+intent: null
+summary: IA6_every_local_caller_carries_the_key (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999256
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999256
+lastSeenAt: 1792829999256
+fingerprint: null
+payload:
+  id: IA6_every_local_caller_carries_the_key
+  map: docs/2026-10-10-idearium-access-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/data/access/local.key
+    - copilot/server.js
+    - guardian/server.js
+    - idearium/cli/index.js
+    - nexus MCP server
+  depends_on:
+    - IA0_the_door_checks_who_is_asking
+  blocks: []
+  spec: null
+  graph: 48cf449554a93a5a

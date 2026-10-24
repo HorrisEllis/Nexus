@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-routing-fidelity-phasemap.spec::RR3_per_agent_config_in_cortex
+type: phase
+id: docs_raid-routing-fidelity-phasemap.spec::RR3_per_agent_config_in_cortex
+context: pipeline phase RR3_per_agent_config_in_cortex of docs/raid-routing-fidelity-phasemap.spec
+intent: null
+summary: RR3_per_agent_config_in_cortex (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830035266
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830035266
+lastSeenAt: 1792830035266
+fingerprint: null
+payload:
+  id: RR3_per_agent_config_in_cortex
+  map: docs/raid-routing-fidelity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - RR1_verify_and_wire_the_snr_fidelity_gate
+  blocks: []
+  spec: null
+  graph: efff7260225f5d9a

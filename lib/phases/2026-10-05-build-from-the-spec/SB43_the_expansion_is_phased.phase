@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB43_the_expansion_is_phased
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB43_the_expansion_is_phased
+context: pipeline phase SB43_the_expansion_is_phased of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB43_the_expansion_is_phased (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991005
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991005
+lastSeenAt: 1792829991005
+fingerprint: null
+payload:
+  id: SB43_the_expansion_is_phased
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-expand.js
+  depends_on:
+    - SB42_a_repo_expands_from_its_spec
+  blocks: []
+  spec: null
+  graph: d07fa0b1c8d777ac

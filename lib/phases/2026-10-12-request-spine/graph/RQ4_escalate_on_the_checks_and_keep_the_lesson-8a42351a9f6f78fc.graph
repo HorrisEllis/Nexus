@@ -1,0 +1,230 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ4_escalate_on_the_checks_and_keep_the_lesson:8a42351a9f6f78fc
+type: graph
+id: phase:RQ4_escalate_on_the_checks_and_keep_the_lesson:8a42351a9f6f78fc
+context: dependency graph of phase RQ4_escalate_on_the_checks_and_keep_the_lesson
+intent: null
+summary: 23 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830001708
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001708
+lastSeenAt: 1792830001708
+fingerprint: null
+payload:
+  for: RQ4_escalate_on_the_checks_and_keep_the_lesson
+  kind: phase
+  repo: null
+  hash: 8a42351a9f6f78fc
+  nodes:
+    - path: idearium/lib/config-core.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/case-library.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/build-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/case-library.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-model-fit-ladder.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: meta/crystal-lattice.js
+      role: uses
+      exists: true
+      system: meta
+  edges:
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: lib/case-library.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/case-library.js
+      to: meta/crystal-lattice.js
+      kind: requires
+    - from: lib/component-store.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/agent-record.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-model-fit-ladder.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/autonomous-loop.js
+      to: lib/case-library.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/case-library.js
+      kind: requires
+    - from: tests/modules/case-library.test.js
+      to: lib/case-library.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/build-context.js
+      to: lib/component-store.js
+      kind: requires
+  crossings:
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/case-library.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/case-library.js
+      to: meta/crystal-lattice.js
+      fromSystem: lib
+      toSystem: meta
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ3_repair_with_the_checks_own_words
+    dependents:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ2_the_generation_failure_vocabulary_and_index
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ3_repair_with_the_checks_own_words
+    downstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
+    blockedBy:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ3_repair_with_the_checks_own_words
+    unlocks:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
+    conflicts:
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ27_the_reasoning_half_gets_its_home
+        files:
+          - lib/case-library.js
+          - lib/component-store.js
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 4 · blocked by RQ3_repair_with_the_checks_own_words
+      - 'depends on (1): RQ3_repair_with_the_checks_own_words · all upstream 4'
+      - >-
+        needed by (1): RQ5_the_small_model_baseline · all downstream 7 · finishing it unlocks
+        RQ5_the_small_model_baseline
+      - >-
+        same files as RQ27_the_reasoning_half_gets_its_home with no order between them:
+        lib/case-library.js, lib/component-store.js

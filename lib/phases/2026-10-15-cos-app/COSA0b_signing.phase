@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA0b_signing
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA0b_signing
+context: pipeline phase COSA0b_signing of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA0b_signing (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005841
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005841
+lastSeenAt: 1792830005841
+fingerprint: null
+payload:
+  id: COSA0b_signing
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9df6163a6b8d73c2

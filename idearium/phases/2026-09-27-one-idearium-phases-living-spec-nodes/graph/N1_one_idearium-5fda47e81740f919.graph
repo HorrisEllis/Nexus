@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N1_one_idearium:5fda47e81740f919
+type: graph
+id: phase:N1_one_idearium:5fda47e81740f919
+context: dependency graph of phase N1_one_idearium
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829983313
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829983313
+lastSeenAt: 1792829983313
+fingerprint: null
+payload:
+  for: N1_one_idearium
+  kind: phase
+  repo: null
+  hash: 5fda47e81740f919
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    upstream: []
+    downstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): Z1_release · finishing it unlocks Z1_release'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

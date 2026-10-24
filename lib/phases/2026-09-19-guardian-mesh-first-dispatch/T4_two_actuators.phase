@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::T4_two_actuators
+type: phase
+id: docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::T4_two_actuators
+context: pipeline phase T4_two_actuators of docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+intent: null
+summary: T4_two_actuators (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829978960
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978960
+lastSeenAt: 1792829978960
+fingerprint: null
+payload:
+  id: T4_two_actuators
+  map: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1e41d389b0d7fe92

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB7_the_follow_up
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB7_the_follow_up
+context: pipeline phase JB7_the_follow_up of docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: JB7_the_follow_up (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001282
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001282
+lastSeenAt: 1792830001282
+fingerprint: null
+payload:
+  id: JB7_the_follow_up
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/automation/cron.js
+    - clear-glass/src/automation/steps.js
+  depends_on:
+    - JB6_the_application_ledger
+    - JB5_varied_wording_true_facts
+  blocks: []
+  spec: null
+  graph: ba331fb30a195c2d

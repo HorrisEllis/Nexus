@@ -1,0 +1,205 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FR1_failure_reports:dafc215b29905071
+type: graph
+id: phase:FR1_failure_reports:dafc215b29905071
+context: dependency graph of phase FR1_failure_reports
+intent: null
+summary: 22 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830007480
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007480
+lastSeenAt: 1792830007480
+fingerprint: null
+payload:
+  for: FR1_failure_reports
+  kind: phase
+  repo: null
+  hash: dafc215b29905071
+  nodes:
+    - path: cortex/self-heal/failure-mode-forensics.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/contract-failures.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/fault-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/reflection.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/self-heal/failure-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-model.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/fault-log.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/reflection.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-c1-compound-failure-mode.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/bda/kernel.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/fault-log.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: cortex/self-heal/failure-mode-forensics.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/self-heal/failure-mode-forensics.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/self-heal/failure-mode-forensics.js
+      to: cortex/config.js
+      kind: requires
+    - from: lib/reflection.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/reflection.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: lib/reflection.js
+      to: intelligence/bda/kernel.js
+      kind: requires
+    - from: lib/reflection.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: lib/reflection.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/fault-log.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: cortex/self-heal/failure-intake.js
+      to: cortex/self-heal/failure-mode-forensics.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/self-heal/failure-mode-forensics.js
+      kind: requires
+    - from: tests/modules/test-c1-compound-failure-mode.test.js
+      to: cortex/self-heal/failure-mode-forensics.js
+      kind: requires
+    - from: tests/modules/reflection.test.js
+      to: lib/reflection.js
+      kind: requires
+  crossings:
+    - from: lib/reflection.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: lib/reflection.js
+      to: intelligence/bda/kernel.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/reflection.js
+      to: intelligence/gap/predicate.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD0_raid_runs_the_contract
+    dependents:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::ST1_stability_checks
+    upstream:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD0_raid_runs_the_contract
+    downstream:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::ST1_stability_checks
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::ST1_stability_checks
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · ready
+      - 'depends on (1): RD0_raid_runs_the_contract · all upstream 2'
+      - 'needed by (1): ST1_stability_checks · finishing it unlocks ST1_stability_checks'

@@ -1,0 +1,101 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB0_map:af5948d939560015
+type: graph
+id: phase:SB0_map:af5948d939560015
+context: dependency graph of phase SB0_map
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829990916
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990916
+lastSeenAt: 1792829990916
+fingerprint: null
+payload:
+  for: SB0_map
+  kind: phase
+  repo: null
+  hash: af5948d939560015
+  nodes:
+    - path: docs/2026-10-05-build-from-the-spec-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/SPEC-REGISTRY.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+    upstream: []
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB10_reuse_first_keyed_on_the_contract
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB11_each_block_chunked
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB12_the_registry_is_the_component_list
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB13_each_component_chunked
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB14_reuse_compounds
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB15_empty_is_not_built
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB18_the_system_template_is_used
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB19_atlases_per_component
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB21_deterministic_parts_grow_with_the_system
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB22_every_component_capability_command_events_as_nodes
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB23_a_new_system_slots_in
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB24_loom_builds_a_new_system
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB25_atlas_template_in_his_structure
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB26_an_imported_project_shows_its_progress
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB27_expanding_a_repo_keeps_its_spec_and_phases_current
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB28_genesis_in_the_shape_nexus_systems_have
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB29_the_build_flow_in_his_order
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB2_his_words_seed_the_spec
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB30_the_template_is_a_skeleton
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB32_context_is_never_optional
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB33_the_agent_runs_the_pipeline
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB34_context_is_the_code_tab_the_graphs_and_memory
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB35_the_index_is_there_when_the_agent_asks
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB37_the_working_set_signal_to_noise
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB39_the_checklist_builds_the_working_set
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB3_the_section_prompt_is_domain_agnostic
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB43_the_expansion_is_phased
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB44_phases_are_chunked_then_coded
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB45_skeletons_grey_until_coded
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB46_every_step_by_hand
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB47_built_and_run_in_cos
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB48_proof_in_cos_closes_the_phase
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB49_an_idea_runs_through_by_itself
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB4_template_fidelity
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB5_nexus_rebuilds_a_system_from_its_spec
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB6_hundreds_of_specs
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB7_domain_file_tree_templates
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB8_promote_with_full_block_options
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB9_the_spec_is_a_spec_file
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): SB1_templates_are_the_default_frame, SB16_genesis_nodes_domain · all
+        downstream 47 · finishing it unlocks SB1_templates_are_the_default_frame,
+        SB16_genesis_nodes_domain

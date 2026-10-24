@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+context: pipeline phase BS8_files_ui of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS8_files_ui (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985008
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985008
+lastSeenAt: 1792829985008
+fingerprint: null
+payload:
+  id: BS8_files_ui
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - idearium/ui/js/file-manage.js
+    - idearium/ui/index.html
+  depends_on:
+    - BS7_api
+  blocks: []
+  spec: null
+  graph: c46c3ff81f3ff946

@@ -7,11 +7,11 @@ intent: null
 summary: UI2_version_in_code (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792653394708
+exported_at: 1792830020476
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394708
-lastSeenAt: 1792653394708
+firstSeenAt: 1792830020476
+lastSeenAt: 1792830020476
 fingerprint: null
 payload:
   id: UI2_version_in_code

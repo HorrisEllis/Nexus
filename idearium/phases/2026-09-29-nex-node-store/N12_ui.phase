@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N12_ui
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N12_ui
+context: pipeline phase N12_ui of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N12_ui (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985432
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985432
+lastSeenAt: 1792829985432
+fingerprint: null
+payload:
+  id: N12_ui
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/settings.html (a Store page)
+  depends_on:
+    - N9_cli
+  blocks: []
+  spec: null
+  graph: 278ef4d8f071d90f

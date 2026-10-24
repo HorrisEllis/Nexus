@@ -1,0 +1,264 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N21_no_empty_generation_event_gates:22cd6c8351ac8c9e
+type: graph
+id: phase:N21_no_empty_generation_event_gates:22cd6c8351ac8c9e
+context: dependency graph of phase N21_no_empty_generation_event_gates
+intent: null
+summary: 31 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985442
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985442
+lastSeenAt: 1792829985442
+fingerprint: null
+payload:
+  for: N21_no_empty_generation_event_gates
+  kind: phase
+  repo: null
+  hash: 22cd6c8351ac8c9e
+  nodes:
+    - path: guardian/lib/code-artifact.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/response-sink.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/api/build-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/plan-panel.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/extract-code.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/step-gate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: state.js
+      role: changes
+      exists: false
+      system: null
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/guardian-stream.cjs
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/warp-build-dispatch.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/reply-kind.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-extract-code.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-language-checks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: idearium/repo/snapshot-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-248-toolchain.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intake.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/languages.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reply-kind.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/step-gate.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/extract-code.js
+      to: lib/languages.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: lib/intake.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/reply-kind.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/run-state.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot-files.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/reply-kind.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: tests/modules/test-language-checks.test.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/extract-code.js
+      kind: requires
+    - from: idearium/lib/guardian-stream.cjs
+      to: lib/extract-code.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: lib/extract-code.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/extract-code.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: lib/extract-code.js
+      kind: requires
+    - from: tests/modules/test-extract-code.js
+      to: lib/extract-code.js
+      kind: requires
+  crossings:
+    - from: lib/step-gate.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: guardian/lib/code-artifact.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: guardian
+      toSystem: clear-glass
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 5
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+    dependents:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N22_shadow_and_negative_space_reasoning
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N23_ollama_first_build_then_agent_review
+    upstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N6_time
+    downstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N22_shadow_and_negative_space_reasoning
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N23_ollama_first_build_then_agent_review
+    blockedBy:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+    unlocks:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N23_ollama_first_build_then_agent_review
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 5 · blocked by N14_failure_mode_field
+      - 'depends on (1): N14_failure_mode_field · all upstream 7'
+      - >-
+        needed by (2): N22_shadow_and_negative_space_reasoning,
+        N23_ollama_first_build_then_agent_review · finishing it unlocks
+        N23_ollama_first_build_then_agent_review

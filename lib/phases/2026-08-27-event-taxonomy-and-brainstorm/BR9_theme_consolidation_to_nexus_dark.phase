@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR9_theme_consolidation_to_nexus_dark
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR9_theme_consolidation_to_nexus_dark
+context: >-
+  pipeline phase BR9_theme_consolidation_to_nexus_dark of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: BR9_theme_consolidation_to_nexus_dark (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971729
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971729
+lastSeenAt: 1792829971729
+fingerprint: null
+payload:
+  id: BR9_theme_consolidation_to_nexus_dark
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4ab785621dee1689

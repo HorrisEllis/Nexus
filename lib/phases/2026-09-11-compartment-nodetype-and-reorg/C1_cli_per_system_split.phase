@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::C1_cli_per_system_split
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::C1_cli_per_system_split
+context: >-
+  pipeline phase C1_cli_per_system_split of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: C1_cli_per_system_split (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976057
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976057
+lastSeenAt: 1792829976057
+fingerprint: null
+payload:
+  id: C1_cli_per_system_split
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c001edf00d734977

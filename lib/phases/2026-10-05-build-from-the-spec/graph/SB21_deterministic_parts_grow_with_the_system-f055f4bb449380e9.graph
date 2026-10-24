@@ -1,0 +1,195 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB21_deterministic_parts_grow_with_the_system:f055f4bb449380e9
+type: graph
+id: phase:SB21_deterministic_parts_grow_with_the_system:f055f4bb449380e9
+context: dependency graph of phase SB21_deterministic_parts_grow_with_the_system
+intent: null
+summary: 19 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829990966
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990966
+lastSeenAt: 1792829990966
+fingerprint: null
+payload:
+  for: SB21_deterministic_parts_grow_with_the_system
+  kind: phase
+  repo: null
+  hash: f055f4bb449380e9
+  nodes:
+    - path: lib/atlas-generate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/templates/system-scaffold.js
+      role: changes
+      exists: true
+      system: loom
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/node-registry.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/lib/domain-nodes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/readme-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/test/system-scaffold.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/generate-atlases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: test-node-index.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/templates/system-scaffold.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/node-index.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: lib/node-index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/templates/system-scaffold.js
+      kind: requires
+    - from: loom/test/system-scaffold.test.js
+      to: loom/templates/system-scaffold.js
+      kind: requires
+    - from: lib/readme-generate.js
+      to: lib/atlas-generate.js
+      kind: requires
+    - from: scripts/generate-atlases.js
+      to: lib/atlas-generate.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-index.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-index.js
+      kind: requires
+    - from: intelligence/lib/domain-nodes.js
+      to: lib/node-index.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-index.js
+      kind: requires
+    - from: test-node-index.js
+      to: lib/node-index.js
+      kind: requires
+  crossings:
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/node-index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB19_atlases_per_component
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB23_a_new_system_slots_in
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB19_atlases_per_component
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB23_a_new_system_slots_in
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB24_loom_builds_a_new_system
+    blockedBy:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB19_atlases_per_component
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB25_atlas_template_in_his_structure
+        files:
+          - lib/atlas-generate.js
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 4 · blocked by SB20_each_system_owns_its_own,
+        SB19_atlases_per_component
+      - 'depends on (2): SB20_each_system_owns_its_own, SB19_atlases_per_component · all upstream 5'
+      - 'needed by (1): SB23_a_new_system_slots_in · all downstream 2'
+      - >-
+        same files as SB25_atlas_template_in_his_structure with no order between them:
+        lib/atlas-generate.js

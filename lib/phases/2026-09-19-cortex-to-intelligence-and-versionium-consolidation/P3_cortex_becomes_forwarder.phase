@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P3_cortex_becomes_forwarder
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P3_cortex_becomes_forwarder
+context: >-
+  pipeline phase P3_cortex_becomes_forwarder of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: P3_cortex_becomes_forwarder (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829978563
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978563
+lastSeenAt: 1792829978563
+fingerprint: null
+payload:
+  id: P3_cortex_becomes_forwarder
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P2_intelligence_gains_routes
+    - D2
+  blocks: []
+  spec: null
+  graph: 76fa1bf1526a963a

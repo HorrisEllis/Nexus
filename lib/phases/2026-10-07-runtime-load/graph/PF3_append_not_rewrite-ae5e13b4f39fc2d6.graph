@@ -1,0 +1,177 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PF3_append_not_rewrite:ae5e13b4f39fc2d6
+type: graph
+id: phase:PF3_append_not_rewrite:ae5e13b4f39fc2d6
+context: dependency graph of phase PF3_append_not_rewrite
+intent: null
+summary: 20 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829996103
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829996103
+lastSeenAt: 1792829996103
+fingerprint: null
+payload:
+  for: PF3_append_not_rewrite
+  kind: phase
+  repo: null
+  hash: ae5e13b4f39fc2d6
+  nodes:
+    - path: cortex/memory/jaa-db.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: guardian/jaa-store.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: tests/modules/test-pf3-append-store.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/test/copilot-cli.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/account-routing.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/test-adversarial-sim.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-bus-subscriptions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-hook-ownership.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-deletes-stick.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-flush-lock.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-jaa-selective-load.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sigma-compaction.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/tiers.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/jaa-store.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: guardian/lib/account-routing.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-adversarial-sim.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-bus-subscriptions.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-hook-ownership.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-deletes-stick.test.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-flush-lock.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-jaa-selective-load.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: tests/modules/test-sigma-compaction.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: clear-glass/test/copilot-cli.test.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+  crossings:
+    - from: architect/service.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

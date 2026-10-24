@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-personal-chat-import-phasemap.spec::PI3b_the_measured_patterns
+type: phase
+id: docs_2026-10-15-personal-chat-import-phasemap.spec::PI3b_the_measured_patterns
+context: pipeline phase PI3b_the_measured_patterns of docs/2026-10-15-personal-chat-import-phasemap.spec
+intent: null
+summary: PI3b_the_measured_patterns (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007882
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007882
+lastSeenAt: 1792830007882
+fingerprint: null
+payload:
+  id: PI3b_the_measured_patterns
+  map: docs/2026-10-15-personal-chat-import-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - PI3_the_intelligence_pass
+  blocks: []
+  spec: null
+  graph: 6edf264fc41eb579

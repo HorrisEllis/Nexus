@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:WK6_enterprise_grade:0d8254a618965546
+type: graph
+id: phase:WK6_enterprise_grade:0d8254a618965546
+context: dependency graph of phase WK6_enterprise_grade
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829993407
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829993407
+lastSeenAt: 1792829993407
+fingerprint: null
+payload:
+  for: WK6_enterprise_grade
+  kind: phase
+  repo: null
+  hash: 0d8254a618965546
+  nodes:
+    - path: idearium/ui/css/void-theme.css
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/workshop.html
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK3_the_agent_drafts_every_block
+    dependents: []
+    upstream:
+      - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK1_the_workshop_is_blocks_from_the_templates
+      - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK3_the_agent_drafts_every_block
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · ready
+      - 'depends on (1): WK3_the_agent_drafts_every_block · all upstream 2'
+      - 'needed by (0): —'

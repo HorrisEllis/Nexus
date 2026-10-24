@@ -1,0 +1,114 @@
+envelope: 1
+uuid: nexus-export-graph-phase:A4:05516e0391cf85cd
+type: graph
+id: phase:A4:05516e0391cf85cd
+context: dependency graph of phase A4
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829982523
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829982523
+lastSeenAt: 1792829982523
+fingerprint: null
+payload:
+  for: A4
+  kind: phase
+  repo: null
+  hash: 05516e0391cf85cd
+  nodes:
+    - path: idearium/spec/idearium.spec
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+  edges:
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-09-27-idearium-atlas-phasemap.spec::A3
+    dependents: []
+    upstream:
+      - docs/2026-09-27-idearium-atlas-phasemap.spec::A1
+      - docs/2026-09-27-idearium-atlas-phasemap.spec::A2
+      - docs/2026-09-27-idearium-atlas-phasemap.spec::A3
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3
+      - 'depends on (1): A3 · all upstream 3'
+      - 'needed by (0): —'

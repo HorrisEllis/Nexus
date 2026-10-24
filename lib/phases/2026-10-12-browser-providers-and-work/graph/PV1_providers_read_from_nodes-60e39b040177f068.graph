@@ -1,0 +1,266 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PV1_providers_read_from_nodes:60e39b040177f068
+type: graph
+id: phase:PV1_providers_read_from_nodes:60e39b040177f068
+context: dependency graph of phase PV1_providers_read_from_nodes
+intent: null
+summary: 31 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830001267
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001267
+lastSeenAt: 1792830001267
+fingerprint: null
+payload:
+  for: PV1_providers_read_from_nodes
+  kind: phase
+  repo: null
+  hash: 60e39b040177f068
+  nodes:
+    - path: guardian/lib/agent-facts.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-routing.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-router.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-capability-profile.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-chat.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: service/guardian-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-facts-hash.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/agent-facts.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/agent-facts.js
+      to: lib/agent-facts-hash.js
+      kind: requires
+    - from: guardian/lib/provider-routing.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: service/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-capability-profile.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-chat.js
+      to: lib/agent-providers.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: service/guardian-service.js
+      to: guardian/server.js
+      fromSystem: service
+      toSystem: guardian
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: null
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV0_claude_code_is_a_guardian_provider
+    dependents:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV0_claude_code_is_a_guardian_provider
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV0_claude_code_is_a_guardian_provider
+    downstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV0_claude_code_is_a_guardian_provider
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV0_claude_code_is_a_guardian_provider
+    unlocks:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV0_claude_code_is_a_guardian_provider
+    conflicts:
+      - with: docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV4_inputs_are_history
+        files:
+          - lib/repo-agent.js
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer — · blocked by PV0_claude_code_is_a_guardian_provider
+      - 'depends on (1): PV0_claude_code_is_a_guardian_provider'
+      - >-
+        needed by (1): PV0_claude_code_is_a_guardian_provider · finishing it unlocks
+        PV0_claude_code_is_a_guardian_provider
+      - 'CYCLE: PV0_claude_code_is_a_guardian_provider → PV1_providers_read_from_nodes'
+      - 'same files as PV4_inputs_are_history with no order between them: lib/repo-agent.js'

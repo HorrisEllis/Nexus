@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-22-brainos-agent-suite-phasemap.spec::AS1_agent_system_tab
+type: phase
+id: docs_2026-09-22-brainos-agent-suite-phasemap.spec::AS1_agent_system_tab
+context: pipeline phase AS1_agent_system_tab of docs/2026-09-22-brainos-agent-suite-phasemap.spec
+intent: null
+summary: AS1_agent_system_tab (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829979376
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829979376
+lastSeenAt: 1792829979376
+fingerprint: null
+payload:
+  id: AS1_agent_system_tab
+  map: docs/2026-09-22-brainos-agent-suite-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4907efefd5944bb4

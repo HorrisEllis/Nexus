@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:W0_map:48e0fd2adc75cbe4
+type: graph
+id: phase:W0_map:48e0fd2adc75cbe4
+context: dependency graph of phase W0_map
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829986647
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829986647
+lastSeenAt: 1792829986647
+fingerprint: null
+payload:
+  for: W0_map
+  kind: phase
+  repo: null
+  hash: 48e0fd2adc75cbe4
+  nodes:
+    - path: docs/2026-09-30-idearium-coding-flow-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/SPEC-REGISTRY.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W1_idearium_never_blocks_on_git
+    upstream: []
+    downstream:
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W1_idearium_never_blocks_on_git
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W2_plan_always_lands
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W3_work_surface
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W4_navigation
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W5_theme_and_css
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W6_release
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W7_next_mapped_2026_09_30
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W1_idearium_never_blocks_on_git
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): W1_idearium_never_blocks_on_git · all downstream 7 · finishing it unlocks
+        W1_idearium_never_blocks_on_git

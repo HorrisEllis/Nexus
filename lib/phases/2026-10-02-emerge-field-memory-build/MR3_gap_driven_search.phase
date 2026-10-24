@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR3_gap_driven_search
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR3_gap_driven_search
+context: pipeline phase MR3_gap_driven_search of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR3_gap_driven_search (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988430
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988430
+lastSeenAt: 1792829988430
+fingerprint: null
+payload:
+  id: MR3_gap_driven_search
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/gap-search.js
+    - emergence/vendor/rfr2/liminal/negative-space.js
+    - emergence/vendor/rfr2/liminal/relational-gaps.js
+  depends_on:
+    - MR1_recall_triad_and_context_table
+  blocks: []
+  spec: null
+  graph: 9b368a799ea724a4

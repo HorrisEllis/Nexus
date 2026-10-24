@@ -1,0 +1,280 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ7_the_context_obligations:31e6486efe8a56e7
+type: graph
+id: phase:RQ7_the_context_obligations:31e6486efe8a56e7
+context: dependency graph of phase RQ7_the_context_obligations
+intent: null
+summary: 31 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830001712
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001712
+lastSeenAt: 1792830001712
+fingerprint: null
+payload:
+  for: RQ7_the_context_obligations
+  kind: phase
+  repo: null
+  hash: 31e6486efe8a56e7
+  nodes:
+    - path: cortex/core/raid/context-gate.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/context-synthesis.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/obligations.js
+      role: changes
+      exists: false
+      system: cortex
+    - path: cortex/registry-components.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/build-context.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/routes/opportunity.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/query/context-atlas.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-stream.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-component-store.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tool-catalog.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/agent-chat-search.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/query-movement.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/query-recall.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/query/query-recall.js
+      kind: requires
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/query/query-movement.js
+      kind: requires
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/query/nexus-map.js
+      kind: requires
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/query/agent-chat-search.js
+      kind: requires
+    - from: cortex/core/raid/context-synthesis.js
+      to: lib/agent-tools/tools/diagnostic/loom-scan.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/agent-tools/tool-catalog.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: tests/modules/test-component-store.test.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: copilot/routes/opportunity.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/context-atlas.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-stream.js
+      to: lib/context-atlas.js
+      kind: requires
+  crossings:
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/context-atlas.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+    dependents:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ8_the_gap_is_a_question
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ22_the_dependency_boundary_with_invariants_that_run
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ27_the_reasoning_half_gets_its_home
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+    downstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ11_spec_and_registry_reconciled
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ12_the_phase_dag
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ22_the_dependency_boundary_with_invariants_that_run
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ23_acceptance_conditions_that_cannot_be_moved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ24_the_gate_transaction
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ25_progress_is_evidence_not_activity
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ26_comparison_and_drift_on_real_signals
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ27_the_reasoning_half_gets_its_home
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ8_the_gap_is_a_question
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+    blockedBy:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+    unlocks:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ8_the_gap_is_a_question
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by RQ6_one_intent_map, RQ1_the_verifier_library
+      - 'depends on (2): RQ6_one_intent_map, RQ1_the_verifier_library · all upstream 3'
+      - >-
+        needed by (4): RQ8_the_gap_is_a_question, RQ9_the_chunked_contract,
+        RQ22_the_dependency_boundary_with_invariants_that_run, RQ27_the_reasoning_half_gets_its_home
+        · all downstream 18 · finishing it unlocks RQ8_the_gap_is_a_question

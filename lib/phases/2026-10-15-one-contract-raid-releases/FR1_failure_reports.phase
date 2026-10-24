@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-one-contract-raid-releases-phasemap.spec::FR1_failure_reports
+type: phase
+id: docs_2026-10-15-one-contract-raid-releases-phasemap.spec::FR1_failure_reports
+context: pipeline phase FR1_failure_reports of docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+intent: null
+summary: FR1_failure_reports (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007480
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007480
+lastSeenAt: 1792830007480
+fingerprint: null
+payload:
+  id: FR1_failure_reports
+  map: docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/contract-failures.js
+    - lib/fault-log.js
+    - cortex/self-heal/failure-mode-forensics.js
+    - lib/reflection.js
+  depends_on:
+    - RD0_raid_runs_the_contract
+  blocks: []
+  spec: null
+  graph: dafc215b29905071

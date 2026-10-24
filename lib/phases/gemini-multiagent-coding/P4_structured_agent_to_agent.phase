@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_gemini-multiagent-coding-phasemap.spec::P4_structured_agent_to_agent
+type: phase
+id: docs_gemini-multiagent-coding-phasemap.spec::P4_structured_agent_to_agent
+context: pipeline phase P4_structured_agent_to_agent of docs/gemini-multiagent-coding-phasemap.spec
+intent: null
+summary: P4_structured_agent_to_agent (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830030957
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830030957
+lastSeenAt: 1792830030957
+fingerprint: null
+payload:
+  id: P4_structured_agent_to_agent
+  map: docs/gemini-multiagent-coding-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P1_per_agent_contracts
+    - P2_tree_parse_recall_injection
+  blocks: []
+  spec: null
+  graph: 8f27af99fec90581

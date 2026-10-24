@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV6_raid_reads_health_everywhere
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV6_raid_reads_health_everywhere
+context: >-
+  pipeline phase PV6_raid_reads_health_everywhere of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: PV6_raid_reads_health_everywhere (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001273
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001273
+lastSeenAt: 1792830001273
+fingerprint: null
+payload:
+  id: PV6_raid_reads_health_everywhere
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/index.js
+    - cortex/core/raid/officiator.js
+    - guardian/server.js
+    - idearium/spec-engine/chunk-dispatch.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 15524e9b64da288d

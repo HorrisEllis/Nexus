@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P21_versionium_causal_field
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P21_versionium_causal_field
+context: >-
+  pipeline phase P21_versionium_causal_field of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P21_versionium_causal_field (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976513
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976513
+lastSeenAt: 1792829976513
+fingerprint: null
+payload:
+  id: P21_versionium_causal_field
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: be3bd82bdc27d4ac

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-routing-registry-genesis-phasemap.spec::RG4_routing_ui
+type: phase
+id: docs_2026-10-01-routing-registry-genesis-phasemap.spec::RG4_routing_ui
+context: pipeline phase RG4_routing_ui of docs/2026-10-01-routing-registry-genesis-phasemap.spec
+intent: null
+summary: RG4_routing_ui (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987568
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987568
+lastSeenAt: 1792829987568
+fingerprint: null
+payload:
+  id: RG4_routing_ui
+  map: docs/2026-10-01-routing-registry-genesis-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/settings.html
+  depends_on:
+    - RG3_dispatch_uses_the_route
+  blocks: []
+  spec: null
+  graph: 0480ecf02ae62d8c

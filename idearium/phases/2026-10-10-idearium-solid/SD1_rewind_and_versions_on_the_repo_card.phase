@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD1_rewind_and_versions_on_the_repo_card
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD1_rewind_and_versions_on_the_repo_card
+context: >-
+  pipeline phase SD1_rewind_and_versions_on_the_repo_card of
+  docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD1_rewind_and_versions_on_the_repo_card (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999642
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999642
+lastSeenAt: 1792829999642
+fingerprint: null
+payload:
+  id: SD1_rewind_and_versions_on_the_repo_card
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - idearium/ui/js/repo-drawer-views.js
+    - idearium/ui/js/repo-tasks.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2652c3fb731ca33b

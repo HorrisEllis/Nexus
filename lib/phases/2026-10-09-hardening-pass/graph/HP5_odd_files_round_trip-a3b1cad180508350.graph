@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP5_odd_files_round_trip:a3b1cad180508350
+type: graph
+id: phase:HP5_odd_files_round_trip:a3b1cad180508350
+context: dependency graph of phase HP5_odd_files_round_trip
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829997241
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997241
+lastSeenAt: 1792829997241
+fingerprint: null
+payload:
+  for: HP5_odd_files_round_trip
+  kind: phase
+  repo: null
+  hash: a3b1cad180508350
+  nodes:
+    - path: lib/spec-document.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-spec-document.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/api/index.js
+      to: lib/spec-document.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: lib/spec-document.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

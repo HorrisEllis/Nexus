@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303347
+exported_at: 1792830021764
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303347
-lastSeenAt: 1792456303347
+firstSeenAt: 1792830021764
+lastSeenAt: 1792830021764
 fingerprint: null
 payload:
   for: IV2_invariant_miner
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
+    dagHash: 2f8ddd0afd383c4f
     layer: 5
     deps:
       - docs/2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
@@ -56,7 +56,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 7583ffef0c495b95 · layer 5 · blocked by IV1_invariant_kinds, TV1_traversal_primitive
+      - DAG 2f8ddd0afd383c4f · layer 5 · blocked by IV1_invariant_kinds, TV1_traversal_primitive
       - 'depends on (2): IV1_invariant_kinds, TV1_traversal_primitive · all upstream 9'
       - >-
         needed by (2): CY2_invariants_are_crystals, TV2_invariant_guided_traversal · all downstream

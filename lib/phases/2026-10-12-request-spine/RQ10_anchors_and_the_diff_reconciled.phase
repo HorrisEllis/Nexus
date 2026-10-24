@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+context: pipeline phase RQ10_anchors_and_the_diff_reconciled of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ10_anchors_and_the_diff_reconciled (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001718
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001718
+lastSeenAt: 1792830001718
+fingerprint: null
+payload:
+  id: RQ10_anchors_and_the_diff_reconciled
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chunk-verify.js (the anchor and scope checks)
+    - lib/repo-inject.js (`before`)
+    - lib/code-edit.js
+    - versionium (snapshot hash)
+  depends_on:
+    - RQ9_the_chunked_contract
+  blocks: []
+  spec: null
+  graph: 7bbed5785d277733

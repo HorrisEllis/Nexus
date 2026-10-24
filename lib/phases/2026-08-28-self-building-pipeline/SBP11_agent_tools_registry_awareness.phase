@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP11_agent_tools_registry_awareness
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP11_agent_tools_registry_awareness
+context: >-
+  pipeline phase SBP11_agent_tools_registry_awareness of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP11_agent_tools_registry_awareness (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829972554
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972554
+lastSeenAt: 1792829972554
+fingerprint: null
+payload:
+  id: SBP11_agent_tools_registry_awareness
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - SBP9_hat_forge_real_hats
+  blocks: []
+  spec: null
+  graph: 10a463896c66d6e4

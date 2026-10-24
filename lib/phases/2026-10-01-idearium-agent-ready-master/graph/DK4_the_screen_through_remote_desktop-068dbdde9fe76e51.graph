@@ -1,0 +1,82 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DK4_the_screen_through_remote_desktop:068dbdde9fe76e51
+type: graph
+id: phase:DK4_the_screen_through_remote_desktop:068dbdde9fe76e51
+context: dependency graph of phase DK4_the_screen_through_remote_desktop
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987071
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987071
+lastSeenAt: 1792829987071
+fingerprint: null
+payload:
+  for: DK4_the_screen_through_remote_desktop
+  kind: phase
+  repo: null
+  hash: 068dbdde9fe76e51
+  nodes:
+    - path: cos/testenv/provision.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/ui/desktop.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/testenv/provision.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DK2_desktop_setup_popup
+    dependents: []
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DK1_desktop_image_and_login
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DK2_desktop_setup_popup
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DK3_vm_engines
+        files:
+          - cos/testenv/provision.js
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · ready
+      - 'depends on (1): DK2_desktop_setup_popup · all upstream 2'
+      - 'needed by (0): —'
+      - 'same files as DK3_vm_engines with no order between them: cos/testenv/provision.js'

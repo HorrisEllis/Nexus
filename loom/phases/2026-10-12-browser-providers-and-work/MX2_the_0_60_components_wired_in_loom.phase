@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
+context: >-
+  pipeline phase MX2_the_0_60_components_wired_in_loom of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: MX2_the_0_60_components_wired_in_loom (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001286
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001286
+lastSeenAt: 1792830001286
+fingerprint: null
+payload:
+  id: MX2_the_0_60_components_wired_in_loom
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/maps/component-intake-map.js
+    - loom/maps/accounts-authority-map.js
+    - loom/maps/observability-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 119b6279fd663960

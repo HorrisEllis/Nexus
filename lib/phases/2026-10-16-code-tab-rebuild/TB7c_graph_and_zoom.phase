@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB7c_graph_and_zoom
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB7c_graph_and_zoom
+context: pipeline phase TB7c_graph_and_zoom of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB7c_graph_and_zoom (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830010174
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010174
+lastSeenAt: 1792830010174
+fingerprint: null
+payload:
+  id: TB7c_graph_and_zoom
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TB5_tab_shell
+    - TB7a_edges_recorded
+  blocks: []
+  spec: null
+  graph: 78e30e5a8955bb39

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::V9_precommit_gate_for_raid_contracts
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::V9_precommit_gate_for_raid_contracts
+context: >-
+  pipeline phase V9_precommit_gate_for_raid_contracts of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: V9_precommit_gate_for_raid_contracts (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974319
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974319
+lastSeenAt: 1792829974319
+fingerprint: null
+payload:
+  id: V9_precommit_gate_for_raid_contracts
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - B1_full_build_contract_schema
+  blocks: []
+  spec: null
+  graph: 088f2ec27fdd977e

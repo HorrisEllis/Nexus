@@ -9,11 +9,11 @@ intent: null
 summary: GW0_gate_census (foundation) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792456416773
+exported_at: 1792830022175
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416773
-lastSeenAt: 1792456416773
+firstSeenAt: 1792830022175
+lastSeenAt: 1792830022175
 fingerprint: null
 payload:
   id: GW0_gate_census

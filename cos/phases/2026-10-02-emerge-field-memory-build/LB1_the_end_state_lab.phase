@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+context: pipeline phase LB1_the_end_state_lab of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: LB1_the_end_state_lab (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988492
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988492
+lastSeenAt: 1792829988492
+fingerprint: null
+payload:
+  id: LB1_the_end_state_lab
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/playground/llm-lab.js
+    - cos/playground/sandbox.js
+    - idearium/repo/proof-run.js
+    - copilot/capability-extend.js
+  depends_on:
+    - PR1_proof_run_the_delivery_checker
+    - SH1_shadow_space
+    - CB1_cfr_build_logic
+  blocks: []
+  spec: null
+  graph: e780bee785bbcbb0

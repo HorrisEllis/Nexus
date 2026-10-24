@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-canvas-compartments-phasemap.spec::CN4_workshop_templates
+type: phase
+id: docs_2026-10-16-canvas-compartments-phasemap.spec::CN4_workshop_templates
+context: pipeline phase CN4_workshop_templates of docs/2026-10-16-canvas-compartments-phasemap.spec
+intent: null
+summary: CN4_workshop_templates (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830009791
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830009791
+lastSeenAt: 1792830009791
+fingerprint: null
+payload:
+  id: CN4_workshop_templates
+  map: docs/2026-10-16-canvas-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.104 (CC-05)
+  files:
+    - idearium/spec-engine/templates/eravos-canvas.spec (new)
+    - idearium/spec-engine/templates/eravos-tool.spec (new)
+    - idearium/spec-engine/templates.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ca880b9d3e8fd1e4

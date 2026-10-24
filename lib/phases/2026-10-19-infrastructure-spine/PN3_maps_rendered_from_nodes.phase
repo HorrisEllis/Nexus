@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::PN3_maps_rendered_from_nodes
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::PN3_maps_rendered_from_nodes
+context: pipeline phase PN3_maps_rendered_from_nodes of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: PN3_maps_rendered_from_nodes (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830020062
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020062
+lastSeenAt: 1792830020062
+fingerprint: null
+payload:
+  id: PN3_maps_rendered_from_nodes
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - scripts/render-phasemaps.js
+    - idearium/spec-engine/
+  depends_on:
+    - PN2_dual_read
+  blocks: []
+  spec: null
+  graph: e5c77a3e8f639f3f

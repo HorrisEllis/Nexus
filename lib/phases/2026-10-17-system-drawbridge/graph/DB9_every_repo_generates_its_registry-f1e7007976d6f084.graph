@@ -1,0 +1,85 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB9_every_repo_generates_its_registry:f1e7007976d6f084
+type: graph
+id: phase:DB9_every_repo_generates_its_registry:f1e7007976d6f084
+context: dependency graph of phase DB9_every_repo_generates_its_registry
+intent: null
+summary: 6 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830016885
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016885
+lastSeenAt: 1792830016885
+fingerprint: null
+payload:
+  for: DB9_every_repo_generates_its_registry
+  kind: phase
+  repo: null
+  hash: f1e7007976d6f084
+  nodes:
+    - path: lib/drawbridge-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/capability-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/drawbridge-registry.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/drawbridge-registry.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: lib/drawbridge-registry.js
+      kind: requires
+  crossings:
+    - from: lib/drawbridge-registry.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

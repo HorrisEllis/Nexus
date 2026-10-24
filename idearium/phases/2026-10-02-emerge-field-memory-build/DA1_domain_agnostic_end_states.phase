@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::DA1_domain_agnostic_end_states
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::DA1_domain_agnostic_end_states
+context: >-
+  pipeline phase DA1_domain_agnostic_end_states of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: DA1_domain_agnostic_end_states (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988500
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988500
+lastSeenAt: 1792829988500
+fingerprint: null
+payload:
+  id: DA1_domain_agnostic_end_states
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/proof-run.js
+  depends_on:
+    - PR1_proof_run_the_delivery_checker
+  blocks: []
+  spec: null
+  graph: 6b50e373c633cffb

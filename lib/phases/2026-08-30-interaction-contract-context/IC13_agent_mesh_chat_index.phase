@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC13_agent_mesh_chat_index
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC13_agent_mesh_chat_index
+context: >-
+  pipeline phase IC13_agent_mesh_chat_index of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC13_agent_mesh_chat_index (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829972964
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972964
+lastSeenAt: 1792829972964
+fingerprint: null
+payload:
+  id: IC13_agent_mesh_chat_index
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - IC11_agent_truth_fragmentation
+  blocks: []
+  spec: null
+  graph: acae83a88cfed8cd

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS5_the_template_picker
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS5_the_template_picker
+context: pipeline phase RS5_the_template_picker of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS5_the_template_picker (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829993789
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829993789
+lastSeenAt: 1792829993789
+fingerprint: null
+payload:
+  id: RS5_the_template_picker
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/workshop.html
+    - idearium/ui/js/template-picker.js
+  depends_on:
+    - RS4_the_pipeline_on_warp2
+  blocks: []
+  spec: null
+  graph: 2047af4e58c842c4

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-nexus-git-sync-phasemap.spec::GS5_release_alignment
+type: phase
+id: docs_2026-10-16-nexus-git-sync-phasemap.spec::GS5_release_alignment
+context: pipeline phase GS5_release_alignment of docs/2026-10-16-nexus-git-sync-phasemap.spec
+intent: null
+summary: GS5_release_alignment (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830012972
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830012972
+lastSeenAt: 1792830012972
+fingerprint: null
+payload:
+  id: GS5_release_alignment
+  map: docs/2026-10-16-nexus-git-sync-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9cea81dfaa362267

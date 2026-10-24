@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+context: pipeline phase CV2_untangle_with_rf0 of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: CV2_untangle_with_rf0 (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830014479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830014479
+lastSeenAt: 1792830014479
+fingerprint: null
+payload:
+  id: CV2_untangle_with_rf0
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: null
+  status: '"PARTLY BUILT 0.60.113 — CV2a and CV2b built; CV2c (the edits) open"'
+  files: []
+  depends_on:
+    - CV1_carve_backend_route_command_ui
+  blocks: []
+  spec: null
+  graph: 12a1eb1568c475ca

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW25_the_systems_at_the_gate_moments
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW25_the_systems_at_the_gate_moments
+context: >-
+  pipeline phase GW25_the_systems_at_the_gate_moments of
+  docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW25_the_systems_at_the_gate_moments (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830006658
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006658
+lastSeenAt: 1792830006658
+fingerprint: null
+payload:
+  id: GW25_the_systems_at_the_gate_moments
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - GW24_the_gate_holds_the_agent_gets_a_projection
+    - GW6_the_intelligence_system_on_every_gate
+  blocks: []
+  spec: null
+  graph: 1cbbebed615a505e

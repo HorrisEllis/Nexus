@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+type: phase
+id: docs_2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+context: pipeline phase DS7_tools_are_mods of docs/2026-10-10-design-surface-phasemap.spec
+intent: null
+summary: DS7_tools_are_mods (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829998870
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998870
+lastSeenAt: 1792829998870
+fingerprint: null
+payload:
+  id: DS7_tools_are_mods
+  map: docs/2026-10-10-design-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - eravos/ui/runtime/mod-factory.js
+    - eravos/ui/runtime/wire-system.js
+    - eravos/ui/mods/photo-editor
+  depends_on:
+    - DS6_one_module_contract_nested
+  blocks: []
+  spec: null
+  graph: 95b991d2ba973682

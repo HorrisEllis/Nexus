@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:D1_canvas_authority:d0dc896558286d1e
+type: graph
+id: phase:D1_canvas_authority:d0dc896558286d1e
+context: dependency graph of phase D1_canvas_authority
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829978155
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978155
+lastSeenAt: 1792829978155
+fingerprint: null
+payload:
+  for: D1_canvas_authority
+  kind: phase
+  repo: null
+  hash: d0dc896558286d1e
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

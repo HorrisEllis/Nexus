@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303343
+exported_at: 1792830021762
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303343
-lastSeenAt: 1792456303343
+firstSeenAt: 1792830021762
+lastSeenAt: 1792830021762
 fingerprint: null
 payload:
   for: CY2_invariants_are_crystals
@@ -53,7 +53,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
+    dagHash: 2f8ddd0afd383c4f
     layer: 8
     deps:
       - docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
@@ -92,7 +92,7 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 7583ffef0c495b95 · layer 8 · ON THE CRITICAL PATH · blocked by CY0_one_crystal_schema,
+        DAG 2f8ddd0afd383c4f · layer 8 · ON THE CRITICAL PATH · blocked by CY0_one_crystal_schema,
         IV2_invariant_miner, CY1_lifecycle_and_injection
       - >-
         depends on (3): CY0_one_crystal_schema, IV2_invariant_miner, CY1_lifecycle_and_injection ·

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-runtime-load-phasemap.spec::PF1_the_stall
+type: phase
+id: docs_2026-10-07-runtime-load-phasemap.spec::PF1_the_stall
+context: pipeline phase PF1_the_stall of docs/2026-10-07-runtime-load-phasemap.spec
+intent: null
+summary: PF1_the_stall (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829996101
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829996101
+lastSeenAt: 1792829996101
+fingerprint: null
+payload:
+  id: PF1_the_stall
+  map: docs/2026-10-07-runtime-load-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7057301b9979c4f4

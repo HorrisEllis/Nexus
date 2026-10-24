@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CV3_file_rewind
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CV3_file_rewind
+context: pipeline phase CV3_file_rewind of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CV3_file_rewind (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005440
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005440
+lastSeenAt: 1792830005440
+fingerprint: null
+payload:
+  id: CV3_file_rewind
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    BUILT 0.60.81 run rewind (CX-07), 0.60.82 UI (MG-14); a file restores from the Manage timeline
+    (MG-12)
+  files:
+    - idearium/ui/js/file-versions.js
+    - idearium/api/index.js
+    - versionium/lib/files.js
+    - lib/run-state.js
+  depends_on:
+    - CV2_a_version_per_diff
+    - CE1_the_run_state
+  blocks: []
+  spec: null
+  graph: b559809f1fb359df

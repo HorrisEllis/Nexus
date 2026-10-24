@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC12_universal_gap_and_symmetry_detection
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC12_universal_gap_and_symmetry_detection
+context: >-
+  pipeline phase IC12_universal_gap_and_symmetry_detection of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC12_universal_gap_and_symmetry_detection (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829972963
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972963
+lastSeenAt: 1792829972963
+fingerprint: null
+payload:
+  id: IC12_universal_gap_and_symmetry_detection
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - RR4_governed_handshake_on_handoff
+    - IC5_full_input_queue_output_qc_lifecycle
+  blocks: []
+  spec: null
+  graph: 4c68e3f3c0900e7c

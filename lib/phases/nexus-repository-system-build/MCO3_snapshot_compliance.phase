@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repository-system-build-phasemap.spec::MCO3_snapshot_compliance
+type: phase
+id: docs_nexus-repository-system-build-phasemap.spec::MCO3_snapshot_compliance
+context: pipeline phase MCO3_snapshot_compliance of docs/nexus-repository-system-build-phasemap.spec
+intent: null
+summary: MCO3_snapshot_compliance (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830034110
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830034110
+lastSeenAt: 1792830034110
+fingerprint: null
+payload:
+  id: MCO3_snapshot_compliance
+  map: docs/nexus-repository-system-build-phasemap.spec
+  repo: null
+  layer: null
+  status: '>'
+  files: []
+  depends_on:
+    - MCO1_graph_layer
+    - MCO2_verification_deepening
+  blocks: []
+  spec: null
+  graph: 00fc7f80a15780aa

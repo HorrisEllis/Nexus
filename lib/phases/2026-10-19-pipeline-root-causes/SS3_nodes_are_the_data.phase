@@ -7,11 +7,11 @@ intent: null
 summary: SS3_nodes_are_the_data (library) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792653394705
+exported_at: 1792830020475
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394705
-lastSeenAt: 1792653394705
+firstSeenAt: 1792830020475
+lastSeenAt: 1792830020475
 fingerprint: null
 payload:
   id: SS3_nodes_are_the_data

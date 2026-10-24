@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF8_nexus_spec_is_stale
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF8_nexus_spec_is_stale
+context: >-
+  pipeline phase RF8_nexus_spec_is_stale of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: RF8_nexus_spec_is_stale (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975190
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975190
+lastSeenAt: 1792829975190
+fingerprint: null
+payload:
+  id: RF8_nexus_spec_is_stale
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d9074fc27532498a

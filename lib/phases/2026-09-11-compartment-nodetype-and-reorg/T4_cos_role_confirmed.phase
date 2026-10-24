@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T4_cos_role_confirmed
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T4_cos_role_confirmed
+context: >-
+  pipeline phase T4_cos_role_confirmed of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: T4_cos_role_confirmed (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976050
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976050
+lastSeenAt: 1792829976050
+fingerprint: null
+payload:
+  id: T4_cos_role_confirmed
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - T1_extend_system_scaffold
+  blocks: []
+  spec: null
+  graph: 73888c5f227ef76d

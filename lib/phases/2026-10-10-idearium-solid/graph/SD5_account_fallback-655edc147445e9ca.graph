@@ -1,0 +1,180 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SD5_account_fallback:655edc147445e9ca
+type: graph
+id: phase:SD5_account_fallback:655edc147445e9ca
+context: dependency graph of phase SD5_account_fallback
+intent: null
+summary: 21 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829999648
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999648
+lastSeenAt: 1792829999648
+fingerprint: null
+payload:
+  for: SD5_account_fallback
+  kind: phase
+  repo: null
+  hash: 655edc147445e9ca
+  nodes:
+    - path: guardian/lib/dispatch-ladder.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/economy-guard.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/account-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/economy/gate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-router.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/economy/store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/adapters/warp-cascade.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-guardian-dispatch-ladder.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-wake.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-mesh-chat-reload.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/economy/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/economy-guard.js
+      to: lib/economy/store.js
+      kind: requires
+    - from: guardian/lib/economy-guard.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: lib/account-registry.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: guardian/lib/dispatch-ladder.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/economy/store.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/account-registry.js
+      kind: requires
+    - from: lib/agent-router.js
+      to: lib/account-registry.js
+      kind: requires
+    - from: tests/modules/test-guardian-dispatch-ladder.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: tests/modules/test-guardian-wake.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: tests/modules/test-mesh-chat-reload.test.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+  crossings:
+    - from: lib/account-registry.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-10-idearium-solid-phasemap.spec::SD4_agents_live_in_guardian
+    dependents: []
+    upstream:
+      - docs/2026-10-10-idearium-solid-phasemap.spec::SD4_agents_live_in_guardian
+    downstream: []
+    blockedBy:
+      - docs/2026-10-10-idearium-solid-phasemap.spec::SD4_agents_live_in_guardian
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by SD4_agents_live_in_guardian
+      - 'depends on (1): SD4_agents_live_in_guardian'
+      - 'needed by (0): —'

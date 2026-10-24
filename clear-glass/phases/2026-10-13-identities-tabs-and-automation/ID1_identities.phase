@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+context: pipeline phase ID1_identities of docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: ID1_identities (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002539
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002539
+lastSeenAt: 1792830002539
+fingerprint: null
+payload:
+  id: ID1_identities
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/identity/store.js
+    - clear-glass/src/options/store.js
+    - guardian/lib/account-routing.js
+  depends_on:
+    - ID0_signed_in_where_he_signs_in
+  blocks: []
+  spec: null
+  graph: b977f6b54637a686

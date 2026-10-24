@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gating-census-phasemap.spec::L0_the_record_tells_the_truth
+type: phase
+id: docs_2026-10-18-gating-census-phasemap.spec::L0_the_record_tells_the_truth
+context: pipeline phase L0_the_record_tells_the_truth of docs/2026-10-18-gating-census-phasemap.spec
+intent: null
+summary: L0_the_record_tells_the_truth (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830018476
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830018476
+lastSeenAt: 1792830018476
+fingerprint: null
+payload:
+  id: L0_the_record_tells_the_truth
+  map: docs/2026-10-18-gating-census-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7adb29f2991be2a8

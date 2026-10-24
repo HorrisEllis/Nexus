@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792653394696
+exported_at: 1792830020471
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394696
-lastSeenAt: 1792653394696
+firstSeenAt: 1792830020471
+lastSeenAt: 1792830020471
 fingerprint: null
 payload:
   for: VF1_verify_first
@@ -225,7 +225,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 4470939bf8678599
+    dagHash: 2f8ddd0afd383c4f
     layer: 1
     deps:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
@@ -257,7 +257,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 4470939bf8678599 · layer 1
+      - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): RC4_agent_file_names_guarded'
       - >-
         needed by (6): VF2_one_response_bundle, VF3_mutation_check, VF5_verdict_cache,

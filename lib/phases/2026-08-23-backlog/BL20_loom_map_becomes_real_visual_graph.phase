@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL20_loom_map_becomes_real_visual_graph
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL20_loom_map_becomes_real_visual_graph
+context: pipeline phase BL20_loom_map_becomes_real_visual_graph of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL20_loom_map_becomes_real_visual_graph (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971262
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971262
+lastSeenAt: 1792829971262
+fingerprint: null
+payload:
+  id: BL20_loom_map_becomes_real_visual_graph
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 762077890aeb5d5d

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-personal-chat-import-phasemap.spec::PI7_the_links
+type: phase
+id: docs_2026-10-15-personal-chat-import-phasemap.spec::PI7_the_links
+context: pipeline phase PI7_the_links of docs/2026-10-15-personal-chat-import-phasemap.spec
+intent: null
+summary: PI7_the_links (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007884
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007884
+lastSeenAt: 1792830007884
+fingerprint: null
+payload:
+  id: PI7_the_links
+  map: docs/2026-10-15-personal-chat-import-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - PI5_the_crawler
+    - PI3b_the_measured_patterns
+  blocks: []
+  spec: null
+  graph: 8e6fdc9331be6c5f

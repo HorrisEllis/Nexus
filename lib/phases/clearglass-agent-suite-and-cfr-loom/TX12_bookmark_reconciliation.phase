@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX12_bookmark_reconciliation
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX12_bookmark_reconciliation
+context: >-
+  pipeline phase TX12_bookmark_reconciliation of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX12_bookmark_reconciliation (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830028217
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830028217
+lastSeenAt: 1792830028217
+fingerprint: null
+payload:
+  id: TX12_bookmark_reconciliation
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 076b925839d9fd7c

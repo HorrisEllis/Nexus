@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N0_census
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N0_census
+context: pipeline phase N0_census of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N0_census (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985418
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985418
+lastSeenAt: 1792829985418
+fingerprint: null
+payload:
+  id: N0_census
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/census.js
+    - docs/nexstore-type-catalogue.yaml (generated, then reviewed)
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9b89ddab0ca4dd15

@@ -7,11 +7,11 @@ intent: null
 summary: 22 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792502099143
+exported_at: 1792830023781
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502099143
-lastSeenAt: 1792502099143
+firstSeenAt: 1792830023781
+lastSeenAt: 1792830023781
 fingerprint: null
 payload:
   for: BS13_plugin_settings
@@ -159,13 +159,14 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 2527b07c5dc17a5a
+    dagHash: 2f8ddd0afd383c4f
     layer: 2
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
     dependents:
       - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
       - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+      - docs/2026-10-21-passwords-phasemap.spec::PW4_surface
     upstream:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
       - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
@@ -174,16 +175,18 @@ payload:
       - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
       - docs/2026-10-21-adblock-phasemap.spec::AB5_import
       - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+      - docs/2026-10-21-passwords-phasemap.spec::PW4_surface
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF8_host_import
     blockedBy: []
     unlocks:
       - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
       - docs/2026-10-21-browser-shell-phasemap.spec::BS16_import_fields
+      - docs/2026-10-21-passwords-phasemap.spec::PW4_surface
     conflicts: []
     dangling: []
     lines:
-      - DAG 2527b07c5dc17a5a · layer 2
+      - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): BS4_extensions · all upstream 2'
       - >-
-        needed by (2): AB3_wiring, BS16_import_fields · all downstream 5 · finishing it unlocks
-        AB3_wiring, BS16_import_fields
+        needed by (3): AB3_wiring, BS16_import_fields, PW4_surface · all downstream 6 · finishing it
+        unlocks AB3_wiring, BS16_import_fields, PW4_surface

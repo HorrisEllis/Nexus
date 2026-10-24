@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+context: pipeline phase RS3_the_spec_document of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS3_the_spec_document (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829993787
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829993787
+lastSeenAt: 1792829993787
+fingerprint: null
+payload:
+  id: RS3_the_spec_document
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/spec-document.js
+    - emerge/emerge-kernel.js
+    - idearium/spec-engine/templates/genesis.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6a4e782e7d9fcab1

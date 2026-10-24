@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::CLI1_headless_dispatch_via_mesh
+type: phase
+id: docs_2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::CLI1_headless_dispatch_via_mesh
+context: >-
+  pipeline phase CLI1_headless_dispatch_via_mesh of
+  docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+intent: null
+summary: CLI1_headless_dispatch_via_mesh (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829979760
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829979760
+lastSeenAt: 1792829979760
+fingerprint: null
+payload:
+  id: CLI1_headless_dispatch_via_mesh
+  map: docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 361e4ee667b1a789

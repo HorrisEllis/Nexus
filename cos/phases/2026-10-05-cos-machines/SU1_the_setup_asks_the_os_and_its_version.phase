@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cos-machines-phasemap.spec::SU1_the_setup_asks_the_os_and_its_version
+type: phase
+id: docs_2026-10-05-cos-machines-phasemap.spec::SU1_the_setup_asks_the_os_and_its_version
+context: >-
+  pipeline phase SU1_the_setup_asks_the_os_and_its_version of
+  docs/2026-10-05-cos-machines-phasemap.spec
+intent: null
+summary: SU1_the_setup_asks_the_os_and_its_version (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829992263
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829992263
+lastSeenAt: 1792829992263
+fingerprint: null
+payload:
+  id: SU1_the_setup_asks_the_os_and_its_version
+  map: docs/2026-10-05-cos-machines-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/desktop-setup.js
+    - cos/testenv/provision.js
+    - cos/testenv/images.js
+  depends_on:
+    - OS2_images_downloaded_and_kept_current
+  blocks: []
+  spec: null
+  graph: 9797666d275643e9

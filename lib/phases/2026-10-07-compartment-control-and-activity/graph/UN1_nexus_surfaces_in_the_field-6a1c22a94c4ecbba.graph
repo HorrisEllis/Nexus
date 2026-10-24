@@ -1,0 +1,118 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UN1_nexus_surfaces_in_the_field:6a1c22a94c4ecbba
+type: graph
+id: phase:UN1_nexus_surfaces_in_the_field:6a1c22a94c4ecbba
+context: dependency graph of phase UN1_nexus_surfaces_in_the_field
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829994587
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829994587
+lastSeenAt: 1792829994587
+fingerprint: null
+payload:
+  for: UN1_nexus_surfaces_in_the_field
+  kind: phase
+  repo: null
+  hash: 6a1c22a94c4ecbba
+  nodes:
+    - path: clear-glass/src/page/field.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/agent-tools/tools/clear-glass/browser.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ui/tv-shell/spotlight/spotlight.js
+      role: changes
+      exists: true
+      system: ui
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/clear-glass/learned.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/opportunity/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/clear-glass-agent-surface.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/agent-tools/naming.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cg-learning.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/tools/clear-glass/browser.js
+      to: lib/agent-tools/naming.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/browser.js
+      to: lib/cg-learning.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/clear-glass/browser.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/learned.js
+      to: lib/agent-tools/tools/clear-glass/browser.js
+      kind: requires
+    - from: lib/opportunity/index.js
+      to: lib/agent-tools/tools/clear-glass/browser.js
+      kind: requires
+    - from: tests/modules/clear-glass-agent-surface.test.js
+      to: lib/agent-tools/tools/clear-glass/browser.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CM2_every_command_for_every_agent
+    dependents:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::SP1_one_spotlight
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DC1_a_click_that_did_nothing
+    upstream:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CM2_every_command_for_every_agent
+    downstream:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DC1_a_click_that_did_nothing
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DX1_diagnose_it
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::SP1_one_spotlight
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::SP1_one_spotlight
+      - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DC1_a_click_that_did_nothing
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · ready
+      - 'depends on (1): CM2_every_command_for_every_agent'
+      - >-
+        needed by (2): SP1_one_spotlight, DC1_a_click_that_did_nothing · all downstream 3 ·
+        finishing it unlocks SP1_one_spotlight, DC1_a_click_that_did_nothing

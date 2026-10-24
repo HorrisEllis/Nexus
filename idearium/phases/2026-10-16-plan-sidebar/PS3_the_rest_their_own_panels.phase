@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-plan-sidebar-phasemap.spec::PS3_the_rest_their_own_panels
+type: phase
+id: docs_2026-10-16-plan-sidebar-phasemap.spec::PS3_the_rest_their_own_panels
+context: pipeline phase PS3_the_rest_their_own_panels of docs/2026-10-16-plan-sidebar-phasemap.spec
+intent: null
+summary: PS3_the_rest_their_own_panels (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830013342
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830013342
+lastSeenAt: 1792830013342
+fingerprint: null
+payload:
+  id: PS3_the_rest_their_own_panels
+  map: docs/2026-10-16-plan-sidebar-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.107
+  files:
+    - idearium/ui/js/code-tab-panels.js
+    - idearium/ui/js/plan-panel.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 93b5117548ecff11

@@ -1,0 +1,276 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CON8_nexus_server_hook:f465dcf260e72cab
+type: graph
+id: phase:CON8_nexus_server_hook:f465dcf260e72cab
+context: dependency graph of phase CON8_nexus_server_hook
+intent: null
+summary: 30 node(s), 7 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830010563
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010563
+lastSeenAt: 1792830010563
+fingerprint: null
+payload:
+  for: CON8_nexus_server_hook
+  kind: phase
+  repo: null
+  hash: f465dcf260e72cab
+  nodes:
+    - path: copilot/lib/grammar-router.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/lib/nexus-awareness.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/nexus-cli-interface.js
+      role: changes
+      exists: true
+      system: lib
+    - path: nexus/autopilot.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: ui/tv-shell/menu.js
+      role: changes
+      exists: true
+      system: ui
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/identity/copilot-identity.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-help.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-alk-lattice-live.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autopilot-boot-gates.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autopilot-idle.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-boot-phases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-spawn-guard.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-container-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-graph-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-ledger-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/autopilot-intelligence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/bus-subscriptions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/error-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-sse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Event.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Stream.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/StreamLog.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: nexus/autopilot.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/ledger-fanin/boot.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/ledger-sse.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/error-log.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/autopilot-intelligence.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/Stream.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/StreamLog.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/Axiom.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/Event.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/bus-subscriptions.js
+      kind: requires
+    - from: tests/modules/test-alk-lattice-live.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-autopilot-boot-gates.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-autopilot-idle.test.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-boot-phases.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-spawn-guard.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-container-api.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-graph-api.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-ledger-api.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/nexus-awareness.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-help.js
+      to: copilot/lib/nexus-awareness.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/copilot-identity.js
+      to: copilot/lib/self-model.js
+      kind: requires
+  crossings:
+    - from: nexus/autopilot.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: nexus
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/Stream.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/StreamLog.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/Axiom.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/Event.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/query/nexus-help.js
+      to: copilot/lib/nexus-awareness.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/copilot-identity.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
+    dependents: []
+    upstream:
+      - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
+    downstream: []
+    blockedBy:
+      - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by CON1_one_door_client
+      - 'depends on (1): CON1_one_door_client'
+      - 'needed by (0): —'

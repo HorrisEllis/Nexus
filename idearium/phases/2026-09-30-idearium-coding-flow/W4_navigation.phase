@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-30-idearium-coding-flow-phasemap.spec::W4_navigation
+type: phase
+id: docs_2026-09-30-idearium-coding-flow-phasemap.spec::W4_navigation
+context: pipeline phase W4_navigation of docs/2026-09-30-idearium-coding-flow-phasemap.spec
+intent: null
+summary: W4_navigation (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829986651
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829986651
+lastSeenAt: 1792829986651
+fingerprint: null
+payload:
+  id: W4_navigation
+  map: docs/2026-09-30-idearium-coding-flow-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/index.html
+    - idearium/ui/js/app.js
+  depends_on:
+    - W3_work_surface
+  blocks: []
+  spec: null
+  graph: 5dd9ebc74f199860

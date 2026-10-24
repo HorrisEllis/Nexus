@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::PF0_profiles_linked_to_hats
+type: phase
+id: docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::PF0_profiles_linked_to_hats
+context: >-
+  pipeline phase PF0_profiles_linked_to_hats of
+  docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+intent: null
+summary: PF0_profiles_linked_to_hats (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002963
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002963
+lastSeenAt: 1792830002963
+fingerprint: null
+payload:
+  id: PF0_profiles_linked_to_hats
+  map: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1617b623eba97216

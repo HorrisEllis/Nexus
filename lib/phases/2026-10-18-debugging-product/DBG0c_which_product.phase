@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-debugging-product-phasemap.spec::DBG0c_which_product
+type: phase
+id: docs_2026-10-18-debugging-product-phasemap.spec::DBG0c_which_product
+context: pipeline phase DBG0c_which_product of docs/2026-10-18-debugging-product-phasemap.spec
+intent: null
+summary: DBG0c_which_product (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830017712
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830017712
+lastSeenAt: 1792830017712
+fingerprint: null
+payload:
+  id: DBG0c_which_product
+  map: docs/2026-10-18-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN (his — direction, what the product is for)
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5660fd2408793875

@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:E1:8b75f1c7cf514a23
+type: graph
+id: phase:E1:8b75f1c7cf514a23
+context: dependency graph of phase E1
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829980539
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980539
+lastSeenAt: 1792829980539
+fingerprint: null
+payload:
+  for: E1
+  kind: phase
+  repo: null
+  hash: 8b75f1c7cf514a23
+  nodes:
+    - path: eravos/ui/catalog/catalog-ui.js
+      role: changes
+      exists: false
+      system: null
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: ui/eravos/catalog/catalog-ui.js
+      role: changes
+      exists: false
+      system: ui
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+    upstream: []
+    downstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): R1 · finishing it unlocks R1'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

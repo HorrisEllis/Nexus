@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-failure-reproduction-phasemap.spec::FM1_every_ledger_into_rfr2
+type: phase
+id: docs_2026-10-05-failure-reproduction-phasemap.spec::FM1_every_ledger_into_rfr2
+context: pipeline phase FM1_every_ledger_into_rfr2 of docs/2026-10-05-failure-reproduction-phasemap.spec
+intent: null
+summary: FM1_every_ledger_into_rfr2 (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829992655
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829992655
+lastSeenAt: 1792829992655
+fingerprint: null
+payload:
+  id: FM1_every_ledger_into_rfr2
+  map: docs/2026-10-05-failure-reproduction-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/ledger-fanin/
+    - intelligence/rfr2/kernel/index.js
+    - intelligence/rfr2/causality/index.js
+    - lib/rfr2-bridge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3f69872ecac3e79c

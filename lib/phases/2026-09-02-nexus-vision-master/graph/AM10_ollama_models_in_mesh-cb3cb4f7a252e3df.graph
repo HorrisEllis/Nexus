@@ -1,0 +1,164 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM10_ollama_models_in_mesh:cb3cb4f7a252e3df
+type: graph
+id: phase:AM10_ollama_models_in_mesh:cb3cb4f7a252e3df
+context: dependency graph of phase AM10_ollama_models_in_mesh
+intent: null
+summary: 17 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829974300
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974300
+lastSeenAt: 1792829974300
+fingerprint: null
+payload:
+  for: AM10_ollama_models_in_mesh
+  kind: phase
+  repo: null
+  hash: cb3cb4f7a252e3df
+  nodes:
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/hat-seed-ollama-personalities.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/agent-mesh-drainer.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/agent-mesh-hostile.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/dom-transport.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/route-graph.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/network/install.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/abliterated-catalog.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: lib/hat-seed-ollama-personalities.js
+      to: ollama/abliterated-catalog.js
+      kind: requires
+    - from: lib/hat-seed-ollama-personalities.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/route-graph.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/automation-engine.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/network/install.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/mesh/dom-transport.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-drainer.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-hostile.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+  crossings:
+    - from: lib/hat-seed-ollama-personalities.js
+      to: ollama/abliterated-catalog.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: copilot/lifeline.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM2_first_principles_hat_or_modifier
+type: phase
+id: docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM2_first_principles_hat_or_modifier
+context: >-
+  pipeline phase AM2_first_principles_hat_or_modifier of
+  docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+intent: null
+summary: AM2_first_principles_hat_or_modifier (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829973861
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973861
+lastSeenAt: 1792829973861
+fingerprint: null
+payload:
+  id: AM2_first_principles_hat_or_modifier
+  map: docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - AM1_raid_intent_contracts_per_agent
+  blocks: []
+  spec: null
+  graph: 0e345d95c9a3188b

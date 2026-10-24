@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RG0_map:2dbe0930b534d57a
+type: graph
+id: phase:RG0_map:2dbe0930b534d57a
+context: dependency graph of phase RG0_map
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987565
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987565
+lastSeenAt: 1792829987565
+fingerprint: null
+payload:
+  for: RG0_map
+  kind: phase
+  repo: null
+  hash: 2dbe0930b534d57a
+  nodes:
+    - path: docs/2026-10-01-routing-registry-genesis-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: docs/SPEC-REGISTRY.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG1_routing_policy_library
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC1_registry_block
+    upstream: []
+    downstream:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::AR1_architecture_spec
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::GN1_genesis
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC1_registry_block
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC2_registry_as_nodes
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG1_routing_policy_library
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG2_routing_config_api_cli
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG3_dispatch_uses_the_route
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG4_routing_ui
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG9_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG1_routing_policy_library
+      - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC1_registry_block
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): RG1_routing_policy_library, RC1_registry_block · all downstream 9 · finishing
+        it unlocks RG1_routing_policy_library, RC1_registry_block

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-observability-tablet-phasemap.spec::OB4_bottleneck_detection
+type: phase
+id: docs_nexus-observability-tablet-phasemap.spec::OB4_bottleneck_detection
+context: pipeline phase OB4_bottleneck_detection of docs/nexus-observability-tablet-phasemap.spec
+intent: null
+summary: OB4_bottleneck_detection (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830033334
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830033334
+lastSeenAt: 1792830033334
+fingerprint: null
+payload:
+  id: OB4_bottleneck_detection
+  map: docs/nexus-observability-tablet-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 591af951a6da1c78

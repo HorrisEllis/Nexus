@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME4_one_attempt_record
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME4_one_attempt_record
+context: pipeline phase ME4_one_attempt_record of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME4_one_attempt_record (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997690
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997690
+lastSeenAt: 1792829997690
+fingerprint: null
+payload:
+  id: ME4_one_attempt_record
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - lib/economy/ledger.js
+  depends_on:
+    - ME3_one_engine_one_budget
+  blocks: []
+  spec: null
+  graph: f2a989a0e8ce7614

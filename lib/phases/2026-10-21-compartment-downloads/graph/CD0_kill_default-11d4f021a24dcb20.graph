@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792481794257
+exported_at: 1792830024192
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792481794257
-lastSeenAt: 1792481794257
+firstSeenAt: 1792830024192
+lastSeenAt: 1792830024192
 fingerprint: null
 payload:
   for: CD0_kill_default
@@ -23,7 +23,7 @@ payload:
   crossings: []
   ready: false
   dag:
-    dagHash: 0c4fb6c30abee07a
+    dagHash: 2f8ddd0afd383c4f
     layer: 0
     deps: []
     dependents:
@@ -39,9 +39,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 0c4fb6c30abee07a · layer 0
+      - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - >-
         needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks
         CD4_kill_on_disconnect
-      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

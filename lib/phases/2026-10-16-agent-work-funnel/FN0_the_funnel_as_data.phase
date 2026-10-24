@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-agent-work-funnel-phasemap.spec::FN0_the_funnel_as_data
+type: phase
+id: docs_2026-10-16-agent-work-funnel-phasemap.spec::FN0_the_funnel_as_data
+context: pipeline phase FN0_the_funnel_as_data of docs/2026-10-16-agent-work-funnel-phasemap.spec
+intent: null
+summary: FN0_the_funnel_as_data (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830009415
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830009415
+lastSeenAt: 1792830009415
+fingerprint: null
+payload:
+  id: FN0_the_funnel_as_data
+  map: docs/2026-10-16-agent-work-funnel-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.94 — lib/work-funnel.js, POST /api/repos/:uuid/funnel, `repo funnel`;
+    test-work-funnel 8/8. The screen is FN4."
+  files:
+    - lib/work-funnel.js (new)
+    - lib/node-schemas/schema.funnel (new)
+    - tests/modules/test-work-funnel.test.js (new)
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 36bff935bc611507

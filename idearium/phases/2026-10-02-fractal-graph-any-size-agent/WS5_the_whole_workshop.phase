@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::WS5_the_whole_workshop
+type: phase
+id: docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::WS5_the_whole_workshop
+context: >-
+  pipeline phase WS5_the_whole_workshop of
+  docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+intent: null
+summary: WS5_the_whole_workshop (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988949
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988949
+lastSeenAt: 1792829988949
+fingerprint: null
+payload:
+  id: WS5_the_whole_workshop
+  map: docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/workshop.html
+    - idearium/lib/workshop.js
+  depends_on:
+    - FG4_context_for_any_agent
+  blocks: []
+  spec: null
+  graph: be72ff97f0f348b3

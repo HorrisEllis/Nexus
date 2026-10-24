@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR8_clearglass_full_agent_tool_parity
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR8_clearglass_full_agent_tool_parity
+context: >-
+  pipeline phase BR8_clearglass_full_agent_tool_parity of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: BR8_clearglass_full_agent_tool_parity (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971732
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971732
+lastSeenAt: 1792829971732
+fingerprint: null
+payload:
+  id: BR8_clearglass_full_agent_tool_parity
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TX16_persistent_listener_registry_and_callable_elements
+  blocks: []
+  spec: null
+  graph: 62e54d03c6ab830a

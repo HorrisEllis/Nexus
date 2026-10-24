@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-eravos-removal-phasemap.spec::ER1_delete_the_system
+type: phase
+id: docs_2026-10-16-eravos-removal-phasemap.spec::ER1_delete_the_system
+context: pipeline phase ER1_delete_the_system of docs/2026-10-16-eravos-removal-phasemap.spec
+intent: null
+summary: ER1_delete_the_system (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792830011314
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830011314
+lastSeenAt: 1792830011314
+fingerprint: null
+payload:
+  id: ER1_delete_the_system
+  map: docs/2026-10-16-eravos-removal-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.83
+  files:
+    - eravos/ (deleted)
+    - ui/eravos/ (deleted)
+    - hooks/eravos.hooks.js (deleted)
+    - hooks/index.js
+    - docs/eravos.spec (deleted)
+    - docs/eravos-agnostic-canvas.spec (deleted)
+    - tests/modules/test-eravos-pulse-migration.js (deleted)
+    - run-all.js
+    - tests/modules/run-all.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2d6cbb2fd32f8057

@@ -9,18 +9,21 @@ intent: null
 summary: PS1_phase_specs (library) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792456416777
+exported_at: 1792830022177
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416777
-lastSeenAt: 1792456416777
+firstSeenAt: 1792830022177
+lastSeenAt: 1792830022177
 fingerprint: null
 payload:
   id: PS1_phase_specs
   map: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: >-
+    "DONE 2026-10-24. by evidence — test-phase-specs.test.js (its own), test-pipeline-nodes.test.js
+    (linked), test-pipeline-root-causes.test.js (linked) (dry run 2026-10-23; James 2026-10-24: yes
+    do it. )"
   files:
     - emerge/compiler/phase-specs.js
     - lib/pipeline-nodes.js

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB5_varied_wording_true_facts
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB5_varied_wording_true_facts
+context: >-
+  pipeline phase JB5_varied_wording_true_facts of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: JB5_varied_wording_true_facts (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001279
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001279
+lastSeenAt: 1792830001279
+fingerprint: null
+payload:
+  id: JB5_varied_wording_true_facts
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/semantic-variant.js
+    - copilot/lib/reword.js
+    - guardian/lib/eros-typist.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 88d2ca99cff642c0

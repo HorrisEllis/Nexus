@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC0a_what_a_piece_depends_on:613ca4097520294e
+type: graph
+id: phase:PC0a_what_a_piece_depends_on:613ca4097520294e
+context: dependency graph of phase PC0a_what_a_piece_depends_on
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830016433
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016433
+lastSeenAt: 1792830016433
+fingerprint: null
+payload:
+  for: PC0a_what_a_piece_depends_on
+  kind: phase
+  repo: null
+  hash: 613ca4097520294e
+  nodes:
+    - path: docs/2026-10-17-decisions-by-the-axioms.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC2_any_order
+    upstream: []
+    downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC2_any_order
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::PC6_assembled_and_checked_whole
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): PC2_any_order · all downstream 2'

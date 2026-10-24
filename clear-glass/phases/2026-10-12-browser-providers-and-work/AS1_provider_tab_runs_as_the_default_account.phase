@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::AS1_provider_tab_runs_as_the_default_account
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::AS1_provider_tab_runs_as_the_default_account
+context: >-
+  pipeline phase AS1_provider_tab_runs_as_the_default_account of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: AS1_provider_tab_runs_as_the_default_account (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001294
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001294
+lastSeenAt: 1792830001294
+fingerprint: null
+payload:
+  id: AS1_provider_tab_runs_as_the_default_account
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/providers/account-switch.js
+    - clear-glass/src/providers/host.js
+    - clear-glass/src/main/index.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/renderer/settings/sections/accounts.js
+    - clear-glass/renderer/settings/sections/providers.js
+    - idearium/cli/route-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6db6cedc22343312

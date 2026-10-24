@@ -1,0 +1,227 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R1:3c37b05f3eb39ced
+type: graph
+id: phase:R1:3c37b05f3eb39ced
+context: dependency graph of phase R1
+intent: null
+summary: 25 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829980918
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980918
+lastSeenAt: 1792829980918
+fingerprint: null
+payload:
+  for: R1
+  kind: phase
+  repo: null
+  hash: 3c37b05f3eb39ced
+  nodes:
+    - path: guardian/lib/chat-transcripts.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/job-retry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/jobs.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp-handler.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: service/guardian-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/guardian-job-persistence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-chat-per-agent.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/response-sink.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-identity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-model.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/introspect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/path-guard.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/job-retry.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/introspect.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/chat-logger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-identity.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-model.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: guardian/lib/chat-transcripts.js
+      to: lib/path-guard.js
+      kind: requires
+    - from: guardian/lib/chat-transcripts.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: tests/modules/test-chat-per-agent.test.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: service/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/jobs.js
+      kind: requires
+    - from: tests/modules/guardian-job-persistence.test.js
+      to: guardian/lib/jobs.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: guardian/lib/jobs.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/lib/chat-transcripts.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: guardian
+      toSystem: clear-glass
+      kind: system
+      known: true
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: service/guardian-service.js
+      to: guardian/server.js
+      fromSystem: service
+      toSystem: guardian
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+    upstream: []
+    downstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::X1
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): T1 · all downstream 2'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

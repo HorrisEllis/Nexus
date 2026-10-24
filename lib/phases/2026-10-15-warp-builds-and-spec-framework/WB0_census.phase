@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB0_census
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB0_census
+context: pipeline phase WB0_census of docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: WB0_census (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792830009020
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830009020
+lastSeenAt: 1792830009020
+fingerprint: null
+payload:
+  id: WB0_census
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE (0.60.67 — CK-255 red: 5 build paths bypass WARP)"'
+  files:
+    - lib/build-paths.js (new)
+    - lib/checks/ck-255-warp-builds.js (new)
+    - lib/check-catalogue.js
+    - cos/spec/check-catalogue.spec
+    - tests/modules/test-build-paths.test.js (new)
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9a044eef08fa5b1b

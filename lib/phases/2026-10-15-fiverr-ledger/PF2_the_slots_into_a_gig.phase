@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-fiverr-ledger-phasemap.spec::PF2_the_slots_into_a_gig
+type: phase
+id: docs_2026-10-15-fiverr-ledger-phasemap.spec::PF2_the_slots_into_a_gig
+context: pipeline phase PF2_the_slots_into_a_gig of docs/2026-10-15-fiverr-ledger-phasemap.spec
+intent: null
+summary: PF2_the_slots_into_a_gig (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830006234
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006234
+lastSeenAt: 1792830006234
+fingerprint: null
+payload:
+  id: PF2_the_slots_into_a_gig
+  map: docs/2026-10-15-fiverr-ledger-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - PF1_the_sources
+  blocks: []
+  spec: null
+  graph: 6abf349983e78cdf

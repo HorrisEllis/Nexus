@@ -1,0 +1,186 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP22_a_missing_tab_is_not_a_login_wall:7116d27e8a0491f4
+type: graph
+id: phase:HP22_a_missing_tab_is_not_a_login_wall:7116d27e8a0491f4
+context: dependency graph of phase HP22_a_missing_tab_is_not_a_login_wall
+intent: null
+summary: 21 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829997254
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997254
+lastSeenAt: 1792829997254
+fingerprint: null
+payload:
+  for: HP22_a_missing_tab_is_not_a_login_wall
+  kind: phase
+  repo: null
+  hash: 7116d27e8a0491f4
+  nodes:
+    - path: guardian/ask.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/gate-trail.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-model-fit-ladder.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/account-routing.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-attention.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/lib/account-routing.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/lib/provider-attention.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/agent-record.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-model-fit-ladder.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/gate-trail.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: guardian/ask.js
+      kind: requires
+  crossings:
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+    dependents: []
+    upstream:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2
+      - 'depends on (1): HP17_no_tab_is_said_in_seconds · all upstream 2'
+      - 'needed by (0): —'

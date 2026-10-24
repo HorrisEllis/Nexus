@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-cos-console-phasemap.spec::CON4_safety_gate
+type: phase
+id: docs_2026-10-16-cos-console-phasemap.spec::CON4_safety_gate
+context: pipeline phase CON4_safety_gate of docs/2026-10-16-cos-console-phasemap.spec
+intent: null
+summary: CON4_safety_gate (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830010561
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010561
+lastSeenAt: 1792830010561
+fingerprint: null
+payload:
+  id: CON4_safety_gate
+  map: docs/2026-10-16-cos-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - CON1_one_door_client
+  blocks: []
+  spec: null
+  graph: 6aeb5837dbad6f77

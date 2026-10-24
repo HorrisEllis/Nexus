@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MR6_contradictions_held:66efe147c088270c
+type: graph
+id: phase:MR6_contradictions_held:66efe147c088270c
+context: dependency graph of phase MR6_contradictions_held
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829988437
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988437
+lastSeenAt: 1792829988437
+fingerprint: null
+payload:
+  for: MR6_contradictions_held
+  kind: phase
+  repo: null
+  hash: 66efe147c088270c
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 6
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+    dependents: []
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream: []
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 6 · blocked by RF1_relational_field,
+        MR1_recall_triad_and_context_table
+      - 'depends on (2): RF1_relational_field, MR1_recall_triad_and_context_table · all upstream 8'
+      - 'needed by (0): —'

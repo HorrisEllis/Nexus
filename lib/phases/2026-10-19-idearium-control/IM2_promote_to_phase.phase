@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-idearium-control-phasemap.spec::IM2_promote_to_phase
+type: phase
+id: docs_2026-10-19-idearium-control-phasemap.spec::IM2_promote_to_phase
+context: pipeline phase IM2_promote_to_phase of docs/2026-10-19-idearium-control-phasemap.spec
+intent: null
+summary: IM2_promote_to_phase (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830019669
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830019669
+lastSeenAt: 1792830019669
+fingerprint: null
+payload:
+  id: IM2_promote_to_phase
+  map: docs/2026-10-19-idearium-control-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/work-funnel.js
+    - idearium/api/index.js
+  depends_on:
+    - IM1_ideas_and_notes_as_one
+    - PC1_phase_controls
+  blocks: []
+  spec: null
+  graph: 1569487c0a2437d9

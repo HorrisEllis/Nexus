@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P15_forge_shell_into_loom
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P15_forge_shell_into_loom
+context: pipeline phase P15_forge_shell_into_loom of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P15_forge_shell_into_loom (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830032526
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830032526
+lastSeenAt: 1792830032526
+fingerprint: null
+payload:
+  id: P15_forge_shell_into_loom
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1a4643a7c98e4523

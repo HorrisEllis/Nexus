@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV1
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV1
+context: pipeline phase SV1 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: SV1 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829984149
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984149
+lastSeenAt: 1792829984149
+fingerprint: null
+payload:
+  id: SV1
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - each system's interaction contract (guardian/interaction-contract.json is the existing shape)
+    - loom registry (hooks/wires are the contract)
+    - docs/sovereignty.spec (new)
+  depends_on:
+    - SV0
+  blocks: []
+  spec: null
+  graph: aba511479e53415c

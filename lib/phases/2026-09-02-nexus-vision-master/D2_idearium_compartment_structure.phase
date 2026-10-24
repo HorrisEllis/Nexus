@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::D2_idearium_compartment_structure
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::D2_idearium_compartment_structure
+context: >-
+  pipeline phase D2_idearium_compartment_structure of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: D2_idearium_compartment_structure (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974292
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974292
+lastSeenAt: 1792829974292
+fingerprint: null
+payload:
+  id: D2_idearium_compartment_structure
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - D1_bridgeos_readme_template
+  blocks: []
+  spec: null
+  graph: 80dbc60fc6451eb9

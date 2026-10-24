@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::CG5_copilot_guided_spotlight_macro
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CG5_copilot_guided_spotlight_macro
+context: >-
+  pipeline phase CG5_copilot_guided_spotlight_macro of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: CG5_copilot_guided_spotlight_macro (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974309
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974309
+lastSeenAt: 1792829974309
+fingerprint: null
+payload:
+  id: CG5_copilot_guided_spotlight_macro
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - CG4_macros_plugin_autofill
+  blocks: []
+  spec: null
+  graph: c2df75d5133452f2

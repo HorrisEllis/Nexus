@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+context: pipeline phase ME12_callers_moved of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME12_callers_moved (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997699
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997699
+lastSeenAt: 1792829997699
+fingerprint: null
+payload:
+  id: ME12_callers_moved
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - lib/repo-agent.js
+    - copilot/server.js
+    - lib/agent-tools/tools/coordination/parallel-dispatch.js
+  depends_on:
+    - ME2_caller_policy
+    - ME3_one_engine_one_budget
+    - ME4_one_attempt_record
+    - ME11_old_settings_translated
+  blocks: []
+  spec: null
+  graph: 9e7765b848590053

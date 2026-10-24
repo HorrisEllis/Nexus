@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM16_per_system_data_decay
+type: phase
+id: docs_2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM16_per_system_data_decay
+context: >-
+  pipeline phase LM16_per_system_data_decay of
+  docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+intent: null
+summary: LM16_per_system_data_decay (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829973401
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973401
+lastSeenAt: 1792829973401
+fingerprint: null
+payload:
+  id: LM16_per_system_data_decay
+  map: docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 750e2cda196b99e0

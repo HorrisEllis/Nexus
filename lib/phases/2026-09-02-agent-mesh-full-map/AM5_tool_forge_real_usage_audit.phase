@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM5_tool_forge_real_usage_audit
+type: phase
+id: docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM5_tool_forge_real_usage_audit
+context: >-
+  pipeline phase AM5_tool_forge_real_usage_audit of
+  docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+intent: null
+summary: AM5_tool_forge_real_usage_audit (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829973863
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973863
+lastSeenAt: 1792829973863
+fingerprint: null
+payload:
+  id: AM5_tool_forge_real_usage_audit
+  map: docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6e14d076e28a13e6

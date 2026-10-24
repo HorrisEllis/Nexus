@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
+type: phase
+id: docs_2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
+context: pipeline phase DP6_reproduce_in_cos of docs/2026-10-17-debugging-product-phasemap.spec
+intent: null
+summary: DP6_reproduce_in_cos (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830015258
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830015258
+lastSeenAt: 1792830015258
+fingerprint: null
+payload:
+  id: DP6_reproduce_in_cos
+  map: docs/2026-10-17-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - DP4_every_ledger_into_rfr2
+    - DP5_the_case
+  blocks: []
+  spec: null
+  graph: c5f5f220559d416e

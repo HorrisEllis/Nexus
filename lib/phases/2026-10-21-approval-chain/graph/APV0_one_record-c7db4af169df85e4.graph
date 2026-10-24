@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792595037265
+exported_at: 1792830022974
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792595037265
-lastSeenAt: 1792595037265
+firstSeenAt: 1792830022974
+lastSeenAt: 1792830022974
 fingerprint: null
 payload:
   for: APV0_one_record
@@ -23,7 +23,7 @@ payload:
   crossings: []
   ready: false
   dag:
-    dagHash: 035c035515349513
+    dagHash: 2f8ddd0afd383c4f
     layer: 0
     deps: []
     dependents:
@@ -41,6 +41,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 035c035515349513 · layer 0
+      - DAG 2f8ddd0afd383c4f · layer 0
       - 'depends on (0): —'
       - 'needed by (1): APV1_change_entry · all downstream 5 · finishing it unlocks APV1_change_entry'

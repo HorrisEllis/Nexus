@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-personal-chat-import-phasemap.spec::PI5_the_crawler
+type: phase
+id: docs_2026-10-15-personal-chat-import-phasemap.spec::PI5_the_crawler
+context: pipeline phase PI5_the_crawler of docs/2026-10-15-personal-chat-import-phasemap.spec
+intent: null
+summary: PI5_the_crawler (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007883
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007883
+lastSeenAt: 1792830007883
+fingerprint: null
+payload:
+  id: PI5_the_crawler
+  map: docs/2026-10-15-personal-chat-import-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/chats/crawler.js
+    - lib/chat-crawl-plan.js
+  depends_on:
+    - PI1_the_importer
+  blocks: []
+  spec: null
+  graph: f8d69ae582cc49df

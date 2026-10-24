@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG5_recursive_build
+type: phase
+id: docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG5_recursive_build
+context: pipeline phase FG5_recursive_build of docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+intent: null
+summary: FG5_recursive_build (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988948
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988948
+lastSeenAt: 1792829988948
+fingerprint: null
+payload:
+  id: FG5_recursive_build
+  map: docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/chunk-dispatch.js
+    - architecture-spec/registry/decompose.js
+  depends_on:
+    - FG4_context_for_any_agent
+  blocks: []
+  spec: null
+  graph: b8e78a1fd1f50e1a

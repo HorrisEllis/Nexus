@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF7_pipeline_scoped_to_changes
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF7_pipeline_scoped_to_changes
+context: >-
+  pipeline phase PF7_pipeline_scoped_to_changes of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PF7_pipeline_scoped_to_changes (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987046
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987046
+lastSeenAt: 1792829987046
+fingerprint: null
+payload:
+  id: PF7_pipeline_scoped_to_changes
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/import-pipeline.js
+  depends_on:
+    - PF5_in_place_spec_update
+  blocks: []
+  spec: null
+  graph: 74c2988f7fb0dbb6

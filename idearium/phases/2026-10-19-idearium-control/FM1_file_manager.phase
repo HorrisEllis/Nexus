@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-idearium-control-phasemap.spec::FM1_file_manager
+type: phase
+id: docs_2026-10-19-idearium-control-phasemap.spec::FM1_file_manager
+context: pipeline phase FM1_file_manager of docs/2026-10-19-idearium-control-phasemap.spec
+intent: null
+summary: FM1_file_manager (interface) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830019662
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830019662
+lastSeenAt: 1792830019662
+fingerprint: null
+payload:
+  id: FM1_file_manager
+  map: docs/2026-10-19-idearium-control-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - idearium/ui/js/file-manage.js
+    - idearium/api/index.js
+    - lib/repo-inject.js
+  depends_on:
+    - NM1_one_name_per_file
+  blocks: []
+  spec: null
+  graph: 30ae3862a6fbedde

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P1_reconcile_node_schema_precedent
+type: phase
+id: docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P1_reconcile_node_schema_precedent
+context: >-
+  pipeline phase P1_reconcile_node_schema_precedent of
+  docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+intent: null
+summary: P1_reconcile_node_schema_precedent (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829978158
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978158
+lastSeenAt: 1792829978158
+fingerprint: null
+payload:
+  id: P1_reconcile_node_schema_precedent
+  map: docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 774ed515bc4d0e37

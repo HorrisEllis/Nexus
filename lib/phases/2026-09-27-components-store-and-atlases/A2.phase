@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-components-store-and-atlases-phasemap.spec::A2
+type: phase
+id: docs_2026-09-27-components-store-and-atlases-phasemap.spec::A2
+context: pipeline phase A2 of docs/2026-09-27-components-store-and-atlases-phasemap.spec
+intent: null
+summary: A2 (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829982128
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829982128
+lastSeenAt: 1792829982128
+fingerprint: null
+payload:
+  id: A2
+  map: docs/2026-09-27-components-store-and-atlases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/atlases/*.md
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c42260b792aebce5

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF1_sync_names_its_slow_step
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF1_sync_names_its_slow_step
+context: >-
+  pipeline phase PF1_sync_names_its_slow_step of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PF1_sync_names_its_slow_step (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987037
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987037
+lastSeenAt: 1792829987037
+fingerprint: null
+payload:
+  id: PF1_sync_names_its_slow_step
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/nexus-self.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a427008df9c74099

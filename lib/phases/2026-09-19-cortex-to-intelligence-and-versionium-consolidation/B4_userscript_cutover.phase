@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B4_userscript_cutover
+type: phase
+id: docs_2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B4_userscript_cutover
+context: >-
+  pipeline phase B4_userscript_cutover of
+  docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+intent: null
+summary: B4_userscript_cutover (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829978554
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978554
+lastSeenAt: 1792829978554
+fingerprint: null
+payload:
+  id: B4_userscript_cutover
+  map: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3f2e8e0e67d4f20b

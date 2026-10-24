@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG3_summaries_up_the_tree
+type: phase
+id: docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG3_summaries_up_the_tree
+context: >-
+  pipeline phase FG3_summaries_up_the_tree of
+  docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+intent: null
+summary: FG3_summaries_up_the_tree (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988947
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988947
+lastSeenAt: 1792829988947
+fingerprint: null
+payload:
+  id: FG3_summaries_up_the_tree
+  map: docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/summaries.js
+  depends_on:
+    - FG1_containment_tree
+  blocks: []
+  spec: null
+  graph: b2a59b562ac95c2c

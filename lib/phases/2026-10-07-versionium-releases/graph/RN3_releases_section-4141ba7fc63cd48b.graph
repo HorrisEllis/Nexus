@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RN3_releases_section:4141ba7fc63cd48b
+type: graph
+id: phase:RN3_releases_section:4141ba7fc63cd48b
+context: dependency graph of phase RN3_releases_section
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829996859
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829996859
+lastSeenAt: 1792829996859
+fingerprint: null
+payload:
+  for: RN3_releases_section
+  kind: phase
+  repo: null
+  hash: 4141ba7fc63cd48b
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN2_cortex_is_the_bookkeeper
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
+    dependents: []
+    upstream:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::LT1_provenance_lattice
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN1_release_is_a_node_and_a_tag
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN2_cortex_is_the_bookkeeper
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
+    downstream: []
+    blockedBy:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN2_cortex_is_the_bookkeeper
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 3 · blocked by RN2_cortex_is_the_bookkeeper,
+        VR2_history_and_diff
+      - 'depends on (2): RN2_cortex_is_the_bookkeeper, VR2_history_and_diff · all upstream 5'
+      - 'needed by (0): —'

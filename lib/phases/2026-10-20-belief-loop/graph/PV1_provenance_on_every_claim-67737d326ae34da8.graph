@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303348
+exported_at: 1792830021764
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303348
-lastSeenAt: 1792456303348
+firstSeenAt: 1792830021764
+lastSeenAt: 1792830021764
 fingerprint: null
 payload:
   for: PV1_provenance_on_every_claim
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
+    dagHash: 2f8ddd0afd383c4f
     layer: 4
     deps:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
@@ -60,7 +60,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 7583ffef0c495b95 · layer 4 · blocked by GR1_graph_primitive, NM1_one_name_per_file
+      - DAG 2f8ddd0afd383c4f · layer 4 · blocked by GR1_graph_primitive, NM1_one_name_per_file
       - 'depends on (2): GR1_graph_primitive, NM1_one_name_per_file · all upstream 6'
       - >-
         needed by (2): EW1_evidence_record_and_weights, RA1_root_cause_through_provenance · all

@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR1_per_agent_wake_words:e51fea7cf9dc2e35
+type: graph
+id: phase:SR1_per_agent_wake_words:e51fea7cf9dc2e35
+context: dependency graph of phase SR1_per_agent_wake_words
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829974334
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974334
+lastSeenAt: 1792829974334
+fingerprint: null
+payload:
+  for: SR1_per_agent_wake_words
+  kind: phase
+  repo: null
+  hash: e51fea7cf9dc2e35
+  nodes:
+    - path: guardian/userscript-nexus-wake.js
+      role: changes
+      exists: true
+      system: guardian
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

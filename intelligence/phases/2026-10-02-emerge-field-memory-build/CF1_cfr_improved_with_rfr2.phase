@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+context: >-
+  pipeline phase CF1_cfr_improved_with_rfr2 of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: CF1_cfr_improved_with_rfr2 (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988420
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988420
+lastSeenAt: 1792829988420
+fingerprint: null
+payload:
+  id: CF1_cfr_improved_with_rfr2
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/cfr/graph.js
+    - intelligence/cfr/ledger.js
+    - intelligence/cfr/field.js
+    - intelligence/cfr/sigma.js
+    - intelligence/cfr/delta.js
+    - intelligence/cfr/contract-verifier.js
+    - intelligence/rfr2/
+  depends_on:
+    - EM1_emerge_core
+    - EM2_warp_his_own
+  blocks: []
+  spec: null
+  graph: f185d6cfdfa80ada

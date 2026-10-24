@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF2_spec_framework_block
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF2_spec_framework_block
+context: >-
+  pipeline phase SF2_spec_framework_block of
+  docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: SF2_spec_framework_block (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830009024
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830009024
+lastSeenAt: 1792830009024
+fingerprint: null
+payload:
+  id: SF2_spec_framework_block
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE (0.60.66)
+  files:
+    - lib/repo-prompt-blocks.js
+    - docs/spec-compiler.spec
+    - idearium/compiler-bridge.js
+    - tests/modules/test-spec-pipeline.test.js
+  depends_on:
+    - SF1_intent_blocks
+  blocks: []
+  spec: null
+  graph: f3369f9f0bb0ba75

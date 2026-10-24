@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RF8_nexus_spec_is_stale:d9074fc27532498a
+type: graph
+id: phase:RF8_nexus_spec_is_stale:d9074fc27532498a
+context: dependency graph of phase RF8_nexus_spec_is_stale
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829975190
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975190
+lastSeenAt: 1792829975190
+fingerprint: null
+payload:
+  for: RF8_nexus_spec_is_stale
+  kind: phase
+  repo: null
+  hash: d9074fc27532498a
+  nodes:
+    - path: docs/nexus.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

@@ -1,0 +1,84 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N29_full_run_only_failures:3ccc80b708b1184e
+type: graph
+id: phase:N29_full_run_only_failures:3ccc80b708b1184e
+context: dependency graph of phase N29_full_run_only_failures
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985453
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985453
+lastSeenAt: 1792829985453
+fingerprint: null
+payload:
+  for: N29_full_run_only_failures
+  kind: phase
+  repo: null
+  hash: 3ccc80b708b1184e
+  nodes:
+    - path: lib/queue.js
+      role: changes
+      exists: true
+      system: lib
+    - path: run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: service/cortex-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: service/guardian-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: lib/safe-watch.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/queue.js
+      to: lib/safe-watch.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/queue.js
+      kind: requires
+    - from: service/cortex-service.js
+      to: lib/queue.js
+      kind: requires
+    - from: service/guardian-service.js
+      to: lib/queue.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: lib/queue.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N19_suite_triage_and_known_gaps
+    dependents: []
+    upstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N19_suite_triage_and_known_gaps
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · ready
+      - 'depends on (1): N19_suite_triage_and_known_gaps'
+      - 'needed by (0): —'

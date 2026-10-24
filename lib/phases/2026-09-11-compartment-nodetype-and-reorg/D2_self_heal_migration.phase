@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D2_self_heal_migration
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D2_self_heal_migration
+context: >-
+  pipeline phase D2_self_heal_migration of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: D2_self_heal_migration (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976054
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976054
+lastSeenAt: 1792829976054
+fingerprint: null
+payload:
+  id: D2_self_heal_migration
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - D1_diagnostic_real_folder
+  blocks: []
+  spec: null
+  graph: 5f98a58f11bf4291

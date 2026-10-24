@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD11_the_desktop_inside_idearium
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD11_the_desktop_inside_idearium
+context: pipeline phase SD11_the_desktop_inside_idearium of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD11_the_desktop_inside_idearium (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999655
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999655
+lastSeenAt: 1792829999655
+fingerprint: null
+payload:
+  id: SD11_the_desktop_inside_idearium
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/desktop.html
+    - idearium/ui/js/repo-settings.js
+    - idearium/ui/js/app.js
+    - cos/workspace/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 355bfb9bb8b0c1e5

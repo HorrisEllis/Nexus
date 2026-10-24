@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+type: phase
+id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+context: pipeline phase FMR0_causality_measured of docs/2026-10-17-failure-mode-report-phasemap.spec
+intent: null
+summary: FMR0_causality_measured (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830015646
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830015646
+lastSeenAt: 1792830015646
+fingerprint: null
+payload:
+  id: FMR0_causality_measured
+  map: docs/2026-10-17-failure-mode-report-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f921952916dd5696

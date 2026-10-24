@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-fiverr-ledger-phasemap.spec::PF0a_what_a_chat_may_claim
+type: phase
+id: docs_2026-10-15-fiverr-ledger-phasemap.spec::PF0a_what_a_chat_may_claim
+context: pipeline phase PF0a_what_a_chat_may_claim of docs/2026-10-15-fiverr-ledger-phasemap.spec
+intent: null
+summary: PF0a_what_a_chat_may_claim (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830006235
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006235
+lastSeenAt: 1792830006235
+fingerprint: null
+payload:
+  id: PF0a_what_a_chat_may_claim
+  map: docs/2026-10-15-fiverr-ledger-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4e2cdba97918f157

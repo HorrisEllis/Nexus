@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-failure-mode-report-phasemap.spec::FMR10_it_compounds
+type: phase
+id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR10_it_compounds
+context: pipeline phase FMR10_it_compounds of docs/2026-10-17-failure-mode-report-phasemap.spec
+intent: null
+summary: FMR10_it_compounds (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830015654
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830015654
+lastSeenAt: 1792830015654
+fingerprint: null
+payload:
+  id: FMR10_it_compounds
+  map: docs/2026-10-17-failure-mode-report-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - FMR7_a_fix_proven_by_its_macro
+  blocks: []
+  spec: null
+  graph: ef3258cec40e1e23

@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL25_nexus_options_config:abb545081f8c4e3e
+type: graph
+id: phase:BL25_nexus_options_config:abb545081f8c4e3e
+context: dependency graph of phase BL25_nexus_options_config
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829971270
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971270
+lastSeenAt: 1792829971270
+fingerprint: null
+payload:
+  for: BL25_nexus_options_config
+  kind: phase
+  repo: null
+  hash: abb545081f8c4e3e
+  nodes:
+    - path: tests/modules/nexus-options-autoboot.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/options/store.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: tests/modules/nexus-options-autoboot.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/nexus-options-autoboot.test.js
+      to: clear-glass/src/providers/registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

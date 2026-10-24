@@ -1,0 +1,133 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NV1_words_to_elements:b3eedddb8bbbae8e
+type: graph
+id: phase:NV1_words_to_elements:b3eedddb8bbbae8e
+context: dependency graph of phase NV1_words_to_elements
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830002549
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002549
+lastSeenAt: 1792830002549
+fingerprint: null
+payload:
+  for: NV1_words_to_elements
+  kind: phase
+  repo: null
+  hash: b3eedddb8bbbae8e
+  nodes:
+    - path: clear-glass/src/driver/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/field.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/zoom.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/page-resolver.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-memory.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/page-session.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/reader.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/core/zoom.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/reader.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-session.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/page-memory.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::NV2_tell_clear_glass_what_to_do
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::MC1_steps_as_events_and_snapshots
+    upstream: []
+    downstream:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::MC1_steps_as_events_and_snapshots
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::NV2_tell_clear_glass_what_to_do
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::NV2_tell_clear_glass_what_to_do
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::MC1_steps_as_events_and_snapshots
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): NV2_tell_clear_glass_what_to_do, MC1_steps_as_events_and_snapshots ·
+        finishing it unlocks NV2_tell_clear_glass_what_to_do, MC1_steps_as_events_and_snapshots
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

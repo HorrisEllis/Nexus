@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnection
+context: pipeline phase R7_fault_taxonomy_reconnection of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R7_fault_taxonomy_reconnection (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830036416
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830036416
+lastSeenAt: 1792830036416
+fingerprint: null
+payload:
+  id: R7_fault_taxonomy_reconnection
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: abe9e773e82c4bb0

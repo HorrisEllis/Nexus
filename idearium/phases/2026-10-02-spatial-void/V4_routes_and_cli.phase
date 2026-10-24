@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-spatial-void-phasemap.spec::V4_routes_and_cli
+type: phase
+id: docs_2026-10-02-spatial-void-phasemap.spec::V4_routes_and_cli
+context: pipeline phase V4_routes_and_cli of docs/2026-10-02-spatial-void-phasemap.spec
+intent: null
+summary: V4_routes_and_cli (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829989368
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829989368
+lastSeenAt: 1792829989368
+fingerprint: null
+payload:
+  id: V4_routes_and_cli
+  map: docs/2026-10-02-spatial-void-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a9f04ac36a0b6f1c

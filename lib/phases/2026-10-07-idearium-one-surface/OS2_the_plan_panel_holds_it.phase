@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-idearium-one-surface-phasemap.spec::OS2_the_plan_panel_holds_it
+type: phase
+id: docs_2026-10-07-idearium-one-surface-phasemap.spec::OS2_the_plan_panel_holds_it
+context: pipeline phase OS2_the_plan_panel_holds_it of docs/2026-10-07-idearium-one-surface-phasemap.spec
+intent: null
+summary: OS2_the_plan_panel_holds_it (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829995350
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829995350
+lastSeenAt: 1792829995350
+fingerprint: null
+payload:
+  id: OS2_the_plan_panel_holds_it
+  map: docs/2026-10-07-idearium-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7c79a17a177f132e

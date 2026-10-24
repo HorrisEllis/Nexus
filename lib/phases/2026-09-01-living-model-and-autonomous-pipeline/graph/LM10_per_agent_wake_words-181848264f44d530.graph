@@ -1,0 +1,85 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM10_per_agent_wake_words:181848264f44d530
+type: graph
+id: phase:LM10_per_agent_wake_words:181848264f44d530
+context: dependency graph of phase LM10_per_agent_wake_words
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829973391
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973391
+lastSeenAt: 1792829973391
+fingerprint: null
+payload:
+  for: LM10_per_agent_wake_words
+  kind: phase
+  repo: null
+  hash: 181848264f44d530
+  nodes:
+    - path: lib/agent-chat.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/coordination/agent-chat.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/wake-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-chat.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: guardian/lib/wake-loop.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/coordination/agent-chat.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+    dependents: []
+    upstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+    downstream: []
+    blockedBy:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by LM9_deterministic_agent_switch_cli
+      - 'depends on (1): LM9_deterministic_agent_switch_cli'
+      - 'needed by (0): —'

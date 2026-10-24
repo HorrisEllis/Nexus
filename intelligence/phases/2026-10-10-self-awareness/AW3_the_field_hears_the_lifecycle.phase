@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-self-awareness-phasemap.spec::AW3_the_field_hears_the_lifecycle
+type: phase
+id: docs_2026-10-10-self-awareness-phasemap.spec::AW3_the_field_hears_the_lifecycle
+context: pipeline phase AW3_the_field_hears_the_lifecycle of docs/2026-10-10-self-awareness-phasemap.spec
+intent: null
+summary: AW3_the_field_hears_the_lifecycle (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830000077
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000077
+lastSeenAt: 1792830000077
+fingerprint: null
+payload:
+  id: AW3_the_field_hears_the_lifecycle
+  map: docs/2026-10-10-self-awareness-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/cfr/field.js
+    - guardian/event-taxonomy.js
+  depends_on:
+    - AW2_every_call_says_who_asked
+  blocks: []
+  spec: null
+  graph: 79083f2ccb474917

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI4_w7_open_items
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI4_w7_open_items
+context: pipeline phase UI4_w7_open_items of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: UI4_w7_open_items (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987078
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987078
+lastSeenAt: 1792829987078
+fingerprint: null
+payload:
+  id: UI4_w7_open_items
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 18e3783da1c40086

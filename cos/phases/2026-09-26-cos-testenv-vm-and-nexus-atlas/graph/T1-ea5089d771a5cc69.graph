@@ -1,0 +1,64 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T1:ea5089d771a5cc69
+type: graph
+id: phase:T1:ea5089d771a5cc69
+context: dependency graph of phase T1
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829980532
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980532
+lastSeenAt: 1792829980532
+fingerprint: null
+payload:
+  for: T1
+  kind: phase
+  repo: null
+  hash: ea5089d771a5cc69
+  nodes:
+    - path: cos/testenv/tar.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: used-by
+      exists: true
+      system: cos
+  edges:
+    - from: cos/testenv/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/testenv/tar.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+    upstream: []
+    downstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T6
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T7
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): T4 · all downstream 4 · finishing it unlocks T4'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

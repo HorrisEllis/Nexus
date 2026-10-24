@@ -1,0 +1,102 @@
+envelope: 1
+uuid: nexus-export-graph-phase:G1:f85015d13bbbc49d
+type: graph
+id: phase:G1:f85015d13bbbc49d
+context: dependency graph of phase G1
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829984142
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984142
+lastSeenAt: 1792829984142
+fingerprint: null
+payload:
+  for: G1
+  kind: phase
+  repo: null
+  hash: f85015d13bbbc49d
+  nodes:
+    - path: idearium/repo/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/scan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-repo-graph.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/scan.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/verify-lazy.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: tests/modules/test-repo-graph.js
+      to: idearium/repo/graph.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G0
+    dependents:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B3
+    upstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G0
+    downstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B1
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B3
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B4
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G3
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M3
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV1
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV3
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G2
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · ready
+      - 'depends on (1): G0'
+      - 'needed by (2): G2, B3 · all downstream 12 · finishing it unlocks G2'

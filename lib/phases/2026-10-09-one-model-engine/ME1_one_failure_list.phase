@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+context: pipeline phase ME1_one_failure_list of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME1_one_failure_list (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997685
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997685
+lastSeenAt: 1792829997685
+fingerprint: null
+payload:
+  id: ME1_one_failure_list
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+  depends_on:
+    - ME0_the_inventory_proved
+  blocks: []
+  spec: null
+  graph: 6aa7efde8e0d3998

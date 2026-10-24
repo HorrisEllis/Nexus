@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DS4_interface_types_by_adapter:23e21f01a2f3ded3
+type: graph
+id: phase:DS4_interface_types_by_adapter:23e21f01a2f3ded3
+context: dependency graph of phase DS4_interface_types_by_adapter
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829998868
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998868
+lastSeenAt: 1792829998868
+fingerprint: null
+payload:
+  for: DS4_interface_types_by_adapter
+  kind: phase
+  repo: null
+  hash: 23e21f01a2f3ded3
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+    dependents: []
+    upstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      - docs/2026-10-10-design-surface-phasemap.spec::DS1_tokens_edited_live
+      - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+    downstream: []
+    blockedBy:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · blocked by DS2_pick_and_edit_any_page
+      - 'depends on (1): DS2_pick_and_edit_any_page · all upstream 3'
+      - 'needed by (0): —'

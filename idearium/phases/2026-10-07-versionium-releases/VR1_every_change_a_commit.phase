@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+type: phase
+id: docs_2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+context: pipeline phase VR1_every_change_a_commit of docs/2026-10-07-versionium-releases-phasemap.spec
+intent: null
+summary: VR1_every_change_a_commit (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829996855
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829996855
+lastSeenAt: 1792829996855
+fingerprint: null
+payload:
+  id: VR1_every_change_a_commit
+  map: docs/2026-10-07-versionium-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-inject.js
+    - idearium/api/index.js
+    - idearium/repo/snapshot.js
+    - versionium/lib/files.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 14c51a8423588640

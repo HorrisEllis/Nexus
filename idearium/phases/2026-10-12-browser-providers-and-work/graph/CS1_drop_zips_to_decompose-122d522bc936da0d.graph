@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS1_drop_zips_to_decompose:122d522bc936da0d
+type: graph
+id: phase:CS1_drop_zips_to_decompose:122d522bc936da0d
+context: dependency graph of phase CS1_drop_zips_to_decompose
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830001291
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001291
+lastSeenAt: 1792830001291
+fingerprint: null
+payload:
+  for: CS1_drop_zips_to_decompose
+  kind: phase
+  repo: null
+  hash: 122d522bc936da0d
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/components-panel.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1
+      - 'depends on (1): CS0_projects_decomposed_into_components'
+      - 'needed by (0): —'

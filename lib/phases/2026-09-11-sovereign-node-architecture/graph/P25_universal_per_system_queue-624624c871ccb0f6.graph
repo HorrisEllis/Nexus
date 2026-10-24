@@ -1,0 +1,79 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P25_universal_per_system_queue:624624c871ccb0f6
+type: graph
+id: phase:P25_universal_per_system_queue:624624c871ccb0f6
+context: dependency graph of phase P25_universal_per_system_queue
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976518
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976518
+lastSeenAt: 1792829976518
+fingerprint: null
+payload:
+  for: P25_universal_per_system_queue
+  kind: phase
+  repo: null
+  hash: 624624c871ccb0f6
+  nodes:
+    - path: lib/queue.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: service/cortex-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: service/guardian-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: lib/safe-watch.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/queue.js
+      to: lib/safe-watch.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/queue.js
+      kind: requires
+    - from: service/cortex-service.js
+      to: lib/queue.js
+      kind: requires
+    - from: service/guardian-service.js
+      to: lib/queue.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: lib/queue.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

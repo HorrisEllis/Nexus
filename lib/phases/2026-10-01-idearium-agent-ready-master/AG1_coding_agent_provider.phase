@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::AG1_coding_agent_provider
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::AG1_coding_agent_provider
+context: >-
+  pipeline phase AG1_coding_agent_provider of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: AG1_coding_agent_provider (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987064
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987064
+lastSeenAt: 1792829987064
+fingerprint: null
+payload:
+  id: AG1_coding_agent_provider
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-providers.js
+    - guardian/lib/jobs.js
+    - idearium/spec-engine/chunk-dispatch.js
+  depends_on:
+    - DT2_failure_mode_field
+    - CI1_compounding_iterate
+  blocks: []
+  spec: null
+  graph: 7098e6ab122046fe

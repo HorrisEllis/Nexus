@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP1_reconcile_repo_layer_vs_cos_compartment
+type: phase
+id: docs_2026-08-28-self-building-pipeline-phasemap.spec::SBP1_reconcile_repo_layer_vs_cos_compartment
+context: >-
+  pipeline phase SBP1_reconcile_repo_layer_vs_cos_compartment of
+  docs/2026-08-28-self-building-pipeline-phasemap.spec
+intent: null
+summary: SBP1_reconcile_repo_layer_vs_cos_compartment (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829972549
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972549
+lastSeenAt: 1792829972549
+fingerprint: null
+payload:
+  id: SBP1_reconcile_repo_layer_vs_cos_compartment
+  map: docs/2026-08-28-self-building-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 811af61fec93be21

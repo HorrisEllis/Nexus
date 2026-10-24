@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-staging-self-heal-phasemap.spec::C0
+type: phase
+id: docs_2026-09-28-staging-self-heal-phasemap.spec::C0
+context: pipeline phase C0 of docs/2026-09-28-staging-self-heal-phasemap.spec
+intent: null
+summary: C0 (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829984586
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984586
+lastSeenAt: 1792829984586
+fingerprint: null
+payload:
+  id: C0
+  map: docs/2026-09-28-staging-self-heal-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/gap-field.js
+    - orchestrator/orchestrator.js
+    - intelligence/server.js
+    - cortex/gap-finder/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0b7235ad10d93e23

@@ -1,0 +1,158 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SY1_fifteen_systems:83380ce301d81c15
+type: graph
+id: phase:SY1_fifteen_systems:83380ce301d81c15
+context: dependency graph of phase SY1_fifteen_systems
+intent: null
+summary: 17 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829991463
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991463
+lastSeenAt: 1792829991463
+fingerprint: null
+payload:
+  for: SY1_fifteen_systems
+  kind: phase
+  repo: null
+  hash: 83380ce301d81c15
+  nodes:
+    - path: lib/nexus-self/systems.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: tests/modules/test-loom-phasemap.js
+      role: changes
+      exists: true
+      system: null
+    - path: emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: emerge/compiler/phase-specs.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/inject-gate.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/nexus-self/store.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/phase-map-auto.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+  crossings:
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: loom
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::SY2_cos_its_own_system
+    upstream: []
+    downstream:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::SY2_cos_its_own_system
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-cli-data-code-phasemap.spec::SY2_cos_its_own_system
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): SY2_cos_its_own_system · finishing it unlocks SY2_cos_its_own_system'

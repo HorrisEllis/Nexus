@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-22-brainos-agent-suite-phasemap.spec::MM1_module_manager
+type: phase
+id: docs_2026-09-22-brainos-agent-suite-phasemap.spec::MM1_module_manager
+context: pipeline phase MM1_module_manager of docs/2026-09-22-brainos-agent-suite-phasemap.spec
+intent: null
+summary: MM1_module_manager (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829979378
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829979378
+lastSeenAt: 1792829979378
+fingerprint: null
+payload:
+  id: MM1_module_manager
+  map: docs/2026-09-22-brainos-agent-suite-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d3b53816c694dbec

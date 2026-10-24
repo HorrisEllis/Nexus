@@ -1,0 +1,307 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ23_acceptance_conditions_that_cannot_be_moved:6eb606b5ddc53407
+type: graph
+id: phase:RQ23_acceptance_conditions_that_cannot_be_moved:6eb606b5ddc53407
+context: dependency graph of phase RQ23_acceptance_conditions_that_cannot_be_moved
+intent: null
+summary: 29 node(s), 9 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830001736
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001736
+lastSeenAt: 1792830001736
+fingerprint: null
+payload:
+  for: RQ23_acceptance_conditions_that_cannot_be_moved
+  kind: phase
+  repo: null
+  hash: 6eb606b5ddc53407
+  nodes:
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/foundation/intent.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/repo/proof-run.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/charter.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/end-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/intent.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/gates/compartment.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/nodes/intent.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-container.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-boundary.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/event-taxonomy.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-intent-contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contract-repo-provision.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: meta/adversary-suite.js
+      role: uses
+      exists: true
+      system: meta
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/end-state.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/contract-repo-provision.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/event-taxonomy.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: meta/adversary-suite.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-boundary.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/agent-intent-contract.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/end-state.js
+      kind: requires
+    - from: lib/project-container.js
+      to: lib/end-state.js
+      kind: requires
+    - from: cos/test/test.js
+      to: lib/charter.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/charter.js
+      kind: requires
+    - from: cos/cli/commands/intent.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: cos/host/gates/compartment.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: cos/nodes/intent.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+  crossings:
+    - from: lib/end-state.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: meta/adversary-suite.js
+      fromSystem: cortex
+      toSystem: meta
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: nexus/nexus-bus.js
+      fromSystem: cortex
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/foundation/intent.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+    dependents:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ24_the_gate_transaction
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ25_progress_is_evidence_not_activity
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ26_comparison_and_drift_on_real_signals
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+    downstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ24_the_gate_transaction
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ25_progress_is_evidence_not_activity
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ26_comparison_and_drift_on_real_signals
+    blockedBy:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ22_the_dependency_boundary_with_invariants_that_run
+        files:
+          - lib/charter.js
+          - cos/foundation/intent.js
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 4 · blocked by RQ9_the_chunked_contract,
+        RQ1_the_verifier_library
+      - 'depends on (2): RQ9_the_chunked_contract, RQ1_the_verifier_library · all upstream 5'
+      - >-
+        needed by (3): RQ24_the_gate_transaction, RQ25_progress_is_evidence_not_activity,
+        RQ26_comparison_and_drift_on_real_signals
+      - >-
+        same files as RQ22_the_dependency_boundary_with_invariants_that_run with no order between
+        them: lib/charter.js, cos/foundation/intent.js

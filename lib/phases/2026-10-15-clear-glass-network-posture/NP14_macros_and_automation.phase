@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP14_macros_and_automation
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP14_macros_and_automation
+context: >-
+  pipeline phase NP14_macros_and_automation of
+  docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP14_macros_and_automation (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830004602
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830004602
+lastSeenAt: 1792830004602
+fingerprint: null
+payload:
+  id: NP14_macros_and_automation
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - NP9_cli_first
+  blocks: []
+  spec: null
+  graph: 2847a26c9d226bd5

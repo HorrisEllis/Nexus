@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303351
+exported_at: 1792830021765
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303351
-lastSeenAt: 1792456303351
+firstSeenAt: 1792830021765
+lastSeenAt: 1792830021765
 fingerprint: null
 payload:
   for: CF1_confidence_from_evidence
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
+    dagHash: 2f8ddd0afd383c4f
     layer: 6
     deps:
       - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
@@ -61,7 +61,7 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 7583ffef0c495b95 · layer 6 · ON THE CRITICAL PATH · blocked by
+        DAG 2f8ddd0afd383c4f · layer 6 · ON THE CRITICAL PATH · blocked by
         EW1_evidence_record_and_weights
       - 'depends on (1): EW1_evidence_record_and_weights · all upstream 12'
       - >-

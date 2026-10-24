@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::J1
+type: phase
+id: docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::J1
+context: pipeline phase J1 of docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+intent: null
+summary: J1 (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987999
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987999
+lastSeenAt: 1792829987999
+fingerprint: null
+payload:
+  id: J1
+  map: docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/jobs.js
+    - guardian/lib/job-retry.js
+    - ollama/server.js
+    - idearium/spec-engine/chunk-dispatch.js
+  depends_on:
+    - J0
+  blocks: []
+  spec: null
+  graph: 1e8293ee40b537f7

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::LR1_each_component_in_the_language_that_fits
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::LR1_each_component_in_the_language_that_fits
+context: >-
+  pipeline phase LR1_each_component_in_the_language_that_fits of
+  docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: LR1_each_component_in_the_language_that_fits (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830000473
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000473
+lastSeenAt: 1792830000473
+fingerprint: null
+payload:
+  id: LR1_each_component_in_the_language_that_fits
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-providers.js
+    - cos/testenv/detect.js
+    - idearium/repo/graph.js
+  depends_on:
+    - P8_per_system_component_registry
+    - LR0_the_shared_primitives_are_the_glyph
+  blocks: []
+  spec: null
+  graph: 811033a724b0ca79

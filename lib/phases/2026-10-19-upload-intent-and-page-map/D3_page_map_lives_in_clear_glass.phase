@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::D3_page_map_lives_in_clear_glass
+type: phase
+id: docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::D3_page_map_lives_in_clear_glass
+context: >-
+  pipeline phase D3_page_map_lives_in_clear_glass of
+  docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+intent: null
+summary: D3_page_map_lives_in_clear_glass (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830021323
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830021323
+lastSeenAt: 1792830021323
+fingerprint: null
+payload:
+  id: D3_page_map_lives_in_clear_glass
+  map: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b5014277f10ddc0e

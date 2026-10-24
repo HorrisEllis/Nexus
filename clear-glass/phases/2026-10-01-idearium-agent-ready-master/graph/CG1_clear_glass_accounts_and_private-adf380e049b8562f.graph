@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG1_clear_glass_accounts_and_private:adf380e049b8562f
+type: graph
+id: phase:CG1_clear_glass_accounts_and_private:adf380e049b8562f
+context: dependency graph of phase CG1_clear_glass_accounts_and_private
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829987096
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987096
+lastSeenAt: 1792829987096
+fingerprint: null
+payload:
+  for: CG1_clear_glass_accounts_and_private
+  kind: phase
+  repo: null
+  hash: adf380e049b8562f
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF10_clear_glass_err_aborted_9000
+        files:
+          - clear-glass/src/
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+      - 'same files as PF10_clear_glass_err_aborted_9000 with no order between them: clear-glass/src/'

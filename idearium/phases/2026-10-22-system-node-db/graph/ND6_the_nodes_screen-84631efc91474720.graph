@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792650734509
+exported_at: 1792830025828
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792650734509
-lastSeenAt: 1792650734509
+firstSeenAt: 1792830025828
+lastSeenAt: 1792830025828
 fingerprint: null
 payload:
   for: ND6_the_nodes_screen
@@ -31,7 +31,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 4470939bf8678599
+    dagHash: 2f8ddd0afd383c4f
     layer: 6
     deps:
       - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
@@ -58,6 +58,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 4470939bf8678599 · layer 6 · blocked by ND5_every_agent_reaches_every_system
+      - DAG 2f8ddd0afd383c4f · layer 6 · blocked by ND5_every_agent_reaches_every_system
       - 'depends on (1): ND5_every_agent_reaches_every_system · all upstream 14'
       - 'needed by (0): —'

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N15_contract_history
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N15_contract_history
+context: pipeline phase N15_contract_history of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N15_contract_history (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985436
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985436
+lastSeenAt: 1792829985436
+fingerprint: null
+payload:
+  id: N15_contract_history
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/views/contract-history.js
+  depends_on:
+    - N8_service
+    - N14_failure_mode_field
+  blocks: []
+  spec: null
+  graph: a9ca7dca146ef7fe

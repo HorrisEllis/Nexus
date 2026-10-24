@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::DK2_the_dock
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::DK2_the_dock
+context: pipeline phase DK2_the_dock of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: DK2_the_dock (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792830010181
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010181
+lastSeenAt: 1792830010181
+fingerprint: null
+payload:
+  id: DK2_the_dock
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/code-dock.js (new)
+    - idearium/ui/index.html
+    - idearium/ui/js/code-surface.js
+    - idearium/ui/js/repo-tasks.js
+    - tests/modules/test-code-dock.test.js (new)
+  depends_on:
+    - DK1_procedures_backend
+  blocks: []
+  spec: null
+  graph: fab19127bc19d5c2

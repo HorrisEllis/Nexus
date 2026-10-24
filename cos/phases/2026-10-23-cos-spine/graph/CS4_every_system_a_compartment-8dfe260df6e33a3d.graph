@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792757382212
+exported_at: 1792830026215
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382212
-lastSeenAt: 1792757382212
+firstSeenAt: 1792830026215
+lastSeenAt: 1792830026215
 fingerprint: null
 payload:
   for: CS4_every_system_a_compartment
@@ -164,7 +164,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 3351ce8a7e938b5b
+    dagHash: 2f8ddd0afd383c4f
     layer: 5
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
@@ -221,7 +221,7 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 3351ce8a7e938b5b · layer 5 · blocked by CS4a_cos_boots_alone,
+        DAG 2f8ddd0afd383c4f · layer 5 · blocked by CS4a_cos_boots_alone,
         CS3_the_registry_is_the_bridge, CS_D7_sovereign_first, DB6_move_the_crossings,
         DB16_a_registry_for_each_system, DB4_one_bus_per_system, DB5_the_handshake_for_every_system,
         DB11_cos_compartment_per_system

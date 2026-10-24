@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-definition-of-complete-phasemap.spec::DOD8_contract_conditions_comparison_and_drift_engines
+type: phase
+id: docs_2026-08-28-definition-of-complete-phasemap.spec::DOD8_contract_conditions_comparison_and_drift_engines
+context: >-
+  pipeline phase DOD8_contract_conditions_comparison_and_drift_engines of
+  docs/2026-08-28-definition-of-complete-phasemap.spec
+intent: null
+summary: DOD8_contract_conditions_comparison_and_drift_engines (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829972150
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972150
+lastSeenAt: 1792829972150
+fingerprint: null
+payload:
+  id: DOD8_contract_conditions_comparison_and_drift_engines
+  map: docs/2026-08-28-definition-of-complete-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1d10a9ee9575d398

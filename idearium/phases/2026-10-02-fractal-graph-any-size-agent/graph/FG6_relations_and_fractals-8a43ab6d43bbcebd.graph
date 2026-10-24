@@ -1,0 +1,152 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FG6_relations_and_fractals:8a43ab6d43bbcebd
+type: graph
+id: phase:FG6_relations_and_fractals:8a43ab6d43bbcebd
+context: dependency graph of phase FG6_relations_and_fractals
+intent: null
+summary: 14 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829988949
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988949
+lastSeenAt: 1792829988949
+fingerprint: null
+payload:
+  for: FG6_relations_and_fractals
+  kind: phase
+  repo: null
+  hash: 8a43ab6d43bbcebd
+  nodes:
+    - path: idearium/repo/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/lattice/associative-lattice.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/scan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/query/meta-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: nexus/nexus-connect.js
+      role: used-by
+      exists: true
+      system: nexus
+    - path: tests/modules/associative-lattice.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-graph.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/lattice/associative-lattice.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/lattice/associative-lattice.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/scan.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/verify-lazy.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: tests/modules/test-repo-graph.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/meta-query.js
+      to: intelligence/lattice/associative-lattice.js
+      kind: requires
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/lattice/associative-lattice.js
+      kind: requires
+    - from: nexus/nexus-connect.js
+      to: intelligence/lattice/associative-lattice.js
+      kind: requires
+    - from: tests/modules/associative-lattice.test.js
+      to: intelligence/lattice/associative-lattice.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/query/meta-query.js
+      to: intelligence/lattice/associative-lattice.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/ledger-fanin/boot.js
+      to: intelligence/lattice/associative-lattice.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: nexus/nexus-connect.js
+      to: intelligence/lattice/associative-lattice.js
+      fromSystem: nexus
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+    dependents: []
+    upstream:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+    downstream: []
+    blockedBy:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by FG1_containment_tree
+      - 'depends on (1): FG1_containment_tree'
+      - 'needed by (0): —'

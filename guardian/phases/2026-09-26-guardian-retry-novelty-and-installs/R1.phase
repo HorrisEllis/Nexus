@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::R1
+type: phase
+id: docs_2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::R1
+context: pipeline phase R1 of docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec
+intent: null
+summary: R1 (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829980918
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980918
+lastSeenAt: 1792829980918
+fingerprint: null
+payload:
+  id: R1
+  map: docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/job-retry.js
+    - guardian/lib/ncp-handler.js
+    - guardian/lib/chat-transcripts.js
+    - guardian/server.js
+    - guardian/lib/jobs.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3c37b05f3eb39ced

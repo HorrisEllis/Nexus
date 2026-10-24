@@ -1,0 +1,217 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ22_the_dependency_boundary_with_invariants_that_run:8ca887e33d3969e3
+type: graph
+id: phase:RQ22_the_dependency_boundary_with_invariants_that_run:8ca887e33d3969e3
+context: dependency graph of phase RQ22_the_dependency_boundary_with_invariants_that_run
+intent: null
+summary: 23 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830001734
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001734
+lastSeenAt: 1792830001734
+fingerprint: null
+payload:
+  for: RQ22_the_dependency_boundary_with_invariants_that_run
+  kind: phase
+  repo: null
+  hash: 8ca887e33d3969e3
+  nodes:
+    - path: cortex/core/raid/context-gate.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-boundary.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/foundation/intent.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/charter.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/chunk-verify.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/registry-harness.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/intent.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/gates/compartment.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/nodes/intent.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/build-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-component-store.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/agent-tools/tool-catalog.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/agent-tools/tool-catalog.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/component-store.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-boundary.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/build-context.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: tests/modules/test-component-store.test.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: cos/test/test.js
+      to: lib/charter.js
+      kind: requires
+    - from: cos/cli/commands/intent.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: cos/host/gates/compartment.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: cos/nodes/intent.js
+      to: cos/foundation/intent.js
+      kind: requires
+  crossings:
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+    dependents: []
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+    downstream: []
+    blockedBy:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ23_acceptance_conditions_that_cannot_be_moved
+        files:
+          - lib/charter.js
+          - cos/foundation/intent.js
+      - with: docs/2026-10-12-request-spine-phasemap.spec::RQ27_the_reasoning_half_gets_its_home
+        files:
+          - cortex/core/raid/context-gate.js
+          - lib/registry-harness.js
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 4 · blocked by RQ7_the_context_obligations,
+        RQ9_the_chunked_contract, RQ1_the_verifier_library
+      - >-
+        depends on (3): RQ7_the_context_obligations, RQ9_the_chunked_contract,
+        RQ1_the_verifier_library · all upstream 5
+      - 'needed by (0): —'
+      - >-
+        same files as RQ23_acceptance_conditions_that_cannot_be_moved with no order between them:
+        lib/charter.js, cos/foundation/intent.js
+      - >-
+        same files as RQ27_the_reasoning_half_gets_its_home with no order between them:
+        cortex/core/raid/context-gate.js, lib/registry-harness.js

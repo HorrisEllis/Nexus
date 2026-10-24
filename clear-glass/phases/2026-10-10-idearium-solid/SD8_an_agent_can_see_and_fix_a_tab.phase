@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD8_an_agent_can_see_and_fix_a_tab
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD8_an_agent_can_see_and_fix_a_tab
+context: pipeline phase SD8_an_agent_can_see_and_fix_a_tab of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD8_an_agent_can_see_and_fix_a_tab (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999652
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999652
+lastSeenAt: 1792829999652
+fingerprint: null
+payload:
+  id: SD8_an_agent_can_see_and_fix_a_tab
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/driver/glass.js
+    - lib/agent-tools/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 487ac3e1e6056957

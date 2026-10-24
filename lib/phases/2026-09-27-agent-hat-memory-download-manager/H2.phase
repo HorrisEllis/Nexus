@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H2
+type: phase
+id: docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H2
+context: pipeline phase H2 of docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+intent: null
+summary: H2 (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829981306
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829981306
+lastSeenAt: 1792829981306
+fingerprint: null
+payload:
+  id: H2
+  map: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-providers.js
+    - lib/repo-agent.js
+    - lib/seam/adapters/warp-cascade.js
+    - idearium/ui/js/app.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 614a688e1eeeef44

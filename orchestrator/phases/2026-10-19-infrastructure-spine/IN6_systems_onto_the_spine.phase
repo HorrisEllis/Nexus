@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::IN6_systems_onto_the_spine
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN6_systems_onto_the_spine
+context: pipeline phase IN6_systems_onto_the_spine of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: IN6_systems_onto_the_spine (integration) — 12 file(s)
+system: idearium
+tags: []
+exported_at: 1792830020054
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020054
+lastSeenAt: 1792830020054
+fingerprint: null
+payload:
+  id: IN6_systems_onto_the_spine
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - orchestrator/
+    - guardian/
+    - idearium/
+    - copilot/
+    - intelligence/
+    - loom/
+    - versionium/
+    - diagnostic/
+    - architect/
+    - cortex/
+    - ollama/
+    - clear-glass/
+  depends_on:
+    - IN4_retire_hand_maps
+  blocks: []
+  spec: null
+  graph: cdcb05f20732c595

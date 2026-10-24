@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::CG10_zoom_and_hotkeys_bug
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CG10_zoom_and_hotkeys_bug
+context: pipeline phase CG10_zoom_and_hotkeys_bug of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: CG10_zoom_and_hotkeys_bug (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974315
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974315
+lastSeenAt: 1792829974315
+fingerprint: null
+payload:
+  id: CG10_zoom_and_hotkeys_bug
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4433572db3edc3a9

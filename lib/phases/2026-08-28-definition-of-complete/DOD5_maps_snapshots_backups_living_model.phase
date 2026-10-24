@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-definition-of-complete-phasemap.spec::DOD5_maps_snapshots_backups_living_model
+type: phase
+id: docs_2026-08-28-definition-of-complete-phasemap.spec::DOD5_maps_snapshots_backups_living_model
+context: >-
+  pipeline phase DOD5_maps_snapshots_backups_living_model of
+  docs/2026-08-28-definition-of-complete-phasemap.spec
+intent: null
+summary: DOD5_maps_snapshots_backups_living_model (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829972149
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972149
+lastSeenAt: 1792829972149
+fingerprint: null
+payload:
+  id: DOD5_maps_snapshots_backups_living_model
+  map: docs/2026-08-28-definition-of-complete-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3908fcdebd5c6049

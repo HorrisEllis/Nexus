@@ -7,11 +7,11 @@ intent: null
 summary: ND1_every_system_has_its_database (foundation) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792650734502
+exported_at: 1792830025824
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792650734502
-lastSeenAt: 1792650734502
+firstSeenAt: 1792830025824
+lastSeenAt: 1792830025824
 fingerprint: null
 payload:
   id: ND1_every_system_has_its_database
@@ -28,4 +28,4 @@ payload:
   blocks:
     - MOD-ND-CENSUS
   spec: docs/system-node-db.spec
-  graph: 87dd2ec53f3067a4
+  graph: d31a6f77d650fe55

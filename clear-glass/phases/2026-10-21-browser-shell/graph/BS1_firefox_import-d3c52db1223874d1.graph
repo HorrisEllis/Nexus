@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792502099130
+exported_at: 1792830023773
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502099130
-lastSeenAt: 1792502099130
+firstSeenAt: 1792830023773
+lastSeenAt: 1792830023773
 fingerprint: null
 payload:
   for: BS1_firefox_import
@@ -34,7 +34,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 2527b07c5dc17a5a
+    dagHash: 2f8ddd0afd383c4f
     layer: 1
     deps:
       - docs/2026-10-21-browser-shell-phasemap.spec::BS0_cookie_target
@@ -50,6 +50,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 2527b07c5dc17a5a · layer 1
+      - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): BS0_cookie_target'
       - 'needed by (1): BS7_surface · finishing it unlocks BS7_surface'

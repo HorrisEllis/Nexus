@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::UX1_design_philosophy_consolidation
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::UX1_design_philosophy_consolidation
+context: >-
+  pipeline phase UX1_design_philosophy_consolidation of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: UX1_design_philosophy_consolidation (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975230
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975230
+lastSeenAt: 1792829975230
+fingerprint: null
+payload:
+  id: UX1_design_philosophy_consolidation
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8518048c60a27800

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-gates-that-learn-and-priorities-phasemap.spec::GT1_gates_route_diagnose_retry
+type: phase
+id: docs_2026-10-13-gates-that-learn-and-priorities-phasemap.spec::GT1_gates_route_diagnose_retry
+context: >-
+  pipeline phase GT1_gates_route_diagnose_retry of
+  docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
+intent: null
+summary: GT1_gates_route_diagnose_retry (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002149
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002149
+lastSeenAt: 1792830002149
+fingerprint: null
+payload:
+  id: GT1_gates_route_diagnose_retry
+  map: docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8014549b43dcfa51

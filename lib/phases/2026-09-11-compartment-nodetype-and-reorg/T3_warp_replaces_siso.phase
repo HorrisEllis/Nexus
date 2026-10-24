@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
+context: >-
+  pipeline phase T3_warp_replaces_siso of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: T3_warp_replaces_siso (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976049
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976049
+lastSeenAt: 1792829976049
+fingerprint: null
+payload:
+  id: T3_warp_replaces_siso
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4a279856f4f7d1cc

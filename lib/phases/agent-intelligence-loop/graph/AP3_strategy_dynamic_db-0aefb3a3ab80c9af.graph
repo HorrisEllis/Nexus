@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AP3_strategy_dynamic_db:0aefb3a3ab80c9af
+type: graph
+id: phase:AP3_strategy_dynamic_db:0aefb3a3ab80c9af
+context: dependency graph of phase AP3_strategy_dynamic_db
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792830027402
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830027402
+lastSeenAt: 1792830027402
+fingerprint: null
+payload:
+  for: AP3_strategy_dynamic_db
+  kind: phase
+  repo: null
+  hash: 0aefb3a3ab80c9af
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/agent-intelligence-loop-phasemap.spec::AP2_agent_events_to_intelligence
+    dependents:
+      - docs/agent-intelligence-loop-phasemap.spec::AP4_intelligence_optimizes
+      - docs/agent-intelligence-loop-phasemap.spec::AP5_autonomous_build_loop
+    upstream:
+      - docs/agent-intelligence-loop-phasemap.spec::AP1_pull_toolbox
+      - docs/agent-intelligence-loop-phasemap.spec::AP2_agent_events_to_intelligence
+    downstream:
+      - docs/agent-intelligence-loop-phasemap.spec::AP4_intelligence_optimizes
+      - docs/agent-intelligence-loop-phasemap.spec::AP5_autonomous_build_loop
+    blockedBy: []
+    unlocks:
+      - docs/agent-intelligence-loop-phasemap.spec::AP4_intelligence_optimizes
+      - docs/agent-intelligence-loop-phasemap.spec::AP5_autonomous_build_loop
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2
+      - 'depends on (1): AP2_agent_events_to_intelligence · all upstream 2'
+      - >-
+        needed by (2): AP4_intelligence_optimizes, AP5_autonomous_build_loop · finishing it unlocks
+        AP4_intelligence_optimizes, AP5_autonomous_build_loop

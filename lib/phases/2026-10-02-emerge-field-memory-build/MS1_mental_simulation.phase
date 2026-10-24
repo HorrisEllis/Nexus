@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+context: pipeline phase MS1_mental_simulation of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MS1_mental_simulation (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988496
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988496
+lastSeenAt: 1792829988496
+fingerprint: null
+payload:
+  id: MS1_mental_simulation
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/raid-simulation-engine.spec
+    - intelligence/cfr/
+  depends_on:
+    - FM1_mining_failure_modes
+    - LB1_the_end_state_lab
+  blocks: []
+  spec: null
+  graph: 7cb6b7e7414bd2be

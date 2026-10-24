@@ -1,0 +1,73 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ID3_bookmarks_carry_the_identity:fe345d2788c05a2e
+type: graph
+id: phase:ID3_bookmarks_carry_the_identity:fe345d2788c05a2e
+context: dependency graph of phase ID3_bookmarks_carry_the_identity
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830002540
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002540
+lastSeenAt: 1792830002540
+fingerprint: null
+payload:
+  for: ID3_bookmarks_carry_the_identity
+  kind: phase
+  repo: null
+  hash: fe345d2788c05a2e
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/bookmarks/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/phase2.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/bookmarks/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/bookmarks/store.js
+      kind: requires
+    - from: clear-glass/test/phase2.test.js
+      to: clear-glass/src/bookmarks/store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+    dependents: []
+    upstream:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID0_signed_in_where_he_signs_in
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+    downstream: []
+    blockedBy:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · blocked by TB1_tab_is_a_view
+      - 'depends on (1): TB1_tab_is_a_view · all upstream 3'
+      - 'needed by (0): —'

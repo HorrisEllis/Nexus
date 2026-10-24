@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+context: >-
+  pipeline phase UM1_nexus_understands_james of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: UM1_nexus_understands_james (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987108
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987108
+lastSeenAt: 1792829987108
+fingerprint: null
+payload:
+  id: UM1_nexus_understands_james
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-memory.js
+    - clear-glass/src/downloads/chat-ledger.js
+    - lib/node-schemas/
+  depends_on:
+    - DT1_persistence_census
+    - CX1_context_cascade
+  blocks: []
+  spec: null
+  graph: 941120d6e488072b

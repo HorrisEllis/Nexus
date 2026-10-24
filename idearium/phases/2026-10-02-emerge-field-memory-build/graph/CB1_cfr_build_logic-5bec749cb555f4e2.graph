@@ -1,0 +1,251 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CB1_cfr_build_logic:5bec749cb555f4e2
+type: graph
+id: phase:CB1_cfr_build_logic:5bec749cb555f4e2
+context: dependency graph of phase CB1_cfr_build_logic
+intent: null
+summary: 23 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829988451
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988451
+lastSeenAt: 1792829988451
+fingerprint: null
+payload:
+  for: CB1_cfr_build_logic
+  kind: phase
+  repo: null
+  hash: 5bec749cb555f4e2
+  nodes:
+    - path: idearium/spec-engine/chunk-dispatch.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/warp-build-dispatch.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/guardian-extract.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/idearium-warp-cache.test.mjs
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-model-fit-ladder.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/job-retry.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/extract-code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/adapters/warp-cascade.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: warp/dispatch/population.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/plugins/crystallizer-flatfile.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: lib/seam/adapters/warp-cascade.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/plugins/crystallizer-flatfile.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/dispatch/population.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: lib/extract-code.js
+      kind: requires
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/warp-build-dispatch.js
+      kind: requires
+    - from: tests/modules/idearium-warp-cache.test.mjs
+      to: idearium/spec-engine/warp-build-dispatch.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/spec-engine/warp-build-dispatch.js
+      kind: requires
+    - from: idearium/spec-engine/guardian-extract.js
+      to: idearium/spec-engine/chunk-dispatch.js
+      kind: requires
+    - from: lib/agent-record.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: tests/modules/test-model-fit-ladder.test.js
+      to: lib/pipeline-routing.js
+      kind: requires
+  crossings:
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/plugins/crystallizer-flatfile.js
+      fromSystem: idearium
+      toSystem: warp
+      kind: system
+      known: true
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/dispatch/population.js
+      fromSystem: idearium
+      toSystem: warp
+      kind: system
+      known: true
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 5
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 5 · blocked by EM2_warp_his_own, CF1_cfr_improved_with_rfr2,
+        MR1_recall_triad_and_context_table
+      - >-
+        depends on (3): EM2_warp_his_own, CF1_cfr_improved_with_rfr2,
+        MR1_recall_triad_and_context_table · all upstream 7
+      - >-
+        needed by (6): MR7_recipes, CB2_analysis_then_synthesis, CB4_the_emergence_loop_builds,
+        RC1_the_repo_main_chat, BT1_build_teams, LB1_the_end_state_lab · all downstream 11

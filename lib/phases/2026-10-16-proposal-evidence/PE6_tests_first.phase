@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-proposal-evidence-phasemap.spec::PE6_tests_first
+type: phase
+id: docs_2026-10-16-proposal-evidence-phasemap.spec::PE6_tests_first
+context: pipeline phase PE6_tests_first of docs/2026-10-16-proposal-evidence-phasemap.spec
+intent: null
+summary: PE6_tests_first (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830013723
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830013723
+lastSeenAt: 1792830013723
+fingerprint: null
+payload:
+  id: PE6_tests_first
+  map: docs/2026-10-16-proposal-evidence-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4997403b606e1628

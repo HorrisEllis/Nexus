@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+context: pipeline phase B1_full_build_contract_schema of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: B1_full_build_contract_schema (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974282
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974282
+lastSeenAt: 1792829974282
+fingerprint: null
+payload:
+  id: B1_full_build_contract_schema
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c784685e99ac5130

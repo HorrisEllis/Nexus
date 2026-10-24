@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792502100075
+exported_at: 1792830025402
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792502100075
-lastSeenAt: 1792502100075
+firstSeenAt: 1792830025402
+lastSeenAt: 1792830025402
 fingerprint: null
 payload:
   for: SF5_circuit_check
@@ -150,7 +150,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 2527b07c5dc17a5a
+    dagHash: 2f8ddd0afd383c4f
     layer: 2
     deps:
       - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
@@ -170,6 +170,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 2527b07c5dc17a5a · layer 2
+      - DAG 2f8ddd0afd383c4f · layer 2
       - 'depends on (1): SF1_honest_detection · all upstream 2'
       - 'needed by (1): SF6_surface · all downstream 4 · finishing it unlocks SF6_surface'

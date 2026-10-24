@@ -1,0 +1,110 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EC1_usage_ledger:3bb692c134237f3f
+type: graph
+id: phase:EC1_usage_ledger:3bb692c134237f3f
+context: dependency graph of phase EC1_usage_ledger
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985875
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985875
+lastSeenAt: 1792829985875
+fingerprint: null
+payload:
+  for: EC1_usage_ledger
+  kind: phase
+  repo: null
+  hash: 3bb692c134237f3f
+  nodes:
+    - path: lib/economy/ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/lib/economy-guard.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/economy/store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/adapters/warp-cascade.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: guardian/lib/economy-guard.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/economy/store.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/economy/ledger.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC2_gate
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC3_token_constraints
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC4_learning_router
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC6_guardian_enforcement
+    upstream: []
+    downstream:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC2_gate
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC3_token_constraints
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC4_learning_router
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC6_guardian_enforcement
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC7_router_in_builds
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC8_economy_console
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC2_gate
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC3_token_constraints
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC4_learning_router
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC6_guardian_enforcement
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (4): EC2_gate, EC3_token_constraints, EC4_learning_router,
+        EC6_guardian_enforcement · all downstream 7 · finishing it unlocks EC2_gate,
+        EC3_token_constraints, EC4_learning_router, EC6_guardian_enforcement

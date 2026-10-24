@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-13-track-b-sovereignty-phasemap.spec::MCO16_component_projections_retracted
+type: phase
+id: docs_2026-09-13-track-b-sovereignty-phasemap.spec::MCO16_component_projections_retracted
+context: >-
+  pipeline phase MCO16_component_projections_retracted of
+  docs/2026-09-13-track-b-sovereignty-phasemap.spec
+intent: null
+summary: MCO16_component_projections_retracted (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829977378
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829977378
+lastSeenAt: 1792829977378
+fingerprint: null
+payload:
+  id: MCO16_component_projections_retracted
+  map: docs/2026-09-13-track-b-sovereignty-phasemap.spec
+  repo: null
+  layer: null
+  status: '"RETRACTED 2026-09-13. Original plan: split'
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4e9c11ff0b4b91af

@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV1:aba511479e53415c
+type: graph
+id: phase:SV1:aba511479e53415c
+context: dependency graph of phase SV1
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829984149
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984149
+lastSeenAt: 1792829984149
+fingerprint: null
+payload:
+  for: SV1
+  kind: phase
+  repo: null
+  hash: aba511479e53415c
+  nodes:
+    - path: guardian/interaction-contract.json
+      role: changes
+      exists: true
+      system: guardian
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV0
+    dependents:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV3
+    upstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G1
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV0
+    downstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV3
+    blockedBy:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV0
+    unlocks:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV3
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 4 · blocked by SV0
+      - 'depends on (1): SV0 · all upstream 4'
+      - 'needed by (2): SV2, SV3 · finishing it unlocks SV3'

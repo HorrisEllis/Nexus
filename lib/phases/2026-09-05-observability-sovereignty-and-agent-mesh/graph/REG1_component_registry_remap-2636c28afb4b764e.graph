@@ -1,0 +1,181 @@
+envelope: 1
+uuid: nexus-export-graph-phase:REG1_component_registry_remap:2636c28afb4b764e
+type: graph
+id: phase:REG1_component_registry_remap:2636c28afb4b764e
+context: dependency graph of phase REG1_component_registry_remap
+intent: null
+summary: 16 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829975217
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975217
+lastSeenAt: 1792829975217
+fingerprint: null
+payload:
+  for: REG1_component_registry_remap
+  kind: phase
+  repo: null
+  hash: 2636c28afb4b764e
+  nodes:
+    - path: hooks/index.js
+      role: changes
+      exists: true
+      system: hooks
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/intents.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/query/nexus-status.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: hooks/architect.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/copilot.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/cortex.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/emerge.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/guardian.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/idearium.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/intelligence.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/ollama.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/orchestrator.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/side-effect-parser.js
+      role: uses
+      exists: true
+      system: hooks
+  edges:
+    - from: hooks/index.js
+      to: hooks/guardian.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/cortex.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/intelligence.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/orchestrator.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/idearium.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/architect.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/emerge.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/copilot.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/ollama.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/side-effect-parser.js
+      kind: requires
+    - from: architect/service.js
+      to: hooks/index.js
+      kind: requires
+    - from: copilot/intents.js
+      to: hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: hooks/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-status.js
+      to: hooks/index.js
+      kind: requires
+    - from: lib/nerve/index.js
+      to: hooks/index.js
+      kind: requires
+  crossings:
+    - from: architect/service.js
+      to: hooks/index.js
+      fromSystem: architect
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: copilot/intents.js
+      to: hooks/index.js
+      fromSystem: copilot
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: hooks/index.js
+      fromSystem: cortex
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/query/nexus-status.js
+      to: hooks/index.js
+      fromSystem: lib
+      toSystem: hooks
+      kind: upward
+      known: true
+    - from: lib/nerve/index.js
+      to: hooks/index.js
+      fromSystem: lib
+      toSystem: hooks
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::SPEC1_rewrite_nexus_spec
+    upstream: []
+    downstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::SPEC1_rewrite_nexus_spec
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::SPEC1_rewrite_nexus_spec
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): SPEC1_rewrite_nexus_spec · finishing it unlocks SPEC1_rewrite_nexus_spec'

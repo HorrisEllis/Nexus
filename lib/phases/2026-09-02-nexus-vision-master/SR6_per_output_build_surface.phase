@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR6_per_output_build_surface
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR6_per_output_build_surface
+context: pipeline phase SR6_per_output_build_surface of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR6_per_output_build_surface (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974340
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974340
+lastSeenAt: 1792829974340
+fingerprint: null
+payload:
+  id: SR6_per_output_build_surface
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - C3_component_import_decomposition
+  blocks: []
+  spec: null
+  graph: 67b0a4481b1bbd4f

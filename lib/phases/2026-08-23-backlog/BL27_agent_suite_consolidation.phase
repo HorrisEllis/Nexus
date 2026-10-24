@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL27_agent_suite_consolidation
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL27_agent_suite_consolidation
+context: pipeline phase BL27_agent_suite_consolidation of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL27_agent_suite_consolidation (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971273
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971273
+lastSeenAt: 1792829971273
+fingerprint: null
+payload:
+  id: BL27_agent_suite_consolidation
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - BL21_agent_mesh_real_connection
+    - BL26_account_agent_window_uuid_linking
+  blocks: []
+  spec: null
+  graph: 5312857a8c56f41a

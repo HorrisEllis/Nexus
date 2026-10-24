@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::CG2_clear_glass_drag_wrapper_and_fluid_url_bar
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::CG2_clear_glass_drag_wrapper_and_fluid_url_bar
+context: >-
+  pipeline phase CG2_clear_glass_drag_wrapper_and_fluid_url_bar of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: CG2_clear_glass_drag_wrapper_and_fluid_url_bar (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987098
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987098
+lastSeenAt: 1792829987098
+fingerprint: null
+payload:
+  id: CG2_clear_glass_drag_wrapper_and_fluid_url_bar
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/ (the frameless window's chrome and its toolbar)
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c9f738c8197eb8e4

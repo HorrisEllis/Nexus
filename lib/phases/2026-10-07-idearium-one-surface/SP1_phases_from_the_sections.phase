@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-idearium-one-surface-phasemap.spec::SP1_phases_from_the_sections
+type: phase
+id: docs_2026-10-07-idearium-one-surface-phasemap.spec::SP1_phases_from_the_sections
+context: pipeline phase SP1_phases_from_the_sections of docs/2026-10-07-idearium-one-surface-phasemap.spec
+intent: null
+summary: SP1_phases_from_the_sections (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829995353
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829995353
+lastSeenAt: 1792829995353
+fingerprint: null
+payload:
+  id: SP1_phases_from_the_sections
+  map: docs/2026-10-07-idearium-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 74d13d62a255e6a3

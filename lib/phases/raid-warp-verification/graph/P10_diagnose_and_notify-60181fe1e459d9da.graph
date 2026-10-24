@@ -1,0 +1,96 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P10_diagnose_and_notify:60181fe1e459d9da
+type: graph
+id: phase:P10_diagnose_and_notify:60181fe1e459d9da
+context: dependency graph of phase P10_diagnose_and_notify
+intent: null
+summary: 8 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830036022
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830036022
+lastSeenAt: 1792830036022
+fingerprint: null
+payload:
+  for: P10_diagnose_and_notify
+  kind: phase
+  repo: null
+  hash: 60181fe1e459d9da
+  nodes:
+    - path: copilot/cli.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/recursive-diagnose.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cli/nexus-cli.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/cli-reasoning.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/grammar-engine.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/cli.js
+      to: lib/grammar-engine.js
+      kind: requires
+    - from: copilot/cli.js
+      to: lib/cli-reasoning.js
+      kind: requires
+    - from: copilot/recursive-diagnose.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/recursive-diagnose.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: cli/nexus-cli.js
+      to: copilot/cli.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/recursive-diagnose.js
+      kind: requires
+  crossings:
+    - from: cli/nexus-cli.js
+      to: copilot/cli.js
+      fromSystem: cli
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

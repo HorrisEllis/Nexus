@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-live-mind-phasemap.spec::P2_snapshot_on_sigma
+type: phase
+id: docs_nexus-live-mind-phasemap.spec::P2_snapshot_on_sigma
+context: pipeline phase P2_snapshot_on_sigma of docs/nexus-live-mind-phasemap.spec
+intent: null
+summary: P2_snapshot_on_sigma (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830032949
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830032949
+lastSeenAt: 1792830032949
+fingerprint: null
+payload:
+  id: P2_snapshot_on_sigma
+  map: docs/nexus-live-mind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P1_nervous_system_live
+  blocks: []
+  spec: null
+  graph: e9c2e2af02f2273e

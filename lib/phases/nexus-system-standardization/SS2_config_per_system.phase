@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-system-standardization-phasemap.spec::SS2_config_per_system
+type: phase
+id: docs_nexus-system-standardization-phasemap.spec::SS2_config_per_system
+context: pipeline phase SS2_config_per_system of docs/nexus-system-standardization-phasemap.spec
+intent: null
+summary: SS2_config_per_system (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830034887
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830034887
+lastSeenAt: 1792830034887
+fingerprint: null
+payload:
+  id: SS2_config_per_system
+  map: docs/nexus-system-standardization-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - SS1_system_manifest
+  blocks: []
+  spec: null
+  graph: 21362d473f86d2b4

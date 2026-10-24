@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-mobile-compartments-phasemap.spec::MB4_apple_via_a_real_mac
+type: phase
+id: docs_2026-10-16-mobile-compartments-phasemap.spec::MB4_apple_via_a_real_mac
+context: pipeline phase MB4_apple_via_a_real_mac of docs/2026-10-16-mobile-compartments-phasemap.spec
+intent: null
+summary: MB4_apple_via_a_real_mac (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830012563
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830012563
+lastSeenAt: 1792830012563
+fingerprint: null
+payload:
+  id: MB4_apple_via_a_real_mac
+  map: docs/2026-10-16-mobile-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7d75149232a2bd8e

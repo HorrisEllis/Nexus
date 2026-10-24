@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME13_no_bypass
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME13_no_bypass
+context: pipeline phase ME13_no_bypass of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME13_no_bypass (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997699
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997699
+lastSeenAt: 1792829997699
+fingerprint: null
+payload:
+  id: ME13_no_bypass
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/modules/test-one-model-engine.test.js
+  depends_on:
+    - ME12_callers_moved
+  blocks: []
+  spec: null
+  graph: 5db1b29401ba54fb

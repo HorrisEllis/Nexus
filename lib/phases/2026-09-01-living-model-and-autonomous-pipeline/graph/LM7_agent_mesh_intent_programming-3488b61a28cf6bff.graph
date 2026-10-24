@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM7_agent_mesh_intent_programming:3488b61a28cf6bff
+type: graph
+id: phase:LM7_agent_mesh_intent_programming:3488b61a28cf6bff
+context: dependency graph of phase LM7_agent_mesh_intent_programming
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829973388
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973388
+lastSeenAt: 1792829973388
+fingerprint: null
+payload:
+  for: LM7_agent_mesh_intent_programming
+  kind: phase
+  repo: null
+  hash: 3488b61a28cf6bff
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
+    dependents:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM8_full_pipeline_wiring
+    upstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM3_interaction_contract_wired_to_registry
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
+    downstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM8_full_pipeline_wiring
+    blockedBy:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
+    unlocks:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM8_full_pipeline_wiring
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 4 · blocked by LM6_who_creates_contracts
+      - 'depends on (1): LM6_who_creates_contracts · all upstream 4'
+      - 'needed by (1): LM8_full_pipeline_wiring · finishing it unlocks LM8_full_pipeline_wiring'

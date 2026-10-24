@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:S2_spec_tab:13a6b256674ca997
+type: graph
+id: phase:S2_spec_tab:13a6b256674ca997
+context: dependency graph of phase S2_spec_tab
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829983318
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829983318
+lastSeenAt: 1792829983318
+fingerprint: null
+payload:
+  for: S2_spec_tab
+  kind: phase
+  repo: null
+  hash: 13a6b256674ca997
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::S1_living_spec
+    dependents:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    upstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::S1_living_spec
+    downstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1
+      - 'depends on (1): S1_living_spec'
+      - 'needed by (1): Z1_release · finishing it unlocks Z1_release'

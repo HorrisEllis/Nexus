@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N25_manage_button_enterprise
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N25_manage_button_enterprise
+context: pipeline phase N25_manage_button_enterprise of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N25_manage_button_enterprise (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985448
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985448
+lastSeenAt: 1792829985448
+fingerprint: null
+payload:
+  id: N25_manage_button_enterprise
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/file-manage.js (+ its css)
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 76b8735454ef17a9

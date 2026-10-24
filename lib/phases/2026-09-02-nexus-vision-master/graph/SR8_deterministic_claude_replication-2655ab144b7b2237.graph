@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR8_deterministic_claude_replication:2655ab144b7b2237
+type: graph
+id: phase:SR8_deterministic_claude_replication:2655ab144b7b2237
+context: dependency graph of phase SR8_deterministic_claude_replication
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829974345
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974345
+lastSeenAt: 1792829974345
+fingerprint: null
+payload:
+  for: SR8_deterministic_claude_replication
+  kind: phase
+  repo: null
+  hash: 2655ab144b7b2237
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · ready
+      - 'depends on (2): SR3_artifact_extraction_introspect_bridge, B1_full_build_contract_schema'
+      - 'needed by (0): —'

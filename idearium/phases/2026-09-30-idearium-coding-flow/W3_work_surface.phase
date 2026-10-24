@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-30-idearium-coding-flow-phasemap.spec::W3_work_surface
+type: phase
+id: docs_2026-09-30-idearium-coding-flow-phasemap.spec::W3_work_surface
+context: pipeline phase W3_work_surface of docs/2026-09-30-idearium-coding-flow-phasemap.spec
+intent: null
+summary: W3_work_surface (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792829986650
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829986650
+lastSeenAt: 1792829986650
+fingerprint: null
+payload:
+  id: W3_work_surface
+  map: docs/2026-09-30-idearium-coding-flow-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/work-surface.js
+    - idearium/api/index.js
+    - idearium/api/build-surface.js
+    - idearium/ui/js/work-surface.js
+    - idearium/ui/css/work-surface.css
+    - idearium/ui/js/plan-panel.js
+    - loom/maps/one-idearium-map.js
+  depends_on:
+    - W2_plan_always_lands
+  blocks: []
+  spec: null
+  graph: d22aa3fd5498f953

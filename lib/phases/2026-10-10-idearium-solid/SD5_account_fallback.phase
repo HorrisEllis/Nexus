@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD5_account_fallback
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD5_account_fallback
+context: pipeline phase SD5_account_fallback of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD5_account_fallback (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999648
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999648
+lastSeenAt: 1792829999648
+fingerprint: null
+payload:
+  id: SD5_account_fallback
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/economy/ledger.js
+    - lib/economy/gate.js
+    - guardian/lib/economy-guard.js
+    - lib/account-registry.js
+    - guardian/lib/dispatch-ladder.js
+  depends_on:
+    - SD4_agents_live_in_guardian
+  blocks: []
+  spec: null
+  graph: 655edc147445e9ca

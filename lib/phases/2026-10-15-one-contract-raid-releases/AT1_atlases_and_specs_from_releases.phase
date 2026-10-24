@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-one-contract-raid-releases-phasemap.spec::AT1_atlases_and_specs_from_releases
+type: phase
+id: docs_2026-10-15-one-contract-raid-releases-phasemap.spec::AT1_atlases_and_specs_from_releases
+context: >-
+  pipeline phase AT1_atlases_and_specs_from_releases of
+  docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+intent: null
+summary: AT1_atlases_and_specs_from_releases (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007479
+lastSeenAt: 1792830007479
+fingerprint: null
+payload:
+  id: AT1_atlases_and_specs_from_releases
+  map: docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/atlas-generate.js
+    - scripts/generate-atlases.js
+  depends_on:
+    - RN2_changelog_from_the_commits
+  blocks: []
+  spec: null
+  graph: dc5b8827fb668ce2

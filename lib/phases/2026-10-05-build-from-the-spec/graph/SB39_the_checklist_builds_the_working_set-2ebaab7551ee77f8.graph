@@ -1,0 +1,270 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB39_the_checklist_builds_the_working_set:2ebaab7551ee77f8
+type: graph
+id: phase:SB39_the_checklist_builds_the_working_set:2ebaab7551ee77f8
+context: dependency graph of phase SB39_the_checklist_builds_the_working_set
+intent: null
+summary: 34 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829991001
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991001
+lastSeenAt: 1792829991001
+fingerprint: null
+payload:
+  for: SB39_the_checklist_builds_the_working_set
+  kind: phase
+  repo: null
+  hash: 2ebaab7551ee77f8
+  nodes:
+    - path: copilot/lib/workset.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-catalog.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/learn.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-prompt-blocks.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/ask.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/tool-runtime.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/framework-builder.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/generate-tool-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/loom/harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/user-guide-generator.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/hat-seed.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/work-funnel.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/naming.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-call-listener.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-config.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/context-prereqs.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/shadow.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/learn.js
+      to: lib/agent-tools/naming.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-config.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/event-types.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tool-call-listener.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/context-prereqs.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: guardian/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: intelligence/framework-builder.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/generate-tool-nodes.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/loom/harness.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/tool-layers.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/agent-tools/user-guide-generator.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/hat-seed.js
+      to: lib/agent-tools/index.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/index.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 10
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
+    dependents: []
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB32_context_is_never_optional
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB33_the_agent_runs_the_pipeline
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB34_context_is_the_code_tab_the_graphs_and_memory
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB35_the_index_is_there_when_the_agent_asks
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB37_the_working_set_signal_to_noise
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB3_the_section_prompt_is_domain_agnostic
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 10
+      - 'depends on (1): SB38_prerequisites_the_questions_first · all upstream 10'
+      - 'needed by (0): —'

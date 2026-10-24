@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
+context: pipeline phase SB3_guided_build_loop of docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB3_guided_build_loop (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830034493
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830034493
+lastSeenAt: 1792830034493
+fingerprint: null
+payload:
+  id: SB3_guided_build_loop
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - SB1_schema_extension
+    - SB2_universal_file_parse
+  blocks: []
+  spec: null
+  graph: 43e53ddad29a7b4a

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-awareness-routing-phasemap.spec::CA5_intent_routing
+type: phase
+id: docs_copilot-awareness-routing-phasemap.spec::CA5_intent_routing
+context: pipeline phase CA5_intent_routing of docs/copilot-awareness-routing-phasemap.spec
+intent: null
+summary: CA5_intent_routing (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830028976
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830028976
+lastSeenAt: 1792830028976
+fingerprint: null
+payload:
+  id: CA5_intent_routing
+  map: docs/copilot-awareness-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3a5f0d9163ea6078

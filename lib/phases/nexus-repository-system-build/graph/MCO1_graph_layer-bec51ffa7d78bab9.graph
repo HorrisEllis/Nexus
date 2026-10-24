@@ -1,0 +1,268 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MCO1_graph_layer:bec51ffa7d78bab9
+type: graph
+id: phase:MCO1_graph_layer:bec51ffa7d78bab9
+context: dependency graph of phase MCO1_graph_layer
+intent: null
+summary: 31 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830034108
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830034108
+lastSeenAt: 1792830034108
+fingerprint: null
+payload:
+  for: MCO1_graph_layer
+  kind: phase
+  repo: null
+  hash: bec51ffa7d78bab9
+  nodes:
+    - path: cortex/core/raid/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/cortex-v2.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/repo/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/manifest/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec/idearium.repo-graph.spec
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/code-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/routing-ir.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/lib/heal-loop.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/scan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/compiler-t0.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/manifest/wire-check.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-repo-graph.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/contract/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/snr-filter.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/tunables.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/repo/repo-node.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-graph.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/sigma.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/constitutional-ai.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/execution-pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/replay-engine.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/index.js
+      to: cortex/core/raid/snr-filter.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/core/raid/tunables.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/contract/index.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/execution-pipeline.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/constitutional-ai.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/repo-node.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/spec-graph.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/scan.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/verify-lazy.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: tests/modules/test-repo-graph.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/spec-engine/compiler-t0.js
+      to: idearium/spec-engine/manifest/graph.js
+      kind: requires
+    - from: idearium/spec-engine/manifest/wire-check.js
+      to: idearium/spec-engine/manifest/graph.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/routing-ir.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: diagnostic/lib/heal-loop.js
+      to: cortex/core/raid/index.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/index.js
+      to: intelligence/cfr/sigma.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/index.js
+      to: intelligence/bda/index.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/lib/heal-loop.js
+      to: cortex/core/raid/index.js
+      fromSystem: diagnostic
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/nexus-repository-system-build-phasemap.spec::MCO0_audit_real_coverage
+    dependents:
+      - docs/nexus-repository-system-build-phasemap.spec::MCO2_verification_deepening
+      - docs/nexus-repository-system-build-phasemap.spec::MCO3_snapshot_compliance
+      - docs/nexus-repository-system-build-phasemap.spec::MCO4_hooks_wires_flows_tools
+    upstream:
+      - docs/nexus-repository-system-build-phasemap.spec::MCO0_audit_real_coverage
+    downstream:
+      - docs/nexus-repository-system-build-phasemap.spec::MCO2_verification_deepening
+      - docs/nexus-repository-system-build-phasemap.spec::MCO3_snapshot_compliance
+      - docs/nexus-repository-system-build-phasemap.spec::MCO4_hooks_wires_flows_tools
+      - docs/nexus-repository-system-build-phasemap.spec::MCO5_git_integration_credentials
+    blockedBy: []
+    unlocks:
+      - docs/nexus-repository-system-build-phasemap.spec::MCO2_verification_deepening
+      - docs/nexus-repository-system-build-phasemap.spec::MCO3_snapshot_compliance
+      - docs/nexus-repository-system-build-phasemap.spec::MCO4_hooks_wires_flows_tools
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1
+      - 'depends on (1): MCO0_audit_real_coverage'
+      - >-
+        needed by (3): MCO2_verification_deepening, MCO3_snapshot_compliance,
+        MCO4_hooks_wires_flows_tools · all downstream 4 · finishing it unlocks
+        MCO2_verification_deepening, MCO3_snapshot_compliance, MCO4_hooks_wires_flows_tools

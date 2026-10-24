@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-announce-pulse-repair-phasemap.spec::PR5_repair_for_real
+type: phase
+id: docs_2026-10-05-announce-pulse-repair-phasemap.spec::PR5_repair_for_real
+context: pipeline phase PR5_repair_for_real of docs/2026-10-05-announce-pulse-repair-phasemap.spec
+intent: null
+summary: PR5_repair_for_real (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990532
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990532
+lastSeenAt: 1792829990532
+fingerprint: null
+payload:
+  id: PR5_repair_for_real
+  map: docs/2026-10-05-announce-pulse-repair-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - nexus/autopilot.js
+    - diagnostic/nexus-heal-loop.js
+    - lib/shadow-space.js
+  depends_on:
+    - PR3_negative_space_for_missed_heartbeats
+  blocks: []
+  spec: null
+  graph: 620eceb6ad914afa

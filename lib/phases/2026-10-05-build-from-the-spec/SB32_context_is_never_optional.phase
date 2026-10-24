@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB32_context_is_never_optional
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB32_context_is_never_optional
+context: pipeline phase SB32_context_is_never_optional of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB32_context_is_never_optional (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990986
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990986
+lastSeenAt: 1792829990986
+fingerprint: null
+payload:
+  id: SB32_context_is_never_optional
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent.js
+    - lib/repo-hat.js
+  depends_on:
+    - SB3_the_section_prompt_is_domain_agnostic
+  blocks: []
+  spec: null
+  graph: 811c78496a6d6038

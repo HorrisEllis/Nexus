@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:D1_bridgeos_readme_template:4fb8fecea9b65f50
+type: graph
+id: phase:D1_bridgeos_readme_template:4fb8fecea9b65f50
+context: dependency graph of phase D1_bridgeos_readme_template
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829974290
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974290
+lastSeenAt: 1792829974290
+fingerprint: null
+payload:
+  for: D1_bridgeos_readme_template
+  kind: phase
+  repo: null
+  hash: 4fb8fecea9b65f50
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::D2_idearium_compartment_structure
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::D3_loom_compartment_readme
+    upstream: []
+    downstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::D2_idearium_compartment_structure
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::D3_loom_compartment_readme
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::D2_idearium_compartment_structure
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::D3_loom_compartment_readme
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): D2_idearium_compartment_structure, D3_loom_compartment_readme · finishing it
+        unlocks D2_idearium_compartment_structure, D3_loom_compartment_readme

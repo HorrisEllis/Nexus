@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N17_data_migration_to_owning_systems
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N17_data_migration_to_owning_systems
+context: >-
+  pipeline phase N17_data_migration_to_owning_systems of
+  docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N17_data_migration_to_owning_systems (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985438
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985438
+lastSeenAt: 1792829985438
+fingerprint: null
+payload:
+  id: N17_data_migration_to_owning_systems
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/migrate.js (per-source plans)
+  depends_on:
+    - N10_migration
+  blocks: []
+  spec: null
+  graph: a936213ccfa0c257

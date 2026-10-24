@@ -1,0 +1,232 @@
+envelope: 1
+uuid: nexus-export-graph-phase:C4:1e1f2af6d71358cb
+type: graph
+id: phase:C4:1e1f2af6d71358cb
+context: dependency graph of phase C4
+intent: null
+summary: 27 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829982127
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829982127
+lastSeenAt: 1792829982127
+fingerprint: null
+payload:
+  for: C4
+  kind: phase
+  repo: null
+  hash: 1e1f2af6d71358cb
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/loom/harness.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/build-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-component-store.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/naming.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-catalog.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/agent-tools/tool-catalog.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/agent-tools/tools/loom/harness.js
+      to: lib/agent-tools/naming.js
+      kind: requires
+    - from: lib/agent-tools/tools/loom/harness.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/build-context.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: tests/modules/test-component-store.test.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/loom/harness.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      fromSystem: service
+      toSystem: idearium
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

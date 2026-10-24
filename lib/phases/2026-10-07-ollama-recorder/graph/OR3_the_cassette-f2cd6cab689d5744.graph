@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OR3_the_cassette:f2cd6cab689d5744
+type: graph
+id: phase:OR3_the_cassette:f2cd6cab689d5744
+context: dependency graph of phase OR3_the_cassette
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829995727
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829995727
+lastSeenAt: 1792829995727
+fingerprint: null
+payload:
+  for: OR3_the_cassette
+  kind: phase
+  repo: null
+  hash: f2cd6cab689d5744
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

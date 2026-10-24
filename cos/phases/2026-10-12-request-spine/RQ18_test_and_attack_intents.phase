@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
+context: pipeline phase RQ18_test_and_attack_intents of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ18_test_and_attack_intents (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001729
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001729
+lastSeenAt: 1792830001729
+fingerprint: null
+payload:
+  id: RQ18_test_and_attack_intents
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/spec/torture-chamber.spec
+    - cos/spec/qa-catalog.spec
+    - intelligence (adversary-suite)
+    - copilot/adversarial.js
+  depends_on:
+    - RQ15_cells_in_parallel
+  blocks: []
+  spec: null
+  graph: 8496c9d2a82eb910

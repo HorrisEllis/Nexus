@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ST1_schema_for_everything_reusable:7d79572c6ac4587e
+type: graph
+id: phase:ST1_schema_for_everything_reusable:7d79572c6ac4587e
+context: dependency graph of phase ST1_schema_for_everything_reusable
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830020060
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020060
+lastSeenAt: 1792830020060
+fingerprint: null
+payload:
+  for: ST1_schema_for_everything_reusable
+  kind: phase
+  repo: null
+  hash: 7d79572c6ac4587e
+  nodes:
+    - path: idearium/spec-engine/templates/genesis.spec
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+    dependents:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+    upstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+    downstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN3_maps_rendered_from_nodes
+    blockedBy:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+    unlocks:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by IN0_baseline
+      - 'depends on (1): IN0_baseline'
+      - >-
+        needed by (1): PN1_phases_to_nodes · all downstream 3 · finishing it unlocks
+        PN1_phases_to_nodes

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
+context: pipeline phase BS17_copilot_browser_verbs of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS17_copilot_browser_verbs (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985015
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985015
+lastSeenAt: 1792829985015
+fingerprint: null
+payload:
+  id: BS17_copilot_browser_verbs
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/copilot/verbs.js
+    - clear-glass/src/copilot/bridge.js
+    - clear-glass/renderer/browser.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 612a170a43473d39

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::A1
+type: phase
+id: docs_2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::A1
+context: pipeline phase A1 of docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec
+intent: null
+summary: A1 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829980537
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980537
+lastSeenAt: 1792829980537
+fingerprint: null
+payload:
+  id: A1
+  map: docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/atlases/*.md
+    - idearium/ui/js/nexus-atlas.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 369bde5ee0a043bb

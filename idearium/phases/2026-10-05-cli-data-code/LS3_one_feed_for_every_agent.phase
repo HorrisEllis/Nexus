@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::LS3_one_feed_for_every_agent
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::LS3_one_feed_for_every_agent
+context: pipeline phase LS3_one_feed_for_every_agent of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: LS3_one_feed_for_every_agent (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991472
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991472
+lastSeenAt: 1792829991472
+fingerprint: null
+payload:
+  id: LS3_one_feed_for_every_agent
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+  depends_on:
+    - LS2_copilot_sends_the_text_as_it_comes
+  blocks: []
+  spec: null
+  graph: cbe6c8256329685a

@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CON3_system_controls:9bea20876814d6b2
+type: graph
+id: phase:CON3_system_controls:9bea20876814d6b2
+context: dependency graph of phase CON3_system_controls
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829792721
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829792721
+lastSeenAt: 1792829792721
+fingerprint: null
+payload:
+  for: CON3_system_controls
+  kind: phase
+  repo: null
+  hash: 9bea20876814d6b2
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 746f60cbfacbcde1
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 746f60cbfacbcde1 · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

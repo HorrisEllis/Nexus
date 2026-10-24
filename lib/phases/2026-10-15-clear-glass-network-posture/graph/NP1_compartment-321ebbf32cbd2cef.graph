@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NP1_compartment:321ebbf32cbd2cef
+type: graph
+id: phase:NP1_compartment:321ebbf32cbd2cef
+context: dependency graph of phase NP1_compartment
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829786770
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829786770
+lastSeenAt: 1792829786770
+fingerprint: null
+payload:
+  for: NP1_compartment
+  kind: phase
+  repo: null
+  hash: 321ebbf32cbd2cef
+  nodes:
+    - path: clear-glass/src/net/transport-host.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/net/service.js
+      to: clear-glass/src/net/transport-host.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 746f60cbfacbcde1
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP19_container
+    upstream: []
+    downstream:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP19_container
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP19_container
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 746f60cbfacbcde1 · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): NP19_container · finishing it unlocks NP19_container'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

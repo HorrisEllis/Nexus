@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BR1_callto_component_hotswap_catalog:e6e82690ee483733
+type: graph
+id: phase:BR1_callto_component_hotswap_catalog:e6e82690ee483733
+context: dependency graph of phase BR1_callto_component_hotswap_catalog
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829971726
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971726
+lastSeenAt: 1792829971726
+fingerprint: null
+payload:
+  for: BR1_callto_component_hotswap_catalog
+  kind: phase
+  repo: null
+  hash: e6e82690ee483733
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
+    dependents: []
+    upstream:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
+    downstream: []
+    blockedBy:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by TX10_component_registry_discipline
+      - 'depends on (1): TX10_component_registry_discipline'
+      - 'needed by (0): —'

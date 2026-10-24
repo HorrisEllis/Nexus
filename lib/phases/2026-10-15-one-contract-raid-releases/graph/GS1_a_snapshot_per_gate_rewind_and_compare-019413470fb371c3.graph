@@ -1,0 +1,200 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GS1_a_snapshot_per_gate_rewind_and_compare:019413470fb371c3
+type: graph
+id: phase:GS1_a_snapshot_per_gate_rewind_and_compare:019413470fb371c3
+context: dependency graph of phase GS1_a_snapshot_per_gate_rewind_and_compare
+intent: null
+summary: 19 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830007476
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007476
+lastSeenAt: 1792830007476
+fingerprint: null
+payload:
+  for: GS1_a_snapshot_per_gate_rewind_and_compare
+  kind: phase
+  repo: null
+  hash: 019413470fb371c3
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/repo/snapshot-restore.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/replay-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/snapshot-trigger.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/integrity-revert.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/repo/snapshot-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-versions.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/repo-versions.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: idearium/repo/snapshot-restore.js
+      to: idearium/repo/snapshot-files.js
+      kind: requires
+    - from: lib/replay-engine.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: intelligence/snapshot-trigger.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: lib/integrity-revert.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: lib/replay-engine.js
+      kind: requires
+  crossings:
+    - from: lib/replay-engine.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::BR1_bricks_on_every_path
+    dependents:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::BR2_recursion_to_a_depth
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN1_versionium_tags_and_releases
+    upstream:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::BR1_bricks_on_every_path
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD0_raid_runs_the_contract
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RD1_every_build_goes_through_raid
+    downstream:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::AT1_atlases_and_specs_from_releases
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::BR2_recursion_to_a_depth
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN1_versionium_tags_and_releases
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN2_changelog_from_the_commits
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN3_releases_in_idearium
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::BR2_recursion_to_a_depth
+      - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::RN1_versionium_tags_and_releases
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 4
+      - 'depends on (1): BR1_bricks_on_every_path · all upstream 4'
+      - >-
+        needed by (2): BR2_recursion_to_a_depth, RN1_versionium_tags_and_releases · all downstream 5
+        · finishing it unlocks BR2_recursion_to_a_depth, RN1_versionium_tags_and_releases

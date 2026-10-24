@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
+context: >-
+  pipeline phase SB31_every_new_repo_is_the_skeleton_the_idea_slots_in of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB31_every_new_repo_is_the_skeleton_the_idea_slots_in (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990984
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990984
+lastSeenAt: 1792829990984
+fingerprint: null
+payload:
+  id: SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/index.js
+    - idearium/api/index.js
+    - lib/file-tree-plan.js
+    - lib/registry-plan.js
+    - idearium/spec-engine/templates/architecture-spec.template.yaml
+  depends_on:
+    - SB30_the_template_is_a_skeleton
+  blocks: []
+  spec: null
+  graph: a632e63c0a0c153d

@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-30-idearium-coding-flow-phasemap.spec::W5_theme_and_css
+type: phase
+id: docs_2026-09-30-idearium-coding-flow-phasemap.spec::W5_theme_and_css
+context: pipeline phase W5_theme_and_css of docs/2026-09-30-idearium-coding-flow-phasemap.spec
+intent: null
+summary: W5_theme_and_css (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792829986652
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829986652
+lastSeenAt: 1792829986652
+fingerprint: null
+payload:
+  id: W5_theme_and_css
+  map: docs/2026-09-30-idearium-coding-flow-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/css/nexus-theme.css
+    - idearium/ui/js/theme.js
+    - idearium/lib/config-core.cjs
+    - idearium/ui/index.html
+    - idearium/ui/settings.html
+    - idearium/ui/css/work-surface.css
+  depends_on:
+    - W4_navigation
+  blocks: []
+  spec: null
+  graph: ec86ed1c0f589dd1

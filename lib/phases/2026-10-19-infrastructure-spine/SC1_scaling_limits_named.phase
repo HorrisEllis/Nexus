@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::SC1_scaling_limits_named
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::SC1_scaling_limits_named
+context: pipeline phase SC1_scaling_limits_named of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: SC1_scaling_limits_named (foundation) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830020060
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020060
+lastSeenAt: 1792830020060
+fingerprint: null
+payload:
+  id: SC1_scaling_limits_named
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/phase-dag.js
+    - lib/jaa-store.js
+    - loom/bootstrap.js
+    - idearium/repo/nexus-self.js
+  depends_on:
+    - IN8_any_size
+  blocks: []
+  spec: null
+  graph: 336b753926ee2771

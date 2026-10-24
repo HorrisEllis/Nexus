@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::D3_decided_2026_09_23
+type: phase
+id: docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::D3_decided_2026_09_23
+context: pipeline phase D3_decided_2026_09_23 of docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+intent: null
+summary: D3_decided_2026_09_23 (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829978967
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978967
+lastSeenAt: 1792829978967
+fingerprint: null
+payload:
+  id: D3_decided_2026_09_23
+  map: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3dfdde6d3ae10df7

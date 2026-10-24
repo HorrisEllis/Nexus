@@ -1,0 +1,77 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP11_a_reply_on_the_page_is_never_sent_again:fefc2312b6a59efa
+type: graph
+id: phase:HP11_a_reply_on_the_page_is_never_sent_again:fefc2312b6a59efa
+context: dependency graph of phase HP11_a_reply_on_the_page_is_never_sent_again
+intent: null
+summary: 5 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829997245
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997245
+lastSeenAt: 1792829997245
+fingerprint: null
+payload:
+  for: HP11_a_reply_on_the_page_is_never_sent_again
+  kind: phase
+  repo: null
+  hash: fefc2312b6a59efa
+  nodes:
+    - path: guardian/lib/job-retry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/jobs.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+  edges:
+    - from: guardian/lib/job-retry.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      kind: requires
+  crossings:
+    - from: lib/pipeline-routing.js
+      to: guardian/lib/job-retry.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

@@ -1,0 +1,84 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB4_bookmark_checklists:8c52de1ac7a8caf8
+type: graph
+id: phase:TB4_bookmark_checklists:8c52de1ac7a8caf8
+context: dependency graph of phase TB4_bookmark_checklists
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830001259
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001259
+lastSeenAt: 1792830001259
+fingerprint: null
+payload:
+  for: TB4_bookmark_checklists
+  kind: phase
+  repo: null
+  hash: 8c52de1ac7a8caf8
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/bookmarks/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/rewind/engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/rewind/resume.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/phase2.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/bookmarks/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/bookmarks/store.js
+      kind: requires
+    - from: clear-glass/test/phase2.test.js
+      to: clear-glass/src/bookmarks/store.js
+      kind: requires
+    - from: clear-glass/src/rewind/resume.js
+      to: clear-glass/src/rewind/engine.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB2_a_tab_runs_as_an_account
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB0_the_webview_session_proved
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB2_a_tab_runs_as_an_account
+    downstream: []
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB2_a_tab_runs_as_an_account
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · blocked by TB2_a_tab_runs_as_an_account
+      - 'depends on (1): TB2_a_tab_runs_as_an_account · all upstream 3'
+      - 'needed by (0): —'

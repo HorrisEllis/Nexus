@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:D2_cutover_policy:2c58bda799e2bf2d
+type: graph
+id: phase:D2_cutover_policy:2c58bda799e2bf2d
+context: dependency graph of phase D2_cutover_policy
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829978558
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978558
+lastSeenAt: 1792829978558
+fingerprint: null
+payload:
+  for: D2_cutover_policy
+  kind: phase
+  repo: null
+  hash: 2c58bda799e2bf2d
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

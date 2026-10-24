@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P34_nodes_in_the_lattice:2e02ff3713ff6e57
+type: graph
+id: phase:P34_nodes_in_the_lattice:2e02ff3713ff6e57
+context: dependency graph of phase P34_nodes_in_the_lattice
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829976529
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976529
+lastSeenAt: 1792829976529
+fingerprint: null
+payload:
+  for: P34_nodes_in_the_lattice
+  kind: phase
+  repo: null
+  hash: 2e02ff3713ff6e57
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+    dependents: []
+    upstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P5_data_folder_completion
+    downstream: []
+    blockedBy:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 2 · blocked by P33_every_system_runs_its_node_registry,
+        P19_dynamic_nodes_via_causal_graph
+      - >-
+        depends on (2): P33_every_system_runs_its_node_registry, P19_dynamic_nodes_via_causal_graph
+        · all upstream 4
+      - 'needed by (0): —'

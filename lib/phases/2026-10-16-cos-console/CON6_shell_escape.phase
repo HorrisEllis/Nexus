@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-cos-console-phasemap.spec::CON6_shell_escape
+type: phase
+id: docs_2026-10-16-cos-console-phasemap.spec::CON6_shell_escape
+context: pipeline phase CON6_shell_escape of docs/2026-10-16-cos-console-phasemap.spec
+intent: null
+summary: CON6_shell_escape (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830010562
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010562
+lastSeenAt: 1792830010562
+fingerprint: null
+payload:
+  id: CON6_shell_escape
+  map: docs/2026-10-16-cos-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a539b2efcad651dc

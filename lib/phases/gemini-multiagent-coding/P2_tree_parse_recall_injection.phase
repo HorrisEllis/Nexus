@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_gemini-multiagent-coding-phasemap.spec::P2_tree_parse_recall_injection
+type: phase
+id: docs_gemini-multiagent-coding-phasemap.spec::P2_tree_parse_recall_injection
+context: pipeline phase P2_tree_parse_recall_injection of docs/gemini-multiagent-coding-phasemap.spec
+intent: null
+summary: P2_tree_parse_recall_injection (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830030955
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830030955
+lastSeenAt: 1792830030955
+fingerprint: null
+payload:
+  id: P2_tree_parse_recall_injection
+  map: docs/gemini-multiagent-coding-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P1_per_agent_contracts
+  blocks: []
+  spec: null
+  graph: 31411292304becfe

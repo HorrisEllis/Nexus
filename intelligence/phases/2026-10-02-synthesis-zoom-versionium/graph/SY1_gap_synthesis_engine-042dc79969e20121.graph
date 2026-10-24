@@ -1,0 +1,74 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SY1_gap_synthesis_engine:042dc79969e20121
+type: graph
+id: phase:SY1_gap_synthesis_engine:042dc79969e20121
+context: dependency graph of phase SY1_gap_synthesis_engine
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829989747
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829989747
+lastSeenAt: 1792829989747
+fingerprint: null
+payload:
+  for: SY1_gap_synthesis_engine
+  kind: phase
+  repo: null
+  hash: 042dc79969e20121
+  nodes:
+    - path: intelligence/synthesis/engine.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/synthesis/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/synthesis/sources.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/synthesis/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/synthesis/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec::SY2_synthesis_surfaces
+      - docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec::LV1_fill_the_highest_leverage
+    upstream: []
+    downstream:
+      - docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec::LV1_fill_the_highest_leverage
+      - docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec::SY2_synthesis_surfaces
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec::SY2_synthesis_surfaces
+      - docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec::LV1_fill_the_highest_leverage
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): SY2_synthesis_surfaces, LV1_fill_the_highest_leverage · finishing it unlocks
+        SY2_synthesis_surfaces, LV1_fill_the_highest_leverage
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

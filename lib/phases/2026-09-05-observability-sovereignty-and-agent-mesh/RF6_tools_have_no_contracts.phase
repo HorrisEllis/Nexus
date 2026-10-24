@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF6_tools_have_no_contracts
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF6_tools_have_no_contracts
+context: >-
+  pipeline phase RF6_tools_have_no_contracts of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: RF6_tools_have_no_contracts (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975187
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975187
+lastSeenAt: 1792829975187
+fingerprint: null
+payload:
+  id: RF6_tools_have_no_contracts
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 416447ad4ef40e25

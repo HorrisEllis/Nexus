@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-autonomous-phasemap.spec::CA5_system_control_and_clearglass
+type: phase
+id: docs_copilot-autonomous-phasemap.spec::CA5_system_control_and_clearglass
+context: pipeline phase CA5_system_control_and_clearglass of docs/copilot-autonomous-phasemap.spec
+intent: null
+summary: CA5_system_control_and_clearglass (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830028602
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830028602
+lastSeenAt: 1792830028602
+fingerprint: null
+payload:
+  id: CA5_system_control_and_clearglass
+  map: docs/copilot-autonomous-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - CA1_scheduler
+    - CA4_connections
+  blocks: []
+  spec: null
+  graph: 292f947e788fddeb

@@ -1,0 +1,188 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB1_tab_is_a_view:ee8c681d5d8a4bf4
+type: graph
+id: phase:TB1_tab_is_a_view:ee8c681d5d8a4bf4
+context: dependency graph of phase TB1_tab_is_a_view
+intent: null
+summary: 20 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830002542
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002542
+lastSeenAt: 1792830002542
+fingerprint: null
+payload:
+  for: TB1_tab_is_a_view
+  kind: phase
+  repo: null
+  hash: ee8c681d5d8a4bf4
+  nodes:
+    - path: clear-glass/src/driver/page-resolver.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tabs/views.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-mesh-dom-transport.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/contexts/google-signin.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/vault.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/compartment-window.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/sse/server.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tls/proxy.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/main/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/sse/server.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/tls/proxy.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/manager.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/dom/archaeology.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+    - from: tests/modules/test-mesh-dom-transport.js
+      to: clear-glass/src/driver/page-resolver.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+    dependents:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID3_bookmarks_carry_the_identity
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID4_incognito
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB2_new_tab_menu
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB3_browser_rebuilt
+    upstream:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID0_signed_in_where_he_signs_in
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+    downstream:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID3_bookmarks_carry_the_identity
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID4_incognito
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB2_new_tab_menu
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB3_browser_rebuilt
+    blockedBy:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+    unlocks:
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID3_bookmarks_carry_the_identity
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID4_incognito
+      - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB2_new_tab_menu
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by ID1_identities
+      - 'depends on (1): ID1_identities · all upstream 2'
+      - >-
+        needed by (4): ID3_bookmarks_carry_the_identity, ID4_incognito, TB2_new_tab_menu,
+        TB3_browser_rebuilt · finishing it unlocks ID3_bookmarks_carry_the_identity, ID4_incognito,
+        TB2_new_tab_menu

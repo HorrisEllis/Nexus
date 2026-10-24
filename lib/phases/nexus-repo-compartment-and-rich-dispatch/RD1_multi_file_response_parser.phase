@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::RD1_multi_file_response_parser
+type: phase
+id: docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::RD1_multi_file_response_parser
+context: >-
+  pipeline phase RD1_multi_file_response_parser of
+  docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+intent: null
+summary: RD1_multi_file_response_parser (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830033722
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830033722
+lastSeenAt: 1792830033722
+fingerprint: null
+payload:
+  id: RD1_multi_file_response_parser
+  map: docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 747cf5517c059840

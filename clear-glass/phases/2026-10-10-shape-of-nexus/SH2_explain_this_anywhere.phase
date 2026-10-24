@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::SH2_explain_this_anywhere
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::SH2_explain_this_anywhere
+context: pipeline phase SH2_explain_this_anywhere of docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: SH2_explain_this_anywhere (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830000471
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000471
+lastSeenAt: 1792830000471
+fingerprint: null
+payload:
+  id: SH2_explain_this_anywhere
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/page/field.js
+    - clear-glass/src/copilot/tools.js
+  depends_on:
+    - OP2_the_system_settings_in_its_repo
+  blocks: []
+  spec: null
+  graph: ee5f18699614cf8c

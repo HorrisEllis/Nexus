@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ21_the_contract_file_is_its_record
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ21_the_contract_file_is_its_record
+context: pipeline phase RQ21_the_contract_file_is_its_record of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ21_the_contract_file_is_its_record (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001733
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001733
+lastSeenAt: 1792830001733
+fingerprint: null
+payload:
+  id: RQ21_the_contract_file_is_its_record
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/node-export.js
+    - >-
+      lib/node-schemas/schema.contract and cortex/schemas/schema.contract (the sovereign copy; both
+      change together)
+    - cortex/core/raid/contract-intake.js (the file is written again at every transition)
+    - cortex/core/raid/event-taxonomy.js
+  depends_on:
+    - RQ0_the_inventory_proved
+  blocks: []
+  spec: null
+  graph: edb46c91a98d61cd

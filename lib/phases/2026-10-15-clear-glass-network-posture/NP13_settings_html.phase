@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP13_settings_html
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP13_settings_html
+context: pipeline phase NP13_settings_html of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP13_settings_html (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830004600
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830004600
+lastSeenAt: 1792830004600
+fingerprint: null
+payload:
+  id: NP13_settings_html
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - NP9_cli_first
+    - NP10_browser_surface
+  blocks: []
+  spec: null
+  graph: 7963737bd097d29a

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA0c_the_learned_map_is_per_site
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA0c_the_learned_map_is_per_site
+context: >-
+  pipeline phase GA0c_the_learned_map_is_per_site of
+  docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: GA0c_the_learned_map_is_per_site (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830019245
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830019245
+lastSeenAt: 1792830019245
+fingerprint: null
+payload:
+  id: GA0c_the_learned_map_is_per_site
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 369955e98964c84b

@@ -1,0 +1,277 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AR1_architect_retirement_and_hooks_to_loom:dfe63d7a9aa408fb
+type: graph
+id: phase:AR1_architect_retirement_and_hooks_to_loom:dfe63d7a9aa408fb
+context: dependency graph of phase AR1_architect_retirement_and_hooks_to_loom
+intent: null
+summary: 40 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976061
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976061
+lastSeenAt: 1792829976061
+fingerprint: null
+payload:
+  for: AR1_architect_retirement_and_hooks_to_loom
+  kind: phase
+  repo: null
+  hash: dfe63d7a9aa408fb
+  nodes:
+    - path: architect/service.js
+      role: changes
+      exists: true
+      system: architect
+    - path: architect/src/spec/Blueprint.js
+      role: changes
+      exists: true
+      system: architect
+    - path: copilot/intents.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: docs/hooks-migration.spec
+      role: changes
+      exists: true
+      system: null
+    - path: hooks/index.js
+      role: changes
+      exists: true
+      system: hooks
+    - path: lib/agent-tools/tools/clear-glass/command-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-status.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ollama/lib/command-index.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: scripts/generate-hooks.js
+      role: changes
+      exists: true
+      system: null
+    - path: scripts/verify-wires.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/nerve-phase0-phase1.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/nexus-nerve.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nerve-gap-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nerve-ollama-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: service/cortex-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: hooks/architect.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/copilot.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/cortex.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/emerge.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/guardian.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/idearium.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/intelligence.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/ollama.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/orchestrator.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/side-effect-parser.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: hooks/index.js
+      to: hooks/guardian.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/cortex.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/intelligence.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/orchestrator.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/idearium.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/architect.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/emerge.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/copilot.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/ollama.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/side-effect-parser.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: service/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intents.js
+      kind: requires
+    - from: lib/nerve-gap-bridge.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: lib/nerve-ollama-bridge.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings:
+    - from: service/cortex-service.js
+      to: cortex/boot.js
+      fromSystem: service
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

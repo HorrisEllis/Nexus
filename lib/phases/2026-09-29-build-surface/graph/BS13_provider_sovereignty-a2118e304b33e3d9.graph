@@ -1,0 +1,242 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS13_provider_sovereignty:a2118e304b33e3d9
+type: graph
+id: phase:BS13_provider_sovereignty:a2118e304b33e3d9
+context: dependency graph of phase BS13_provider_sovereignty
+intent: null
+summary: 26 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985011
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985011
+lastSeenAt: 1792829985011
+fingerprint: null
+payload:
+  for: BS13_provider_sovereignty
+  kind: phase
+  repo: null
+  hash: a2118e304b33e3d9
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/seam/adapters/warp-cascade.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/warp-build-dispatch.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/warp-rung.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-warp-cascade-provider-fallback.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+    - path: warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/dispatch/cascade.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/dispatch/index.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: lib/seam/adapters/warp-cascade.js
+      to: warp/dispatch/index.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: warp/dispatch/cascade.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: warp/core/Axiom.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/economy/store.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/economy/gate.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: lib/seam/adapters/warp-cascade.js
+      kind: requires
+    - from: lib/warp-rung.js
+      to: lib/seam/adapters/warp-cascade.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: lib/seam/adapters/warp-cascade.js
+      kind: requires
+    - from: tests/modules/test-warp-cascade-provider-fallback.js
+      to: lib/seam/adapters/warp-cascade.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: lib/seam/adapters/warp-cascade.js
+      to: warp/dispatch/index.js
+      fromSystem: lib
+      toSystem: warp
+      kind: upward
+      known: true
+    - from: lib/seam/adapters/warp-cascade.js
+      to: warp/dispatch/cascade.js
+      fromSystem: lib
+      toSystem: warp
+      kind: upward
+      known: true
+    - from: lib/seam/adapters/warp-cascade.js
+      to: warp/core/Axiom.js
+      fromSystem: lib
+      toSystem: warp
+      kind: upward
+      known: true
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      fromSystem: service
+      toSystem: idearium
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    upstream: []
+    downstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): BS12_release · finishing it unlocks BS12_release'

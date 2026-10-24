@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA3_the_pick_is_saved_three_ways
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA3_the_pick_is_saved_three_ways
+context: >-
+  pipeline phase GA3_the_pick_is_saved_three_ways of
+  docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: GA3_the_pick_is_saved_three_ways (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830019248
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830019248
+lastSeenAt: 1792830019248
+fingerprint: null
+payload:
+  id: GA3_the_pick_is_saved_three_ways
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/gig-learn.js
+    - clear-glass/src/site-settings/store.js
+    - clear-glass/src/macros/recording.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - GA2_a_missed_field_asks_the_picker
+  blocks: []
+  spec: null
+  graph: 44b0a16a16b16c5c

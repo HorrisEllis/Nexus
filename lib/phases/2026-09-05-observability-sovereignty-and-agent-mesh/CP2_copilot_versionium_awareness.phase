@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CP2_copilot_versionium_awareness
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CP2_copilot_versionium_awareness
+context: >-
+  pipeline phase CP2_copilot_versionium_awareness of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: CP2_copilot_versionium_awareness (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975223
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975223
+lastSeenAt: 1792829975223
+fingerprint: null
+payload:
+  id: CP2_copilot_versionium_awareness
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - VSB1_fix_versionium_split_brain
+  blocks: []
+  spec: null
+  graph: dc90fa1d06d6df9e

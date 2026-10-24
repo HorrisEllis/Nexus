@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P6_verify
+type: phase
+id: docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P6_verify
+context: pipeline phase P6_verify of docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+intent: null
+summary: P6_verify (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829978965
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978965
+lastSeenAt: 1792829978965
+fingerprint: null
+payload:
+  id: P6_verify
+  map: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e233123773468798

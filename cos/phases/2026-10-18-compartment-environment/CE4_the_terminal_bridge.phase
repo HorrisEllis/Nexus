@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
+type: phase
+id: docs_2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
+context: pipeline phase CE4_the_terminal_bridge of docs/2026-10-18-compartment-environment-phasemap.spec
+intent: null
+summary: CE4_the_terminal_bridge (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830017329
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830017329
+lastSeenAt: 1792830017329
+fingerprint: null
+payload:
+  id: CE4_the_terminal_bridge
+  map: docs/2026-10-18-compartment-environment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/compartment/terminal.js
+    - cos/server.js
+    - idearium/api/index.js
+    - package.json
+  depends_on:
+    - CE3_the_handshake
+  blocks: []
+  spec: null
+  graph: 008607ecef551be9

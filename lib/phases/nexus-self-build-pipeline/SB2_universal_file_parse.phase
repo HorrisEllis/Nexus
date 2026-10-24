@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+context: pipeline phase SB2_universal_file_parse of docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB2_universal_file_parse (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830034492
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830034492
+lastSeenAt: 1792830034492
+fingerprint: null
+payload:
+  id: SB2_universal_file_parse
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d95800e9f662b1a7

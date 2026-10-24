@@ -1,0 +1,121 @@
+envelope: 1
+uuid: nexus-export-graph-phase:S3:9e150090cf73a41d
+type: graph
+id: phase:S3:9e150090cf73a41d
+context: dependency graph of phase S3
+intent: null
+summary: 10 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829984585
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984585
+lastSeenAt: 1792829984585
+fingerprint: null
+payload:
+  for: S3
+  kind: phase
+  repo: null
+  hash: 9e150090cf73a41d
+  nodes:
+    - path: cos/ci/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/runtime/syntax-check.cjs
+      role: changes
+      exists: true
+      system: cos
+    - path: intelligence/rfr2/enforcement/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: cos/ci/ci-keys.smoke.cjs
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/ci/ci.smoke.cjs
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/ci/keys.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/rfr2/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: cos/ci/keys.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/playground/sandbox.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/ci/index.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: cos/ci/index.js
+      to: cos/ci/keys.js
+      kind: requires
+    - from: cos/ci/ci-keys.smoke.cjs
+      to: cos/ci/index.js
+      kind: requires
+    - from: cos/ci/ci.smoke.cjs
+      to: cos/ci/index.js
+      kind: requires
+    - from: cos/ci/keys.js
+      to: cos/ci/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cos/ci/index.js
+      kind: requires
+    - from: intelligence/rfr2/index.js
+      to: intelligence/rfr2/enforcement/index.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: cos/ci/index.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+    dependents:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    upstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S0
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+    downstream:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · ready
+      - 'depends on (1): S1 · all upstream 2'
+      - 'needed by (4): S4, L1, A1, X1 · all downstream 7 · finishing it unlocks S4'

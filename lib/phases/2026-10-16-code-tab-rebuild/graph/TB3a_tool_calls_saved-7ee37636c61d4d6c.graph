@@ -1,0 +1,78 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TB3a_tool_calls_saved:7ee37636c61d4d6c
+type: graph
+id: phase:TB3a_tool_calls_saved:7ee37636c61d4d6c
+context: dependency graph of phase TB3a_tool_calls_saved
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830010176
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010176
+lastSeenAt: 1792830010176
+fingerprint: null
+payload:
+  for: TB3a_tool_calls_saved
+  kind: phase
+  repo: null
+  hash: 7ee37636c61d4d6c
+  nodes:
+    - path: lib/agent-tools/tool-call-listener.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/tool-call-listener.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: guardian/server.js
+      to: lib/agent-tools/tool-call-listener.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tool-call-listener.js
+      kind: requires
+    - from: tests/modules/tool-call-listener.test.js
+      to: lib/agent-tools/tool-call-listener.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+    dependents:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4a_recall_in_the_dispatcher
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4b_nexus_recall_tool
+    upstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB0_decisions
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB1_read_model_per_tab
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+    downstream:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4a_recall_in_the_dispatcher
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4b_nexus_recall_tool
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4c_measure
+    blockedBy:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB2_persistence_audit
+    unlocks:
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4a_recall_in_the_dispatcher
+      - docs/2026-10-16-code-tab-rebuild-phasemap.spec::TB4b_nexus_recall_tool
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · blocked by TB2_persistence_audit
+      - 'depends on (1): TB2_persistence_audit · all upstream 3'
+      - >-
+        needed by (2): TB4a_recall_in_the_dispatcher, TB4b_nexus_recall_tool · all downstream 3 ·
+        finishing it unlocks TB4a_recall_in_the_dispatcher, TB4b_nexus_recall_tool

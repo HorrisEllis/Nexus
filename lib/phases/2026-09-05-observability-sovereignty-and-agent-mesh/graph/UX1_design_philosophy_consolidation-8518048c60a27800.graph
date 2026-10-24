@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UX1_design_philosophy_consolidation:8518048c60a27800
+type: graph
+id: phase:UX1_design_philosophy_consolidation:8518048c60a27800
+context: dependency graph of phase UX1_design_philosophy_consolidation
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829975230
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975230
+lastSeenAt: 1792829975230
+fingerprint: null
+payload:
+  for: UX1_design_philosophy_consolidation
+  kind: phase
+  repo: null
+  hash: 8518048c60a27800
+  nodes:
+    - path: docs/UI-DESIGN-PHILOSOPHY.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

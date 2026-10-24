@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP6_the_build_surface_opens:ed70fce51132cf3d
+type: graph
+id: phase:HP6_the_build_surface_opens:ed70fce51132cf3d
+context: dependency graph of phase HP6_the_build_surface_opens
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829997241
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997241
+lastSeenAt: 1792829997241
+fingerprint: null
+payload:
+  for: HP6_the_build_surface_opens
+  kind: phase
+  repo: null
+  hash: ed70fce51132cf3d
+  nodes:
+    - path: idearium/ui/js/phases.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

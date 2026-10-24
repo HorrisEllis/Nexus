@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456416773
+exported_at: 1792830022175
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416773
-lastSeenAt: 1792456416773
+firstSeenAt: 1792830022175
+lastSeenAt: 1792830022175
 fingerprint: null
 payload:
   for: GW1_gate_primitive
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
+    dagHash: 2f8ddd0afd383c4f
     layer: 4
     deps:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
@@ -69,7 +69,7 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 7583ffef0c495b95 · layer 4 · ON THE CRITICAL PATH · blocked by GW0_gate_census,
+        DAG 2f8ddd0afd383c4f · layer 4 · ON THE CRITICAL PATH · blocked by GW0_gate_census,
         GR1_graph_primitive, GQ1_quality_stream
       - 'depends on (3): GW0_gate_census, GR1_graph_primitive, GQ1_quality_stream · all upstream 9'
       - >-

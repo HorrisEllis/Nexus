@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UP6_model_for_the_unplaced:76cb86273b1fc6d5
+type: graph
+id: phase:UP6_model_for_the_unplaced:76cb86273b1fc6d5
+context: dependency graph of phase UP6_model_for_the_unplaced
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830021327
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830021327
+lastSeenAt: 1792830021327
+fingerprint: null
+payload:
+  for: UP6_model_for_the_unplaced
+  kind: phase
+  repo: null
+  hash: 76cb86273b1fc6d5
+  nodes:
+    - path: lib/upload-placement.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/api/index.js
+      to: lib/upload-placement.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP3_upload_routes_and_commands
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP5_registry_wires_on_apply
+    dependents: []
+    upstream:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP1_placement_tool
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP2_learned_placements
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP3_upload_routes_and_commands
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP5_registry_wires_on_apply
+    downstream: []
+    blockedBy:
+      - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP5_registry_wires_on_apply
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 4 · blocked by UP5_registry_wires_on_apply
+      - 'depends on (2): UP3_upload_routes_and_commands, UP5_registry_wires_on_apply · all upstream 4'
+      - 'needed by (0): —'

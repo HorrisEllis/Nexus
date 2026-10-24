@@ -1,0 +1,105 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FG1_containment_tree:aaca074a00f1ef2c
+type: graph
+id: phase:FG1_containment_tree:aaca074a00f1ef2c
+context: dependency graph of phase FG1_containment_tree
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829988946
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988946
+lastSeenAt: 1792829988946
+fingerprint: null
+payload:
+  for: FG1_containment_tree
+  kind: phase
+  repo: null
+  hash: aaca074a00f1ef2c
+  nodes:
+    - path: idearium/repo/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/tree.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/scan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-repo-graph.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/scan.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/verify-lazy.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: tests/modules/test-repo-graph.js
+      to: idearium/repo/graph.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG2_token_budget_chunking
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG3_summaries_up_the_tree
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG6_relations_and_fractals
+    upstream: []
+    downstream:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG2_token_budget_chunking
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG3_summaries_up_the_tree
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG5_recursive_build
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG6_relations_and_fractals
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::WS5_the_whole_workshop
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG2_token_budget_chunking
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG3_summaries_up_the_tree
+      - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG6_relations_and_fractals
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (3): FG2_token_budget_chunking, FG3_summaries_up_the_tree,
+        FG6_relations_and_fractals · all downstream 6 · finishing it unlocks
+        FG2_token_budget_chunking, FG3_summaries_up_the_tree, FG6_relations_and_fractals
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

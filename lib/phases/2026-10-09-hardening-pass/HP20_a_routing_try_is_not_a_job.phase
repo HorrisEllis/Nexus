@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP20_a_routing_try_is_not_a_job
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP20_a_routing_try_is_not_a_job
+context: pipeline phase HP20_a_routing_try_is_not_a_job of docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP20_a_routing_try_is_not_a_job (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997252
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997252
+lastSeenAt: 1792829997252
+fingerprint: null
+payload:
+  id: HP20_a_routing_try_is_not_a_job
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/economy/ledger.js
+    - lib/pipeline-routing.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d5e16036c01329d2

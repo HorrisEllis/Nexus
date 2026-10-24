@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-30-idearium-coding-flow-phasemap.spec::W2_plan_always_lands
+type: phase
+id: docs_2026-09-30-idearium-coding-flow-phasemap.spec::W2_plan_always_lands
+context: pipeline phase W2_plan_always_lands of docs/2026-09-30-idearium-coding-flow-phasemap.spec
+intent: null
+summary: W2_plan_always_lands (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829986649
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829986649
+lastSeenAt: 1792829986649
+fingerprint: null
+payload:
+  id: W2_plan_always_lands
+  map: docs/2026-09-30-idearium-coding-flow-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/spec-plan.js
+    - idearium/api/build-surface.js
+    - idearium/cli/index.js
+    - idearium/ui/js/living-spec.js
+    - idearium/ui/js/phases.js
+  depends_on:
+    - W1_idearium_never_blocks_on_git
+  blocks: []
+  spec: null
+  graph: ab26ca62c4c01f00

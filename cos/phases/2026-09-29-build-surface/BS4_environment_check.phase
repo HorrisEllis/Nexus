@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS4_environment_check
+context: pipeline phase BS4_environment_check of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS4_environment_check (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985005
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985005
+lastSeenAt: 1792829985005
+fingerprint: null
+payload:
+  id: BS4_environment_check
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/testenv/environment.js
+    - tests/modules/test-build-surface.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d708b357faeeeade

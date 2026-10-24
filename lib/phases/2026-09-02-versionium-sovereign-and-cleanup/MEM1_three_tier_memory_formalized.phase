@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::MEM1_three_tier_memory_formalized
+type: phase
+id: docs_2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec::MEM1_three_tier_memory_formalized
+context: >-
+  pipeline phase MEM1_three_tier_memory_formalized of
+  docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+intent: null
+summary: MEM1_three_tier_memory_formalized (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974795
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974795
+lastSeenAt: 1792829974795
+fingerprint: null
+payload:
+  id: MEM1_three_tier_memory_formalized
+  map: docs/2026-09-02-versionium-sovereign-and-cleanup-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9be52a539ecdbb7a

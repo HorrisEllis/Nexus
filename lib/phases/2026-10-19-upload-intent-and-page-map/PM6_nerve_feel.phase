@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::PM6_nerve_feel
+type: phase
+id: docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::PM6_nerve_feel
+context: pipeline phase PM6_nerve_feel of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+intent: null
+summary: PM6_nerve_feel (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830021331
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830021331
+lastSeenAt: 1792830021331
+fingerprint: null
+payload:
+  id: PM6_nerve_feel
+  map: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+  repo: null
+  layer: integration
+  status: DONE 0.60.175
+  files:
+    - clear-glass/src/page/attention.js
+    - lib/nerve/index.js
+    - lib/nerve-ollama-bridge.js
+  depends_on:
+    - PM5_tools_routes_commands
+  blocks: []
+  spec: null
+  graph: 539b63300c679ad5

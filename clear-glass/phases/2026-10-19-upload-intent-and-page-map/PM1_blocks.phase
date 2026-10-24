@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::PM1_blocks
+type: phase
+id: docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::PM1_blocks
+context: pipeline phase PM1_blocks of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+intent: null
+summary: PM1_blocks (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830021328
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830021328
+lastSeenAt: 1792830021328
+fingerprint: null
+payload:
+  id: PM1_blocks
+  map: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.174
+  files:
+    - clear-glass/src/page/blocks.js
+    - tests/modules/clear-glass-page-map.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 283abe1c8554e022

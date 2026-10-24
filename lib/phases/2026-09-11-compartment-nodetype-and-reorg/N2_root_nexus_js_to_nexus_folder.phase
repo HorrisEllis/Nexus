@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::N2_root_nexus_js_to_nexus_folder
+context: >-
+  pipeline phase N2_root_nexus_js_to_nexus_folder of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: N2_root_nexus_js_to_nexus_folder (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976059
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976059
+lastSeenAt: 1792829976059
+fingerprint: null
+payload:
+  id: N2_root_nexus_js_to_nexus_folder
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6d1b3e2c07a74a19

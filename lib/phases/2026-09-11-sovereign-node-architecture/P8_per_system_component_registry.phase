@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P8_per_system_component_registry
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P8_per_system_component_registry
+context: >-
+  pipeline phase P8_per_system_component_registry of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P8_per_system_component_registry (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976501
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976501
+lastSeenAt: 1792829976501
+fingerprint: null
+payload:
+  id: P8_per_system_component_registry
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9b441101dc4ad8c8

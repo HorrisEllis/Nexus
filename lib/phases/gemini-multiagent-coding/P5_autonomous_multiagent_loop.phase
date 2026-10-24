@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_gemini-multiagent-coding-phasemap.spec::P5_autonomous_multiagent_loop
+type: phase
+id: docs_gemini-multiagent-coding-phasemap.spec::P5_autonomous_multiagent_loop
+context: pipeline phase P5_autonomous_multiagent_loop of docs/gemini-multiagent-coding-phasemap.spec
+intent: null
+summary: P5_autonomous_multiagent_loop (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830030958
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830030958
+lastSeenAt: 1792830030958
+fingerprint: null
+payload:
+  id: P5_autonomous_multiagent_loop
+  map: docs/gemini-multiagent-coding-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P1_per_agent_contracts
+    - P2_tree_parse_recall_injection
+    - P3_line_block_seam_sync
+    - P4_structured_agent_to_agent
+  blocks: []
+  spec: null
+  graph: 7a74916704cceb5b

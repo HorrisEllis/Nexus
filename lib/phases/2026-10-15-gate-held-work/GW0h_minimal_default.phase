@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW0h_minimal_default
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW0h_minimal_default
+context: pipeline phase GW0h_minimal_default of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW0h_minimal_default (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830006626
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006626
+lastSeenAt: 1792830006626
+fingerprint: null
+payload:
+  id: GW0h_minimal_default
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "DECIDED 2026-10-18 by his axioms (D20, docs/2026-10-17-decisions-by-the-axioms.spec addendum
+    c): coder_recommends, as written. Was: OPEN"
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: eb1ee7f27528283a

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CV2_a_version_per_diff
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CV2_a_version_per_diff
+context: pipeline phase CV2_a_version_per_diff of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CV2_a_version_per_diff (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005439
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005439
+lastSeenAt: 1792830005439
+fingerprint: null
+payload:
+  id: CV2_a_version_per_diff
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.81 (test-code-tab-expand CX-04, CX-05)
+  files:
+    - lib/repo-versions.js
+    - versionium/lib/files.js
+    - versionium/lib/releases.js
+    - lib/line-edit.js
+  depends_on:
+    - CE7_ai_assisted_editing
+  blocks: []
+  spec: null
+  graph: fa951e6ce16e4c3d

@@ -1,0 +1,98 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EX0_executors_he_already_built:d7ad680fcecf9144
+type: graph
+id: phase:EX0_executors_he_already_built:d7ad680fcecf9144
+context: dependency graph of phase EX0_executors_he_already_built
+intent: null
+summary: 6 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830002967
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002967
+lastSeenAt: 1792830002967
+fingerprint: null
+payload:
+  for: EX0_executors_he_already_built
+  kind: phase
+  repo: null
+  hash: d7ad680fcecf9144
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::SC0_scheduler
+    dependents: []
+    upstream:
+      - docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::SC0_scheduler
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · ready
+      - 'depends on (1): SC0_scheduler'
+      - 'needed by (0): —'

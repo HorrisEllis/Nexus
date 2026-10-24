@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_cortex-schema-registry-phasemap.spec::P3_observe_on_write_no_block
+type: phase
+id: docs_cortex-schema-registry-phasemap.spec::P3_observe_on_write_no_block
+context: pipeline phase P3_observe_on_write_no_block of docs/cortex-schema-registry-phasemap.spec
+intent: null
+summary: P3_observe_on_write_no_block (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830030569
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830030569
+lastSeenAt: 1792830030569
+fingerprint: null
+payload:
+  id: P3_observe_on_write_no_block
+  map: docs/cortex-schema-registry-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 719d251a2203bc5e

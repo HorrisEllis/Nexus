@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA8_other_projects
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA8_other_projects
+context: pipeline phase COSA8_other_projects of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA8_other_projects (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005847
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005847
+lastSeenAt: 1792830005847
+fingerprint: null
+payload:
+  id: COSA8_other_projects
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - COSA3_run_and_supervise
+  blocks: []
+  spec: null
+  graph: 5f67a6ff59ecd341

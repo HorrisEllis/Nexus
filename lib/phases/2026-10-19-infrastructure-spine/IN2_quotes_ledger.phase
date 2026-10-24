@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+context: pipeline phase IN2_quotes_ledger of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: IN2_quotes_ledger (foundation) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830020052
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020052
+lastSeenAt: 1792830020052
+fingerprint: null
+payload:
+  id: IN2_quotes_ledger
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - docs/quotes/
+    - scripts/extract-quotes.js
+    - scripts/generate-atlases.js
+  depends_on:
+    - IN0_baseline
+  blocks: []
+  spec: null
+  graph: 746264db652fe47c

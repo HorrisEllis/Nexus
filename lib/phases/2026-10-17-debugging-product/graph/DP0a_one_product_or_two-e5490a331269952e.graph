@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DP0a_one_product_or_two:e5490a331269952e
+type: graph
+id: phase:DP0a_one_product_or_two:e5490a331269952e
+context: dependency graph of phase DP0a_one_product_or_two
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792830015251
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830015251
+lastSeenAt: 1792830015251
+fingerprint: null
+payload:
+  for: DP0a_one_product_or_two
+  kind: phase
+  repo: null
+  hash: e5490a331269952e
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP11_the_product_boundary
+    upstream: []
+    downstream:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP11_the_product_boundary
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-17-debugging-product-phasemap.spec::DP11_the_product_boundary
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): DP11_the_product_boundary · finishing it unlocks DP11_the_product_boundary'

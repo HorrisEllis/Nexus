@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-roadmap-phasemap.spec::OR2_the_proposal
+type: phase
+id: docs_2026-10-09-one-roadmap-phasemap.spec::OR2_the_proposal
+context: pipeline phase OR2_the_proposal of docs/2026-10-09-one-roadmap-phasemap.spec
+intent: null
+summary: OR2_the_proposal (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829998097
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998097
+lastSeenAt: 1792829998097
+fingerprint: null
+payload:
+  id: OR2_the_proposal
+  map: docs/2026-10-09-one-roadmap-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/roadmap-triage.md
+  depends_on:
+    - OR1_five_answers_for_an_open_phase
+  blocks: []
+  spec: null
+  graph: 87394dbbf51c92a7

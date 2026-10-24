@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DI1_chunking_for_data_ingestion
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DI1_chunking_for_data_ingestion
+context: >-
+  pipeline phase DI1_chunking_for_data_ingestion of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DI1_chunking_for_data_ingestion (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987095
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987095
+lastSeenAt: 1792829987095
+fingerprint: null
+payload:
+  id: DI1_chunking_for_data_ingestion
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/import-pipeline.js
+    - lib/zip-ingest.js
+    - lib/node-schemas/
+  depends_on:
+    - DT1_persistence_census
+  blocks: []
+  spec: null
+  graph: 91bad89cab545ae9

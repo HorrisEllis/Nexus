@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::HG3_bv09_the_detector_and_files
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::HG3_bv09_the_detector_and_files
+context: pipeline phase HG3_bv09_the_detector_and_files of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: HG3_bv09_the_detector_and_files (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991456
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991456
+lastSeenAt: 1792829991456
+fingerprint: null
+payload:
+  id: HG3_bv09_the_detector_and_files
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - tests/modules/test-build-verify.test.js
+    - lib/seam/detector.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8f5946737fc02601

@@ -1,0 +1,64 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N16_settings_without_iframes:81ecfb6e1dbf2207
+type: graph
+id: phase:N16_settings_without_iframes:81ecfb6e1dbf2207
+context: dependency graph of phase N16_settings_without_iframes
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985436
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985436
+lastSeenAt: 1792829985436
+fingerprint: null
+payload:
+  for: N16_settings_without_iframes
+  kind: phase
+  repo: null
+  hash: 81ecfb6e1dbf2207
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/repo-environment.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/settings.html
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 7
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N15_contract_history
+    dependents: []
+    upstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N15_contract_history
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N4_kinds_record_ledger_ring_blob
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N6_time
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+    downstream: []
+    blockedBy:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N15_contract_history
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 7 · blocked by N15_contract_history
+      - 'depends on (1): N15_contract_history · all upstream 11'
+      - 'needed by (0): —'

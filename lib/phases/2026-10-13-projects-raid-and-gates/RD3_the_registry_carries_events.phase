@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RD3_the_registry_carries_events
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RD3_the_registry_carries_events
+context: >-
+  pipeline phase RD3_the_registry_carries_events of
+  docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: RD3_the_registry_carries_events (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830003410
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830003410
+lastSeenAt: 1792830003410
+fingerprint: null
+payload:
+  id: RD3_the_registry_carries_events
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-registry.js
+    - cortex/core/raid/router.js
+    - lib/capability-registry.js
+  depends_on:
+    - RD0_raid_has_its_own_contract
+  blocks: []
+  spec: null
+  graph: f2ceaa39f7c300e5

@@ -1,0 +1,75 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T2:b9eb08e456c5fca6
+type: graph
+id: phase:T2:b9eb08e456c5fca6
+context: dependency graph of phase T2
+intent: null
+summary: 3 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829980533
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980533
+lastSeenAt: 1792829980533
+fingerprint: null
+payload:
+  for: T2
+  kind: phase
+  repo: null
+  hash: b9eb08e456c5fca6
+  nodes:
+    - path: cos/testenv/detect.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/environment.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: cos/testenv/environment.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      kind: requires
+  crossings:
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+    upstream: []
+    downstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T6
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T7
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): T4, T3_debug_report · all downstream 5 · finishing it unlocks T4,
+        T3_debug_report
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG11_ublock_adblocker_native_features:fed21457aecdec12
+type: graph
+id: phase:CG11_ublock_adblocker_native_features:fed21457aecdec12
+context: dependency graph of phase CG11_ublock_adblocker_native_features
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829974316
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974316
+lastSeenAt: 1792829974316
+fingerprint: null
+payload:
+  for: CG11_ublock_adblocker_native_features
+  kind: phase
+  repo: null
+  hash: fed21457aecdec12
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

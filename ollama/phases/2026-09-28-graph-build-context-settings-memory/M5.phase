@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::M5
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::M5
+context: pipeline phase M5 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: M5 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829984165
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984165
+lastSeenAt: 1792829984165
+fingerprint: null
+payload:
+  id: M5
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ollama/server.js
+    - copilot/server.js (adversarial probe)
+  depends_on:
+    - M0
+    - R0
+  blocks: []
+  spec: null
+  graph: 47f9fc2d4ac5f4ef

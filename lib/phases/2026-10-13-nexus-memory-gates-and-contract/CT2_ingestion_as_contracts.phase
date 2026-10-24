@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT2_ingestion_as_contracts
+type: phase
+id: docs_2026-10-13-nexus-memory-gates-and-contract-phasemap.spec::CT2_ingestion_as_contracts
+context: >-
+  pipeline phase CT2_ingestion_as_contracts of
+  docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+intent: null
+summary: CT2_ingestion_as_contracts (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002964
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002964
+lastSeenAt: 1792830002964
+fingerprint: null
+payload:
+  id: CT2_ingestion_as_contracts
+  map: docs/2026-10-13-nexus-memory-gates-and-contract-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - CT1_dynamic_chunking
+  blocks: []
+  spec: null
+  graph: ba7095d82e6aabf3

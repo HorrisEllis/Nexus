@@ -1,0 +1,155 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T1_loop:528376a1fb70a883
+type: graph
+id: phase:T1_loop:528376a1fb70a883
+context: dependency graph of phase T1_loop
+intent: null
+summary: 16 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829978958
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978958
+lastSeenAt: 1792829978958
+fingerprint: null
+payload:
+  for: T1_loop
+  kind: phase
+  repo: null
+  hash: 528376a1fb70a883
+  nodes:
+    - path: contracts/nexus-interaction-contract.js
+      role: changes
+      exists: true
+      system: contracts
+    - path: copilot/intents.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/lib/autonomy-router.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: copilot/lib/capabilities.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/intent-learning.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/registry-components.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: hooks/index.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: lib/command-builder.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/idea-provenance.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/scheduler.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-control.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/triggers.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/intents.js
+      to: hooks/index.js
+      kind: requires
+    - from: copilot/intents.js
+      to: copilot/registry-components.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/intent-learning.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/capabilities.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/scheduler.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/idea-provenance.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/triggers.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/system-control.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/command-builder.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/constant-autonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: contracts/nexus-interaction-contract.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intents.js
+      kind: requires
+  crossings:
+    - from: copilot/intents.js
+      to: hooks/index.js
+      fromSystem: copilot
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: contracts/nexus-interaction-contract.js
+      fromSystem: orchestrator
+      toSystem: contracts
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

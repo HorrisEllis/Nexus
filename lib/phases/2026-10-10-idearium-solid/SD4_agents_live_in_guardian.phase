@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD4_agents_live_in_guardian
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD4_agents_live_in_guardian
+context: pipeline phase SD4_agents_live_in_guardian of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD4_agents_live_in_guardian (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999647
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999647
+lastSeenAt: 1792829999647
+fingerprint: null
+payload:
+  id: SD4_agents_live_in_guardian
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/agent-model-nodes.js
+    - guardian/lib/selector-map.js
+    - lib/account-registry.js
+    - lib/economy/policy.js
+    - lib/node-schemas/schema.agent
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d79b599501f437b1

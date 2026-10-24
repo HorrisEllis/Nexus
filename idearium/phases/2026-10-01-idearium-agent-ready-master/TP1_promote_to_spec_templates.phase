@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::TP1_promote_to_spec_templates
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::TP1_promote_to_spec_templates
+context: >-
+  pipeline phase TP1_promote_to_spec_templates of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: TP1_promote_to_spec_templates (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987118
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987118
+lastSeenAt: 1792829987118
+fingerprint: null
+payload:
+  id: TP1_promote_to_spec_templates
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates.js
+    - idearium/spec-engine/templates/
+    - idearium/ui/js/app.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6373324428f83107

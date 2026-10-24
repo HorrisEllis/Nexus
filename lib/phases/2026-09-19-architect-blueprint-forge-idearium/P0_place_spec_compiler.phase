@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P0_place_spec_compiler
+type: phase
+id: docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P0_place_spec_compiler
+context: >-
+  pipeline phase P0_place_spec_compiler of
+  docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+intent: null
+summary: P0_place_spec_compiler (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829978158
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978158
+lastSeenAt: 1792829978158
+fingerprint: null
+payload:
+  id: P0_place_spec_compiler
+  map: docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 816ab40bc00d49c5

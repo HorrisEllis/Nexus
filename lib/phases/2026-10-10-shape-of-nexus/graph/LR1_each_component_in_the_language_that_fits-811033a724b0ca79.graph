@@ -1,0 +1,143 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LR1_each_component_in_the_language_that_fits:811033a724b0ca79
+type: graph
+id: phase:LR1_each_component_in_the_language_that_fits:811033a724b0ca79
+context: dependency graph of phase LR1_each_component_in_the_language_that_fits
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830000473
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000473
+lastSeenAt: 1792830000473
+fingerprint: null
+payload:
+  for: LR1_each_component_in_the_language_that_fits
+  kind: phase
+  repo: null
+  hash: 811033a724b0ca79
+  nodes:
+    - path: cos/testenv/detect.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/repo/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-providers.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-capability-profile.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-chat.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/generate-tool-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/economy/store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/lifeline.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-capability-profile.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-chat.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-tools/generate-tool-nodes.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/economy/store.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-providers.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P8_per_system_component_registry
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::LR0_the_shared_primitives_are_the_glyph
+    dependents: []
+    upstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P8_per_system_component_registry
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::LR0_the_shared_primitives_are_the_glyph
+    downstream: []
+    blockedBy:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P8_per_system_component_registry
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::LR0_the_shared_primitives_are_the_glyph
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 1 · blocked by P8_per_system_component_registry,
+        LR0_the_shared_primitives_are_the_glyph
+      - 'depends on (2): P8_per_system_component_registry, LR0_the_shared_primitives_are_the_glyph'
+      - 'needed by (0): —'

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+type: phase
+id: docs_2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+context: pipeline phase DP5_the_case of docs/2026-10-17-debugging-product-phasemap.spec
+intent: null
+summary: DP5_the_case (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830015258
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830015258
+lastSeenAt: 1792830015258
+fingerprint: null
+payload:
+  id: DP5_the_case
+  map: docs/2026-10-17-debugging-product-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - diagnostic/lib/case.js
+    - cortex/core/raid/contract-gates.js
+  depends_on:
+    - DP2_one_gap_door
+  blocks: []
+  spec: null
+  graph: cf1e15322534ca7f

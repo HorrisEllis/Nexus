@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::V10_dynamic_registry_self_wiring
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::V10_dynamic_registry_self_wiring
+context: >-
+  pipeline phase V10_dynamic_registry_self_wiring of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: V10_dynamic_registry_self_wiring (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974321
+lastSeenAt: 1792829974321
+fingerprint: null
+payload:
+  id: V10_dynamic_registry_self_wiring
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - VM1_versionium_owns_loom_map_sync
+  blocks: []
+  spec: null
+  graph: c55603e97de1585c

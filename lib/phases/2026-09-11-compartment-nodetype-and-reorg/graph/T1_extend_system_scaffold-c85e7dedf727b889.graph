@@ -1,0 +1,301 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T1_extend_system_scaffold:c85e7dedf727b889
+type: graph
+id: phase:T1_extend_system_scaffold:c85e7dedf727b889
+context: dependency graph of phase T1_extend_system_scaffold
+intent: null
+summary: 38 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976046
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976046
+lastSeenAt: 1792829976046
+fingerprint: null
+payload:
+  for: T1_extend_system_scaffold
+  kind: phase
+  repo: null
+  hash: c85e7dedf727b889
+  nodes:
+    - path: cos/archetype/nexus-system/lib/modules.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/runtime/run.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: guardian/api-dispatch.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: hooks/index.js
+      role: changes
+      exists: true
+      system: hooks
+    - path: intelligence/synthesis/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/clear-glass/command-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/ledger-writer.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/doc-generator.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/templates/system-scaffold.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/test/system-scaffold.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: ollama/lib/command-index.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/intents.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/tests/shape.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/event-taxonomy.cjs
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/query/nexus-status.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/scanners/event-taxonomy-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/clear-glass-gig.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/testenv/installer.js
+      role: uses
+      exists: true
+      system: cos
+    - path: hooks/architect.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/copilot.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/cortex.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/emerge.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/guardian.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/idearium.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/intelligence.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/ollama.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/orchestrator.hooks.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: hooks/side-effect-parser.js
+      role: uses
+      exists: true
+      system: hooks
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/templates/system-scaffold.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/guardian.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/cortex.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/intelligence.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/orchestrator.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/idearium.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/architect.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/emerge.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/copilot.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/ollama.hooks.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/side-effect-parser.js
+      kind: requires
+    - from: cos/runtime/run.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/templates/system-scaffold.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: diagnostic/tests/shape.test.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: idearium/event-taxonomy.cjs
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: loom/scanners/event-taxonomy-map.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: tests/modules/clear-glass-gig.test.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: architect/service.js
+      to: hooks/index.js
+      kind: requires
+    - from: copilot/intents.js
+      to: hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: hooks/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-status.js
+      to: hooks/index.js
+      kind: requires
+  crossings:
+    - from: architect/service.js
+      to: hooks/index.js
+      fromSystem: architect
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: copilot/intents.js
+      to: hooks/index.js
+      fromSystem: copilot
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: hooks/index.js
+      fromSystem: cortex
+      toSystem: hooks
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/query/nexus-status.js
+      to: hooks/index.js
+      fromSystem: lib
+      toSystem: hooks
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T4_cos_role_confirmed
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::X1_node_decomposition_tool
+    upstream: []
+    downstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::AR2_decentralize_interaction_contracts
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D2_self_heal_migration
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T4_cos_role_confirmed
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::X1_node_decomposition_tool
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T4_cos_role_confirmed
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::X1_node_decomposition_tool
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (3): T4_cos_role_confirmed, D1_diagnostic_real_folder, X1_node_decomposition_tool
+        · all downstream 5 · finishing it unlocks T4_cos_role_confirmed, D1_diagnostic_real_folder,
+        X1_node_decomposition_tool

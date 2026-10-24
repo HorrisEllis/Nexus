@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID1_resolve_versionium_cortex_dependency
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID1_resolve_versionium_cortex_dependency
+context: >-
+  pipeline phase ID1_resolve_versionium_cortex_dependency of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: ID1_resolve_versionium_cortex_dependency (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975209
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975209
+lastSeenAt: 1792829975209
+fingerprint: null
+payload:
+  id: ID1_resolve_versionium_cortex_dependency
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4782d4c5e56ab572

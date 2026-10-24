@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+context: pipeline phase AR3_one_architect_canvas of docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: AR3_one_architect_canvas (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990140
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990140
+lastSeenAt: 1792829990140
+fingerprint: null
+payload:
+  id: AR3_one_architect_canvas
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/arch-canvas.js
+    - idearium/ui/css/arch-canvas.css
+  depends_on:
+    - AR2_architect_in_the_workshop
+  blocks: []
+  spec: null
+  graph: 78c9c0ecdde06280

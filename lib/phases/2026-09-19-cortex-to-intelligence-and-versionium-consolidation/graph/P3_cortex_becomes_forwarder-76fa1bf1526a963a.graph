@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P3_cortex_becomes_forwarder:76fa1bf1526a963a
+type: graph
+id: phase:P3_cortex_becomes_forwarder:76fa1bf1526a963a
+context: dependency graph of phase P3_cortex_becomes_forwarder
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829978563
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978563
+lastSeenAt: 1792829978563
+fingerprint: null
+payload:
+  for: P3_cortex_becomes_forwarder
+  kind: phase
+  repo: null
+  hash: 76fa1bf1526a963a
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P2_intelligence_gains_routes
+      - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::D2
+    dependents:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+    upstream:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D4_names
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P0_map
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P2_intelligence_gains_routes
+      - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::D1
+      - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::D2
+    downstream:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P5_retire_second_runtime
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P7_hostile_verify_and_ship
+    blockedBy:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P2_intelligence_gains_routes
+    unlocks:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · blocked by P2_intelligence_gains_routes
+      - 'depends on (2): P2_intelligence_gains_routes, D2 · all upstream 6'
+      - >-
+        needed by (1): P4_repoint_callers · all downstream 3 · finishing it unlocks
+        P4_repoint_callers

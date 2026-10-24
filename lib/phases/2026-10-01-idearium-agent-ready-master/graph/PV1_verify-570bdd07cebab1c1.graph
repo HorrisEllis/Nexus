@@ -1,0 +1,265 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PV1_verify:570bdd07cebab1c1
+type: graph
+id: phase:PV1_verify:570bdd07cebab1c1
+context: dependency graph of phase PV1_verify
+intent: null
+summary: 28 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987102
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987102
+lastSeenAt: 1792829987102
+fingerprint: null
+payload:
+  for: PV1_verify
+  kind: phase
+  repo: null
+  hash: 570bdd07cebab1c1
+  nodes:
+    - path: cos/runtime/run.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/build-verify.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/cos-debug-report.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/step-gate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/import-checks.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/reply-kind.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-build-verify.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-language-checks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/playground/branch.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/detect.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/installer.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/checks/ck-248-toolchain.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/failure-post.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/build-verify.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/branch.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/failure-post.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/build-verify.js
+      kind: requires
+    - from: tests/modules/test-build-verify.test.js
+      to: lib/build-verify.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: lib/import-checks.js
+      to: cos/runtime/run.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/reply-kind.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: tests/modules/test-language-checks.test.js
+      to: lib/step-gate.js
+      kind: requires
+  crossings:
+    - from: lib/build-verify.js
+      to: cos/testenv/installer.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/step-gate.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: lib/import-checks.js
+      to: cos/runtime/run.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
+    upstream: []
+    downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV4_cli_and_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): PV2_repair_feedback · all downstream 4 · finishing it unlocks
+        PV2_repair_feedback
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

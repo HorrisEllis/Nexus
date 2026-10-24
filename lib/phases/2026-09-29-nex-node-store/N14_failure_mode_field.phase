@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+context: pipeline phase N14_failure_mode_field of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N14_failure_mode_field (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985435
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985435
+lastSeenAt: 1792829985435
+fingerprint: null
+payload:
+  id: N14_failure_mode_field
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/failure-field.js
+    - lib/node-schemas (failure_mode schema, grounded)
+  depends_on:
+    - N5_kinds_edge_and_lattice
+    - N6_time
+  blocks: []
+  spec: null
+  graph: b296d7b4bd69362b

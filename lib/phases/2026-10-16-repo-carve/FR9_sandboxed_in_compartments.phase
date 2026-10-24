@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-repo-carve-phasemap.spec::FR9_sandboxed_in_compartments
+type: phase
+id: docs_2026-10-16-repo-carve-phasemap.spec::FR9_sandboxed_in_compartments
+context: pipeline phase FR9_sandboxed_in_compartments of docs/2026-10-16-repo-carve-phasemap.spec
+intent: null
+summary: FR9_sandboxed_in_compartments (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830014488
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830014488
+lastSeenAt: 1792830014488
+fingerprint: null
+payload:
+  id: FR9_sandboxed_in_compartments
+  map: docs/2026-10-16-repo-carve-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b650b1973c9adbba

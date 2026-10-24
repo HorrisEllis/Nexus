@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB9_the_spec_is_a_spec_file
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB9_the_spec_is_a_spec_file
+context: pipeline phase SB9_the_spec_is_a_spec_file of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB9_the_spec_is_a_spec_file (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990934
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990934
+lastSeenAt: 1792829990934
+fingerprint: null
+payload:
+  id: SB9_the_spec_is_a_spec_file
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - idearium/lib/spec-library-import.js
+    - idearium/lib/workshop.js
+    - idearium/repo/index.js
+  depends_on:
+    - SB1_templates_are_the_default_frame
+  blocks: []
+  spec: null
+  graph: 2a0075e7f7a66b99

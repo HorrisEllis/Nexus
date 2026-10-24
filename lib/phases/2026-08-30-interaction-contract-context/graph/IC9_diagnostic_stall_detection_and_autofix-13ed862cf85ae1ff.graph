@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IC9_diagnostic_stall_detection_and_autofix:13ed862cf85ae1ff
+type: graph
+id: phase:IC9_diagnostic_stall_detection_and_autofix:13ed862cf85ae1ff
+context: dependency graph of phase IC9_diagnostic_stall_detection_and_autofix
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829972960
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972960
+lastSeenAt: 1792829972960
+fingerprint: null
+payload:
+  for: IC9_diagnostic_stall_detection_and_autofix
+  kind: phase
+  repo: null
+  hash: 13ed862cf85ae1ff
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 4
+    deps:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC5_full_input_queue_output_qc_lifecycle
+    dependents: []
+    upstream:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC5_full_input_queue_output_qc_lifecycle
+      - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+      - docs/raid-routing-fidelity-phasemap.spec::RR2_contract_based_chunking
+      - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+    downstream: []
+    blockedBy:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC5_full_input_queue_output_qc_lifecycle
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 4 · blocked by IC5_full_input_queue_output_qc_lifecycle
+      - 'depends on (1): IC5_full_input_queue_output_qc_lifecycle · all upstream 4'
+      - 'needed by (0): —'

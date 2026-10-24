@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
+context: pipeline phase DB4_one_bus_per_system of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB4_one_bus_per_system (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830016878
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016878
+lastSeenAt: 1792830016878
+fingerprint: null
+payload:
+  id: DB4_one_bus_per_system
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2212630faddc3883

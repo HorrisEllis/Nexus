@@ -1,0 +1,123 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N13_release:9057f45c32bc5a7a
+type: graph
+id: phase:N13_release:9057f45c32bc5a7a
+context: dependency graph of phase N13_release
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985434
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985434
+lastSeenAt: 1792829985434
+fingerprint: null
+payload:
+  for: N13_release
+  kind: phase
+  repo: null
+  hash: 9057f45c32bc5a7a
+  nodes:
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+  edges:
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 8
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N11_adopters
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+    dependents: []
+    upstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N10_migration
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N11_adopters
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N4_kinds_record_ledger_ring_blob
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N6_time
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N9_cli
+    downstream: []
+    blockedBy:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N11_adopters
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 8 · blocked by N11_adopters, N12_ui
+      - 'depends on (2): N11_adopters, N12_ui · all upstream 13'
+      - 'needed by (0): —'

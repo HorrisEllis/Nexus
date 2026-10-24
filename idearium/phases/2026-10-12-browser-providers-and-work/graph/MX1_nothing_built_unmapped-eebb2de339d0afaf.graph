@@ -1,0 +1,116 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MX1_nothing_built_unmapped:eebb2de339d0afaf
+type: graph
+id: phase:MX1_nothing_built_unmapped:eebb2de339d0afaf
+context: dependency graph of phase MX1_nothing_built_unmapped
+intent: null
+summary: 11 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830001285
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001285
+lastSeenAt: 1792830001285
+fingerprint: null
+payload:
+  for: MX1_nothing_built_unmapped
+  kind: phase
+  repo: null
+  hash: eebb2de339d0afaf
+  nodes:
+    - path: idearium/lib/workshop.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/living-spec.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/void.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/repo/nexus-self.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/source-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/repo/roadmap.js
+      to: idearium/repo/source-files.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/lib/void.js
+      to: idearium/lib/workshop.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX0_phases_tagged_to_components
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX0_phases_tagged_to_components
+    downstream: []
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX0_phases_tagged_to_components
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by MX0_phases_tagged_to_components
+      - 'depends on (1): MX0_phases_tagged_to_components'
+      - 'needed by (0): —'

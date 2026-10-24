@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+type: phase
+id: docs_2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+context: pipeline phase GQ1_quality_stream of docs/2026-10-19-solid-build-foundation-phasemap.spec
+intent: null
+summary: GQ1_quality_stream (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792830020934
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020934
+lastSeenAt: 1792830020934
+fingerprint: null
+payload:
+  id: GQ1_quality_stream
+  map: docs/2026-10-19-solid-build-foundation-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/quality-stream.js
+  depends_on:
+    - CT1_cos_test_runner
+  blocks:
+    - '"quality_stream"'
+  spec: null
+  graph: 85b1ad483b041f8f

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET3_clearglass_event_taxonomy
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET3_clearglass_event_taxonomy
+context: >-
+  pipeline phase ET3_clearglass_event_taxonomy of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: ET3_clearglass_event_taxonomy (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971722
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971722
+lastSeenAt: 1792829971722
+fingerprint: null
+payload:
+  id: ET3_clearglass_event_taxonomy
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - ET1_event_taxonomy_pattern
+  blocks: []
+  spec: null
+  graph: 716426b659cd5b43

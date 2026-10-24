@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N4_kinds_record_ledger_ring_blob
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N4_kinds_record_ledger_ring_blob
+context: pipeline phase N4_kinds_record_ledger_ring_blob of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N4_kinds_record_ledger_ring_blob (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985424
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985424
+lastSeenAt: 1792829985424
+fingerprint: null
+payload:
+  id: N4_kinds_record_ledger_ring_blob
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/kinds/record.js
+    - lib/nexstore/kinds/ledger.js
+    - lib/nexstore/kinds/ring.js
+    - lib/nexstore/kinds/blob.js
+  depends_on:
+    - N3_projection_and_indexes
+  blocks: []
+  spec: null
+  graph: 0808a2146da71927

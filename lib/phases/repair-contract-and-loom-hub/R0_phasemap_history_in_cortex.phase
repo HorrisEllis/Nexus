@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+type: phase
+id: docs_repair-contract-and-loom-hub-phasemap.spec::R0_phasemap_history_in_cortex
+context: pipeline phase R0_phasemap_history_in_cortex of docs/repair-contract-and-loom-hub-phasemap.spec
+intent: null
+summary: R0_phasemap_history_in_cortex (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830036409
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830036409
+lastSeenAt: 1792830036409
+fingerprint: null
+payload:
+  id: R0_phasemap_history_in_cortex
+  map: docs/repair-contract-and-loom-hub-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9f7fec7fb67eb3bf

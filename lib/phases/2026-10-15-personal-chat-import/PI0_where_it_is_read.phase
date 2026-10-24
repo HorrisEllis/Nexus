@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-personal-chat-import-phasemap.spec::PI0_where_it_is_read
+type: phase
+id: docs_2026-10-15-personal-chat-import-phasemap.spec::PI0_where_it_is_read
+context: pipeline phase PI0_where_it_is_read of docs/2026-10-15-personal-chat-import-phasemap.spec
+intent: null
+summary: PI0_where_it_is_read (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007876
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007876
+lastSeenAt: 1792830007876
+fingerprint: null
+payload:
+  id: PI0_where_it_is_read
+  map: docs/2026-10-15-personal-chat-import-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a32fbaf89e5d74b5

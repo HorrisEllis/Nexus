@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW0f_mutation_testing
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW0f_mutation_testing
+context: pipeline phase GW0f_mutation_testing of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW0f_mutation_testing (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830006624
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006624
+lastSeenAt: 1792830006624
+fingerprint: null
+payload:
+  id: GW0f_mutation_testing
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "DECIDED 2026-10-18 by his axioms (D18, docs/2026-10-17-decisions-by-the-axioms.spec addendum
+    c): coder_recommends, as written. Was: OPEN"
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0e47ea5d7cf634b5

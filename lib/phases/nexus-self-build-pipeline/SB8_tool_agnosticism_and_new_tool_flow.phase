@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB8_tool_agnosticism_and_new_tool_flow
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB8_tool_agnosticism_and_new_tool_flow
+context: >-
+  pipeline phase SB8_tool_agnosticism_and_new_tool_flow of
+  docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB8_tool_agnosticism_and_new_tool_flow (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830034497
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830034497
+lastSeenAt: 1792830034497
+fingerprint: null
+payload:
+  id: SB8_tool_agnosticism_and_new_tool_flow
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - SB6_contract_type_schemas_and_toolbox_directory
+  blocks: []
+  spec: null
+  graph: 0dad83e5c39c6d0a

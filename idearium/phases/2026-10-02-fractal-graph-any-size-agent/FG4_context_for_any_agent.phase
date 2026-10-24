@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+type: phase
+id: docs_2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+context: >-
+  pipeline phase FG4_context_for_any_agent of
+  docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+intent: null
+summary: FG4_context_for_any_agent (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988948
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988948
+lastSeenAt: 1792829988948
+fingerprint: null
+payload:
+  id: FG4_context_for_any_agent
+  map: docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/context.js
+    - lib/repo-agent.js
+  depends_on:
+    - FG2_token_budget_chunking
+    - FG3_summaries_up_the_tree
+  blocks: []
+  spec: null
+  graph: b0b88cad66b15693

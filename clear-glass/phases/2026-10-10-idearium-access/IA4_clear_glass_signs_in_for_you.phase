@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-access-phasemap.spec::IA4_clear_glass_signs_in_for_you
+type: phase
+id: docs_2026-10-10-idearium-access-phasemap.spec::IA4_clear_glass_signs_in_for_you
+context: pipeline phase IA4_clear_glass_signs_in_for_you of docs/2026-10-10-idearium-access-phasemap.spec
+intent: null
+summary: IA4_clear_glass_signs_in_for_you (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999255
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999255
+lastSeenAt: 1792829999255
+fingerprint: null
+payload:
+  id: IA4_clear_glass_signs_in_for_you
+  map: docs/2026-10-10-idearium-access-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/accounts/idearium-login.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - IA1_the_routes
+  blocks: []
+  spec: null
+  graph: 5aa67551e81230b4

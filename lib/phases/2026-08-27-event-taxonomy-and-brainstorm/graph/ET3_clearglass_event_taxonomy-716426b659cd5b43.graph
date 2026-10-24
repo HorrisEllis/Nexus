@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ET3_clearglass_event_taxonomy:716426b659cd5b43
+type: graph
+id: phase:ET3_clearglass_event_taxonomy:716426b659cd5b43
+context: dependency graph of phase ET3_clearglass_event_taxonomy
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829971722
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971722
+lastSeenAt: 1792829971722
+fingerprint: null
+payload:
+  for: ET3_clearglass_event_taxonomy
+  kind: phase
+  repo: null
+  hash: 716426b659cd5b43
+  nodes:
+    - path: clear-glass/src/diagnostic/error-capture.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: diagnostic/error-capture.js
+      role: changes
+      exists: false
+      system: diagnostic
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/error-capture.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/diagnostic/error-capture.js
+      kind: requires
+    - from: tests/modules/error-capture.test.js
+      to: clear-glass/src/diagnostic/error-capture.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+    dependents:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+    upstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+    downstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR6_copilot_as_agent_chat_model
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+    blockedBy:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by ET1_event_taxonomy_pattern
+      - 'depends on (1): ET1_event_taxonomy_pattern'
+      - 'needed by (1): ET5_loom_event_taxonomy_map · all downstream 3'

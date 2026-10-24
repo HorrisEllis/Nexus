@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P5_forge_as_phasemap_view
+type: phase
+id: docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P5_forge_as_phasemap_view
+context: >-
+  pipeline phase P5_forge_as_phasemap_view of
+  docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+intent: null
+summary: P5_forge_as_phasemap_view (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829978161
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978161
+lastSeenAt: 1792829978161
+fingerprint: null
+payload:
+  id: P5_forge_as_phasemap_view
+  map: docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P3_architect_canvas_onto_loom_registry
+  blocks: []
+  spec: null
+  graph: afc40acee5a4b7cc

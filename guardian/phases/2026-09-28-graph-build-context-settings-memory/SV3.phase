@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV3
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV3
+context: pipeline phase SV3 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: SV3 (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792829984152
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984152
+lastSeenAt: 1792829984152
+fingerprint: null
+payload:
+  id: SV3
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - architect → cortex/core/raid/contract-intake.js (10)
+    - guardian → cortex/core/raid (6)
+    - guardian → intelligence (9)
+    - diagnostic → intelligence (8)
+    - idearium → cos (17)
+    - cortex → copilot/lifeline.js (2)
+    - …
+  depends_on:
+    - SV1
+  blocks: []
+  spec: null
+  graph: 221b311c3eb9b080

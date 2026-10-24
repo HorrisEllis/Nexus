@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-verification-spine-phasemap.spec::P4_sigma_and_drift_scoring
+type: phase
+id: docs_raid-verification-spine-phasemap.spec::P4_sigma_and_drift_scoring
+context: pipeline phase P4_sigma_and_drift_scoring of docs/raid-verification-spine-phasemap.spec
+intent: null
+summary: P4_sigma_and_drift_scoring (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830035644
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830035644
+lastSeenAt: 1792830035644
+fingerprint: null
+payload:
+  id: P4_sigma_and_drift_scoring
+  map: docs/raid-verification-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0bc9660bb9269c47

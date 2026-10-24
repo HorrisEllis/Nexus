@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-heal-nodes-phasemap.spec::HL2_level_zero_reads_heals
+type: phase
+id: docs_2026-10-07-heal-nodes-phasemap.spec::HL2_level_zero_reads_heals
+context: pipeline phase HL2_level_zero_reads_heals of docs/2026-10-07-heal-nodes-phasemap.spec
+intent: null
+summary: HL2_level_zero_reads_heals (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829994976
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829994976
+lastSeenAt: 1792829994976
+fingerprint: null
+payload:
+  id: HL2_level_zero_reads_heals
+  map: docs/2026-10-07-heal-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 90ff9b6cb72f2226

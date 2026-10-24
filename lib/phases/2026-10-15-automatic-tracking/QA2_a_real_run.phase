@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::QA2_a_real_run
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::QA2_a_real_run
+context: pipeline phase QA2_a_real_run of docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: QA2_a_real_run (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830003809
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830003809
+lastSeenAt: 1792830003809
+fingerprint: null
+payload:
+  id: QA2_a_real_run
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    PARTLY DONE (0.60.43 — real Versionium/Idearium/RAID, model stubbed; the run on James's machine
+    is open)
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 37774413980dc0ec

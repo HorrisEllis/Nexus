@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792478240948
+exported_at: 1792830024631
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792478240948
-lastSeenAt: 1792478240948
+firstSeenAt: 1792830024631
+lastSeenAt: 1792830024631
 fingerprint: null
 payload:
   for: DL5_memory_in_cortex
@@ -207,7 +207,7 @@ payload:
       known: true
   ready: true
   dag:
-    dagHash: 9d788036d22d64e6
+    dagHash: 2f8ddd0afd383c4f
     layer: 4
     deps:
       - docs/2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
@@ -226,6 +226,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 9d788036d22d64e6 · layer 4 · blocked by DL3_rewire_writers
+      - DAG 2f8ddd0afd383c4f · layer 4 · blocked by DL3_rewire_writers
       - 'depends on (1): DL3_rewire_writers · all upstream 6'
       - 'needed by (0): —'

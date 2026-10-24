@@ -1,0 +1,106 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SBP8_agent_mesh_consolidation:5a5600d90602c11e
+type: graph
+id: phase:SBP8_agent_mesh_consolidation:5a5600d90602c11e
+context: dependency graph of phase SBP8_agent_mesh_consolidation
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829972551
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972551
+lastSeenAt: 1792829972551
+fingerprint: null
+payload:
+  for: SBP8_agent_mesh_consolidation
+  kind: phase
+  repo: null
+  hash: 5a5600d90602c11e
+  nodes:
+    - path: lib/agent-router.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-build-learning.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-system/contracts.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/routing-config.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/account-registry.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-router.js
+      to: lib/account-registry.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/agent-build-learning.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/agent-system/contracts.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/routing-config.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/seam/spec-parser.js
+      to: lib/agent-router.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

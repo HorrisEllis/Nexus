@@ -7,11 +7,11 @@ intent: null
 summary: APV4_emit_on_the_ledger (api) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792595037306
+exported_at: 1792830022978
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792595037306
-lastSeenAt: 1792595037306
+firstSeenAt: 1792830022978
+lastSeenAt: 1792830022978
 fingerprint: null
 payload:
   id: APV4_emit_on_the_ledger
@@ -28,4 +28,4 @@ payload:
   blocks:
     - MOD-APV-EMIT
   spec: docs/approval-chain.spec
-  graph: cedb2fe875e7db6e
+  graph: 831e03b8acdf10fc

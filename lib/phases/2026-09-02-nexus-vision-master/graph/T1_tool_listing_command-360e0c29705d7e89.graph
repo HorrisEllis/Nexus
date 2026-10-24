@@ -1,0 +1,231 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T1_tool_listing_command:360e0c29705d7e89
+type: graph
+id: phase:T1_tool_listing_command:360e0c29705d7e89
+context: dependency graph of phase T1_tool_listing_command
+intent: null
+summary: 28 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829974270
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974270
+lastSeenAt: 1792829974270
+fingerprint: null
+payload:
+  for: T1_tool_listing_command
+  kind: phase
+  repo: null
+  hash: 360e0c29705d7e89
+  nodes:
+    - path: copilot/lib/self-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/copilot/hat.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/jobs.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-intent-contract.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/hat-seed-ollama-personalities.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/hat-seed.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/intent-hat-router.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: copilot/lib/intent-learning.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/nexus-awareness.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reflection.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/hat-forge.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/reflection.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/nexus-awareness.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/intent-learning.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: clear-glass/src/copilot/hat.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/agent-intent-contract.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/hat-seed-ollama-personalities.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/hat-seed.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/intent-hat-router.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/hat-forge.js
+      kind: requires
+  crossings:
+    - from: copilot/lib/self-model.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T3_tool_to_event_mapping
+    upstream: []
+    downstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::T3_tool_to_event_mapping
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): T3_tool_to_event_mapping'

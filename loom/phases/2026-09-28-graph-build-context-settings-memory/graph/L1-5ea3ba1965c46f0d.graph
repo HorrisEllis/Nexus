@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:L1:5ea3ba1965c46f0d
+type: graph
+id: phase:L1:5ea3ba1965c46f0d
+context: dependency graph of phase L1
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829984167
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984167
+lastSeenAt: 1792829984167
+fingerprint: null
+payload:
+  for: L1
+  kind: phase
+  repo: null
+  hash: 5ea3ba1965c46f0d
+  nodes:
+    - path: loom/maps/idearium-codebase-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: loom/maps/idearium-codebase-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/idearium-codebase-map.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling:
+      - each
+      - phase's
+      - code
+      - landing
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: each, phase''s, code, landing'

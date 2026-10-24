@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-routing-registry-genesis-phasemap.spec::RG1_routing_policy_library
+type: phase
+id: docs_2026-10-01-routing-registry-genesis-phasemap.spec::RG1_routing_policy_library
+context: >-
+  pipeline phase RG1_routing_policy_library of
+  docs/2026-10-01-routing-registry-genesis-phasemap.spec
+intent: null
+summary: RG1_routing_policy_library (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987566
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987566
+lastSeenAt: 1792829987566
+fingerprint: null
+payload:
+  id: RG1_routing_policy_library
+  map: docs/2026-10-01-routing-registry-genesis-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+  depends_on:
+    - RG0_map
+  blocks: []
+  spec: null
+  graph: 6f62f23ea86dfc53

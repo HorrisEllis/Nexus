@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG4_macros_plugin_autofill:28b2a325170ef2f1
+type: graph
+id: phase:CG4_macros_plugin_autofill:28b2a325170ef2f1
+context: dependency graph of phase CG4_macros_plugin_autofill
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829974308
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974308
+lastSeenAt: 1792829974308
+fingerprint: null
+payload:
+  for: CG4_macros_plugin_autofill
+  kind: phase
+  repo: null
+  hash: 28b2a325170ef2f1
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG5_copilot_guided_spotlight_macro
+    upstream: []
+    downstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG5_copilot_guided_spotlight_macro
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG5_copilot_guided_spotlight_macro
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): CG5_copilot_guided_spotlight_macro · finishing it unlocks
+        CG5_copilot_guided_spotlight_macro
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

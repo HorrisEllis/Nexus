@@ -1,0 +1,272 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IC5_full_input_queue_output_qc_lifecycle:5cf93f4f44f1c70a
+type: graph
+id: phase:IC5_full_input_queue_output_qc_lifecycle:5cf93f4f44f1c70a
+context: dependency graph of phase IC5_full_input_queue_output_qc_lifecycle
+intent: null
+summary: 31 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829972959
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972959
+lastSeenAt: 1792829972959
+fingerprint: null
+payload:
+  for: IC5_full_input_queue_output_qc_lifecycle
+  kind: phase
+  repo: null
+  hash: 5cf93f4f44f1c70a
+  nodes:
+    - path: clear-glass/src/copilot/hat.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/jobs/intake.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/releases/service.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/code-edit.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/intake.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/code-artifact.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/response-sink.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/project-compartment.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-history.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/lib/cos-seam-artifact-staging.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/change-entry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/structure.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/languages.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/code-edit.js
+      to: lib/languages.js
+      kind: requires
+    - from: lib/code-edit.js
+      to: lib/code-intel/structure.js
+      kind: requires
+    - from: lib/code-edit.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/nexus-self/inject-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/change-entry.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/code-edit.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/code-edit.js
+      kind: requires
+    - from: lib/repo-history.js
+      to: lib/code-edit.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/code-edit.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/intake.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: lib/intake.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/intake.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: lib/intake.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/intake.js
+      kind: requires
+    - from: lib/project-compartment.js
+      to: lib/intake.js
+      kind: requires
+    - from: lib/seam/queue.js
+      to: lib/intake.js
+      kind: requires
+    - from: tests/lib/cos-seam-artifact-staging.test.js
+      to: lib/intake.js
+      kind: requires
+  crossings:
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+    dependents:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC9_diagnostic_stall_detection_and_autofix
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC12_universal_gap_and_symmetry_detection
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC6_multi_source_code_request_intake
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC7_drift_and_comparison_tracking_in_the_pipeline
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC8_callto_event_driven_cli_injection
+    upstream:
+      - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+      - docs/raid-routing-fidelity-phasemap.spec::RR2_contract_based_chunking
+      - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+    downstream:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC12_universal_gap_and_symmetry_detection
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC6_multi_source_code_request_intake
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC7_drift_and_comparison_tracking_in_the_pipeline
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC8_callto_event_driven_cli_injection
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC9_diagnostic_stall_detection_and_autofix
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC9_diagnostic_stall_detection_and_autofix
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC12_universal_gap_and_symmetry_detection
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC6_multi_source_code_request_intake
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC7_drift_and_comparison_tracking_in_the_pipeline
+      - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC8_callto_event_driven_cli_injection
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · ready
+      - 'depends on (1): RR4_governed_handshake_on_handoff · all upstream 3'
+      - >-
+        needed by (5): IC9_diagnostic_stall_detection_and_autofix,
+        IC12_universal_gap_and_symmetry_detection, IC6_multi_source_code_request_intake,
+        IC7_drift_and_comparison_tracking_in_the_pipeline, IC8_callto_event_driven_cli_injection ·
+        finishing it unlocks IC9_diagnostic_stall_detection_and_autofix,
+        IC12_universal_gap_and_symmetry_detection, IC6_multi_source_code_request_intake,
+        IC7_drift_and_comparison_tracking_in_the_pipeline, IC8_callto_event_driven_cli_injection

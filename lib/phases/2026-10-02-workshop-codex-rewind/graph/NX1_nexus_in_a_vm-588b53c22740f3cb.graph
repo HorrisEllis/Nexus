@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NX1_nexus_in_a_vm:588b53c22740f3cb
+type: graph
+id: phase:NX1_nexus_in_a_vm:588b53c22740f3cb
+context: dependency graph of phase NX1_nexus_in_a_vm
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829990147
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990147
+lastSeenAt: 1792829990147
+fingerprint: null
+payload:
+  for: NX1_nexus_in_a_vm
+  kind: phase
+  repo: null
+  hash: 588b53c22740f3cb
+  nodes:
+    - path: docs/2026-10-02-spatial-void-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/ui/js/void-sky.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: loom/data/registry.json
+      role: changes
+      exists: true
+      system: loom
+    - path: tests/modules/test-spec-workshop.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-spec-workshop.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

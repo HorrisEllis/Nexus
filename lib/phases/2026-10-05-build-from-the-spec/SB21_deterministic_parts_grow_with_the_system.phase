@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB21_deterministic_parts_grow_with_the_system
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB21_deterministic_parts_grow_with_the_system
+context: >-
+  pipeline phase SB21_deterministic_parts_grow_with_the_system of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB21_deterministic_parts_grow_with_the_system (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990966
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990966
+lastSeenAt: 1792829990966
+fingerprint: null
+payload:
+  id: SB21_deterministic_parts_grow_with_the_system
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/templates/system-scaffold.js
+    - lib/atlas-generate.js
+    - lib/node-index.js
+  depends_on:
+    - SB20_each_system_owns_its_own
+    - SB19_atlases_per_component
+  blocks: []
+  spec: null
+  graph: f055f4bb449380e9

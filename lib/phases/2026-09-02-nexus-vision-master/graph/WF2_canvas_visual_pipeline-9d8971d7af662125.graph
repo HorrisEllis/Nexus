@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:WF2_canvas_visual_pipeline:9d8971d7af662125
+type: graph
+id: phase:WF2_canvas_visual_pipeline:9d8971d7af662125
+context: dependency graph of phase WF2_canvas_visual_pipeline
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829974304
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974304
+lastSeenAt: 1792829974304
+fingerprint: null
+payload:
+  for: WF2_canvas_visual_pipeline
+  kind: phase
+  repo: null
+  hash: 9d8971d7af662125
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

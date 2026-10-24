@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::AR4_pipeline_architect_on_the_canvas
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::AR4_pipeline_architect_on_the_canvas
+context: >-
+  pipeline phase AR4_pipeline_architect_on_the_canvas of
+  docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: AR4_pipeline_architect_on_the_canvas (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990141
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990141
+lastSeenAt: 1792829990141
+fingerprint: null
+payload:
+  id: AR4_pipeline_architect_on_the_canvas
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/architect.html
+    - idearium/lib/architect.js
+    - idearium/ui/index.html
+  depends_on:
+    - AR3_one_architect_canvas
+  blocks: []
+  spec: null
+  graph: cec156eb688fb013

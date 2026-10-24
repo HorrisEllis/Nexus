@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL22_rewind_timeline_ui
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL22_rewind_timeline_ui
+context: pipeline phase BL22_rewind_timeline_ui of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL22_rewind_timeline_ui (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971267
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971267
+lastSeenAt: 1792829971267
+fingerprint: null
+payload:
+  id: BL22_rewind_timeline_ui
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c303b8516180f930

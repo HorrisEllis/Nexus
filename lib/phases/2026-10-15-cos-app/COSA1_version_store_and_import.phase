@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+context: pipeline phase COSA1_version_store_and_import of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA1_version_store_and_import (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005842
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005842
+lastSeenAt: 1792830005842
+fingerprint: null
+payload:
+  id: COSA1_version_store_and_import
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT-0.60.87
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e72f32ca6a953d76

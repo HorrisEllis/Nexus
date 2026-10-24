@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::LN1_lenses_on_the_canvas
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::LN1_lenses_on_the_canvas
+context: pipeline phase LN1_lenses_on_the_canvas of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: LN1_lenses_on_the_canvas (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988463
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988463
+lastSeenAt: 1792829988463
+fingerprint: null
+payload:
+  id: LN1_lenses_on_the_canvas
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/arch-canvas.js
+    - idearium/ui/architect.html
+  depends_on:
+    - RF1_relational_field
+    - MR5_fractal_levels_with_the_field
+  blocks: []
+  spec: null
+  graph: 792316b31766a3f3

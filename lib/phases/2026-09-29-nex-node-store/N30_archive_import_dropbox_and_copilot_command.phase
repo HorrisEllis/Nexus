@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N30_archive_import_dropbox_and_copilot_command
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N30_archive_import_dropbox_and_copilot_command
+context: >-
+  pipeline phase N30_archive_import_dropbox_and_copilot_command of
+  docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N30_archive_import_dropbox_and_copilot_command (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985454
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985454
+lastSeenAt: 1792829985454
+fingerprint: null
+payload:
+  id: N30_archive_import_dropbox_and_copilot_command
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - 'cli/import-history.js (--jsonl: one line per zip + the result, for a job to follow)'
+    - >-
+      lib/history-import-job.js (new — the import as a background child process, like
+      cos/testenv/setup-job.js)
+    - >-
+      idearium/api/index.js (GET|POST /api/history/import, PUT /api/history/import/upload, the
+      /archive-import.html page)
+    - idearium/ui/archive-import.html (new — the drop box)
+    - idearium/ui/js/app.js (the /import-archives command; 'import my archives' opens it too)
+    - 'clear-glass/src/copilot/verbs.js (the co-pilot pane: ''import my archives'' opens the drop box)'
+    - clear-glass/src/copilot/bridge.js (the pane checks the archive intent before 'visit')
+    - >-
+      loom/maps/one-idearium-map.js (the api → job wire and the job → CLI spawn wire, which the
+      scanner cannot see)
+    - >-
+      tests/modules/test-history-import-job.test.js (18) · tests/probe/archive-import-chromium.js
+      (7, real Chromium)
+  depends_on:
+    - N27_history_import_from_700_zips
+  blocks: []
+  spec: null
+  graph: dedd8b0e675c778d

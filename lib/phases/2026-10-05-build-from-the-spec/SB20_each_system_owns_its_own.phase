@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
+context: pipeline phase SB20_each_system_owns_its_own of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB20_each_system_owns_its_own (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990964
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990964
+lastSeenAt: 1792829990964
+fingerprint: null
+payload:
+  id: SB20_each_system_owns_its_own
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/node-schemas.js
+    - guardian/schemas/
+    - clear-glass/schemas/
+    - lib/node-index.js
+    - lib/nexus-self/systems.js
+  depends_on:
+    - SB17_the_system_template_is_complete
+  blocks: []
+  spec: null
+  graph: 4b6d2494146e3c0b

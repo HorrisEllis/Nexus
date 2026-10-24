@@ -1,0 +1,73 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MR3_gap_driven_search:9b368a799ea724a4
+type: graph
+id: phase:MR3_gap_driven_search:9b368a799ea724a4
+context: dependency graph of phase MR3_gap_driven_search
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829988430
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988430
+lastSeenAt: 1792829988430
+fingerprint: null
+payload:
+  for: MR3_gap_driven_search
+  kind: phase
+  repo: null
+  hash: 9b368a799ea724a4
+  nodes:
+    - path: emergence/vendor/rfr2/liminal/negative-space.js
+      role: changes
+      exists: true
+      system: emergence
+    - path: emergence/vendor/rfr2/liminal/relational-gaps.js
+      role: changes
+      exists: true
+      system: emergence
+    - path: lib/gap-search.js
+      role: changes
+      exists: false
+      system: lib
+    - path: emergence/vendor/rfr2/liminal/bus.js
+      role: uses
+      exists: true
+      system: emergence
+    - path: emergence/vendor/rfr2/liminal/core.js
+      role: uses
+      exists: true
+      system: emergence
+  edges:
+    - from: emergence/vendor/rfr2/liminal/negative-space.js
+      to: emergence/vendor/rfr2/liminal/bus.js
+      kind: requires
+    - from: emergence/vendor/rfr2/liminal/negative-space.js
+      to: emergence/vendor/rfr2/liminal/core.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · blocked by MR1_recall_triad_and_context_table
+      - 'depends on (1): MR1_recall_triad_and_context_table · all upstream 3'
+      - 'needed by (1): RC1_the_repo_main_chat · all downstream 2'

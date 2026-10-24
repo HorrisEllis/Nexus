@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P12_fault_logging_first_class
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P12_fault_logging_first_class
+context: pipeline phase P12_fault_logging_first_class of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P12_fault_logging_first_class (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830032523
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830032523
+lastSeenAt: 1792830032523
+fingerprint: null
+payload:
+  id: P12_fault_logging_first_class
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 294480e2df7ebd14

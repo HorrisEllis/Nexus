@@ -1,0 +1,89 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS4_environment_check:d708b357faeeeade
+type: graph
+id: phase:BS4_environment_check:d708b357faeeeade
+context: dependency graph of phase BS4_environment_check
+intent: null
+summary: 6 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985005
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985005
+lastSeenAt: 1792829985005
+fingerprint: null
+payload:
+  for: BS4_environment_check
+  kind: phase
+  repo: null
+  hash: d708b357faeeeade
+  nodes:
+    - path: cos/testenv/environment.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-build-surface.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: cos/testenv/detect.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: tests/modules/test-build-surface.api.js
+      role: uses
+      exists: true
+      system: null
+  edges:
+    - from: cos/testenv/environment.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: tests/modules/test-build-surface.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: tests/modules/test-build-surface.test.js
+      to: tests/modules/test-build-surface.api.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      kind: requires
+  crossings:
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+    upstream: []
+    downstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS10_settings_and_environment_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS11_plan_panel
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+      - docs/2026-09-29-build-surface-phasemap.spec::BS8_files_ui
+      - docs/2026-09-29-build-surface-phasemap.spec::BS9_spec_and_phase_build_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): BS7_api · all downstream 6 · finishing it unlocks BS7_api'

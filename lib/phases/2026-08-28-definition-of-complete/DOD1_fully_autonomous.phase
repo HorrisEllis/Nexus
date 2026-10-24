@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-definition-of-complete-phasemap.spec::DOD1_fully_autonomous
+type: phase
+id: docs_2026-08-28-definition-of-complete-phasemap.spec::DOD1_fully_autonomous
+context: pipeline phase DOD1_fully_autonomous of docs/2026-08-28-definition-of-complete-phasemap.spec
+intent: null
+summary: DOD1_fully_autonomous (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829972146
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972146
+lastSeenAt: 1792829972146
+fingerprint: null
+payload:
+  id: DOD1_fully_autonomous
+  map: docs/2026-08-28-definition-of-complete-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e5fd79a1162932ba

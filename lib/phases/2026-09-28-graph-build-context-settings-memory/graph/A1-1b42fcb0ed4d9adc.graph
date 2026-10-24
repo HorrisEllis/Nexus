@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:A1:1b42fcb0ed4d9adc
+type: graph
+id: phase:A1:1b42fcb0ed4d9adc
+context: dependency graph of phase A1
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829984168
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984168
+lastSeenAt: 1792829984168
+fingerprint: null
+payload:
+  for: A1
+  kind: phase
+  repo: null
+  hash: 1b42fcb0ed4d9adc
+  nodes:
+    - path: docs/atlases/idearium-atlas.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling:
+      - each
+      - phase
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: each, phase'

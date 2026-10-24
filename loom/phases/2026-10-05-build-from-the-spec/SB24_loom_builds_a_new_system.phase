@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB24_loom_builds_a_new_system
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB24_loom_builds_a_new_system
+context: pipeline phase SB24_loom_builds_a_new_system of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB24_loom_builds_a_new_system (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990972
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990972
+lastSeenAt: 1792829990972
+fingerprint: null
+payload:
+  id: SB24_loom_builds_a_new_system
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/templates/system-scaffold.js
+    - loom/server.js
+    - loom/registry-components.js
+    - idearium/ui/js/app.js
+  depends_on:
+    - SB23_a_new_system_slots_in
+    - SB25_atlas_template_in_his_structure
+  blocks: []
+  spec: null
+  graph: bdd03972022356be

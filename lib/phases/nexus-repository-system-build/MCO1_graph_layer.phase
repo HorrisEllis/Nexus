@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repository-system-build-phasemap.spec::MCO1_graph_layer
+type: phase
+id: docs_nexus-repository-system-build-phasemap.spec::MCO1_graph_layer
+context: pipeline phase MCO1_graph_layer of docs/nexus-repository-system-build-phasemap.spec
+intent: null
+summary: MCO1_graph_layer (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830034108
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830034108
+lastSeenAt: 1792830034108
+fingerprint: null
+payload:
+  id: MCO1_graph_layer
+  map: docs/nexus-repository-system-build-phasemap.spec
+  repo: null
+  layer: null
+  status: '>'
+  files: []
+  depends_on:
+    - MCO0_audit_real_coverage
+  blocks: []
+  spec: null
+  graph: bec51ffa7d78bab9

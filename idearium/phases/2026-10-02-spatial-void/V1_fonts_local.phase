@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-spatial-void-phasemap.spec::V1_fonts_local
+type: phase
+id: docs_2026-10-02-spatial-void-phasemap.spec::V1_fonts_local
+context: pipeline phase V1_fonts_local of docs/2026-10-02-spatial-void-phasemap.spec
+intent: null
+summary: V1_fonts_local (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829989366
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829989366
+lastSeenAt: 1792829989366
+fingerprint: null
+payload:
+  id: V1_fonts_local
+  map: docs/2026-10-02-spatial-void-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/fonts/
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 032a1c9ee94025d4

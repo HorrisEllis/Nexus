@@ -1,0 +1,175 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RM1_registry_driven_moves:37e44e3fd7c0b5e6
+type: graph
+id: phase:RM1_registry_driven_moves:37e44e3fd7c0b5e6
+context: dependency graph of phase RM1_registry_driven_moves
+intent: null
+summary: 15 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987061
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987061
+lastSeenAt: 1792829987061
+fingerprint: null
+payload:
+  for: RM1_registry_driven_moves
+  kind: phase
+  repo: null
+  hash: 37e44e3fd7c0b5e6
+  nodes:
+    - path: idearium/repo/architecture.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/registry-move.js
+      role: changes
+      exists: false
+      system: lib
+    - path: loom/scanners/source-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/self-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/agent-memory-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/build-context-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/build-surface-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/chat-ledger-map.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/maps/compartment-activity-map.js
+      role: used-by
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/repo/architecture.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/architecture.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: lib/self-build-loop.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/agent-memory-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/build-context-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/build-surface-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/chat-ledger-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: loom/maps/compartment-activity-map.js
+      to: loom/scanners/source-map.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/atlas-generate.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/registry-harness.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/self-build-loop.js
+      to: loom/scanners/source-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+    dependents:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI7_phasemaps_out_of_files_and_tree_ops
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+    downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI7_phasemaps_out_of_files_and_tree_ops
+    blockedBy:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+    unlocks:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI7_phasemaps_out_of_files_and_tree_ops
+    conflicts:
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4b_registry_chunk_in_repo_chunking
+        files:
+          - idearium/repo/architecture.js
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · blocked by DT4_registry_block_to_nodes
+      - 'depends on (1): DT4_registry_block_to_nodes · all upstream 3'
+      - >-
+        needed by (1): UI7_phasemaps_out_of_files_and_tree_ops · finishing it unlocks
+        UI7_phasemaps_out_of_files_and_tree_ops
+      - >-
+        same files as DT4b_registry_chunk_in_repo_chunking with no order between them:
+        idearium/repo/architecture.js

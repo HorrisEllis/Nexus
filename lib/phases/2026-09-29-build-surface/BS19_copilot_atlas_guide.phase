@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS19_copilot_atlas_guide
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS19_copilot_atlas_guide
+context: pipeline phase BS19_copilot_atlas_guide of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS19_copilot_atlas_guide (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985016
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985016
+lastSeenAt: 1792829985016
+fingerprint: null
+payload:
+  id: BS19_copilot_atlas_guide
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/atlases/copilot-atlas.md
+    - tests/modules/test-nexus-atlas-refs.test.js
+  depends_on:
+    - BS17_copilot_browser_verbs
+  blocks: []
+  spec: null
+  graph: 8cfe36554eded916

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-heal-nodes-phasemap.spec::HL0_runtime_faults_reach_the_ladder
+type: phase
+id: docs_2026-10-07-heal-nodes-phasemap.spec::HL0_runtime_faults_reach_the_ladder
+context: pipeline phase HL0_runtime_faults_reach_the_ladder of docs/2026-10-07-heal-nodes-phasemap.spec
+intent: null
+summary: HL0_runtime_faults_reach_the_ladder (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829994975
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829994975
+lastSeenAt: 1792829994975
+fingerprint: null
+payload:
+  id: HL0_runtime_faults_reach_the_ladder
+  map: docs/2026-10-07-heal-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 947d5607680d7d04

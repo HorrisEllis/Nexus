@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-idearium-one-surface-phasemap.spec::SP3_the_file_tree_is_the_spine
+type: phase
+id: docs_2026-10-07-idearium-one-surface-phasemap.spec::SP3_the_file_tree_is_the_spine
+context: >-
+  pipeline phase SP3_the_file_tree_is_the_spine of
+  docs/2026-10-07-idearium-one-surface-phasemap.spec
+intent: null
+summary: SP3_the_file_tree_is_the_spine (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829995354
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829995354
+lastSeenAt: 1792829995354
+fingerprint: null
+payload:
+  id: SP3_the_file_tree_is_the_spine
+  map: docs/2026-10-07-idearium-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a05d1bb6700d15b8

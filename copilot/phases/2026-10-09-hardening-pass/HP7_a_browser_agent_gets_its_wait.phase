@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP7_a_browser_agent_gets_its_wait
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP7_a_browser_agent_gets_its_wait
+context: pipeline phase HP7_a_browser_agent_gets_its_wait of docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP7_a_browser_agent_gets_its_wait (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997242
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997242
+lastSeenAt: 1792829997242
+fingerprint: null
+payload:
+  id: HP7_a_browser_agent_gets_its_wait
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lifeline.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a4195cb04cac45ee

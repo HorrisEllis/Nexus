@@ -1,0 +1,314 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T3_warp_replaces_siso:4a279856f4f7d1cc
+type: graph
+id: phase:T3_warp_replaces_siso:4a279856f4f7d1cc
+context: dependency graph of phase T3_warp_replaces_siso
+intent: null
+summary: 36 node(s), 9 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976049
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976049
+lastSeenAt: 1792829976049
+fingerprint: null
+payload:
+  for: T3_warp_replaces_siso
+  kind: phase
+  repo: null
+  hash: 4a279856f4f7d1cc
+  nodes:
+    - path: cli/nexus-cli.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cos/cli/commands/create.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/host/event-bus.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/siso/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/siso/Stream.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: changes
+      exists: true
+      system: cos
+    - path: emerge/compiler/ring-buffer.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: warp/core/index.js
+      role: changes
+      exists: true
+      system: warp
+    - path: warp/core/Stream.js
+      role: changes
+      exists: true
+      system: warp
+    - path: warp/core/StreamLog.js
+      role: changes
+      exists: true
+      system: warp
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/spec-engine/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/seam/build-contract.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/gates.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/warp-bus.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/schema/axioms.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/schema/driver.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/schema/gates.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: warp/dispatch/benchmark.js
+      role: used-by
+      exists: true
+      system: warp
+    - path: warp/index.js
+      role: used-by
+      exists: true
+      system: warp
+    - path: warp/test/core.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Event.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Gate.js
+      role: uses
+      exists: true
+      system: cos
+    - path: warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Engine.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Event.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Expectation.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Gate.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/GateFusion.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Ledger.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Link.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: cos/siso/Stream.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: warp/core/index.js
+      to: warp/core/Event.js
+      kind: requires
+    - from: warp/core/index.js
+      to: warp/core/Gate.js
+      kind: requires
+    - from: warp/core/index.js
+      to: warp/core/Axiom.js
+      kind: requires
+    - from: warp/core/index.js
+      to: warp/core/GateFusion.js
+      kind: requires
+    - from: warp/core/index.js
+      to: warp/core/Link.js
+      kind: requires
+    - from: warp/core/index.js
+      to: warp/core/Expectation.js
+      kind: requires
+    - from: warp/core/index.js
+      to: warp/core/Ledger.js
+      kind: requires
+    - from: warp/core/index.js
+      to: warp/core/Engine.js
+      kind: requires
+    - from: cos/siso/index.js
+      to: cos/siso/Gate.js
+      kind: requires
+    - from: cos/cli/commands/create.js
+      to: cos/siso/Event.js
+      kind: requires
+    - from: cos/cli/commands/create.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: warp/core/index.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: warp/core/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: warp/core/index.js
+      kind: requires
+    - from: lib/seam/build-contract.js
+      to: warp/core/index.js
+      kind: requires
+    - from: lib/seam/gates.js
+      to: warp/core/index.js
+      kind: requires
+    - from: lib/warp-bus.js
+      to: warp/core/index.js
+      kind: requires
+    - from: loom/schema/axioms.js
+      to: warp/core/index.js
+      kind: requires
+    - from: loom/schema/driver.js
+      to: warp/core/index.js
+      kind: requires
+    - from: loom/schema/gates.js
+      to: warp/core/index.js
+      kind: requires
+    - from: warp/dispatch/benchmark.js
+      to: warp/core/index.js
+      kind: requires
+    - from: warp/index.js
+      to: warp/core/index.js
+      kind: requires
+    - from: warp/test/core.test.js
+      to: warp/core/index.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/contract-intake.js
+      to: warp/core/index.js
+      fromSystem: cortex
+      toSystem: warp
+      kind: system
+      known: true
+    - from: idearium/spec-engine/index.js
+      to: warp/core/index.js
+      fromSystem: idearium
+      toSystem: warp
+      kind: system
+      known: true
+    - from: intelligence/server.js
+      to: warp/core/index.js
+      fromSystem: intelligence
+      toSystem: warp
+      kind: system
+      known: true
+    - from: lib/seam/build-contract.js
+      to: warp/core/index.js
+      fromSystem: lib
+      toSystem: warp
+      kind: upward
+      known: true
+    - from: lib/seam/gates.js
+      to: warp/core/index.js
+      fromSystem: lib
+      toSystem: warp
+      kind: upward
+      known: true
+    - from: lib/warp-bus.js
+      to: warp/core/index.js
+      fromSystem: lib
+      toSystem: warp
+      kind: upward
+      known: true
+    - from: loom/schema/axioms.js
+      to: warp/core/index.js
+      fromSystem: loom
+      toSystem: warp
+      kind: system
+      known: true
+    - from: loom/schema/driver.js
+      to: warp/core/index.js
+      fromSystem: loom
+      toSystem: warp
+      kind: system
+      known: true
+    - from: loom/schema/gates.js
+      to: warp/core/index.js
+      fromSystem: loom
+      toSystem: warp
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T2_idearium_genesis_alignment
+    upstream: []
+    downstream:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T2_idearium_genesis_alignment
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T2_idearium_genesis_alignment
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): T2_idearium_genesis_alignment · finishing it unlocks
+        T2_idearium_genesis_alignment

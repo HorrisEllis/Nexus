@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::UP2_learned_placements
+type: phase
+id: docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::UP2_learned_placements
+context: pipeline phase UP2_learned_placements of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+intent: null
+summary: UP2_learned_placements (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792830021325
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830021325
+lastSeenAt: 1792830021325
+fingerprint: null
+payload:
+  id: UP2_learned_placements
+  map: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.173
+  files:
+    - lib/upload-placement.js
+  depends_on:
+    - UP1_placement_tool
+  blocks: []
+  spec: null
+  graph: ce0e81c67e6b36ce

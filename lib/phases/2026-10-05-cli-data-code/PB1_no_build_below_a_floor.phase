@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::PB1_no_build_below_a_floor
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::PB1_no_build_below_a_floor
+context: pipeline phase PB1_no_build_below_a_floor of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: PB1_no_build_below_a_floor (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991465
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991465
+lastSeenAt: 1792829991465
+fingerprint: null
+payload:
+  id: PB1_no_build_below_a_floor
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - idearium/lib/config.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: aa5354fee35ba1e8

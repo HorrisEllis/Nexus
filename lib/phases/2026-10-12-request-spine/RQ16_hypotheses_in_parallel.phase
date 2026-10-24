@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
+context: pipeline phase RQ16_hypotheses_in_parallel of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ16_hypotheses_in_parallel (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001726
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001726
+lastSeenAt: 1792830001726
+fingerprint: null
+payload:
+  id: RQ16_hypotheses_in_parallel
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-05-failure-reproduction-phasemap.spec (FM2 FM3)
+    - cortex/self-heal/failure-mode-forensics.js
+    - intelligence/rfr2
+  depends_on:
+    - RQ15_cells_in_parallel
+    - RQ17_observe_by_request
+  blocks: []
+  spec: null
+  graph: 39c60cb36660f79d

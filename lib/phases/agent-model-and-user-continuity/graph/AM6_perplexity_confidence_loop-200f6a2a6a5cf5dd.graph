@@ -1,0 +1,317 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AM6_perplexity_confidence_loop:200f6a2a6a5cf5dd
+type: graph
+id: phase:AM6_perplexity_confidence_loop:200f6a2a6a5cf5dd
+context: dependency graph of phase AM6_perplexity_confidence_loop
+intent: null
+summary: 45 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830027822
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830027822
+lastSeenAt: 1792830027822
+fingerprint: null
+payload:
+  for: AM6_perplexity_confidence_loop
+  kind: phase
+  repo: null
+  hash: 200f6a2a6a5cf5dd
+  nodes:
+    - path: clear-glass/renderer/selector-check.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/macros/recorder-script.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/processes/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: diagnostic/lib/causality.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: guardian/lib/dispatch-ladder.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/repo/deviation.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-build-loop.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-system/contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/safe-apply.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/fault-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-compartment.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/cos-simulate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/emergence.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/safe-apply.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: changes
+      exists: true
+      system: loom
+    - path: meta/adversary-suite.js
+      role: changes
+      exists: true
+      system: meta
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/agent-model.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-system/submit.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/emergence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-map.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-faults.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: meta/index.js
+      role: used-by
+      exists: true
+      system: meta
+    - path: tests/modules/adversary-suite.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/bep-lookup.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/causal-lookup.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/fix-map.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-chat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/self-repair.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/end-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-system/contracts.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: lib/fault-log.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: cortex/push-recall.js
+      to: cortex/memory/fix-map.js
+      kind: requires
+    - from: cortex/push-recall.js
+      to: cortex/memory/bep-lookup.js
+      kind: requires
+    - from: cortex/push-recall.js
+      to: cortex/memory/causal-lookup.js
+      kind: requires
+    - from: guardian/lib/dispatch-ladder.js
+      to: guardian/options.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/agent-chat.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/end-state.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/agent-tools/tools/sandbox/self-repair.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/agent-system/submit.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-map.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/emergence.js
+      to: lib/emergence.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: lib/phase-faults.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: meta/adversary-suite.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: meta/adversary-suite.js
+      kind: requires
+    - from: meta/index.js
+      to: meta/adversary-suite.js
+      kind: requires
+    - from: tests/modules/adversary-suite.test.js
+      to: meta/adversary-suite.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+  crossings:
+    - from: lib/agent-build-loop.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: meta/adversary-suite.js
+      fromSystem: cortex
+      toSystem: meta
+      kind: system
+      known: true
+    - from: lib/compartment-engine.js
+      to: meta/adversary-suite.js
+      fromSystem: lib
+      toSystem: meta
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+    dependents: []
+    upstream:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+    downstream: []
+    blockedBy:
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM1_per_agent_learned_model
+      - docs/agent-model-and-user-continuity-phasemap.spec::AM5_ambiguity_triggered_pull
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 1 · blocked by AM1_per_agent_learned_model,
+        AM5_ambiguity_triggered_pull
+      - 'depends on (2): AM1_per_agent_learned_model, AM5_ambiguity_triggered_pull'
+      - 'needed by (0): —'

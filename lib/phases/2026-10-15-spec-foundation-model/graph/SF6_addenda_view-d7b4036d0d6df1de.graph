@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF6_addenda_view:d7b4036d0d6df1de
+type: graph
+id: phase:SF6_addenda_view:d7b4036d0d6df1de
+context: dependency graph of phase SF6_addenda_view
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792830008636
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830008636
+lastSeenAt: 1792830008636
+fingerprint: null
+payload:
+  for: SF6_addenda_view
+  kind: phase
+  repo: null
+  hash: d7b4036d0d6df1de
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+    dependents: []
+    upstream:
+      - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by SF1_foundation_field
+      - 'depends on (1): SF1_foundation_field'
+      - 'needed by (0): —'

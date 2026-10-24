@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB30_the_template_is_a_skeleton
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB30_the_template_is_a_skeleton
+context: >-
+  pipeline phase SB30_the_template_is_a_skeleton of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB30_the_template_is_a_skeleton (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990983
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990983
+lastSeenAt: 1792829990983
+fingerprint: null
+payload:
+  id: SB30_the_template_is_a_skeleton
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates/architecture-spec.template.yaml
+    - idearium/spec-engine/templates/system/schemas/
+    - docs/architecture-spec/architecture-spec.spec
+  depends_on:
+    - SB17_the_system_template_is_complete
+  blocks: []
+  spec: null
+  graph: 22cd72ac9008bd9b

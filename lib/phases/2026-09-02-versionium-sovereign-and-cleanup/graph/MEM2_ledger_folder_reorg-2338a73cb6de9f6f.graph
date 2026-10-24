@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MEM2_ledger_folder_reorg:2338a73cb6de9f6f
+type: graph
+id: phase:MEM2_ledger_folder_reorg:2338a73cb6de9f6f
+context: dependency graph of phase MEM2_ledger_folder_reorg
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829974796
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974796
+lastSeenAt: 1792829974796
+fingerprint: null
+payload:
+  for: MEM2_ledger_folder_reorg
+  kind: phase
+  repo: null
+  hash: 2338a73cb6de9f6f
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-routing-registry-genesis-phasemap.spec::RG0_map
+type: phase
+id: docs_2026-10-01-routing-registry-genesis-phasemap.spec::RG0_map
+context: pipeline phase RG0_map of docs/2026-10-01-routing-registry-genesis-phasemap.spec
+intent: null
+summary: RG0_map (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987565
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987565
+lastSeenAt: 1792829987565
+fingerprint: null
+payload:
+  id: RG0_map
+  map: docs/2026-10-01-routing-registry-genesis-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-01-routing-registry-genesis-phasemap.spec
+    - docs/SPEC-REGISTRY.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2dbe0930b534d57a

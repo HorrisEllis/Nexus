@@ -10,6 +10,8 @@
  *          folder reports no drift; a phase file edited by hand is reported as drift
  *   PS-03  pipeline-nodes graphNode keeps graph.dag (it dropped it before 2026-10-20)
  *   PS-04  the committed per-phase nodes of both 2026-10-20 maps exist for every phase (written, not only derivable)
+ *   PS-05  0.60.227 a later key with a phase id already defined (a note) never replaces the phase
+ *   PS-06  0.60.227 PS2 every phase of every map has its .phase, and its .graph carries its DAG slice
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert');
@@ -70,6 +72,37 @@ test('PS-04', 'the committed per-phase nodes exist for every phase of both maps'
     const ds = map === MAP ? derived : quiet(() => PS.derive({ map }));
     for (const d of ds) assert.ok(fs.existsSync(path.join(ROOT, d.dir, `${d.phase}.phase`)), `${d.dir}/${d.phase}.phase not committed`);
   }
+});
+
+// PS-05 / PS-06 — 0.60.227 PS2. James, 2026-10-24: "spec per component/capability/etc its in the specs. deocmpose all of the phases into
+// .phase nodes including dag per phase."
+test('PS-05', 'a later key with a phase id already defined is a note about it: the first definition is the phase (DAG and .phase)', () => {
+  const PD = require(path.join(ROOT, 'lib/phase-dag.js'));
+  const text = 'phases:\n  X1_real:\n    status: DONE 2026-10-01\n    depends_on: []\n    files: [lib/x.js]\nnotes:\n  changes:\n    X1_real: "a note that names it"\n';
+  const n = PD.build([{ path: 'docs/x-phasemap.spec', text }]).nodes['docs/x-phasemap.spec::X1_real'];
+  assert.deepStrictEqual([n.line, n.done, n.files], [1, true, ['lib/x.js']], 'the note did not replace it');
+  const real = PD.build([{ path: 'docs/2026-10-15-clear-glass-network-posture-phasemap.spec', text: fs.readFileSync(path.join(ROOT, 'docs/2026-10-15-clear-glass-network-posture-phasemap.spec'), 'utf8') }]).nodes['docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP4_webrtc'];
+  assert.strictEqual(real.line, 83, 'his NP4_webrtc is the phase at line 83, not the note at 336');
+});
+
+test('PS-06', "every phase of every map has its .phase, and its .graph carries its slice of the whole DAG", () => {
+  const PF = require(path.join(ROOT, 'lib/phase-files.js'));
+  const NE = require(path.join(ROOT, 'lib/node-export.js'));
+  const maps = fs.readdirSync(path.join(ROOT, 'docs')).filter(f => f.endsWith('-phasemap.spec'));
+  const have = new Map();
+  for (const f of require('child_process').execSync('find . -name "*.phase" -not -path "*/node_modules/*"', { cwd: ROOT }).toString().trim().split('\n')) have.set(f.split('/phases/')[1], f);
+  let n = 0; const missing = [];
+  for (const f of maps) {
+    const id = f.replace(/-phasemap\.spec$/, ''); const seen = new Set();
+    for (const p of PF.phasesOf(fs.readFileSync(path.join(ROOT, 'docs', f), 'utf8'), `docs/${f}`)) { if (seen.has(p.id)) continue; seen.add(p.id); n++; if (!have.has(`${id}/${p.id}.phase`)) missing.push(`${id}/${p.id}`); }
+  }
+  assert.ok(n > 2000, `${n} phases`);
+  assert.deepStrictEqual(missing.slice(0, 5), [], `${missing.length} phases have no .phase`);
+  const one = NE.fromYaml(fs.readFileSync(path.join(ROOT, have.get('2026-09-28-graph-build-context-settings-memory/G0.phase')), 'utf8')).payload;
+  const g = path.join(ROOT, path.dirname(have.get('2026-09-28-graph-build-context-settings-memory/G0.phase')), 'graph', `G0-${one.graph}.graph`);
+  assert.ok(fs.existsSync(g), 'its graph, by its hash');
+  const dag = NE.fromYaml(fs.readFileSync(g, 'utf8')).payload.dag;
+  assert.ok(dag && dag.dagHash && Array.isArray(dag.downstream), 'the graph carries its DAG slice');
 });
 
 console.log(`\n  ${passed} passed, ${failed} failed`);

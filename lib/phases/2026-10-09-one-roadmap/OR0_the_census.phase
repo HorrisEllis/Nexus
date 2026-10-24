@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
+type: phase
+id: docs_2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
+context: pipeline phase OR0_the_census of docs/2026-10-09-one-roadmap-phasemap.spec
+intent: null
+summary: OR0_the_census (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829998095
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998095
+lastSeenAt: 1792829998095
+fingerprint: null
+payload:
+  id: OR0_the_census
+  map: docs/2026-10-09-one-roadmap-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-10-09-one-roadmap-phasemap.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b3f330f789402a35

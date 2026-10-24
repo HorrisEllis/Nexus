@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-gates-that-learn-and-priorities-phasemap.spec::QA1_the_catalogue_runs
+type: phase
+id: docs_2026-10-13-gates-that-learn-and-priorities-phasemap.spec::QA1_the_catalogue_runs
+context: >-
+  pipeline phase QA1_the_catalogue_runs of
+  docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
+intent: null
+summary: QA1_the_catalogue_runs (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002153
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002153
+lastSeenAt: 1792830002153
+fingerprint: null
+payload:
+  id: QA1_the_catalogue_runs
+  map: docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2f28022294f93cfe

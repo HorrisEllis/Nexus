@@ -1,0 +1,263 @@
+envelope: 1
+uuid: nexus-export-graph-phase:I1:3e215fa27c0ef67b
+type: graph
+id: phase:I1:3e215fa27c0ef67b
+context: dependency graph of phase I1
+intent: null
+summary: 28 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829980923
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980923
+lastSeenAt: 1792829980923
+fingerprint: null
+payload:
+  for: I1
+  kind: phase
+  repo: null
+  hash: 3e215fa27c0ef67b
+  nodes:
+    - path: cos/testenv/installer.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/cos-run.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cos/runtime/run.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-verify.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: service/idearium-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/playground/branch.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/runtime/run.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/detect.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/cos-debug-report.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/failure-post.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/testenv/installer.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/runtime/run.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/branch.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/cos-debug-report.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/failure-post.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: cos/runtime/run.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: lib/build-verify.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: lib/cos-run.js
+      to: cos/runtime/run.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/build-verify.js
+      to: cos/testenv/installer.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: service/idearium-service.js
+      to: idearium/api/index.js
+      fromSystem: service
+      toSystem: idearium
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+    upstream: []
+    downstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::X1
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): T1 · all downstream 2'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

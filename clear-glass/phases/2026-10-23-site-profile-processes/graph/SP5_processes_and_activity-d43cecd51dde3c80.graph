@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792754193315
+exported_at: 1792830026982
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792754193315
-lastSeenAt: 1792754193315
+firstSeenAt: 1792830026982
+lastSeenAt: 1792830026982
 fingerprint: null
 payload:
   for: SP5_processes_and_activity
@@ -219,7 +219,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: dbdd2256c2bfe7c4
+    dagHash: 2f8ddd0afd383c4f
     layer: 1
     deps:
       - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D3_person_ends_processes
@@ -236,6 +236,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG dbdd2256c2bfe7c4 · layer 1 · blocked by SP_D3_person_ends_processes
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by SP_D3_person_ends_processes
       - 'depends on (1): SP_D3_person_ends_processes'
       - 'needed by (1): SP6_the_processes_screen · finishing it unlocks SP6_the_processes_screen'

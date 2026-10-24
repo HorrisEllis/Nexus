@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::AM10_ollama_models_in_mesh
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::AM10_ollama_models_in_mesh
+context: pipeline phase AM10_ollama_models_in_mesh of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: AM10_ollama_models_in_mesh (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974300
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974300
+lastSeenAt: 1792829974300
+fingerprint: null
+payload:
+  id: AM10_ollama_models_in_mesh
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cb3cb4f7a252e3df

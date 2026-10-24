@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-compartment-control-and-activity-phasemap.spec::VM1_checkpoints_on_the_log
+type: phase
+id: docs_2026-10-07-compartment-control-and-activity-phasemap.spec::VM1_checkpoints_on_the_log
+context: >-
+  pipeline phase VM1_checkpoints_on_the_log of
+  docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+intent: null
+summary: VM1_checkpoints_on_the_log (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829994581
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829994581
+lastSeenAt: 1792829994581
+fingerprint: null
+payload:
+  id: VM1_checkpoints_on_the_log
+  map: docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - DT1_desktop_into_the_log
+  blocks: []
+  spec: null
+  graph: 120f9c6befec0413

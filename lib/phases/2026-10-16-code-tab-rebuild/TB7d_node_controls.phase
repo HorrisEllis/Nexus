@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB7d_node_controls
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB7d_node_controls
+context: pipeline phase TB7d_node_controls of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB7d_node_controls (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830010175
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010175
+lastSeenAt: 1792830010175
+fingerprint: null
+payload:
+  id: TB7d_node_controls
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TB7c_graph_and_zoom
+  blocks: []
+  spec: null
+  graph: 4f2be3f82aed75ef

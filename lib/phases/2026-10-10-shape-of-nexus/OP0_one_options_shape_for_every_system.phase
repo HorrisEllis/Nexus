@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::OP0_one_options_shape_for_every_system
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::OP0_one_options_shape_for_every_system
+context: >-
+  pipeline phase OP0_one_options_shape_for_every_system of
+  docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: OP0_one_options_shape_for_every_system (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830000460
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000460
+lastSeenAt: 1792830000460
+fingerprint: null
+payload:
+  id: OP0_one_options_shape_for_every_system
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/options.js
+    - idearium/lib/config-core.cjs
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a172702727a5d91e

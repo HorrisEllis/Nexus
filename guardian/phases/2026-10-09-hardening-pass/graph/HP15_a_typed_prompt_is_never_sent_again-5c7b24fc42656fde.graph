@@ -1,0 +1,185 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HP15_a_typed_prompt_is_never_sent_again:5c7b24fc42656fde
+type: graph
+id: phase:HP15_a_typed_prompt_is_never_sent_again:5c7b24fc42656fde
+context: dependency graph of phase HP15_a_typed_prompt_is_never_sent_again
+intent: null
+summary: 18 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829997248
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997248
+lastSeenAt: 1792829997248
+fingerprint: null
+payload:
+  for: HP15_a_typed_prompt_is_never_sent_again
+  kind: phase
+  repo: null
+  hash: 5c7b24fc42656fde
+  nodes:
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/dispatcher-ping-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-stale-socket.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/clear-glass-bridge.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/chat-transcripts.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatch-pool.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/profile-lanes.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-login.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-routing.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/dispatch-pool.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/profile-lanes.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/clear-glass-bridge.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-login.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-ping-gate.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-stale-socket.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/dispatcher.js
+      to: cortex/core/raid/index.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/lib/dispatcher.js
+      to: ollama/lib/model-inventory.js
+      fromSystem: guardian
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: guardian/lib/dispatcher.js
+      to: intelligence/alk/index.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+    dependents:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+    upstream:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
+    downstream:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1
+      - 'depends on (1): HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds'
+      - 'needed by (1): HP19_the_simulator_stays · finishing it unlocks HP19_the_simulator_stays'

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD16_a_plan_step_never_proposes_code
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD16_a_plan_step_never_proposes_code
+context: >-
+  pipeline phase SD16_a_plan_step_never_proposes_code of
+  docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD16_a_plan_step_never_proposes_code (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999662
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999662
+lastSeenAt: 1792829999662
+fingerprint: null
+payload:
+  id: SD16_a_plan_step_never_proposes_code
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/build-surface.js
+    - lib/repo-agent.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 15a5817d56c7df8e

@@ -1,0 +1,91 @@
+envelope: 1
+uuid: nexus-export-graph-phase:JB6_the_application_ledger:46f6fdd5ad1b1534
+type: graph
+id: phase:JB6_the_application_ledger:46f6fdd5ad1b1534
+context: dependency graph of phase JB6_the_application_ledger
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830001280
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001280
+lastSeenAt: 1792830001280
+fingerprint: null
+payload:
+  for: JB6_the_application_ledger
+  kind: phase
+  repo: null
+  hash: 46f6fdd5ad1b1534
+  nodes:
+    - path: clear-glass/src/autofill/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/clear-glass-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-screen-qa.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/autofill/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-autofill.test.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-screen-qa.test.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB4_resume_import
+    dependents:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB7_the_follow_up
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB0_gig_files
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB4_resume_import
+    downstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB7_the_follow_up
+    blockedBy:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB4_resume_import
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by JB4_resume_import
+      - 'depends on (1): JB4_resume_import · all upstream 2'
+      - 'needed by (1): JB7_the_follow_up'

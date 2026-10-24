@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_sentinel_meaning
+type: phase
+id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_sentinel_meaning
+context: pipeline phase NP9_sentinel_meaning of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+intent: null
+summary: NP9_sentinel_meaning (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830004596
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830004596
+lastSeenAt: 1792830004596
+fingerprint: null
+payload:
+  id: NP9_sentinel_meaning
+  map: docs/2026-10-15-clear-glass-network-posture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c74cc64a8c25bb10

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-repository-overhaul-phasemap.spec::MCO1_graph_layer
+type: phase
+id: docs_idearium-repository-overhaul-phasemap.spec::MCO1_graph_layer
+context: pipeline phase MCO1_graph_layer of docs/idearium-repository-overhaul-phasemap.spec
+intent: null
+summary: MCO1_graph_layer (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830031749
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830031749
+lastSeenAt: 1792830031749
+fingerprint: null
+payload:
+  id: MCO1_graph_layer
+  map: docs/idearium-repository-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: '>'
+  files: []
+  depends_on:
+    - MCO0_audit_real_coverage
+  blocks: []
+  spec: null
+  graph: 85de28ae27e35120

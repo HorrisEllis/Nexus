@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-live-mind-phasemap.spec::P6_copilot_programmable
+type: phase
+id: docs_nexus-live-mind-phasemap.spec::P6_copilot_programmable
+context: pipeline phase P6_copilot_programmable of docs/nexus-live-mind-phasemap.spec
+intent: null
+summary: P6_copilot_programmable (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830032953
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830032953
+lastSeenAt: 1792830032953
+fingerprint: null
+payload:
+  id: P6_copilot_programmable
+  map: docs/nexus-live-mind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P4_copilot_awareness
+    - P5
+  blocks: []
+  spec: null
+  graph: 52e733c13ed35b06

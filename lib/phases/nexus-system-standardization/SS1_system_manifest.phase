@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-system-standardization-phasemap.spec::SS1_system_manifest
+type: phase
+id: docs_nexus-system-standardization-phasemap.spec::SS1_system_manifest
+context: pipeline phase SS1_system_manifest of docs/nexus-system-standardization-phasemap.spec
+intent: null
+summary: SS1_system_manifest (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830034887
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830034887
+lastSeenAt: 1792830034887
+fingerprint: null
+payload:
+  id: SS1_system_manifest
+  map: docs/nexus-system-standardization-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - SS0_clear_clutter
+  blocks: []
+  spec: null
+  graph: a9200dbf3224b519

@@ -330,3 +330,15 @@ lost. … specs, then phases then specced again with dag and related files for i
 The build contract is docs/substrate.spec (emerge module format; every module at specDepth 1.0). Each phase above now names `spec:` and the
 module ids it builds in `blocks:`. Each phase is specced again as <owner>/phases/2026-10-20-substrate-graph-traversal-chunking-gating/<phase>.phase and its
 graph/<phase>-<hash>.graph (related files with roles, crossings, the DAG slice), written by emerge/compiler/phase-specs.js.
+
+## ADDENDUM 2026-10-24 (0.60.227) — PS2: every phase decomposed
+James, 2026-10-24: "spec per component/capability/etc its in the specs. deocmpose all of the phases into .phase nodes including dag per phase."
+- emerge/compiler/phase-specs.js 1.1.0 writeAll / `--all`: PS1's write over every docs/*-phasemap.spec in one run. 2046 phases → 2046 .phase
+  and .graph (each graph carries the phase's slice of the whole DAG), beside each owning system. `--all --dry` derives without writing.
+- What it measured (docs/2026-10-24-phase-nodes-spec-coverage.md): 133 phases name their spec; 1107 open phases have none. His reading of
+  "spec per component" is that rule (docs/CLAUDE.md, 2026-10-20): the coverage table is the list of components still to spec, per system.
+  The coder's reading (to confirm): he asked for the decomposition now and the specs per component next, not 1107 specs in one pass.
+- Found: a later key with an already-defined phase id in the same map is a note, not a phase; the DAG read it last-wins and lost the real
+  phase (11 in 3 maps). The first definition wins in lib/phase-dag.js and in derive(), as idearium/repo/roadmap.js already reads it (its
+  duplicate_phase_id warning). Loom's parser still returns both (its consumers rely on the warning).
+- Kept, not deleted (§0.3): 2 .phase files left in an older owner's folder when their phase's files moved system (SL1, BX10).

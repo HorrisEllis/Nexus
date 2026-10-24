@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N11_adopters
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N11_adopters
+context: pipeline phase N11_adopters of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N11_adopters (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985431
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985431
+lastSeenAt: 1792829985431
+fingerprint: null
+payload:
+  id: N11_adopters
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/schema/registry.js
+    - versionium/lib/store.js
+    - intelligence/lattice/associative-lattice.js
+    - intelligence/rfr2/kernel/index.js (ring persistence)
+    - cortex/core/raid/index.js (weights and health from the store)
+  depends_on:
+    - N10_migration
+  blocks: []
+  spec: null
+  graph: f7c6777d110dfd74

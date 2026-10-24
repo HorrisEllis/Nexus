@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N19_suite_triage_and_known_gaps
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N19_suite_triage_and_known_gaps
+context: pipeline phase N19_suite_triage_and_known_gaps of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N19_suite_triage_and_known_gaps (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985440
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985440
+lastSeenAt: 1792829985440
+fingerprint: null
+payload:
+  id: N19_suite_triage_and_known_gaps
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - 'tests/known-gaps.yaml (each entry a gap node: file, failing count allowed, kind, reason)'
+    - >-
+      tests/modules/run-all.js (reports known gaps apart; a new failure or a gap that grows still
+      fails)
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e41f290ddd43afc5

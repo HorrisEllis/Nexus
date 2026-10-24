@@ -1,0 +1,136 @@
+envelope: 1
+uuid: nexus-export-graph-phase:O1:78637aa71993ad81
+type: graph
+id: phase:O1:78637aa71993ad81
+context: dependency graph of phase O1
+intent: null
+summary: 12 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829981302
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829981302
+lastSeenAt: 1792829981302
+fingerprint: null
+payload:
+  for: O1
+  kind: phase
+  repo: null
+  hash: 78637aa71993ad81
+  nodes:
+    - path: copilot/adversarial.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/lib/activity-recall.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/faculty/faculty-tools.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-adversarial-consolidation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/analysis.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/intuition.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/adversarial.js
+      to: copilot/intuition.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: copilot/analysis.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: copilot/lib/activity-recall.js
+      to: copilot/adversarial.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/adversarial.js
+      kind: requires
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/adversarial.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-consolidation.test.js
+      to: copilot/adversarial.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: copilot/adversarial.js
+      kind: requires
+  crossings:
+    - from: copilot/adversarial.js
+      to: intelligence/adversarial.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/adversarial.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    upstream: []
+    downstream:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): X1 · finishing it unlocks X1'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

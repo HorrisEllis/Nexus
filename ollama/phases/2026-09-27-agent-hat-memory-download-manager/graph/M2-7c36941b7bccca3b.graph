@@ -1,0 +1,186 @@
+envelope: 1
+uuid: nexus-export-graph-phase:M2:7c36941b7bccca3b
+type: graph
+id: phase:M2:7c36941b7bccca3b
+context: dependency graph of phase M2
+intent: null
+summary: 17 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829981316
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829981316
+lastSeenAt: 1792829981316
+fingerprint: null
+payload:
+  for: M2
+  kind: phase
+  repo: null
+  hash: 7c36941b7bccca3b
+  nodes:
+    - path: ollama/lib/dispatch.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/routes/jobs.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/lib/command-index.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/server.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/agent-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/http-utils.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/dispatch/cascade.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/dispatch/index.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/dispatch/population.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/plugins/crystallizer-flatfile.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: ollama/routes/jobs.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/jobs.js
+      to: ollama/lib/state.js
+      kind: requires
+    - from: ollama/routes/jobs.js
+      to: ollama/lib/http-utils.js
+      kind: requires
+    - from: ollama/routes/jobs.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/index.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/cascade.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: warp/plugins/crystallizer-flatfile.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/population.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: warp/core/Axiom.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: ollama/lib/command-index.js
+      to: ollama/routes/jobs.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/jobs.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: ollama/lib/dispatch.js
+      kind: requires
+  crossings:
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/index.js
+      fromSystem: ollama
+      toSystem: warp
+      kind: system
+      known: true
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/cascade.js
+      fromSystem: ollama
+      toSystem: warp
+      kind: system
+      known: true
+    - from: ollama/lib/dispatch.js
+      to: warp/plugins/crystallizer-flatfile.js
+      fromSystem: ollama
+      toSystem: warp
+      kind: system
+      known: true
+    - from: ollama/lib/dispatch.js
+      to: warp/dispatch/population.js
+      fromSystem: ollama
+      toSystem: warp
+      kind: system
+      known: true
+    - from: ollama/lib/dispatch.js
+      to: warp/core/Axiom.js
+      fromSystem: ollama
+      toSystem: warp
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    upstream: []
+    downstream:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): X1 · finishing it unlocks X1'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

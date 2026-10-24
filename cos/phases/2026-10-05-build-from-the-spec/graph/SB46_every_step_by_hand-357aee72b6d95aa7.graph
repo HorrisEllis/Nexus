@@ -1,0 +1,83 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB46_every_step_by_hand:357aee72b6d95aa7
+type: graph
+id: phase:SB46_every_step_by_hand:357aee72b6d95aa7
+context: dependency graph of phase SB46_every_step_by_hand
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829991011
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991011
+lastSeenAt: 1792829991011
+fingerprint: null
+payload:
+  for: SB46_every_step_by_hand
+  kind: phase
+  repo: null
+  hash: 357aee72b6d95aa7
+  nodes:
+    - path: cli/idearium.js
+      role: changes
+      exists: false
+      system: cli
+    - path: cos/archetype/nexus-system/cli.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system/lib/scaffold.js
+      role: changes
+      exists: false
+      system: cos
+    - path: idearium/ui/js/phases.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: cos/archetype/nexus-system/lib/commands.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system/lib/system.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/archetype/nexus-system/cli.js
+      to: cos/archetype/nexus-system/lib/system.js
+      kind: requires
+    - from: cos/archetype/nexus-system/cli.js
+      to: cos/archetype/nexus-system/lib/commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 6
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB47_built_and_run_in_cos
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB49_an_idea_runs_through_by_itself
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB30_the_template_is_a_skeleton
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB47_built_and_run_in_cos
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB48_proof_in_cos_closes_the_phase
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB49_an_idea_runs_through_by_itself
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 6 · ready
+      - 'depends on (1): SB42_a_repo_expands_from_its_spec · all upstream 6'
+      - >-
+        needed by (2): SB47_built_and_run_in_cos, SB49_an_idea_runs_through_by_itself · all
+        downstream 3

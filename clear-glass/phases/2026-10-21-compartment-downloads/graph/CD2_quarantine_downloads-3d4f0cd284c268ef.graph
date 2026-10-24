@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792481794289
+exported_at: 1792830024194
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792481794289
-lastSeenAt: 1792481794289
+firstSeenAt: 1792830024194
+lastSeenAt: 1792830024194
 fingerprint: null
 payload:
   for: CD2_quarantine_downloads
@@ -41,7 +41,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 0c4fb6c30abee07a
+    dagHash: 2f8ddd0afd383c4f
     layer: 1
     deps:
       - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
@@ -59,7 +59,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 0c4fb6c30abee07a · layer 1
+      - DAG 2f8ddd0afd383c4f · layer 1
       - 'depends on (1): CD1_magnet_parse'
       - >-
         needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks

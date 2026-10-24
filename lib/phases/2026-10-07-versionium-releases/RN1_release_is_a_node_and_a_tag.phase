@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-versionium-releases-phasemap.spec::RN1_release_is_a_node_and_a_tag
+type: phase
+id: docs_2026-10-07-versionium-releases-phasemap.spec::RN1_release_is_a_node_and_a_tag
+context: >-
+  pipeline phase RN1_release_is_a_node_and_a_tag of
+  docs/2026-10-07-versionium-releases-phasemap.spec
+intent: null
+summary: RN1_release_is_a_node_and_a_tag (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829996858
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829996858
+lastSeenAt: 1792829996858
+fingerprint: null
+payload:
+  id: RN1_release_is_a_node_and_a_tag
+  map: docs/2026-10-07-versionium-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - VR1_every_change_a_commit
+  blocks: []
+  spec: null
+  graph: ac55d5c78a92cf41

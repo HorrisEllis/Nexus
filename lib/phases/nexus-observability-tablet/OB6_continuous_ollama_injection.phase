@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-observability-tablet-phasemap.spec::OB6_continuous_ollama_injection
+type: phase
+id: docs_nexus-observability-tablet-phasemap.spec::OB6_continuous_ollama_injection
+context: pipeline phase OB6_continuous_ollama_injection of docs/nexus-observability-tablet-phasemap.spec
+intent: null
+summary: OB6_continuous_ollama_injection (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830033335
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830033335
+lastSeenAt: 1792830033335
+fingerprint: null
+payload:
+  id: OB6_continuous_ollama_injection
+  map: docs/nexus-observability-tablet-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 48971e046feff0e8

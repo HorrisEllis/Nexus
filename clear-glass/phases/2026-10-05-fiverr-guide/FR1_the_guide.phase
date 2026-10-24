@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-fiverr-guide-phasemap.spec::FR1_the_guide
+type: phase
+id: docs_2026-10-05-fiverr-guide-phasemap.spec::FR1_the_guide
+context: pipeline phase FR1_the_guide of docs/2026-10-05-fiverr-guide-phasemap.spec
+intent: null
+summary: FR1_the_guide (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829993038
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829993038
+lastSeenAt: 1792829993038
+fingerprint: null
+payload:
+  id: FR1_the_guide
+  map: docs/2026-10-05-fiverr-guide-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/fiverr-guide.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/preload/index.js
+    - clear-glass/renderer/settings/sections/autofill.js
+    - clear-glass/renderer/settings/sections/autofill.css
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c57302eaf1167ddf

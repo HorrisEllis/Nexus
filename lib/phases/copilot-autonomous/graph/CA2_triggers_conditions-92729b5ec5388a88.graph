@@ -1,0 +1,229 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CA2_triggers_conditions:92729b5ec5388a88
+type: graph
+id: phase:CA2_triggers_conditions:92729b5ec5388a88
+context: dependency graph of phase CA2_triggers_conditions
+intent: null
+summary: 26 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830028600
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830028600
+lastSeenAt: 1792830028600
+fingerprint: null
+payload:
+  for: CA2_triggers_conditions
+  kind: phase
+  repo: null
+  hash: 92729b5ec5388a88
+  nodes:
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/session-hub.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: intelligence/relational-field.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/triggers.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/seam/watchdog-gates.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/adapter.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/intake-bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/activity-recall.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/governance/register-trigger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/autonomous-repair.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: clear-glass/siso/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/session-hub.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/account-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-pull.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/execution/run-command.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/rfr2-bridge.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/triggers.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/triggers.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/triggers.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/triggers.js
+      to: lib/agent-pull.js
+      kind: requires
+    - from: lib/triggers.js
+      to: lib/agent-tools/tools/execution/run-command.js
+      kind: requires
+    - from: clear-glass/src/core/bus.js
+      to: clear-glass/siso/index.js
+      kind: requires
+    - from: clear-glass/test/session-hub.test.js
+      to: clear-glass/src/cookies/session-hub.js
+      kind: requires
+    - from: clear-glass/test/session-hub.test.js
+      to: clear-glass/src/providers/account-switch.js
+      kind: requires
+    - from: intelligence/relational-field.js
+      to: lib/rfr2-bridge.js
+      kind: requires
+    - from: copilot/lib/activity-recall.js
+      to: lib/triggers.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: lib/triggers.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/triggers.js
+      kind: requires
+    - from: lib/agent-tools/tools/governance/register-trigger.js
+      to: lib/triggers.js
+      kind: requires
+    - from: lib/autonomous-repair.js
+      to: lib/triggers.js
+      kind: requires
+    - from: clear-glass/seam/watchdog-gates.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/downloads/adapter.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/downloads/intake-bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+  crossings:
+    - from: lib/triggers.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/triggers.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
+    dependents:
+      - docs/copilot-autonomous-phasemap.spec::CA3_pipeline_chains
+      - docs/copilot-autonomous-phasemap.spec::CA7_constant_autonomy
+    upstream:
+      - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
+    downstream:
+      - docs/copilot-autonomous-phasemap.spec::CA3_pipeline_chains
+      - docs/copilot-autonomous-phasemap.spec::CA6_self_building_commands
+      - docs/copilot-autonomous-phasemap.spec::CA7_constant_autonomy
+    blockedBy: []
+    unlocks:
+      - docs/copilot-autonomous-phasemap.spec::CA3_pipeline_chains
+      - docs/copilot-autonomous-phasemap.spec::CA7_constant_autonomy
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1
+      - 'depends on (1): CA1_scheduler'
+      - >-
+        needed by (2): CA3_pipeline_chains, CA7_constant_autonomy · all downstream 3 · finishing it
+        unlocks CA3_pipeline_chains, CA7_constant_autonomy

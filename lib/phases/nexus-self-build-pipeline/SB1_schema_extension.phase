@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+type: phase
+id: docs_nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+context: pipeline phase SB1_schema_extension of docs/nexus-self-build-pipeline-phasemap.spec
+intent: null
+summary: SB1_schema_extension (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830034491
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830034491
+lastSeenAt: 1792830034491
+fingerprint: null
+payload:
+  id: SB1_schema_extension
+  map: docs/nexus-self-build-pipeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 72f0c5f1efbfffb5

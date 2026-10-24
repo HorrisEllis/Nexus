@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-verified-primitives-phasemap.spec::VP1_confidence_from_evidence
+type: phase
+id: docs_2026-10-05-verified-primitives-phasemap.spec::VP1_confidence_from_evidence
+context: pipeline phase VP1_confidence_from_evidence of docs/2026-10-05-verified-primitives-phasemap.spec
+intent: null
+summary: VP1_confidence_from_evidence (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829994199
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829994199
+lastSeenAt: 1792829994199
+fingerprint: null
+payload:
+  id: VP1_confidence_from_evidence
+  map: docs/2026-10-05-verified-primitives-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/confidence.js
+  depends_on:
+    - VP0_map_and_atlas
+  blocks: []
+  spec: null
+  graph: d274b14ef5df1bea

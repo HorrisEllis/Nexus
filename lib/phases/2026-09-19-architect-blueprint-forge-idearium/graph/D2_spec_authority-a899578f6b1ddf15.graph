@@ -1,0 +1,135 @@
+envelope: 1
+uuid: nexus-export-graph-phase:D2_spec_authority:a899578f6b1ddf15
+type: graph
+id: phase:D2_spec_authority:a899578f6b1ddf15
+context: dependency graph of phase D2_spec_authority
+intent: null
+summary: 12 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829978156
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978156
+lastSeenAt: 1792829978156
+fingerprint: null
+payload:
+  for: D2_spec_authority
+  kind: phase
+  repo: null
+  hash: a899578f6b1ddf15
+  nodes:
+    - path: idearium/spec-engine/chunk-dispatch.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/warp-build-dispatch.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/guardian-extract.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/idearium-warp-cache.test.mjs
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/extract-code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/adapters/warp-cascade.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: warp/dispatch/population.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/plugins/crystallizer-flatfile.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: lib/seam/adapters/warp-cascade.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/plugins/crystallizer-flatfile.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/dispatch/population.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: lib/extract-code.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/chunk-dispatch.js
+      kind: requires
+    - from: idearium/spec-engine/guardian-extract.js
+      to: idearium/spec-engine/chunk-dispatch.js
+      kind: requires
+    - from: tests/modules/idearium-warp-cache.test.mjs
+      to: idearium/spec-engine/warp-build-dispatch.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/spec-engine/warp-build-dispatch.js
+      kind: requires
+  crossings:
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/plugins/crystallizer-flatfile.js
+      fromSystem: idearium
+      toSystem: warp
+      kind: system
+      known: true
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: warp/dispatch/population.js
+      fromSystem: idearium
+      toSystem: warp
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

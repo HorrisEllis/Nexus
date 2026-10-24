@@ -1,0 +1,232 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PR5_repair_for_real:620eceb6ad914afa
+type: graph
+id: phase:PR5_repair_for_real:620eceb6ad914afa
+context: dependency graph of phase PR5_repair_for_real
+intent: null
+summary: 24 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829990532
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990532
+lastSeenAt: 1792829990532
+fingerprint: null
+payload:
+  for: PR5_repair_for_real
+  kind: phase
+  repo: null
+  hash: 620eceb6ad914afa
+  nodes:
+    - path: diagnostic/nexus-heal-loop.js
+      role: changes
+      exists: false
+      system: diagnostic
+    - path: lib/shadow-space.js
+      role: changes
+      exists: true
+      system: lib
+    - path: nexus/autopilot.js
+      role: changes
+      exists: true
+      system: nexus
+    - path: tests/modules/test-alk-lattice-live.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autopilot-boot-gates.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autopilot-idle.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-boot-phases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-shadow-space.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-spawn-guard.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-container-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-graph-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-ledger-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/autopilot-intelligence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/bus-subscriptions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/error-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-sse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Event.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/Stream.js
+      role: uses
+      exists: true
+      system: warp
+    - path: warp/core/StreamLog.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: nexus/autopilot.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/ledger-fanin/boot.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/ledger-sse.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/error-log.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/autopilot-intelligence.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/Stream.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/StreamLog.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/Axiom.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: warp/core/Event.js
+      kind: requires
+    - from: nexus/autopilot.js
+      to: lib/bus-subscriptions.js
+      kind: requires
+    - from: tests/modules/test-alk-lattice-live.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-autopilot-boot-gates.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-autopilot-idle.test.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-boot-phases.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-spawn-guard.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-container-api.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-graph-api.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-ledger-api.js
+      to: nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-shadow-space.test.js
+      to: lib/shadow-space.js
+      kind: requires
+  crossings:
+    - from: nexus/autopilot.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: nexus
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/Stream.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/StreamLog.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/Axiom.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+    - from: nexus/autopilot.js
+      to: warp/core/Event.js
+      fromSystem: nexus
+      toSystem: warp
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+    dependents: []
+    upstream:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR1_the_announced_registry_is_the_list
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · ready
+      - 'depends on (1): PR3_negative_space_for_missed_heartbeats · all upstream 3'
+      - 'needed by (0): —'

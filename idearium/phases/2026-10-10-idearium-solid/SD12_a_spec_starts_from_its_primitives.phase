@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD12_a_spec_starts_from_its_primitives
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD12_a_spec_starts_from_its_primitives
+context: >-
+  pipeline phase SD12_a_spec_starts_from_its_primitives of
+  docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD12_a_spec_starts_from_its_primitives (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999656
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999656
+lastSeenAt: 1792829999656
+fingerprint: null
+payload:
+  id: SD12_a_spec_starts_from_its_primitives
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - lib/spec-document.js
+  depends_on:
+    - SD6_an_idea_logged_asked_expanded
+  blocks: []
+  spec: null
+  graph: 5f1332ad4be21d47

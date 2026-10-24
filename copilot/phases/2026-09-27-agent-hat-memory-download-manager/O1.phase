@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O1
+type: phase
+id: docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O1
+context: pipeline phase O1 of docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+intent: null
+summary: O1 (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829981302
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829981302
+lastSeenAt: 1792829981302
+fingerprint: null
+payload:
+  id: O1
+  map: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/adversarial.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 78637aa71993ad81

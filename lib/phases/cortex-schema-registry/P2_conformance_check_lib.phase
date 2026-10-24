@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_cortex-schema-registry-phasemap.spec::P2_conformance_check_lib
+type: phase
+id: docs_cortex-schema-registry-phasemap.spec::P2_conformance_check_lib
+context: pipeline phase P2_conformance_check_lib of docs/cortex-schema-registry-phasemap.spec
+intent: null
+summary: P2_conformance_check_lib (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830030568
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830030568
+lastSeenAt: 1792830030568
+fingerprint: null
+payload:
+  id: P2_conformance_check_lib
+  map: docs/cortex-schema-registry-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9d3e03fe9b7e2d00

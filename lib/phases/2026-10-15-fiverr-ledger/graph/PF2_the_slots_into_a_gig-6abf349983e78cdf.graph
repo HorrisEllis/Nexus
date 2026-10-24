@@ -1,0 +1,64 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PF2_the_slots_into_a_gig:6abf349983e78cdf
+type: graph
+id: phase:PF2_the_slots_into_a_gig:6abf349983e78cdf
+context: dependency graph of phase PF2_the_slots_into_a_gig
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830006234
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006234
+lastSeenAt: 1792830006234
+fingerprint: null
+payload:
+  for: PF2_the_slots_into_a_gig
+  kind: phase
+  repo: null
+  hash: 6abf349983e78cdf
+  nodes:
+    - path: lib/gig-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gig-ledger-listener.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-gig-ledger.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: lib/gig-ledger-listener.js
+      to: lib/gig-ledger.js
+      kind: requires
+    - from: tests/modules/test-gig-ledger.test.js
+      to: lib/gig-ledger.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF1_the_sources
+    dependents:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF3_the_screen
+    upstream:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF0_the_ledger
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF1_the_sources
+    downstream:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF3_the_screen
+    blockedBy:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF1_the_sources
+    unlocks:
+      - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF3_the_screen
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by PF1_the_sources
+      - 'depends on (1): PF1_the_sources · all upstream 2'
+      - 'needed by (1): PF3_the_screen · finishing it unlocks PF3_the_screen'

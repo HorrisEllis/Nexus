@@ -1,0 +1,67 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM2_registry_as_hub_with_watchdog:519224c23b9cef9e
+type: graph
+id: phase:LM2_registry_as_hub_with_watchdog:519224c23b9cef9e
+context: dependency graph of phase LM2_registry_as_hub_with_watchdog
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829973383
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973383
+lastSeenAt: 1792829973383
+fingerprint: null
+payload:
+  for: LM2_registry_as_hub_with_watchdog
+  kind: phase
+  repo: null
+  hash: 519224c23b9cef9e
+  nodes:
+    - path: loom/maps/raid-events-and-tools-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+  edges:
+    - from: loom/bootstrap.js
+      to: loom/maps/raid-events-and-tools-map.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+    dependents:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM3_interaction_contract_wired_to_registry
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM14_components_store
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM25_atlas_living_update
+    upstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+    downstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM14_components_store
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM25_atlas_living_update
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM26_atlas_completeness_and_release_gate
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM3_interaction_contract_wired_to_registry
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM7_agent_mesh_intent_programming
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM8_full_pipeline_wiring
+    blockedBy:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+    unlocks:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM3_interaction_contract_wired_to_registry
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by LM1_spec_as_living_model
+      - 'depends on (1): LM1_spec_as_living_model'
+      - >-
+        needed by (3): LM3_interaction_contract_wired_to_registry, LM14_components_store,
+        LM25_atlas_living_update · all downstream 7 · finishing it unlocks
+        LM3_interaction_contract_wired_to_registry

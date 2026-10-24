@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::TC1_tools_get_real_contracts
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::TC1_tools_get_real_contracts
+context: >-
+  pipeline phase TC1_tools_get_real_contracts of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: TC1_tools_get_real_contracts (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975206
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975206
+lastSeenAt: 1792829975206
+fingerprint: null
+payload:
+  id: TC1_tools_get_real_contracts
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: eba5000b75c458f8

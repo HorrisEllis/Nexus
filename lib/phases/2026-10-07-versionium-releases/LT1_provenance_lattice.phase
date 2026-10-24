@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-versionium-releases-phasemap.spec::LT1_provenance_lattice
+type: phase
+id: docs_2026-10-07-versionium-releases-phasemap.spec::LT1_provenance_lattice
+context: pipeline phase LT1_provenance_lattice of docs/2026-10-07-versionium-releases-phasemap.spec
+intent: null
+summary: LT1_provenance_lattice (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829996857
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829996857
+lastSeenAt: 1792829996857
+fingerprint: null
+payload:
+  id: LT1_provenance_lattice
+  map: docs/2026-10-07-versionium-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/record.js
+    - meta/crystal-lattice.js
+    - intelligence/spatial/system-lattice.js
+    - cortex/cortex-v2.js
+  depends_on:
+    - VR1_every_change_a_commit
+  blocks: []
+  spec: null
+  graph: 91871c2b63fe20e1

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+type: phase
+id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB3a_tool_calls_saved
+context: pipeline phase TB3a_tool_calls_saved of docs/2026-10-16-code-tab-rebuild-phasemap.spec
+intent: null
+summary: TB3a_tool_calls_saved (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830010176
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010176
+lastSeenAt: 1792830010176
+fingerprint: null
+payload:
+  id: TB3a_tool_calls_saved
+  map: docs/2026-10-16-code-tab-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TB2_persistence_audit
+  blocks: []
+  spec: null
+  graph: 7ee37636c61d4d6c

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-synthesis-zoom-versionium-phasemap.spec::WS3_the_pipeline_together
+type: phase
+id: docs_2026-10-02-synthesis-zoom-versionium-phasemap.spec::WS3_the_pipeline_together
+context: >-
+  pipeline phase WS3_the_pipeline_together of
+  docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec
+intent: null
+summary: WS3_the_pipeline_together (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829989746
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829989746
+lastSeenAt: 1792829989746
+fingerprint: null
+payload:
+  id: WS3_the_pipeline_together
+  map: docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/index.html
+    - idearium/ui/js/app.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1d67e5ca764d0db6

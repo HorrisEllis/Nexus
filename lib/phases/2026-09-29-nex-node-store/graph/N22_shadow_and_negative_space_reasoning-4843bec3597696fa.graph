@@ -1,0 +1,130 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N22_shadow_and_negative_space_reasoning:4843bec3597696fa
+type: graph
+id: phase:N22_shadow_and_negative_space_reasoning:4843bec3597696fa
+context: dependency graph of phase N22_shadow_and_negative_space_reasoning
+intent: null
+summary: 11 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985443
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985443
+lastSeenAt: 1792829985443
+fingerprint: null
+payload:
+  for: N22_shadow_and_negative_space_reasoning
+  kind: phase
+  repo: null
+  hash: 4843bec3597696fa
+  nodes:
+    - path: lib/step-gate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/reply-kind.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-language-checks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/checks/ck-248-toolchain.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/step-gate.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/step-gate.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/reply-kind.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: tests/modules/test-language-checks.test.js
+      to: lib/step-gate.js
+      kind: requires
+  crossings:
+    - from: lib/step-gate.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 6
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N21_no_empty_generation_event_gates
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+    dependents: []
+    upstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N21_no_empty_generation_event_gates
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N6_time
+    downstream: []
+    blockedBy:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 6 · blocked by N14_failure_mode_field
+      - 'depends on (2): N21_no_empty_generation_event_gates, N14_failure_mode_field · all upstream 8'
+      - 'needed by (0): —'

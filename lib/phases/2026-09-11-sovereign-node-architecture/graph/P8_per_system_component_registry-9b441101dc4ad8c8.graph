@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P8_per_system_component_registry:9b441101dc4ad8c8
+type: graph
+id: phase:P8_per_system_component_registry:9b441101dc4ad8c8
+context: dependency graph of phase P8_per_system_component_registry
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829976501
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976501
+lastSeenAt: 1792829976501
+fingerprint: null
+payload:
+  for: P8_per_system_component_registry
+  kind: phase
+  repo: null
+  hash: 9b441101dc4ad8c8
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P36_an_event_ledger_per_registry
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P37_the_ui_floats_on_the_registry
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::LR1_each_component_in_the_language_that_fits
+    upstream: []
+    downstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P36_an_event_ledger_per_registry
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P37_the_ui_floats_on_the_registry
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::LR1_each_component_in_the_language_that_fits
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P36_an_event_ledger_per_registry
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (3): P36_an_event_ledger_per_registry, P37_the_ui_floats_on_the_registry,
+        LR1_each_component_in_the_language_that_fits · finishing it unlocks
+        P36_an_event_ledger_per_registry
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

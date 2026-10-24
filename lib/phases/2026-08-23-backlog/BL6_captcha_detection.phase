@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL6_captcha_detection
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL6_captcha_detection
+context: pipeline phase BL6_captcha_detection of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL6_captcha_detection (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971246
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971246
+lastSeenAt: 1792829971246
+fingerprint: null
+payload:
+  id: BL6_captcha_detection
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - BL0_macro_system
+  blocks: []
+  spec: null
+  graph: acc28d69b4475ef7

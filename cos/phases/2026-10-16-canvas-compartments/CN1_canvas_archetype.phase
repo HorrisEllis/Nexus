@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-canvas-compartments-phasemap.spec::CN1_canvas_archetype
+type: phase
+id: docs_2026-10-16-canvas-compartments-phasemap.spec::CN1_canvas_archetype
+context: pipeline phase CN1_canvas_archetype of docs/2026-10-16-canvas-compartments-phasemap.spec
+intent: null
+summary: CN1_canvas_archetype (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830009789
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830009789
+lastSeenAt: 1792830009789
+fingerprint: null
+payload:
+  id: CN1_canvas_archetype
+  map: docs/2026-10-16-canvas-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.104 (tests/modules/test-canvas-compartments.test.js CC-01)
+  files:
+    - cos/archetype/eravos-canvas/ (new)
+    - cos/archetype/eravos-canvas.js (new)
+    - cos/archetype/registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 80bf09efae3df71b

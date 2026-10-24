@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-one-contract-raid-releases-phasemap.spec::RN3_releases_in_idearium
+type: phase
+id: docs_2026-10-15-one-contract-raid-releases-phasemap.spec::RN3_releases_in_idearium
+context: >-
+  pipeline phase RN3_releases_in_idearium of
+  docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+intent: null
+summary: RN3_releases_in_idearium (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007479
+lastSeenAt: 1792830007479
+fingerprint: null
+payload:
+  id: RN3_releases_in_idearium
+  map: docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/repo-versions.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - RN2_changelog_from_the_commits
+  blocks: []
+  spec: null
+  graph: 1b5d6979e4dd7138

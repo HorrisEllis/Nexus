@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::UP6_model_for_the_unplaced
+type: phase
+id: docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::UP6_model_for_the_unplaced
+context: >-
+  pipeline phase UP6_model_for_the_unplaced of
+  docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+intent: null
+summary: UP6_model_for_the_unplaced (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792830021327
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830021327
+lastSeenAt: 1792830021327
+fingerprint: null
+payload:
+  id: UP6_model_for_the_unplaced
+  map: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/upload-placement.js
+  depends_on:
+    - UP3_upload_routes_and_commands
+    - UP5_registry_wires_on_apply
+  blocks: []
+  spec: null
+  graph: 76cb86273b1fc6d5

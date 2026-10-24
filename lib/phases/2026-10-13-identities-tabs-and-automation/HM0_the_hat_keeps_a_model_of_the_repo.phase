@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::HM0_the_hat_keeps_a_model_of_the_repo
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::HM0_the_hat_keeps_a_model_of_the_repo
+context: >-
+  pipeline phase HM0_the_hat_keeps_a_model_of_the_repo of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: HM0_the_hat_keeps_a_model_of_the_repo (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002544
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002544
+lastSeenAt: 1792830002544
+fingerprint: null
+payload:
+  id: HM0_the_hat_keeps_a_model_of_the_repo
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/repo-agent.js
+    - lib/repo-prompt-blocks.js
+    - lib/context-atlas.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3e7320f2d7cabfcb

@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NP12_plugin_split:581a7f5c1194fe97
+type: graph
+id: phase:NP12_plugin_split:581a7f5c1194fe97
+context: dependency graph of phase NP12_plugin_split
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792830004599
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830004599
+lastSeenAt: 1792830004599
+fingerprint: null
+payload:
+  for: NP12_plugin_split
+  kind: phase
+  repo: null
+  hash: 581a7f5c1194fe97
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP18_freeze_plugin
+    upstream: []
+    downstream:
+      - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP18_freeze_plugin
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): NP18_freeze_plugin'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

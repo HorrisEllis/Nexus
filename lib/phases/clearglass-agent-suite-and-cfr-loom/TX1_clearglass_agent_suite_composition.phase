@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX1_clearglass_agent_suite_composition
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX1_clearglass_agent_suite_composition
+context: >-
+  pipeline phase TX1_clearglass_agent_suite_composition of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX1_clearglass_agent_suite_composition (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830028206
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830028206
+lastSeenAt: 1792830028206
+fingerprint: null
+payload:
+  id: TX1_clearglass_agent_suite_composition
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 19b14f384dffbacc

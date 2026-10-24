@@ -1,0 +1,91 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SH2_explain_this_anywhere:ee5f18699614cf8c
+type: graph
+id: phase:SH2_explain_this_anywhere:ee5f18699614cf8c
+context: dependency graph of phase SH2_explain_this_anywhere
+intent: null
+summary: 5 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830000471
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000471
+lastSeenAt: 1792830000471
+fingerprint: null
+payload:
+  for: SH2_explain_this_anywhere
+  kind: phase
+  repo: null
+  hash: ee5f18699614cf8c
+  nodes:
+    - path: clear-glass/src/copilot/tools.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/field.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+  edges:
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: clear-glass/src/copilot/tools.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: clear-glass/src/copilot/tools.js
+      fromSystem: orchestrator
+      toSystem: clear-glass
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP2_the_system_settings_in_its_repo
+    dependents: []
+    upstream:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP0_one_options_shape_for_every_system
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP1_every_system_declares_its_options
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP2_the_system_settings_in_its_repo
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-10-shape-of-nexus-phasemap.spec::TU1_the_nexus_tutorial
+        files:
+          - clear-glass/src/page/field.js
+          - clear-glass/src/copilot/tools.js
+      - with: docs/2026-10-10-shape-of-nexus-phasemap.spec::CG1_the_field_injects_once
+        files:
+          - clear-glass/src/page/field.js
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · ready
+      - 'depends on (1): OP2_the_system_settings_in_its_repo · all upstream 3'
+      - 'needed by (0): —'
+      - >-
+        same files as TU1_the_nexus_tutorial with no order between them:
+        clear-glass/src/page/field.js, clear-glass/src/copilot/tools.js
+      - >-
+        same files as CG1_the_field_injects_once with no order between them:
+        clear-glass/src/page/field.js

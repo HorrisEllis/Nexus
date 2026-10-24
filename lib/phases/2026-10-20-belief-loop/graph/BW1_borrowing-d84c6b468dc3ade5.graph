@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303358
+exported_at: 1792830021770
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303358
-lastSeenAt: 1792456303358
+firstSeenAt: 1792830021770
+lastSeenAt: 1792830021770
 fingerprint: null
 payload:
   for: BW1_borrowing
@@ -27,7 +27,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
+    dagHash: 2f8ddd0afd383c4f
     layer: 9
     deps:
       - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
@@ -68,7 +68,7 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 7583ffef0c495b95 · layer 9 · ON THE CRITICAL PATH · blocked by
+        DAG 2f8ddd0afd383c4f · layer 9 · ON THE CRITICAL PATH · blocked by
         XD1_cross_domain_verification, CY2_invariants_are_crystals
       - 'depends on (2): XD1_cross_domain_verification, CY2_invariants_are_crystals · all upstream 25'
       - 'needed by (0): —'

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX3_talk_to_agent_launcher
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX3_talk_to_agent_launcher
+context: >-
+  pipeline phase TX3_talk_to_agent_launcher of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX3_talk_to_agent_launcher (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830028208
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830028208
+lastSeenAt: 1792830028208
+fingerprint: null
+payload:
+  id: TX3_talk_to_agent_launcher
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 095e5e9f21e07bf9

@@ -1,0 +1,267 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM19_atlas_spec_coverage_prerequisite:8a1244b9d4b5690b
+type: graph
+id: phase:LM19_atlas_spec_coverage_prerequisite:8a1244b9d4b5690b
+context: dependency graph of phase LM19_atlas_spec_coverage_prerequisite
+intent: null
+summary: 30 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829973404
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973404
+lastSeenAt: 1792829973404
+fingerprint: null
+payload:
+  for: LM19_atlas_spec_coverage_prerequisite
+  kind: phase
+  repo: null
+  hash: 8a1244b9d4b5690b
+  nodes:
+    - path: diagnostic/nexus-diagnostic.js
+      role: changes
+      exists: true
+      system: diagnostic
+    - path: idearium/repo/living-spec.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/scanners/spec-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: service/nexus-diagnostic.js
+      role: changes
+      exists: false
+      system: service
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/compiler-t0.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/test/e2e-pipeline.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/seam/cross-system-status.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/idearium-auto-repo-creation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-chunk-dependencies.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-loop.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/chunk-nodes.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/data-dir.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/db.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/templates.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/build-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-digest.js
+      role: uses
+      exists: true
+      system: lib
+    - path: warp/core/index.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: idearium/repo/living-spec.js
+      to: idearium/repo/nexus-self.js
+      kind: requires
+    - from: idearium/repo/living-spec.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/spec-engine/templates.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/lib/db.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/lib/chunk-nodes.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/lib/data-dir.cjs
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: warp/core/index.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/index.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/build-context.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/spec-digest.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/living-spec.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/spec-engine/compiler-t0.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/test/e2e-pipeline.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: lib/seam/cross-system-status.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-auto-repo-creation.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-chunk-dependencies.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-loop.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+  crossings:
+    - from: idearium/spec-engine/index.js
+      to: warp/core/index.js
+      fromSystem: idearium
+      toSystem: warp
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: idearium/spec-engine/index.js
+      fromSystem: cortex
+      toSystem: idearium
+      kind: system
+      known: true
+    - from: lib/seam/cross-system-status.js
+      to: idearium/spec-engine/index.js
+      fromSystem: lib
+      toSystem: idearium
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM18_atlas_map_each_system_first
+    dependents:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM21_atlas_fact_extractors
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM26_atlas_completeness_and_release_gate
+    upstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM18_atlas_map_each_system_first
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+    downstream:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM21_atlas_fact_extractors
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM22_atlas_structure_ledger
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM23_atlas_history_versions_calendar
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM24_atlas_prose_layer
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM25_atlas_living_update
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM26_atlas_completeness_and_release_gate
+    blockedBy:
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+      - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM18_atlas_map_each_system_first
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 1 · blocked by LM1_spec_as_living_model,
+        LM18_atlas_map_each_system_first
+      - 'depends on (2): LM1_spec_as_living_model, LM18_atlas_map_each_system_first'
+      - >-
+        needed by (2): LM21_atlas_fact_extractors, LM26_atlas_completeness_and_release_gate · all
+        downstream 6

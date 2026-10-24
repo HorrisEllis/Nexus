@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+context: >-
+  pipeline phase MR9_liminal_on_the_agents of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR9_liminal_on_the_agents (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988445
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988445
+lastSeenAt: 1792829988445
+fingerprint: null
+payload:
+  id: MR9_liminal_on_the_agents
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emergence/vendor/rfr2/liminal/
+    - lib/agent-memory.js
+  depends_on:
+    - CF1_cfr_improved_with_rfr2
+  blocks: []
+  spec: null
+  graph: 6faebe0d8292d4ed

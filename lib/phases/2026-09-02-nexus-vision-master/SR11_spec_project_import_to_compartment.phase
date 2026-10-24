@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR11_spec_project_import_to_compartment
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR11_spec_project_import_to_compartment
+context: >-
+  pipeline phase SR11_spec_project_import_to_compartment of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR11_spec_project_import_to_compartment (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974349
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974349
+lastSeenAt: 1792829974349
+fingerprint: null
+payload:
+  id: SR11_spec_project_import_to_compartment
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3ba40fae475bab7c

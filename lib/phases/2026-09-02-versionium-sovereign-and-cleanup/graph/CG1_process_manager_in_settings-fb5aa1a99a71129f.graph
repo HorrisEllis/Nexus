@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG1_process_manager_in_settings:fb5aa1a99a71129f
+type: graph
+id: phase:CG1_process_manager_in_settings:fb5aa1a99a71129f
+context: dependency graph of phase CG1_process_manager_in_settings
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829974793
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974793
+lastSeenAt: 1792829974793
+fingerprint: null
+payload:
+  for: CG1_process_manager_in_settings
+  kind: phase
+  repo: null
+  hash: fb5aa1a99a71129f
+  nodes:
+    - path: clear-glass/tools/process-monitor.html
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

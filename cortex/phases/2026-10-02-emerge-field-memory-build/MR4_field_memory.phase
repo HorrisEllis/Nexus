@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+context: pipeline phase MR4_field_memory of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR4_field_memory (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988432
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988432
+lastSeenAt: 1792829988432
+fingerprint: null
+payload:
+  id: MR4_field_memory
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/memory/relevance.js
+    - cortex/memory/decay.js
+    - cortex/memory/tiers.js
+  depends_on:
+    - OT1_one_write_path
+    - CF1_cfr_improved_with_rfr2
+  blocks: []
+  spec: null
+  graph: 3f0c971304297739

@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DBG0c_which_product:5660fd2408793875
+type: graph
+id: phase:DBG0c_which_product:5660fd2408793875
+context: dependency graph of phase DBG0c_which_product
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830017712
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830017712
+lastSeenAt: 1792830017712
+fingerprint: null
+payload:
+  for: DBG0c_which_product
+  kind: phase
+  repo: null
+  hash: 5660fd2408793875
+  nodes:
+    - path: docs/CLAUDE.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG8_in_the_product
+    upstream: []
+    downstream:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG8_in_the_product
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): DBG8_in_the_product'

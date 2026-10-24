@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV2
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV2
+context: pipeline phase SV2 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: SV2 (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792829984151
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984151
+lastSeenAt: 1792829984151
+fingerprint: null
+payload:
+  id: SV2
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/memory/jaa-db.js (cortex only)
+    - the 78 lib/ files that require it
+    - per-system importers (copilot 12
+    - intelligence 8
+    - versionium 6
+    - loom 6
+    - guardian 5
+    - orchestrator 4
+    - idearium 4
+    - …)
+  depends_on:
+    - SV1
+    - M1
+  blocks: []
+  spec: null
+  graph: 233056d110ca606c

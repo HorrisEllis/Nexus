@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+context: >-
+  pipeline phase DT3_failure_modes_routes_and_preflight of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DT3_failure_modes_routes_and_preflight (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987054
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987054
+lastSeenAt: 1792829987054
+fingerprint: null
+payload:
+  id: DT3_failure_modes_routes_and_preflight
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/index.js
+    - lib/fault-log.js
+  depends_on:
+    - DT2_failure_mode_field
+  blocks: []
+  spec: null
+  graph: 16167e797e66f7b5

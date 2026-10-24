@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW23_wire_what_exists
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW23_wire_what_exists
+context: pipeline phase GW23_wire_what_exists of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW23_wire_what_exists (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830006655
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006655
+lastSeenAt: 1792830006655
+fingerprint: null
+payload:
+  id: GW23_wire_what_exists
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/registry
+    - loom/scanners/
+    - loom/maps/
+    - lib/rfr2-bridge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 226517a257b63ee7

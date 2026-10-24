@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+type: phase
+id: docs_2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+context: pipeline phase DS3_components_are_mods of docs/2026-10-10-design-surface-phasemap.spec
+intent: null
+summary: DS3_components_are_mods (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829998867
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998867
+lastSeenAt: 1792829998867
+fingerprint: null
+payload:
+  id: DS3_components_are_mods
+  map: docs/2026-10-10-design-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - eravos/ui/runtime/mod-factory.js
+    - eravos/ui/mods
+  depends_on:
+    - DS0_one_token_source
+  blocks: []
+  spec: null
+  graph: bb967cfd589a6163

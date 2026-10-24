@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DBG1_consolidate_debug_surfaces
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DBG1_consolidate_debug_surfaces
+context: >-
+  pipeline phase DBG1_consolidate_debug_surfaces of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: DBG1_consolidate_debug_surfaces (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975207
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975207
+lastSeenAt: 1792829975207
+fingerprint: null
+payload:
+  id: DBG1_consolidate_debug_surfaces
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b465eaa0e326ce17

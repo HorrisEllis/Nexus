@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+context: >-
+  pipeline phase RM1_registry_driven_moves of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: RM1_registry_driven_moves (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987061
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987061
+lastSeenAt: 1792829987061
+fingerprint: null
+payload:
+  id: RM1_registry_driven_moves
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/registry-move.js (new)
+    - idearium/repo/architecture.js
+    - loom/scanners/source-map.js
+  depends_on:
+    - DT4_registry_block_to_nodes
+  blocks: []
+  spec: null
+  graph: 37e44e3fd7c0b5e6

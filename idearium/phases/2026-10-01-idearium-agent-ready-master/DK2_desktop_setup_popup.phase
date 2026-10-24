@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DK2_desktop_setup_popup
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::DK2_desktop_setup_popup
+context: >-
+  pipeline phase DK2_desktop_setup_popup of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: DK2_desktop_setup_popup (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987066
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987066
+lastSeenAt: 1792829987066
+fingerprint: null
+payload:
+  id: DK2_desktop_setup_popup
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/desktop-setup.js
+    - idearium/ui/index.html
+    - idearium/ui/js/repo-environment.js
+    - idearium/api/build-surface.js
+    - idearium/api/index.js
+  depends_on:
+    - DK1_desktop_image_and_login
+  blocks: []
+  spec: null
+  graph: 334decc7beb3a1fe

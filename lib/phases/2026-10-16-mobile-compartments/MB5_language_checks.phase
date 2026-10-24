@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-mobile-compartments-phasemap.spec::MB5_language_checks
+type: phase
+id: docs_2026-10-16-mobile-compartments-phasemap.spec::MB5_language_checks
+context: pipeline phase MB5_language_checks of docs/2026-10-16-mobile-compartments-phasemap.spec
+intent: null
+summary: MB5_language_checks (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830012564
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830012564
+lastSeenAt: 1792830012564
+fingerprint: null
+payload:
+  id: MB5_language_checks
+  map: docs/2026-10-16-mobile-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4a314473b4cff295

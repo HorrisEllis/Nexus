@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::V8_full_change_tracking_hashing
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::V8_full_change_tracking_hashing
+context: >-
+  pipeline phase V8_full_change_tracking_hashing of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: V8_full_change_tracking_hashing (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974318
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974318
+lastSeenAt: 1792829974318
+fingerprint: null
+payload:
+  id: V8_full_change_tracking_hashing
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4371829fd3cff4f1

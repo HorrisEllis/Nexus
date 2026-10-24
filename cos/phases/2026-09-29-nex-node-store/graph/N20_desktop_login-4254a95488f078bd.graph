@@ -1,0 +1,79 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N20_desktop_login:4254a95488f078bd
+type: graph
+id: phase:N20_desktop_login:4254a95488f078bd
+context: dependency graph of phase N20_desktop_login
+intent: null
+summary: 7 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985441
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985441
+lastSeenAt: 1792829985441
+fingerprint: null
+payload:
+  for: N20_desktop_login
+  kind: phase
+  repo: null
+  hash: 4254a95488f078bd
+  nodes:
+    - path: cos/testenv/provision.js
+      role: changes
+      exists: true
+      system: cos
+    - path: docs/atlases/idearium-atlas.md
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/ui/desktop.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: cos/compartment/guest-agent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/testenv/provision.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/compartment/guest-agent.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

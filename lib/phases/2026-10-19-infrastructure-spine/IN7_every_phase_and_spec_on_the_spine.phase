@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+context: >-
+  pipeline phase IN7_every_phase_and_spec_on_the_spine of
+  docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: IN7_every_phase_and_spec_on_the_spine (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830020055
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020055
+lastSeenAt: 1792830020055
+fingerprint: null
+payload:
+  id: IN7_every_phase_and_spec_on_the_spine
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/phase-dag.js
+    - lib/phase-plan.js
+    - idearium/repo/phase-mapping.js
+    - idearium/spec-engine/
+  depends_on:
+    - IN3_registry_is_the_spine
+  blocks: []
+  spec: null
+  graph: 3f98bf90b31ed6e9

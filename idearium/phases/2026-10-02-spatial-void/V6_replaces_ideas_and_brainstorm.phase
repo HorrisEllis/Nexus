@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-spatial-void-phasemap.spec::V6_replaces_ideas_and_brainstorm
+type: phase
+id: docs_2026-10-02-spatial-void-phasemap.spec::V6_replaces_ideas_and_brainstorm
+context: pipeline phase V6_replaces_ideas_and_brainstorm of docs/2026-10-02-spatial-void-phasemap.spec
+intent: null
+summary: V6_replaces_ideas_and_brainstorm (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829989369
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829989369
+lastSeenAt: 1792829989369
+fingerprint: null
+payload:
+  id: V6_replaces_ideas_and_brainstorm
+  map: docs/2026-10-02-spatial-void-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/index.html
+    - idearium/ui/js/app.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c80f4e0208c7a97c

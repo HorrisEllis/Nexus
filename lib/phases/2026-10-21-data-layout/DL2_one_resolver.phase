@@ -7,18 +7,18 @@ intent: null
 summary: DL2_one_resolver (library) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792478240944
+exported_at: 1792830024628
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792478240944
-lastSeenAt: 1792478240944
+firstSeenAt: 1792830024628
+lastSeenAt: 1792830024628
 fingerprint: null
 payload:
   id: DL2_one_resolver
   map: docs/2026-10-21-data-layout-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: '"DONE 0.60.207 — test-data-home DH-01..06 (DH-06 in Clear Glass)"'
   files:
     - lib/data-home.js
     - lib/test-sandbox.js
@@ -27,4 +27,4 @@ payload:
   blocks:
     - MOD-DATA-HOME
   spec: docs/data-layout.spec
-  graph: db5711605437e8fc
+  graph: c98c0dd03a13e5a3

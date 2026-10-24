@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::WS1_agents_use_the_work_surface
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::WS1_agents_use_the_work_surface
+context: >-
+  pipeline phase WS1_agents_use_the_work_surface of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: WS1_agents_use_the_work_surface (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991027
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991027
+lastSeenAt: 1792829991027
+fingerprint: null
+payload:
+  id: WS1_agents_use_the_work_surface
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/idearium/code.js
+    - idearium/api/index.js
+    - lib/repo-hat.js
+    - lib/agent-tools/tool-guide.js
+    - lib/agent-tools/tool-catalog.js
+  depends_on:
+    - CH1_compartment_charter
+  blocks: []
+  spec: null
+  graph: 3a87213be2eb4b9d

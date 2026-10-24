@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P31_job_reference_command_syntax
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P31_job_reference_command_syntax
+context: >-
+  pipeline phase P31_job_reference_command_syntax of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P31_job_reference_command_syntax (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976522
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976522
+lastSeenAt: 1792829976522
+fingerprint: null
+payload:
+  id: P31_job_reference_command_syntax
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 05330631270dac6a

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM4_userscript_shared_core_dedup
+type: phase
+id: docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM4_userscript_shared_core_dedup
+context: >-
+  pipeline phase AM4_userscript_shared_core_dedup of
+  docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+intent: null
+summary: AM4_userscript_shared_core_dedup (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829973863
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973863
+lastSeenAt: 1792829973863
+fingerprint: null
+payload:
+  id: AM4_userscript_shared_core_dedup
+  map: docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2a7095a3c05cd5cb

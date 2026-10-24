@@ -9,11 +9,11 @@ intent: null
 summary: TV2_invariant_guided_traversal (library) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792456416765
+exported_at: 1792830022170
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416765
-lastSeenAt: 1792456416765
+firstSeenAt: 1792830022170
+lastSeenAt: 1792830022170
 fingerprint: null
 payload:
   id: TV2_invariant_guided_traversal

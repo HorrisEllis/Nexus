@@ -1,0 +1,200 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AP3_release_like_an_enterprise:84659775a8f5692d
+type: graph
+id: phase:AP3_release_like_an_enterprise:84659775a8f5692d
+context: dependency graph of phase AP3_release_like_an_enterprise
+intent: null
+summary: 18 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829992262
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829992262
+lastSeenAt: 1792829992262
+fingerprint: null
+payload:
+  for: AP3_release_like_an_enterprise
+  kind: phase
+  repo: null
+  hash: 84659775a8f5692d
+  nodes:
+    - path: cos/testenv/environment.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/cos-run.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-verify.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/playground/branch.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/runtime/run.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/detect.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/installer.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/cos-debug-report.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/failure-post.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/testenv/environment.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/runtime/run.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/installer.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/nexus-self/branch.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/cos-debug-report.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: lib/failure-post.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: lib/build-verify.js
+      to: lib/cos-run.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: lib/cos-run.js
+      kind: requires
+  crossings:
+    - from: lib/cos-run.js
+      to: cos/runtime/run.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/installer.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/testenv/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: idearium/api/build-surface.js
+      to: cos/testenv/environment.js
+      fromSystem: idearium
+      toSystem: cos
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 5
+    deps:
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP2_test_on_the_android_compartment
+    dependents: []
+    upstream:
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP1_android_build_compartment
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP2_test_on_the_android_compartment
+      - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
+      - docs/2026-10-05-cos-machines-phasemap.spec::OS2_images_downloaded_and_kept_current
+      - docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
+    downstream: []
+    blockedBy:
+      - docs/2026-10-05-cos-machines-phasemap.spec::AP2_test_on_the_android_compartment
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
+        files:
+          - lib/cos-run.js
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 5 · blocked by AP2_test_on_the_android_compartment
+      - 'depends on (1): AP2_test_on_the_android_compartment · all upstream 5'
+      - 'needed by (0): —'
+      - 'same files as EL1_electron_compiler with no order between them: lib/cos-run.js'

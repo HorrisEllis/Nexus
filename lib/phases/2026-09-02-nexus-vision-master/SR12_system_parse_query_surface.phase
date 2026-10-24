@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::SR12_system_parse_query_surface
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR12_system_parse_query_surface
+context: >-
+  pipeline phase SR12_system_parse_query_surface of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: SR12_system_parse_query_surface (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974351
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974351
+lastSeenAt: 1792829974351
+fingerprint: null
+payload:
+  id: SR12_system_parse_query_surface
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8c16a48512a80c7c

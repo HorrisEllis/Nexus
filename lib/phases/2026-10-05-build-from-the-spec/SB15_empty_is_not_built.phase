@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB15_empty_is_not_built
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB15_empty_is_not_built
+context: pipeline phase SB15_empty_is_not_built of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB15_empty_is_not_built (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990954
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990954
+lastSeenAt: 1792829990954
+fingerprint: null
+payload:
+  id: SB15_empty_is_not_built
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/build-verify.js
+    - idearium/repo/index.js
+  depends_on:
+    - SB12_the_registry_is_the_component_list
+  blocks: []
+  spec: null
+  graph: 39cd55ae1d782360

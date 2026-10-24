@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR4_erosmancer_as_clearglass_plugin
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR4_erosmancer_as_clearglass_plugin
+context: >-
+  pipeline phase BR4_erosmancer_as_clearglass_plugin of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: BR4_erosmancer_as_clearglass_plugin (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971728
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971728
+lastSeenAt: 1792829971728
+fingerprint: null
+payload:
+  id: BR4_erosmancer_as_clearglass_plugin
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - TX14_plugin_system_v1_build
+  blocks: []
+  spec: null
+  graph: 03ecdb7f9c99b61f

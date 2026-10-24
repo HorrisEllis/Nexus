@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N9_cli
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N9_cli
+context: pipeline phase N9_cli of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N9_cli (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985429
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985429
+lastSeenAt: 1792829985429
+fingerprint: null
+payload:
+  id: N9_cli
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/cli.js
+  depends_on:
+    - N8_service
+  blocks: []
+  spec: null
+  graph: 2bd8335f5d98134a

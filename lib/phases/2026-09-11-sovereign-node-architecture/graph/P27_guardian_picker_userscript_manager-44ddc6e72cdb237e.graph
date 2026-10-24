@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P27_guardian_picker_userscript_manager:44ddc6e72cdb237e
+type: graph
+id: phase:P27_guardian_picker_userscript_manager:44ddc6e72cdb237e
+context: dependency graph of phase P27_guardian_picker_userscript_manager
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976521
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976521
+lastSeenAt: 1792829976521
+fingerprint: null
+payload:
+  for: P27_guardian_picker_userscript_manager
+  kind: phase
+  repo: null
+  hash: 44ddc6e72cdb237e
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/guardian-picker.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/bookmarks/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

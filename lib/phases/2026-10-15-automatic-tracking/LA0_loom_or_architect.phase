@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::LA0_loom_or_architect
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::LA0_loom_or_architect
+context: pipeline phase LA0_loom_or_architect of docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: LA0_loom_or_architect (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830003808
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830003808
+lastSeenAt: 1792830003808
+fingerprint: null
+payload:
+  id: LA0_loom_or_architect
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: DECIDED (2026-10-15) — see addendum
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fe68e1311d0c19f9

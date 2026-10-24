@@ -1,0 +1,132 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GH1_the_git_bridge:6dd3595186ddbb17
+type: graph
+id: phase:GH1_the_git_bridge:6dd3595186ddbb17
+context: dependency graph of phase GH1_the_git_bridge
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829996860
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829996860
+lastSeenAt: 1792829996860
+fingerprint: null
+payload:
+  for: GH1_the_git_bridge
+  kind: phase
+  repo: null
+  hash: 6dd3595186ddbb17
+  nodes:
+    - path: docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: versionium/lib/releases.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: versionium/routes/versionium.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: versionium/lib/releases.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: versionium/routes/versionium.js
+      to: versionium/lib/releases.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
+    dependents: []
+    upstream:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
+    downstream: []
+    blockedBy:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by VR2_history_and_diff
+      - 'depends on (1): VR2_history_and_diff · all upstream 2'
+      - 'needed by (0): —'

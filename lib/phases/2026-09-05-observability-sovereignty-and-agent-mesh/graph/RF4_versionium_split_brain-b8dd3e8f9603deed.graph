@@ -1,0 +1,178 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RF4_versionium_split_brain:b8dd3e8f9603deed
+type: graph
+id: phase:RF4_versionium_split_brain:b8dd3e8f9603deed
+context: dependency graph of phase RF4_versionium_split_brain
+intent: null
+summary: 18 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829975183
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975183
+lastSeenAt: 1792829975183
+fingerprint: null
+payload:
+  for: RF4_versionium_split_brain
+  kind: phase
+  repo: null
+  hash: b8dd3e8f9603deed
+  nodes:
+    - path: cortex/cortex-v2.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: hooks/cortex.hooks.js
+      role: changes
+      exists: true
+      system: hooks
+    - path: ui/contracts.js
+      role: changes
+      exists: true
+      system: ui
+    - path: versionium/lib/engine.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: hooks/index.js
+      role: used-by
+      exists: true
+      system: hooks
+    - path: products/flight-recorder/lib/versions.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-migration.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: ui/api.js
+      role: used-by
+      exists: true
+      system: ui
+    - path: ui/store.js
+      role: used-by
+      exists: true
+      system: ui
+    - path: versionium/routes/versionium.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: versionium/server.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/rfr2/compress/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/context/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/rfr2/kernel/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: versionium/config.js
+      role: uses
+      exists: true
+      system: versionium
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: versionium/lib/engine.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/kernel/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/compress/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/context/index.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: versionium/config.js
+      kind: requires
+    - from: versionium/lib/engine.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: products/flight-recorder/lib/versions.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: tests/modules/test-versionium-migration.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: versionium/routes/versionium.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/lib/engine.js
+      kind: requires
+    - from: ui/api.js
+      to: ui/contracts.js
+      kind: requires
+    - from: ui/store.js
+      to: ui/contracts.js
+      kind: requires
+    - from: hooks/index.js
+      to: hooks/cortex.hooks.js
+      kind: requires
+  crossings:
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/kernel/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/compress/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: intelligence/rfr2/context/index.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/engine.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: versionium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

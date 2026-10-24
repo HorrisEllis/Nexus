@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-idearium-solid-phasemap.spec::SD17_an_imported_project_continues
+type: phase
+id: docs_2026-10-10-idearium-solid-phasemap.spec::SD17_an_imported_project_continues
+context: pipeline phase SD17_an_imported_project_continues of docs/2026-10-10-idearium-solid-phasemap.spec
+intent: null
+summary: SD17_an_imported_project_continues (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829999663
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829999663
+lastSeenAt: 1792829999663
+fingerprint: null
+payload:
+  id: SD17_an_imported_project_continues
+  map: docs/2026-10-10-idearium-solid-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/roadmap-import.js
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/phases.js
+    - loom/maps/one-idearium-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ca41b1efd7fa26c1

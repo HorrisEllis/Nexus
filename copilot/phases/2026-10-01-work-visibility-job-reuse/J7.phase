@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::J7
+type: phase
+id: docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::J7
+context: pipeline phase J7 of docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+intent: null
+summary: J7 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988003
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988003
+lastSeenAt: 1792829988003
+fingerprint: null
+payload:
+  id: J7
+  map: docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/adversarial.js
+    - idearium/nexus-self sync scheduler
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 58dc5b6c1cc9744f

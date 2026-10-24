@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+context: pipeline phase SH1_shadow_space of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: SH1_shadow_space (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988468
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988468
+lastSeenAt: 1792829988468
+fingerprint: null
+payload:
+  id: SH1_shadow_space
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/shadow.js
+    - intelligence/liminal-space/
+    - cos/workspace/
+    - emergence/vendor/rfr2/liminal/shadow.js
+  depends_on:
+    - EM0_ground
+    - EV0_contracts_for_every_system
+  blocks: []
+  spec: null
+  graph: f4d22958311863ce

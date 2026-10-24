@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:LM16_per_system_data_decay:750e2cda196b99e0
+type: graph
+id: phase:LM16_per_system_data_decay:750e2cda196b99e0
+context: dependency graph of phase LM16_per_system_data_decay
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829973401
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973401
+lastSeenAt: 1792829973401
+fingerprint: null
+payload:
+  for: LM16_per_system_data_decay
+  kind: phase
+  repo: null
+  hash: 750e2cda196b99e0
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

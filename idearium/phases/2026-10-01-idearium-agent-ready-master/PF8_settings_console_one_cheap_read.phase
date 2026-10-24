@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF8_settings_console_one_cheap_read
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PF8_settings_console_one_cheap_read
+context: >-
+  pipeline phase PF8_settings_console_one_cheap_read of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PF8_settings_console_one_cheap_read (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987047
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987047
+lastSeenAt: 1792829987047
+fingerprint: null
+payload:
+  id: PF8_settings_console_one_cheap_read
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js settings.console
+    - idearium/ui/settings.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8b3388d417799343

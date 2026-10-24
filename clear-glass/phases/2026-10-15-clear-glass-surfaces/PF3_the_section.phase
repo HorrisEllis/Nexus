@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-clear-glass-surfaces-phasemap.spec::PF3_the_section
+type: phase
+id: docs_2026-10-15-clear-glass-surfaces-phasemap.spec::PF3_the_section
+context: pipeline phase PF3_the_section of docs/2026-10-15-clear-glass-surfaces-phasemap.spec
+intent: null
+summary: PF3_the_section (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005032
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005032
+lastSeenAt: 1792830005032
+fingerprint: null
+payload:
+  id: PF3_the_section
+  map: docs/2026-10-15-clear-glass-surfaces-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/library/sections/portfolio.js
+    - clear-glass/renderer/library/sections/portfolio.css
+    - clear-glass/renderer/gig-panel.js
+  depends_on:
+    - PF2_the_items
+  blocks: []
+  spec: null
+  graph: 66f9578d26cb5b2c

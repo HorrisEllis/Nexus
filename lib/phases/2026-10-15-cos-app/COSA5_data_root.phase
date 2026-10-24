@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA5_data_root
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA5_data_root
+context: pipeline phase COSA5_data_root of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA5_data_root (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005845
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005845
+lastSeenAt: 1792830005845
+fingerprint: null
+payload:
+  id: COSA5_data_root
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8c58d98a92114457

@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV1_providers_read_from_nodes
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV1_providers_read_from_nodes
+context: >-
+  pipeline phase PV1_providers_read_from_nodes of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: PV1_providers_read_from_nodes (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001267
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001267
+lastSeenAt: 1792830001267
+fingerprint: null
+payload:
+  id: PV1_providers_read_from_nodes
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/agent-facts.js
+    - guardian/lib/provider-routing.js
+    - guardian/server.js
+    - lib/agent-providers.js
+    - lib/pipeline-routing.js
+    - lib/agent-router.js
+    - lib/repo-agent.js
+  depends_on:
+    - PV0_claude_code_is_a_guardian_provider
+  blocks: []
+  spec: null
+  graph: 60e39b040177f068

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::HG6_scanner_status_vocabulary
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::HG6_scanner_status_vocabulary
+context: pipeline phase HG6_scanner_status_vocabulary of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: HG6_scanner_status_vocabulary (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991459
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991459
+lastSeenAt: 1792829991459
+fingerprint: null
+payload:
+  id: HG6_scanner_status_vocabulary
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f79a44488c30eea9

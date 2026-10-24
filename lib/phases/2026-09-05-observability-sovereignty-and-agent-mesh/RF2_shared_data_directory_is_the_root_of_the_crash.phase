@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF2_shared_data_directory_is_the_root_of_the_crash
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF2_shared_data_directory_is_the_root_of_the_crash
+context: >-
+  pipeline phase RF2_shared_data_directory_is_the_root_of_the_crash of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: RF2_shared_data_directory_is_the_root_of_the_crash (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975179
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975179
+lastSeenAt: 1792829975179
+fingerprint: null
+payload:
+  id: RF2_shared_data_directory_is_the_root_of_the_crash
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f13dc181f8f75b6c

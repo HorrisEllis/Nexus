@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+context: pipeline phase N3_projection_and_indexes of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N3_projection_and_indexes (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985423
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985423
+lastSeenAt: 1792829985423
+fingerprint: null
+payload:
+  id: N3_projection_and_indexes
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/projection.js
+    - lib/nexstore/checkpoint.js
+  depends_on:
+    - N1_record_and_log
+    - N2
+  blocks: []
+  spec: null
+  graph: e869d4762f5f68e4

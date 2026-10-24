@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR6_macro_to_automation
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR6_macro_to_automation
+context: pipeline phase MR6_macro_to_automation of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR6_macro_to_automation (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007072
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007072
+lastSeenAt: 1792830007072
+fingerprint: null
+payload:
+  id: MR6_macro_to_automation
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 806c89ac1dcff4f2

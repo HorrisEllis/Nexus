@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::J5
+type: phase
+id: docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::J5
+context: pipeline phase J5 of docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+intent: null
+summary: J5 (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988002
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988002
+lastSeenAt: 1792829988002
+fingerprint: null
+payload:
+  id: J5
+  map: docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/copilot/chat-store.js
+    - clear-glass/src/api/settings.js
+    - lib/agent-memory.js
+    - guardian/server.js
+  depends_on:
+    - J1
+  blocks: []
+  spec: null
+  graph: 664d74fc10c451b6

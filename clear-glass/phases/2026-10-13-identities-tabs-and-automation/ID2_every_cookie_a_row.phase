@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::ID2_every_cookie_a_row
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::ID2_every_cookie_a_row
+context: >-
+  pipeline phase ID2_every_cookie_a_row of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: ID2_every_cookie_a_row (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002539
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002539
+lastSeenAt: 1792830002539
+fingerprint: null
+payload:
+  id: ID2_every_cookie_a_row
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/cookies/table.js
+    - clear-glass/src/cookies/vault.js
+  depends_on:
+    - ID1_identities
+  blocks: []
+  spec: null
+  graph: fe5049365936c188

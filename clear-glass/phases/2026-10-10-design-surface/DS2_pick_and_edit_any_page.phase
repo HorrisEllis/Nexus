@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+type: phase
+id: docs_2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+context: pipeline phase DS2_pick_and_edit_any_page of docs/2026-10-10-design-surface-phasemap.spec
+intent: null
+summary: DS2_pick_and_edit_any_page (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829998866
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998866
+lastSeenAt: 1792829998866
+fingerprint: null
+payload:
+  id: DS2_pick_and_edit_any_page
+  map: docs/2026-10-10-design-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/driver/glass.js
+    - guardian/lib/selector-map.js
+  depends_on:
+    - DS1_tokens_edited_live
+  blocks: []
+  spec: null
+  graph: 47581699d0b5073d

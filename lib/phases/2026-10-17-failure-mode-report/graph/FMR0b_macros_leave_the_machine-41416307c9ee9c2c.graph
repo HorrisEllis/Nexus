@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FMR0b_macros_leave_the_machine:41416307c9ee9c2c
+type: graph
+id: phase:FMR0b_macros_leave_the_machine:41416307c9ee9c2c
+context: dependency graph of phase FMR0b_macros_leave_the_machine
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792830015643
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830015643
+lastSeenAt: 1792830015643
+fingerprint: null
+payload:
+  for: FMR0b_macros_leave_the_machine
+  kind: phase
+  repo: null
+  hash: 41416307c9ee9c2c
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

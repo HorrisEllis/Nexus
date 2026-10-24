@@ -1,0 +1,56 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AZ1_semantic_zoom:4803c502f673ce60
+type: graph
+id: phase:AZ1_semantic_zoom:4803c502f673ce60
+context: dependency graph of phase AZ1_semantic_zoom
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829989747
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829989747
+lastSeenAt: 1792829989747
+fingerprint: null
+payload:
+  for: AZ1_semantic_zoom
+  kind: phase
+  repo: null
+  hash: 4803c502f673ce60
+  nodes:
+    - path: idearium/ui/css/arch-canvas.css
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/arch-canvas.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+    dependents: []
+    upstream:
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR2_architect_in_the_workshop
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
+      - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW1_spec_workshop
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3
+      - 'depends on (1): AR3_one_architect_canvas · all upstream 4'
+      - 'needed by (0): —'

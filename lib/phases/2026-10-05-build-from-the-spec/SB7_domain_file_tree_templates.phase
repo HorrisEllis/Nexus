@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB7_domain_file_tree_templates
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB7_domain_file_tree_templates
+context: pipeline phase SB7_domain_file_tree_templates of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB7_domain_file_tree_templates (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990931
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990931
+lastSeenAt: 1792829990931
+fingerprint: null
+payload:
+  id: SB7_domain_file_tree_templates
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/file-tree-plan.js
+    - eravos/ui/mods/
+    - cos/archetype/registry.js
+  depends_on:
+    - SB1_templates_are_the_default_frame
+  blocks: []
+  spec: null
+  graph: 51af06abc8952960

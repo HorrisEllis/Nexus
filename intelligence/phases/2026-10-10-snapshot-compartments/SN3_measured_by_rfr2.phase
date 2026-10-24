@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-snapshot-compartments-phasemap.spec::SN3_measured_by_rfr2
+type: phase
+id: docs_2026-10-10-snapshot-compartments-phasemap.spec::SN3_measured_by_rfr2
+context: pipeline phase SN3_measured_by_rfr2 of docs/2026-10-10-snapshot-compartments-phasemap.spec
+intent: null
+summary: SN3_measured_by_rfr2 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830000869
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000869
+lastSeenAt: 1792830000869
+fingerprint: null
+payload:
+  id: SN3_measured_by_rfr2
+  map: docs/2026-10-10-snapshot-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/rfr2/delta/index.js
+    - intelligence/rfr2/sigma/index.js
+    - intelligence/rfr2/time/index.js
+  depends_on:
+    - SN2_run_in_parallel
+  blocks: []
+  spec: null
+  graph: 0cf6510fcc61eccc

@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RF3_selfheal_permanently_stuck:c22104b06eed53d9
+type: graph
+id: phase:RF3_selfheal_permanently_stuck:c22104b06eed53d9
+context: dependency graph of phase RF3_selfheal_permanently_stuck
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829975181
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975181
+lastSeenAt: 1792829975181
+fingerprint: null
+payload:
+  for: RF3_selfheal_permanently_stuck
+  kind: phase
+  repo: null
+  hash: c22104b06eed53d9
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

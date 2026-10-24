@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+context: >-
+  pipeline phase CB2_analysis_then_synthesis of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: CB2_analysis_then_synthesis (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988453
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988453
+lastSeenAt: 1792829988453
+fingerprint: null
+payload:
+  id: CB2_analysis_then_synthesis
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - MR1_recall_triad_and_context_table
+    - MR5_fractal_levels_with_the_field
+    - CB1_cfr_build_logic
+  blocks: []
+  spec: null
+  graph: 6526c6e29a6f1882

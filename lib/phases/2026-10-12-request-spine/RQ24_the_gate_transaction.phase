@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ24_the_gate_transaction
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ24_the_gate_transaction
+context: pipeline phase RQ24_the_gate_transaction of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ24_the_gate_transaction (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001737
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001737
+lastSeenAt: 1792830001737
+fingerprint: null
+payload:
+  id: RQ24_the_gate_transaction
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/chunk-verify.js
+    - lib/repo-inject.js (revert exists)
+    - versionium/lib/engine.js (commit
+    - restore
+    - createBranch)
+    - cortex/core/raid/index.js (verify() becomes the tail of the gate)
+    - cortex/core/raid/contract-intake.js (onFail)
+    - lib/replay-engine.js
+  depends_on:
+    - RQ21_the_contract_file_is_its_record
+    - RQ23_acceptance_conditions_that_cannot_be_moved
+    - RQ2_the_generation_failure_vocabulary_and_index
+    - RQ10_anchors_and_the_diff_reconciled
+  blocks: []
+  spec: null
+  graph: ad6d4d6afc88c72b

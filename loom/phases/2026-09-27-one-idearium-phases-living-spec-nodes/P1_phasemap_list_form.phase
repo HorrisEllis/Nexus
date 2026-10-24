@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P1_phasemap_list_form
+type: phase
+id: docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P1_phasemap_list_form
+context: >-
+  pipeline phase P1_phasemap_list_form of
+  docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+intent: null
+summary: P1_phasemap_list_form (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829983314
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829983314
+lastSeenAt: 1792829983314
+fingerprint: null
+payload:
+  id: P1_phasemap_list_form
+  map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/scanners/phasemap-map.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8e17fb4800a62ea5

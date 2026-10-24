@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-30-interaction-contract-context-phasemap.spec::IC8_callto_event_driven_cli_injection
+type: phase
+id: docs_2026-08-30-interaction-contract-context-phasemap.spec::IC8_callto_event_driven_cli_injection
+context: >-
+  pipeline phase IC8_callto_event_driven_cli_injection of
+  docs/2026-08-30-interaction-contract-context-phasemap.spec
+intent: null
+summary: IC8_callto_event_driven_cli_injection (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829972967
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972967
+lastSeenAt: 1792829972967
+fingerprint: null
+payload:
+  id: IC8_callto_event_driven_cli_injection
+  map: docs/2026-08-30-interaction-contract-context-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - IC5_full_input_queue_output_qc_lifecycle
+  blocks: []
+  spec: null
+  graph: f44516d2a55c9222

@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T5_untestable_here:3ec3c1ec8bf6950c
+type: graph
+id: phase:T5_untestable_here:3ec3c1ec8bf6950c
+context: dependency graph of phase T5_untestable_here
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829978960
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978960
+lastSeenAt: 1792829978960
+fingerprint: null
+payload:
+  for: T5_untestable_here
+  kind: phase
+  repo: null
+  hash: 3ec3c1ec8bf6950c
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

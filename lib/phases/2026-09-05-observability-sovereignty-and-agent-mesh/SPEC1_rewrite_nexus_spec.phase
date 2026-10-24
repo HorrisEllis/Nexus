@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::SPEC1_rewrite_nexus_spec
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::SPEC1_rewrite_nexus_spec
+context: >-
+  pipeline phase SPEC1_rewrite_nexus_spec of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: SPEC1_rewrite_nexus_spec (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975219
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975219
+lastSeenAt: 1792829975219
+fingerprint: null
+payload:
+  id: SPEC1_rewrite_nexus_spec
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - REG1_component_registry_remap
+  blocks: []
+  spec: null
+  graph: 8486df46c0ff1a3d

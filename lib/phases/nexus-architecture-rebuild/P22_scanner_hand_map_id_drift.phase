@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-architecture-rebuild-phasemap.spec::P22_scanner_hand_map_id_drift
+type: phase
+id: docs_nexus-architecture-rebuild-phasemap.spec::P22_scanner_hand_map_id_drift
+context: pipeline phase P22_scanner_hand_map_id_drift of docs/nexus-architecture-rebuild-phasemap.spec
+intent: null
+summary: P22_scanner_hand_map_id_drift (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830032531
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830032531
+lastSeenAt: 1792830032531
+fingerprint: null
+payload:
+  id: P22_scanner_hand_map_id_drift
+  map: docs/nexus-architecture-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 30e76170cbf9b06b

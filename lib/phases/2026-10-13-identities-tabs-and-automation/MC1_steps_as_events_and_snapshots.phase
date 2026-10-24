@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::MC1_steps_as_events_and_snapshots
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::MC1_steps_as_events_and_snapshots
+context: >-
+  pipeline phase MC1_steps_as_events_and_snapshots of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: MC1_steps_as_events_and_snapshots (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002551
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002551
+lastSeenAt: 1792830002551
+fingerprint: null
+payload:
+  id: MC1_steps_as_events_and_snapshots
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - NV1_words_to_elements
+  blocks: []
+  spec: null
+  graph: b7dfa5c5ff2fcec2

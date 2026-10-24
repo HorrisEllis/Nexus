@@ -1,0 +1,72 @@
+envelope: 1
+uuid: nexus-export-graph-phase:C1_copilot_contract:c7e07067de82c969
+type: graph
+id: phase:C1_copilot_contract:c7e07067de82c969
+context: dependency graph of phase C1_copilot_contract
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829983321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829983321
+lastSeenAt: 1792829983321
+fingerprint: null
+payload:
+  for: C1_copilot_contract
+  kind: phase
+  repo: null
+  hash: c7e07067de82c969
+  nodes:
+    - path: copilot/interaction-contract.json
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/registry-components.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/intents.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+  edges:
+    - from: copilot/intents.js
+      to: copilot/registry-components.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/registry-components.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    upstream: []
+    downstream:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X3_nodes_route
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X4_command_index_spec
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): X1_system_nodes, Z1_release · all downstream 4 · finishing it unlocks
+        X1_system_nodes, Z1_release
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

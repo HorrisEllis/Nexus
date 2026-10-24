@@ -1,0 +1,238 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EC5_staging_by_economy:a13ffbca0770c51b
+type: graph
+id: phase:EC5_staging_by_economy:a13ffbca0770c51b
+context: dependency graph of phase EC5_staging_by_economy
+intent: null
+summary: 26 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985877
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985877
+lastSeenAt: 1792829985877
+fingerprint: null
+payload:
+  for: EC5_staging_by_economy
+  kind: phase
+  repo: null
+  hash: a13ffbca0770c51b
+  nodes:
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-inject-screen.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-inject-approval.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-proposal-evidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/change-entry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/inject-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/path-guard.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/lib/merge3.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: lib/repo-inject.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/nexus-self/inject-gate.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/change-entry.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-versions.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/path-guard.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: versionium/lib/merge3.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: lib/spec-collect.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-inject-screen.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-nexus-inject-approval.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: tests/modules/test-proposal-evidence.test.js
+      to: lib/repo-inject.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+  crossings:
+    - from: lib/repo-inject.js
+      to: guardian/lib/code-artifact.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/repo-inject.js
+      to: versionium/lib/merge3.js
+      fromSystem: lib
+      toSystem: versionium
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC0_policy_model
+    dependents:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+    upstream:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC0_policy_model
+    downstream:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1
+      - 'depends on (1): EC0_policy_model'
+      - 'needed by (1): EC11_release · finishing it unlocks EC11_release'

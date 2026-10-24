@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-routing-registry-genesis-phasemap.spec::RC2_registry_as_nodes
+type: phase
+id: docs_2026-10-01-routing-registry-genesis-phasemap.spec::RC2_registry_as_nodes
+context: pipeline phase RC2_registry_as_nodes of docs/2026-10-01-routing-registry-genesis-phasemap.spec
+intent: null
+summary: RC2_registry_as_nodes (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987569
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987569
+lastSeenAt: 1792829987569
+fingerprint: null
+payload:
+  id: RC2_registry_as_nodes
+  map: docs/2026-10-01-routing-registry-genesis-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/architecture.js
+    - idearium/api/index.js
+    - lib/node-export.js
+  depends_on:
+    - RC1_registry_block
+  blocks: []
+  spec: null
+  graph: 89682c310007557f

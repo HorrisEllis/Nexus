@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::HG7_the_law_and_clear_glass
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::HG7_the_law_and_clear_glass
+context: pipeline phase HG7_the_law_and_clear_glass of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: HG7_the_law_and_clear_glass (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991460
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991460
+lastSeenAt: 1792829991460
+fingerprint: null
+payload:
+  id: HG7_the_law_and_clear_glass
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/AXIOMS-v3.1.md
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e775e5b9fae4d6a3

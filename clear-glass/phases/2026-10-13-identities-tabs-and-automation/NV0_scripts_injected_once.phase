@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::NV0_scripts_injected_once
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::NV0_scripts_injected_once
+context: >-
+  pipeline phase NV0_scripts_injected_once of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: NV0_scripts_injected_once (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002548
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002548
+lastSeenAt: 1792830002548
+fingerprint: null
+payload:
+  id: NV0_scripts_injected_once
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/userscripts/manager.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 10ac55e1555a339a

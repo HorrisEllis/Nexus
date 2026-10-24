@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-failure-reproduction-phasemap.spec::FM2_a_failure_is_a_clip
+type: phase
+id: docs_2026-10-05-failure-reproduction-phasemap.spec::FM2_a_failure_is_a_clip
+context: pipeline phase FM2_a_failure_is_a_clip of docs/2026-10-05-failure-reproduction-phasemap.spec
+intent: null
+summary: FM2_a_failure_is_a_clip (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829992655
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829992655
+lastSeenAt: 1792829992655
+fingerprint: null
+payload:
+  id: FM2_a_failure_is_a_clip
+  map: docs/2026-10-05-failure-reproduction-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/rfr2/clip/index.js
+    - lib/failure-macro.js
+    - intelligence/cfr/contract-verifier.js
+  depends_on:
+    - FM1_every_ledger_into_rfr2
+  blocks: []
+  spec: null
+  graph: a487cd62141f833a

@@ -1,0 +1,270 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB37_the_working_set_signal_to_noise:bd7d6f47a4d010c5
+type: graph
+id: phase:SB37_the_working_set_signal_to_noise:bd7d6f47a4d010c5
+context: dependency graph of phase SB37_the_working_set_signal_to_noise
+intent: null
+summary: 30 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829990998
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990998
+lastSeenAt: 1792829990998
+fingerprint: null
+payload:
+  for: SB37_the_working_set_signal_to_noise
+  kind: phase
+  repo: null
+  hash: bd7d6f47a4d010c5
+  nodes:
+    - path: copilot/lib/workset.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-prompt-blocks.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-tools-and-graph.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-build-context.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/inject-config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cortex-write.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/step-gate.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/config.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/inject-config.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/cortex-write.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/repo-prompt-blocks.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: lib/repo-prompt-blocks.js
+      kind: requires
+    - from: tests/modules/test-agent-tools-and-graph.test.js
+      to: lib/repo-prompt-blocks.js
+      kind: requires
+    - from: tests/modules/test-build-context.test.js
+      to: lib/repo-prompt-blocks.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+  crossings:
+    - from: copilot/tool-runtime.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/routes/autonomous-loop.js
+      to: copilot/tool-runtime.js
+      fromSystem: guardian
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: copilot/tool-runtime.js
+      fromSystem: idearium
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 8
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB32_context_is_never_optional
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB33_the_agent_runs_the_pipeline
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB34_context_is_the_code_tab_the_graphs_and_memory
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB35_the_index_is_there_when_the_agent_asks
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB36_every_agent_can_use_the_tools
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB3_the_section_prompt_is_domain_agnostic
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB39_the_checklist_builds_the_working_set
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 8
+      - 'depends on (1): SB36_every_agent_can_use_the_tools · all upstream 8'
+      - >-
+        needed by (1): SB38_prerequisites_the_questions_first · all downstream 2 · finishing it
+        unlocks SB38_prerequisites_the_questions_first

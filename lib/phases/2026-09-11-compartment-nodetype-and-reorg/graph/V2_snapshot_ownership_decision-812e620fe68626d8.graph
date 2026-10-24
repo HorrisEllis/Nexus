@@ -1,0 +1,149 @@
+envelope: 1
+uuid: nexus-export-graph-phase:V2_snapshot_ownership_decision:812e620fe68626d8
+type: graph
+id: phase:V2_snapshot_ownership_decision:812e620fe68626d8
+context: dependency graph of phase V2_snapshot_ownership_decision
+intent: null
+summary: 11 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976052
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976052
+lastSeenAt: 1792829976052
+fingerprint: null
+payload:
+  for: V2_snapshot_ownership_decision
+  kind: phase
+  repo: null
+  hash: 812e620fe68626d8
+  nodes:
+    - path: cortex/snapshot/index.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/self-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/snapshot-integrity.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-snapshot-migration.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/pipeline.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: versionium/lib/snapshot.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: cortex/snapshot/index.js
+      to: versionium/lib/snapshot.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: guardian/server.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: lib/self-build-loop.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: orchestrator/lib/autonomous-loop.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: tests/modules/snapshot-integrity.test.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: tests/modules/test-versionium-snapshot-migration.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: tests/pipeline.test.js
+      to: cortex/snapshot/index.js
+      kind: requires
+  crossings:
+    - from: cortex/snapshot/index.js
+      to: versionium/lib/snapshot.js
+      fromSystem: cortex
+      toSystem: versionium
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: cortex/snapshot/index.js
+      fromSystem: guardian
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/compartment-engine.js
+      to: cortex/snapshot/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/self-build-loop.js
+      to: cortex/snapshot/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: orchestrator/lib/autonomous-loop.js
+      to: cortex/snapshot/index.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: orchestrator/lib/request-handler.js
+      to: cortex/snapshot/index.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

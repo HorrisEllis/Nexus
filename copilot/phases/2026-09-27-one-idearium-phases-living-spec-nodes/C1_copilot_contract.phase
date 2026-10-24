@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::C1_copilot_contract
+type: phase
+id: docs_2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::C1_copilot_contract
+context: >-
+  pipeline phase C1_copilot_contract of
+  docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+intent: null
+summary: C1_copilot_contract (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829983321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829983321
+lastSeenAt: 1792829983321
+fingerprint: null
+payload:
+  id: C1_copilot_contract
+  map: docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/registry-components.js
+    - copilot/interaction-contract.json
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c7e07067de82c969

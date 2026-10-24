@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-verified-primitives-phasemap.spec::VP2_adversarial_review
+type: phase
+id: docs_2026-10-05-verified-primitives-phasemap.spec::VP2_adversarial_review
+context: pipeline phase VP2_adversarial_review of docs/2026-10-05-verified-primitives-phasemap.spec
+intent: null
+summary: VP2_adversarial_review (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829994200
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829994200
+lastSeenAt: 1792829994200
+fingerprint: null
+payload:
+  id: VP2_adversarial_review
+  map: docs/2026-10-05-verified-primitives-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-council.js
+    - copilot/lifeline.js
+    - meta/adversary-suite.js
+  depends_on:
+    - VP1_confidence_from_evidence
+  blocks: []
+  spec: null
+  graph: 861894593ce759d9

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-idearium-control-phasemap.spec::VS1_versions_in_the_surface
+type: phase
+id: docs_2026-10-19-idearium-control-phasemap.spec::VS1_versions_in_the_surface
+context: pipeline phase VS1_versions_in_the_surface of docs/2026-10-19-idearium-control-phasemap.spec
+intent: null
+summary: VS1_versions_in_the_surface (interface) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830019665
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830019665
+lastSeenAt: 1792830019665
+fingerprint: null
+payload:
+  id: VS1_versions_in_the_surface
+  map: docs/2026-10-19-idearium-control-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - lib/repo-history.js
+    - idearium/ui/js/repo-versions.js
+    - idearium/ui/js/code-surface.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2f948ae931b8b5ff

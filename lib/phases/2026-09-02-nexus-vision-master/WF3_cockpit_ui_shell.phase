@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::WF3_cockpit_ui_shell
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::WF3_cockpit_ui_shell
+context: pipeline phase WF3_cockpit_ui_shell of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: WF3_cockpit_ui_shell (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974306
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974306
+lastSeenAt: 1792829974306
+fingerprint: null
+payload:
+  id: WF3_cockpit_ui_shell
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - AM7_agent_suite_welcome_ui
+  blocks: []
+  spec: null
+  graph: e038ecb5ad9f4172

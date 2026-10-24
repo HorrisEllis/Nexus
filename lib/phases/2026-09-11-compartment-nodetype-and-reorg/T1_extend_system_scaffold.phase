@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
+context: >-
+  pipeline phase T1_extend_system_scaffold of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: T1_extend_system_scaffold (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976046
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976046
+lastSeenAt: 1792829976046
+fingerprint: null
+payload:
+  id: T1_extend_system_scaffold
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c85e7dedf727b889

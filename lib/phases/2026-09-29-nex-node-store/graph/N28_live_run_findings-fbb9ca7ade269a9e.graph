@@ -1,0 +1,263 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N28_live_run_findings:fbb9ca7ade269a9e
+type: graph
+id: phase:N28_live_run_findings:fbb9ca7ade269a9e
+context: dependency graph of phase N28_live_run_findings
+intent: null
+summary: 26 node(s), 8 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985452
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985452
+lastSeenAt: 1792829985452
+fingerprint: null
+payload:
+  for: N28_live_run_findings
+  kind: phase
+  repo: null
+  hash: fbb9ca7ade269a9e
+  nodes:
+    - path: idearium/repo/nexus-self.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/cos-bridge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/canvas-compartments.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-remote.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/lib/mco04-cos-bridge-work-phase.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mco04-executor-cos-migration.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/cli/commands/advance-work-phase.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/destroy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/cli/commands/intent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/intent.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: uses
+      exists: true
+      system: cos
+    - path: idearium/lib/db.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/cos-bridge.js
+      to: cos/host/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/advance-work-phase.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/destroy.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/foundation/intent.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/intent.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: lib/cos-bridge.js
+      to: cos/workspace/vm-control.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/lib/db.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: lib/canvas-compartments.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: lib/cos-remote.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: lib/system-registry.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: tests/lib/mco04-cos-bridge-work-phase.test.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: tests/modules/mco04-executor-cos-migration.test.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: lib/cos-bridge.js
+      kind: requires
+  crossings:
+    - from: lib/cos-bridge.js
+      to: cos/host/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/create.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/advance-work-phase.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/destroy.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/foundation/intent.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/cli/commands/intent.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/workspace/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-bridge.js
+      to: cos/workspace/vm-control.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

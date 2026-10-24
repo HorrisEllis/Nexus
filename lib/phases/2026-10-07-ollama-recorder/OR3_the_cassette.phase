@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-ollama-recorder-phasemap.spec::OR3_the_cassette
+type: phase
+id: docs_2026-10-07-ollama-recorder-phasemap.spec::OR3_the_cassette
+context: pipeline phase OR3_the_cassette of docs/2026-10-07-ollama-recorder-phasemap.spec
+intent: null
+summary: OR3_the_cassette (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829995727
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829995727
+lastSeenAt: 1792829995727
+fingerprint: null
+payload:
+  id: OR3_the_cassette
+  map: docs/2026-10-07-ollama-recorder-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f2cd6cab689d5744

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-13-track-b-sovereignty-phasemap.spec::MCO17_contract_boundary_retracted
+type: phase
+id: docs_2026-09-13-track-b-sovereignty-phasemap.spec::MCO17_contract_boundary_retracted
+context: >-
+  pipeline phase MCO17_contract_boundary_retracted of
+  docs/2026-09-13-track-b-sovereignty-phasemap.spec
+intent: null
+summary: MCO17_contract_boundary_retracted (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829977378
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829977378
+lastSeenAt: 1792829977378
+fingerprint: null
+payload:
+  id: MCO17_contract_boundary_retracted
+  map: docs/2026-09-13-track-b-sovereignty-phasemap.spec
+  repo: null
+  layer: null
+  status: '"RETRACTED 2026-09-13. Original plan: split contract-'
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7e7a95ae7baa92ae

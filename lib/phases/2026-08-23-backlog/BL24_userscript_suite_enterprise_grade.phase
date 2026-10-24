@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL24_userscript_suite_enterprise_grade
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL24_userscript_suite_enterprise_grade
+context: pipeline phase BL24_userscript_suite_enterprise_grade of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL24_userscript_suite_enterprise_grade (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971269
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971269
+lastSeenAt: 1792829971269
+fingerprint: null
+payload:
+  id: BL24_userscript_suite_enterprise_grade
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: edba621e935840c5

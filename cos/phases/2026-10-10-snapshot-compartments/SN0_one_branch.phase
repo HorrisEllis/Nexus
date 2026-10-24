@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+type: phase
+id: docs_2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+context: pipeline phase SN0_one_branch of docs/2026-10-10-snapshot-compartments-phasemap.spec
+intent: null
+summary: SN0_one_branch (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830000867
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000867
+lastSeenAt: 1792830000867
+fingerprint: null
+payload:
+  id: SN0_one_branch
+  map: docs/2026-10-10-snapshot-compartments-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/playground/branch.js
+    - cos/workspace/index.js
+    - lib/nexus-self/branch.js
+    - lib/safe-apply.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1e77410bef5d0634

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
+context: >-
+  pipeline phase DB9_every_repo_generates_its_registry of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB9_every_repo_generates_its_registry (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830016885
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016885
+lastSeenAt: 1792830016885
+fingerprint: null
+payload:
+  id: DB9_every_repo_generates_its_registry
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f1e7007976d6f084

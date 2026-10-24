@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::UP1_placement_tool
+type: phase
+id: docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::UP1_placement_tool
+context: pipeline phase UP1_placement_tool of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+intent: null
+summary: UP1_placement_tool (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830021325
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830021325
+lastSeenAt: 1792830021325
+fingerprint: null
+payload:
+  id: UP1_placement_tool
+  map: docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
+  repo: null
+  layer: library
+  status: DONE 0.60.173
+  files:
+    - lib/upload-placement.js
+    - tests/modules/test-upload-placement.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 166fb192867b3804

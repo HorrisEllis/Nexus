@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-cos-console-phasemap.spec::CON5_pane
+type: phase
+id: docs_2026-10-16-cos-console-phasemap.spec::CON5_pane
+context: pipeline phase CON5_pane of docs/2026-10-16-cos-console-phasemap.spec
+intent: null
+summary: CON5_pane (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830010562
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010562
+lastSeenAt: 1792830010562
+fingerprint: null
+payload:
+  id: CON5_pane
+  map: docs/2026-10-16-cos-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - CON2_grammar_and_completion
+  blocks: []
+  spec: null
+  graph: 8bbaf7e5aa41faf7

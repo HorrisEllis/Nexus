@@ -9,11 +9,11 @@ intent: null
 summary: CH0_chunk_census_and_contract (foundation) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792456416767
+exported_at: 1792830022171
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456416767
-lastSeenAt: 1792456416767
+firstSeenAt: 1792830022171
+lastSeenAt: 1792830022171
 fingerprint: null
 payload:
   id: CH0_chunk_census_and_contract

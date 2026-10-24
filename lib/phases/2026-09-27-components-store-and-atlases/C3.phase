@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-27-components-store-and-atlases-phasemap.spec::C3
+type: phase
+id: docs_2026-09-27-components-store-and-atlases-phasemap.spec::C3
+context: pipeline phase C3 of docs/2026-09-27-components-store-and-atlases-phasemap.spec
+intent: null
+summary: C3 (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829982126
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829982126
+lastSeenAt: 1792829982126
+fingerprint: null
+payload:
+  id: C3
+  map: docs/2026-09-27-components-store-and-atlases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-self/systems.js
+    - loom/scanners/source-map.js
+    - lib/test-sandbox.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6f53d9aa14fc9e97

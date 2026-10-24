@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+context: pipeline phase MR8_crystallization of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR8_crystallization (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988442
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988442
+lastSeenAt: 1792829988442
+fingerprint: null
+payload:
+  id: MR8_crystallization
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - warp/dispatch/population.js
+    - emerge/core/constraint.js
+  depends_on:
+    - MR7_recipes
+    - EM2_warp_his_own
+  blocks: []
+  spec: null
+  graph: b7db5295beb68216

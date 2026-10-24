@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-spec-foundation-model-phasemap.spec::SF7_get_his_run_current
+type: phase
+id: docs_2026-10-15-spec-foundation-model-phasemap.spec::SF7_get_his_run_current
+context: pipeline phase SF7_get_his_run_current of docs/2026-10-15-spec-foundation-model-phasemap.spec
+intent: null
+summary: SF7_get_his_run_current (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830008636
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830008636
+lastSeenAt: 1792830008636
+fingerprint: null
+payload:
+  id: SF7_get_his_run_current
+  map: docs/2026-10-15-spec-foundation-model-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b512f674cbcad8ad

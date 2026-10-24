@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+type: phase
+id: docs_nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+context: pipeline phase SS4_full_logging_per_system of docs/nexus-system-standardization-phasemap.spec
+intent: null
+summary: SS4_full_logging_per_system (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830034889
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830034889
+lastSeenAt: 1792830034889
+fingerprint: null
+payload:
+  id: SS4_full_logging_per_system
+  map: docs/nexus-system-standardization-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - SS1_system_manifest
+    - SS3_event_driven_handshake_contracts
+  blocks: []
+  spec: null
+  graph: 80f873187821fffc

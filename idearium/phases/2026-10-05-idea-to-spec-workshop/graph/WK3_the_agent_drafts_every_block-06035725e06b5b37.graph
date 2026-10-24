@@ -1,0 +1,66 @@
+envelope: 1
+uuid: nexus-export-graph-phase:WK3_the_agent_drafts_every_block:06035725e06b5b37
+type: graph
+id: phase:WK3_the_agent_drafts_every_block:06035725e06b5b37
+context: dependency graph of phase WK3_the_agent_drafts_every_block
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829993406
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829993406
+lastSeenAt: 1792829993406
+fingerprint: null
+payload:
+  for: WK3_the_agent_drafts_every_block
+  kind: phase
+  repo: null
+  hash: 06035725e06b5b37
+  nodes:
+    - path: idearium/lib/workshop.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/workshop.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/lib/void.js
+      role: used-by
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/lib/workshop.js
+      kind: requires
+    - from: idearium/lib/void.js
+      to: idearium/lib/workshop.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK1_the_workshop_is_blocks_from_the_templates
+    dependents:
+      - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK6_enterprise_grade
+    upstream:
+      - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK1_the_workshop_is_blocks_from_the_templates
+    downstream:
+      - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK6_enterprise_grade
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK6_enterprise_grade
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1
+      - 'depends on (1): WK1_the_workshop_is_blocks_from_the_templates'
+      - 'needed by (1): WK6_enterprise_grade · finishing it unlocks WK6_enterprise_grade'

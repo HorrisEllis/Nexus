@@ -1,0 +1,94 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DBG8_in_the_product:fb23f2c646765085
+type: graph
+id: phase:DBG8_in_the_product:fb23f2c646765085
+context: dependency graph of phase DBG8_in_the_product
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830017719
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830017719
+lastSeenAt: 1792830017719
+fingerprint: null
+payload:
+  for: DBG8_in_the_product
+  kind: phase
+  repo: null
+  hash: fb23f2c646765085
+  nodes:
+    - path: products/flight-recorder/bin/flight-recorder.js
+      role: changes
+      exists: true
+      system: null
+    - path: products/flight-recorder/product.json
+      role: changes
+      exists: true
+      system: null
+    - path: products/flight-recorder/README.md
+      role: changes
+      exists: true
+      system: null
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: uses
+      exists: true
+      system: null
+    - path: products/flight-recorder/lib/versions.js
+      role: uses
+      exists: true
+      system: null
+  edges:
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: products/flight-recorder/lib/project.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: lib/run-state.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: products/flight-recorder/lib/versions.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG0c_which_product
+    dependents: []
+    upstream:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG0a_synchronized_ids
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG0c_which_product
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG1_the_key
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+    downstream: []
+    blockedBy:
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+      - docs/2026-10-18-debugging-product-phasemap.spec::DBG0c_which_product
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · blocked by DBG2_the_case, DBG0c_which_product
+      - 'depends on (2): DBG2_the_case, DBG0c_which_product · all upstream 4'
+      - 'needed by (0): —'

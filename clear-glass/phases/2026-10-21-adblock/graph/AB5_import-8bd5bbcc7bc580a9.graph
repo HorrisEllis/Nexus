@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792500829723
+exported_at: 1792830022586
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792500829723
-lastSeenAt: 1792500829723
+firstSeenAt: 1792830022586
+lastSeenAt: 1792830022586
 fingerprint: null
 payload:
   for: AB5_import
@@ -219,7 +219,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 412d78d99de5f927
+    dagHash: 2f8ddd0afd383c4f
     layer: 5
     deps:
       - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
@@ -241,6 +241,6 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - DAG 412d78d99de5f927 · layer 5
+      - DAG 2f8ddd0afd383c4f · layer 5
       - 'depends on (2): AB4_surface, BS16_import_fields · all upstream 9'
       - 'needed by (0): —'

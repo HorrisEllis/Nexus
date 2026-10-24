@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-synthesis-zoom-versionium-phasemap.spec::SY2_synthesis_surfaces
+type: phase
+id: docs_2026-10-02-synthesis-zoom-versionium-phasemap.spec::SY2_synthesis_surfaces
+context: pipeline phase SY2_synthesis_surfaces of docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec
+intent: null
+summary: SY2_synthesis_surfaces (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829989748
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829989748
+lastSeenAt: 1792829989748
+fingerprint: null
+payload:
+  id: SY2_synthesis_surfaces
+  map: docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/routes.js
+    - intelligence/registry-components.js
+    - intelligence/commands/
+  depends_on:
+    - SY1_gap_synthesis_engine
+  blocks: []
+  spec: null
+  graph: aae4f3b1d0b3a1d2

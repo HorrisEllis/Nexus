@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-roadmap-phasemap.spec::OR6_old_code_out
+type: phase
+id: docs_2026-10-09-one-roadmap-phasemap.spec::OR6_old_code_out
+context: pipeline phase OR6_old_code_out of docs/2026-10-09-one-roadmap-phasemap.spec
+intent: null
+summary: OR6_old_code_out (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829998100
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998100
+lastSeenAt: 1792829998100
+fingerprint: null
+payload:
+  id: OR6_old_code_out
+  map: docs/2026-10-09-one-roadmap-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - _archive/2026-10-09-declutter/
+  depends_on:
+    - OR0_the_census
+  blocks: []
+  spec: null
+  graph: 6af214e0e32a3243

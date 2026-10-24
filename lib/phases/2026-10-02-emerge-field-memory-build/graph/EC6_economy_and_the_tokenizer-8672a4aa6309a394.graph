@@ -1,0 +1,125 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EC6_economy_and_the_tokenizer:8672a4aa6309a394
+type: graph
+id: phase:EC6_economy_and_the_tokenizer:8672a4aa6309a394
+context: dependency graph of phase EC6_economy_and_the_tokenizer
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829988465
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988465
+lastSeenAt: 1792829988465
+fingerprint: null
+payload:
+  for: EC6_economy_and_the_tokenizer
+  kind: phase
+  repo: null
+  hash: 8672a4aa6309a394
+  nodes:
+    - path: lib/economy/ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/economy/router.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/economy/tokenizer/bpe.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/economy/tokenizer/gguf.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/economy/tokens.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/lib/economy-guard.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/economy/store.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/adapters/warp-cascade.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: guardian/lib/economy-guard.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/economy/router.js
+      kind: requires
+    - from: lib/economy/store.js
+      to: lib/economy/ledger.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/economy/ledger.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_agents
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · ready
+      - 'depends on (2): EM1_emerge_core, EV0_contracts_for_every_system · all upstream 3'
+      - 'needed by (2): FV1_client_jobs, AC1_accounts_into_agents · all downstream 3'

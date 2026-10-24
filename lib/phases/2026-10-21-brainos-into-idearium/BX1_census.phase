@@ -7,11 +7,11 @@ intent: null
 summary: BX1_census (foundation) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792585108767
+exported_at: 1792830023357
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792585108767
-lastSeenAt: 1792585108767
+firstSeenAt: 1792830023357
+lastSeenAt: 1792830023357
 fingerprint: null
 payload:
   id: BX1_census

@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UI1_history_and_save_in_manage:a01c5d1997949e6a
+type: graph
+id: phase:UI1_history_and_save_in_manage:a01c5d1997949e6a
+context: dependency graph of phase UI1_history_and_save_in_manage
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987074
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987074
+lastSeenAt: 1792829987074
+fingerprint: null
+payload:
+  for: UI1_history_and_save_in_manage
+  kind: phase
+  repo: null
+  hash: a01c5d1997949e6a
+  nodes:
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/file-manage.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/file-versions.js
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
+    upstream: []
+    downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI11_nav_and_look_restored
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): UI8_code_tab_is_code · all downstream 2 · finishing it unlocks
+        UI8_code_tab_is_code
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

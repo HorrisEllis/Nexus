@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N8_service
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N8_service
+context: pipeline phase N8_service of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N8_service (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985428
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985428
+lastSeenAt: 1792829985428
+fingerprint: null
+payload:
+  id: N8_service
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/service.js
+    - lib/nexstore/client.js
+  depends_on:
+    - N7_views_yaml_and_nex
+  blocks: []
+  spec: null
+  graph: a93084e10fd5c6be

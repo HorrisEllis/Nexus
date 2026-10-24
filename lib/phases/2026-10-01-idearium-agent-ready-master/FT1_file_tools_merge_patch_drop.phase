@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+context: >-
+  pipeline phase FT1_file_tools_merge_patch_drop of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: FT1_file_tools_merge_patch_drop (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987116
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987116
+lastSeenAt: 1792829987116
+fingerprint: null
+payload:
+  id: FT1_file_tools_merge_patch_drop
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/
+    - lib/zip-ingest.js
+    - idearium/api/index.js
+    - idearium/ui/js/app.js
+  depends_on:
+    - CI1_compounding_iterate
+  blocks: []
+  spec: null
+  graph: b482bb0cc2b2da5b

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-model-and-user-continuity-phasemap.spec::AM9_get_to_know_you_and_idea_capture
+type: phase
+id: docs_agent-model-and-user-continuity-phasemap.spec::AM9_get_to_know_you_and_idea_capture
+context: >-
+  pipeline phase AM9_get_to_know_you_and_idea_capture of
+  docs/agent-model-and-user-continuity-phasemap.spec
+intent: null
+summary: AM9_get_to_know_you_and_idea_capture (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830027826
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830027826
+lastSeenAt: 1792830027826
+fingerprint: null
+payload:
+  id: AM9_get_to_know_you_and_idea_capture
+  map: docs/agent-model-and-user-continuity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - AM4_full_user_continuity
+  blocks: []
+  spec: null
+  graph: 32fca166c640cfd4

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+type: phase
+id: docs_2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+context: pipeline phase T1 of docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec
+intent: null
+summary: T1 (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829980924
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980924
+lastSeenAt: 1792829980924
+fingerprint: null
+payload:
+  id: T1
+  map: docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - R1
+    - N2
+    - E1
+    - I1
+  blocks: []
+  spec: null
+  graph: a15775f6e0b048ee

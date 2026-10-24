@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+type: phase
+id: docs_agent-model-and-user-continuity-phasemap.spec::AM6_perplexity_confidence_loop
+context: >-
+  pipeline phase AM6_perplexity_confidence_loop of
+  docs/agent-model-and-user-continuity-phasemap.spec
+intent: null
+summary: AM6_perplexity_confidence_loop (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830027822
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830027822
+lastSeenAt: 1792830027822
+fingerprint: null
+payload:
+  id: AM6_perplexity_confidence_loop
+  map: docs/agent-model-and-user-continuity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - AM1_per_agent_learned_model
+    - AM5_ambiguity_triggered_pull
+  blocks: []
+  spec: null
+  graph: 200f6a2a6a5cf5dd

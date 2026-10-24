@@ -1,0 +1,156 @@
+envelope: 1
+uuid: nexus-export-graph-phase:E1:48449faf7b7f8211
+type: graph
+id: phase:E1:48449faf7b7f8211
+context: dependency graph of phase E1
+intent: null
+summary: 17 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829980922
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980922
+lastSeenAt: 1792829980922
+fingerprint: null
+payload:
+  for: E1
+  kind: phase
+  repo: null
+  hash: 48449faf7b7f8211
+  nodes:
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: erosmancer/erosmancer-os/src/api/server.ts
+      role: changes
+      exists: true
+      system: erosmancer
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/google-signin.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/compartment-window.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: erosmancer/erosmancer-os/src/adaptive/index.ts
+      role: uses
+      exists: true
+      system: erosmancer
+    - path: erosmancer/erosmancer-os/src/behavior/index.ts
+      role: uses
+      exists: true
+      system: erosmancer
+    - path: erosmancer/erosmancer-os/src/hostile/index.ts
+      role: uses
+      exists: true
+      system: erosmancer
+    - path: erosmancer/erosmancer-os/src/index.ts
+      role: uses
+      exists: true
+      system: erosmancer
+    - path: erosmancer/erosmancer-os/src/observer/index.ts
+      role: uses
+      exists: true
+      system: erosmancer
+    - path: erosmancer/erosmancer-os/src/replay/index.ts
+      role: uses
+      exists: true
+      system: erosmancer
+    - path: erosmancer/erosmancer-os/src/routing/index.ts
+      role: uses
+      exists: true
+      system: erosmancer
+    - path: erosmancer/erosmancer-os/src/types/index.ts
+      role: uses
+      exists: true
+      system: erosmancer
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: erosmancer/erosmancer-os/src/api/server.ts
+      to: erosmancer/erosmancer-os/src/index.ts
+      kind: requires
+    - from: erosmancer/erosmancer-os/src/api/server.ts
+      to: erosmancer/erosmancer-os/src/behavior/index.ts
+      kind: requires
+    - from: erosmancer/erosmancer-os/src/api/server.ts
+      to: erosmancer/erosmancer-os/src/routing/index.ts
+      kind: requires
+    - from: erosmancer/erosmancer-os/src/api/server.ts
+      to: erosmancer/erosmancer-os/src/observer/index.ts
+      kind: requires
+    - from: erosmancer/erosmancer-os/src/api/server.ts
+      to: erosmancer/erosmancer-os/src/replay/index.ts
+      kind: requires
+    - from: erosmancer/erosmancer-os/src/api/server.ts
+      to: erosmancer/erosmancer-os/src/adaptive/index.ts
+      kind: requires
+    - from: erosmancer/erosmancer-os/src/api/server.ts
+      to: erosmancer/erosmancer-os/src/hostile/index.ts
+      kind: requires
+    - from: erosmancer/erosmancer-os/src/api/server.ts
+      to: erosmancer/erosmancer-os/src/types/index.ts
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+    upstream: []
+    downstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::T1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::X1
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): T1 · all downstream 2'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

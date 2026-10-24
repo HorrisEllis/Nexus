@@ -1,0 +1,69 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE6_the_code_tab:f11d856e1aa25e18
+type: graph
+id: phase:CE6_the_code_tab:f11d856e1aa25e18
+context: dependency graph of phase CE6_the_code_tab
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830017330
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830017330
+lastSeenAt: 1792830017330
+fingerprint: null
+payload:
+  for: CE6_the_code_tab
+  kind: phase
+  repo: null
+  hash: f11d856e1aa25e18
+  nodes:
+    - path: idearium/ui/css/compartment-terminal.css
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/ui/js/code-surface.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/code-tab-panels.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/compartment-terminal.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/ui/vendor/xterm.js
+      role: changes
+      exists: false
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 5
+    deps:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+    dependents: []
+    upstream:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+    downstream: []
+    blockedBy:
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
+      - docs/2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 5 · blocked by CE4_the_terminal_bridge, CE5_the_guest_file_tree
+      - 'depends on (2): CE4_the_terminal_bridge, CE5_the_guest_file_tree · all upstream 6'
+      - 'needed by (0): —'

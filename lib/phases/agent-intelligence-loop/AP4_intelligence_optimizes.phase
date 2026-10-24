@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-intelligence-loop-phasemap.spec::AP4_intelligence_optimizes
+type: phase
+id: docs_agent-intelligence-loop-phasemap.spec::AP4_intelligence_optimizes
+context: pipeline phase AP4_intelligence_optimizes of docs/agent-intelligence-loop-phasemap.spec
+intent: null
+summary: AP4_intelligence_optimizes (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830027402
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830027402
+lastSeenAt: 1792830027402
+fingerprint: null
+payload:
+  id: AP4_intelligence_optimizes
+  map: docs/agent-intelligence-loop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - AP2_agent_events_to_intelligence
+    - AP3_strategy_dynamic_db
+  blocks: []
+  spec: null
+  graph: 8f53bceb7cf58c12

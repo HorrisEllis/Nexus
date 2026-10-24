@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG3_ublock_style_adblocker:303ef29f7a7e41db
+type: graph
+id: phase:CG3_ublock_style_adblocker:303ef29f7a7e41db
+context: dependency graph of phase CG3_ublock_style_adblocker
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829974794
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974794
+lastSeenAt: 1792829974794
+fingerprint: null
+payload:
+  for: CG3_ublock_style_adblocker
+  kind: phase
+  repo: null
+  hash: 303ef29f7a7e41db
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

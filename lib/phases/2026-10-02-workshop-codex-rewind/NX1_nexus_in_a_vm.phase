@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::NX1_nexus_in_a_vm
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::NX1_nexus_in_a_vm
+context: pipeline phase NX1_nexus_in_a_vm of docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: NX1_nexus_in_a_vm (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990147
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990147
+lastSeenAt: 1792829990147
+fingerprint: null
+payload:
+  id: NX1_nexus_in_a_vm
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 588b53c22740f3cb

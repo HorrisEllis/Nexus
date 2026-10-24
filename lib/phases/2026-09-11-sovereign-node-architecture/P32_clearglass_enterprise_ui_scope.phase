@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P32_clearglass_enterprise_ui_scope
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P32_clearglass_enterprise_ui_scope
+context: >-
+  pipeline phase P32_clearglass_enterprise_ui_scope of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P32_clearglass_enterprise_ui_scope (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976523
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976523
+lastSeenAt: 1792829976523
+fingerprint: null
+payload:
+  id: P32_clearglass_enterprise_ui_scope
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f2ef2defe3ad1ca5

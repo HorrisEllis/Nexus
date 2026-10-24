@@ -9,11 +9,11 @@ intent: null
 summary: RC7_every_run_names_its_starter (foundation) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792653394716
+exported_at: 1792830020481
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394716
-lastSeenAt: 1792653394716
+firstSeenAt: 1792830020481
+lastSeenAt: 1792830020481
 fingerprint: null
 payload:
   id: RC7_every_run_names_its_starter

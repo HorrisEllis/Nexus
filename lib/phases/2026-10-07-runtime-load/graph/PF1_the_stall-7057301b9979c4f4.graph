@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PF1_the_stall:7057301b9979c4f4
+type: graph
+id: phase:PF1_the_stall:7057301b9979c4f4
+context: dependency graph of phase PF1_the_stall
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829996101
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829996101
+lastSeenAt: 1792829996101
+fingerprint: null
+payload:
+  for: PF1_the_stall
+  kind: phase
+  repo: null
+  hash: 7057301b9979c4f4
+  nodes:
+    - path: tests/modules/test-pf1-stalls.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-pf1-stalls.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

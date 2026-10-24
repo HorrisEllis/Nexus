@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
+context: >-
+  pipeline phase DB10_shadow_and_negative_space_at_the_drawbridge of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB10_shadow_and_negative_space_at_the_drawbridge (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830016886
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016886
+lastSeenAt: 1792830016886
+fingerprint: null
+payload:
+  id: DB10_shadow_and_negative_space_at_the_drawbridge
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1ed4e7e5928a51c6

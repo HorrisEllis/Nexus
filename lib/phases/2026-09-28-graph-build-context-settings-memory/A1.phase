@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::A1
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::A1
+context: pipeline phase A1 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: A1 (?) — 11 file(s)
+system: idearium
+tags: []
+exported_at: 1792829984168
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984168
+lastSeenAt: 1792829984168
+fingerprint: null
+payload:
+  id: A1
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/atlases/idearium-atlas.md (build path
+    - Settings → Agents → full repo settings
+    - context-on)
+    - docs/atlases/core-atlas.md (lib/context-atlas.js
+    - lib/code-edit.js)
+    - each system's own atlas page for its store and contract (I12)
+    - docs/atlases/nexus-atlas.md (memory model)
+    - idearium/spec/idearium.repo-graph.spec
+    - docs/code-intel.spec
+    - docs/SPEC-REGISTRY.spec
+    - tests/modules/test-nexus-atlas-refs.test.js (holds refs real)
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 1b42fcb0ed4d9adc

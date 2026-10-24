@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB1_warp_at_the_rung
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB1_warp_at_the_rung
+context: >-
+  pipeline phase WB1_warp_at_the_rung of
+  docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: WB1_warp_at_the_rung (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792830009021
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830009021
+lastSeenAt: 1792830009021
+fingerprint: null
+payload:
+  id: WB1_warp_at_the_rung
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: '"DONE (0.60.73) — lib/warp-rung.js; James chose option 1 (2026-10-16)"'
+  files:
+    - idearium/api/index.js
+    - idearium/spec-engine/warp-build-dispatch.js
+    - lib/seam/adapters/warp-cascade.js
+    - lib/repo-agent.js
+    - lib/pipeline-routing.js
+    - lib/warp-rung.js (new)
+    - tests/modules/test-warp-rung.test.js (new)
+  depends_on:
+    - WB0_census
+  blocks: []
+  spec: null
+  graph: 60eb99e47c8e797a

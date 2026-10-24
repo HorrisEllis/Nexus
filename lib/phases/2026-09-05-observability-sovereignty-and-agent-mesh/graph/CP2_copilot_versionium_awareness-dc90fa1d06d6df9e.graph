@@ -1,0 +1,41 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CP2_copilot_versionium_awareness:dc90fa1d06d6df9e
+type: graph
+id: phase:CP2_copilot_versionium_awareness:dc90fa1d06d6df9e
+context: dependency graph of phase CP2_copilot_versionium_awareness
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829975223
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975223
+lastSeenAt: 1792829975223
+fingerprint: null
+payload:
+  for: CP2_copilot_versionium_awareness
+  kind: phase
+  repo: null
+  hash: dc90fa1d06d6df9e
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
+    dependents: []
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · ready
+      - 'depends on (1): VSB1_fix_versionium_split_brain'
+      - 'needed by (0): —'

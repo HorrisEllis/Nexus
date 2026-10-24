@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+context: pipeline phase PN2_dual_read of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: PN2_dual_read (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830020061
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020061
+lastSeenAt: 1792830020061
+fingerprint: null
+payload:
+  id: PN2_dual_read
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/phase-dag.js
+    - idearium/repo/phases.js
+    - loom/scanners/phasemap-map.js
+  depends_on:
+    - PN1_phases_to_nodes
+  blocks: []
+  spec: null
+  graph: 513d83c925413e21

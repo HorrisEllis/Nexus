@@ -1,0 +1,94 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OR4_one_roadmap_in_idearium:eccb05a79ab9f7b3
+type: graph
+id: phase:OR4_one_roadmap_in_idearium:eccb05a79ab9f7b3
+context: dependency graph of phase OR4_one_roadmap_in_idearium
+intent: null
+summary: 7 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829998101
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998101
+lastSeenAt: 1792829998101
+fingerprint: null
+payload:
+  for: OR4_one_roadmap_in_idearium
+  kind: phase
+  repo: null
+  hash: eccb05a79ab9f7b3
+  nodes:
+    - path: idearium/repo/roadmap.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/phases.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/repo/source-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: loom/scanners/phasemap-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: idearium/repo/roadmap.js
+      to: idearium/repo/source-files.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+    dependents:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR5_it_stays_decluttered
+    upstream:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+    downstream:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR5_it_stays_decluttered
+    blockedBy:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by OR1_five_answers_for_an_open_phase
+      - 'depends on (1): OR1_five_answers_for_an_open_phase · all upstream 2'
+      - 'needed by (1): OR5_it_stays_decluttered'

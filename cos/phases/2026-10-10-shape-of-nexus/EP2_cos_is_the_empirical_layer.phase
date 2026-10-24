@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::EP2_cos_is_the_empirical_layer
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::EP2_cos_is_the_empirical_layer
+context: pipeline phase EP2_cos_is_the_empirical_layer of docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: EP2_cos_is_the_empirical_layer (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830000470
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000470
+lastSeenAt: 1792830000470
+fingerprint: null
+payload:
+  id: EP2_cos_is_the_empirical_layer
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/playground/compare.js
+    - guardian/lib/agent-model-nodes.js
+  depends_on:
+    - EP1_every_claim_says_how_it_is_known
+  blocks: []
+  spec: null
+  graph: abb7cdf7233d1a4c

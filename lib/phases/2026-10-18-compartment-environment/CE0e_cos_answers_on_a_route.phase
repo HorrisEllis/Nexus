@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+type: phase
+id: docs_2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
+context: >-
+  pipeline phase CE0e_cos_answers_on_a_route of
+  docs/2026-10-18-compartment-environment-phasemap.spec
+intent: null
+summary: CE0e_cos_answers_on_a_route (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830017325
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830017325
+lastSeenAt: 1792830017325
+fingerprint: null
+payload:
+  id: CE0e_cos_answers_on_a_route
+  map: docs/2026-10-18-compartment-environment-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d18a6bf6a4639c90

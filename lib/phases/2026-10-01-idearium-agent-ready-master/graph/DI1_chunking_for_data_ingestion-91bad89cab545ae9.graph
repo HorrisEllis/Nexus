@@ -1,0 +1,227 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DI1_chunking_for_data_ingestion:91bad89cab545ae9
+type: graph
+id: phase:DI1_chunking_for_data_ingestion:91bad89cab545ae9
+context: dependency graph of phase DI1_chunking_for_data_ingestion
+intent: null
+summary: 23 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987095
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987095
+lastSeenAt: 1792829987095
+fingerprint: null
+payload:
+  for: DI1_chunking_for_data_ingestion
+  kind: phase
+  repo: null
+  hash: 91bad89cab545ae9
+  nodes:
+    - path: idearium/repo/import-pipeline.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/zip-ingest.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/code-api.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline-worker.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/opportunity/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-decompose.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-import-pipeline-syntax.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-mco2-verify-deepening.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-graph.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-three-graphs.test.mjs
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/repo/graph.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/pipeline-events.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/repo-node.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-graph.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/chunk-glyph.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/languages.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/repo-node.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/spec-graph.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/pipeline-events.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/verify-lazy.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: lib/chunk-glyph.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: lib/languages.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: lib/zip-ingest.js
+      to: lib/zip.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: idearium/repo/code-api.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: idearium/repo/import-pipeline-worker.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: idearium/repo/index.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: tests/modules/test-import-pipeline-syntax.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: tests/modules/test-mco2-verify-deepening.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: tests/modules/test-repo-graph.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: tests/modules/test-three-graphs.test.mjs
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: idearium/repo/import-pipeline.js
+      kind: requires
+    - from: lib/opportunity/index.js
+      to: lib/zip-ingest.js
+      kind: requires
+    - from: lib/project-decompose.js
+      to: lib/zip-ingest.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+    dependents:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+    downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
+    blockedBy:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF7_pipeline_scoped_to_changes
+        files:
+          - idearium/repo/import-pipeline.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+        files:
+          - lib/node-schemas/
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4b_registry_chunk_in_repo_chunking
+        files:
+          - idearium/repo/import-pipeline.js
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+        files:
+          - lib/node-schemas/
+      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+        files:
+          - lib/zip-ingest.js
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by DT1_persistence_census
+      - 'depends on (1): DT1_persistence_census · all upstream 2'
+      - 'needed by (1): IL1_spec_library_as_ideas · all downstream 4'
+      - >-
+        same files as PF7_pipeline_scoped_to_changes with no order between them:
+        idearium/repo/import-pipeline.js
+      - 'same files as CI1_compounding_iterate with no order between them: lib/node-schemas/'
+      - >-
+        same files as DT4b_registry_chunk_in_repo_chunking with no order between them:
+        idearium/repo/import-pipeline.js
+      - 'same files as UM1_nexus_understands_james with no order between them: lib/node-schemas/'
+      - 'same files as FT1_file_tools_merge_patch_drop with no order between them: lib/zip-ingest.js'

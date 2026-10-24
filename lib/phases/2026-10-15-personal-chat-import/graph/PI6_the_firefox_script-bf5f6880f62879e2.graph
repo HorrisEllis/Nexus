@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PI6_the_firefox_script:bf5f6880f62879e2
+type: graph
+id: phase:PI6_the_firefox_script:bf5f6880f62879e2
+context: dependency graph of phase PI6_the_firefox_script
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792830007881
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007881
+lastSeenAt: 1792830007881
+fingerprint: null
+payload:
+  for: PI6_the_firefox_script
+  kind: phase
+  repo: null
+  hash: bf5f6880f62879e2
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI2_the_listener
+    dependents: []
+    upstream:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI0_where_it_is_read
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI2_the_listener
+    downstream: []
+    blockedBy:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI2_the_listener
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3 · blocked by PI2_the_listener
+      - 'depends on (1): PI2_the_listener · all upstream 3'
+      - 'needed by (0): —'

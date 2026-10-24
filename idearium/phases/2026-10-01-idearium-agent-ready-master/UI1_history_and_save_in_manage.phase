@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI1_history_and_save_in_manage
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI1_history_and_save_in_manage
+context: >-
+  pipeline phase UI1_history_and_save_in_manage of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: UI1_history_and_save_in_manage (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987074
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987074
+lastSeenAt: 1792829987074
+fingerprint: null
+payload:
+  id: UI1_history_and_save_in_manage
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js (the editor tabs)
+    - idearium/ui/js/file-versions.js
+    - idearium/ui/js/file-manage.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a01c5d1997949e6a

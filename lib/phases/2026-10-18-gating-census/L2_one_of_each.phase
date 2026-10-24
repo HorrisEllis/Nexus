@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-18-gating-census-phasemap.spec::L2_one_of_each
+type: phase
+id: docs_2026-10-18-gating-census-phasemap.spec::L2_one_of_each
+context: pipeline phase L2_one_of_each of docs/2026-10-18-gating-census-phasemap.spec
+intent: null
+summary: L2_one_of_each (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830018477
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830018477
+lastSeenAt: 1792830018477
+fingerprint: null
+payload:
+  id: L2_one_of_each
+  map: docs/2026-10-18-gating-census-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 15bb418b41b19b2a

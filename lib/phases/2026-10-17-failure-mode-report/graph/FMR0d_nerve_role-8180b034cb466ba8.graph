@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FMR0d_nerve_role:8180b034cb466ba8
+type: graph
+id: phase:FMR0d_nerve_role:8180b034cb466ba8
+context: dependency graph of phase FMR0d_nerve_role
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830015645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830015645
+lastSeenAt: 1792830015645
+fingerprint: null
+payload:
+  for: FMR0d_nerve_role
+  kind: phase
+  repo: null
+  hash: 8180b034cb466ba8
+  nodes:
+    - path: docs/nexus-nerve.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'

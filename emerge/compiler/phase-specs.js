@@ -27,7 +27,7 @@ const fs = require('fs');
 const path = require('path');
 
 const MODULE_ID = 'nexus.emerge.phase-specs';
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';   // 1.1.0 PS2 --all
 const ROOT = path.resolve(__dirname, '../..');
 
 const _field = (body, k) => { const m = String(body || '').match(new RegExp(`^\\s{4}${k}:\\s*(.+)$`, 'm')); return m ? m[1].trim() : null; };
@@ -69,7 +69,9 @@ function derive({ root = ROOT, map, mapsDir = path.join(root, 'docs') } = {}) {
   let baseline = null; try { baseline = PG.baselineEdges(root); } catch (_) { baseline = null; }
   const specCache = new Map();
   const out = [];
+  const seenIds = new Set();
   for (const ph of PF.phasesOf(mapText, mapRel)) {
+    if (seenIds.has(ph.id)) continue; seenIds.add(ph.id);   // 0.60.227 the first definition is the phase; a later same id is a note about it
     const key = `${mapRel}::${ph.id}`;
     const node = dag.nodes[key];
     const spec = _field(ph.body, 'spec');
@@ -129,7 +131,42 @@ function check(opts = {}) {
   });
 }
 
-if (require.main === module) {
+/**
+ * PS2 0.60.227 — James, 2026-10-24: "spec per component/capability/etc its in the specs. deocmpose all of the phases into .phase nodes
+ * including dag per phase." writeAll writes every phase of every docs/*-phasemap.spec as its .phase and .graph (its slice of the whole
+ * DAG), and says, per owning system, how many phases name the spec they build from — the specs still to write, per component.
+ *   writeAll({ root, check }) → { maps, phases, written, withSpec, blocksMissing, ready, byOwner: { owner: { phases, withSpec } }, failed: [{ map, error }] }
+ */
+function writeAll({ root = ROOT, check: dry = false } = {}) {
+  const mapsDir = path.join(root, 'docs');
+  const maps = fs.readdirSync(mapsDir).filter(f => f.endsWith('-phasemap.spec')).sort();
+  const sum = { maps: maps.length, phases: 0, written: 0, withSpec: 0, blocksMissing: 0, ready: 0, drift: 0, byOwner: {}, noSpec: [], failed: [] };
+  for (const f of maps) {
+    const map = `docs/${f}`;
+    let rows;
+    try { rows = dry ? derive({ root, map }).map(d => ({ ...d, phaseFile: null })) : write({ root, map }); }
+    catch (e) { sum.failed.push({ map, error: e.message.split('\n')[0] }); continue; }
+    for (const r of rows) {
+      const spec = (r.phaseEnv ? r.phaseEnv.payload.spec : null) || (() => { try { return require('../../lib/node-export.js').fromYaml(fs.readFileSync(path.join(root, r.phaseFile), 'utf8')).payload.spec; } catch (_) { return null; } })();
+      sum.phases++; if (!dry) sum.written++; if (r.ready) sum.ready++; if (r.blocks.missing.length) sum.blocksMissing++;
+      const o = (sum.byOwner[r.owner] = sum.byOwner[r.owner] || { phases: 0, withSpec: 0 }); o.phases++;
+      if (spec) { sum.withSpec++; o.withSpec++; } else sum.noSpec.push({ map, phase: r.phase, owner: r.owner });
+    }
+  }
+  return sum;
+}
+
+if (require.main === module && process.argv.includes('--all')) {
+  const quiet = console.log; console.log = () => {};
+  let r; try { r = writeAll({ check: process.argv.includes('--dry') }); } finally { console.log = quiet; }
+  console.log(`${r.maps} maps · ${r.phases} phases · ${r.written} .phase + .graph written · ${r.withSpec} name their spec · ${r.ready} ready · ${r.blocksMissing} name blocks their spec lacks`);
+  for (const [o, x] of Object.entries(r.byOwner).sort((a, b) => b[1].phases - a[1].phases)) console.log(`  ${o.padEnd(16)} ${String(x.phases).padStart(5)} phases · ${String(x.withSpec).padStart(4)} with a spec`);
+  for (const f of r.failed) console.log(`  ✗ ${f.map}: ${f.error}`);
+  if (process.argv.includes('--json')) require('fs').writeFileSync(process.argv[process.argv.indexOf('--json') + 1], JSON.stringify(r, null, 1));
+  process.exit(r.failed.length ? 1 : 0);
+}
+
+if (require.main === module && !process.argv.includes('--all')) {
   const args = process.argv.slice(2); const map = args.find(a => !a.startsWith('--'));
   if (!map) { console.error('usage: node emerge/compiler/phase-specs.js <map.spec> [--check]'); process.exit(2); }
   const quiet = console.log; console.log = () => {};
@@ -139,4 +176,4 @@ if (require.main === module) {
   process.exit(rows.some(r => (r.drift && r.drift.length) || (r.blocks && r.blocks.missing.length)) ? 1 : 0);
 }
 
-module.exports = { MODULE_ID, VERSION, specIds, derive, write, check };
+module.exports = { writeAll, MODULE_ID, VERSION, specIds, derive, write, check };

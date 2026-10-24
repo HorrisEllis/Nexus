@@ -1,0 +1,82 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EC2_gate:5b5011336adda021
+type: graph
+id: phase:EC2_gate:5b5011336adda021
+context: dependency graph of phase EC2_gate
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985875
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985875
+lastSeenAt: 1792829985875
+fingerprint: null
+payload:
+  for: EC2_gate
+  kind: phase
+  repo: null
+  hash: 5b5011336adda021
+  nodes:
+    - path: lib/economy/gate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/lib/economy-guard.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/adapters/warp-cascade.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/economy-guard.js
+      to: lib/economy/gate.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/economy/gate.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/economy/gate.js
+      kind: requires
+    - from: lib/seam/adapters/warp-cascade.js
+      to: lib/economy/gate.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC0_policy_model
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC1_usage_ledger
+    dependents:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC6_guardian_enforcement
+    upstream:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC0_policy_model
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC1_usage_ledger
+    downstream:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC11_release
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC6_guardian_enforcement
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC8_economy_console
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-provider-economy-phasemap.spec::EC6_guardian_enforcement
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1
+      - 'depends on (2): EC0_policy_model, EC1_usage_ledger'
+      - >-
+        needed by (1): EC6_guardian_enforcement · all downstream 3 · finishing it unlocks
+        EC6_guardian_enforcement

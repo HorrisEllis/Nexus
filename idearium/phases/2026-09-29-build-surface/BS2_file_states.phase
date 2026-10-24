@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS2_file_states
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS2_file_states
+context: pipeline phase BS2_file_states of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS2_file_states (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985003
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985003
+lastSeenAt: 1792829985003
+fingerprint: null
+payload:
+  id: BS2_file_states
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/file-state.js
+    - tests/modules/test-build-surface.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f0c78c53f55cc0ca

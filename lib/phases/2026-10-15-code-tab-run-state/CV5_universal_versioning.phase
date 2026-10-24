@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CV5_universal_versioning
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CV5_universal_versioning
+context: pipeline phase CV5_universal_versioning of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CV5_universal_versioning (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005443
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005443
+lastSeenAt: 1792830005443
+fingerprint: null
+payload:
+  id: CV5_universal_versioning
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN (scope to confirm - see open_decisions CV0)
+  files:
+    - versionium/lib/files.js
+    - lib/node-export.js
+    - lib/repo-versions.js
+  depends_on:
+    - CV4_tagged_history
+  blocks: []
+  spec: null
+  graph: caf16dc4d08f56cc

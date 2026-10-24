@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::GC1_global_component_reuse_store
+type: phase
+id: docs_nexus-repo-compartment-and-rich-dispatch-phasemap.spec::GC1_global_component_reuse_store
+context: >-
+  pipeline phase GC1_global_component_reuse_store of
+  docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+intent: null
+summary: GC1_global_component_reuse_store (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830033725
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830033725
+lastSeenAt: 1792830033725
+fingerprint: null
+payload:
+  id: GC1_global_component_reuse_store
+  map: docs/nexus-repo-compartment-and-rich-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 7caeeeea63576bfe

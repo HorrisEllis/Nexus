@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR7_guardian_dispatch_connectivity_sweep
+type: phase
+id: docs_2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR7_guardian_dispatch_connectivity_sweep
+context: >-
+  pipeline phase BR7_guardian_dispatch_connectivity_sweep of
+  docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+intent: null
+summary: BR7_guardian_dispatch_connectivity_sweep (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971731
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971731
+lastSeenAt: 1792829971731
+fingerprint: null
+payload:
+  id: BR7_guardian_dispatch_connectivity_sweep
+  map: docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a44c17cca2432a5d

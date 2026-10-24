@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-shape-of-nexus-phasemap.spec::TU1_the_nexus_tutorial
+type: phase
+id: docs_2026-10-10-shape-of-nexus-phasemap.spec::TU1_the_nexus_tutorial
+context: pipeline phase TU1_the_nexus_tutorial of docs/2026-10-10-shape-of-nexus-phasemap.spec
+intent: null
+summary: TU1_the_nexus_tutorial (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830000464
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000464
+lastSeenAt: 1792830000464
+fingerprint: null
+payload:
+  id: TU1_the_nexus_tutorial
+  map: docs/2026-10-10-shape-of-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/page/field.js
+    - clear-glass/src/copilot/tools.js
+  depends_on:
+    - CG1_the_field_injects_once
+    - CG2_one_source_of_truth_for_the_browser
+  blocks: []
+  spec: null
+  graph: 3c410e7addc61b7e

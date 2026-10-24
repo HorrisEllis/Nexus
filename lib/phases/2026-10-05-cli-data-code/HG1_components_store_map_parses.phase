@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::HG1_components_store_map_parses
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::HG1_components_store_map_parses
+context: pipeline phase HG1_components_store_map_parses of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: HG1_components_store_map_parses (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991454
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991454
+lastSeenAt: 1792829991454
+fingerprint: null
+payload:
+  id: HG1_components_store_map_parses
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-09-27-components-store-and-atlases-phasemap.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: dcd4302a4f92f533

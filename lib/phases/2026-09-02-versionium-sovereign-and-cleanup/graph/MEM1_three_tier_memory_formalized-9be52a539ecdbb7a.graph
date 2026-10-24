@@ -1,0 +1,195 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MEM1_three_tier_memory_formalized:9be52a539ecdbb7a
+type: graph
+id: phase:MEM1_three_tier_memory_formalized:9be52a539ecdbb7a
+context: dependency graph of phase MEM1_three_tier_memory_formalized
+intent: null
+summary: 18 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829974795
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974795
+lastSeenAt: 1792829974795
+fingerprint: null
+payload:
+  for: MEM1_three_tier_memory_formalized
+  kind: phase
+  repo: null
+  hash: 9be52a539ecdbb7a
+  nodes:
+    - path: copilot/lib/user-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: intelligence/spatial/lattice.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: copilot/lib/autonomy-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/spatial/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/spatial/system-lattice.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/governance/ask-james.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-user-model-radiate.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/user-model.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/lib/user-model.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: idearium/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: intelligence/spatial/index.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: intelligence/spatial/system-lattice.js
+      to: intelligence/spatial/lattice.js
+      kind: requires
+    - from: copilot/lib/autonomy-router.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/governance/ask-james.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: tests/modules/test-user-model-radiate.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: tests/modules/user-model.test.js
+      to: copilot/lib/user-model.js
+      kind: requires
+  crossings:
+    - from: copilot/lib/user-model.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: intelligence/spatial/lattice.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: idearium/index.js
+      to: intelligence/spatial/lattice.js
+      fromSystem: idearium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/governance/ask-james.js
+      to: copilot/lib/user-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: orchestrator/lib/request-handler.js
+      to: copilot/lib/user-model.js
+      fromSystem: orchestrator
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: copilot/lib/user-model.js
+      fromSystem: orchestrator
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'

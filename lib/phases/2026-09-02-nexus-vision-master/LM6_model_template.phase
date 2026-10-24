@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::LM6_model_template
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::LM6_model_template
+context: pipeline phase LM6_model_template of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: LM6_model_template (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974327
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974327
+lastSeenAt: 1792829974327
+fingerprint: null
+payload:
+  id: LM6_model_template
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - LM2_per_system_living_model_completion
+  blocks: []
+  spec: null
+  graph: 58c8bda5255910c8

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB50_every_task_timestamped
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB50_every_task_timestamped
+context: pipeline phase SB50_every_task_timestamped of docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB50_every_task_timestamped (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991018
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991018
+lastSeenAt: 1792829991018
+fingerprint: null
+payload:
+  id: SB50_every_task_timestamped
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/build-plan.js
+    - idearium/api/build-surface.js
+    - idearium/repo/phases.js
+    - idearium/ui/js/plan-panel.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 655bed31e0471a71

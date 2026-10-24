@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CV1_one_menu
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CV1_one_menu
+context: pipeline phase CV1_one_menu of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CV1_one_menu (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005438
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005438
+lastSeenAt: 1792830005438
+fingerprint: null
+payload:
+  id: CV1_one_menu
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.82 (test-code-tab-merge MG-12)
+  files:
+    - idearium/ui/js/file-manage.js
+    - idearium/ui/js/file-versions.js
+    - idearium/ui/js/code-surface.js
+  depends_on:
+    - CE0_one_tab_or_two
+  blocks: []
+  spec: null
+  graph: ee95a78a4705be68

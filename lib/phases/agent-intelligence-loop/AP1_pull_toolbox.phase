@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-intelligence-loop-phasemap.spec::AP1_pull_toolbox
+type: phase
+id: docs_agent-intelligence-loop-phasemap.spec::AP1_pull_toolbox
+context: pipeline phase AP1_pull_toolbox of docs/agent-intelligence-loop-phasemap.spec
+intent: null
+summary: AP1_pull_toolbox (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830027401
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830027401
+lastSeenAt: 1792830027401
+fingerprint: null
+payload:
+  id: AP1_pull_toolbox
+  map: docs/agent-intelligence-loop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0c00d607ee3cf034

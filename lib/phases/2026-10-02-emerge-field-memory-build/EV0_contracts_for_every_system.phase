@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+context: >-
+  pipeline phase EV0_contracts_for_every_system of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: EV0_contracts_for_every_system (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988410
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988410
+lastSeenAt: 1792829988410
+fingerprint: null
+payload:
+  id: EV0_contracts_for_every_system
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/event-taxonomy.js
+    - cortex/event-taxonomy.js
+    - intelligence/event-taxonomy.js
+    - loom/event-taxonomy.js
+    - copilot/event-taxonomy.js
+    - cos/event-taxonomy.js
+    - emerge/event-taxonomy.js
+    - warp/event-taxonomy.js
+    - cos/interaction-contract.json
+    - warp/interaction-contract.json
+    - emerge/interaction-contract.json
+    - loom/scanners/phasemap-map.js
+    - lib/event-taxonomy-pattern.js
+  depends_on:
+    - EM0_ground
+  blocks: []
+  spec: null
+  graph: effdf129b11ae306

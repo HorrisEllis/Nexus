@@ -1,0 +1,131 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS1_one_popup_frame:2309fce9f645ea6b
+type: graph
+id: phase:CS1_one_popup_frame:2309fce9f645ea6b
+context: dependency graph of phase CS1_one_popup_frame
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830005034
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005034
+lastSeenAt: 1792830005034
+fingerprint: null
+payload:
+  for: CS1_one_popup_frame
+  kind: phase
+  repo: null
+  hash: 2309fce9f645ea6b
+  nodes:
+    - path: clear-glass/renderer/settings/settings.css
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/accounts/login-portal.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/compartment-window.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/host.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/login-portal-elsewhere.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/signin-window-quiet.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/window-frame.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/cookies/session-hub.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/download-capture.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/gm-shim.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/main/compartment-window.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/providers/registry.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/providers/gm-shim.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/providers/download-capture.js
+      kind: requires
+    - from: clear-glass/src/accounts/login-portal.js
+      to: clear-glass/src/cookies/session-hub.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/test/window-frame.test.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/test/login-portal-elsewhere.test.js
+      to: clear-glass/src/accounts/login-portal.js
+      kind: requires
+    - from: clear-glass/test/signin-window-quiet.test.js
+      to: clear-glass/src/accounts/login-portal.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS2_settings_providers_and_accounts
+    upstream: []
+    downstream:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS2_settings_providers_and_accounts
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS3_clear_glass_users_as_plugins
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS2_settings_providers_and_accounts
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): CS2_settings_providers_and_accounts · all downstream 2 · finishing it unlocks
+        CS2_settings_providers_and_accounts

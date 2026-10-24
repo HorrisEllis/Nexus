@@ -1,0 +1,40 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P4_identity:f5af86aa56495490
+type: graph
+id: phase:P4_identity:f5af86aa56495490
+context: dependency graph of phase P4_identity
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829978964
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978964
+lastSeenAt: 1792829978964
+fingerprint: null
+payload:
+  for: P4_identity
+  kind: phase
+  repo: null
+  hash: f5af86aa56495490
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

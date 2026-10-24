@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-eravos-removal-phasemap.spec::ER3_unwire_the_screens
+type: phase
+id: docs_2026-10-16-eravos-removal-phasemap.spec::ER3_unwire_the_screens
+context: pipeline phase ER3_unwire_the_screens of docs/2026-10-16-eravos-removal-phasemap.spec
+intent: null
+summary: ER3_unwire_the_screens (?) — 19 file(s)
+system: idearium
+tags: []
+exported_at: 1792830011316
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830011316
+lastSeenAt: 1792830011316
+fingerprint: null
+payload:
+  id: ER3_unwire_the_screens
+  map: docs/2026-10-16-eravos-removal-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.83
+  files:
+    - idearium/ui/index.html
+    - idearium/ui/js/app.js
+    - idearium/ui/js/compartment.js
+    - idearium/api/index.js
+    - idearium/test/ui-restructure.smoke.cjs
+    - lib/file-tree-plan.js
+    - lib/spec-collect.js
+    - ui/home/index.html
+    - ui/home/core/config.js
+    - ui/home/areas/shell.js
+    - ui/home/areas/rail.js
+    - ui/tv-shell/index.html
+    - ui/tv-shell/warp-ui/nexus-shell.js
+    - ui/tv-shell/nerve/nerve.js
+    - ui/brainos/brainos-app.js
+    - ui/brainos/brainos-automation.js
+    - ui/brainos/brainos-canvas.js
+    - clear-glass/renderer/library/sections/downloads.js
+    - clear-glass/renderer/guardian-picker.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 39401869987f58e9

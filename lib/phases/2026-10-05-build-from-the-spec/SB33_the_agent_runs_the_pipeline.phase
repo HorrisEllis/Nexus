@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB33_the_agent_runs_the_pipeline
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB33_the_agent_runs_the_pipeline
+context: >-
+  pipeline phase SB33_the_agent_runs_the_pipeline of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB33_the_agent_runs_the_pipeline (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990990
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990990
+lastSeenAt: 1792829990990
+fingerprint: null
+payload:
+  id: SB33_the_agent_runs_the_pipeline
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/idearium/repo-chunks.js
+    - lib/repo-hat.js
+    - idearium/api/index.js
+  depends_on:
+    - SB32_context_is_never_optional
+  blocks: []
+  spec: null
+  graph: 4535cb3c5069ae44

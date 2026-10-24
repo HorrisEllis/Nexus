@@ -1,0 +1,132 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T3:255b5681dc7d3f96
+type: graph
+id: phase:T3:255b5681dc7d3f96
+context: dependency graph of phase T3
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829980534
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980534
+lastSeenAt: 1792829980534
+fingerprint: null
+payload:
+  for: T3
+  kind: phase
+  repo: null
+  hash: 255b5681dc7d3f96
+  nodes:
+    - path: cos/compartment/qemu-runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/host.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/process-runner.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/installer.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/provision.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/setup-job.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/workspace/vm-control.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/helpers/cos-mini-guest.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-vm-shell.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: cos/testenv/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/installer.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/provision.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/testenv/setup-job.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/workspace/index.js
+      to: cos/testenv/host.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/workspace/vm-control.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/helpers/cos-mini-guest.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-vm-shell.test.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T5
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    upstream: []
+    downstream:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T5
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T6
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T7
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+      - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T5
+      - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (3): T4, T5, Z1_release · all downstream 6 · finishing it unlocks T4, T5,
+        Z1_release
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

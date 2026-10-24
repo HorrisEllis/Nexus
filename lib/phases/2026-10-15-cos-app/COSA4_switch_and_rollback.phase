@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-cos-app-phasemap.spec::COSA4_switch_and_rollback
+type: phase
+id: docs_2026-10-15-cos-app-phasemap.spec::COSA4_switch_and_rollback
+context: pipeline phase COSA4_switch_and_rollback of docs/2026-10-15-cos-app-phasemap.spec
+intent: null
+summary: COSA4_switch_and_rollback (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005844
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005844
+lastSeenAt: 1792830005844
+fingerprint: null
+payload:
+  id: COSA4_switch_and_rollback
+  map: docs/2026-10-15-cos-app-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT-0.60.88
+  files: []
+  depends_on:
+    - COSA3_run_and_supervise
+  blocks: []
+  spec: null
+  graph: 3bc800982689e9a5

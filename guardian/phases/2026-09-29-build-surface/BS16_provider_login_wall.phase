@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-build-surface-phasemap.spec::BS16_provider_login_wall
+type: phase
+id: docs_2026-09-29-build-surface-phasemap.spec::BS16_provider_login_wall
+context: pipeline phase BS16_provider_login_wall of docs/2026-09-29-build-surface-phasemap.spec
+intent: null
+summary: BS16_provider_login_wall (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985014
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985014
+lastSeenAt: 1792829985014
+fingerprint: null
+payload:
+  id: BS16_provider_login_wall
+  map: docs/2026-09-29-build-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/userscript-chat-stream.js (1.1.0)
+    - guardian/lib/provider-login.js
+    - guardian/server.js
+    - guardian/lib/dispatcher.js
+    - guardian/userscripts.yaml
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b6c1499352b07bb4

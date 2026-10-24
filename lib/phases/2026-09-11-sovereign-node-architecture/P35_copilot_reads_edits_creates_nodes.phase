@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P35_copilot_reads_edits_creates_nodes
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P35_copilot_reads_edits_creates_nodes
+context: >-
+  pipeline phase P35_copilot_reads_edits_creates_nodes of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P35_copilot_reads_edits_creates_nodes (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976530
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976530
+lastSeenAt: 1792829976530
+fingerprint: null
+payload:
+  id: P35_copilot_reads_edits_creates_nodes
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P33_every_system_runs_its_node_registry
+  blocks: []
+  spec: null
+  graph: 4c5e2012491d8686

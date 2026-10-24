@@ -1,0 +1,113 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RF7_three_disconnected_debug_surfaces:38fbd8a7a9ef1cf0
+type: graph
+id: phase:RF7_three_disconnected_debug_surfaces:38fbd8a7a9ef1cf0
+context: dependency graph of phase RF7_three_disconnected_debug_surfaces
+intent: null
+summary: 7 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829975188
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975188
+lastSeenAt: 1792829975188
+fingerprint: null
+payload:
+  for: RF7_three_disconnected_debug_surfaces
+  kind: phase
+  repo: null
+  hash: 38fbd8a7a9ef1cf0
+  nodes:
+    - path: cli/cfr-debug.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cli/sentinel.js
+      role: changes
+      exists: true
+      system: cli
+    - path: intelligence/cfr/contract-verifier.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/delta.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/sigma.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/sigma.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/delta.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      kind: requires
+  crossings:
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/sigma.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/delta.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/graph.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cli/cfr-debug.js
+      to: intelligence/cfr/contract-verifier.js
+      fromSystem: cli
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

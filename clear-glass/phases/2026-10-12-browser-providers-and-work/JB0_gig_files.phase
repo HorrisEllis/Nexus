@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB0_gig_files
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::JB0_gig_files
+context: pipeline phase JB0_gig_files of docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: JB0_gig_files (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001274
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001274
+lastSeenAt: 1792830001274
+fingerprint: null
+payload:
+  id: JB0_gig_files
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/autofill/gig.js
+    - clear-glass/renderer/settings/sections/autofill.js
+    - clear-glass/renderer/gig-panel.js
+    - clear-glass/docs/gigs/gig-template.gig
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e3c172dca44dd01b

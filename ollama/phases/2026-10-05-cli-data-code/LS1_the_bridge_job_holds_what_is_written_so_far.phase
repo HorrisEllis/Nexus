@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::LS1_the_bridge_job_holds_what_is_written_so_far
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::LS1_the_bridge_job_holds_what_is_written_so_far
+context: >-
+  pipeline phase LS1_the_bridge_job_holds_what_is_written_so_far of
+  docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: LS1_the_bridge_job_holds_what_is_written_so_far (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991470
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991470
+lastSeenAt: 1792829991470
+fingerprint: null
+payload:
+  id: LS1_the_bridge_job_holds_what_is_written_so_far
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - ollama/lib/ollama-client.js
+    - ollama/lib/dispatch.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 22224f60f8a23d5a

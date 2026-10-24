@@ -1,0 +1,164 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DT1_persistence_census:a397051c2ba83059
+type: graph
+id: phase:DT1_persistence_census:a397051c2ba83059
+context: dependency graph of phase DT1_persistence_census
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987051
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987051
+lastSeenAt: 1792829987051
+fingerprint: null
+payload:
+  for: DT1_persistence_census
+  kind: phase
+  repo: null
+  hash: a397051c2ba83059
+  nodes:
+    - path: docs/nexstore-writers.yaml
+      role: changes
+      exists: true
+      system: null
+    - path: lib/nexstore/writers.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-schemas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexstore-writers.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/node-registry.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/lib/domain-nodes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/nexstore/census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-pipeline-nodes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-export-idea-tagged-query.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-schemas-split.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: tests/modules/test-nexstore-writers.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/node-schemas.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/nexstore/census.js
+      to: lib/nexstore/writers.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: intelligence/lib/domain-nodes.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/modules/test-pipeline-nodes.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-export-idea-tagged-query.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-schemas-split.test.js
+      to: lib/node-schemas.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+    dependents:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DI1_chunking_for_data_ingestion
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+    downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::AG1_coding_agent_provider
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DI1_chunking_for_data_ingestion
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4b_registry_chunk_in_repo_chunking
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::GL1_gate_verify_fix_loop
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI7_phasemaps_out_of_files_and_tree_ops
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DI1_chunking_for_data_ingestion
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · ready
+      - 'depends on (1): M0_map'
+      - >-
+        needed by (4): DT2_failure_mode_field, DT4_registry_block_to_nodes,
+        DI1_chunking_for_data_ingestion, UM1_nexus_understands_james · all downstream 19 · finishing
+        it unlocks DT2_failure_mode_field, DT4_registry_block_to_nodes,
+        DI1_chunking_for_data_ingestion

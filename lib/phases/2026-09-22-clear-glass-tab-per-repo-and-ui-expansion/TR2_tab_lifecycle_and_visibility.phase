@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::TR2_tab_lifecycle_and_visibility
+type: phase
+id: docs_2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec::TR2_tab_lifecycle_and_visibility
+context: >-
+  pipeline phase TR2_tab_lifecycle_and_visibility of
+  docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+intent: null
+summary: TR2_tab_lifecycle_and_visibility (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829979763
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829979763
+lastSeenAt: 1792829979763
+fingerprint: null
+payload:
+  id: TR2_tab_lifecycle_and_visibility
+  map: docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f48c6d68235b7c84

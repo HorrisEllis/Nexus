@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-macro-node-recording-phasemap.spec::MR10_capabilities_as_steps
+type: phase
+id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR10_capabilities_as_steps
+context: pipeline phase MR10_capabilities_as_steps of docs/2026-10-15-macro-node-recording-phasemap.spec
+intent: null
+summary: MR10_capabilities_as_steps (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007076
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007076
+lastSeenAt: 1792830007076
+fingerprint: null
+payload:
+  id: MR10_capabilities_as_steps
+  map: docs/2026-10-15-macro-node-recording-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 206869b1f3e5a0bb

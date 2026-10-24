@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT7_the_plan_shows_current_work
+type: phase
+id: docs_2026-10-05-code-tab-and-one-router-phasemap.spec::CT7_the_plan_shows_current_work
+context: >-
+  pipeline phase CT7_the_plan_shows_current_work of
+  docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+intent: null
+summary: CT7_the_plan_shows_current_work (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991872
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991872
+lastSeenAt: 1792829991872
+fingerprint: null
+payload:
+  id: CT7_the_plan_shows_current_work
+  map: docs/2026-10-05-code-tab-and-one-router-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/plan-panel.js
+  depends_on:
+    - CT5_hooked_into_the_plan
+  blocks: []
+  spec: null
+  graph: a52abee8ded7dd97

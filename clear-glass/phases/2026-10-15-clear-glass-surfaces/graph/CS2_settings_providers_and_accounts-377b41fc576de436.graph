@@ -1,0 +1,59 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CS2_settings_providers_and_accounts:377b41fc576de436
+type: graph
+id: phase:CS2_settings_providers_and_accounts:377b41fc576de436
+context: dependency graph of phase CS2_settings_providers_and_accounts
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830005035
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005035
+lastSeenAt: 1792830005035
+fingerprint: null
+payload:
+  for: CS2_settings_providers_and_accounts
+  kind: phase
+  repo: null
+  hash: 377b41fc576de436
+  nodes:
+    - path: clear-glass/renderer/settings/sections/accounts.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/settings/sections/providers.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/settings/settings.html
+      role: changes
+      exists: false
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS1_one_popup_frame
+    dependents:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS3_clear_glass_users_as_plugins
+    upstream:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS1_one_popup_frame
+    downstream:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS3_clear_glass_users_as_plugins
+    blockedBy:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS1_one_popup_frame
+    unlocks:
+      - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::CS3_clear_glass_users_as_plugins
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by CS1_one_popup_frame
+      - 'depends on (1): CS1_one_popup_frame'
+      - >-
+        needed by (1): CS3_clear_glass_users_as_plugins · finishing it unlocks
+        CS3_clear_glass_users_as_plugins

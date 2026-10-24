@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB2_the_registry_says_what_it_offers
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB2_the_registry_says_what_it_offers
+context: >-
+  pipeline phase DB2_the_registry_says_what_it_offers of
+  docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB2_the_registry_says_what_it_offers (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830016872
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016872
+lastSeenAt: 1792830016872
+fingerprint: null
+payload:
+  id: DB2_the_registry_says_what_it_offers
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 4121727170f95b81

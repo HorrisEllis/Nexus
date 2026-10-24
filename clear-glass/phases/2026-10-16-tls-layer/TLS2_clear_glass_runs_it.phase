@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-tls-layer-phasemap.spec::TLS2_clear_glass_runs_it
+type: phase
+id: docs_2026-10-16-tls-layer-phasemap.spec::TLS2_clear_glass_runs_it
+context: pipeline phase TLS2_clear_glass_runs_it of docs/2026-10-16-tls-layer-phasemap.spec
+intent: null
+summary: TLS2_clear_glass_runs_it (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830014875
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830014875
+lastSeenAt: 1792830014875
+fingerprint: null
+payload:
+  id: TLS2_clear_glass_runs_it
+  map: docs/2026-10-16-tls-layer-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.109
+  files:
+    - clear-glass/src/tls/helper.js
+    - clear-glass/src/main/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b14334ea754ba2f7

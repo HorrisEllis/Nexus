@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-infrastructure-migration-phasemap.spec::IM0c_tests_with_their_system
+type: phase
+id: docs_2026-10-17-infrastructure-migration-phasemap.spec::IM0c_tests_with_their_system
+context: >-
+  pipeline phase IM0c_tests_with_their_system of
+  docs/2026-10-17-infrastructure-migration-phasemap.spec
+intent: null
+summary: IM0c_tests_with_their_system (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830016031
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016031
+lastSeenAt: 1792830016031
+fingerprint: null
+payload:
+  id: IM0c_tests_with_their_system
+  map: docs/2026-10-17-infrastructure-migration-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: aec56e5460f3769b

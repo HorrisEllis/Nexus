@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-failure-reproduction-phasemap.spec::FM4_the_report
+type: phase
+id: docs_2026-10-05-failure-reproduction-phasemap.spec::FM4_the_report
+context: pipeline phase FM4_the_report of docs/2026-10-05-failure-reproduction-phasemap.spec
+intent: null
+summary: FM4_the_report (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829992657
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829992657
+lastSeenAt: 1792829992657
+fingerprint: null
+payload:
+  id: FM4_the_report
+  map: docs/2026-10-05-failure-reproduction-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - diagnostic/nexus-diagnostic.js
+    - intelligence/index.js
+  depends_on:
+    - FM3_run_it_in_cos
+  blocks: []
+  spec: null
+  graph: e488e3464b6c5db8

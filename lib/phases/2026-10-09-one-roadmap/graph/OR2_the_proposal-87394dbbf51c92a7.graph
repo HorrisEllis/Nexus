@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OR2_the_proposal:87394dbbf51c92a7
+type: graph
+id: phase:OR2_the_proposal:87394dbbf51c92a7
+context: dependency graph of phase OR2_the_proposal
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829998097
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998097
+lastSeenAt: 1792829998097
+fingerprint: null
+payload:
+  for: OR2_the_proposal
+  kind: phase
+  repo: null
+  hash: 87394dbbf51c92a7
+  nodes:
+    - path: docs/roadmap-triage.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+    dependents: []
+    upstream:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+    downstream: []
+    blockedBy:
+      - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by OR1_five_answers_for_an_open_phase
+      - 'depends on (1): OR1_five_answers_for_an_open_phase · all upstream 2'
+      - 'needed by (0): —'

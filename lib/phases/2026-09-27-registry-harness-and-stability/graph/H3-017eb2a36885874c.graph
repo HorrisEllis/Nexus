@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:H3:017eb2a36885874c
+type: graph
+id: phase:H3:017eb2a36885874c
+context: dependency graph of phase H3
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829983716
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829983716
+lastSeenAt: 1792829983716
+fingerprint: null
+payload:
+  for: H3
+  kind: phase
+  repo: null
+  hash: 017eb2a36885874c
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-09-27-registry-harness-and-stability-phasemap.spec::H2
+    dependents: []
+    upstream:
+      - docs/2026-09-27-registry-harness-and-stability-phasemap.spec::H1
+      - docs/2026-09-27-registry-harness-and-stability-phasemap.spec::H2
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2
+      - 'depends on (1): H2 · all upstream 2'
+      - 'needed by (0): —'

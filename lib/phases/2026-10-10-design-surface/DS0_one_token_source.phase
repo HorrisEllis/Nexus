@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+type: phase
+id: docs_2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+context: pipeline phase DS0_one_token_source of docs/2026-10-10-design-surface-phasemap.spec
+intent: null
+summary: DS0_one_token_source (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829998863
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998863
+lastSeenAt: 1792829998863
+fingerprint: null
+payload:
+  id: DS0_one_token_source
+  map: docs/2026-10-10-design-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/css/nexus-theme.css
+    - ui/themes/nexus-dark.css
+    - ui/themes/nexus-light.css
+    - eravos/ui/index.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 385edcecb63311aa

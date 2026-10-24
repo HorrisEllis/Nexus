@@ -1,0 +1,300 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL21_agent_mesh_real_connection:82582a994731b7ce
+type: graph
+id: phase:BL21_agent_mesh_real_connection:82582a994731b7ce
+context: dependency graph of phase BL21_agent_mesh_real_connection
+intent: null
+summary: 27 node(s), 12 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829971266
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971266
+lastSeenAt: 1792829971266
+fingerprint: null
+payload:
+  for: BL21_agent_mesh_real_connection
+  kind: phase
+  repo: null
+  hash: 82582a994731b7ce
+  nodes:
+    - path: copilot/lib/self-model.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/self-model.js
+      role: changes
+      exists: false
+      system: lib
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/identity/copilot-identity.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/switch-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/chains.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/command-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/connections.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/intent-hat-router.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/scheduler.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-control.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/triggers.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: copilot/config.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/intent-learning.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/nexus-awareness.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/fault-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reflection.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/user-model.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/reflection.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/fault-log.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/nexus-awareness.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: copilot/lib/intent-learning.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/config.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/copilot-identity.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/switch-agent.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/chains.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/command-builder.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/connections.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/constant-autonomy.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/intent-hat-router.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/scheduler.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/system-control.js
+      to: copilot/lib/self-model.js
+      kind: requires
+    - from: lib/triggers.js
+      to: copilot/lib/self-model.js
+      kind: requires
+  crossings:
+    - from: copilot/lib/self-model.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/identity/copilot-identity.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/identity/switch-agent.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/chains.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/command-builder.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/connections.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/constant-autonomy.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/intent-hat-router.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/scheduler.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/system-control.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: lib/triggers.js
+      to: copilot/lib/self-model.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL27_agent_suite_consolidation
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX16_persistent_listener_registry_and_callable_elements
+    upstream: []
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL27_agent_suite_consolidation
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR8_clearglass_full_agent_tool_parity
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX16_persistent_listener_registry_and_callable_elements
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL27_agent_suite_consolidation
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): BL27_agent_suite_consolidation,
+        TX16_persistent_listener_registry_and_callable_elements · all downstream 3 · finishing it
+        unlocks BL27_agent_suite_consolidation

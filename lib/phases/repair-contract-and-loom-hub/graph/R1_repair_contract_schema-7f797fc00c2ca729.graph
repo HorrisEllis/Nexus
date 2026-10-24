@@ -1,0 +1,274 @@
+envelope: 1
+uuid: nexus-export-graph-phase:R1_repair_contract_schema:7f797fc00c2ca729
+type: graph
+id: phase:R1_repair_contract_schema:7f797fc00c2ca729
+context: dependency graph of phase R1_repair_contract_schema
+intent: null
+summary: 33 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830036410
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830036410
+lastSeenAt: 1792830036410
+fingerprint: null
+payload:
+  for: R1_repair_contract_schema
+  kind: phase
+  repo: null
+  hash: 7f797fc00c2ca729
+  nodes:
+    - path: copilot/diagnostics.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/warp-build-dispatch.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/diagnostic/resource-monitor.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/diagnostic-causal.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-language-checks.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: copilot/lib/lifeline-contracts.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/gap-finder/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/diagnostic/system-priority.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/self-repair.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/autonomous-repair.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: copilot/movement-map.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/system-status.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/relational-field.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/snapshot-trigger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/checks/ck-248-toolchain.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/prevention.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/step-gate.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/resource-monitor.js
+      to: lib/prevention.js
+      kind: requires
+    - from: tests/modules/test-language-checks.test.js
+      to: lib/checks/ck-248-toolchain.js
+      kind: requires
+    - from: tests/modules/test-language-checks.test.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: tests/modules/test-language-checks.test.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: copilot/diagnostics.js
+      to: copilot/system-status.js
+      kind: requires
+    - from: copilot/diagnostics.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: copilot/diagnostics.js
+      to: copilot/movement-map.js
+      kind: requires
+    - from: lib/diagnostic-causal.js
+      to: intelligence/relational-field.js
+      kind: requires
+    - from: lib/diagnostic-causal.js
+      to: intelligence/snapshot-trigger.js
+      kind: requires
+    - from: copilot/lib/lifeline-contracts.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/gap-finder/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/system-priority.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/self-repair.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/autonomous-repair.js
+      to: lib/gap-field.js
+      kind: requires
+  crossings:
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: copilot/diagnostics.js
+      to: intelligence/cfr/field.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/diagnostic-causal.js
+      to: intelligence/relational-field.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/diagnostic-causal.js
+      to: intelligence/snapshot-trigger.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R3_autonomous_repair_trigger
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R8_ui_diagnostic_surfaces_wired_together
+    upstream: []
+    downstream:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R3_autonomous_repair_trigger
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R8_ui_diagnostic_surfaces_wired_together
+    blockedBy: []
+    unlocks:
+      - docs/repair-contract-and-loom-hub-phasemap.spec::R8_ui_diagnostic_surfaces_wired_together
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (2): R3_autonomous_repair_trigger, R8_ui_diagnostic_surfaces_wired_together ·
+        finishing it unlocks R8_ui_diagnostic_surfaces_wired_together

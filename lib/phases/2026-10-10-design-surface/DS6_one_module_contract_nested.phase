@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+type: phase
+id: docs_2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+context: pipeline phase DS6_one_module_contract_nested of docs/2026-10-10-design-surface-phasemap.spec
+intent: null
+summary: DS6_one_module_contract_nested (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829998870
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829998870
+lastSeenAt: 1792829998870
+fingerprint: null
+payload:
+  id: DS6_one_module_contract_nested
+  map: docs/2026-10-10-design-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - eravos/ui/runtime/mod-factory.js
+    - cos/compartment
+    - lib/nexus-self/systems.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f4efc65eae813809

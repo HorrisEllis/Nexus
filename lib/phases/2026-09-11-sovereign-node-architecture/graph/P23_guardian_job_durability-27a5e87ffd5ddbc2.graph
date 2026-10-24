@@ -1,0 +1,199 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P23_guardian_job_durability:27a5e87ffd5ddbc2
+type: graph
+id: phase:P23_guardian_job_durability:27a5e87ffd5ddbc2
+context: dependency graph of phase P23_guardian_job_durability
+intent: null
+summary: 24 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976516
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976516
+lastSeenAt: 1792829976516
+fingerprint: null
+payload:
+  for: P23_guardian_job_durability
+  kind: phase
+  repo: null
+  hash: 27a5e87ffd5ddbc2
+  nodes:
+    - path: architect/schemas/index.js
+      role: changes
+      exists: true
+      system: architect
+    - path: clear-glass/renderer/site-profile-groups.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/schemas/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/ncp-handler.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-agent-provider.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/response-sink.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-identity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-model.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/introspect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/introspect.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/chat-logger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-identity.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-model.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: architect/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp-handler.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-repo-agent-provider.js
+      to: lib/repo-agent.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

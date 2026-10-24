@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+context: >-
+  pipeline phase BK1_blocked_is_actionable of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: BK1_blocked_is_actionable (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987083
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987083
+lastSeenAt: 1792829987083
+fingerprint: null
+payload:
+  id: BK1_blocked_is_actionable
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js (phases board)
+    - idearium/api/index.js (repo.phases.build)
+  depends_on:
+    - CT1_cut_replies_are_finished
+    - DT2_failure_mode_field
+  blocks: []
+  spec: null
+  graph: 01332261b8dcdc42

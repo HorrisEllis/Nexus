@@ -1,0 +1,99 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EP2_cos_is_the_empirical_layer:abb7cdf7233d1a4c
+type: graph
+id: phase:EP2_cos_is_the_empirical_layer:abb7cdf7233d1a4c
+context: dependency graph of phase EP2_cos_is_the_empirical_layer
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830000470
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830000470
+lastSeenAt: 1792830000470
+fingerprint: null
+payload:
+  for: EP2_cos_is_the_empirical_layer
+  kind: phase
+  repo: null
+  hash: abb7cdf7233d1a4c
+  nodes:
+    - path: cos/playground/compare.js
+      role: changes
+      exists: true
+      system: cos
+    - path: guardian/lib/agent-model-nodes.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: cos/cli/commands/compare.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playground/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/playground/branch.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/playground/sandbox.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/agent-model.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/playground/compare.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/playground/compare.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: cos/playground/compare.js
+      to: cos/playground/sandbox.js
+      kind: requires
+    - from: guardian/lib/agent-model-nodes.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/agent-model-nodes.js
+      to: lib/agent-model.js
+      kind: requires
+    - from: cos/cli/commands/compare.js
+      to: cos/playground/compare.js
+      kind: requires
+    - from: cos/playground/index.js
+      to: cos/playground/compare.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::EP1_every_claim_says_how_it_is_known
+    dependents: []
+    upstream:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::EP1_every_claim_says_how_it_is_known
+    downstream: []
+    blockedBy:
+      - docs/2026-10-10-shape-of-nexus-phasemap.spec::EP1_every_claim_says_how_it_is_known
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by EP1_every_claim_says_how_it_is_known
+      - 'depends on (1): EP1_every_claim_says_how_it_is_known'
+      - 'needed by (0): —'

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-request-spine-phasemap.spec::RQ12_the_phase_dag
+type: phase
+id: docs_2026-10-12-request-spine-phasemap.spec::RQ12_the_phase_dag
+context: pipeline phase RQ12_the_phase_dag of docs/2026-10-12-request-spine-phasemap.spec
+intent: null
+summary: RQ12_the_phase_dag (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001721
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001721
+lastSeenAt: 1792830001721
+fingerprint: null
+payload:
+  id: RQ12_the_phase_dag
+  map: docs/2026-10-12-request-spine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/index.js
+    - idearium/ui/js/plan-panel.js
+    - loom/scanners/phasemap-map.js
+  depends_on:
+    - RQ9_the_chunked_contract
+  blocks: []
+  spec: null
+  graph: 657be08a0225c679

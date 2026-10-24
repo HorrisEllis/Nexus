@@ -1,0 +1,86 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TX11_plugin_architecture_decision:d1f7b8740d4b8944
+type: graph
+id: phase:TX11_plugin_architecture_decision:d1f7b8740d4b8944
+context: dependency graph of phase TX11_plugin_architecture_decision
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830028216
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830028216
+lastSeenAt: 1792830028216
+fingerprint: null
+payload:
+  for: TX11_plugin_architecture_decision
+  kind: phase
+  repo: null
+  hash: d1f7b8740d4b8944
+  nodes:
+    - path: copilot/bridge.js
+      role: changes
+      exists: false
+      system: copilot
+    - path: lib/agent-tools/tools/clear-glass/dom-archaeology.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/clear-glass/provider-deploy.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/clear-glass/tab-visibility.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/governance/tool-config.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-config.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/index.js
+      to: lib/tool-config.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/tool-layers.js
+      to: lib/tool-config.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+    upstream: []
+    downstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR4_erosmancer_as_clearglass_plugin
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR8_clearglass_full_agent_tool_parity
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX15_whisper_as_a_real_optional_capability
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX16_persistent_listener_registry_and_callable_elements
+    blockedBy: []
+    unlocks:
+      - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX14_plugin_system_v1_build
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): TX14_plugin_system_v1_build · all downstream 5 · finishing it unlocks
+        TX14_plugin_system_v1_build

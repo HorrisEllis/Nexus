@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::V2_snapshot_ownership_decision
+type: phase
+id: docs_2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::V2_snapshot_ownership_decision
+context: >-
+  pipeline phase V2_snapshot_ownership_decision of
+  docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+intent: null
+summary: V2_snapshot_ownership_decision (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976052
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976052
+lastSeenAt: 1792829976052
+fingerprint: null
+payload:
+  id: V2_snapshot_ownership_decision
+  map: docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 812e620fe68626d8

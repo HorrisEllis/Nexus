@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-compartment-control-and-activity-phasemap.spec::DX1_diagnose_it
+type: phase
+id: docs_2026-10-07-compartment-control-and-activity-phasemap.spec::DX1_diagnose_it
+context: pipeline phase DX1_diagnose_it of docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+intent: null
+summary: DX1_diagnose_it (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829994589
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829994589
+lastSeenAt: 1792829994589
+fingerprint: null
+payload:
+  id: DX1_diagnose_it
+  map: docs/2026-10-07-compartment-control-and-activity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - DC1_a_click_that_did_nothing
+    - SP1_one_spotlight
+  blocks: []
+  spec: null
+  graph: 589ac7374abdf907

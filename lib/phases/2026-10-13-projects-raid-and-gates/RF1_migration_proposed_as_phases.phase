@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RF1_migration_proposed_as_phases
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RF1_migration_proposed_as_phases
+context: >-
+  pipeline phase RF1_migration_proposed_as_phases of
+  docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: RF1_migration_proposed_as_phases (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830003403
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830003403
+lastSeenAt: 1792830003403
+fingerprint: null
+payload:
+  id: RF1_migration_proposed_as_phases
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/architecture-migrate.js
+    - idearium/repo/roadmap.js
+  depends_on:
+    - RF0_architecture_read
+  blocks: []
+  spec: null
+  graph: 0653cb1c1c976e54

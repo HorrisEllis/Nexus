@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-intelligence-loop-phasemap.spec::AP3_strategy_dynamic_db
+type: phase
+id: docs_agent-intelligence-loop-phasemap.spec::AP3_strategy_dynamic_db
+context: pipeline phase AP3_strategy_dynamic_db of docs/agent-intelligence-loop-phasemap.spec
+intent: null
+summary: AP3_strategy_dynamic_db (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830027402
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830027402
+lastSeenAt: 1792830027402
+fingerprint: null
+payload:
+  id: AP3_strategy_dynamic_db
+  map: docs/agent-intelligence-loop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - AP2_agent_events_to_intelligence
+  blocks: []
+  spec: null
+  graph: 0aefb3a3ab80c9af

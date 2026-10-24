@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-failure-reproduction-phasemap.spec::FM3_run_it_in_cos
+type: phase
+id: docs_2026-10-05-failure-reproduction-phasemap.spec::FM3_run_it_in_cos
+context: pipeline phase FM3_run_it_in_cos of docs/2026-10-05-failure-reproduction-phasemap.spec
+intent: null
+summary: FM3_run_it_in_cos (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829992656
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829992656
+lastSeenAt: 1792829992656
+fingerprint: null
+payload:
+  id: FM3_run_it_in_cos
+  map: docs/2026-10-05-failure-reproduction-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/failure-macro.js
+    - cos/testenv/index.js
+    - lib/shadow-space.js
+  depends_on:
+    - FM2_a_failure_is_a_clip
+  blocks: []
+  spec: null
+  graph: 9c26dcce49a297be

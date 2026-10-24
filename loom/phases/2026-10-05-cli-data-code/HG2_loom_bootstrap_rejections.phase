@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::HG2_loom_bootstrap_rejections
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::HG2_loom_bootstrap_rejections
+context: pipeline phase HG2_loom_bootstrap_rejections of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: HG2_loom_bootstrap_rejections (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991455
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991455
+lastSeenAt: 1792829991455
+fingerprint: null
+payload:
+  id: HG2_loom_bootstrap_rejections
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/bootstrap.js
+    - loom/maps/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 966dd95e7e861011

@@ -1,0 +1,184 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF18_intelligence_becomes_a_real_system:9ed23465f0df57af
+type: graph
+id: phase:SF18_intelligence_becomes_a_real_system:9ed23465f0df57af
+context: dependency graph of phase SF18_intelligence_becomes_a_real_system
+intent: null
+summary: 18 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829970796
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829970796
+lastSeenAt: 1792829970796
+fingerprint: null
+payload:
+  for: SF18_intelligence_becomes_a_real_system
+  kind: phase
+  repo: null
+  hash: 9ed23465f0df57af
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: emerge/consumer.js
+      role: changes
+      exists: false
+      system: emerge
+    - path: intelligence/consumer.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: service/cortex-service.js
+      role: used-by
+      exists: true
+      system: service
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/config.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/field-provider.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/framework-builder.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal-space/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/self-register-remote.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+    - path: warp/core/index.js
+      role: uses
+      exists: true
+      system: warp
+  edges:
+    - from: intelligence/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/config.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/cfr/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/framework-builder.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/field-provider.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/self-register-remote.js
+      kind: requires
+    - from: intelligence/server.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/server.js
+      to: warp/core/index.js
+      kind: requires
+    - from: service/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+  crossings:
+    - from: intelligence/server.js
+      to: nexus/nexus-bus.js
+      fromSystem: intelligence
+      toSystem: nexus
+      kind: system
+      known: true
+    - from: intelligence/server.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: intelligence/server.js
+      to: warp/core/index.js
+      fromSystem: intelligence
+      toSystem: warp
+      kind: system
+      known: true
+    - from: service/cortex-service.js
+      to: cortex/boot.js
+      fromSystem: service
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-08-22-session-full-phasemap.spec::SF17_intelligence_system_all_4_phases
+    dependents:
+      - docs/2026-08-22-session-full-phasemap.spec::SF19_loom_registry_never_auto_synced
+    upstream:
+      - docs/2026-08-22-session-full-phasemap.spec::SF17_intelligence_system_all_4_phases
+    downstream:
+      - docs/2026-08-22-session-full-phasemap.spec::SF19_loom_registry_never_auto_synced
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-22-session-full-phasemap.spec::SF19_loom_registry_never_auto_synced
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1
+      - 'depends on (1): SF17_intelligence_system_all_4_phases'
+      - >-
+        needed by (1): SF19_loom_registry_never_auto_synced · finishing it unlocks
+        SF19_loom_registry_never_auto_synced

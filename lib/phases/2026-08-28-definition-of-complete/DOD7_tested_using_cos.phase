@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-28-definition-of-complete-phasemap.spec::DOD7_tested_using_cos
+type: phase
+id: docs_2026-08-28-definition-of-complete-phasemap.spec::DOD7_tested_using_cos
+context: pipeline phase DOD7_tested_using_cos of docs/2026-08-28-definition-of-complete-phasemap.spec
+intent: null
+summary: DOD7_tested_using_cos (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829972150
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829972150
+lastSeenAt: 1792829972150
+fingerprint: null
+payload:
+  id: DOD7_tested_using_cos
+  map: docs/2026-08-28-definition-of-complete-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a31ec4e8442ad5dc

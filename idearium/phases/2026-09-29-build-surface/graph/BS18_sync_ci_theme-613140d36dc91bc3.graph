@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BS18_sync_ci_theme:613140d36dc91bc3
+type: graph
+id: phase:BS18_sync_ci_theme:613140d36dc91bc3
+context: dependency graph of phase BS18_sync_ci_theme
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985015
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985015
+lastSeenAt: 1792829985015
+fingerprint: null
+payload:
+  for: BS18_sync_ci_theme
+  kind: phase
+  repo: null
+  hash: 613140d36dc91bc3
+  nodes:
+    - path: idearium/ui/index.html
+      role: changes
+      exists: true
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    upstream: []
+    downstream:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): BS12_release · finishing it unlocks BS12_release'

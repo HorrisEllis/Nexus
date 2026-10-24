@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
+context: >-
+  pipeline phase TB1_a_tab_is_its_own_webview of
+  docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: TB1_a_tab_is_its_own_webview (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001255
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001255
+lastSeenAt: 1792830001255
+fingerprint: null
+payload:
+  id: TB1_a_tab_is_its_own_webview
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/renderer/browser.js
+    - clear-glass/renderer/browser.html
+  depends_on:
+    - TB0_the_webview_session_proved
+  blocks: []
+  spec: null
+  graph: d0d5c9dc749e3d31

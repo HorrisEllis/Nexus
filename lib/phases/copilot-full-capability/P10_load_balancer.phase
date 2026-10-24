@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_copilot-full-capability-phasemap.spec::P10_load_balancer
+type: phase
+id: docs_copilot-full-capability-phasemap.spec::P10_load_balancer
+context: pipeline phase P10_load_balancer of docs/copilot-full-capability-phasemap.spec
+intent: null
+summary: P10_load_balancer (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830029358
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830029358
+lastSeenAt: 1792830029358
+fingerprint: null
+payload:
+  id: P10_load_balancer
+  map: docs/copilot-full-capability-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 232f1aea84cbeb53

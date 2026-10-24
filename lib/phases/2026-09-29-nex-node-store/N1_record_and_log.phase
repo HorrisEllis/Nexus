@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
+type: phase
+id: docs_2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
+context: pipeline phase N1_record_and_log of docs/2026-09-29-nex-node-store-phasemap.spec
+intent: null
+summary: N1_record_and_log (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985419
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985419
+lastSeenAt: 1792829985419
+fingerprint: null
+payload:
+  id: N1_record_and_log
+  map: docs/2026-09-29-nex-node-store-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexstore/record.js
+    - lib/nexstore/log.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6d4e3abb4292bf6a

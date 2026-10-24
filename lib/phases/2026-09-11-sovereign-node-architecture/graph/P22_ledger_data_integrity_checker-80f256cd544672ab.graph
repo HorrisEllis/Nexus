@@ -1,0 +1,100 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P22_ledger_data_integrity_checker:80f256cd544672ab
+type: graph
+id: phase:P22_ledger_data_integrity_checker:80f256cd544672ab
+context: dependency graph of phase P22_ledger_data_integrity_checker
+intent: null
+summary: 9 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976514
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976514
+lastSeenAt: 1792829976514
+fingerprint: null
+payload:
+  for: P22_ledger_data_integrity_checker
+  kind: phase
+  repo: null
+  hash: 80f256cd544672ab
+  nodes:
+    - path: lib/file-integrity.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/integrity-revert.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/replay-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: intelligence/snapshot-trigger.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+  edges:
+    - from: lib/replay-engine.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/file-integrity.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: intelligence/snapshot-trigger.js
+      to: lib/replay-engine.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: lib/replay-engine.js
+      kind: requires
+  crossings:
+    - from: lib/replay-engine.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

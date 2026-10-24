@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-workshop-codex-rewind-phasemap.spec::WS7_the_full_workshop
+type: phase
+id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::WS7_the_full_workshop
+context: pipeline phase WS7_the_full_workshop of docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+intent: null
+summary: WS7_the_full_workshop (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990146
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990146
+lastSeenAt: 1792829990146
+fingerprint: null
+payload:
+  id: WS7_the_full_workshop
+  map: docs/2026-10-02-workshop-codex-rewind-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/workshop.html
+    - idearium/ui/css/workshop.css
+    - idearium/ui/js/workshop.js
+    - idearium/lib/workshop.js
+    - idearium/api/index.js
+    - idearium/ui/_archive/
+  depends_on:
+    - SW1_spec_workshop
+    - SW2_workshop_page_in_the_voids_style
+  blocks: []
+  spec: null
+  graph: 7115b04f434c37ca

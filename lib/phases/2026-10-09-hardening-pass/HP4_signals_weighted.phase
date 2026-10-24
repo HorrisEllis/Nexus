@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-hardening-pass-phasemap.spec::HP4_signals_weighted
+type: phase
+id: docs_2026-10-09-hardening-pass-phasemap.spec::HP4_signals_weighted
+context: pipeline phase HP4_signals_weighted of docs/2026-10-09-hardening-pass-phasemap.spec
+intent: null
+summary: HP4_signals_weighted (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997240
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997240
+lastSeenAt: 1792829997240
+fingerprint: null
+payload:
+  id: HP4_signals_weighted
+  map: docs/2026-10-09-hardening-pass-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/economy/router.js
+    - lib/pipeline-routing.js
+    - idearium/lib/config-core.cjs
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 036df943c960cf97

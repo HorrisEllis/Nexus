@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-automatic-tracking-phasemap.spec::CP1_the_contract_panel
+type: phase
+id: docs_2026-10-15-automatic-tracking-phasemap.spec::CP1_the_contract_panel
+context: pipeline phase CP1_the_contract_panel of docs/2026-10-15-automatic-tracking-phasemap.spec
+intent: null
+summary: CP1_the_contract_panel (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830003813
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830003813
+lastSeenAt: 1792830003813
+fingerprint: null
+payload:
+  id: CP1_the_contract_panel
+  map: docs/2026-10-15-automatic-tracking-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/contract-panel.js (new)
+    - idearium/ui/js/plan-panel.js
+    - idearium/api/index.js
+  depends_on:
+    - CX1_context_from_the_dependencies
+  blocks: []
+  spec: null
+  graph: c237d6f98a19ae59

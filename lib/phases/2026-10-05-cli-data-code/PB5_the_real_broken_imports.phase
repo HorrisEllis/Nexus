@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::PB5_the_real_broken_imports
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::PB5_the_real_broken_imports
+context: pipeline phase PB5_the_real_broken_imports of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: PB5_the_real_broken_imports (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991469
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991469
+lastSeenAt: 1792829991469
+fingerprint: null
+payload:
+  id: PB5_the_real_broken_imports
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cli/run-supervised.js
+    - erosmancer/erosmancer-os/tests/run.js
+    - tests/_archive/
+  depends_on:
+    - PB4_imports_inside_text_are_not_imports
+  blocks: []
+  spec: null
+  graph: 64c2d31e9c1a9aff

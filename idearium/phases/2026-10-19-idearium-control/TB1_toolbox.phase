@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-idearium-control-phasemap.spec::TB1_toolbox
+type: phase
+id: docs_2026-10-19-idearium-control-phasemap.spec::TB1_toolbox
+context: pipeline phase TB1_toolbox of docs/2026-10-19-idearium-control-phasemap.spec
+intent: null
+summary: TB1_toolbox (interface) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830019664
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830019664
+lastSeenAt: 1792830019664
+fingerprint: null
+payload:
+  id: TB1_toolbox
+  map: docs/2026-10-19-idearium-control-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - idearium/ui/js/app.js
+    - idearium/ui/js/repo-toolbox.js
+    - idearium/api/index.js
+  depends_on:
+    - FM2_stores_in_the_files_tab
+  blocks: []
+  spec: null
+  graph: 573f4e5a75544e59

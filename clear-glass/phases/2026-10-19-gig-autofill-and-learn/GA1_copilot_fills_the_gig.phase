@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1_copilot_fills_the_gig
+type: phase
+id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1_copilot_fills_the_gig
+context: pipeline phase GA1_copilot_fills_the_gig of docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+intent: null
+summary: GA1_copilot_fills_the_gig (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830019246
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830019246
+lastSeenAt: 1792830019246
+fingerprint: null
+payload:
+  id: GA1_copilot_fills_the_gig
+  map: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/copilot/tools.js
+    - clear-glass/src/copilot/hat.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6d8a7e5ce0db2455

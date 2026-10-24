@@ -1,0 +1,99 @@
+envelope: 1
+uuid: nexus-export-graph-phase:B4:220b4ae717d05c04
+type: graph
+id: phase:B4:220b4ae717d05c04
+context: dependency graph of phase B4
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829984161
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984161
+lastSeenAt: 1792829984161
+fingerprint: null
+payload:
+  for: B4
+  kind: phase
+  repo: null
+  hash: 220b4ae717d05c04
+  nodes:
+    - path: cos/runtime/syntax-check.cjs
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/repo/graph.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/import-pipeline.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/scan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-repo-graph.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: idearium/api/index.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/import-pipeline.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/scan.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: idearium/repo/verify-lazy.js
+      to: idearium/repo/graph.js
+      kind: requires
+    - from: tests/modules/test-repo-graph.js
+      to: idearium/repo/graph.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 5
+    deps:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B3
+    dependents: []
+    upstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B3
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C1
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G1
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G2
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
+    downstream: []
+    blockedBy:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B3
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 5 · blocked by B3
+      - 'depends on (1): B3 · all upstream 8'
+      - 'needed by (0): —'

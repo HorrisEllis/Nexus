@@ -1,0 +1,42 @@
+envelope: 1
+uuid: nexus-export-graph-phase:D2_idearium_compartment_structure:80dbc60fc6451eb9
+type: graph
+id: phase:D2_idearium_compartment_structure:80dbc60fc6451eb9
+context: dependency graph of phase D2_idearium_compartment_structure
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1792829974292
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974292
+lastSeenAt: 1792829974292
+fingerprint: null
+payload:
+  for: D2_idearium_compartment_structure
+  kind: phase
+  repo: null
+  hash: 80dbc60fc6451eb9
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::D1_bridgeos_readme_template
+    dependents: []
+    upstream:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::D1_bridgeos_readme_template
+    downstream: []
+    blockedBy:
+      - docs/2026-09-02-nexus-vision-master-phasemap.spec::D1_bridgeos_readme_template
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by D1_bridgeos_readme_template
+      - 'depends on (1): D1_bridgeos_readme_template'
+      - 'needed by (0): —'

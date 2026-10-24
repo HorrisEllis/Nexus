@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-12-browser-providers-and-work-phasemap.spec::TB6_element_endpoints
+type: phase
+id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::TB6_element_endpoints
+context: pipeline phase TB6_element_endpoints of docs/2026-10-12-browser-providers-and-work-phasemap.spec
+intent: null
+summary: TB6_element_endpoints (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830001261
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830001261
+lastSeenAt: 1792830001261
+fingerprint: null
+payload:
+  id: TB6_element_endpoints
+  map: docs/2026-10-12-browser-providers-and-work-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/dom/archaeology.js
+    - clear-glass/src/page/field.js
+    - guardian/userscript-field-map.js
+  depends_on:
+    - TB5_site_and_account_nodes
+  blocks: []
+  spec: null
+  graph: 43ef5bbbbaab7af2

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+type: phase
+id: docs_raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+context: pipeline phase RR4_governed_handshake_on_handoff of docs/raid-routing-fidelity-phasemap.spec
+intent: null
+summary: RR4_governed_handshake_on_handoff (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830035267
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830035267
+lastSeenAt: 1792830035267
+fingerprint: null
+payload:
+  id: RR4_governed_handshake_on_handoff
+  map: docs/raid-routing-fidelity-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - RR1_verify_and_wire_the_snr_fidelity_gate
+    - RR2_contract_based_chunking
+  blocks: []
+  spec: null
+  graph: b031ed28511d3eae

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-google-signin-phasemap.spec::GS5_contexts_one_firefox
+type: phase
+id: docs_2026-10-16-google-signin-phasemap.spec::GS5_contexts_one_firefox
+context: pipeline phase GS5_contexts_one_firefox of docs/2026-10-16-google-signin-phasemap.spec
+intent: null
+summary: GS5_contexts_one_firefox (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830011717
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830011717
+lastSeenAt: 1792830011717
+fingerprint: null
+payload:
+  id: GS5_contexts_one_firefox
+  map: docs/2026-10-16-google-signin-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.108
+  files:
+    - clear-glass/src/fingerprint/engine.js
+    - clear-glass/src/contexts/manager.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8ef7925a206080dd

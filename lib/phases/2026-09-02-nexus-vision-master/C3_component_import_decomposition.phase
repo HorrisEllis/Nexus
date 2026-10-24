@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::C3_component_import_decomposition
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::C3_component_import_decomposition
+context: >-
+  pipeline phase C3_component_import_decomposition of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: C3_component_import_decomposition (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974288
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974288
+lastSeenAt: 1792829974288
+fingerprint: null
+payload:
+  id: C3_component_import_decomposition
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 161153bb675e4ff1

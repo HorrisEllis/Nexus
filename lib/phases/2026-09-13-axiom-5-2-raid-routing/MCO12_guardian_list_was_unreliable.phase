@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO12_guardian_list_was_unreliable
+type: phase
+id: docs_2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO12_guardian_list_was_unreliable
+context: >-
+  pipeline phase MCO12_guardian_list_was_unreliable of
+  docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec
+intent: null
+summary: MCO12_guardian_list_was_unreliable (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976961
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976961
+lastSeenAt: 1792829976961
+fingerprint: null
+payload:
+  id: MCO12_guardian_list_was_unreliable
+  map: docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec
+  repo: null
+  layer: null
+  status: '"FINDING, not yet actioned. MCO7''s guardian route list (bus/emit,'
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 699ffb5ba2eb8fea

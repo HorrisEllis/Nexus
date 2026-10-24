@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+context: >-
+  pipeline phase DF1_guardian_own_data_folder of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: DF1_guardian_own_data_folder (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975195
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975195
+lastSeenAt: 1792829975195
+fingerprint: null
+payload:
+  id: DF1_guardian_own_data_folder
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c492a7b9764336d9

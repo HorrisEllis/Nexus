@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-code-tab-run-state-phasemap.spec::CE10_lost_jobs_fall_back
+type: phase
+id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CE10_lost_jobs_fall_back
+context: pipeline phase CE10_lost_jobs_fall_back of docs/2026-10-15-code-tab-run-state-phasemap.spec
+intent: null
+summary: CE10_lost_jobs_fall_back (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830005436
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830005436
+lastSeenAt: 1792830005436
+fingerprint: null
+payload:
+  id: CE10_lost_jobs_fall_back
+  map: docs/2026-10-15-code-tab-run-state-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 0.60.50 (tests/modules/test-run-state.test.js)
+  files:
+    - guardian/lib/dispatcher.js
+    - guardian/lib/job-retry.js
+    - lib/run-state.js
+  depends_on:
+    - CE1_the_run_state
+  blocks: []
+  spec: null
+  graph: 75cbbf1b8a77a1aa

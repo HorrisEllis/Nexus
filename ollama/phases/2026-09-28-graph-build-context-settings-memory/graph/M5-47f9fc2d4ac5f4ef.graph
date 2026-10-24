@@ -1,0 +1,164 @@
+envelope: 1
+uuid: nexus-export-graph-phase:M5:47f9fc2d4ac5f4ef
+type: graph
+id: phase:M5:47f9fc2d4ac5f4ef
+context: dependency graph of phase M5
+intent: null
+summary: 17 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829984165
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984165
+lastSeenAt: 1792829984165
+fingerprint: null
+payload:
+  for: M5
+  kind: phase
+  repo: null
+  hash: 47f9fc2d4ac5f4ef
+  nodes:
+    - path: copilot/server.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: ollama/server.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: lib/clear-glass-stream-bridge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/copilot-adversarial-wire.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-handshake-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/dispatch.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/http-utils.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/jobs.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/models.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/queue.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/stream.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/system.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/uploads.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: ollama/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/state.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/dispatch.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/http-utils.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/system.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/uploads.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/stream.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/jobs.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/queue.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/models.js
+      kind: requires
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-wire.test.js
+      to: copilot/server.js
+      kind: requires
+    - from: tests/modules/copilot-handshake-dispatch.test.js
+      to: copilot/server.js
+      kind: requires
+  crossings:
+    - from: lib/clear-glass-stream-bridge.js
+      to: copilot/server.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
+    dependents: []
+    upstream:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
+    downstream: []
+    blockedBy:
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
+      - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · blocked by M0, R0
+      - 'depends on (2): M0, R0'
+      - 'needed by (0): —'

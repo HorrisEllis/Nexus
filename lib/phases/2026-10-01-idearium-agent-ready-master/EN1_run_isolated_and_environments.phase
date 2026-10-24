@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::EN1_run_isolated_and_environments
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::EN1_run_isolated_and_environments
+context: >-
+  pipeline phase EN1_run_isolated_and_environments of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: EN1_run_isolated_and_environments (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987119
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987119
+lastSeenAt: 1792829987119
+fingerprint: null
+payload:
+  id: EN1_run_isolated_and_environments
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/cos-bridge.js
+    - lib/cos-run.js
+    - versionium/
+    - idearium/repo/
+  depends_on:
+    - HC1_hat_agent_to_cos_build
+  blocks: []
+  spec: null
+  graph: 8b73ac9da187069c

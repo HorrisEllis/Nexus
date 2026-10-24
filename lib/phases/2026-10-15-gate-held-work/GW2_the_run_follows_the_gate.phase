@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+type: phase
+id: docs_2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+context: pipeline phase GW2_the_run_follows_the_gate of docs/2026-10-15-gate-held-work-phasemap.spec
+intent: null
+summary: GW2_the_run_follows_the_gate (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792830006631
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006631
+lastSeenAt: 1792830006631
+fingerprint: null
+payload:
+  id: GW2_the_run_follows_the_gate
+  map: docs/2026-10-15-gate-held-work-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "PARTLY BUILT 0.60.77 — a brick's run keyed by the brick (lib/run-state.js), resumed by every
+    retry, rung, fallback and chat; the baton header on Ollama too; each brick's run in the trace.
+    Open: GW0b (when a gate opens a new chat), the packet as the one handoff (GW1)"
+  files:
+    - lib/run-state.js
+    - cortex/core/raid/contract-gates.js
+    - cortex/core/raid/contract-adapters.js
+    - lib/repo-agent.js
+    - copilot/server.js
+  depends_on:
+    - GW1_the_baton
+    - GW0_what_is_a_gate
+  blocks: []
+  spec: null
+  graph: 8f78d99aa885a501

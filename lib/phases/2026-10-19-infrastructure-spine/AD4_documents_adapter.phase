@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-infrastructure-spine-phasemap.spec::AD4_documents_adapter
+type: phase
+id: docs_2026-10-19-infrastructure-spine-phasemap.spec::AD4_documents_adapter
+context: pipeline phase AD4_documents_adapter of docs/2026-10-19-infrastructure-spine-phasemap.spec
+intent: null
+summary: AD4_documents_adapter (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792830020058
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830020058
+lastSeenAt: 1792830020058
+fingerprint: null
+payload:
+  id: AD4_documents_adapter
+  map: docs/2026-10-19-infrastructure-spine-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/adapters/documents.js
+  depends_on:
+    - AD1_adapter_contract
+  blocks: []
+  spec: null
+  graph: 71fc91214f3f74f8

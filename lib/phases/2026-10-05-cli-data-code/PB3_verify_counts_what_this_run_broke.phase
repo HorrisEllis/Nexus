@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::PB3_verify_counts_what_this_run_broke
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::PB3_verify_counts_what_this_run_broke
+context: >-
+  pipeline phase PB3_verify_counts_what_this_run_broke of
+  docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: PB3_verify_counts_what_this_run_broke (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991467
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991467
+lastSeenAt: 1792829991467
+fingerprint: null
+payload:
+  id: PB3_verify_counts_what_this_run_broke
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/build-verify.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 2c3748ba8d24ac93

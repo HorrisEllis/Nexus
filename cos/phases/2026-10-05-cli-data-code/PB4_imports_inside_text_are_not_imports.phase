@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::PB4_imports_inside_text_are_not_imports
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::PB4_imports_inside_text_are_not_imports
+context: >-
+  pipeline phase PB4_imports_inside_text_are_not_imports of
+  docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: PB4_imports_inside_text_are_not_imports (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991468
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991468
+lastSeenAt: 1792829991468
+fingerprint: null
+payload:
+  id: PB4_imports_inside_text_are_not_imports
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/runtime/run.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d0e4233a40cc3822

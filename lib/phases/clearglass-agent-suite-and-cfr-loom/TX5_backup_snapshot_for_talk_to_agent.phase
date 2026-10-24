@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX5_backup_snapshot_for_talk_to_agent
+type: phase
+id: docs_clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX5_backup_snapshot_for_talk_to_agent
+context: >-
+  pipeline phase TX5_backup_snapshot_for_talk_to_agent of
+  docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+intent: null
+summary: TX5_backup_snapshot_for_talk_to_agent (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830028210
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830028210
+lastSeenAt: 1792830028210
+fingerprint: null
+payload:
+  id: TX5_backup_snapshot_for_talk_to_agent
+  map: docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 99f5f528664f4042

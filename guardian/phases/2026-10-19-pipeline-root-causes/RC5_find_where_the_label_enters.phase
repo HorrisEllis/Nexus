@@ -9,11 +9,11 @@ intent: null
 summary: RC5_find_where_the_label_enters (foundation) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792653394695
+exported_at: 1792830020470
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792653394695
-lastSeenAt: 1792653394695
+firstSeenAt: 1792830020470
+lastSeenAt: 1792830020470
 fingerprint: null
 payload:
   id: RC5_find_where_the_label_enters

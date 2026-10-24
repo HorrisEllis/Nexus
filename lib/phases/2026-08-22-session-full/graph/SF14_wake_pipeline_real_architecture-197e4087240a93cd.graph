@@ -1,0 +1,129 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF14_wake_pipeline_real_architecture:197e4087240a93cd
+type: graph
+id: phase:SF14_wake_pipeline_real_architecture:197e4087240a93cd
+context: dependency graph of phase SF14_wake_pipeline_real_architecture
+intent: null
+summary: 13 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829970791
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829970791
+lastSeenAt: 1792829970791
+fingerprint: null
+payload:
+  for: SF14_wake_pipeline_real_architecture
+  kind: phase
+  repo: null
+  hash: 197e4087240a93cd
+  nodes:
+    - path: clear-glass/src/copilot/wake-relay.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cli/nexus-repl.js
+      role: changes
+      exists: true
+      system: cli
+    - path: cortex/cortex-v2.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/clear-glass-screen-qa.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-wake.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/autofill/matcher.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cli/nexus-repl-descriptors.js
+      role: uses
+      exists: true
+      system: cli
+    - path: lib/context-builder.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/grammar-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: cli/nexus-repl.js
+      to: lib/grammar-engine.js
+      kind: requires
+    - from: cli/nexus-repl.js
+      to: cli/nexus-repl-descriptors.js
+      kind: requires
+    - from: cli/nexus-repl.js
+      to: ollama/config.js
+      kind: requires
+    - from: cli/nexus-repl.js
+      to: lib/context-builder.js
+      kind: requires
+    - from: clear-glass/src/screen-qa/detector.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: tests/modules/clear-glass-screen-qa.test.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/copilot/wake-relay.js
+      kind: requires
+    - from: tests/modules/test-guardian-wake.js
+      to: clear-glass/src/copilot/wake-relay.js
+      kind: requires
+  crossings:
+    - from: cli/nexus-repl.js
+      to: ollama/config.js
+      fromSystem: cli
+      toSystem: ollama
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-08-22-session-full-phasemap.spec::SF15_wake_pipeline_real_bugs_fixed
+    upstream: []
+    downstream:
+      - docs/2026-08-22-session-full-phasemap.spec::SF15_wake_pipeline_real_bugs_fixed
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-22-session-full-phasemap.spec::SF15_wake_pipeline_real_bugs_fixed
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (1): SF15_wake_pipeline_real_bugs_fixed · finishing it unlocks
+        SF15_wake_pipeline_real_bugs_fixed

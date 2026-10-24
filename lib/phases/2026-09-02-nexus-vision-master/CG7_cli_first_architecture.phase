@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::CG7_cli_first_architecture
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CG7_cli_first_architecture
+context: pipeline phase CG7_cli_first_architecture of docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: CG7_cli_first_architecture (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974312
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974312
+lastSeenAt: 1792829974312
+fingerprint: null
+payload:
+  id: CG7_cli_first_architecture
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b57d50165ca5bd29

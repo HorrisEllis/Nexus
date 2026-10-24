@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF12_end_state_vision_and_full_phase_map_docs
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF12_end_state_vision_and_full_phase_map_docs
+context: >-
+  pipeline phase SF12_end_state_vision_and_full_phase_map_docs of
+  docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF12_end_state_vision_and_full_phase_map_docs (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829970789
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829970789
+lastSeenAt: 1792829970789
+fingerprint: null
+payload:
+  id: SF12_end_state_vision_and_full_phase_map_docs
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e20580490f498608

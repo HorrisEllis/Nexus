@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-29-provider-economy-phasemap.spec::EC1_usage_ledger
+type: phase
+id: docs_2026-09-29-provider-economy-phasemap.spec::EC1_usage_ledger
+context: pipeline phase EC1_usage_ledger of docs/2026-09-29-provider-economy-phasemap.spec
+intent: null
+summary: EC1_usage_ledger (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792829985875
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985875
+lastSeenAt: 1792829985875
+fingerprint: null
+payload:
+  id: EC1_usage_ledger
+  map: docs/2026-09-29-provider-economy-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/economy/ledger.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 3bb692c134237f3f

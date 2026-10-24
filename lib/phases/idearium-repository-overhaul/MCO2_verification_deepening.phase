@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-repository-overhaul-phasemap.spec::MCO2_verification_deepening
+type: phase
+id: docs_idearium-repository-overhaul-phasemap.spec::MCO2_verification_deepening
+context: pipeline phase MCO2_verification_deepening of docs/idearium-repository-overhaul-phasemap.spec
+intent: null
+summary: MCO2_verification_deepening (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830031750
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830031750
+lastSeenAt: 1792830031750
+fingerprint: null
+payload:
+  id: MCO2_verification_deepening
+  map: docs/idearium-repository-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: '>'
+  files: []
+  depends_on:
+    - MCO1_graph_layer
+  blocks: []
+  spec: null
+  graph: 6b47c1fa993010fe

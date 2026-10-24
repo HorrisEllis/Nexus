@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-22-brainos-agent-suite-phasemap.spec::RD1_reader
+type: phase
+id: docs_2026-09-22-brainos-agent-suite-phasemap.spec::RD1_reader
+context: pipeline phase RD1_reader of docs/2026-09-22-brainos-agent-suite-phasemap.spec
+intent: null
+summary: RD1_reader (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829979379
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829979379
+lastSeenAt: 1792829979379
+fingerprint: null
+payload:
+  id: RD1_reader
+  map: docs/2026-09-22-brainos-agent-suite-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ffe56609c225d915

@@ -1,0 +1,237 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW1_the_baton:2558d35dc4282735
+type: graph
+id: phase:GW1_the_baton:2558d35dc4282735
+context: dependency graph of phase GW1_the_baton
+intent: null
+summary: 21 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830006630
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830006630
+lastSeenAt: 1792830006630
+fingerprint: null
+payload:
+  for: GW1_the_baton
+  kind: phase
+  repo: null
+  hash: 2558d35dc4282735
+  nodes:
+    - path: cortex/core/raid/contract-adapters.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/repo-prompt-blocks.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/response-sink.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/change-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gig-ledger-listener.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-collect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/run-state.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/run-state.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/repo-prompt-blocks.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-prompt-blocks.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-prompt-blocks.js
+      to: lib/spec-collect.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/run-state.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/change-record.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/gig-ledger-listener.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/run-state.js
+      kind: requires
+  crossings:
+    - from: lib/run-state.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: lib/repo-prompt-blocks.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW4_copilot_on_the_gates
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW5_agents_are_copilot
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW26_everything_declares_what_it_needs
+    upstream: []
+    downstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW15_every_file_tested
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW17_friction_and_tension_per_file
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW18_debug_by_bisect
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW22_find_before_generate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW25_the_systems_at_the_gate_moments
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW26_everything_declares_what_it_needs
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW4_copilot_on_the_gates
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW5_agents_are_copilot
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW6_the_intelligence_system_on_every_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW8_causal_graph_and_failure_mode_field
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW9_the_contract_panel
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW5_agents_are_copilot
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW26_everything_declares_what_it_needs
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (5): GW2_the_run_follows_the_gate, GW4_copilot_on_the_gates,
+        GW5_agents_are_copilot, GW24_the_gate_holds_the_agent_gets_a_projection,
+        GW26_everything_declares_what_it_needs · all downstream 19 · finishing it unlocks
+        GW2_the_run_follows_the_gate, GW5_agents_are_copilot,
+        GW24_the_gate_holds_the_agent_gets_a_projection, GW26_everything_declares_what_it_needs

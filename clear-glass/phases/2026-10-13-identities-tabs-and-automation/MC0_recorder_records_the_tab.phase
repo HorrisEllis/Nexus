@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::MC0_recorder_records_the_tab
+type: phase
+id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::MC0_recorder_records_the_tab
+context: >-
+  pipeline phase MC0_recorder_records_the_tab of
+  docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+intent: null
+summary: MC0_recorder_records_the_tab (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830002551
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830002551
+lastSeenAt: 1792830002551
+fingerprint: null
+payload:
+  id: MC0_recorder_records_the_tab
+  map: docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/driver/index.js
+    - clear-glass/renderer/settings/core.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cf9c1e64e40c7dbf

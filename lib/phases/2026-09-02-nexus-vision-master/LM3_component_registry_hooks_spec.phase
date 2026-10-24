@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::LM3_component_registry_hooks_spec
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::LM3_component_registry_hooks_spec
+context: >-
+  pipeline phase LM3_component_registry_hooks_spec of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: LM3_component_registry_hooks_spec (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974324
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974324
+lastSeenAt: 1792829974324
+fingerprint: null
+payload:
+  id: LM3_component_registry_hooks_spec
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - LM2_per_system_living_model_completion
+  blocks: []
+  spec: null
+  graph: 128374a4d532fba0

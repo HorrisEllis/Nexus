@@ -1,0 +1,260 @@
+envelope: 1
+uuid: nexus-export-graph-phase:ET5_loom_event_taxonomy_map:9aaa3b469d6c50fc
+type: graph
+id: phase:ET5_loom_event_taxonomy_map:9aaa3b469d6c50fc
+context: dependency graph of phase ET5_loom_event_taxonomy_map
+intent: null
+summary: 22 node(s), 10 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829971724
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971724
+lastSeenAt: 1792829971724
+fingerprint: null
+payload:
+  for: ET5_loom_event_taxonomy_map
+  kind: phase
+  repo: null
+  hash: 9aaa3b469d6c50fc
+  nodes:
+    - path: architect/schemas/index.js
+      role: changes
+      exists: true
+      system: architect
+    - path: clear-glass/schemas/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: copilot/schemas/index.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: loom/scanners/event-taxonomy-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap-import.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/phase-dag.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/spec-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: loom/test/phasemap-map.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/generate-atlases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: architect/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: loom/scanners/event-taxonomy-map.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/server.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: loom/test/phasemap-map.test.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: scripts/generate-atlases.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+  crossings:
+    - from: loom/scanners/phasemap-map.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: loom
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/phases.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/roadmap-import.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: false
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/spec-plan.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: lib/phase-dag.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: false
+    - from: lib/phase-files.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: lib/spec-census.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET2_guardian_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET3_clearglass_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET4_orchestrator_autopilot_event_taxonomy
+    dependents:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR6_copilot_as_agent_chat_model
+    upstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET1_event_taxonomy_pattern
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET2_guardian_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET3_clearglass_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET4_orchestrator_autopilot_event_taxonomy
+    downstream:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR6_copilot_as_agent_chat_model
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+    blockedBy:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET2_guardian_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET3_clearglass_event_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET4_orchestrator_autopilot_event_taxonomy
+    unlocks:
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET6_sigma_gates_on_taxonomy
+      - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR6_copilot_as_agent_chat_model
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        DAG 2f8ddd0afd383c4f · layer 2 · blocked by ET2_guardian_event_taxonomy,
+        ET3_clearglass_event_taxonomy, ET4_orchestrator_autopilot_event_taxonomy
+      - >-
+        depends on (3): ET2_guardian_event_taxonomy, ET3_clearglass_event_taxonomy,
+        ET4_orchestrator_autopilot_event_taxonomy · all upstream 4
+      - >-
+        needed by (2): ET6_sigma_gates_on_taxonomy, BR6_copilot_as_agent_chat_model · finishing it
+        unlocks ET6_sigma_gates_on_taxonomy, BR6_copilot_as_agent_chat_model

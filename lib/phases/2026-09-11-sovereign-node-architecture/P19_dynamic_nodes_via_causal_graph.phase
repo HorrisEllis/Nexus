@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+type: phase
+id: docs_2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+context: >-
+  pipeline phase P19_dynamic_nodes_via_causal_graph of
+  docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+intent: null
+summary: P19_dynamic_nodes_via_causal_graph (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829976510
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976510
+lastSeenAt: 1792829976510
+fingerprint: null
+payload:
+  id: P19_dynamic_nodes_via_causal_graph
+  map: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f5a629931620fb96

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
+type: phase
+id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
+context: pipeline phase DB19_genesis_sandboxed_fork of docs/2026-10-17-system-drawbridge-phasemap.spec
+intent: null
+summary: DB19_genesis_sandboxed_fork (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792830016897
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830016897
+lastSeenAt: 1792830016897
+fingerprint: null
+payload:
+  id: DB19_genesis_sandboxed_fork
+  map: docs/2026-10-17-system-drawbridge-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates/genesis-sandboxed.spec
+    - idearium/spec-engine/templates.js
+  depends_on:
+    - DB13_the_tunnel
+  blocks: []
+  spec: null
+  graph: 68f0ea951c3c9dae

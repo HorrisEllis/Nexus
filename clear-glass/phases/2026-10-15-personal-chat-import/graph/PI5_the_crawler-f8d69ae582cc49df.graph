@@ -1,0 +1,81 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PI5_the_crawler:f8d69ae582cc49df
+type: graph
+id: phase:PI5_the_crawler:f8d69ae582cc49df
+context: dependency graph of phase PI5_the_crawler
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792830007883
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007883
+lastSeenAt: 1792830007883
+fingerprint: null
+payload:
+  for: PI5_the_crawler
+  kind: phase
+  repo: null
+  hash: f8d69ae582cc49df
+  nodes:
+    - path: clear-glass/src/chats/crawler.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: lib/chat-crawl-plan.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/chats/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-chat-crawl-plan.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-chat-crawler.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/chat-crawl-settings.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/chats/crawler.js
+      to: lib/chat-crawl-settings.js
+      kind: requires
+    - from: clear-glass/src/chats/service.js
+      to: clear-glass/src/chats/crawler.js
+      kind: requires
+    - from: tests/modules/test-chat-crawler.test.js
+      to: clear-glass/src/chats/crawler.js
+      kind: requires
+    - from: tests/modules/test-chat-crawl-plan.test.js
+      to: lib/chat-crawl-plan.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+    dependents:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI7_the_links
+    upstream:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI0_where_it_is_read
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+    downstream:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI7_the_links
+    blockedBy:
+      - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by PI1_the_importer
+      - 'depends on (1): PI1_the_importer · all upstream 2'
+      - 'needed by (1): PI7_the_links'

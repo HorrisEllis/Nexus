@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-23-backlog-phasemap.spec::BL28_background_tabs_setting
+type: phase
+id: docs_2026-08-23-backlog-phasemap.spec::BL28_background_tabs_setting
+context: pipeline phase BL28_background_tabs_setting of docs/2026-08-23-backlog-phasemap.spec
+intent: null
+summary: BL28_background_tabs_setting (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829971274
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829971274
+lastSeenAt: 1792829971274
+fingerprint: null
+payload:
+  id: BL28_background_tabs_setting
+  map: docs/2026-08-23-backlog-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - BL24_userscript_suite_enterprise_grade
+  blocks: []
+  spec: null
+  graph: 179098e301fdb617

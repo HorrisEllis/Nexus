@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-verified-primitives-phasemap.spec::VP5_provenance
+type: phase
+id: docs_2026-10-05-verified-primitives-phasemap.spec::VP5_provenance
+context: pipeline phase VP5_provenance of docs/2026-10-05-verified-primitives-phasemap.spec
+intent: null
+summary: VP5_provenance (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829994204
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829994204
+lastSeenAt: 1792829994204
+fingerprint: null
+payload:
+  id: VP5_provenance
+  map: docs/2026-10-05-verified-primitives-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/component-store.js
+    - lib/node-export.js
+    - docs/atlases/idearium-atlas.md
+  depends_on:
+    - VP4_the_primitive_field
+  blocks: []
+  spec: null
+  graph: f17055700f5ac665

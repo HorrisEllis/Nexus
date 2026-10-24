@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-09-one-model-engine-phasemap.spec::ME9_the_layers_below_report
+type: phase
+id: docs_2026-10-09-one-model-engine-phasemap.spec::ME9_the_layers_below_report
+context: pipeline phase ME9_the_layers_below_report of docs/2026-10-09-one-model-engine-phasemap.spec
+intent: null
+summary: ME9_the_layers_below_report (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792829997695
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829997695
+lastSeenAt: 1792829997695
+fingerprint: null
+payload:
+  id: ME9_the_layers_below_report
+  map: docs/2026-10-09-one-model-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/dispatcher.js
+    - guardian/lib/dispatch-ladder.js
+    - guardian/lib/job-retry.js
+    - guardian/lib/economy-guard.js
+    - ollama/lib/dispatch.js
+    - clear-glass/src/providers/host.js
+  depends_on:
+    - ME1_one_failure_list
+    - ME3_one_engine_one_budget
+  blocks: []
+  spec: null
+  graph: cd11715c75119ecd

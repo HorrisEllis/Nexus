@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-nexus-vision-master-phasemap.spec::CP4_copilot_cli_deterministic_toggle
+type: phase
+id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CP4_copilot_cli_deterministic_toggle
+context: >-
+  pipeline phase CP4_copilot_cli_deterministic_toggle of
+  docs/2026-09-02-nexus-vision-master-phasemap.spec
+intent: null
+summary: CP4_copilot_cli_deterministic_toggle (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829974332
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829974332
+lastSeenAt: 1792829974332
+fingerprint: null
+payload:
+  id: CP4_copilot_cli_deterministic_toggle
+  map: docs/2026-09-02-nexus-vision-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: de2b606e1ee66875

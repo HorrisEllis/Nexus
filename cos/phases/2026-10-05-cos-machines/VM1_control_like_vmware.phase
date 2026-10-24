@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
+type: phase
+id: docs_2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
+context: pipeline phase VM1_control_like_vmware of docs/2026-10-05-cos-machines-phasemap.spec
+intent: null
+summary: VM1_control_like_vmware (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792829992258
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829992258
+lastSeenAt: 1792829992258
+fingerprint: null
+payload:
+  id: VM1_control_like_vmware
+  map: docs/2026-10-05-cos-machines-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/compartment/qemu-runtime.js
+    - cos/workspace/index.js
+    - cos/cli/commands/vm.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6722ac63e2d3dd68

@@ -1,0 +1,202 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FM1_mining_failure_modes:4584c0639e11da24
+type: graph
+id: phase:FM1_mining_failure_modes:4584c0639e11da24
+context: dependency graph of phase FM1_mining_failure_modes
+intent: null
+summary: 16 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829988494
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988494
+lastSeenAt: 1792829988494
+fingerprint: null
+payload:
+  for: FM1_mining_failure_modes
+  kind: phase
+  repo: null
+  hash: 4584c0639e11da24
+  nodes:
+    - path: cortex/self-heal/failure-mode-forensics.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/fault-taxonomy.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/repo/proof-run.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: cortex/self-heal/escalation.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/failure-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-c1-compound-failure-mode.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-diagnostic-heal-path.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-fault-taxonomy.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/self-heal/failure-mode-forensics.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/self-heal/failure-mode-forensics.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/self-heal/failure-mode-forensics.js
+      to: cortex/config.js
+      kind: requires
+    - from: idearium/repo/proof-run.js
+      to: lib/shadow.js
+      kind: requires
+    - from: cortex/self-heal/failure-intake.js
+      to: cortex/self-heal/failure-mode-forensics.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/self-heal/failure-mode-forensics.js
+      kind: requires
+    - from: tests/modules/test-c1-compound-failure-mode.test.js
+      to: cortex/self-heal/failure-mode-forensics.js
+      kind: requires
+    - from: cortex/self-heal/escalation.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: tests/modules/test-diagnostic-heal-path.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: tests/modules/test-fault-taxonomy.js
+      to: cortex/self-heal/fault-taxonomy.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/proof-run.js
+      kind: requires
+  crossings:
+    - from: diagnostic/nexus-diagnostic.js
+      to: cortex/self-heal/fault-taxonomy.js
+      fromSystem: diagnostic
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: intelligence/gap/predicate.js
+      to: cortex/self-heal/fault-taxonomy.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 5
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+    blockedBy:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV0_fulfil_a_taken_order
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::DA1_domain_agnostic_end_states
+        files:
+          - idearium/repo/proof-run.js
+      - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_lab
+        files:
+          - idearium/repo/proof-run.js
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 5 · blocked by CF1_cfr_improved_with_rfr2
+      - >-
+        depends on (2): PR1_proof_run_the_delivery_checker, CF1_cfr_improved_with_rfr2 · all
+        upstream 7
+      - 'needed by (2): MS1_mental_simulation, GL1_the_graphs_as_a_model'
+      - >-
+        same files as FV0_fulfil_a_taken_order with no order between them:
+        idearium/repo/proof-run.js
+      - >-
+        same files as PR2_screenshots_through_clear_glass with no order between them:
+        idearium/repo/proof-run.js
+      - 'same files as LB1_the_end_state_lab with no order between them: idearium/repo/proof-run.js'
+      - >-
+        same files as RD1_raid_complete_or_build with no order between them:
+        idearium/repo/proof-run.js
+      - >-
+        same files as DA1_domain_agnostic_end_states with no order between them:
+        idearium/repo/proof-run.js
+      - … and 1 more phases sharing its files without an order

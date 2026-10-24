@@ -1,0 +1,131 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CX0_codex_component_store:a475e453d53efd69
+type: graph
+id: phase:CX0_codex_component_store:a475e453d53efd69
+context: dependency graph of phase CX0_codex_component_store
+intent: null
+summary: 13 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829988512
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988512
+lastSeenAt: 1792829988512
+fingerprint: null
+payload:
+  for: CX0_codex_component_store
+  kind: phase
+  repo: null
+  hash: a475e453d53efd69
+  nodes:
+    - path: lib/component-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/build-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-decompose.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-build-context.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-build-verify.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-component-store.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-project-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/component-store.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/build-context.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/project-decompose.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/project-registry.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/component-store.js
+      kind: requires
+    - from: tests/modules/test-build-context.test.js
+      to: lib/component-store.js
+      kind: requires
+    - from: tests/modules/test-build-verify.test.js
+      to: lib/component-store.js
+      kind: requires
+    - from: tests/modules/test-component-store.test.js
+      to: lib/component-store.js
+      kind: requires
+    - from: tests/modules/test-project-registry.test.js
+      to: lib/component-store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 1
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_lab
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_lab
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 1 · ready
+      - 'depends on (1): EM0_ground'
+      - 'needed by (1): CL1_the_component_lab'

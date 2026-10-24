@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-cli-data-code-phasemap.spec::HG4_scripts_inside_the_sandbox
+type: phase
+id: docs_2026-10-05-cli-data-code-phasemap.spec::HG4_scripts_inside_the_sandbox
+context: pipeline phase HG4_scripts_inside_the_sandbox of docs/2026-10-05-cli-data-code-phasemap.spec
+intent: null
+summary: HG4_scripts_inside_the_sandbox (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829991457
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991457
+lastSeenAt: 1792829991457
+fingerprint: null
+payload:
+  id: HG4_scripts_inside_the_sandbox
+  map: docs/2026-10-05-cli-data-code-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/test-sandbox.js
+    - scripts/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a8510e63e202d6f6

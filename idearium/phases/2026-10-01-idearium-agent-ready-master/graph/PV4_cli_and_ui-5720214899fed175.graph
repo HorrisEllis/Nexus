@@ -1,0 +1,123 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PV4_cli_and_ui:5720214899fed175
+type: graph
+id: phase:PV4_cli_and_ui:5720214899fed175
+context: dependency graph of phase PV4_cli_and_ui
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829987107
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987107
+lastSeenAt: 1792829987107
+fingerprint: null
+payload:
+  for: PV4_cli_and_ui
+  kind: phase
+  repo: null
+  hash: 5720214899fed175
+  nodes:
+    - path: idearium/cli/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/js/plan-panel.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/cli/store-chatter.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/core/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/spec-library-import.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/spec-plan.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/manifest/commands.js
+      role: uses
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/cli/index.js
+      to: idearium/cli/store-chatter.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/core/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/repo/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/spec-engine/manifest/commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/repo/spec-plan.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/lib/spec-library-import.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 3
+    deps:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
+    dependents:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+    upstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV1_verify
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
+    downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 3
+      - 'depends on (1): PV3_prove_loop · all upstream 3'
+      - 'needed by (1): CP1_copilot_drives_idearium_and_talks_to_its_agents'

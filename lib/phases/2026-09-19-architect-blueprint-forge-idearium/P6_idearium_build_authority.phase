@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P6_idearium_build_authority
+type: phase
+id: docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P6_idearium_build_authority
+context: >-
+  pipeline phase P6_idearium_build_authority of
+  docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+intent: null
+summary: P6_idearium_build_authority (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829978161
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829978161
+lastSeenAt: 1792829978161
+fingerprint: null
+payload:
+  id: P6_idearium_build_authority
+  map: docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - P2_decide_D1_D2_D3
+  blocks: []
+  spec: null
+  graph: 6a967cacc9231f14

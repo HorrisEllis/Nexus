@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM3_agent_mesh_folder_consolidation
+type: phase
+id: docs_2026-09-02-agent-mesh-full-map-phasemap.spec::AM3_agent_mesh_folder_consolidation
+context: >-
+  pipeline phase AM3_agent_mesh_folder_consolidation of
+  docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+intent: null
+summary: AM3_agent_mesh_folder_consolidation (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829973862
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829973862
+lastSeenAt: 1792829973862
+fingerprint: null
+payload:
+  id: AM3_agent_mesh_folder_consolidation
+  map: docs/2026-09-02-agent-mesh-full-map-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d4c4810cf7b54e3b

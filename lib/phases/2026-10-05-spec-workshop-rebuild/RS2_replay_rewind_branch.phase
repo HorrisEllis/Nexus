@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS2_replay_rewind_branch
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS2_replay_rewind_branch
+context: pipeline phase RS2_replay_rewind_branch of docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS2_replay_rewind_branch (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829993787
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829993787
+lastSeenAt: 1792829993787
+fingerprint: null
+payload:
+  id: RS2_replay_rewind_branch
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/generation-recorder.js
+    - emergence/vendor/rfr2/cfr-kernel/rewind.js
+  depends_on:
+    - RS1_the_generation_recorder
+  blocks: []
+  spec: null
+  graph: ed0fd5754ecc8b3a

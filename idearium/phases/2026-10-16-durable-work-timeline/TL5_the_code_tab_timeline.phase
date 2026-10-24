@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-16-durable-work-timeline-phasemap.spec::TL5_the_code_tab_timeline
+type: phase
+id: docs_2026-10-16-durable-work-timeline-phasemap.spec::TL5_the_code_tab_timeline
+context: pipeline phase TL5_the_code_tab_timeline of docs/2026-10-16-durable-work-timeline-phasemap.spec
+intent: null
+summary: TL5_the_code_tab_timeline (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830010939
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830010939
+lastSeenAt: 1792830010939
+fingerprint: null
+payload:
+  id: TL5_the_code_tab_timeline
+  map: docs/2026-10-16-durable-work-timeline-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/code-surface.js
+    - idearium/ui/js/work-timeline.js (new)
+    - idearium/ui/css
+  depends_on:
+    - TL3_the_timeline
+    - TL4_rewind_to_a_gate
+  blocks: []
+  spec: null
+  graph: 143fd58bcbeb02d8

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::J3
+type: phase
+id: docs_2026-10-01-work-visibility-job-reuse-phasemap.spec::J3
+context: pipeline phase J3 of docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+intent: null
+summary: J3 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988001
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988001
+lastSeenAt: 1792829988001
+fingerprint: null
+payload:
+  id: J3
+  map: docs/2026-10-01-work-visibility-job-reuse-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/plan-panel.js
+    - idearium/spec-engine/index.js
+  depends_on:
+    - J0
+  blocks: []
+  spec: null
+  graph: 7c8a64dbe9e7d597

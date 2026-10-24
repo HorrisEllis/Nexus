@@ -1,0 +1,183 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SF19_loom_registry_never_auto_synced:73c7fd75c8376239
+type: graph
+id: phase:SF19_loom_registry_never_auto_synced:73c7fd75c8376239
+context: dependency graph of phase SF19_loom_registry_never_auto_synced
+intent: null
+summary: 21 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829970797
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829970797
+lastSeenAt: 1792829970797
+fingerprint: null
+payload:
+  for: SF19_loom_registry_never_auto_synced
+  kind: phase
+  repo: null
+  hash: 73c7fd75c8376239
+  nodes:
+    - path: lib/loom-map.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/bootstrap.js
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/data/registry.json
+      role: changes
+      exists: true
+      system: loom
+    - path: loom/server.js
+      role: changes
+      exists: true
+      system: loom
+    - path: copilot/module-builder.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/component-ledger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/maps/accounts-authority-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/copilot-capability-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/observability-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/raid-events-and-tools-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/session-2026-08-14-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/ui-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/maps/warp-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/scanners/source-map.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/schema/driver.js
+      role: uses
+      exists: true
+      system: loom
+    - path: loom/schema/index.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/loom-map.js
+      to: loom/schema/driver.js
+      kind: requires
+    - from: lib/loom-map.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/loom-map.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/schema/index.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/warp-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/observability-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/copilot-capability-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/session-2026-08-14-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/ui-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/raid-events-and-tools-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/accounts-authority-map.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/scanners/source-map.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+  crossings:
+    - from: lib/loom-map.js
+      to: loom/schema/driver.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-08-22-session-full-phasemap.spec::SF18_intelligence_becomes_a_real_system
+    dependents: []
+    upstream:
+      - docs/2026-08-22-session-full-phasemap.spec::SF17_intelligence_system_all_4_phases
+      - docs/2026-08-22-session-full-phasemap.spec::SF18_intelligence_becomes_a_real_system
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2
+      - 'depends on (1): SF18_intelligence_becomes_a_real_system · all upstream 2'
+      - 'needed by (0): —'

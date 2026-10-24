@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:N15_contract_history:a9ca7dca146ef7fe
+type: graph
+id: phase:N15_contract_history:a9ca7dca146ef7fe
+context: dependency graph of phase N15_contract_history
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829985436
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829985436
+lastSeenAt: 1792829985436
+fingerprint: null
+payload:
+  for: N15_contract_history
+  kind: phase
+  repo: null
+  hash: a9ca7dca146ef7fe
+  nodes:
+    - path: lib/nexstore/views/contract-history.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 6
+    deps:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+    dependents:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N16_settings_without_iframes
+    upstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N4_kinds_record_ledger_ring_blob
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N6_time
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+    downstream:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N16_settings_without_iframes
+    blockedBy:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+    unlocks:
+      - docs/2026-09-29-nex-node-store-phasemap.spec::N16_settings_without_iframes
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 6 · blocked by N8_service, N14_failure_mode_field
+      - 'depends on (2): N8_service, N14_failure_mode_field · all upstream 10'
+      - >-
+        needed by (1): N16_settings_without_iframes · finishing it unlocks
+        N16_settings_without_iframes

@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-system-expectations-phasemap.spec::EX5_time_to_breach
+type: phase
+id: docs_2026-10-07-system-expectations-phasemap.spec::EX5_time_to_breach
+context: pipeline phase EX5_time_to_breach of docs/2026-10-07-system-expectations-phasemap.spec
+intent: null
+summary: EX5_time_to_breach (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829996478
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829996478
+lastSeenAt: 1792829996478
+fingerprint: null
+payload:
+  id: EX5_time_to_breach
+  map: docs/2026-10-07-system-expectations-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cb016f9887da62f8

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF4_versionium_split_brain
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF4_versionium_split_brain
+context: >-
+  pipeline phase RF4_versionium_split_brain of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: RF4_versionium_split_brain (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829975183
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829975183
+lastSeenAt: 1792829975183
+fingerprint: null
+payload:
+  id: RF4_versionium_split_brain
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: b8dd3e8f9603deed

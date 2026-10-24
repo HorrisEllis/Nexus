@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-system-expectations-phasemap.spec::EX4_intelligence_learns_the_normal
+type: phase
+id: docs_2026-10-07-system-expectations-phasemap.spec::EX4_intelligence_learns_the_normal
+context: >-
+  pipeline phase EX4_intelligence_learns_the_normal of
+  docs/2026-10-07-system-expectations-phasemap.spec
+intent: null
+summary: EX4_intelligence_learns_the_normal (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829996477
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829996477
+lastSeenAt: 1792829996477
+fingerprint: null
+payload:
+  id: EX4_intelligence_learns_the_normal
+  map: docs/2026-10-07-system-expectations-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5991de2b3e18f190

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_idearium-repository-overhaul-phasemap.spec::MCO6_compartment_ownership
+type: phase
+id: docs_idearium-repository-overhaul-phasemap.spec::MCO6_compartment_ownership
+context: pipeline phase MCO6_compartment_ownership of docs/idearium-repository-overhaul-phasemap.spec
+intent: null
+summary: MCO6_compartment_ownership (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830031755
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830031755
+lastSeenAt: 1792830031755
+fingerprint: null
+payload:
+  id: MCO6_compartment_ownership
+  map: docs/idearium-repository-overhaul-phasemap.spec
+  repo: null
+  layer: null
+  status: '>'
+  files: []
+  depends_on:
+    - MCO0_audit_real_coverage
+  blocks: []
+  spec: null
+  graph: ccbefa5d407a1b18

@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_agent-intelligence-loop-phasemap.spec::AP2_agent_events_to_intelligence
+type: phase
+id: docs_agent-intelligence-loop-phasemap.spec::AP2_agent_events_to_intelligence
+context: pipeline phase AP2_agent_events_to_intelligence of docs/agent-intelligence-loop-phasemap.spec
+intent: null
+summary: AP2_agent_events_to_intelligence (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792830027401
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830027401
+lastSeenAt: 1792830027401
+fingerprint: null
+payload:
+  id: AP2_agent_events_to_intelligence
+  map: docs/agent-intelligence-loop-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - AP1_pull_toolbox
+  blocks: []
+  spec: null
+  graph: 7eaa646dd401b978

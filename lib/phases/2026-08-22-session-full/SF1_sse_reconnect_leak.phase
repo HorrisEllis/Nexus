@@ -1,0 +1,26 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-08-22-session-full-phasemap.spec::SF1_sse_reconnect_leak
+type: phase
+id: docs_2026-08-22-session-full-phasemap.spec::SF1_sse_reconnect_leak
+context: pipeline phase SF1_sse_reconnect_leak of docs/2026-08-22-session-full-phasemap.spec
+intent: null
+summary: SF1_sse_reconnect_leak (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792829970768
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829970768
+lastSeenAt: 1792829970768
+fingerprint: null
+payload:
+  id: SF1_sse_reconnect_leak
+  map: docs/2026-08-22-session-full-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 36a10b8830fc0eb0

@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI3_settings_tab_retheme_collapse
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::UI3_settings_tab_retheme_collapse
+context: >-
+  pipeline phase UI3_settings_tab_retheme_collapse of
+  docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: UI3_settings_tab_retheme_collapse (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987076
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987076
+lastSeenAt: 1792829987076
+fingerprint: null
+payload:
+  id: UI3_settings_tab_retheme_collapse
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/settings.html
+    - idearium/ui/js/repo-environment.js
+    - idearium/ui/js/app.js
+  depends_on:
+    - PF8_settings_console_one_cheap_read
+  blocks: []
+  spec: null
+  graph: ccdf3a127c208ee6

@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:T1:a15775f6e0b048ee
+type: graph
+id: phase:T1:a15775f6e0b048ee
+context: dependency graph of phase T1
+intent: null
+summary: 15 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829980924
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829980924
+lastSeenAt: 1792829980924
+fingerprint: null
+payload:
+  for: T1
+  kind: phase
+  repo: null
+  hash: a15775f6e0b048ee
+  nodes:
+    - path: guardian/lib/ncp-handler.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/semantic-variant.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/reword.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/response-sink.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-identity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-model.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/introspect.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/options.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/introspect.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/chat-logger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-identity.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/agent-model.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: lib/semantic-variant.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp-handler.js
+      kind: requires
+    - from: copilot/lib/reword.js
+      to: lib/semantic-variant.js
+      kind: requires
+  crossings:
+    - from: guardian/lib/ncp-handler.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 2
+    deps:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::R1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::E1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::I1
+    dependents:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::X1
+    upstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::E1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::I1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::R1
+    downstream:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::X1
+    blockedBy:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::R1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::E1
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::I1
+    unlocks:
+      - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::X1
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 2 · blocked by R1, N2, E1, I1
+      - 'depends on (4): R1, N2, E1, I1 · all upstream 5'
+      - 'needed by (1): X1 · finishing it unlocks X1'

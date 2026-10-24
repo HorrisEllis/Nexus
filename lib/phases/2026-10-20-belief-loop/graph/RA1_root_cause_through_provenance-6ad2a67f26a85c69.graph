@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792456303355
+exported_at: 1792830021768
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303355
-lastSeenAt: 1792456303355
+firstSeenAt: 1792830021768
+lastSeenAt: 1792830021768
 fingerprint: null
 payload:
   for: RA1_root_cause_through_provenance
@@ -143,7 +143,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    dagHash: 7583ffef0c495b95
+    dagHash: 2f8ddd0afd383c4f
     layer: 6
     deps:
       - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
@@ -182,7 +182,7 @@ payload:
     dangling: []
     lines:
       - >-
-        DAG 7583ffef0c495b95 · layer 6 · blocked by PV1_provenance_on_every_claim,
+        DAG 2f8ddd0afd383c4f · layer 6 · blocked by PV1_provenance_on_every_claim,
         TV1_traversal_primitive, EW1_evidence_record_and_weights, RA0_rca_says_what_it_does
       - >-
         depends on (4): PV1_provenance_on_every_claim, TV1_traversal_primitive,

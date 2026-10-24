@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+context: >-
+  pipeline phase PR2_screenshots_through_clear_glass of
+  docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: PR2_screenshots_through_clear_glass (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792829988489
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829988489
+lastSeenAt: 1792829988489
+fingerprint: null
+payload:
+  id: PR2_screenshots_through_clear_glass
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/driver/index.js
+    - idearium/repo/proof-run.js
+  depends_on:
+    - PR1_proof_run_the_delivery_checker
+    - GA1_guardian_source_of_truth
+  blocks: []
+  spec: null
+  graph: 3444f6584530ed41

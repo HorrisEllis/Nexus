@@ -1,0 +1,70 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB43_the_expansion_is_phased:d07fa0b1c8d777ac
+type: graph
+id: phase:SB43_the_expansion_is_phased:d07fa0b1c8d777ac
+context: dependency graph of phase SB43_the_expansion_is_phased
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829991005
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829991005
+lastSeenAt: 1792829991005
+fingerprint: null
+payload:
+  for: SB43_the_expansion_is_phased
+  kind: phase
+  repo: null
+  hash: d07fa0b1c8d777ac
+  nodes:
+    - path: lib/repo-expand.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/file-tree-plan.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-expand.js
+      to: lib/file-tree-plan.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-expand.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 6
+    deps:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+    dependents:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB44_phases_are_chunked_then_coded
+    upstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB30_the_template_is_a_skeleton
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+    downstream:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB44_phases_are_chunked_then_coded
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB45_skeletons_grey_until_coded
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB44_phases_are_chunked_then_coded
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 6
+      - 'depends on (1): SB42_a_repo_expands_from_its_spec · all upstream 6'
+      - >-
+        needed by (1): SB44_phases_are_chunked_then_coded · all downstream 2 · finishing it unlocks
+        SB44_phases_are_chunked_then_coded

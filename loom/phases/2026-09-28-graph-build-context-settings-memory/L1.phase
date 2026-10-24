@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::L1
+type: phase
+id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::L1
+context: pipeline phase L1 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+intent: null
+summary: L1 (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792829984167
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829984167
+lastSeenAt: 1792829984167
+fingerprint: null
+payload:
+  id: L1
+  map: docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - 'loom/maps/idearium-codebase-map.js (build path: file-tree-plan'
+    - repo-settings
+    - build-identity
+    - repo-prompt-blocks)
+    - loom/maps/agent-memory-map.js (context-atlas)
+    - loom/maps/observability-map.js (table-compactor
+    - graph relations)
+    - loom/maps/raid-events-and-tools-map.js (executor identity)
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 5ea3ba1965c46f0d

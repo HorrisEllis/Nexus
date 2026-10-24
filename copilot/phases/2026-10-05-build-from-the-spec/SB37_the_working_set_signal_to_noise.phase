@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-build-from-the-spec-phasemap.spec::SB37_the_working_set_signal_to_noise
+type: phase
+id: docs_2026-10-05-build-from-the-spec-phasemap.spec::SB37_the_working_set_signal_to_noise
+context: >-
+  pipeline phase SB37_the_working_set_signal_to_noise of
+  docs/2026-10-05-build-from-the-spec-phasemap.spec
+intent: null
+summary: SB37_the_working_set_signal_to_noise (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1792829990998
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829990998
+lastSeenAt: 1792829990998
+fingerprint: null
+payload:
+  id: SB37_the_working_set_signal_to_noise
+  map: docs/2026-10-05-build-from-the-spec-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/lib/workset.js
+    - copilot/tool-runtime.js
+    - copilot/server.js
+    - lib/repo-prompt-blocks.js
+    - lib/repo-agent.js
+    - lib/test-sandbox.js
+  depends_on:
+    - SB36_every_agent_can_use_the_tools
+  blocks: []
+  spec: null
+  graph: bd7d6f47a4d010c5

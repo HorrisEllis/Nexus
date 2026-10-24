@@ -1,0 +1,158 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P12_compartment_per_contract:8cfd3609296f0e65
+type: graph
+id: phase:P12_compartment_per_contract:8cfd3609296f0e65
+context: dependency graph of phase P12_compartment_per_contract
+intent: null
+summary: 13 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792829976506
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829976506
+lastSeenAt: 1792829976506
+fingerprint: null
+payload:
+  for: P12_compartment_per_contract
+  kind: phase
+  repo: null
+  hash: 8cfd3609296f0e65
+  nodes:
+    - path: lib/compartment-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/compartment-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-phase-compartment.test.mjs
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/snapshot/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/case-library.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/constitutional-ai.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/open-loop-taxonomy.js
+      role: uses
+      exists: true
+      system: lib
+    - path: meta/adversary-suite.js
+      role: uses
+      exists: true
+      system: meta
+    - path: meta/crystal-lattice.js
+      role: uses
+      exists: true
+      system: meta
+    - path: nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: nexus
+  edges:
+    - from: lib/compartment-engine.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: cortex/snapshot/index.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/constitutional-ai.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: nexus/nexus-bus.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/open-loop-taxonomy.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: meta/adversary-suite.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: meta/crystal-lattice.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/case-library.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: lib/autonomous-loop.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: tests/modules/compartment-engine.test.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: tests/modules/idearium-phase-compartment.test.mjs
+      to: lib/compartment-engine.js
+      kind: requires
+  crossings:
+    - from: lib/compartment-engine.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/compartment-engine.js
+      to: cortex/snapshot/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/compartment-engine.js
+      to: nexus/nexus-bus.js
+      fromSystem: lib
+      toSystem: nexus
+      kind: upward
+      known: true
+    - from: lib/compartment-engine.js
+      to: meta/adversary-suite.js
+      fromSystem: lib
+      toSystem: meta
+      kind: upward
+      known: true
+    - from: lib/compartment-engine.js
+      to: meta/crystal-lattice.js
+      fromSystem: lib
+      toSystem: meta
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 2f8ddd0afd383c4f
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 2f8ddd0afd383c4f · layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)

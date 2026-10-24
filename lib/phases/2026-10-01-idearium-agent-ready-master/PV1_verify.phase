@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PV1_verify
+type: phase
+id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::PV1_verify
+context: pipeline phase PV1_verify of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+intent: null
+summary: PV1_verify (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792829987102
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792829987102
+lastSeenAt: 1792829987102
+fingerprint: null
+payload:
+  id: PV1_verify
+  map: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/build-verify.js
+    - lib/cos-run.js
+    - cos/runtime/run.js
+    - lib/cos-debug-report.js
+    - lib/step-gate.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 570bdd07cebab1c1

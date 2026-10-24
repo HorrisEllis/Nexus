@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-one-contract-raid-releases-phasemap.spec::RD0_raid_runs_the_contract
+type: phase
+id: docs_2026-10-15-one-contract-raid-releases-phasemap.spec::RD0_raid_runs_the_contract
+context: >-
+  pipeline phase RD0_raid_runs_the_contract of
+  docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+intent: null
+summary: RD0_raid_runs_the_contract (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792830007473
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792830007473
+lastSeenAt: 1792830007473
+fingerprint: null
+payload:
+  id: RD0_raid_runs_the_contract
+  map: docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-intake.js
+    - cortex/core/raid/contract-gates.js
+    - cortex/core/raid/contract-boundary.js
+  depends_on:
+    - GT1a_exhausted_climb_spends_its_attempt
+  blocks: []
+  spec: null
+  graph: e1539a5fce346d1b
