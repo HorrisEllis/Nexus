@@ -7,11 +7,11 @@ intent: null
 summary: 20 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792880100964
+exported_at: 1792881043791
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100964
-lastSeenAt: 1792880100964
+firstSeenAt: 1792881043791
+lastSeenAt: 1792881043791
 fingerprint: null
 payload:
   for: SV0_the_census_tells_the_truth
@@ -173,6 +173,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_D1_how_a_system_declares_its_tables
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV2_core_files_go_home
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
@@ -190,6 +191,6 @@ payload:
       - layer 0
       - 'depends on (0): —'
       - >-
-        needed by (2): SV1_every_table_has_one_owner, SV2_core_files_go_home · all downstream 20 ·
+        needed by (2): SV1_every_table_has_one_owner, SV2_core_files_go_home · all downstream 21 ·
         finishing it unlocks SV1_every_table_has_one_owner
     edges: []

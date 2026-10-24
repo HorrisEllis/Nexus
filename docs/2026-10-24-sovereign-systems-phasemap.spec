@@ -141,7 +141,7 @@ phases_c:
       compartment.json and its registry, so it shows each system's step on CS_D7's road.
     proof: "a require in a comment is not a crossing; the table above comes back from the route (`system sovereign`) with in, up and the step"
   SV1_every_table_has_one_owner:
-    status: OPEN
+    status: "PARTLY — the census DONE 0.60.250 (lib/system-boundary.js tables(): 127 tables, 43 one writer, 3 one system + core, 31 only core, 3 contested: event_log, failures, gaps; 47 read only; 21 of 106 store users name no table it can read); the declaration OPEN, his call (SV1_D1)"
     depends_on: [SV0_the_census_tells_the_truth]
     files: [lib/system-store.js, lib/table-owners.js, lib/jaa-store.js, cortex/memory/jaa-db.js, cortex/boot.js, idearium/cli/route-commands.js]
     reuse: "found 2026-10-24 (§8.6): lib/system-store.js openStore(system, { tables, migrate }) already gives a system its own store and brings its tables home from cortex's once, keeping the rows there (SV-01; guardian uses it, test-guardian-own-data). SV1 builds the ownership census on it, not beside it."
@@ -152,6 +152,11 @@ phases_c:
       Route GET /api/system/tables and the row `system tables`. Where the files lie on disk does not change in this phase: moving his
       stored data is brought to him first.
     proof: "each table names its owner and its writers; a contested table is listed, not assigned; the census's data crossings drop for every owner"
+  # 2026-10-24 — his answer on brave-cori to the same proposal (a table → owner map): "Look at emerge. Deeply Custom". The coder's reading
+  # there, to confirm: each system declares its tables in Emergence (<system>.eg), and the owner map is compiled from the declarations.
+  # No .eg program exists yet. guardian and loom already declare theirs as lib/system-store.js table lists. Which one is his call:
+  SV1_D1_how_a_system_declares_its_tables:
+    status: "OPEN — his to choose: (a) Emergence, <system>.eg compiled to its store module (brave-cori's proposal from his \"Look at emerge. Deeply Custom\"); (b) the system-store table lists already in use (lib/system-store.js openStore tables, guardian and loom); the three contested tables (event_log, failures, gaps) are his to assign either way"
   SV2_core_files_go_home:
     status: OPEN
     depends_on: [SV0_the_census_tells_the_truth, CS12_the_mover_is_proven]

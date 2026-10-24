@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792880100966
+exported_at: 1792881043792
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792880100966
-lastSeenAt: 1792880100966
+firstSeenAt: 1792881043792
+lastSeenAt: 1792881043792
 fingerprint: null
 payload:
   for: SV1_every_table_has_one_owner
@@ -220,6 +220,7 @@ payload:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
     dependents:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_D1_how_a_system_declares_its_tables
     upstream:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
     downstream:
@@ -235,6 +236,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_D1_how_a_system_declares_its_tables
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV5_clear_glass_guardian_orchestrator
@@ -244,14 +246,16 @@ payload:
     blockedBy: []
     unlocks:
       - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_D1_how_a_system_declares_its_tables
     conflicts: []
     dangling: []
     lines:
       - layer 1 · ready
       - 'depends on (1): SV0_the_census_tells_the_truth'
       - >-
-        needed by (1): SV3_components_and_architect · all downstream 18 · finishing it unlocks
-        SV3_components_and_architect
+        needed by (2): SV3_components_and_architect, SV1_D1_how_a_system_declares_its_tables · all
+        downstream 19 · finishing it unlocks SV3_components_and_architect,
+        SV1_D1_how_a_system_declares_its_tables
     edges:
       - from: docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
         kind: declared

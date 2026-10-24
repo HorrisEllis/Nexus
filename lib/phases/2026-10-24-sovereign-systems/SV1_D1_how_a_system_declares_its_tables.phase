@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-sovereign-systems-phasemap.spec::SV1_D1_how_a_system_declares_its_tables
+type: phase
+id: docs_2026-10-24-sovereign-systems-phasemap.spec::SV1_D1_how_a_system_declares_its_tables
+context: >-
+  pipeline phase SV1_D1_how_a_system_declares_its_tables of
+  docs/2026-10-24-sovereign-systems-phasemap.spec
+intent: null
+summary: SV1_D1_how_a_system_declares_its_tables (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792881043794
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792881043794
+lastSeenAt: 1792881043794
+fingerprint: null
+payload:
+  id: SV1_D1_how_a_system_declares_its_tables
+  map: docs/2026-10-24-sovereign-systems-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "OPEN — his to choose: (a) Emergence, <system>.eg compiled to its store module (brave-cori's
+    proposal from his \"Look at emerge. Deeply Custom\"); (b) the system-store table lists already
+    in use (lib/system-store.js openStore tables, guardian and loom); the three contested tables
+    (event_log, failures, gaps) are his to assign either way"
+  files:
+    - lib/system-store.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8ecca76df49e7af9
