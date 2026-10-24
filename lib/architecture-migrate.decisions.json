@@ -1,0 +1,36 @@
+{
+  "about": "His calls on where a folder goes (lib/architecture-migrate.js reads this; a decision wins over every rule — USER_AUTONOMY). A later decision is a new entry with its own words; an overturned one is kept under superseded (§0.3).",
+  "decided": {
+    "remote-desktop": {
+      "home": "cos",
+      "why": "his decision: the front end for COS",
+      "by": "James, 2026-10-24: \"not all of them retired.,remote desktop, tablet was meant to tbe the front end for cos i fele like\""
+    },
+    "tablet": {
+      "home": "cos",
+      "why": "his decision: the front end for COS",
+      "by": "James, 2026-10-24: \"not all of them retired.,remote desktop, tablet was meant to tbe the front end for cos i fele like\""
+    },
+    "security": {
+      "home": "cos",
+      "why": "the coder's reading, to confirm: the encrypted WebRTC channel and kill switch of the remote session (his 2026-09-16 \"an encrypted wrapper over webrtc. a kill switch if the connection drops\") — it goes with remote-desktop",
+      "by": "decided by his axioms (code belongs to the system it serves) after his remote-desktop call — to confirm"
+    },
+    "jaa": {
+      "retire": true,
+      "why": "two SQL files nothing loads (the artifact schemas cite them as reference) — archived with its history, recoverable",
+      "by": "decided by his axioms (§0.3 archive, not delete; evidence: no require and no path load) after his \"not all of them retired\" — he can overturn"
+    },
+    "seams": {
+      "retire": true,
+      "why": "one file (seam-contracts.js) nothing loads; lib/seam/ is the live seam code — archived, recoverable",
+      "by": "decided by his axioms (§0.3; evidence: no require and no path load) — he can overturn"
+    },
+    "service": {
+      "retire": true,
+      "why": "OS-service wrappers for cortex, guardian and idearium that nothing starts (no script, no require, no path load); COS runs the systems now — archived, recoverable",
+      "by": "decided by his axioms (§0.3; evidence: nothing starts them) — he can overturn"
+    }
+  },
+  "superseded": {}
+}

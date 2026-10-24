@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792820476278
+exported_at: 1792821071284
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820476278
-lastSeenAt: 1792820476278
+firstSeenAt: 1792821071284
+lastSeenAt: 1792821071284
 fingerprint: null
 payload:
   for: MV13_sentinel
@@ -23,22 +23,20 @@ payload:
   crossings: []
   ready: false
   dag:
-    layer: 1
-    deps:
-      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
-    dependents: []
-    upstream:
-      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
-    downstream: []
-    blockedBy:
-      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_cli
+    upstream: []
+    downstream:
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV21_nexus
+      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV22_cli
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 1 · blocked by MV0_unplaced_homes
-      - 'depends on (1): MV0_unplaced_homes'
-      - 'needed by (0): —'
-    edges:
-      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
-        kind: declared
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): MV22_cli · all downstream 2'
+    edges: []

@@ -7,11 +7,11 @@ intent: null
 summary: MV21_nexus (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792820476290
+exported_at: 1792821071294
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820476290
-lastSeenAt: 1792820476290
+firstSeenAt: 1792821071294
+lastSeenAt: 1792821071294
 fingerprint: null
 payload:
   id: MV21_nexus
@@ -23,7 +23,8 @@ payload:
     - nexus/
     - lib/nexus/
   depends_on:
-    - MV22_warp
+    - MV22_cli
+    - MV20_warp
   blocks: []
   spec: null
   graph: 71489a565b05f8bb

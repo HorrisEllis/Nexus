@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1792820476276
+exported_at: 1792821071282
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820476276
-lastSeenAt: 1792820476276
+firstSeenAt: 1792821071282
+lastSeenAt: 1792821071282
 fingerprint: null
 payload:
   for: MV12_security
@@ -23,22 +23,17 @@ payload:
   crossings: []
   ready: false
   dag:
-    layer: 1
-    deps:
-      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+    layer: 0
+    deps: []
     dependents: []
-    upstream:
-      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+    upstream: []
     downstream: []
-    blockedBy:
-      - docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 1 · blocked by MV0_unplaced_homes
-      - 'depends on (1): MV0_unplaced_homes'
+      - layer 0 · ready
+      - 'depends on (0): —'
       - 'needed by (0): —'
-    edges:
-      - from: docs/2026-10-24-fifteen-systems-migration-phasemap.spec::MV0_unplaced_homes
-        kind: declared
+    edges: []
