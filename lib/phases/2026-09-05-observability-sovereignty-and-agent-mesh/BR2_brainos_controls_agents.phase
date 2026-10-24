@@ -9,11 +9,11 @@ intent: null
 summary: BR2_brainos_controls_agents (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792841753718
+exported_at: 1792874367852
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841753718
-lastSeenAt: 1792841753718
+firstSeenAt: 1792874367852
+lastSeenAt: 1792874367852
 fingerprint: null
 payload:
   id: BR2_brainos_controls_agents
@@ -32,4 +32,4 @@ payload:
     - TC1_tools_get_real_contracts
   blocks: []
   spec: null
-  graph: 5bb6eb8127717696
+  graph: bf8a64c50e3b9bba

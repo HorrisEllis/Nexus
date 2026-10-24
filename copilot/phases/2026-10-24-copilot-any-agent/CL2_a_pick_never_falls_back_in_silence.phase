@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-copilot-any-agent-phasemap.spec::CL2_a_pick_never_falls_back_in_silence
+type: phase
+id: docs_2026-10-24-copilot-any-agent-phasemap.spec::CL2_a_pick_never_falls_back_in_silence
+context: >-
+  pipeline phase CL2_a_pick_never_falls_back_in_silence of
+  docs/2026-10-24-copilot-any-agent-phasemap.spec
+intent: null
+summary: CL2_a_pick_never_falls_back_in_silence (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371330
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371330
+lastSeenAt: 1792874371330
+fingerprint: null
+payload:
+  id: CL2_a_pick_never_falls_back_in_silence
+  map: docs/2026-10-24-copilot-any-agent-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - copilot/lifeline.js
+    - copilot/server.js
+    - tests/modules/test-copilot-any-agent.test.js
+  depends_on:
+    - CL1_the_picked_agent_is_opened
+    - D2_fallback
+  blocks:
+    - MOD-CA-LOUD
+  spec: clear-glass/spec/copilot-any-agent.spec
+  graph: 4d9460c43c1296a6

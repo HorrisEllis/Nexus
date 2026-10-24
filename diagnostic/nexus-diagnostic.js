@@ -915,7 +915,7 @@ function startService() {
             system: name,
             friction: state.friction,
             sigma: state.sigma,
-            fix: `node cli/diagnose.js ${name}`,
+            fix: `node lib/cli/diagnose.js ${name}`,
           });
           console.log(`[diagnostic] ⚠  ${name} friction=${state.friction?.toFixed(3)} — logged`);
         }
@@ -1549,7 +1549,7 @@ function startService() {
         if (age > 300000) { // 5 min
           issues.push({ type: 'orphaned_pending', system: name, file: f,
             ageMs: age, severity: 'medium',
-            fix: `Run: node cli/diagnose.js ${name} or restart ${name} service` });
+            fix: `Run: node lib/cli/diagnose.js ${name} or restart ${name} service` });
         }
       }
     }

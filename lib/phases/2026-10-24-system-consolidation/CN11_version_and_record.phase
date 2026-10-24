@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+type: phase
+id: docs_2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+context: pipeline phase CN11_version_and_record of docs/2026-10-24-system-consolidation-phasemap.spec
+intent: null
+summary: CN11_version_and_record (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371417
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371417
+lastSeenAt: 1792874371417
+fingerprint: null
+payload:
+  id: CN11_version_and_record
+  map: docs/2026-10-24-system-consolidation-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/version.js
+    - docs/SPEC-REGISTRY.spec
+    - loom/maps/warp-map.js
+  depends_on:
+    - CN1_warp_to_lib
+    - CN2_siso_to_lib
+    - CN3_auth_to_orchestrator
+    - CN4_mesh_and_jaa_to_guardian
+    - CN5_emerge_home
+    - CN6_cockpit_to_idearium
+    - CN7_cli_to_nexus
+    - CN8_erosmancer_to_clear_glass
+    - CN9_archive_the_non_systems
+    - CN10_leftovers_named
+  blocks: []
+  spec: null
+  graph: 40fb4237d6e2b96f

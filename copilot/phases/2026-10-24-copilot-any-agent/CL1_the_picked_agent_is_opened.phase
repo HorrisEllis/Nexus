@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-copilot-any-agent-phasemap.spec::CL1_the_picked_agent_is_opened
+type: phase
+id: docs_2026-10-24-copilot-any-agent-phasemap.spec::CL1_the_picked_agent_is_opened
+context: pipeline phase CL1_the_picked_agent_is_opened of docs/2026-10-24-copilot-any-agent-phasemap.spec
+intent: null
+summary: CL1_the_picked_agent_is_opened (integration) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371327
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371327
+lastSeenAt: 1792874371327
+fingerprint: null
+payload:
+  id: CL1_the_picked_agent_is_opened
+  map: docs/2026-10-24-copilot-any-agent-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - copilot/lifeline.js
+    - copilot/server.js
+    - guardian/ask.js
+    - guardian/server.js
+    - tests/modules/test-copilot-any-agent.test.js
+  depends_on:
+    - D1_open_or_refuse
+  blocks:
+    - MOD-CA-OPEN
+  spec: clear-glass/spec/copilot-any-agent.spec
+  graph: 2855aac9d5b559af

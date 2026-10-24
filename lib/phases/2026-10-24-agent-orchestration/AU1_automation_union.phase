@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-agent-orchestration-phasemap.spec::AU1_automation_union
+type: phase
+id: docs_2026-10-24-agent-orchestration-phasemap.spec::AU1_automation_union
+context: pipeline phase AU1_automation_union of docs/2026-10-24-agent-orchestration-phasemap.spec
+intent: null
+summary: AU1_automation_union (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792874371319
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371319
+lastSeenAt: 1792874371319
+fingerprint: null
+payload:
+  id: AU1_automation_union
+  map: docs/2026-10-24-agent-orchestration-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/automation-registry.js
+  depends_on:
+    - AU_D1_automation_union
+  blocks: []
+  spec: docs/brainos-in-idearium.spec
+  graph: 85cdb08ef3dae9f3

@@ -7,11 +7,11 @@ intent: null
 summary: FN1_every_door_goes_through_it (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792822477964
+exported_at: 1792874370516
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822477964
-lastSeenAt: 1792822477964
+firstSeenAt: 1792874370516
+lastSeenAt: 1792874370516
 fingerprint: null
 payload:
   id: FN1_every_door_goes_through_it
@@ -31,4 +31,4 @@ payload:
     - FN0_the_funnel_as_data
   blocks: []
   spec: null
-  graph: 3eaa762c5d3deb20
+  graph: 1be38d0438ac1171

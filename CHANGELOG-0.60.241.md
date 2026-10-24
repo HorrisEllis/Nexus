@@ -47,6 +47,24 @@ Also updated:
     restored. `require.resolve` and stub strings were caught by a repair pass: 10 fixed, 2 bad rewrites reverted.
 12. **`sentinel` is part of the kernel now**, not a system of its own. SV-08 names `components` as its sovereign example.
 
+## Found by booting it, after the suite
+13. **The npm start scripts still named `nexus/autopilot.js`.** The mover rewrites a string that is entirely a path, and
+    `"node nexus/autopilot.js"` is a command, so `npm run start:all` would have failed. The scripts now say
+    `lib/nexus/autopilot.js`, and `movement` says `lib/cli/nexus-movement.js`. `npm start` had pointed at a root `orchestrator.js`
+    that was gone before RF2; it now says `orchestrator/orchestrator.js`.
+14. **The orchestrator's auth hot-swap had stopped, silently.** `require.resolve('../auth/index')` threw after auth/ moved into
+    orchestrator/, a try/catch swallowed it, and the boot log said "auth module unavailable". It now resolves `./auth/index`, and the
+    boot says "[auth] ready — SNR gate active, RSA-2048 loaded". No test covered it; booting found it.
+15. **Run instructions printed to James** named old paths: diagnostic's fix lines, lib/cli/boot-systems.js, idearium's phase-node
+    remedy, intelligence's cfr-debug usage, and phase-specs.js's own usage and INDEX header. They now name lib/. The phase nodes were
+    regenerated: 1993 phases checked, 0 with drift. Main had 63 drifting phases before this.
+
+Proof for 13–15:
+- `npm run start:all` boots every system with no "Cannot find module" (90 s run).
+- An audit of every relative require/require.resolve literal: none newly unresolved against main. The one listed is a string inside
+  a test's expected source text.
+- Clear Glass does not start in the container: Electron refuses root without `--no-sandbox`. That is the environment, not RF2.
+
 ## Proof
 - **Audit over every move since `main`:** 424 files, 525 static paths, **0** pointing anywhere new.
 - Loom and registry tests match `main` (12 files). The refactor tool's tests pass AM 5/5.

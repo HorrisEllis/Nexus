@@ -9,11 +9,11 @@ intent: null
 summary: FG4_context_for_any_agent (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676738
+exported_at: 1792874369115
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676738
-lastSeenAt: 1792787676738
+firstSeenAt: 1792874369115
+lastSeenAt: 1792874369115
 fingerprint: null
 payload:
   id: FG4_context_for_any_agent
@@ -29,4 +29,4 @@ payload:
     - FG3_summaries_up_the_tree
   blocks: []
   spec: null
-  graph: b0b88cad66b15693
+  graph: 1771a3106b4b242f

@@ -1,0 +1,98 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CN6_cockpit_to_idearium:ce51d1857853636b
+type: graph
+id: phase:CN6_cockpit_to_idearium:ce51d1857853636b
+context: dependency graph of phase CN6_cockpit_to_idearium
+intent: null
+summary: 6 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792874371410
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792874371410
+lastSeenAt: 1792874371410
+fingerprint: null
+payload:
+  for: CN6_cockpit_to_idearium
+  kind: phase
+  repo: null
+  hash: ce51d1857853636b
+  nodes:
+    - path: orchestrator/lib/spec-drift.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: lib/blueprint.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: intelligence/gap/predicate.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: intelligence/gap/predicate.js
+      kind: requires
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/spec-drift.js
+      kind: requires
+  crossings:
+    - from: orchestrator/lib/spec-drift.js
+      to: intelligence/gap/predicate.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/blueprint.js
+      to: orchestrator/lib/spec-drift.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+    dependents:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+    upstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN_D1_what_is_a_system
+    downstream:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN11_version_and_record
+    blockedBy:
+      - docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by CN0_the_rule_in_force
+      - 'depends on (1): CN0_the_rule_in_force · all upstream 2'
+      - 'needed by (1): CN11_version_and_record'
+    edges:
+      - from: docs/2026-10-24-system-consolidation-phasemap.spec::CN0_the_rule_in_force
+        kind: declared

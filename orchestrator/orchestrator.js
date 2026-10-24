@@ -3118,7 +3118,7 @@ try {
   const _authMod = require('./auth/index');
   _authMod.init();
   // Watch auth/index.js itself for hotswap
-  const _authFile = require.resolve('../auth/index');
+  const _authFile = require.resolve('./auth/index');
   require('../lib/safe-watch.js').watch(_authFile, () => {
     setTimeout(() => {
       try {
