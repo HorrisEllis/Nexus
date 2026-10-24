@@ -976,7 +976,7 @@ function startService() {
     // Healthy when orchestrator is healthy and the file exists
     // §0.39.265 — the shell moved into its own folder (ui/forge-shell/); this
     // still looked for ui/forge-shell.html and warned "missing" on every boot.
-    const forgeFile = path.join(ROOT, 'ui', 'forge-shell', 'forge-shell.html');
+    const forgeFile = path.join(ROOT, 'lib', 'ui', 'forge-shell', 'forge-shell.html');
     const forgeShellExists = fs.existsSync(forgeFile);
     const orchState = systemState['orchestrator'] || {};
     const forgeHealthy = forgeShellExists && orchState.online;

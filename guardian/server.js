@@ -3727,8 +3727,8 @@ function handleExtendedRoutes(req, res, url, method) {
   // Cockpit
   if (method==='GET' && (url.pathname==='/'||url.pathname==='/cockpit'||url.pathname==='/cockpit/')) {
     // Serve from root /ui/guardian/index.html (sovereign UI source of truth)
-    const forgeIdePath = require('path').join(__dirname, '..', 'ui', 'guardian', 'index.html');
-    const cockpitPath  = require('path').join(__dirname, '..', 'ui', 'home', 'index.html');
+    const forgeIdePath = require('path').join(__dirname, '..', 'lib', 'ui', 'guardian', 'index.html');
+    const cockpitPath  = require('path').join(__dirname, '..', 'lib', 'ui', 'home', 'index.html');
     const cockpitHtml  = require('fs').existsSync(forgeIdePath)
       ? require('fs').readFileSync(forgeIdePath, 'utf8')
       : require('fs').existsSync(cockpitPath)

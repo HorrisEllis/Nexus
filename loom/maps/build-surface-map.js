@@ -314,7 +314,7 @@ const CONSUMERS = [
   [I('lib/nerve/index.js'), I('clear-glass/src/ipc/agent-routes.js'), '§FN2 HTTP GET :7702/cli/attention → each window\'s focus in the snapshot'],
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/agent-routes.js'), '§FN1 HTTP POST :7702/cli/driver (field, fieldOff, at, spotlight, pointer) · GET /cli/attention'],
   [I('idearium/cli/route-commands.js'), I('cortex/boot.js'), '§FN2 HTTP GET /nerve/snapshot (`idearium nerve`)'],
-  [I('ui/tv-shell/nerve/nerve.js'), I('guardian/server.js'), '§FN3 HTTP /api/guardian/nerve/snapshot windows[].focus → the HUD and the browser node ring'],
+  [I('lib/ui/tv-shell/nerve/nerve.js'), I('guardian/server.js'), '§FN3 HTTP /api/guardian/nerve/snapshot windows[].focus → the HUD and the browser node ring'],
   [I('idearium/api/index.js'), I('idearium/lib/access.cjs'), '§IA0 decide() before every route (ROUTE_CAP); §IA1 /api/access/* — login, keys, revoke'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/accounts/idearium-login.js'), '§IA4 signIn({vault: passwordVault, cookies: session.defaultSession.cookies}) at start'],
   [I('idearium/ui/settings.html'), I('idearium/api/index.js'), '§IA3 Settings → Access: HTTP access/me, access/keys, config access.*'],

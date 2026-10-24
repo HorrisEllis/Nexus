@@ -17,7 +17,7 @@
  */
 const assert = require('assert'), fs = require('fs'), path = require('path');
 const { homeLinks, ROOT, INDEX } = require('../helpers/home-page-source');
-const HOME = path.join(ROOT, 'ui/home');
+const HOME = path.join(ROOT, 'lib', 'ui', 'home');
 let passed = 0, failed = 0;
 function test(id, d, fn) { try { fn(); console.log(`  \u2713 ${id} ${d}`); passed++; } catch (e) { console.error(`  \u2717 ${id} ${d}\n    ${e.message}`); failed++; } }
 const list = dir => fs.readdirSync(path.join(HOME, dir)).sort();

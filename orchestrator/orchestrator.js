@@ -166,7 +166,7 @@ try {
 }
 // §BUGFIX 2026-08-23 — ROOT was __dirname, correct only because
 // orchestrator.js sat at repo root. Used in 19 real places throughout
-// this file (path.join(ROOT, 'ui'), path.join(ROOT, 'cli', ...), etc.)
+// this file (path.join(ROOT, 'lib', 'ui'), path.join(ROOT, 'cli', ...), etc.)
 // as if it meant "the repo root," not "wherever this file lives" — the
 // two were the same thing before this file moved into orchestrator/,
 // and would have silently diverged for every one of those 19 real call
@@ -174,7 +174,7 @@ try {
 // individually: ROOT now explicitly means repo root, correct regardless
 // of which folder this file itself lives in.
 const ROOT    = path.join(__dirname, '..');
-const UI_ROOT = path.join(ROOT, 'ui');
+const UI_ROOT = path.join(ROOT, 'lib', 'ui');
 
 // ── System registry ───────────────────────────────────────────────────────────
 const SYS = {
@@ -798,11 +798,11 @@ const SYSTEM_LOCAL_UI_DIRS = [
   // guardian UI absorbed into main nexus UI — no separate guardian/ui
   { system:'cortex',       dir: path.join(ROOT,'cortex','ui') },
   { system:'idearium',     dir: path.join(ROOT,'idearium','ui') },
-  { system:'nexus',        dir: path.join(ROOT,'ui') },
-  { system:'emerge',       dir: path.join(ROOT,'ui') },        // emerge IDE ui lives at root ui/
-  { system:'orchestrator', dir: path.join(ROOT,'ui','orchestrator') },
-  { system:'explorer',     dir: path.join(ROOT,'ui') },  // contract-explorer + contract-renderer
-  { system:'diagnostic',   dir: path.join(ROOT,'ui','diagnostics') },  // §HOTSWAP-03
+  { system:'nexus',        dir: path.join(ROOT, 'lib', 'ui') },
+  { system:'emerge',       dir: path.join(ROOT, 'lib', 'ui') },        // emerge IDE ui lives at root ui/
+  { system:'orchestrator', dir: path.join(ROOT, 'lib', 'ui', 'orchestrator') },
+  { system:'explorer',     dir: path.join(ROOT, 'lib', 'ui') },  // contract-explorer + contract-renderer
+  { system:'diagnostic',   dir: path.join(ROOT, 'lib', 'ui', 'diagnostics') },  // §HOTSWAP-03
   // §BUGFIX 2026-07-02: was 'ui','diagnostic' (singular) — that folder is
   // empty. The real diagnostic UI, with a real index.html, lives at
   // ui/diagnostics (plural). GET /ui/diagnostic was serving nothing.

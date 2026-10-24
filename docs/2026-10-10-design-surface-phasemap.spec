@@ -37,7 +37,7 @@ spec:
       status: "OPEN"
       james: '"a design system"'
       depends_on: []
-      files: [idearium/ui/css/nexus-theme.css, ui/themes/nexus-dark.css, ui/themes/nexus-light.css, eravos/ui/index.html]
+      files: [idearium/ui/css/nexus-theme.css, lib/ui/themes/nexus-dark.css, lib/ui/themes/nexus-light.css, eravos/ui/index.html]
       does: "The three palettes become one token file (colour, type, spacing, radius, motion) the others import; each surface keeps only what is truly its own, named as an override."
       proof: "changing one token re-colours Idearium, the main UI and Eravos"
     DS1_tokens_edited_live:

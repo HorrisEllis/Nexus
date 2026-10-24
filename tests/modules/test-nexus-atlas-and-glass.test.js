@@ -155,7 +155,7 @@ async function main() {
     };
     for (const d of ['ui', 'idearium/ui', 'clear-glass/renderer', 'guardian', 'cockpit']) if (fs.existsSync(path.join(ROOT, d))) walk(path.join(ROOT, d));
     assert.deepStrictEqual(offenders, []);
-    const tv = fs.readFileSync(path.join(ROOT, 'ui/tv-shell/index.html'), 'utf8');
+    const tv = fs.readFileSync(path.join(ROOT, 'lib', 'ui', 'tv-shell', 'index.html'), 'utf8');
     assert.ok(tv.includes("f.src='../idearium/'"), 'tv-shell loads /ui/idearium/');
     assert.ok(!fs.readFileSync(path.join(ROOT, 'idearium/ui/index.html'), 'utf8').includes('eravos-frame'), '0.60.82 — the Eravos canvas is gone (James: "Delete it outright.")');
     // §0.39.299 AR4 — the Build tab's Architect is idearium's own page (one canvas for both Architects); arch-builder stays architect/'s own

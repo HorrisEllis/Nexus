@@ -49,7 +49,7 @@ function liveMeshNodeIds(svg) {
 function run() {
   global.document = { createElementNS: (ns, tag) => new FakeEl(tag) };
   delete require.cache[require.resolve('../../ui/brainos/brainos-canvas.js')];
-  require('../../ui/brainos/brainos-canvas.js');
+  require('../../lib/ui/brainos/brainos-canvas.js');
   const canvas = global.BrainOSCanvas;
   const container = new FakeEl('div');
   const svg = canvas.mount(container);

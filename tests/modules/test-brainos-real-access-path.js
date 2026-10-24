@@ -17,7 +17,7 @@ function test(id, desc, fn) {
 }
 
 const ROOT = path.join(__dirname, '../..');
-const UI_ROOT = path.join(ROOT, 'ui'); // matches orchestrator/orchestrator.js's own real UI_ROOT
+const UI_ROOT = path.join(ROOT, 'lib', 'ui'); // matches orchestrator/orchestrator.js's own real UI_ROOT
 
 function run() {
   test('BRA-001', 'the old, stray, misplaced nexus/ wrapper directory is genuinely gone', () => {
@@ -69,7 +69,7 @@ function run() {
   });
 
   test('BRA-007', '§UPDATED 2026-09-06 (BrainOS v2 rebuild) — every real asset the current HTML references actually exists on disk', () => {
-    for (const rel of ['ui/brainos/brainos-app.css', 'ui/brainos/brainos-canvas.js', 'ui/brainos/brainos-app.js']) {
+    for (const rel of ['lib/ui/brainos/brainos-app.css', 'lib/ui/brainos/brainos-canvas.js', 'lib/ui/brainos/brainos-app.js']) {
       assert.ok(fs.existsSync(path.join(ROOT, rel)), `${rel} referenced but missing`);
     }
   });

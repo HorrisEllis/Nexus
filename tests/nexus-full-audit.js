@@ -67,7 +67,7 @@ const criticalFiles = [
   'intelligence/causal/anomaly.js',
   'lib/cfr/sigma.js', 'lib/cfr/ledger.js', 'lib/cfr/graph.js',
   'idearium/index.js', 'architect/service.js',
-  'ui/home/index.html', 'ui/emerge-ide.html',
+  'lib/ui/home/index.html', 'ui/emerge-ide.html',
   '.mcp.json', 'docs/mcp.spec', 'docs/mcp-claude-desktop-config.json',
 ];
 

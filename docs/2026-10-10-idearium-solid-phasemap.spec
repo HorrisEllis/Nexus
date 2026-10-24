@@ -72,7 +72,7 @@ spec:
       status: "DONE (0.56.0) — copilot/server.js _noAnswer: both /api/prompt lifeline handlers answer ok:false with lifeline's own reason when there is no text (live: 'Both Ollama and Guardian are unavailable. Check system health.'); the overview says it. SO-05."
       james: '"[unstructured response — keys: ok, requestId, sessionId, text, modelUsed, intent, channel, contextLayers, fromStream] via none" (his screenshot, the overview co-pilot)'
       depends_on: []
-      files: [copilot/server.js, copilot/lifeline.js, ui/tv-shell/index.html]
+      files: [copilot/server.js, copilot/lifeline.js, lib/ui/tv-shell/index.html]
       does: >-
         Copilot's /api/prompt returned ok:true with empty text and modelUsed 'none' — nothing answered and it called it
         success. 0.55.2 made the overview say so plainly; the fix is upstream: an answer with no text and no model is

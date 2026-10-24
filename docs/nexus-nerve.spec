@@ -88,7 +88,7 @@ spec:
         three nodes render permanently "unknown" instead of "stale" —
         which is itself a more honest state per §1.2 than faking a pulse.
     act_layer_spotlight:
-      file:   ui/tv-shell/spotlight/spotlight.js
+      file:   lib/ui/tv-shell/spotlight/spotlight.js
       status: confirmed — real, 452 lines. `Spotlight.execute(ui)` at
               line 449 dispatches to `CP.executeUI(ui)`. An `EL` element
               registry exists at line 41. This is the only confirmed
