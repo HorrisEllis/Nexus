@@ -9,11 +9,11 @@ intent: null
 summary: TB3_tabs_are_compartments (?) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854071345
+exported_at: 1792854994584
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071345
-lastSeenAt: 1792854071345
+firstSeenAt: 1792854994584
+lastSeenAt: 1792854994584
 fingerprint: null
 payload:
   id: TB3_tabs_are_compartments
@@ -216,7 +216,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::TB1_a_tab_is_its_own_webview
@@ -233,7 +233,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by TB1_a_tab_is_its_own_webview
+        - DAG 86519dc3b354b627 · layer 2 · blocked by TB1_a_tab_is_its_own_webview
         - 'depends on (1): TB1_a_tab_is_its_own_webview · all upstream 2'
         - 'needed by (1): MX4_one_system_digest'
   uuid: b878505a-e989-5827-b52b-3df32fe85be9

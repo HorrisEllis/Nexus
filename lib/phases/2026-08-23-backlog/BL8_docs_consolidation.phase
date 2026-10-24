@@ -7,11 +7,11 @@ intent: null
 summary: BL8_docs_consolidation (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854039030
+exported_at: 1792854960473
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854039030
-lastSeenAt: 1792854039030
+firstSeenAt: 1792854960473
+lastSeenAt: 1792854960473
 fingerprint: null
 payload:
   id: BL8_docs_consolidation
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: f11d47b75fd95959
+    hash: cf8208b8d4fd2adc
     nodes:
       - path: loom/scanners/phasemap-map.js
         role: changes
@@ -78,10 +78,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/nexus-client.js
         role: uses
         exists: true
@@ -90,12 +86,16 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -137,12 +137,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
         fromSystem: idearium
@@ -199,7 +193,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -214,7 +208,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (1): BL9_per_system_phasemap_folders · all downstream 2 · finishing it unlocks

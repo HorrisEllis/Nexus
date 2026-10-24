@@ -9,11 +9,11 @@ intent: null
 summary: IM5_each_system_to_the_template (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854086632
+exported_at: 1792855010921
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854086632
-lastSeenAt: 1792854086632
+firstSeenAt: 1792855010921
+lastSeenAt: 1792855010921
 fingerprint: null
 payload:
   id: IM5_each_system_to_the_template
@@ -39,7 +39,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM1_the_shape_census_as_a_command
@@ -61,7 +61,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 2 · blocked by IM1_the_shape_census_as_a_command,
+          DAG 86519dc3b354b627 · layer 2 · blocked by IM1_the_shape_census_as_a_command,
           IM3_wire_what_exists, IM4_the_kernel_boundary
         - >-
           depends on (3): IM1_the_shape_census_as_a_command, IM3_wire_what_exists,

@@ -7,11 +7,11 @@ intent: null
 summary: SF19_loom_registry_never_auto_synced (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854038519
+exported_at: 1792854959817
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854038519
-lastSeenAt: 1792854038519
+firstSeenAt: 1792854959817
+lastSeenAt: 1792854959817
 fingerprint: null
 payload:
   id: SF19_loom_registry_never_auto_synced
@@ -172,7 +172,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-08-22-session-full-phasemap.spec::SF18_intelligence_becomes_a_real_system
@@ -186,7 +186,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): SF18_intelligence_becomes_a_real_system · all upstream 2'
         - 'needed by (0): —'
   uuid: 21691160-b0fe-5374-af3f-32d40e748749

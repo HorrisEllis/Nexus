@@ -1,0 +1,188 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+context: pipeline phase LM3_readers_through_its_routes of docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM3_readers_through_its_routes (backend) — 3 file(s)
+system: architect
+tags: []
+exported_at: 1792855024864
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792855024864
+lastSeenAt: 1792855024864
+fingerprint: null
+payload:
+  id: LM3_readers_through_its_routes
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: >-
+    DONE 0.60.241 — Architect's read view and agent-build-loop through Loom's routes; a real boot
+    read 4 hooks through them
+  files:
+    - architect/service.js
+    - lib/agent-build-loop.js
+    - loom/server.js
+  depends_on:
+    - LM2_loom_owns_its_tables
+  blocks: []
+  spec: null
+  graph:
+    hash: ca49255037a63930
+    nodes:
+      - path: architect/service.js
+        role: changes
+        exists: true
+        system: architect
+      - path: lib/agent-build-loop.js
+        role: changes
+        exists: true
+        system: lib
+      - path: loom/server.js
+        role: changes
+        exists: true
+        system: loom
+      - path: architect/compile-route.js
+        role: uses
+        exists: true
+        system: architect
+      - path: architect/config.js
+        role: uses
+        exists: true
+        system: architect
+      - path: architect/registry-components.js
+        role: uses
+        exists: true
+        system: architect
+      - path: architect/src/spec/Blueprint.js
+        role: uses
+        exists: true
+        system: architect
+      - path: cortex/core/raid/contract-intake.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: hooks/index.js
+        role: uses
+        exists: true
+        system: hooks
+      - path: intelligence/alk/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/hook-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-connect.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: architect/service.js
+        to: lib/data-home.js
+        kind: requires
+      - from: architect/service.js
+        to: lib/hook-registry.js
+        kind: requires
+      - from: architect/service.js
+        to: architect/src/spec/Blueprint.js
+        kind: requires
+      - from: architect/service.js
+        to: intelligence/cfr/index.js
+        kind: requires
+      - from: architect/service.js
+        to: hooks/index.js
+        kind: requires
+      - from: architect/service.js
+        to: architect/compile-route.js
+        kind: requires
+      - from: architect/service.js
+        to: architect/config.js
+        kind: requires
+      - from: architect/service.js
+        to: nexus/nexus-connect.js
+        kind: requires
+      - from: architect/service.js
+        to: architect/registry-components.js
+        kind: requires
+      - from: architect/service.js
+        to: cortex/core/raid/contract-intake.js
+        kind: requires
+      - from: architect/service.js
+        to: intelligence/alk/index.js
+        kind: requires
+      - from: architect/service.js
+        to: lib/node-registry.js
+        kind: requires
+    crossings:
+      - from: architect/service.js
+        to: intelligence/cfr/index.js
+        fromSystem: architect
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: architect/service.js
+        to: hooks/index.js
+        fromSystem: architect
+        toSystem: hooks
+        kind: system
+        known: true
+      - from: architect/service.js
+        to: nexus/nexus-connect.js
+        fromSystem: architect
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: architect/service.js
+        to: cortex/core/raid/contract-intake.js
+        fromSystem: architect
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: architect/service.js
+        to: intelligence/alk/index.js
+        fromSystem: architect
+        toSystem: intelligence
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 86519dc3b354b627
+      layer: 2
+      deps:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      dependents:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      upstream:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      downstream:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 86519dc3b354b627 · layer 2
+        - 'depends on (1): LM2_loom_owns_its_tables · all upstream 2'
+        - >-
+          needed by (1): LM4_the_seal_and_into_its_compartment · all downstream 2 · finishing it
+          unlocks LM4_the_seal_and_into_its_compartment
+  uuid: 42d252a8-be2e-55cd-b242-89da3b93c1f3

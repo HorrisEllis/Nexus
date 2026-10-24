@@ -7,11 +7,11 @@ intent: null
 summary: JB7_the_follow_up (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854071368
+exported_at: 1792854994606
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071368
-lastSeenAt: 1792854071368
+firstSeenAt: 1792854994606
+lastSeenAt: 1792854994606
 fingerprint: null
 payload:
   id: JB7_the_follow_up
@@ -56,7 +56,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB6_the_application_ledger
@@ -76,7 +76,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 3 · blocked by JB6_the_application_ledger,
+          DAG 86519dc3b354b627 · layer 3 · blocked by JB6_the_application_ledger,
           JB5_varied_wording_true_facts
         - 'depends on (2): JB6_the_application_ledger, JB5_varied_wording_true_facts · all upstream 4'
         - 'needed by (0): —'

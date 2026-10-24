@@ -9,11 +9,11 @@ intent: null
 summary: GA3_guardian_userscript_capability_wiring (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854102343
+exported_at: 1792855027787
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854102343
-lastSeenAt: 1792854102343
+firstSeenAt: 1792855027787
+lastSeenAt: 1792855027787
 fingerprint: null
 payload:
   id: GA3_guardian_userscript_capability_wiring
@@ -145,7 +145,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/copilot-guardian-cos-expansion-phasemap.spec::GA1_guardian_nexus_reconciliation
@@ -162,7 +162,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by GA1_guardian_nexus_reconciliation
+        - DAG 86519dc3b354b627 · layer 1 · blocked by GA1_guardian_nexus_reconciliation
         - 'depends on (1): GA1_guardian_nexus_reconciliation'
         - >-
           needed by (1): GA7_clear_glass_guardian_userscript_expansion · finishing it unlocks

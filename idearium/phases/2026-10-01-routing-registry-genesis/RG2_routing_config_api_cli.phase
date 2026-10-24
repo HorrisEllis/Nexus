@@ -9,11 +9,11 @@ intent: null
 summary: RG2_routing_config_api_cli (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056774
+exported_at: 1792854979420
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056774
-lastSeenAt: 1792854056774
+firstSeenAt: 1792854979420
+lastSeenAt: 1792854979420
 fingerprint: null
 payload:
   id: RG2_routing_config_api_cli
@@ -228,7 +228,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG1_routing_policy_library
@@ -247,7 +247,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): RG1_routing_policy_library · all upstream 2'
         - >-
           needed by (1): RG3_dispatch_uses_the_route · all downstream 3 · finishing it unlocks

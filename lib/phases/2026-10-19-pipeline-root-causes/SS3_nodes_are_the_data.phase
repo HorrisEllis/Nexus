@@ -7,11 +7,11 @@ intent: null
 summary: SS3_nodes_are_the_data (library) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854091308
+exported_at: 1792855015864
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854091308
-lastSeenAt: 1792854091308
+firstSeenAt: 1792855015864
+lastSeenAt: 1792855015864
 fingerprint: null
 payload:
   id: SS3_nodes_are_the_data
@@ -167,7 +167,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS2_every_system_home
@@ -186,7 +186,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by SS2_every_system_home
+        - DAG 86519dc3b354b627 · layer 3 · blocked by SS2_every_system_home
         - 'depends on (1): SS2_every_system_home · all upstream 3'
         - >-
           needed by (1): SS4_seal_into_compartments · finishing it unlocks

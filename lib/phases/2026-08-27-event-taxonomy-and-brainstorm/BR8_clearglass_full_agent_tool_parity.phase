@@ -9,11 +9,11 @@ intent: null
 summary: BR8_clearglass_full_agent_tool_parity (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854039628
+exported_at: 1792854961082
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854039628
-lastSeenAt: 1792854039628
+firstSeenAt: 1792854961082
+lastSeenAt: 1792854961082
 fingerprint: null
 payload:
   id: BR8_clearglass_full_agent_tool_parity
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX16_persistent_listener_registry_and_callable_elements
@@ -53,7 +53,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 3 · blocked by
+          DAG 86519dc3b354b627 · layer 3 · blocked by
           TX16_persistent_listener_registry_and_callable_elements
         - 'depends on (1): TX16_persistent_listener_registry_and_callable_elements · all upstream 6'
         - 'needed by (0): —'

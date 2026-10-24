@@ -7,11 +7,11 @@ intent: null
 summary: M0 (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854053214
+exported_at: 1792854975816
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854053214
-lastSeenAt: 1792854053214
+firstSeenAt: 1792854975816
+lastSeenAt: 1792854975816
 fingerprint: null
 payload:
   id: M0
@@ -214,7 +214,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -234,7 +234,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (2): M1, M5 · all downstream 6 · finishing it unlocks M1'
         - >-

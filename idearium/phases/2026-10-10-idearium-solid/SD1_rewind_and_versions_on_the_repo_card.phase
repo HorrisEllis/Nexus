@@ -9,11 +9,11 @@ intent: null
 summary: SD1_rewind_and_versions_on_the_repo_card (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854069591
+exported_at: 1792854992869
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854069591
-lastSeenAt: 1792854069591
+firstSeenAt: 1792854992869
+lastSeenAt: 1792854992869
 fingerprint: null
 payload:
   id: SD1_rewind_and_versions_on_the_repo_card
@@ -47,7 +47,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -58,7 +58,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 0391cdec-1a19-5475-9982-e2a04c73fc0d

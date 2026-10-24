@@ -7,11 +7,11 @@ intent: null
 summary: SS1_system_store_adoption (library) — 20 file(s)
 system: core
 tags: []
-exported_at: 1792854091307
+exported_at: 1792855015863
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854091307
-lastSeenAt: 1792854091307
+firstSeenAt: 1792855015863
+lastSeenAt: 1792855015863
 fingerprint: null
 payload:
   id: SS1_system_store_adoption
@@ -47,7 +47,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: d78715b3b21e685b
+    hash: bc0cdcf29720a557
     nodes:
       - path: cli/clear-idearium.js
         role: changes
@@ -169,10 +169,10 @@ payload:
         role: used-by
         exists: true
         system: intelligence
-      - path: intelligence/synthesis/index.js
+      - path: loom/lib/store.js
         role: used-by
         exists: true
-        system: intelligence
+        system: loom
       - path: tests/modules/test-sovereign-systems.test.js
         role: used-by
         exists: true
@@ -265,6 +265,9 @@ payload:
       - from: diagnostic/healer/api/index.js
         to: lib/system-store.js
         kind: requires
+      - from: loom/lib/store.js
+        to: lib/system-store.js
+        kind: requires
       - from: tests/modules/test-sovereign-systems.test.js
         to: lib/system-store.js
         kind: requires
@@ -295,9 +298,6 @@ payload:
       - from: intelligence/server.js
         to: lib/data-home.js
         kind: requires
-      - from: intelligence/synthesis/index.js
-        to: lib/data-home.js
-        kind: requires
     crossings:
       - from: guardian/lib/ncp.js
         to: intelligence/gap/predicate.js
@@ -307,7 +307,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
@@ -335,7 +335,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): RC1_watchers_never_kill_a_kernel'
         - >-
           needed by (4): SS2_every_system_home, UI1_toolbox_and_store_explorer,

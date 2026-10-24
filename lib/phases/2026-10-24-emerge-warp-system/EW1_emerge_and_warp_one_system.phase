@@ -7,11 +7,11 @@ intent: null
 summary: EW1_emerge_and_warp_one_system (foundation) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792854098931
+exported_at: 1792855024034
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854098931
-lastSeenAt: 1792854098931
+firstSeenAt: 1792855024034
+lastSeenAt: 1792855024034
 fingerprint: null
 payload:
   id: EW1_emerge_and_warp_one_system
@@ -34,7 +34,7 @@ payload:
   blocks: []
   spec: docs/2026-10-17-system-drawbridge-phasemap.spec
   graph:
-    hash: 8c3f3e908d7f646a
+    hash: 3f9ccf67c0a2385c
     nodes:
       - path: lib/nexus-self/systems.js
         role: changes
@@ -104,7 +104,7 @@ payload:
         role: used-by
         exists: true
         system: lib
-      - path: lib/phase-map-auto.js
+      - path: lib/ollama-port.js
         role: used-by
         exists: true
         system: lib
@@ -163,13 +163,13 @@ payload:
       - from: lib/nexus-self/store.js
         to: lib/nexus-self/systems.js
         kind: requires
-      - from: lib/phase-map-auto.js
+      - from: lib/ollama-port.js
         to: lib/nexus-self/systems.js
         kind: requires
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
@@ -190,7 +190,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (2): EW_D0_emerge_and_warp_one_system, EW_D2_the_runtime_is_not_a_crossing'
         - >-
           needed by (1): EW2_the_callers_outside_idearium · all downstream 4 · finishing it unlocks

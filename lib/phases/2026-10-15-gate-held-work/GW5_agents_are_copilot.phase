@@ -7,11 +7,11 @@ intent: null
 summary: GW5_agents_are_copilot (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854076760
+exported_at: 1792855000560
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076760
-lastSeenAt: 1792854076760
+firstSeenAt: 1792855000560
+lastSeenAt: 1792855000560
 fingerprint: null
 payload:
   id: GW5_agents_are_copilot
@@ -239,7 +239,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
@@ -261,7 +261,7 @@ payload:
             - idearium/cli/route-commands.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by GW1_the_baton
+        - DAG 86519dc3b354b627 · layer 1 · blocked by GW1_the_baton
         - 'depends on (1): GW1_the_baton'
         - 'needed by (1): GW22_find_before_generate'
         - 'same files as GW2_the_run_follows_the_gate with no order between them: lib/repo-agent.js'

@@ -9,11 +9,11 @@ intent: null
 summary: PC3_verified_alone_resumed_by_recheck (?) — 2 file(s)
 system: cortex
 tags: []
-exported_at: 1792854087110
+exported_at: 1792855011360
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854087110
-lastSeenAt: 1792854087110
+firstSeenAt: 1792855011360
+lastSeenAt: 1792855011360
 fingerprint: null
 payload:
   id: PC3_verified_alone_resumed_by_recheck
@@ -89,7 +89,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
@@ -111,7 +111,7 @@ payload:
             - cortex/core/raid/contract-gates.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by PC1_the_point_first
+        - DAG 86519dc3b354b627 · layer 2 · blocked by PC1_the_point_first
         - 'depends on (1): PC1_the_point_first · all upstream 3'
         - 'needed by (1): PC6_assembled_and_checked_whole'
         - >-

@@ -7,11 +7,11 @@ intent: null
 summary: SD13_the_machine_is_cos (?) — 6 file(s)
 system: cos
 tags: []
-exported_at: 1792854069609
+exported_at: 1792854992883
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854069609
-lastSeenAt: 1792854069609
+firstSeenAt: 1792854992883
+lastSeenAt: 1792854992883
 fingerprint: null
 payload:
   id: SD13_the_machine_is_cos
@@ -246,7 +246,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -264,7 +264,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

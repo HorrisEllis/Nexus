@@ -9,11 +9,11 @@ intent: null
 summary: IC8_callto_event_driven_cli_injection (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854041416
+exported_at: 1792854963000
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854041416
-lastSeenAt: 1792854041416
+firstSeenAt: 1792854963000
+lastSeenAt: 1792854963000
 fingerprint: null
 payload:
   id: IC8_callto_event_driven_cli_injection
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC5_full_input_queue_output_qc_lifecycle
@@ -50,7 +50,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by IC5_full_input_queue_output_qc_lifecycle
+        - DAG 86519dc3b354b627 · layer 4 · blocked by IC5_full_input_queue_output_qc_lifecycle
         - 'depends on (1): IC5_full_input_queue_output_qc_lifecycle · all upstream 4'
         - 'needed by (0): —'
   uuid: 70345bd5-0284-5f5e-b36b-bc38654f9b1f

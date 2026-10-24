@@ -7,11 +7,11 @@ intent: null
 summary: D4_spec_bulk_import (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854042769
+exported_at: 1792854964496
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854042769
-lastSeenAt: 1792854042769
+firstSeenAt: 1792854964496
+lastSeenAt: 1792854964496
 fingerprint: null
 payload:
   id: D4_spec_bulk_import
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::C1_copilot_spec_wizard
@@ -51,7 +51,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 2 · blocked by C1_copilot_spec_wizard,
+          DAG 86519dc3b354b627 · layer 2 · blocked by C1_copilot_spec_wizard,
           B2_chunk_contract_chaining
         - 'depends on (2): C1_copilot_spec_wizard, B2_chunk_contract_chaining · all upstream 3'
         - 'needed by (0): —'

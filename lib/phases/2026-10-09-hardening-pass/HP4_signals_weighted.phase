@@ -7,11 +7,11 @@ intent: null
 summary: HP4_signals_weighted (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854067124
+exported_at: 1792854990237
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854067124
-lastSeenAt: 1792854067124
+firstSeenAt: 1792854990237
+lastSeenAt: 1792854990237
 fingerprint: null
 payload:
   id: HP4_signals_weighted
@@ -162,7 +162,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -173,7 +173,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 23462371-5959-5244-9a58-4ff1674c13fa

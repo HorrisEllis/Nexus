@@ -9,11 +9,11 @@ intent: null
 summary: AR1_architect_retirement_and_hooks_to_loom (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854044714
+exported_at: 1792854966716
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854044714
-lastSeenAt: 1792854044714
+firstSeenAt: 1792854966716
+lastSeenAt: 1792854966716
 fingerprint: null
 payload:
   id: AR1_architect_retirement_and_hooks_to_loom
@@ -270,7 +270,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -281,7 +281,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 1bace368-dfab-5b6f-82ec-34e16db638d3

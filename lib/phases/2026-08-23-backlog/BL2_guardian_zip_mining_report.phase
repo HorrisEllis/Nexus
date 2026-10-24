@@ -7,11 +7,11 @@ intent: null
 summary: BL2_guardian_zip_mining_report (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854039024
+exported_at: 1792854960467
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854039024
-lastSeenAt: 1792854039024
+firstSeenAt: 1792854960467
+lastSeenAt: 1792854960467
 fingerprint: null
 payload:
   id: BL2_guardian_zip_mining_report
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -50,7 +50,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (3): BL3_port_social_listener_pattern, BL4_port_element_picker_ux,

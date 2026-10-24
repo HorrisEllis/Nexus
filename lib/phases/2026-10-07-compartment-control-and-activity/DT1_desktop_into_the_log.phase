@@ -9,11 +9,11 @@ intent: null
 summary: DT1_desktop_into_the_log (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854064217
+exported_at: 1792854987166
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854064217
-lastSeenAt: 1792854064217
+firstSeenAt: 1792854987166
+lastSeenAt: 1792854987166
 fingerprint: null
 payload:
   id: DT1_desktop_into_the_log
@@ -264,7 +264,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity_log
@@ -281,7 +281,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): AL1_activity_log · all upstream 2'
         - >-
           needed by (1): VM1_checkpoints_on_the_log · finishing it unlocks

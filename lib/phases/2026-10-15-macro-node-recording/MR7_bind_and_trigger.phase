@@ -7,11 +7,11 @@ intent: null
 summary: MR7_bind_and_trigger (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854077220
+exported_at: 1792855001038
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854077220
-lastSeenAt: 1792854077220
+firstSeenAt: 1792855001038
+lastSeenAt: 1792855001038
 fingerprint: null
 payload:
   id: MR7_bind_and_trigger
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-15-macro-node-recording-phasemap.spec::MR1_live_node
@@ -44,7 +44,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): MR1_live_node'
         - 'needed by (0): —'
   uuid: e6a1c5c2-162e-56d5-92ae-866cc61f5fe2

@@ -7,11 +7,11 @@ intent: null
 summary: PC4_a_procedure_per_kind (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854087111
+exported_at: 1792855011361
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854087111
-lastSeenAt: 1792854087111
+firstSeenAt: 1792855011361
+lastSeenAt: 1792855011361
 fingerprint: null
 payload:
   id: PC4_a_procedure_per_kind
@@ -159,7 +159,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
@@ -175,7 +175,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by PC1_the_point_first
+        - DAG 86519dc3b354b627 · layer 2 · blocked by PC1_the_point_first
         - 'depends on (1): PC1_the_point_first · all upstream 3'
         - 'needed by (0): —'
   uuid: 4a5c228a-d194-51c9-9361-4b23b15cacc3

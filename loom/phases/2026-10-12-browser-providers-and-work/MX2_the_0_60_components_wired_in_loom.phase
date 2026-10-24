@@ -9,11 +9,11 @@ intent: null
 summary: MX2_the_0_60_components_wired_in_loom (?) — 3 file(s)
 system: loom
 tags: []
-exported_at: 1792854071372
+exported_at: 1792854994611
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071372
-lastSeenAt: 1792854071372
+firstSeenAt: 1792854994611
+lastSeenAt: 1792854994611
 fingerprint: null
 payload:
   id: MX2_the_0_60_components_wired_in_loom
@@ -61,7 +61,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -72,7 +72,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

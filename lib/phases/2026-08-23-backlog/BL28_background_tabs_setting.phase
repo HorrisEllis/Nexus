@@ -7,11 +7,11 @@ intent: null
 summary: BL28_background_tabs_setting (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854039052
+exported_at: 1792854960498
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854039052
-lastSeenAt: 1792854039052
+firstSeenAt: 1792854960498
+lastSeenAt: 1792854960498
 fingerprint: null
 payload:
   id: BL28_background_tabs_setting
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-08-23-backlog-phasemap.spec::BL24_userscript_suite_enterprise_grade
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): BL24_userscript_suite_enterprise_grade'
         - 'needed by (1): TX16_persistent_listener_registry_and_callable_elements · all downstream 2'
   uuid: 80828614-39b6-50a7-ba48-8f258ff47c52

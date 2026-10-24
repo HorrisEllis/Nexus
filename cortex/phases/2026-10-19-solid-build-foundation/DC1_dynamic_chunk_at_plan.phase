@@ -7,11 +7,11 @@ intent: null
 summary: DC1_dynamic_chunk_at_plan (library) — 2 file(s)
 system: cortex
 tags: []
-exported_at: 1792854091774
+exported_at: 1792855016297
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854091774
-lastSeenAt: 1792854091774
+firstSeenAt: 1792855016297
+lastSeenAt: 1792855016297
 fingerprint: null
 payload:
   id: DC1_dynamic_chunk_at_plan
@@ -88,7 +88,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
@@ -112,7 +112,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): MF1_model_fit_routing'
         - 'needed by (2): GQ2_brick_gate_runs_the_test, DK1_dynamic_chunking · all downstream 9'
   uuid: 3872f502-5dec-5202-ab02-047d0fad9ff7

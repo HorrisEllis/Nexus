@@ -7,11 +7,11 @@ intent: null
 summary: MEM1_cortex_keeps_the_books (foundation) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854091316
+exported_at: 1792855015872
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854091316
-lastSeenAt: 1792854091316
+firstSeenAt: 1792855015872
+lastSeenAt: 1792855015872
 fingerprint: null
 payload:
   id: MEM1_cortex_keeps_the_books
@@ -25,7 +25,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 5dc59a5287acfba0
+    hash: ec51f5a898b3b839
     nodes:
       - path: lib/system-store.js
         role: changes
@@ -39,6 +39,10 @@ payload:
         role: used-by
         exists: true
         system: guardian
+      - path: loom/lib/store.js
+        role: used-by
+        exists: true
+        system: loom
       - path: tests/modules/test-sovereign-systems.test.js
         role: used-by
         exists: true
@@ -57,13 +61,16 @@ payload:
       - from: guardian/agents/index.js
         to: lib/system-store.js
         kind: requires
+      - from: loom/lib/store.js
+        to: lib/system-store.js
+        kind: requires
       - from: tests/modules/test-sovereign-systems.test.js
         to: lib/system-store.js
         kind: requires
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
@@ -77,7 +84,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · ready
+        - DAG 86519dc3b354b627 · layer 2 · ready
         - 'depends on (1): SS1_system_store_adoption · all upstream 2'
         - 'needed by (0): —'
   uuid: 43e0a74a-1c02-5021-9406-6fca83ee7f85

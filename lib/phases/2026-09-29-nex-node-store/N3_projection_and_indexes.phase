@@ -7,11 +7,11 @@ intent: null
 summary: N3_projection_and_indexes (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854054549
+exported_at: 1792854977219
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854054549
-lastSeenAt: 1792854054549
+firstSeenAt: 1792854977219
+lastSeenAt: 1792854977219
 fingerprint: null
 payload:
   id: N3_projection_and_indexes
@@ -42,7 +42,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
@@ -83,7 +83,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by N2
+        - DAG 86519dc3b354b627 · layer 2 · blocked by N2
         - 'depends on (2): N1_record_and_log, N2 · all upstream 3'
         - >-
           needed by (3): N4_kinds_record_ledger_ring_blob, N5_kinds_edge_and_lattice, N6_time · all

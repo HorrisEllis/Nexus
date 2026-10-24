@@ -9,11 +9,11 @@ intent: null
 summary: LM11_copilot_ollama_guardian_toggle (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854041886
+exported_at: 1792854963443
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854041886
-lastSeenAt: 1792854041886
+firstSeenAt: 1792854963443
+lastSeenAt: 1792854963443
 fingerprint: null
 payload:
   id: LM11_copilot_ollama_guardian_toggle
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by LM9_deterministic_agent_switch_cli
+        - DAG 86519dc3b354b627 · layer 1 · blocked by LM9_deterministic_agent_switch_cli
         - 'depends on (1): LM9_deterministic_agent_switch_cli'
         - 'needed by (0): —'
   uuid: fa455f9a-d62c-5161-9f08-76d94c963cc2

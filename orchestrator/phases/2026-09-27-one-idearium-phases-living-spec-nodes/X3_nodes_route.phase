@@ -9,11 +9,11 @@ intent: null
 summary: X3_nodes_route (?) — 2 file(s)
 system: orchestrator
 tags: []
-exported_at: 1792854052326
+exported_at: 1792854974901
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854052326
-lastSeenAt: 1792854052326
+firstSeenAt: 1792854974901
+lastSeenAt: 1792854974901
 fingerprint: null
 payload:
   id: X3_nodes_route
@@ -205,7 +205,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::X1_system_nodes
@@ -224,7 +224,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (2): X1_system_nodes, X2_guardian_hat_agent · all upstream 3'
         - 'needed by (1): Z1_release · finishing it unlocks Z1_release'
   uuid: 9caa5616-0689-5991-927f-8c171ee76253

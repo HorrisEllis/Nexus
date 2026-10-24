@@ -9,11 +9,11 @@ intent: null
 summary: X1_node_decomposition_tool (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854044715
+exported_at: 1792854966717
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854044715
-lastSeenAt: 1792854044715
+firstSeenAt: 1792854966717
+lastSeenAt: 1792854966717
 fingerprint: null
 payload:
   id: X1_node_decomposition_tool
@@ -207,7 +207,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
@@ -220,7 +220,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): T1_extend_system_scaffold'
         - 'needed by (0): —'
   uuid: 2b37f222-1b61-5b82-b465-eea2f3187c75

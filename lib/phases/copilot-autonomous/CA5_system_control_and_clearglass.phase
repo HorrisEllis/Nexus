@@ -7,11 +7,11 @@ intent: null
 summary: CA5_system_control_and_clearglass (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854101047
+exported_at: 1792855026542
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854101047
-lastSeenAt: 1792854101047
+firstSeenAt: 1792855026542
+lastSeenAt: 1792855026542
 fingerprint: null
 payload:
   id: CA5_system_control_and_clearglass
@@ -229,7 +229,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
@@ -244,7 +244,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (2): CA1_scheduler, CA4_connections'
         - 'needed by (0): —'
   uuid: 38ed26e8-e8e8-5038-bf50-c85a1be37f77

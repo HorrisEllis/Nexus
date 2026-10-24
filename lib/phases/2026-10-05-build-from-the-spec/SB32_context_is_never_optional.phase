@@ -7,11 +7,11 @@ intent: null
 summary: SB32_context_is_never_optional (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854060364
+exported_at: 1792854983042
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060364
-lastSeenAt: 1792854060364
+firstSeenAt: 1792854983042
+lastSeenAt: 1792854983042
 fingerprint: null
 payload:
   id: SB32_context_is_never_optional
@@ -201,7 +201,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB3_the_section_prompt_is_domain_agnostic
@@ -225,7 +225,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (1): SB3_the_section_prompt_is_domain_agnostic · all upstream 3'
         - >-
           needed by (1): SB33_the_agent_runs_the_pipeline · all downstream 7 · finishing it unlocks

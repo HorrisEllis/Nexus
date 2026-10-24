@@ -7,11 +7,11 @@ intent: null
 summary: CL2_the_agent_tab_is_the_endpoint (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854060865
+exported_at: 1792854983589
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060865
-lastSeenAt: 1792854060865
+firstSeenAt: 1792854983589
+lastSeenAt: 1792854983589
 fingerprint: null
 payload:
   id: CL2_the_agent_tab_is_the_endpoint
@@ -215,7 +215,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-05-cli-data-code-phasemap.spec::CL1_commands_declared_by_their_system
@@ -229,7 +229,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by CL1_commands_declared_by_their_system
+        - DAG 86519dc3b354b627 · layer 1 · blocked by CL1_commands_declared_by_their_system
         - 'depends on (1): CL1_commands_declared_by_their_system'
         - 'needed by (0): —'
   uuid: 0c0b0634-eace-5632-b660-a2f7b1b73f94

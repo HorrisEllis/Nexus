@@ -7,11 +7,11 @@ intent: null
 summary: N21_no_empty_generation_event_gates (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854054572
+exported_at: 1792854977237
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854054572
-lastSeenAt: 1792854054572
+firstSeenAt: 1792854977237
+lastSeenAt: 1792854977237
 fingerprint: null
 payload:
   id: N21_no_empty_generation_event_gates
@@ -246,7 +246,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
@@ -271,7 +271,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 5 · blocked by N14_failure_mode_field
+        - DAG 86519dc3b354b627 · layer 5 · blocked by N14_failure_mode_field
         - 'depends on (1): N14_failure_mode_field · all upstream 7'
         - >-
           needed by (2): N22_shadow_and_negative_space_reasoning,

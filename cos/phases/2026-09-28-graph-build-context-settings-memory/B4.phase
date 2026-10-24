@@ -7,11 +7,11 @@ intent: null
 summary: B4 (?) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792854053238
+exported_at: 1792854975838
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854053238
-lastSeenAt: 1792854053238
+firstSeenAt: 1792854975838
+lastSeenAt: 1792854975838
 fingerprint: null
 payload:
   id: B4
@@ -84,7 +84,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B3
@@ -105,7 +105,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 5 · blocked by B3
+        - DAG 86519dc3b354b627 · layer 5 · blocked by B3
         - 'depends on (1): B3 · all upstream 8'
         - 'needed by (0): —'
   uuid: 2c853b1e-2e77-5490-940f-507daf2cd576

@@ -9,11 +9,11 @@ intent: null
 summary: MR9_liminal_on_the_agents (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854057625
+exported_at: 1792854980290
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057625
-lastSeenAt: 1792854057625
+firstSeenAt: 1792854980290
+lastSeenAt: 1792854980290
 fingerprint: null
 payload:
   id: MR9_liminal_on_the_agents
@@ -156,7 +156,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
@@ -178,7 +178,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 5 · blocked by CF1_cfr_improved_with_rfr2
+        - DAG 86519dc3b354b627 · layer 5 · blocked by CF1_cfr_improved_with_rfr2
         - 'depends on (1): CF1_cfr_improved_with_rfr2 · all upstream 6'
         - >-
           needed by (1): MR10_the_field_between_james_and_the_agents · finishing it unlocks

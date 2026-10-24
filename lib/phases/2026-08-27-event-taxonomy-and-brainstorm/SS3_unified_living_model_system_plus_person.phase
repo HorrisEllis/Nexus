@@ -9,11 +9,11 @@ intent: null
 summary: SS3_unified_living_model_system_plus_person (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854039629
+exported_at: 1792854961090
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854039629
-lastSeenAt: 1792854039629
+firstSeenAt: 1792854961090
+lastSeenAt: 1792854961090
 fingerprint: null
 payload:
   id: SS3_unified_living_model_system_plus_person
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 0bbbc7d8adf65f4e
+    hash: 0f5923d7149fd088
     nodes:
       - path: copilot/lib/user-model.js
         role: changes
@@ -117,18 +117,25 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
         kind: requires
       - from: copilot/lib/user-model.js
         to: lib/schema-registry.js
+        kind: requires
+      - from: copilot/lib/user-model.js
+        to: cortex/memory/jaa-db.js
         kind: requires
       - from: copilot/lib/user-model.js
         to: lib/gap-field.js
@@ -173,9 +180,9 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
+      - from: copilot/lib/user-model.js
         to: cortex/memory/jaa-db.js
-        fromSystem: loom
+        fromSystem: copilot
         toSystem: cortex
         kind: system
         known: true
@@ -235,7 +242,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
@@ -250,7 +257,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by SS1_system_manifest
+        - DAG 86519dc3b354b627 · layer 2 · blocked by SS1_system_manifest
         - 'depends on (1): SS1_system_manifest · all upstream 2'
         - 'needed by (0): —'
   uuid: df4805f7-3566-5d84-a65b-f0a6a4d29d8f

@@ -7,11 +7,11 @@ intent: null
 summary: ND2_one_node_route_for_every_system (backend) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854096884
+exported_at: 1792855021774
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854096884
-lastSeenAt: 1792854096884
+firstSeenAt: 1792855021774
+lastSeenAt: 1792855021774
 fingerprint: null
 payload:
   id: ND2_one_node_route_for_every_system
@@ -177,7 +177,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
@@ -204,7 +204,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 2 · blocked by ND1_every_system_has_its_database,
+          DAG 86519dc3b354b627 · layer 2 · blocked by ND1_every_system_has_its_database,
           ND_D1_the_file_is_the_node, ND_D3_generated_types_are_not_agents_to_write
         - >-
           depends on (3): ND1_every_system_has_its_database, ND_D1_the_file_is_the_node,

@@ -9,11 +9,11 @@ intent: null
 summary: P1_characterization (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854047321
+exported_at: 1792854969528
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854047321
-lastSeenAt: 1792854047321
+firstSeenAt: 1792854969528
+lastSeenAt: 1792854969528
 fingerprint: null
 payload:
   id: P1_characterization
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P0_map
@@ -52,7 +52,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): P0_map'
         - 'needed by (1): P2_intelligence_gains_routes · all downstream 5'
   uuid: 564125e9-8cb0-5f2b-8eba-7f13c6dd09e9

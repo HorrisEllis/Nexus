@@ -7,11 +7,11 @@ intent: null
 summary: J1 (?) — 4 file(s)
 system: guardian
 tags: []
-exported_at: 1792854057171
+exported_at: 1792854979836
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057171
-lastSeenAt: 1792854057171
+firstSeenAt: 1792854979836
+lastSeenAt: 1792854979836
 fingerprint: null
 payload:
   id: J1
@@ -29,7 +29,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 1e8293ee40b537f7
+    hash: ab794394dfd8d589
     nodes:
       - path: guardian/lib/job-retry.js
         role: changes
@@ -99,6 +99,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/ollama-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: lib/repo-hat.js
         role: uses
         exists: true
@@ -120,10 +124,6 @@ payload:
         exists: true
         system: ollama
       - path: ollama/lib/state.js
-        role: uses
-        exists: true
-        system: ollama
-      - path: ollama/routes/system.js
         role: uses
         exists: true
         system: ollama
@@ -162,7 +162,7 @@ payload:
         to: ollama/lib/http-utils.js
         kind: requires
       - from: ollama/server.js
-        to: ollama/routes/system.js
+        to: lib/ollama-port.js
         kind: requires
       - from: guardian/lib/index.js
         to: guardian/lib/jobs.js
@@ -197,7 +197,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::J0
@@ -217,7 +217,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by J0
+        - DAG 86519dc3b354b627 · layer 1 · blocked by J0
         - 'depends on (1): J0'
         - 'needed by (2): J4, J5 · finishing it unlocks J4, J5'
   uuid: 0b7af088-4937-599a-a0dc-3b0a045b3c32

@@ -9,11 +9,11 @@ intent: null
 summary: CF1_cfr_improved_with_rfr2 (?) — 7 file(s)
 system: intelligence
 tags: []
-exported_at: 1792854057601
+exported_at: 1792854980266
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057601
-lastSeenAt: 1792854057601
+firstSeenAt: 1792854980266
+lastSeenAt: 1792854980266
 fingerprint: null
 payload:
   id: CF1_cfr_improved_with_rfr2
@@ -188,7 +188,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
@@ -244,7 +244,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by EM2_warp_his_own
+        - DAG 86519dc3b354b627 · layer 4 · blocked by EM2_warp_his_own
         - 'depends on (2): EM1_emerge_core, EM2_warp_his_own · all upstream 5'
         - >-
           needed by (9): RF1_relational_field, MR2_vector_space_for_the_field, MR4_field_memory,

@@ -7,11 +7,11 @@ intent: null
 summary: ND3_each_server_serves_its_nodes (integration) — 13 file(s)
 system: core
 tags: []
-exported_at: 1792854096885
+exported_at: 1792855021775
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854096885
-lastSeenAt: 1792854096885
+firstSeenAt: 1792855021775
+lastSeenAt: 1792855021775
 fingerprint: null
 payload:
   id: ND3_each_server_serves_its_nodes
@@ -291,7 +291,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-22-system-node-db-phasemap.spec::ND2_one_node_route_for_every_system
@@ -317,7 +317,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 3 · blocked by ND2_one_node_route_for_every_system,
+          DAG 86519dc3b354b627 · layer 3 · blocked by ND2_one_node_route_for_every_system,
           ND_D2_the_owner_writes
         - >-
           depends on (2): ND2_one_node_route_for_every_system, ND_D2_the_owner_writes · all upstream

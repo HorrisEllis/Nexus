@@ -9,11 +9,11 @@ intent: null
 summary: GW8_causal_graph_and_failure_mode_field (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854076763
+exported_at: 1792855000564
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076763
-lastSeenAt: 1792854076763
+firstSeenAt: 1792855000564
+lastSeenAt: 1792855000564
 fingerprint: null
 payload:
   id: GW8_causal_graph_and_failure_mode_field
@@ -205,7 +205,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
@@ -229,7 +229,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 4 · blocked by GW3_a_contract_is_traced,
+          DAG 86519dc3b354b627 · layer 4 · blocked by GW3_a_contract_is_traced,
           GW6_the_intelligence_system_on_every_gate
         - >-
           depends on (2): GW3_a_contract_is_traced, GW6_the_intelligence_system_on_every_gate · all

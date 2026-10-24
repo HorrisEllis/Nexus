@@ -7,11 +7,11 @@ intent: null
 summary: PB5_the_real_broken_imports (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854060886
+exported_at: 1792854983617
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060886
-lastSeenAt: 1792854060886
+firstSeenAt: 1792854983617
+lastSeenAt: 1792854983617
 fingerprint: null
 payload:
   id: PB5_the_real_broken_imports
@@ -55,7 +55,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-05-cli-data-code-phasemap.spec::PB4_imports_inside_text_are_not_imports
@@ -68,7 +68,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): PB4_imports_inside_text_are_not_imports'
         - 'needed by (0): —'
   uuid: e278c487-03a6-5c0a-9246-ebd111aae44e

@@ -9,11 +9,11 @@ intent: null
 summary: RS8_what_converges_becomes_deterministic (?) — 2 file(s)
 system: emerge
 tags: []
-exported_at: 1792854063334
+exported_at: 1792854986276
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854063334
-lastSeenAt: 1792854063334
+firstSeenAt: 1792854986276
+lastSeenAt: 1792854986276
 fingerprint: null
 payload:
   id: RS8_what_converges_becomes_deterministic
@@ -141,7 +141,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
@@ -157,7 +157,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by RS4_the_pipeline_on_warp2
+        - DAG 86519dc3b354b627 · layer 2 · blocked by RS4_the_pipeline_on_warp2
         - 'depends on (1): RS4_the_pipeline_on_warp2 · all upstream 3'
         - 'needed by (0): —'
   uuid: 275ba9e9-23cb-5e2e-b3a3-a68fe7b3b742

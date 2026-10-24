@@ -7,11 +7,11 @@ intent: null
 summary: BS9_agents_hub (surface) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854094755
+exported_at: 1792855019354
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854094755
-lastSeenAt: 1792854094755
+firstSeenAt: 1792855019354
+lastSeenAt: 1792855019354
 fingerprint: null
 payload:
   id: BS9_agents_hub
@@ -42,7 +42,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
@@ -59,7 +59,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): BS8_design_system · all upstream 2'
         - 'needed by (1): BS10_new_tab · finishing it unlocks BS10_new_tab'
   uuid: 9cad736a-a438-5564-bd0f-e40d54d3cfb6

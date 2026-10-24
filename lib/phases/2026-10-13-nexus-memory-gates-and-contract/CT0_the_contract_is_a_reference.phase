@@ -9,11 +9,11 @@ intent: null
 summary: CT0_the_contract_is_a_reference (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854073056
+exported_at: 1792854996432
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854073056
-lastSeenAt: 1792854073056
+firstSeenAt: 1792854996432
+lastSeenAt: 1792854996432
 fingerprint: null
 payload:
   id: CT0_the_contract_is_a_reference
@@ -192,7 +192,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -207,7 +207,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): CT1_dynamic_chunking · all downstream 2 · finishing it unlocks

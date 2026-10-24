@@ -9,11 +9,11 @@ intent: null
 summary: CB4_the_emergence_loop_builds (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854057640
+exported_at: 1792854980304
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057640
-lastSeenAt: 1792854057640
+firstSeenAt: 1792854980304
+lastSeenAt: 1792854980304
 fingerprint: null
 payload:
   id: CB4_the_emergence_loop_builds
@@ -40,7 +40,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 8
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
@@ -70,7 +70,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 8 · blocked by CB1_cfr_build_logic,
+          DAG 86519dc3b354b627 · layer 8 · blocked by CB1_cfr_build_logic,
           CB2_analysis_then_synthesis, MR2_vector_space_for_the_field
         - >-
           depends on (3): CB1_cfr_build_logic, CB2_analysis_then_synthesis,

@@ -7,11 +7,11 @@ intent: null
 summary: S2 (?) — 1 file(s)
 system: diagnostic
 tags: []
-exported_at: 1792854053708
+exported_at: 1792854976290
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854053708
-lastSeenAt: 1792854053708
+firstSeenAt: 1792854976290
+lastSeenAt: 1792854976290
 fingerprint: null
 payload:
   id: S2
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
@@ -59,7 +59,7 @@ payload:
             - diagnostic/nexus-heal-loop.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · ready
+        - DAG 86519dc3b354b627 · layer 2 · ready
         - 'depends on (1): S1 · all upstream 2'
         - 'needed by (3): L1, A1, X1'
         - 'same files as S5 with no order between them: diagnostic/nexus-heal-loop.js'

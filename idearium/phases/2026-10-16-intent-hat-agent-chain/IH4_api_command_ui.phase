@@ -7,11 +7,11 @@ intent: null
 summary: IH4_api_command_ui (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854082488
+exported_at: 1792855006682
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854082488
-lastSeenAt: 1792854082488
+firstSeenAt: 1792855006682
+lastSeenAt: 1792855006682
 fingerprint: null
 payload:
   id: IH4_api_command_ui
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
@@ -235,7 +235,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by IH1_intent_nodes_point_at_hats
+        - DAG 86519dc3b354b627 · layer 2 · blocked by IH1_intent_nodes_point_at_hats
         - 'depends on (1): IH1_intent_nodes_point_at_hats · all upstream 2'
         - 'needed by (0): —'
   uuid: d058ae03-810e-5b41-9ab7-d0fe2157468b

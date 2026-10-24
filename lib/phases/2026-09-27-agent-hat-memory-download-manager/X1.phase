@@ -7,11 +7,11 @@ intent: null
 summary: X1 (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792854050285
+exported_at: 1792854972614
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854050285
-lastSeenAt: 1792854050285
+firstSeenAt: 1792854972614
+lastSeenAt: 1792854972614
 fingerprint: null
 payload:
   id: X1
@@ -76,7 +76,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O1
@@ -121,7 +121,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (17): O1, O2, O3, H1, H2, H3, H4, G1, G2, G3, G4, G5, M1, M2, M3, M4, M5'
         - 'needed by (0): —'
   uuid: 7dcc9f27-faea-5bcf-8454-27bbbf8d522c

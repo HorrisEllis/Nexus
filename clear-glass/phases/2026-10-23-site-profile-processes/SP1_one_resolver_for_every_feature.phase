@@ -9,11 +9,11 @@ intent: null
 summary: SP1_one_resolver_for_every_feature (foundation) — 6 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854098121
+exported_at: 1792855023126
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854098121
-lastSeenAt: 1792854098121
+firstSeenAt: 1792855023126
+lastSeenAt: 1792855023126
 fingerprint: null
 payload:
   id: SP1_one_resolver_for_every_feature
@@ -201,7 +201,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D1_one_store_one_resolver
@@ -226,7 +226,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 1 · blocked by SP_D1_one_store_one_resolver,
+          DAG 86519dc3b354b627 · layer 1 · blocked by SP_D1_one_store_one_resolver,
           SP_D2_defaults_are_todays_behaviour
         - 'depends on (2): SP_D1_one_store_one_resolver, SP_D2_defaults_are_todays_behaviour'
         - >-

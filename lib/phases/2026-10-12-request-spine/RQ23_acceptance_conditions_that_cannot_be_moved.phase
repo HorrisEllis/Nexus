@@ -9,11 +9,11 @@ intent: null
 summary: RQ23_acceptance_conditions_that_cannot_be_moved (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854071824
+exported_at: 1792854995136
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071824
-lastSeenAt: 1792854071824
+firstSeenAt: 1792854995136
+lastSeenAt: 1792854995136
 fingerprint: null
 payload:
   id: RQ23_acceptance_conditions_that_cannot_be_moved
@@ -283,7 +283,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
@@ -314,7 +314,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 4 · blocked by RQ9_the_chunked_contract,
+          DAG 86519dc3b354b627 · layer 4 · blocked by RQ9_the_chunked_contract,
           RQ1_the_verifier_library
         - 'depends on (2): RQ9_the_chunked_contract, RQ1_the_verifier_library · all upstream 5'
         - >-

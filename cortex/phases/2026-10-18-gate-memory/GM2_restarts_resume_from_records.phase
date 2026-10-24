@@ -7,11 +7,11 @@ intent: null
 summary: GM2_restarts_resume_from_records (?) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792854088804
+exported_at: 1792855013206
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854088804
-lastSeenAt: 1792854088804
+firstSeenAt: 1792855013206
+lastSeenAt: 1792855013206
 fingerprint: null
 payload:
   id: GM2_restarts_resume_from_records
@@ -150,7 +150,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-18-gate-memory-phasemap.spec::GM1_the_gate_record
@@ -165,7 +165,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by GM1_the_gate_record
+        - DAG 86519dc3b354b627 · layer 2 · blocked by GM1_the_gate_record
         - 'depends on (1): GM1_the_gate_record · all upstream 2'
         - 'needed by (0): —'
   uuid: ef6fb37b-7ee9-5405-a190-bdf0b6b45a23

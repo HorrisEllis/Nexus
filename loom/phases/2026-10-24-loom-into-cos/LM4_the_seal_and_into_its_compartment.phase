@@ -1,0 +1,255 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+context: >-
+  pipeline phase LM4_the_seal_and_into_its_compartment of
+  docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM4_the_seal_and_into_its_compartment (integration) — 3 file(s)
+system: loom
+tags: []
+exported_at: 1792855024865
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792855024865
+lastSeenAt: 1792855024865
+fingerprint: null
+payload:
+  id: LM4_the_seal_and_into_its_compartment
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - loom/templates/cos-compartment.js
+    - cos/compartment/process-runner.js
+    - idearium/repo/nexus-self.js
+  depends_on:
+    - LM0_the_heartbeat
+    - LM1_ollama_through_its_bridge
+    - LM3_readers_through_its_routes
+  blocks: []
+  spec: null
+  graph:
+    hash: 9496d2577f4c129b
+    nodes:
+      - path: cos/compartment/process-runner.js
+        role: changes
+        exists: true
+        system: cos
+      - path: idearium/repo/nexus-self.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: loom/templates/cos-compartment.js
+        role: changes
+        exists: true
+        system: loom
+      - path: cos/cli/commands/run.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/cli/commands/status.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/cli/commands/vm.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/foundation/snapshot.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/host/gates/process.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/test/test.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/watchdog/monitor.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/living-spec.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: loom/server.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: tests/modules/test-cos-compartment-template.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-atlas-and-glass.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cos/compartment/qemu-runtime.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/foundation/event-contracts.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/siso/Event.js
+        role: uses
+        exists: true
+        system: cos
+      - path: idearium/lib/db.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/repo/import-pipeline.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: lib/cos-bridge.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/store.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/systems.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/system-boundary.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/system-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/zip-ingest.js
+        role: uses
+        exists: true
+        system: lib
+      - path: loom/scanners/phasemap-map.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: loom/templates/cos-compartment.js
+        to: lib/system-registry.js
+        kind: requires
+      - from: loom/templates/cos-compartment.js
+        to: lib/system-boundary.js
+        kind: requires
+      - from: loom/templates/cos-compartment.js
+        to: lib/cos-bridge.js
+        kind: requires
+      - from: cos/compartment/process-runner.js
+        to: cos/siso/Event.js
+        kind: requires
+      - from: cos/compartment/process-runner.js
+        to: cos/foundation/event-contracts.js
+        kind: requires
+      - from: cos/compartment/process-runner.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: idearium/repo/nexus-self.js
+        to: idearium/repo/import-pipeline.js
+        kind: requires
+      - from: idearium/repo/nexus-self.js
+        to: idearium/lib/db.js
+        kind: requires
+      - from: idearium/repo/nexus-self.js
+        to: lib/nexus-self/store.js
+        kind: requires
+      - from: idearium/repo/nexus-self.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: idearium/repo/nexus-self.js
+        to: lib/zip-ingest.js
+        kind: requires
+      - from: idearium/repo/nexus-self.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/templates/cos-compartment.js
+        kind: requires
+      - from: tests/modules/test-cos-compartment-template.test.js
+        to: loom/templates/cos-compartment.js
+        kind: requires
+      - from: cos/cli/commands/run.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+      - from: cos/cli/commands/status.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+      - from: cos/cli/commands/vm.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+      - from: cos/foundation/snapshot.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+      - from: cos/host/gates/process.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+      - from: cos/test/test.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+      - from: cos/watchdog/monitor.js
+        to: cos/compartment/process-runner.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/repo/nexus-self.js
+        kind: requires
+      - from: idearium/repo/living-spec.js
+        to: idearium/repo/nexus-self.js
+        kind: requires
+      - from: tests/modules/test-nexus-atlas-and-glass.test.js
+        to: idearium/repo/nexus-self.js
+        kind: requires
+    crossings:
+      - from: idearium/repo/nexus-self.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 86519dc3b354b627
+      layer: 3
+      deps:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      dependents:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+      upstream:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      downstream:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 86519dc3b354b627 · layer 3 · ready
+        - >-
+          depends on (3): LM0_the_heartbeat, LM1_ollama_through_its_bridge,
+          LM3_readers_through_its_routes · all upstream 6
+        - 'needed by (1): LM5_the_ways_in · finishing it unlocks LM5_the_ways_in'
+  uuid: 15ada1fe-ca37-5c20-b6a1-7f230caab476

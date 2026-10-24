@@ -9,11 +9,11 @@ intent: null
 summary: D1_diagnostic_real_folder (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854044706
+exported_at: 1792854966708
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854044706
-lastSeenAt: 1792854044706
+firstSeenAt: 1792854966708
+lastSeenAt: 1792854966708
 fingerprint: null
 payload:
   id: D1_diagnostic_real_folder
@@ -321,7 +321,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T1_extend_system_scaffold
@@ -340,7 +340,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): T1_extend_system_scaffold'
         - >-
           needed by (2): D2_self_heal_migration, AR2_decentralize_interaction_contracts · finishing

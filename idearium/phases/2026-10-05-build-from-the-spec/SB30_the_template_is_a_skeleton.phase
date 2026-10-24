@@ -9,11 +9,11 @@ intent: null
 summary: SB30_the_template_is_a_skeleton (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854060360
+exported_at: 1792854983038
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060360
-lastSeenAt: 1792854060360
+firstSeenAt: 1792854983038
+lastSeenAt: 1792854983038
 fingerprint: null
 payload:
   id: SB30_the_template_is_a_skeleton
@@ -44,7 +44,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
@@ -70,7 +70,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (1): SB17_the_system_template_is_complete · all upstream 3'
         - >-
           needed by (1): SB31_every_new_repo_is_the_skeleton_the_idea_slots_in · all downstream 9 ·

@@ -9,11 +9,11 @@ intent: null
 summary: PF7_pipeline_scoped_to_changes (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056260
+exported_at: 1792854978888
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056260
-lastSeenAt: 1792854056260
+firstSeenAt: 1792854978888
+lastSeenAt: 1792854978888
 fingerprint: null
 payload:
   id: PF7_pipeline_scoped_to_changes
@@ -164,7 +164,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
@@ -183,7 +183,7 @@ payload:
             - idearium/repo/import-pipeline.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): PF5_in_place_spec_update'
         - 'needed by (0): —'
         - >-

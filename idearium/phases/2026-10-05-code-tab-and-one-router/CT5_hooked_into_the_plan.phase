@@ -7,11 +7,11 @@ intent: null
 summary: CT5_hooked_into_the_plan (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854061312
+exported_at: 1792854984117
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854061312
-lastSeenAt: 1792854061312
+firstSeenAt: 1792854984117
+lastSeenAt: 1792854984117
 fingerprint: null
 payload:
   id: CT5_hooked_into_the_plan
@@ -165,7 +165,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT3_the_code_tab_is_the_work_surface
@@ -187,7 +187,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (1): CT3_the_code_tab_is_the_work_surface · all upstream 3'
         - >-
           needed by (2): CT7_the_plan_shows_current_work, CT8_live_agent_activity · all downstream 3

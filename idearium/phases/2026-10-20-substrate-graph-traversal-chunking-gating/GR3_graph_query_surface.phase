@@ -9,11 +9,11 @@ intent: null
 summary: GR3_graph_query_surface (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854093029
+exported_at: 1792855017622
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854093029
-lastSeenAt: 1792854093029
+firstSeenAt: 1792855017622
+lastSeenAt: 1792855017622
 fingerprint: null
 payload:
   id: GR3_graph_query_surface
@@ -225,7 +225,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
@@ -259,7 +259,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · blocked by GR2_graph_views, TV1_traversal_primitive,
+          DAG 86519dc3b354b627 · layer 5 · blocked by GR2_graph_views, TV1_traversal_primitive,
           TB1_toolbox
         - 'depends on (3): GR2_graph_views, TV1_traversal_primitive, TB1_toolbox · all upstream 12'
         - 'needed by (1): CH3_chunk_inspector · all downstream 3'

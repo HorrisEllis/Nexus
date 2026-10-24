@@ -9,11 +9,11 @@ intent: null
 summary: CP1_copilot_drives_idearium_and_talks_to_its_agents (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792854056287
+exported_at: 1792854978912
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056287
-lastSeenAt: 1792854056287
+firstSeenAt: 1792854978912
+lastSeenAt: 1792854978912
 fingerprint: null
 payload:
   id: CP1_copilot_drives_idearium_and_talks_to_its_agents
@@ -246,7 +246,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 7
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
@@ -281,7 +281,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 7 · blocked by CX1_context_cascade
+        - DAG 86519dc3b354b627 · layer 7 · blocked by CX1_context_cascade
         - >-
           depends on (3): IL2_library_spec_into_the_pipeline, PV4_cli_and_ui, CX1_context_cascade ·
           all upstream 14

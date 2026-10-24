@@ -7,11 +7,11 @@ intent: null
 summary: HG8_raid_phases_belong_to_cortex (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854060876
+exported_at: 1792854983607
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060876
-lastSeenAt: 1792854060876
+firstSeenAt: 1792854983607
+lastSeenAt: 1792854983607
 fingerprint: null
 payload:
   id: HG8_raid_phases_belong_to_cortex
@@ -25,7 +25,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 7ee377e5eb7b993b
+    hash: 5ac9e1854eac5985
     nodes:
       - path: lib/nexus-self/systems.js
         role: changes
@@ -75,7 +75,7 @@ payload:
         role: used-by
         exists: true
         system: lib
-      - path: lib/phase-map-auto.js
+      - path: lib/ollama-port.js
         role: used-by
         exists: true
         system: lib
@@ -113,13 +113,13 @@ payload:
       - from: lib/nexus-self/store.js
         to: lib/nexus-self/systems.js
         kind: requires
-      - from: lib/phase-map-auto.js
+      - from: lib/ollama-port.js
         to: lib/nexus-self/systems.js
         kind: requires
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -130,7 +130,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 66575a90-aaf6-54b3-a35d-8d18b6c85ffa

@@ -7,11 +7,11 @@ intent: null
 summary: OT1_one_write_path (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854057607
+exported_at: 1792854980270
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057607
-lastSeenAt: 1792854057607
+firstSeenAt: 1792854980270
+lastSeenAt: 1792854980270
 fingerprint: null
 payload:
   id: OT1_one_write_path
@@ -29,7 +29,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 7c9eae93ea3da6cd
+    hash: 617c008485a4d55b
     nodes:
       - path: cortex/memory/jaa-db.js
         role: changes
@@ -47,15 +47,15 @@ payload:
         role: changes
         exists: true
         system: lib
-      - path: architect/service.js
-        role: used-by
-        exists: true
-        system: architect
       - path: clear-glass/test/copilot-cli.test.js
         role: used-by
         exists: true
         system: null
       - path: cli/compact.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: cli/dedup.js
         role: used-by
         exists: true
         system: cli
@@ -179,13 +179,13 @@ payload:
       - from: lib/repo-agent.js
         to: lib/context-atlas.js
         kind: requires
-      - from: architect/service.js
-        to: cortex/memory/jaa-db.js
-        kind: requires
       - from: clear-glass/test/copilot-cli.test.js
         to: cortex/memory/jaa-db.js
         kind: requires
       - from: cli/compact.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cli/dedup.js
         to: cortex/memory/jaa-db.js
         kind: requires
     crossings:
@@ -195,13 +195,13 @@ payload:
         toSystem: clear-glass
         kind: upward
         known: true
-      - from: architect/service.js
+      - from: cli/compact.js
         to: cortex/memory/jaa-db.js
-        fromSystem: architect
+        fromSystem: cli
         toSystem: cortex
         kind: system
         known: true
-      - from: cli/compact.js
+      - from: cli/dedup.js
         to: cortex/memory/jaa-db.js
         fromSystem: cli
         toSystem: cortex
@@ -209,7 +209,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 6
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
@@ -233,7 +233,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 6 · blocked by RF1_relational_field
+        - DAG 86519dc3b354b627 · layer 6 · blocked by RF1_relational_field
         - 'depends on (1): RF1_relational_field · all upstream 7'
         - 'needed by (2): MR4_field_memory, MR11_rewind_the_mind'
   uuid: 31499ec4-9465-5428-9211-b9becf90f9ad

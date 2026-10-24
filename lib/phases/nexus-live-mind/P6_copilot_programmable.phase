@@ -7,11 +7,11 @@ intent: null
 summary: P6_copilot_programmable (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854105801
+exported_at: 1792855031185
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854105801
-lastSeenAt: 1792854105801
+firstSeenAt: 1792855031185
+lastSeenAt: 1792855031185
 fingerprint: null
 payload:
   id: P6_copilot_programmable
@@ -282,7 +282,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/nexus-live-mind-phasemap.spec::P4_copilot_awareness
@@ -300,7 +300,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4
+        - DAG 86519dc3b354b627 · layer 4
         - 'depends on (2): P4_copilot_awareness, P5 · all upstream 5'
         - 'needed by (0): —'
   uuid: b0bb4777-5c0f-560a-8074-690d78500464

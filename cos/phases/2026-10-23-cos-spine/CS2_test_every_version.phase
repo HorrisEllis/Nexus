@@ -7,11 +7,11 @@ intent: null
 summary: CS2_test_every_version (integration) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792854097298
+exported_at: 1792855022203
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854097298
-lastSeenAt: 1792854097298
+firstSeenAt: 1792855022203
+lastSeenAt: 1792855022203
 fingerprint: null
 payload:
   id: CS2_test_every_version
@@ -176,7 +176,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
@@ -201,7 +201,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 2 · blocked by CS1_a_version_is_a_system_state,
+          DAG 86519dc3b354b627 · layer 2 · blocked by CS1_a_version_is_a_system_state,
           SN1_open_a_snapshot_as_a_compartment
         - >-
           depends on (2): CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment ·

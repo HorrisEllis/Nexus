@@ -9,11 +9,11 @@ intent: null
 summary: LM23_atlas_history_versions_calendar (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854041898
+exported_at: 1792854963456
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854041898
-lastSeenAt: 1792854041898
+firstSeenAt: 1792854963456
+lastSeenAt: 1792854963456
 fingerprint: null
 payload:
   id: LM23_atlas_history_versions_calendar
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: cc8f2ab0d0593e31
+    hash: 2b4f8dc5b3b44d64
     nodes:
       - path: data/changelog-snapshot.json
         role: changes
@@ -90,13 +90,13 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
+      - path: loom/lib/store.js
         role: uses
         exists: true
-        system: cortex
+        system: loom
     edges:
       - from: loom/lib/changelog.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: copilot/lib/nexus-awareness.js
         to: lib/version.js
@@ -128,16 +128,10 @@ payload:
       - from: tests/lib/mco05-loom-changelog.test.js
         to: loom/lib/changelog.js
         kind: requires
-    crossings:
-      - from: loom/lib/changelog.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
+    crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM21_atlas_fact_extractors
@@ -163,7 +157,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 4 · blocked by LM21_atlas_fact_extractors,
+          DAG 86519dc3b354b627 · layer 4 · blocked by LM21_atlas_fact_extractors,
           LM22_atlas_structure_ledger
         - 'depends on (2): LM21_atlas_fact_extractors, LM22_atlas_structure_ledger · all upstream 6'
         - 'needed by (2): LM25_atlas_living_update, LM26_atlas_completeness_and_release_gate'

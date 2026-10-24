@@ -7,11 +7,11 @@ intent: null
 summary: B3 (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854053237
+exported_at: 1792854975837
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854053237
-lastSeenAt: 1792854053237
+firstSeenAt: 1792854975837
+lastSeenAt: 1792854975837
 fingerprint: null
 payload:
   id: B3
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B0
@@ -247,7 +247,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by B0, C1, G1
+        - DAG 86519dc3b354b627 · layer 4 · blocked by B0, C1, G1
         - 'depends on (3): B0, C1, G1 · all upstream 7'
         - 'needed by (1): B4 · finishing it unlocks B4'
   uuid: 0bb27595-fb4a-5f23-93b5-3b6096798bc0

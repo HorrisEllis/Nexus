@@ -7,11 +7,11 @@ intent: null
 summary: LB1_the_end_state_lab (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792854057674
+exported_at: 1792854980339
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057674
-lastSeenAt: 1792854057674
+firstSeenAt: 1792854980339
+lastSeenAt: 1792854980339
 fingerprint: null
 payload:
   id: LB1_the_end_state_lab
@@ -156,7 +156,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 6
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
@@ -202,7 +202,7 @@ payload:
             - idearium/repo/proof-run.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 6 · blocked by SH1_shadow_space, CB1_cfr_build_logic
+        - DAG 86519dc3b354b627 · layer 6 · blocked by SH1_shadow_space, CB1_cfr_build_logic
         - >-
           depends on (3): PR1_proof_run_the_delivery_checker, SH1_shadow_space, CB1_cfr_build_logic
           · all upstream 9

@@ -7,11 +7,11 @@ intent: null
 summary: DX1_diagnose_it (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854064227
+exported_at: 1792854987176
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854064227
-lastSeenAt: 1792854064227
+firstSeenAt: 1792854987176
+lastSeenAt: 1792854987176
 fingerprint: null
 payload:
   id: DX1_diagnose_it
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DC1_a_click_that_did_nothing
@@ -258,7 +258,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 3 · blocked by DC1_a_click_that_did_nothing,
+          DAG 86519dc3b354b627 · layer 3 · blocked by DC1_a_click_that_did_nothing,
           SP1_one_spotlight
         - 'depends on (2): DC1_a_click_that_did_nothing, SP1_one_spotlight · all upstream 4'
         - 'needed by (0): —'

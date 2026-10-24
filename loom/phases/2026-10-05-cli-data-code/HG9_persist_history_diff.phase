@@ -7,11 +7,11 @@ intent: null
 summary: HG9_persist_history_diff (?) — 2 file(s)
 system: loom
 tags: []
-exported_at: 1792854060877
+exported_at: 1792854983608
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060877
-lastSeenAt: 1792854060877
+firstSeenAt: 1792854983608
+lastSeenAt: 1792854983608
 fingerprint: null
 payload:
   id: HG9_persist_history_diff
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 95c5a644e3d78081
+    hash: 4186d6ab86ff038c
     nodes:
       - path: loom/scanners/phasemap-map.js
         role: changes
@@ -96,15 +96,22 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
+        kind: requires
+      - from: loom/test/phasemap-map.test.js
+        to: cortex/memory/jaa-db.js
         kind: requires
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
@@ -143,12 +150,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
         fromSystem: idearium
@@ -205,7 +206,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -216,7 +217,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 80379eaa-ba26-5b60-a5cb-c8cec0a68bfd

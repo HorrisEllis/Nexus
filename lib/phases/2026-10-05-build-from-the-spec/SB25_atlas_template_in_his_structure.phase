@@ -9,11 +9,11 @@ intent: null
 summary: SB25_atlas_template_in_his_structure (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854060351
+exported_at: 1792854983020
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060351
-lastSeenAt: 1792854060351
+firstSeenAt: 1792854983020
+lastSeenAt: 1792854983020
 fingerprint: null
 payload:
   id: SB25_atlas_template_in_his_structure
@@ -96,7 +96,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
@@ -119,7 +119,7 @@ payload:
             - lib/atlas-generate.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · ready
+        - DAG 86519dc3b354b627 · layer 3 · ready
         - 'depends on (1): SB17_the_system_template_is_complete · all upstream 3'
         - 'needed by (1): SB24_loom_builds_a_new_system'
         - 'same files as SB19_atlases_per_component with no order between them: lib/atlas-generate.js'

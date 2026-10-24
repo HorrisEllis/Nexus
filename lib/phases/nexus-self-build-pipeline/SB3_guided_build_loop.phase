@@ -7,11 +7,11 @@ intent: null
 summary: SB3_guided_build_loop (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854107411
+exported_at: 1792855032831
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854107411
-lastSeenAt: 1792854107411
+firstSeenAt: 1792855032831
+lastSeenAt: 1792855032831
 fingerprint: null
 payload:
   id: SB3_guided_build_loop
@@ -214,7 +214,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
@@ -235,7 +235,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by SB2_universal_file_parse
+        - DAG 86519dc3b354b627 · layer 1 · blocked by SB2_universal_file_parse
         - 'depends on (2): SB1_schema_extension, SB2_universal_file_parse'
         - >-
           needed by (2): SB4_decision_lattice_wiring, SB5_self_modification_from_inside · finishing

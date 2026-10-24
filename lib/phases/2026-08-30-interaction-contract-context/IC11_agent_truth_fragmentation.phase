@@ -9,11 +9,11 @@ intent: null
 summary: IC11_agent_truth_fragmentation (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854041412
+exported_at: 1792854962996
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854041412
-lastSeenAt: 1792854041412
+firstSeenAt: 1792854962996
+lastSeenAt: 1792854962996
 fingerprint: null
 payload:
   id: IC11_agent_truth_fragmentation
@@ -280,7 +280,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -294,7 +294,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): IC13_agent_mesh_chat_index · finishing it unlocks

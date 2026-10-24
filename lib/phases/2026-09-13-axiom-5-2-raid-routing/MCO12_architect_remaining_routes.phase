@@ -9,11 +9,11 @@ intent: null
 summary: MCO12_architect_remaining_routes (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854045650
+exported_at: 1792854967719
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854045650
-lastSeenAt: 1792854045650
+firstSeenAt: 1792854967719
+lastSeenAt: 1792854967719
 fingerprint: null
 payload:
   id: MCO12_architect_remaining_routes
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 3f4e0875f3387d46
+    hash: 1086e85d8e3b6d16
     nodes:
       - path: architect/service.js
         role: changes
@@ -53,10 +53,6 @@ payload:
         role: uses
         exists: true
         system: cortex
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: hooks/index.js
         role: uses
         exists: true
@@ -74,6 +70,10 @@ payload:
         exists: true
         system: lib
       - path: lib/hook-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-registry.js
         role: uses
         exists: true
         system: lib
@@ -110,13 +110,13 @@ payload:
         to: architect/registry-components.js
         kind: requires
       - from: architect/service.js
-        to: cortex/memory/jaa-db.js
-        kind: requires
-      - from: architect/service.js
         to: cortex/core/raid/contract-intake.js
         kind: requires
       - from: architect/service.js
         to: intelligence/alk/index.js
+        kind: requires
+      - from: architect/service.js
+        to: lib/node-registry.js
         kind: requires
     crossings:
       - from: architect/service.js
@@ -138,12 +138,6 @@ payload:
         kind: system
         known: true
       - from: architect/service.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: architect
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: architect/service.js
         to: cortex/core/raid/contract-intake.js
         fromSystem: architect
         toSystem: cortex
@@ -157,7 +151,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO8_wire_the_honest_subset
@@ -171,7 +165,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): MCO8_wire_the_honest_subset · all upstream 2'
         - 'needed by (0): —'
   uuid: 9bd77931-ccdf-5054-871c-04ec07cb516e

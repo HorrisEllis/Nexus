@@ -9,11 +9,11 @@ intent: null
 summary: PR1_proof_run_the_delivery_checker (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854057670
+exported_at: 1792854980335
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057670
-lastSeenAt: 1792854057670
+firstSeenAt: 1792854980335
+lastSeenAt: 1792854980335
 fingerprint: null
 payload:
   id: PR1_proof_run_the_delivery_checker
@@ -232,7 +232,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
@@ -267,7 +267,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): EM0_ground'
         - >-
           needed by (7): FV0_fulfil_a_taken_order, PR2_screenshots_through_clear_glass,

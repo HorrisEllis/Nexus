@@ -7,11 +7,11 @@ intent: null
 summary: GW2_the_run_follows_the_gate (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854076754
+exported_at: 1792855000557
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076754
-lastSeenAt: 1792854076754
+firstSeenAt: 1792855000557
+lastSeenAt: 1792855000557
 fingerprint: null
 payload:
   id: GW2_the_run_follows_the_gate
@@ -240,7 +240,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
@@ -284,7 +284,7 @@ payload:
             - cortex/core/raid/contract-adapters.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by GW1_the_baton
+        - DAG 86519dc3b354b627 · layer 1 · blocked by GW1_the_baton
         - 'depends on (2): GW1_the_baton, GW0_what_is_a_gate'
         - >-
           needed by (2): GW3_a_contract_is_traced, GW4_copilot_on_the_gates · all downstream 15 ·

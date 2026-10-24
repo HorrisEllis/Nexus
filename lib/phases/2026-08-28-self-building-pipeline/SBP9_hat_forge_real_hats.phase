@@ -7,11 +7,11 @@ intent: null
 summary: SBP9_hat_forge_real_hats (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854040823
+exported_at: 1792854962472
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854040823
-lastSeenAt: 1792854040823
+firstSeenAt: 1792854962472
+lastSeenAt: 1792854962472
 fingerprint: null
 payload:
   id: SBP9_hat_forge_real_hats
@@ -154,7 +154,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -174,7 +174,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (3): SBP10_per_hat_model_assignment, SBP11_agent_tools_registry_awareness,

@@ -9,11 +9,11 @@ intent: null
 summary: SW2_workshop_page_in_the_voids_style (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792854059425
+exported_at: 1792854982118
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854059425
-lastSeenAt: 1792854059425
+firstSeenAt: 1792854982118
+lastSeenAt: 1792854982118
 fingerprint: null
 payload:
   id: SW2_workshop_page_in_the_voids_style
@@ -237,7 +237,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW1_spec_workshop
@@ -253,7 +253,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): SW1_spec_workshop'
         - 'needed by (1): WS7_the_full_workshop · finishing it unlocks WS7_the_full_workshop'
   uuid: e42c4e3b-2607-5c09-8f4e-73bb8fae71b9

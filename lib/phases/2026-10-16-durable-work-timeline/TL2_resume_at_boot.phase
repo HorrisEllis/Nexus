@@ -7,11 +7,11 @@ intent: null
 summary: TL2_resume_at_boot (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854081299
+exported_at: 1792855005418
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854081299
-lastSeenAt: 1792854081299
+firstSeenAt: 1792855005418
+lastSeenAt: 1792855005418
 fingerprint: null
 payload:
   id: TL2_resume_at_boot
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL1_chunks_land_as_they_arrive
@@ -252,7 +252,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by TL1_chunks_land_as_they_arrive
+        - DAG 86519dc3b354b627 · layer 1 · blocked by TL1_chunks_land_as_they_arrive
         - 'depends on (1): TL1_chunks_land_as_they_arrive'
         - 'needed by (0): —'
         - >-

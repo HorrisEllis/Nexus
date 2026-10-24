@@ -7,11 +7,11 @@ intent: null
 summary: CT0_code_tab_census (foundation) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854090445
+exported_at: 1792855014965
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854090445
-lastSeenAt: 1792854090445
+firstSeenAt: 1792855014965
+lastSeenAt: 1792855014965
 fingerprint: null
 payload:
   id: CT0_code_tab_census
@@ -65,7 +65,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -78,7 +78,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (1): CT1_fewer_wider_tabs'
   uuid: 6b64cdcf-9acb-514e-a6be-594cae7fc74d

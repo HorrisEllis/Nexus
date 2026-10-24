@@ -9,11 +9,11 @@ intent: null
 summary: SB45_skeletons_grey_until_coded (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792854060386
+exported_at: 1792854983065
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060386
-lastSeenAt: 1792854060386
+firstSeenAt: 1792854983065
+lastSeenAt: 1792854983065
 fingerprint: null
 payload:
   id: SB45_skeletons_grey_until_coded
@@ -261,7 +261,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 8
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB44_phases_are_chunked_then_coded
@@ -281,7 +281,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 8
+        - DAG 86519dc3b354b627 · layer 8
         - 'depends on (1): SB44_phases_are_chunked_then_coded · all upstream 8'
         - 'needed by (0): —'
   uuid: 82a563e2-2448-5498-b8d0-f3ed4b6abc72

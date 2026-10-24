@@ -9,11 +9,11 @@ intent: null
 summary: WS3_the_pipeline_together (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854059036
+exported_at: 1792854981671
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854059036
-lastSeenAt: 1792854059036
+firstSeenAt: 1792854981671
+lastSeenAt: 1792854981671
 fingerprint: null
 payload:
   id: WS3_the_pipeline_together
@@ -42,7 +42,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -53,7 +53,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

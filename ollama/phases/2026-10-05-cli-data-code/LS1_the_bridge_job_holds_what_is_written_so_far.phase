@@ -9,11 +9,11 @@ intent: null
 summary: LS1_the_bridge_job_holds_what_is_written_so_far (?) — 2 file(s)
 system: ollama-bridge
 tags: []
-exported_at: 1792854060887
+exported_at: 1792854983618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060887
-lastSeenAt: 1792854060887
+firstSeenAt: 1792854983618
+lastSeenAt: 1792854983618
 fingerprint: null
 payload:
   id: LS1_the_bridge_job_holds_what_is_written_so_far
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 3a0dfce0fe4b0cde
+    hash: 7f532b86efac7b6e
     nodes:
       - path: ollama/lib/dispatch.js
         role: changes
@@ -42,10 +42,10 @@ payload:
         role: used-by
         exists: true
         system: idearium
-      - path: loom/agent-suite/index.js
+      - path: ollama/routes/generate.js
         role: used-by
         exists: true
-        system: loom
+        system: ollama
       - path: ollama/routes/jobs.js
         role: used-by
         exists: true
@@ -154,7 +154,7 @@ payload:
       - from: idearium/agent-suite/index.js
         to: ollama/lib/ollama-client.js
         kind: requires
-      - from: loom/agent-suite/index.js
+      - from: ollama/routes/generate.js
         to: ollama/lib/ollama-client.js
         kind: requires
       - from: ollama/routes/jobs.js
@@ -179,15 +179,9 @@ payload:
         toSystem: ollama
         kind: system
         known: true
-      - from: loom/agent-suite/index.js
-        to: ollama/lib/ollama-client.js
-        fromSystem: loom
-        toSystem: ollama
-        kind: system
-        known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -203,7 +197,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): LS2_copilot_sends_the_text_as_it_comes · all downstream 3 · finishing it

@@ -9,11 +9,11 @@ intent: null
 summary: N23_ollama_first_build_then_agent_review (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854054577
+exported_at: 1792854977240
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854054577
-lastSeenAt: 1792854054577
+firstSeenAt: 1792854977240
+lastSeenAt: 1792854977240
 fingerprint: null
 payload:
   id: N23_ollama_first_build_then_agent_review
@@ -32,7 +32,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 5beb3a63e79bdd5f
+    hash: 37421b938108d7ee
     nodes:
       - path: idearium/api/build-surface.js
         role: changes
@@ -70,11 +70,11 @@ payload:
         role: used-by
         exists: true
         system: lib
-      - path: loom/agent-suite/index.js
+      - path: ollama/lib/dispatch.js
         role: used-by
         exists: true
-        system: loom
-      - path: ollama/lib/dispatch.js
+        system: ollama
+      - path: ollama/routes/generate.js
         role: used-by
         exists: true
         system: ollama
@@ -205,10 +205,10 @@ payload:
       - from: idearium/agent-suite/index.js
         to: ollama/lib/ollama-client.js
         kind: requires
-      - from: loom/agent-suite/index.js
+      - from: ollama/lib/dispatch.js
         to: ollama/lib/ollama-client.js
         kind: requires
-      - from: ollama/lib/dispatch.js
+      - from: ollama/routes/generate.js
         to: ollama/lib/ollama-client.js
         kind: requires
       - from: ollama/routes/jobs.js
@@ -236,15 +236,9 @@ payload:
         toSystem: ollama
         kind: system
         known: true
-      - from: loom/agent-suite/index.js
-        to: ollama/lib/ollama-client.js
-        fromSystem: loom
-        toSystem: ollama
-        kind: system
-        known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 6
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N21_no_empty_generation_event_gates
@@ -264,7 +258,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 6
+        - DAG 86519dc3b354b627 · layer 6
         - 'depends on (1): N21_no_empty_generation_event_gates · all upstream 8'
         - 'needed by (0): —'
   uuid: 1edbfe1d-ed20-5ad0-90da-fe8539f57150

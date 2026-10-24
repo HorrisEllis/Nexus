@@ -9,11 +9,11 @@ intent: null
 summary: AM7_agent_switch_continuity_and_chat_recall (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854100142
+exported_at: 1792855025697
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854100142
-lastSeenAt: 1792854100142
+firstSeenAt: 1792855025697
+lastSeenAt: 1792855025697
 fingerprint: null
 payload:
   id: AM7_agent_switch_continuity_and_chat_recall
@@ -266,7 +266,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -281,7 +281,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (2): AM8_lifeline_as_general_channel_and_reasoning_upgrade,

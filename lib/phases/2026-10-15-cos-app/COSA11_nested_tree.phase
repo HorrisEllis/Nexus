@@ -7,11 +7,11 @@ intent: null
 summary: COSA11_nested_tree (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854075951
+exported_at: 1792854999639
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854075951
-lastSeenAt: 1792854075951
+firstSeenAt: 1792854999639
+lastSeenAt: 1792854999639
 fingerprint: null
 payload:
   id: COSA11_nested_tree
@@ -141,7 +141,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
@@ -164,7 +164,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 5 · blocked by COSA9_idearium_sync, COSA10_compartment_window
+        - DAG 86519dc3b354b627 · layer 5 · blocked by COSA9_idearium_sync, COSA10_compartment_window
         - 'depends on (2): COSA9_idearium_sync, COSA10_compartment_window · all upstream 6'
         - 'needed by (1): CON3_system_controls'
   uuid: 6450ea15-82ff-5028-a526-7882996bf2de

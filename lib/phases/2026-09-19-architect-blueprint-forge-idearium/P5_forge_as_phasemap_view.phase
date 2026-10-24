@@ -9,11 +9,11 @@ intent: null
 summary: P5_forge_as_phasemap_view (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854046912
+exported_at: 1792854969083
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854046912
-lastSeenAt: 1792854046912
+firstSeenAt: 1792854969083
+lastSeenAt: 1792854969083
 fingerprint: null
 payload:
   id: P5_forge_as_phasemap_view
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: afc40acee5a4b7cc
+    hash: 4117b9265ded2f1e
     nodes:
       - path: loom/scanners/phasemap-map.js
         role: changes
@@ -81,10 +81,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/nexus-client.js
         role: uses
         exists: true
@@ -93,12 +89,16 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -140,12 +140,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
         fromSystem: idearium
@@ -202,7 +196,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P3_architect_canvas_onto_loom_registry
@@ -217,7 +211,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by P3_architect_canvas_onto_loom_registry
+        - DAG 86519dc3b354b627 · layer 2 · blocked by P3_architect_canvas_onto_loom_registry
         - 'depends on (1): P3_architect_canvas_onto_loom_registry · all upstream 2'
         - 'needed by (0): —'
   uuid: 65428193-4cf8-556a-bc31-f5aa9513902c

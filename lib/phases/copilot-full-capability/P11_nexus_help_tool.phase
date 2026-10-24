@@ -7,11 +7,11 @@ intent: null
 summary: P11_nexus_help_tool (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854101872
+exported_at: 1792855027382
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854101872
-lastSeenAt: 1792854101872
+firstSeenAt: 1792855027382
+lastSeenAt: 1792855027382
 fingerprint: null
 payload:
   id: P11_nexus_help_tool
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 64e850e27dd6620b
+    hash: 2c73d4618b0fe55f
     nodes:
       - path: clear-glass/src/driver/url-listener.js
         role: changes
@@ -102,10 +102,6 @@ payload:
         role: uses
         exists: true
         system: copilot
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/agent-tools/index.js
         role: uses
         exists: true
@@ -138,6 +134,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
       - path: loom/scanners/capability-map.js
         role: uses
         exists: true
@@ -171,7 +171,7 @@ payload:
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -219,12 +219,6 @@ payload:
         toSystem: loom
         kind: system
         known: true
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: lib/agent-tools/tools/query/nexus-help.js
         to: copilot/lib/nexus-awareness.js
         fromSystem: lib
@@ -233,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -244,7 +238,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

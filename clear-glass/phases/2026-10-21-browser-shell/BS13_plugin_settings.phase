@@ -7,11 +7,11 @@ intent: null
 summary: BS13_plugin_settings (integration) — 6 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854094758
+exported_at: 1792855019356
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854094758
-lastSeenAt: 1792854094758
+firstSeenAt: 1792855019356
+lastSeenAt: 1792855019356
 fingerprint: null
 payload:
   id: BS13_plugin_settings
@@ -174,7 +174,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS4_extensions
@@ -200,7 +200,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): BS4_extensions · all upstream 2'
         - >-
           needed by (3): AB3_wiring, BS16_import_fields, PW4_surface · all downstream 6 · finishing

@@ -7,11 +7,11 @@ intent: null
 summary: VP5_provenance (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854063784
+exported_at: 1792854986712
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854063784
-lastSeenAt: 1792854063784
+firstSeenAt: 1792854986712
+lastSeenAt: 1792854986712
 fingerprint: null
 payload:
   id: VP5_provenance
@@ -137,7 +137,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-05-verified-primitives-phasemap.spec::VP4_the_primitive_field
@@ -154,7 +154,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by VP4_the_primitive_field
+        - DAG 86519dc3b354b627 · layer 4 · blocked by VP4_the_primitive_field
         - 'depends on (1): VP4_the_primitive_field · all upstream 4'
         - 'needed by (0): —'
   uuid: 74c3b3b3-fb08-5bd8-9c78-d9cdf761f52f

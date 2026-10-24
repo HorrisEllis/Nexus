@@ -9,11 +9,11 @@ intent: null
 summary: LM25_atlas_living_update (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854041900
+exported_at: 1792854963460
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854041900
-lastSeenAt: 1792854041900
+firstSeenAt: 1792854963460
+lastSeenAt: 1792854963460
 fingerprint: null
 payload:
   id: LM25_atlas_living_update
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: fffff5497b586859
+    hash: 048e812e94e11de7
     nodes:
       - path: loom/lib/changelog.js
         role: changes
@@ -48,13 +48,13 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
+      - path: loom/lib/store.js
         role: uses
         exists: true
-        system: cortex
+        system: loom
     edges:
       - from: loom/lib/changelog.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/server.js
         to: loom/lib/changelog.js
@@ -62,16 +62,10 @@ payload:
       - from: tests/lib/mco05-loom-changelog.test.js
         to: loom/lib/changelog.js
         kind: requires
-    crossings:
-      - from: loom/lib/changelog.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
+    crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
@@ -102,7 +96,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · blocked by LM2_registry_as_hub_with_watchdog,
+          DAG 86519dc3b354b627 · layer 5 · blocked by LM2_registry_as_hub_with_watchdog,
           LM21_atlas_fact_extractors, LM23_atlas_history_versions_calendar, LM24_atlas_prose_layer
         - >-
           depends on (4): LM2_registry_as_hub_with_watchdog, LM21_atlas_fact_extractors,

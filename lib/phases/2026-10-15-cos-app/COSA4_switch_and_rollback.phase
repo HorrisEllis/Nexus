@@ -7,11 +7,11 @@ intent: null
 summary: COSA4_switch_and_rollback (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854075945
+exported_at: 1792854999629
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854075945
-lastSeenAt: 1792854075945
+firstSeenAt: 1792854999629
+lastSeenAt: 1792854999629
 fingerprint: null
 payload:
   id: COSA4_switch_and_rollback
@@ -70,7 +70,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
@@ -89,7 +89,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (1): COSA3_run_and_supervise · all upstream 3'
         - >-
           needed by (1): COSA13_auto_update · all downstream 2 · finishing it unlocks

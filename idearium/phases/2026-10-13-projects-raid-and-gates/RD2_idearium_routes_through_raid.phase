@@ -9,11 +9,11 @@ intent: null
 summary: RD2_idearium_routes_through_raid (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854073466
+exported_at: 1792854996913
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854073466
-lastSeenAt: 1792854073466
+firstSeenAt: 1792854996913
+lastSeenAt: 1792854996913
 fingerprint: null
 payload:
   id: RD2_idearium_routes_through_raid
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
@@ -242,7 +242,7 @@ payload:
             - cortex/core/raid/contract-intake.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by RD0_raid_has_its_own_contract
+        - DAG 86519dc3b354b627 · layer 1 · blocked by RD0_raid_has_its_own_contract
         - 'depends on (1): RD0_raid_has_its_own_contract'
         - >-
           needed by (1): RD4_the_fulfilled_contract_is_one_file · finishing it unlocks

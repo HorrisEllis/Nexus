@@ -7,11 +7,11 @@ intent: null
 summary: GD0_dead_edges (foundation) — 2 file(s)
 system: guardian
 tags: []
-exported_at: 1792854099318
+exported_at: 1792855024436
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854099318
-lastSeenAt: 1792854099318
+firstSeenAt: 1792855024436
+lastSeenAt: 1792855024436
 fingerprint: null
 payload:
   id: GD0_dead_edges
@@ -162,7 +162,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -173,7 +173,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 76c0d1bc-c0b4-5d72-8a3c-d246758f348d

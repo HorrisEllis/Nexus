@@ -7,11 +7,11 @@ intent: null
 summary: TL4_rewind_to_a_gate (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792854081301
+exported_at: 1792855005419
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854081301
-lastSeenAt: 1792854081301
+firstSeenAt: 1792855005419
+lastSeenAt: 1792855005419
 fingerprint: null
 payload:
   id: TL4_rewind_to_a_gate
@@ -247,7 +247,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-16-durable-work-timeline-phasemap.spec::TL3_the_timeline
@@ -269,7 +269,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by TL3_the_timeline
+        - DAG 86519dc3b354b627 · layer 2 · blocked by TL3_the_timeline
         - 'depends on (1): TL3_the_timeline · all upstream 2'
         - 'needed by (2): TL5_the_code_tab_timeline, DBG5_rewind_from_a_case'
         - 'same files as TL2_resume_at_boot with no order between them: idearium/api/index.js'

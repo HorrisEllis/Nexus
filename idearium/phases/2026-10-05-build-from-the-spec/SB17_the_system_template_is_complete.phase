@@ -9,11 +9,11 @@ intent: null
 summary: SB17_the_system_template_is_complete (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854060335
+exported_at: 1792854983003
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060335
-lastSeenAt: 1792854060335
+firstSeenAt: 1792854983003
+lastSeenAt: 1792854983003
 fingerprint: null
 payload:
   id: SB17_the_system_template_is_complete
@@ -48,7 +48,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
@@ -104,7 +104,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): SB16_genesis_nodes_domain · all upstream 2'
         - >-
           needed by (8): SB4_template_fidelity, SB18_the_system_template_is_used,

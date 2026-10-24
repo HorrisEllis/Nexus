@@ -7,11 +7,11 @@ intent: null
 summary: PW2_page (integration) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854096063
+exported_at: 1792855020894
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854096063
-lastSeenAt: 1792854096063
+firstSeenAt: 1792855020894
+lastSeenAt: 1792855020894
 fingerprint: null
 payload:
   id: PW2_page
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-21-passwords-phasemap.spec::PW1_service
@@ -55,7 +55,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): PW1_service · all upstream 2'
         - 'needed by (1): PW3_wiring · all downstream 2 · finishing it unlocks PW3_wiring'
   uuid: 3d5e6c5e-78f9-534b-9baa-bc0222e169c5

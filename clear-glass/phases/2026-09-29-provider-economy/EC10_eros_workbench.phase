@@ -7,11 +7,11 @@ intent: null
 summary: EC10_eros_workbench (?) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854055012
+exported_at: 1792854977677
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854055012
-lastSeenAt: 1792854055012
+firstSeenAt: 1792854977677
+lastSeenAt: 1792854977677
 fingerprint: null
 payload:
   id: EC10_eros_workbench
@@ -50,7 +50,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -64,7 +64,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): EC11_release · finishing it unlocks EC11_release'
   uuid: 1ada843e-d050-5132-a819-74882de1a78f

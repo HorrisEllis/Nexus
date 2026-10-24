@@ -7,11 +7,11 @@ intent: null
 summary: SN2_run_in_parallel (?) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792854070952
+exported_at: 1792854994170
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854070952
-lastSeenAt: 1792854070952
+firstSeenAt: 1792854994170
+lastSeenAt: 1792854994170
 fingerprint: null
 payload:
   id: SN2_run_in_parallel
@@ -109,7 +109,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
@@ -128,7 +128,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by SN1_open_a_snapshot_as_a_compartment
+        - DAG 86519dc3b354b627 · layer 2 · blocked by SN1_open_a_snapshot_as_a_compartment
         - 'depends on (1): SN1_open_a_snapshot_as_a_compartment · all upstream 2'
         - >-
           needed by (1): SN3_measured_by_rfr2 · all downstream 2 · finishing it unlocks

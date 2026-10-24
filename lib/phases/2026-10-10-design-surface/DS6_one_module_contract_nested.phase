@@ -7,11 +7,11 @@ intent: null
 summary: DS6_one_module_contract_nested (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854068795
+exported_at: 1792854992009
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854068795
-lastSeenAt: 1792854068795
+firstSeenAt: 1792854992009
+lastSeenAt: 1792854992009
 fingerprint: null
 payload:
   id: DS6_one_module_contract_nested
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 446967da79eb78c1
+    hash: 9b938c3aedd3d223
     nodes:
       - path: eravos/ui/runtime/mod-factory.js
         role: changes
@@ -81,7 +81,7 @@ payload:
         role: used-by
         exists: true
         system: lib
-      - path: lib/phase-map-auto.js
+      - path: lib/ollama-port.js
         role: used-by
         exists: true
         system: lib
@@ -119,13 +119,13 @@ payload:
       - from: lib/nexus-self/store.js
         to: lib/nexus-self/systems.js
         kind: requires
-      - from: lib/phase-map-auto.js
+      - from: lib/ollama-port.js
         to: lib/nexus-self/systems.js
         kind: requires
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -143,7 +143,7 @@ payload:
             - eravos/ui/runtime/mod-factory.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (1): DS7_tools_are_mods · all downstream 2 · finishing it unlocks

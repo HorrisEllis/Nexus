@@ -9,11 +9,11 @@ intent: null
 summary: SL5_when_a_proven_change_lands_alone (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854097720
+exported_at: 1792855022685
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854097720
-lastSeenAt: 1792854097720
+firstSeenAt: 1792855022685
+lastSeenAt: 1792855022685
 fingerprint: null
 payload:
   id: SL5_when_a_proven_change_lands_alone
@@ -211,7 +211,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-23-self-building-loop-phasemap.spec::SL1_a_proven_phase_closes_itself
@@ -227,7 +227,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): SL1_a_proven_phase_closes_itself · all upstream 2'
         - 'needed by (1): SL4_the_loop'
   uuid: de04cd09-44ac-5c7a-a036-bc8176abb062

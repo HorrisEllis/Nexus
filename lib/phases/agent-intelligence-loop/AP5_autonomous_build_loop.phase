@@ -7,11 +7,11 @@ intent: null
 summary: AP5_autonomous_build_loop (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854099746
+exported_at: 1792855025290
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854099746
-lastSeenAt: 1792854099746
+firstSeenAt: 1792855025290
+lastSeenAt: 1792855025290
 fingerprint: null
 payload:
   id: AP5_autonomous_build_loop
@@ -256,7 +256,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/agent-intelligence-loop-phasemap.spec::AP1_pull_toolbox
@@ -275,7 +275,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4
+        - DAG 86519dc3b354b627 · layer 4
         - >-
           depends on (4): AP1_pull_toolbox, AP2_agent_events_to_intelligence,
           AP3_strategy_dynamic_db, AP4_intelligence_optimizes

@@ -9,11 +9,11 @@ intent: null
 summary: UI2_desktop_environment_menu (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056289
+exported_at: 1792854978914
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056289
-lastSeenAt: 1792854056289
+firstSeenAt: 1792854978914
+lastSeenAt: 1792854978914
 fingerprint: null
 payload:
   id: UI2_desktop_environment_menu
@@ -44,7 +44,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DK2_desktop_setup_popup
@@ -84,7 +84,7 @@ payload:
             - idearium/ui/js/app.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · ready
+        - DAG 86519dc3b354b627 · layer 2 · ready
         - 'depends on (1): DK2_desktop_setup_popup · all upstream 2'
         - 'needed by (0): —'
         - >-

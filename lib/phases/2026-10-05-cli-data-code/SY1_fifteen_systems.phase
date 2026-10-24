@@ -7,11 +7,11 @@ intent: null
 summary: SY1_fifteen_systems (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854060878
+exported_at: 1792854983609
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060878
-lastSeenAt: 1792854060878
+firstSeenAt: 1792854983609
+lastSeenAt: 1792854983609
 fingerprint: null
 payload:
   id: SY1_fifteen_systems
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 74c753f0c95d6701
+    hash: 5f7f2021d907e833
     nodes:
       - path: lib/nexus-self/systems.js
         role: changes
@@ -85,21 +85,21 @@ payload:
         role: used-by
         exists: true
         system: lib
-      - path: lib/phase-map-auto.js
+      - path: lib/ollama-port.js
         role: used-by
         exists: true
         system: lib
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/nexus-client.js
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -137,19 +137,13 @@ payload:
       - from: lib/nexus-self/store.js
         to: lib/nexus-self/systems.js
         kind: requires
-      - from: lib/phase-map-auto.js
+      - from: lib/ollama-port.js
         to: lib/nexus-self/systems.js
         kind: requires
-    crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
+    crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -163,7 +157,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): SY2_cos_its_own_system · finishing it unlocks SY2_cos_its_own_system'
   uuid: 128dd408-cc5a-5508-95f9-b3c50689184d

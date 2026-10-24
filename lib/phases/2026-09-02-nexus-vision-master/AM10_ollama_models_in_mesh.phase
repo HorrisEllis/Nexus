@@ -7,11 +7,11 @@ intent: null
 summary: AM10_ollama_models_in_mesh (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854042774
+exported_at: 1792854964504
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854042774
-lastSeenAt: 1792854042774
+firstSeenAt: 1792854964504
+lastSeenAt: 1792854964504
 fingerprint: null
 payload:
   id: AM10_ollama_models_in_mesh
@@ -155,7 +155,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -166,7 +166,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 279c5de7-d5ef-5cf9-b826-294d014e7603

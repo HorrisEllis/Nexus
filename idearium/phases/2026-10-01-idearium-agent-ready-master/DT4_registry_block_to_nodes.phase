@@ -9,11 +9,11 @@ intent: null
 summary: DT4_registry_block_to_nodes (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056270
+exported_at: 1792854978897
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056270
-lastSeenAt: 1792854056270
+firstSeenAt: 1792854978897
+lastSeenAt: 1792854978897
 fingerprint: null
 payload:
   id: DT4_registry_block_to_nodes
@@ -223,7 +223,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
@@ -245,7 +245,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by DT1_persistence_census
+        - DAG 86519dc3b354b627 · layer 2 · blocked by DT1_persistence_census
         - 'depends on (1): DT1_persistence_census · all upstream 2'
         - >-
           needed by (2): RM1_registry_driven_moves, DT4b_registry_chunk_in_repo_chunking · all

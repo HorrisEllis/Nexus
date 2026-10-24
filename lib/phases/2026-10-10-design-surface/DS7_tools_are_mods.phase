@@ -7,11 +7,11 @@ intent: null
 summary: DS7_tools_are_mods (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854068796
+exported_at: 1792854992009
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854068796
-lastSeenAt: 1792854068796
+firstSeenAt: 1792854992009
+lastSeenAt: 1792854992009
 fingerprint: null
 payload:
   id: DS7_tools_are_mods
@@ -42,7 +42,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
@@ -62,7 +62,7 @@ payload:
             - eravos/ui/runtime/mod-factory.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by DS6_one_module_contract_nested
+        - DAG 86519dc3b354b627 · layer 1 · blocked by DS6_one_module_contract_nested
         - 'depends on (1): DS6_one_module_contract_nested'
         - >-
           needed by (1): DS8_the_registry_routes_the_ui_reflects · finishing it unlocks

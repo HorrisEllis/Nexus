@@ -7,11 +7,11 @@ intent: null
 summary: P2_tree_parse_recall_injection (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854103565
+exported_at: 1792855029034
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854103565
-lastSeenAt: 1792854103565
+firstSeenAt: 1792855029034
+lastSeenAt: 1792855029034
 fingerprint: null
 payload:
   id: P2_tree_parse_recall_injection
@@ -235,7 +235,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
@@ -253,7 +253,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): P1_per_agent_contracts'
         - >-
           needed by (2): P4_structured_agent_to_agent, P5_autonomous_multiagent_loop · finishing it

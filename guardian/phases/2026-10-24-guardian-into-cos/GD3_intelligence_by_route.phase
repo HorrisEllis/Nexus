@@ -7,11 +7,11 @@ intent: null
 summary: GD3_intelligence_by_route (backend) — 4 file(s)
 system: guardian
 tags: []
-exported_at: 1792854099321
+exported_at: 1792855024440
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854099321
-lastSeenAt: 1792854099321
+firstSeenAt: 1792855024440
+lastSeenAt: 1792855024440
 fingerprint: null
 payload:
   id: GD3_intelligence_by_route
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D2_stateful_capabilities_by_route
@@ -262,7 +262,7 @@ payload:
             - guardian/server.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by GD2_primitives_to_the_kernel
+        - DAG 86519dc3b354b627 · layer 2 · blocked by GD2_primitives_to_the_kernel
         - >-
           depends on (2): GD_D2_stateful_capabilities_by_route, GD2_primitives_to_the_kernel · all
           upstream 3

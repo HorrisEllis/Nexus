@@ -9,11 +9,11 @@ intent: null
 summary: BK1_blocked_is_actionable (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056297
+exported_at: 1792854978924
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056297
-lastSeenAt: 1792854056297
+firstSeenAt: 1792854978924
+lastSeenAt: 1792854978924
 fingerprint: null
 payload:
   id: BK1_blocked_is_actionable
@@ -218,7 +218,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
@@ -237,7 +237,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · ready
+        - DAG 86519dc3b354b627 · layer 3 · ready
         - 'depends on (2): CT1_cut_replies_are_finished, DT2_failure_mode_field · all upstream 4'
         - 'needed by (1): BK2_phase_build_writes_code'
   uuid: edeb5360-8940-50a0-af11-8b45d0cdc175

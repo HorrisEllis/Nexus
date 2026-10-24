@@ -7,11 +7,11 @@ intent: null
 summary: AP3_strategy_dynamic_db (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854099745
+exported_at: 1792855025288
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854099745
-lastSeenAt: 1792854099745
+firstSeenAt: 1792855025288
+lastSeenAt: 1792855025288
 fingerprint: null
 payload:
   id: AP3_strategy_dynamic_db
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/agent-intelligence-loop-phasemap.spec::AP2_agent_events_to_intelligence
@@ -51,7 +51,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): AP2_agent_events_to_intelligence · all upstream 2'
         - >-
           needed by (2): AP4_intelligence_optimizes, AP5_autonomous_build_loop · finishing it

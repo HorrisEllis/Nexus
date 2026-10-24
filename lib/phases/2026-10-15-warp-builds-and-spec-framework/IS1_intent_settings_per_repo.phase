@@ -9,11 +9,11 @@ intent: null
 summary: IS1_intent_settings_per_repo (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792854079239
+exported_at: 1792855003283
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854079239
-lastSeenAt: 1792854079239
+firstSeenAt: 1792855003283
+lastSeenAt: 1792855003283
 fingerprint: null
 payload:
   id: IS1_intent_settings_per_repo
@@ -254,7 +254,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF1_intent_blocks
@@ -270,7 +270,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): SF1_intent_blocks'
         - 'needed by (0): —'
         - >-

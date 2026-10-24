@@ -9,11 +9,11 @@ intent: null
 summary: X2_guardian_hat_agent (?) — 3 file(s)
 system: guardian
 tags: []
-exported_at: 1792854052326
+exported_at: 1792854974898
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854052326
-lastSeenAt: 1792854052326
+firstSeenAt: 1792854974898
+lastSeenAt: 1792854974898
 fingerprint: null
 payload:
   id: X2_guardian_hat_agent
@@ -186,7 +186,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -201,7 +201,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): X3_nodes_route · all downstream 2 · finishing it unlocks X3_nodes_route'
         - >-

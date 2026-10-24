@@ -7,11 +7,11 @@ intent: null
 summary: SY2_cos_its_own_system (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854060880
+exported_at: 1792854983610
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060880
-lastSeenAt: 1792854060880
+firstSeenAt: 1792854983610
+lastSeenAt: 1792854983610
 fingerprint: null
 payload:
   id: SY2_cos_its_own_system
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 0266a2d2bdefe360
+    hash: 03bf0b9362773e27
     nodes:
       - path: docs/2026-10-05-cos-machines-phasemap.spec
         role: changes
@@ -86,7 +86,7 @@ payload:
         role: used-by
         exists: true
         system: lib
-      - path: lib/phase-map-auto.js
+      - path: lib/ollama-port.js
         role: used-by
         exists: true
         system: lib
@@ -124,13 +124,13 @@ payload:
       - from: lib/nexus-self/store.js
         to: lib/nexus-self/systems.js
         kind: requires
-      - from: lib/phase-map-auto.js
+      - from: lib/ollama-port.js
         to: lib/nexus-self/systems.js
         kind: requires
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-05-cli-data-code-phasemap.spec::SY1_fifteen_systems
@@ -143,7 +143,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): SY1_fifteen_systems'
         - 'needed by (0): —'
   uuid: 4d47a3ee-b6bb-5fe3-82de-b408fdbdcccb

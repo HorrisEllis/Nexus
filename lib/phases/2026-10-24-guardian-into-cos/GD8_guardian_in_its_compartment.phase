@@ -7,11 +7,11 @@ intent: null
 summary: GD8_guardian_in_its_compartment (integration) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854099324
+exported_at: 1792855024444
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854099324
-lastSeenAt: 1792854099324
+firstSeenAt: 1792855024444
+lastSeenAt: 1792855024444
 fingerprint: null
 payload:
   id: GD8_guardian_in_its_compartment
@@ -152,7 +152,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
@@ -181,7 +181,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · blocked by GD7_the_bus_and_connect,
+          DAG 86519dc3b354b627 · layer 5 · blocked by GD7_the_bus_and_connect,
           CS3_the_registry_is_the_bridge
         - 'depends on (2): GD7_the_bus_and_connect, CS3_the_registry_is_the_bridge · all upstream 13'
         - 'needed by (0): —'

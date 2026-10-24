@@ -7,11 +7,11 @@ intent: null
 summary: RC2_registry_as_nodes (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056776
+exported_at: 1792854979423
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056776
-lastSeenAt: 1792854056776
+firstSeenAt: 1792854979423
+lastSeenAt: 1792854979423
 fingerprint: null
 payload:
   id: RC2_registry_as_nodes
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC1_registry_block
@@ -239,7 +239,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): RC1_registry_block · all upstream 2'
         - 'needed by (1): GN1_genesis · all downstream 3 · finishing it unlocks GN1_genesis'
   uuid: add2dce6-43d2-5400-abf6-8a43067b717b

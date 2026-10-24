@@ -7,11 +7,11 @@ intent: null
 summary: SD10_the_adversarial_gate (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854069605
+exported_at: 1792854992880
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854069605
-lastSeenAt: 1792854069605
+firstSeenAt: 1792854992880
+lastSeenAt: 1792854992880
 fingerprint: null
 payload:
   id: SD10_the_adversarial_gate
@@ -272,7 +272,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -283,7 +283,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 4a4a6654-b726-50a9-ac24-94e87f0a9dea

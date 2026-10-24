@@ -7,11 +7,11 @@ intent: null
 summary: PF2_the_slots_into_a_gig (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854076348
+exported_at: 1792855000133
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076348
-lastSeenAt: 1792854076348
+firstSeenAt: 1792855000133
+lastSeenAt: 1792855000133
 fingerprint: null
 payload:
   id: PF2_the_slots_into_a_gig
@@ -49,7 +49,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF1_the_sources
@@ -67,7 +67,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by PF1_the_sources
+        - DAG 86519dc3b354b627 · layer 2 · blocked by PF1_the_sources
         - 'depends on (1): PF1_the_sources · all upstream 2'
         - 'needed by (1): PF3_the_screen · finishing it unlocks PF3_the_screen'
   uuid: 7e71818b-7cf9-517d-a1c2-b120016d0091

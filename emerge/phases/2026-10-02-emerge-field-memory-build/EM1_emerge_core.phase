@@ -7,11 +7,11 @@ intent: null
 summary: EM1_emerge_core (?) — 12 file(s)
 system: emerge
 tags: []
-exported_at: 1792854057596
+exported_at: 1792854980261
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057596
-lastSeenAt: 1792854057596
+firstSeenAt: 1792854980261
+lastSeenAt: 1792854980261
 fingerprint: null
 payload:
   id: EM1_emerge_core
@@ -125,7 +125,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
@@ -178,7 +178,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (2): EM0_ground, EV0_contracts_for_every_system'
         - >-
           needed by (5): EM2_warp_his_own, CF1_cfr_improved_with_rfr2, RF1_relational_field,

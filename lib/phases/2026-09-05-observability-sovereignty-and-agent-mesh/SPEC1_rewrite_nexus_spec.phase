@@ -9,11 +9,11 @@ intent: null
 summary: SPEC1_rewrite_nexus_spec (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854043762
+exported_at: 1792854965665
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854043762
-lastSeenAt: 1792854043762
+firstSeenAt: 1792854965665
+lastSeenAt: 1792854965665
 fingerprint: null
 payload:
   id: SPEC1_rewrite_nexus_spec
@@ -104,7 +104,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::REG1_component_registry_remap
@@ -118,7 +118,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by REG1_component_registry_remap
+        - DAG 86519dc3b354b627 · layer 1 · blocked by REG1_component_registry_remap
         - 'depends on (1): REG1_component_registry_remap'
         - 'needed by (0): —'
   uuid: 2432bda2-fea5-531a-b232-8939b6e23895

@@ -9,11 +9,11 @@ intent: null
 summary: GA10_copilot_capability_self_awareness (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854102348
+exported_at: 1792855027792
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854102348
-lastSeenAt: 1792854102348
+firstSeenAt: 1792855027792
+lastSeenAt: 1792855027792
 fingerprint: null
 payload:
   id: GA10_copilot_capability_self_awareness
@@ -226,7 +226,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/copilot-guardian-cos-expansion-phasemap.spec::GA4_lib_meta_as_cortex_tools
@@ -240,7 +240,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by GA4_lib_meta_as_cortex_tools
+        - DAG 86519dc3b354b627 · layer 1 · blocked by GA4_lib_meta_as_cortex_tools
         - 'depends on (1): GA4_lib_meta_as_cortex_tools'
         - 'needed by (0): —'
   uuid: 2f3a9223-c05e-5a12-ab18-49f6106327a6

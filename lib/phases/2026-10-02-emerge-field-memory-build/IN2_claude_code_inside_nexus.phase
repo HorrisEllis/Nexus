@@ -9,11 +9,11 @@ intent: null
 summary: IN2_claude_code_inside_nexus (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854057666
+exported_at: 1792854980331
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057666
-lastSeenAt: 1792854057666
+firstSeenAt: 1792854980331
+lastSeenAt: 1792854980331
 fingerprint: null
 payload:
   id: IN2_claude_code_inside_nexus
@@ -201,7 +201,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
@@ -225,7 +225,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 5 · blocked by AC1_accounts_into_agents, SH1_shadow_space
+        - DAG 86519dc3b354b627 · layer 5 · blocked by AC1_accounts_into_agents, SH1_shadow_space
         - >-
           depends on (3): GA1_guardian_source_of_truth, AC1_accounts_into_agents, SH1_shadow_space ·
           all upstream 8

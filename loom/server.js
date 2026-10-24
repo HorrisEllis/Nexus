@@ -182,8 +182,9 @@ function readRawBody(req, maxBytes = 500 * 1024 * 1024) {
 let hookRegistry = null;
 try {
   const { HookRegistry } = require('../lib/hook-registry');
-  const { jaaDB } = require('../cortex/memory/jaa-db');
-  hookRegistry = new HookRegistry({ jaa: jaaDB });
+  // 0.60.241 LM2 — the hook registry on Loom's own store (loom/lib/store.js), brought home from Cortex's; other systems read it through
+  // /api/hooks (LM3)
+  hookRegistry = new HookRegistry({ jaa: require('./lib/store.js').store() });
   hookRegistry.init();
   const _seedBuiltinHooks = (registry) => {
     const seeds = [
@@ -262,6 +263,9 @@ const server = http.createServer(async (req, res) => {
         const layer = url.searchParams.get('layer'); if (layer) filter.layer = parseInt(layer);
         return json(res, 200, { ok: true, hooks: hookRegistry.list(filter), summary: hookRegistry.summary() });
       }
+      // 0.60.241 LM3 — validate and graph served by the owner (Architect's handlers for them sat after a return and never ran)
+      if (method === 'GET' && id === 'validate') return json(res, 200, { ok: true, report: hookRegistry.validate() });
+      if (method === 'GET' && id === 'graph') return json(res, 200, { ok: true, graph: hookRegistry.graph(url.searchParams.get('format') || 'json') });
       if (method === 'GET' && id) {
         const hook = hookRegistry.get(id);
         return hook ? json(res, 200, { ok: true, hook }) : json(res, 404, { ok: false, error: 'hook not found' });
@@ -438,6 +442,12 @@ const server = http.createServer(async (req, res) => {
     // MUST be checked before the general /api/phasemap/:system route below,
     // or "history" gets swallowed as a bogus system name (caught before
     // shipping, not after — checked route order deliberately, not assumed).
+    // 0.60.241 LM3 — the latest transitions across every map (phasemap_history is Loom's own table now; lib/agent-build-loop.js reads it here)
+    if (method === 'GET' && p === '/api/phasemap/history') {
+      const n = Math.max(1, Math.min(500, parseInt(url.searchParams.get('n') || '20', 10) || 20));
+      let rows = []; try { rows = (require('./lib/store.js').store().query(phasemapMap.TABLE, () => true) || []).sort((a, b) => (a.recordedAt || 0) - (b.recordedAt || 0)).slice(-n); } catch (e) { return json(res, 503, { ok: false, error: `loom's store: ${e.message}` }); }
+      return json(res, 200, { ok: true, history: rows, n: rows.length });
+    }
     if (method === 'GET' && p.startsWith('/api/phasemap/history/')) {
       const rest = p.slice('/api/phasemap/history/'.length).split('/');
       const map = decodeURIComponent(rest[0] || '');
@@ -689,10 +699,10 @@ function register() {
     method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
     timeout: 4000 }, () => {
     console.log('[loom] registered');
-    try {
-      const { startHeartbeat } = require('../nexus/nexus-connect');
-      startHeartbeat(SYSTEM_ID, PORT);
-    } catch (_) { /* nexus-connect optional — never crash the server over a heartbeat */ }
+    // 0.60.241 LM0 (docs/2026-10-24-loom-into-cos-phasemap.spec) — the pulse straight from the kernel (lib/pulse.js), as ollama took it
+    // in 0.60.236: nexus-connect's startHeartbeat only handed off to it, and was one of Loom's ways out
+    try { require('../lib/pulse.js').createPulse({ systemId: SYSTEM_ID, port: PORT }); }
+    catch (e) { console.warn(`[loom] no heartbeat: ${e.message}`); }
   });
   r.on('error', () => setTimeout(register, 5000));
   r.write(body); r.end();

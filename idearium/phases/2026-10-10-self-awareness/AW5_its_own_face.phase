@@ -7,11 +7,11 @@ intent: null
 summary: AW5_its_own_face (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854070081
+exported_at: 1792854993336
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854070081
-lastSeenAt: 1792854070081
+firstSeenAt: 1792854993336
+lastSeenAt: 1792854993336
 fingerprint: null
 payload:
   id: AW5_its_own_face
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-10-self-awareness-phasemap.spec::AW1_guardian_reflected_in_nodes
@@ -58,7 +58,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 3 · blocked by AW1_guardian_reflected_in_nodes,
+          DAG 86519dc3b354b627 · layer 3 · blocked by AW1_guardian_reflected_in_nodes,
           AW4_the_door_reads_the_lattice
         - >-
           depends on (2): AW1_guardian_reflected_in_nodes, AW4_the_door_reads_the_lattice · all

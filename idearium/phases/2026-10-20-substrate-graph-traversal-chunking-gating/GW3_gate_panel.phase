@@ -9,11 +9,11 @@ intent: null
 summary: GW3_gate_panel (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854093036
+exported_at: 1792855017631
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854093036
-lastSeenAt: 1792854093036
+firstSeenAt: 1792855017631
+lastSeenAt: 1792855017631
 fingerprint: null
 payload:
   id: GW3_gate_panel
@@ -224,7 +224,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 8
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
@@ -263,7 +263,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 8 · blocked by GW2_gates_at_every_level, TB1_toolbox
+        - DAG 86519dc3b354b627 · layer 8 · blocked by GW2_gates_at_every_level, TB1_toolbox
         - 'depends on (2): GW2_gates_at_every_level, TB1_toolbox · all upstream 24'
         - 'needed by (0): —'
   uuid: 2eb70032-405f-59e0-96aa-412202406462

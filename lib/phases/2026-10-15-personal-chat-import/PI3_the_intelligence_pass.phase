@@ -7,11 +7,11 @@ intent: null
 summary: PI3_the_intelligence_pass (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854078034
+exported_at: 1792855002021
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854078034
-lastSeenAt: 1792854078034
+firstSeenAt: 1792855002021
+lastSeenAt: 1792855002021
 fingerprint: null
 payload:
   id: PI3_the_intelligence_pass
@@ -172,7 +172,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-15-personal-chat-import-phasemap.spec::PI1_the_importer
@@ -197,7 +197,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by PI1_the_importer, PI0b_what_a_chat_may_become
+        - DAG 86519dc3b354b627 · layer 2 · blocked by PI1_the_importer, PI0b_what_a_chat_may_become
         - 'depends on (2): PI1_the_importer, PI0b_what_a_chat_may_become · all upstream 3'
         - >-
           needed by (2): PI4_the_review_screen, PI3b_the_measured_patterns · all downstream 3 ·

@@ -7,11 +7,11 @@ intent: null
 summary: BS7_surface (surface) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854094754
+exported_at: 1792855019353
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854094754
-lastSeenAt: 1792854094754
+firstSeenAt: 1792855019353
+lastSeenAt: 1792855019353
 fingerprint: null
 payload:
   id: BS7_surface
@@ -194,7 +194,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS1_firefox_import
@@ -214,7 +214,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (3): BS1_firefox_import, BS3_menus, BS6_float_cli · all upstream 6'
         - 'needed by (0): —'
   uuid: 3493a338-2ebe-5517-bf45-b34a7a4269b3

@@ -7,11 +7,11 @@ intent: null
 summary: A1 (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854049475
+exported_at: 1792854971731
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854049475
-lastSeenAt: 1792854049475
+firstSeenAt: 1792854971731
+lastSeenAt: 1792854971731
 fingerprint: null
 payload:
   id: A1
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -51,7 +51,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): A2 · all downstream 2 · finishing it unlocks A2'
   uuid: 159d4e01-8620-54f6-bc58-417df0d45bb6

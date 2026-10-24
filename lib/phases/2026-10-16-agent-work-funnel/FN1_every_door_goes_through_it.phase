@@ -7,11 +7,11 @@ intent: null
 summary: FN1_every_door_goes_through_it (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854079658
+exported_at: 1792855003702
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854079658
-lastSeenAt: 1792854079658
+firstSeenAt: 1792855003702
+lastSeenAt: 1792855003702
 fingerprint: null
 payload:
   id: FN1_every_door_goes_through_it
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN0_the_funnel_as_data
@@ -257,7 +257,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): FN0_the_funnel_as_data'
         - >-
           needed by (2): FN2_what_is_missing_is_made_first, FN4_the_screen · finishing it unlocks

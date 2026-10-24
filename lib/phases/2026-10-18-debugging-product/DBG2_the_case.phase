@@ -7,11 +7,11 @@ intent: null
 summary: DBG2_the_case (?) — 10 file(s)
 system: core
 tags: []
-exported_at: 1792854088367
+exported_at: 1792855012760
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854088367
-lastSeenAt: 1792854088367
+firstSeenAt: 1792855012760
+lastSeenAt: 1792855012760
 fingerprint: null
 payload:
   id: DBG2_the_case
@@ -273,7 +273,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-18-debugging-product-phasemap.spec::DBG1_the_key
@@ -303,7 +303,7 @@ payload:
             - lib/gap-field.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by DBG1_the_key
+        - DAG 86519dc3b354b627 · layer 2 · blocked by DBG1_the_key
         - 'depends on (1): DBG1_the_key · all upstream 2'
         - >-
           needed by (5): DBG3_deviation_and_friction_per_run, DBG5_rewind_from_a_case,

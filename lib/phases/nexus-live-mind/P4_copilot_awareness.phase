@@ -7,11 +7,11 @@ intent: null
 summary: P4_copilot_awareness (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854105799
+exported_at: 1792855031184
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854105799
-lastSeenAt: 1792854105799
+firstSeenAt: 1792855031184
+lastSeenAt: 1792855031184
 fingerprint: null
 payload:
   id: P4_copilot_awareness
@@ -246,7 +246,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/nexus-live-mind-phasemap.spec::P1_nervous_system_live
@@ -268,7 +268,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (2): P1_nervous_system_live, P3_diagnostic_kernel · all upstream 3'
         - >-
           needed by (2): P5_copilot_dynamic_and_user_aware, P6_copilot_programmable · finishing it

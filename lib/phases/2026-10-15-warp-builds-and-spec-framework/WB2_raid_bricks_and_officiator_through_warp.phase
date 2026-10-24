@@ -9,11 +9,11 @@ intent: null
 summary: WB2_raid_bricks_and_officiator_through_warp (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792854079235
+exported_at: 1792855003278
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854079235
-lastSeenAt: 1792854079235
+firstSeenAt: 1792855003278
+lastSeenAt: 1792855003278
 fingerprint: null
 payload:
   id: WB2_raid_bricks_and_officiator_through_warp
@@ -279,7 +279,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB1_warp_at_the_rung
@@ -293,7 +293,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): WB1_warp_at_the_rung · all upstream 2'
         - 'needed by (0): —'
   uuid: 8dd6d684-132f-5426-8165-8c55f342824d

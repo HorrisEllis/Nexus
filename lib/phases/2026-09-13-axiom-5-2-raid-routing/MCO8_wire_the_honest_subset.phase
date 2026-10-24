@@ -7,11 +7,11 @@ intent: null
 summary: MCO8_wire_the_honest_subset (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854045649
+exported_at: 1792854967719
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854045649
-lastSeenAt: 1792854045649
+firstSeenAt: 1792854967719
+lastSeenAt: 1792854967719
 fingerprint: null
 payload:
   id: MCO8_wire_the_honest_subset
@@ -25,7 +25,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: ea1b8c0c845ac17a
+    hash: 8e508fdcdc15b40d
     nodes:
       - path: architect/service.js
         role: changes
@@ -111,14 +111,14 @@ payload:
         role: uses
         exists: true
         system: architect
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: hooks/index.js
         role: uses
         exists: true
         system: hooks
+      - path: idearium/config.js
+        role: uses
+        exists: true
+        system: idearium
       - path: intelligence/alk/index.js
         role: uses
         exists: true
@@ -172,13 +172,13 @@ payload:
         to: architect/registry-components.js
         kind: requires
       - from: architect/service.js
-        to: cortex/memory/jaa-db.js
-        kind: requires
-      - from: architect/service.js
         to: intelligence/alk/index.js
         kind: requires
       - from: architect/service.js
         to: lib/node-registry.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/config.js
         kind: requires
       - from: idearium/cli/index.js
         to: idearium/api/index.js
@@ -236,12 +236,6 @@ payload:
         kind: system
         known: true
       - from: architect/service.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: architect
-        toSystem: cortex
-        kind: system
-        known: true
-      - from: architect/service.js
         to: intelligence/alk/index.js
         fromSystem: architect
         toSystem: intelligence
@@ -255,7 +249,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO7_map_real_proxy_traffic
@@ -271,7 +265,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): MCO7_map_real_proxy_traffic'
         - >-
           needed by (1): MCO12_architect_remaining_routes · finishing it unlocks

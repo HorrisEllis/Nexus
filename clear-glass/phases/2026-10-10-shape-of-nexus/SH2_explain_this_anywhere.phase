@@ -7,11 +7,11 @@ intent: null
 summary: SH2_explain_this_anywhere (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854070508
+exported_at: 1792854993747
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854070508
-lastSeenAt: 1792854070508
+firstSeenAt: 1792854993747
+lastSeenAt: 1792854993747
 fingerprint: null
 payload:
   id: SH2_explain_this_anywhere
@@ -68,7 +68,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP2_the_system_settings_in_its_repo
@@ -90,7 +90,7 @@ payload:
             - clear-glass/src/page/field.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · ready
+        - DAG 86519dc3b354b627 · layer 3 · ready
         - 'depends on (1): OP2_the_system_settings_in_its_repo · all upstream 3'
         - 'needed by (0): —'
         - >-

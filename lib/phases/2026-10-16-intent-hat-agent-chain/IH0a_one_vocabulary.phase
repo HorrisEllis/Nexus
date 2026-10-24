@@ -7,11 +7,11 @@ intent: null
 summary: IH0a_one_vocabulary (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854082484
+exported_at: 1792855006678
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854082484
-lastSeenAt: 1792854082484
+firstSeenAt: 1792855006678
+lastSeenAt: 1792855006678
 fingerprint: null
 payload:
   id: IH0a_one_vocabulary
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -48,7 +48,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (1): IH1_intent_nodes_point_at_hats · all downstream 5 · finishing it unlocks

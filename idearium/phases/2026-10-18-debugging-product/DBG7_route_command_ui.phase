@@ -7,11 +7,11 @@ intent: null
 summary: DBG7_route_command_ui (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854088371
+exported_at: 1792855012764
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854088371
-lastSeenAt: 1792854088371
+firstSeenAt: 1792855012764
+lastSeenAt: 1792855012764
 fingerprint: null
 payload:
   id: DBG7_route_command_ui
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
@@ -240,7 +240,7 @@ payload:
             - idearium/cli/route-commands.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by DBG2_the_case
+        - DAG 86519dc3b354b627 · layer 3 · blocked by DBG2_the_case
         - 'depends on (1): DBG2_the_case · all upstream 3'
         - 'needed by (0): —'
         - >-

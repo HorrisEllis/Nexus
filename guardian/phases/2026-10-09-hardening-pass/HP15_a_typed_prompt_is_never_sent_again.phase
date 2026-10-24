@@ -9,11 +9,11 @@ intent: null
 summary: HP15_a_typed_prompt_is_never_sent_again (?) — 1 file(s)
 system: guardian
 tags: []
-exported_at: 1792854067132
+exported_at: 1792854990245
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854067132
-lastSeenAt: 1792854067132
+firstSeenAt: 1792854990245
+lastSeenAt: 1792854990245
 fingerprint: null
 payload:
   id: HP15_a_typed_prompt_is_never_sent_again
@@ -169,7 +169,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
@@ -185,7 +185,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds'
         - 'needed by (1): HP19_the_simulator_stays · finishing it unlocks HP19_the_simulator_stays'
   uuid: fc8efd24-d6ad-5ca5-b0ad-41dd84214b0d

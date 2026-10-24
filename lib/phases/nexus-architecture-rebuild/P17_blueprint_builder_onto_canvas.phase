@@ -7,11 +7,11 @@ intent: null
 summary: P17_blueprint_builder_onto_canvas (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854105361
+exported_at: 1792855030769
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854105361
-lastSeenAt: 1792854105361
+firstSeenAt: 1792855030769
+lastSeenAt: 1792855030769
 fingerprint: null
 payload:
   id: P17_blueprint_builder_onto_canvas
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/nexus-architecture-rebuild-phasemap.spec::P16_architect_node_canvas_in_loom
@@ -45,7 +45,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by P16_architect_node_canvas_in_loom
+        - DAG 86519dc3b354b627 · layer 1 · blocked by P16_architect_node_canvas_in_loom
         - 'depends on (1): P16_architect_node_canvas_in_loom'
         - 'needed by (0): —'
   uuid: 594aaa1d-24d4-56b3-a3b2-2d5a3b15c3b2

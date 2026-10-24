@@ -7,11 +7,11 @@ intent: null
 summary: DP11_the_product_boundary (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854085743
+exported_at: 1792855010010
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854085743
-lastSeenAt: 1792854085743
+firstSeenAt: 1792855010010
+lastSeenAt: 1792855010010
 fingerprint: null
 payload:
   id: DP11_the_product_boundary
@@ -287,7 +287,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-17-debugging-product-phasemap.spec::DP0a_one_product_or_two
@@ -300,7 +300,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): DP0a_one_product_or_two'
         - 'needed by (0): —'
   uuid: c7f99d5c-5517-5fce-b544-46bd4614ff0b

@@ -9,11 +9,11 @@ intent: null
 summary: JB6_the_application_ledger (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854071367
+exported_at: 1792854994605
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071367
-lastSeenAt: 1792854071367
+firstSeenAt: 1792854994605
+lastSeenAt: 1792854994605
 fingerprint: null
 payload:
   id: JB6_the_application_ledger
@@ -81,7 +81,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB4_resume_import
@@ -98,7 +98,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by JB4_resume_import
+        - DAG 86519dc3b354b627 · layer 2 · blocked by JB4_resume_import
         - 'depends on (1): JB4_resume_import · all upstream 2'
         - 'needed by (1): JB7_the_follow_up'
   uuid: 26462346-e1bc-58f4-b107-065d746dc38f

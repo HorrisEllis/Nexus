@@ -9,11 +9,11 @@ intent: null
 summary: D1_canvas_authority (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854046907
+exported_at: 1792854969077
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854046907
-lastSeenAt: 1792854046907
+firstSeenAt: 1792854969077
+lastSeenAt: 1792854969077
 fingerprint: null
 payload:
   id: D1_canvas_authority
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -43,7 +43,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: a3425f44-028f-503c-b40f-f4ef4b70407b

@@ -9,11 +9,11 @@ intent: null
 summary: TX12_bookmark_reconciliation (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854100625
+exported_at: 1792855026117
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854100625
-lastSeenAt: 1792854100625
+firstSeenAt: 1792855026117
+lastSeenAt: 1792855026117
 fingerprint: null
 payload:
   id: TX12_bookmark_reconciliation
@@ -40,7 +40,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -51,7 +51,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 033412f8-3fe6-5cee-bbc7-c6cf0b54d745

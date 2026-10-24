@@ -7,11 +7,11 @@ intent: null
 summary: B1 (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854053236
+exported_at: 1792854975836
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854053236
-lastSeenAt: 1792854053236
+firstSeenAt: 1792854975836
+lastSeenAt: 1792854975836
 fingerprint: null
 payload:
   id: B1
@@ -199,7 +199,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::B0
@@ -220,7 +220,7 @@ payload:
       dangling:
         - staging
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by B0
+        - DAG 86519dc3b354b627 · layer 4 · blocked by B0
         - 'depends on (2): B0, S0 · all upstream 6'
         - 'needed by (0): —'
         - 'DANGLING depends_on: staging'

@@ -7,11 +7,11 @@ intent: null
 summary: HG6_scanner_status_vocabulary (?) — 1 file(s)
 system: loom
 tags: []
-exported_at: 1792854060875
+exported_at: 1792854983603
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060875
-lastSeenAt: 1792854060875
+firstSeenAt: 1792854983603
+lastSeenAt: 1792854983603
 fingerprint: null
 payload:
   id: HG6_scanner_status_vocabulary
@@ -25,7 +25,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: f79a44488c30eea9
+    hash: 82f21124259c6217
     nodes:
       - path: loom/scanners/phasemap-map.js
         role: changes
@@ -79,10 +79,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/nexus-client.js
         role: uses
         exists: true
@@ -91,12 +87,16 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -138,12 +138,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
         fromSystem: idearium
@@ -200,7 +194,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -211,7 +205,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 9a76f07c-bacf-5591-8760-db8089d7fafc

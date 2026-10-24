@@ -7,11 +7,11 @@ intent: null
 summary: SL2_done_by_evidence (library) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792854097717
+exported_at: 1792855022683
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854097717
-lastSeenAt: 1792854097717
+firstSeenAt: 1792855022683
+lastSeenAt: 1792855022683
 fingerprint: null
 payload:
   id: SL2_done_by_evidence
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
@@ -251,7 +251,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): SL0_what_can_be_built_now'
         - 'needed by (0): —'
   uuid: 2d628fb6-385f-5ce9-89ae-5ab1b841c234

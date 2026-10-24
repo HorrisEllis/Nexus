@@ -9,11 +9,11 @@ intent: null
 summary: CG3_the_fiverr_tutorial_in_the_browser (?) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854070506
+exported_at: 1792854993743
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854070506
-lastSeenAt: 1792854070506
+firstSeenAt: 1792854993743
+lastSeenAt: 1792854993743
 fingerprint: null
 payload:
   id: CG3_the_fiverr_tutorial_in_the_browser
@@ -72,7 +72,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-10-shape-of-nexus-phasemap.spec::CG2_one_source_of_truth_for_the_browser
@@ -91,7 +91,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 2 · blocked by CG2_one_source_of_truth_for_the_browser,
+          DAG 86519dc3b354b627 · layer 2 · blocked by CG2_one_source_of_truth_for_the_browser,
           TU1_the_nexus_tutorial
         - >-
           depends on (2): CG2_one_source_of_truth_for_the_browser, TU1_the_nexus_tutorial · all

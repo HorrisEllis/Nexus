@@ -9,11 +9,11 @@ intent: null
 summary: SB39_the_checklist_builds_the_working_set (?) — 10 file(s)
 system: core
 tags: []
-exported_at: 1792854060379
+exported_at: 1792854983057
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060379
-lastSeenAt: 1792854060379
+firstSeenAt: 1792854983057
+lastSeenAt: 1792854983057
 fingerprint: null
 payload:
   id: SB39_the_checklist_builds_the_working_set
@@ -263,7 +263,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 10
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB38_prerequisites_the_questions_first
@@ -285,7 +285,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 10
+        - DAG 86519dc3b354b627 · layer 10
         - 'depends on (1): SB38_prerequisites_the_questions_first · all upstream 10'
         - 'needed by (0): —'
   uuid: b6e631de-f306-54ed-a332-7c88f0a2fcb2

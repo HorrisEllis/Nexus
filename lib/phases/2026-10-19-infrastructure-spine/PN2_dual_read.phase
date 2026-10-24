@@ -7,11 +7,11 @@ intent: null
 summary: PN2_dual_read (library) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854090887
+exported_at: 1792855015417
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854090887
-lastSeenAt: 1792854090887
+firstSeenAt: 1792855015417
+lastSeenAt: 1792855015417
 fingerprint: null
 payload:
   id: PN2_dual_read
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 91127d4a8e44fa8a
+    hash: 69d58ddc59886f72
     nodes:
       - path: idearium/repo/phases.js
         role: changes
@@ -90,10 +90,6 @@ payload:
         role: used-by
         exists: true
         system: loom
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: idearium/repo/roadmap.js
         role: uses
         exists: true
@@ -118,6 +114,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: idearium/repo/phases.js
         to: idearium/repo/roadmap.js
@@ -135,7 +135,7 @@ payload:
         to: lib/phase-plan.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -177,12 +177,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/repo/nexus-self.js
         to: loom/scanners/phasemap-map.js
         fromSystem: idearium
@@ -221,7 +215,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
@@ -252,7 +246,7 @@ payload:
             - lib/phase-dag.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by PN1_phases_to_nodes
+        - DAG 86519dc3b354b627 · layer 3 · blocked by PN1_phases_to_nodes
         - 'depends on (1): PN1_phases_to_nodes · all upstream 3'
         - >-
           needed by (1): PN3_maps_rendered_from_nodes · finishing it unlocks

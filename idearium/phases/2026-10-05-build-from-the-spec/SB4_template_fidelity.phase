@@ -7,11 +7,11 @@ intent: null
 summary: SB4_template_fidelity (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854060302
+exported_at: 1792854982968
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060302
-lastSeenAt: 1792854060302
+firstSeenAt: 1792854982968
+lastSeenAt: 1792854982968
 fingerprint: null
 payload:
   id: SB4_template_fidelity
@@ -29,7 +29,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 1c94f2ce8f6fc54c
+    hash: 4f3f226f57d82826
     nodes:
       - path: idearium/spec-engine/templates/architecture-spec.template.yaml
         role: changes
@@ -87,7 +87,7 @@ payload:
         role: used-by
         exists: true
         system: lib
-      - path: lib/phase-map-auto.js
+      - path: lib/ollama-port.js
         role: used-by
         exists: true
         system: lib
@@ -125,13 +125,13 @@ payload:
       - from: lib/nexus-self/store.js
         to: lib/nexus-self/systems.js
         kind: requires
-      - from: lib/phase-map-auto.js
+      - from: lib/ollama-port.js
         to: lib/nexus-self/systems.js
         kind: requires
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
@@ -157,7 +157,7 @@ payload:
             - lib/nexus-self/systems.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · ready
+        - DAG 86519dc3b354b627 · layer 3 · ready
         - 'depends on (1): SB17_the_system_template_is_complete · all upstream 3'
         - >-
           needed by (1): SB5_nexus_rebuilds_a_system_from_its_spec · all downstream 3 · finishing it

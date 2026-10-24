@@ -7,11 +7,11 @@ intent: null
 summary: GW4_copilot_on_the_gates (?) — 4 file(s)
 system: copilot
 tags: []
-exported_at: 1792854076758
+exported_at: 1792855000559
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076758
-lastSeenAt: 1792854076758
+firstSeenAt: 1792855000559
+lastSeenAt: 1792855000559
 fingerprint: null
 payload:
   id: GW4_copilot_on_the_gates
@@ -244,7 +244,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
@@ -265,7 +265,7 @@ payload:
             - copilot/adaptive-fulfillment.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by GW1_the_baton, GW2_the_run_follows_the_gate
+        - DAG 86519dc3b354b627 · layer 2 · blocked by GW1_the_baton, GW2_the_run_follows_the_gate
         - 'depends on (2): GW1_the_baton, GW2_the_run_follows_the_gate · all upstream 3'
         - 'needed by (0): —'
         - >-

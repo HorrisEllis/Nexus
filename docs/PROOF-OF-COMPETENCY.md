@@ -1130,3 +1130,12 @@ New entries go at the top: date, his words, context, what it shows, evidence.
 - **Skill:** incremental migration. Proving each system's isolation completely before the next keeps every step checkable. Decoupling
   also surfaces hidden defects, because a copy that "works" in-process stops looking like it works once it has to go through a contract.
 - **Checkable:** `CHANGELOG-0.60.240.md`; `tests/modules/test-raid-port.test.js`; `docs/2026-10-24-guardian-into-cos-phasemap.spec` (census:).
+
+### 2026-10-24 — 0.60.241: "Isn't loom in a compartment already or clearglass?"
+- **His words:** "Isn't loom in a compartment already or clearglass?" · "Do it."
+- **Context:** Mid-way through Guardian, he asked whether a system was already in a compartment. The question turned up two facts: every
+  system's compartment is only a read-only mirror, and Loom was 5 requires from sovereign against Guardian's 20. He switched to Loom to
+  prove the path on the shortest case first. Loom then reached 0 ways out in one release, and the move also made a dead Architect route
+  work.
+- **Skill:** asking the question that changes the plan. Checking current state before continuing turned a long migration into a fast proof.
+- **Checkable:** `CHANGELOG-0.60.241.md`; `tests/modules/test-loom-into-cos.test.js` LI-04 (Loom reaches into no other system).

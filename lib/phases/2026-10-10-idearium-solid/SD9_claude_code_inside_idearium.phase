@@ -7,11 +7,11 @@ intent: null
 summary: SD9_claude_code_inside_idearium (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854069604
+exported_at: 1792854992879
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854069604
-lastSeenAt: 1792854069604
+firstSeenAt: 1792854992879
+lastSeenAt: 1792854992879
 fingerprint: null
 payload:
   id: SD9_claude_code_inside_idearium
@@ -179,7 +179,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -193,7 +193,7 @@ payload:
             - lib/repo-agent.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

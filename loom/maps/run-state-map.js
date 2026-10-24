@@ -104,6 +104,9 @@ const FILES = [
   ['idearium/spec-compiler/compiler/phase-specs.js', I('idearium/spec-compiler/compiler/phase-specs.js'), [I('idearium/spec-compiler/compiler/kg-builder.js'), I('lib/phase-dag.js'), I('lib/phase-graph.js'), I('lib/phase-map-auto.js'), I('lib/pipeline-nodes.js'), I('lib/phase-plan.js')]],   // §0.60.176 PS1 each phase specced again: .phase + .graph (dag slice) beside its owner
   ['lib/spec-compiler-port.js', I('lib/spec-compiler-port.js'), [I('lib/nexus-self/systems.js')]],   // 0.60.239 EW2 the kernel's one door to Idearium's spec compiler (in-process when provided, else its route)
   ['lib/raid-port.js', I('lib/raid-port.js'), [I('lib/nexus-self/systems.js')]],   // 0.60.240 GD1 the one door to RAID for every system that is not Cortex (in-process when provided, else Cortex's routes)
+  ['lib/ollama-port.js', I('lib/ollama-port.js'), [I('lib/nexus-self/systems.js')]],   // 0.60.241 LM1 the kernel's door to the ollama bridge (in-process when provided, else POST /api/generate)
+  ['ollama/routes/generate.js', I('ollama/routes/generate.js'), [I('ollama/lib/ollama-client.js'), I('ollama/lib/state.js'), I('ollama/lib/http-utils.js')]],   // 0.60.241 LM1 POST /api/generate
+  ['loom/lib/store.js', I('loom/lib/store.js'), [I('lib/system-store.js')]],   // 0.60.241 LM2 Loom's own store: hooks, hook_bindings, loom_changelog, phasemap_history
   ['lib/upload-placement.js', I('lib/upload-placement.js'), []],   // §0.60.173 UP1/UP2 a zip's files placed against a repo (strip, exists, same bytes, folders, intent, his learned rules); requires/requiredBy
   ['idearium/ui/js/upload-intent.js', I('idearium/ui/js/upload-intent.js'), [I('idearium/ui/js/code-tab-panels.js')]],   // §0.60.173 UP4 the Code tab's upload panel (page globals: CX, _cxPaintPanel, api)
   ['lib/phase-dag.js', I('lib/phase-dag.js'), [I('loom/scanners/phasemap-map.js')]],   // §0.60.172 DG3 the whole DAG of every phasemap
@@ -153,6 +156,16 @@ const CONSUMERS = [
   [I('guardian/server.js'), I('lib/raid-port.js'), '0.60.240 GD1 approveTool (/build, forge, chunking, chat), decide (raw dispatch), listQueue (/api/intake)'],
   [I('guardian/api-dispatch.js'), I('lib/raid-port.js'), '0.60.240 GD1 outcome (was recordOutcome with a job id as the agent)'],
   [I('guardian/lib/dispatcher.js'), I('lib/raid-port.js'), '0.60.240 GD1 approveTool for browser jobs (fails closed)'],
+  [I('ollama/server.js'), I('ollama/routes/generate.js'), '0.60.241 LM1 mounted with the other route modules'],
+  [I('ollama/server.js'), I('lib/ollama-port.js'), '0.60.241 LM1 provide(): callOllamaRaw in-process'],
+  [I('lib/ollama-port.js'), I('ollama/server.js'), '0.60.241 LM1 over HTTP: POST /api/generate (not a require)'],
+  [I('loom/agent-suite/index.js'), I('lib/ollama-port.js'), '0.60.241 LM1 generateWithOllama through the bridge (was ollama-client in-process)'],
+  [I('loom/server.js'), I('loom/lib/store.js'), '0.60.241 LM2 the hook registry on Loom\'s own store; GET /api/phasemap/history'],
+  [I('loom/lib/changelog.js'), I('loom/lib/store.js'), '0.60.241 LM2 loom_changelog'],
+  [I('loom/scanners/phasemap-map.js'), I('loom/lib/store.js'), '0.60.241 LM2 phasemap_history'],
+  [I('loom/server.js'), I('lib/pulse.js'), '0.60.241 LM0 the heartbeat (was nexus-connect startHeartbeat)'],
+  [I('architect/service.js'), I('loom/server.js'), '0.60.241 LM3 the hook read view over HTTP: GET /api/hooks, /:id, /validate, /graph (not a require)'],
+  [I('lib/agent-build-loop.js'), I('loom/server.js'), '0.60.241 LM3 introspect(): GET /api/phasemap/history (not a require)'],
   [I('idearium/api/index.js'), I('lib/upload-placement.js'), '§0.60.173 UP3 repo.uploads.{create,list,get,answer}: plan → needs-you; his answer → repo-inject propose/apply (text) and writeSourceBytes (binaries); learn()'],
   [I('idearium/api/index.js'), I('lib/zip-ingest.js'), '§0.60.173 UP3 the uploaded zip read with the importer\'s own bounds (project-import.config ZIP)'],
   [I('idearium/api/index.js'), I('lib/repo-inject.js'), '§0.60.173 UP3 an upload\'s text files land through propose() and apply() — the one door'],

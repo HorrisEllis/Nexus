@@ -7,11 +7,11 @@ intent: null
 summary: B1_full_build_contract_schema (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854042756
+exported_at: 1792854964486
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854042756
-lastSeenAt: 1792854042756
+firstSeenAt: 1792854964486
+lastSeenAt: 1792854964486
 fingerprint: null
 payload:
   id: B1_full_build_contract_schema
@@ -278,7 +278,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -308,7 +308,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (6): B2_chunk_contract_chaining, V9_precommit_gate_for_raid_contracts,

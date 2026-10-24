@@ -7,11 +7,11 @@ intent: null
 summary: CK1_the_catalogue_runs (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854073470
+exported_at: 1792854996917
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854073470
-lastSeenAt: 1792854073470
+firstSeenAt: 1792854996917
+lastSeenAt: 1792854996917
 fingerprint: null
 payload:
   id: CK1_the_catalogue_runs
@@ -209,7 +209,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::CK0_the_catalogue_written
@@ -233,7 +233,7 @@ payload:
             - idearium/cli/route-commands.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): CK0_the_catalogue_written'
         - >-
           needed by (1): PL4_import_reports_what_is_broken · all downstream 6 · finishing it unlocks

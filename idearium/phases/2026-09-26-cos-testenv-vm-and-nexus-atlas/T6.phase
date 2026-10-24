@@ -7,11 +7,11 @@ intent: null
 summary: T6 (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854049473
+exported_at: 1792854971730
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854049473
-lastSeenAt: 1792854049473
+firstSeenAt: 1792854971730
+lastSeenAt: 1792854971730
 fingerprint: null
 payload:
   id: T6
@@ -251,7 +251,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
@@ -273,7 +273,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (2): T4, T5 · all upstream 5'
         - 'needed by (1): T7 · all downstream 2 · finishing it unlocks T7'
   uuid: acfa691c-17ec-51d5-b266-891855d9b64b

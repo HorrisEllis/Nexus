@@ -7,11 +7,11 @@ intent: null
 summary: N11_adopters (?) — 5 file(s)
 system: intelligence
 tags: []
-exported_at: 1792854054559
+exported_at: 1792854977227
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854054559
-lastSeenAt: 1792854054559
+firstSeenAt: 1792854977227
+lastSeenAt: 1792854977227
 fingerprint: null
 payload:
   id: N11_adopters
@@ -224,7 +224,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 7
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N10_migration
@@ -249,7 +249,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 7 · blocked by N10_migration
+        - DAG 86519dc3b354b627 · layer 7 · blocked by N10_migration
         - 'depends on (1): N10_migration · all upstream 10'
         - 'needed by (1): N13_release'
   uuid: e5b18b46-e696-55da-b833-d189712a2c2a

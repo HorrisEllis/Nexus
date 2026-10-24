@@ -9,11 +9,11 @@ intent: null
 summary: OP1_every_system_declares_its_options (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854070499
+exported_at: 1792854993736
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854070499
-lastSeenAt: 1792854070499
+firstSeenAt: 1792854993736
+lastSeenAt: 1792854993736
 fingerprint: null
 payload:
   id: OP1_every_system_declares_its_options
@@ -101,7 +101,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP0_one_options_shape_for_every_system
@@ -119,7 +119,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): OP0_one_options_shape_for_every_system'
         - >-
           needed by (1): OP2_the_system_settings_in_its_repo · all downstream 3 · finishing it

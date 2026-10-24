@@ -7,11 +7,11 @@ intent: null
 summary: CON9_configure (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854080888
+exported_at: 1792855005004
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854080888
-lastSeenAt: 1792854080888
+firstSeenAt: 1792855005004
+lastSeenAt: 1792855005004
 fingerprint: null
 payload:
   id: CON9_configure
@@ -78,7 +78,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
@@ -95,7 +95,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by CON1_one_door_client, CON4_safety_gate
+        - DAG 86519dc3b354b627 · layer 2 · blocked by CON1_one_door_client, CON4_safety_gate
         - 'depends on (2): CON1_one_door_client, CON4_safety_gate'
         - 'needed by (0): —'
   uuid: 5bd2f53f-8c21-53e9-b00b-53ba7bd93774

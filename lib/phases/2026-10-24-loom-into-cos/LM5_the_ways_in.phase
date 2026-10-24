@@ -1,0 +1,261 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+context: pipeline phase LM5_the_ways_in of docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM5_the_ways_in (backend) — 0 file(s)
+system: core
+tags: []
+exported_at: 1792855024866
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792855024866
+lastSeenAt: 1792855024866
+fingerprint: null
+payload:
+  id: LM5_the_ways_in
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files: []
+  depends_on:
+    - LM4_the_seal_and_into_its_compartment
+  blocks: []
+  spec: null
+  graph:
+    hash: 0c256d78c3e182e8
+    nodes:
+      - path: architect/service.js
+        role: changes
+        exists: true
+        system: architect
+      - path: lib/agent-build-loop.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/ollama-port.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/pulse.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/system-store.js
+        role: changes
+        exists: true
+        system: lib
+      - path: loom/lib/store.js
+        role: changes
+        exists: true
+        system: loom
+      - path: nexus/nexus-connect.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: ollama/routes/generate.js
+        role: changes
+        exists: true
+        system: ollama
+      - path: ui/home/areas/agent-suite.js
+        role: changes
+        exists: true
+        system: ui
+      - path: clear-glass/wire/nexus-wire.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: diagnostic/healer/api/index.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: guardian/agents/index.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: loom/agent-suite/index.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/lib/changelog.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/scanners/phasemap-map.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/server.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: ollama/server.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: orchestrator/lib/pulse.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: architect/src/spec/Blueprint.js
+        role: uses
+        exists: true
+        system: architect
+      - path: lib/agent-chat.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/sandbox/self-repair.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/end-state.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/gap-field.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/hook-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/jaa-store.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/systems.js
+        role: uses
+        exists: true
+        system: lib
+      - path: ollama/lib/http-utils.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/lib/ollama-client.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/lib/state.js
+        role: uses
+        exists: true
+        system: ollama
+    edges:
+      - from: ollama/routes/generate.js
+        to: ollama/lib/http-utils.js
+        kind: requires
+      - from: ollama/routes/generate.js
+        to: ollama/lib/state.js
+        kind: requires
+      - from: ollama/routes/generate.js
+        to: ollama/lib/ollama-client.js
+        kind: requires
+      - from: lib/ollama-port.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: lib/system-store.js
+        to: lib/jaa-store.js
+        kind: requires
+      - from: lib/agent-build-loop.js
+        to: lib/gap-field.js
+        kind: requires
+      - from: lib/agent-build-loop.js
+        to: lib/agent-chat.js
+        kind: requires
+      - from: lib/agent-build-loop.js
+        to: lib/end-state.js
+        kind: requires
+      - from: lib/agent-build-loop.js
+        to: lib/agent-tools/tools/sandbox/self-repair.js
+        kind: requires
+      - from: architect/service.js
+        to: lib/data-home.js
+        kind: requires
+      - from: architect/service.js
+        to: lib/hook-registry.js
+        kind: requires
+      - from: architect/service.js
+        to: architect/src/spec/Blueprint.js
+        kind: requires
+      - from: clear-glass/wire/nexus-wire.js
+        to: lib/pulse.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/pulse.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/pulse.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/pulse.js
+        kind: requires
+      - from: ollama/server.js
+        to: lib/pulse.js
+        kind: requires
+      - from: orchestrator/lib/pulse.js
+        to: lib/pulse.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: lib/pulse.js
+        kind: requires
+      - from: loom/agent-suite/index.js
+        to: lib/ollama-port.js
+        kind: requires
+      - from: loom/lib/changelog.js
+        to: loom/lib/store.js
+        kind: requires
+      - from: loom/scanners/phasemap-map.js
+        to: loom/lib/store.js
+        kind: requires
+      - from: diagnostic/healer/api/index.js
+        to: lib/system-store.js
+        kind: requires
+      - from: guardian/agents/index.js
+        to: lib/system-store.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 86519dc3b354b627
+      layer: 4
+      deps:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      dependents: []
+      upstream:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      downstream: []
+      blockedBy:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 86519dc3b354b627 · layer 4 · blocked by LM4_the_seal_and_into_its_compartment
+        - 'depends on (1): LM4_the_seal_and_into_its_compartment · all upstream 7'
+        - 'needed by (0): —'
+  uuid: 5c1bba21-5a8b-5717-aaf3-293d79462d8e

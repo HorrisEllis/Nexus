@@ -7,11 +7,11 @@ intent: null
 summary: HP19_the_simulator_stays (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854067135
+exported_at: 1792854990248
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854067135
-lastSeenAt: 1792854067135
+firstSeenAt: 1792854990248
+lastSeenAt: 1792854990248
 fingerprint: null
 payload:
   id: HP19_the_simulator_stays
@@ -88,7 +88,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-09-hardening-pass-phasemap.spec::HP13_the_failure_is_put_at_the_right_gate
@@ -111,7 +111,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - >-
           depends on (6): HP13_the_failure_is_put_at_the_right_gate,
           HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds,

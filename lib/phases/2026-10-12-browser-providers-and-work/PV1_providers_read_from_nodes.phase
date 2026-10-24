@@ -9,11 +9,11 @@ intent: null
 summary: PV1_providers_read_from_nodes (?) — 7 file(s)
 system: core
 tags: []
-exported_at: 1792854071352
+exported_at: 1792854994590
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071352
-lastSeenAt: 1792854071352
+firstSeenAt: 1792854994590
+lastSeenAt: 1792854994590
 fingerprint: null
 payload:
   id: PV1_providers_read_from_nodes
@@ -254,7 +254,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: null
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV0_claude_code_is_a_guardian_provider
@@ -274,7 +274,7 @@ payload:
             - lib/repo-agent.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer — · blocked by PV0_claude_code_is_a_guardian_provider
+        - DAG 86519dc3b354b627 · layer — · blocked by PV0_claude_code_is_a_guardian_provider
         - 'depends on (1): PV0_claude_code_is_a_guardian_provider'
         - >-
           needed by (1): PV0_claude_code_is_a_guardian_provider · finishing it unlocks

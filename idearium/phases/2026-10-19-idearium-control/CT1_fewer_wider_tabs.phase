@@ -7,11 +7,11 @@ intent: null
 summary: CT1_fewer_wider_tabs (interface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854090445
+exported_at: 1792855014965
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854090445
-lastSeenAt: 1792854090445
+firstSeenAt: 1792855014965
+lastSeenAt: 1792855014965
 fingerprint: null
 payload:
   id: CT1_fewer_wider_tabs
@@ -52,7 +52,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-19-idearium-control-phasemap.spec::CT0_code_tab_census
@@ -73,7 +73,7 @@ payload:
             - idearium/ui/index.html
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by CT0_code_tab_census, FM1_file_manager
+        - DAG 86519dc3b354b627 · layer 2 · blocked by CT0_code_tab_census, FM1_file_manager
         - 'depends on (2): CT0_code_tab_census, FM1_file_manager · all upstream 3'
         - 'needed by (0): —'
         - >-

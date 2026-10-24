@@ -7,11 +7,11 @@ intent: null
 summary: AB1_engine (library) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854093439
+exported_at: 1792855018071
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854093439
-lastSeenAt: 1792854093439
+firstSeenAt: 1792855018071
+lastSeenAt: 1792855018071
 fingerprint: null
 payload:
   id: AB1_engine
@@ -58,7 +58,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-21-adblock-phasemap.spec::AB0_engine_in_core
@@ -77,7 +77,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): AB0_engine_in_core'
         - 'needed by (1): AB2_lists · all downstream 4 · finishing it unlocks AB2_lists'
   uuid: 79636202-142c-5a1e-a8c0-8d62056be701

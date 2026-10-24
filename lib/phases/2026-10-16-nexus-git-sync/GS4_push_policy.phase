@@ -7,11 +7,11 @@ intent: null
 summary: GS4_push_policy (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854083334
+exported_at: 1792855007484
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854083334
-lastSeenAt: 1792854083334
+firstSeenAt: 1792855007484
+lastSeenAt: 1792855007484
 fingerprint: null
 payload:
   id: GS4_push_policy
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-16-nexus-git-sync-phasemap.spec::GS1_commands
@@ -45,7 +45,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by GS1_commands
+        - DAG 86519dc3b354b627 · layer 1 · blocked by GS1_commands
         - 'depends on (1): GS1_commands'
         - 'needed by (0): —'
   uuid: b609e23c-bab5-5196-9b9a-10fb20e54e1d

@@ -7,11 +7,11 @@ intent: null
 summary: CY2_invariants_are_crystals (integration) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854092612
+exported_at: 1792855017170
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854092612
-lastSeenAt: 1792854092612
+firstSeenAt: 1792855017170
+lastSeenAt: 1792855017170
 fingerprint: null
 payload:
   id: CY2_invariants_are_crystals
@@ -68,7 +68,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 8
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::CY0_one_crystal_schema
@@ -107,7 +107,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 8 · ON THE CRITICAL PATH · blocked by CY0_one_crystal_schema,
+          DAG 86519dc3b354b627 · layer 8 · ON THE CRITICAL PATH · blocked by CY0_one_crystal_schema,
           IV2_invariant_miner, CY1_lifecycle_and_injection
         - >-
           depends on (3): CY0_one_crystal_schema, IV2_invariant_miner, CY1_lifecycle_and_injection ·

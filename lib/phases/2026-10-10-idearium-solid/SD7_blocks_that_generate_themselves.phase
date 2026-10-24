@@ -7,11 +7,11 @@ intent: null
 summary: SD7_blocks_that_generate_themselves (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854069602
+exported_at: 1792854992876
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854069602
-lastSeenAt: 1792854069602
+firstSeenAt: 1792854992876
+lastSeenAt: 1792854992876
 fingerprint: null
 payload:
   id: SD7_blocks_that_generate_themselves
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-10-idearium-solid-phasemap.spec::SD6_an_idea_logged_asked_expanded
@@ -242,7 +242,7 @@ payload:
             - idearium/spec-engine/index.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by SD6_an_idea_logged_asked_expanded
+        - DAG 86519dc3b354b627 · layer 1 · blocked by SD6_an_idea_logged_asked_expanded
         - 'depends on (1): SD6_an_idea_logged_asked_expanded'
         - 'needed by (0): —'
         - >-

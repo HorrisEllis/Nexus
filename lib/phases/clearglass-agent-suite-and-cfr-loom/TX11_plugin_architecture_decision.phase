@@ -9,11 +9,11 @@ intent: null
 summary: TX11_plugin_architecture_decision (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854100623
+exported_at: 1792855026115
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854100623
-lastSeenAt: 1792854100623
+firstSeenAt: 1792855026115
+lastSeenAt: 1792855026115
 fingerprint: null
 payload:
   id: TX11_plugin_architecture_decision
@@ -70,7 +70,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -88,7 +88,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): TX14_plugin_system_v1_build · all downstream 5 · finishing it unlocks

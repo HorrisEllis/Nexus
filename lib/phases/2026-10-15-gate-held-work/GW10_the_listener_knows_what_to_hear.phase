@@ -9,11 +9,11 @@ intent: null
 summary: GW10_the_listener_knows_what_to_hear (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854076765
+exported_at: 1792855000568
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076765
-lastSeenAt: 1792854076765
+firstSeenAt: 1792855000568
+lastSeenAt: 1792855000568
 fingerprint: null
 payload:
   id: GW10_the_listener_knows_what_to_hear
@@ -152,7 +152,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW0d_listener_question
@@ -166,7 +166,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by GW0d_listener_question
+        - DAG 86519dc3b354b627 · layer 1 · blocked by GW0d_listener_question
         - 'depends on (1): GW0d_listener_question'
         - 'needed by (0): —'
   uuid: ab20a84d-f553-53f8-af63-09aa8503dfb3

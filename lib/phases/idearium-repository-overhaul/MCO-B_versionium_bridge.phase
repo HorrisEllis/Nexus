@@ -7,11 +7,11 @@ intent: null
 summary: MCO-B_versionium_bridge (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854104499
+exported_at: 1792855029929
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854104499
-lastSeenAt: 1792854104499
+firstSeenAt: 1792855029929
+lastSeenAt: 1792855029929
 fingerprint: null
 payload:
   id: MCO-B_versionium_bridge
@@ -145,7 +145,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/idearium-repository-overhaul-phasemap.spec::MCO-A_schemas
@@ -167,7 +167,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): MCO-A_schemas · all upstream 2'
         - >-
           needed by (2): MCO-C_repo_materialize, MCO3_snapshot_compliance · all downstream 4 ·

@@ -7,11 +7,11 @@ intent: null
 summary: FM2_stores_in_the_files_tab (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854090444
+exported_at: 1792855014964
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854090444
-lastSeenAt: 1792854090444
+firstSeenAt: 1792855014964
+lastSeenAt: 1792855014964
 fingerprint: null
 payload:
   id: FM2_stores_in_the_files_tab
@@ -220,7 +220,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-19-idearium-control-phasemap.spec::FM1_file_manager
@@ -255,7 +255,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by FM1_file_manager
+        - DAG 86519dc3b354b627 · layer 2 · blocked by FM1_file_manager
         - 'depends on (1): FM1_file_manager · all upstream 2'
         - 'needed by (1): TB1_toolbox · all downstream 6 · finishing it unlocks TB1_toolbox'
         - 'same files as PC1_phase_controls with no order between them: idearium/api/index.js'

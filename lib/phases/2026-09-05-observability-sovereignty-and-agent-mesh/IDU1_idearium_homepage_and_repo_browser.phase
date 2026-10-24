@@ -9,11 +9,11 @@ intent: null
 summary: IDU1_idearium_homepage_and_repo_browser (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854043774
+exported_at: 1792854965673
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854043774
-lastSeenAt: 1792854043774
+firstSeenAt: 1792854965673
+lastSeenAt: 1792854965673
 fingerprint: null
 payload:
   id: IDU1_idearium_homepage_and_repo_browser
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
@@ -50,7 +50,7 @@ payload:
         - REPO_PAGE1
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 2 · blocked by
+          DAG 86519dc3b354b627 · layer 2 · blocked by
           ID2_verify_idearium_reconciliation_reads_right_store
         - 'depends on (1): ID2_verify_idearium_reconciliation_reads_right_store · all upstream 2'
         - 'needed by (0): —'

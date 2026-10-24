@@ -9,11 +9,11 @@ intent: null
 summary: WK3_the_agent_drafts_every_block (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854062917
+exported_at: 1792854985822
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854062917
-lastSeenAt: 1792854062917
+firstSeenAt: 1792854985822
+lastSeenAt: 1792854985822
 fingerprint: null
 payload:
   id: WK3_the_agent_drafts_every_block
@@ -57,7 +57,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK1_the_workshop_is_blocks_from_the_templates
@@ -73,7 +73,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): WK1_the_workshop_is_blocks_from_the_templates'
         - 'needed by (1): WK6_enterprise_grade · finishing it unlocks WK6_enterprise_grade'
   uuid: 1fb92d71-eab6-513d-927c-cbb2afcaa141

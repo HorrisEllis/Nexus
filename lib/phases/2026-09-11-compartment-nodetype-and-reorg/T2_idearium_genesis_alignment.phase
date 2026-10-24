@@ -9,11 +9,11 @@ intent: null
 summary: T2_idearium_genesis_alignment (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854044701
+exported_at: 1792854966702
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854044701
-lastSeenAt: 1792854044701
+firstSeenAt: 1792854966702
+lastSeenAt: 1792854966702
 fingerprint: null
 payload:
   id: T2_idearium_genesis_alignment
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::T3_warp_replaces_siso
@@ -51,7 +51,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by T3_warp_replaces_siso
+        - DAG 86519dc3b354b627 · layer 1 · blocked by T3_warp_replaces_siso
         - 'depends on (1): T3_warp_replaces_siso'
         - 'needed by (0): —'
   uuid: 526b63e4-3c0c-5ede-a13d-2859928145e3

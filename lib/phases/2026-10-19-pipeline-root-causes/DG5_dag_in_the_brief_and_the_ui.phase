@@ -9,11 +9,11 @@ intent: null
 summary: DG5_dag_in_the_brief_and_the_ui (interface) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854091314
+exported_at: 1792855015870
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854091314
-lastSeenAt: 1792854091314
+firstSeenAt: 1792855015870
+lastSeenAt: 1792855015870
 fingerprint: null
 payload:
   id: DG5_dag_in_the_brief_and_the_ui
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG3_the_whole_dag
@@ -46,7 +46,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): DG3_the_whole_dag'
         - 'needed by (0): —'
   uuid: d956be2a-b2b6-509c-980c-3d78f78b5f40

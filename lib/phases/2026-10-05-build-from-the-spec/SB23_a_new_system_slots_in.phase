@@ -7,11 +7,11 @@ intent: null
 summary: SB23_a_new_system_slots_in (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854060347
+exported_at: 1792854983017
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060347
-lastSeenAt: 1792854060347
+firstSeenAt: 1792854983017
+lastSeenAt: 1792854983017
 fingerprint: null
 payload:
   id: SB23_a_new_system_slots_in
@@ -31,7 +31,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: a5367082156e3a24
+    hash: e71f225755ceda93
     nodes:
       - path: lib/nexus-self/systems.js
         role: changes
@@ -97,7 +97,7 @@ payload:
         role: used-by
         exists: true
         system: lib
-      - path: lib/phase-map-auto.js
+      - path: lib/ollama-port.js
         role: used-by
         exists: true
         system: lib
@@ -219,7 +219,7 @@ payload:
       - from: lib/nexus-self/store.js
         to: lib/nexus-self/systems.js
         kind: requires
-      - from: lib/phase-map-auto.js
+      - from: lib/ollama-port.js
         to: lib/nexus-self/systems.js
         kind: requires
     crossings:
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB22_every_component_capability_command_events_as_nodes
@@ -259,7 +259,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · blocked by
+          DAG 86519dc3b354b627 · layer 5 · blocked by
           SB22_every_component_capability_command_events_as_nodes,
           SB21_deterministic_parts_grow_with_the_system
         - >-

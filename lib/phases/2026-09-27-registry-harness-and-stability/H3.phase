@@ -7,11 +7,11 @@ intent: null
 summary: H3 (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854052761
+exported_at: 1792854975327
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854052761
-lastSeenAt: 1792854052761
+firstSeenAt: 1792854975327
+lastSeenAt: 1792854975327
 fingerprint: null
 payload:
   id: H3
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-27-registry-harness-and-stability-phasemap.spec::H2
@@ -45,7 +45,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): H2 · all upstream 2'
         - 'needed by (0): —'
   uuid: 0cfc5558-7f01-54f7-a0a5-e6196a488f4b

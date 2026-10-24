@@ -7,11 +7,11 @@ intent: null
 summary: IM4_the_kernel_boundary (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854086631
+exported_at: 1792855010921
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854086631
-lastSeenAt: 1792854086631
+firstSeenAt: 1792855010921
+lastSeenAt: 1792855010921
 fingerprint: null
 payload:
   id: IM4_the_kernel_boundary
@@ -25,16 +25,12 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 2fa27fc4450f490d
+    hash: 171c24941c048b10
     nodes:
       - path: cortex/memory/jaa-db.js
         role: changes
         exists: true
         system: cortex
-      - path: architect/service.js
-        role: used-by
-        exists: true
-        system: architect
       - path: clear-glass/test/copilot-cli.test.js
         role: used-by
         exists: true
@@ -79,6 +75,10 @@ payload:
         role: used-by
         exists: true
         system: copilot
+      - path: copilot/lib/person-model/index.js
+        role: used-by
+        exists: true
+        system: copilot
       - path: cortex/memory/tiers.js
         role: uses
         exists: true
@@ -115,9 +115,6 @@ payload:
       - from: cortex/memory/jaa-db.js
         to: cortex/memory/tiers.js
         kind: requires
-      - from: architect/service.js
-        to: cortex/memory/jaa-db.js
-        kind: requires
       - from: clear-glass/test/copilot-cli.test.js
         to: cortex/memory/jaa-db.js
         kind: requires
@@ -151,13 +148,10 @@ payload:
       - from: copilot/lib/intent-learning.js
         to: cortex/memory/jaa-db.js
         kind: requires
-    crossings:
-      - from: architect/service.js
+      - from: copilot/lib/person-model/index.js
         to: cortex/memory/jaa-db.js
-        fromSystem: architect
-        toSystem: cortex
-        kind: system
-        known: true
+        kind: requires
+    crossings:
       - from: cli/compact.js
         to: cortex/memory/jaa-db.js
         fromSystem: cli
@@ -218,9 +212,15 @@ payload:
         toSystem: cortex
         kind: system
         known: true
+      - from: copilot/lib/person-model/index.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: copilot
+        toSystem: cortex
+        kind: system
+        known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM0d_lib_is_the_kernel
@@ -235,7 +235,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): IM0d_lib_is_the_kernel'
         - 'needed by (1): IM5_each_system_to_the_template'
   uuid: 338faeeb-63a6-5905-8b71-656b211a6c5e

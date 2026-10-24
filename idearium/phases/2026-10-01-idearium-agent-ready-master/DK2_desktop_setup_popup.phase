@@ -9,11 +9,11 @@ intent: null
 summary: DK2_desktop_setup_popup (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056283
+exported_at: 1792854978908
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056283
-lastSeenAt: 1792854056283
+firstSeenAt: 1792854978908
+lastSeenAt: 1792854978908
 fingerprint: null
 payload:
   id: DK2_desktop_setup_popup
@@ -250,7 +250,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DK1_desktop_image_and_login
@@ -272,7 +272,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): DK1_desktop_image_and_login'
         - >-
           needed by (3): DK3_vm_engines, DK4_the_screen_through_remote_desktop,

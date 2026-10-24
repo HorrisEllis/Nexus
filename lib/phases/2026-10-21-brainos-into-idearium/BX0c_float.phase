@@ -7,11 +7,11 @@ intent: null
 summary: BX0c_float (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854094294
+exported_at: 1792855018901
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854094294
-lastSeenAt: 1792854094294
+firstSeenAt: 1792855018901
+lastSeenAt: 1792855018901
 fingerprint: null
 payload:
   id: BX0c_float
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -43,7 +43,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): BX10_float'
   uuid: a45805da-5f97-5524-b6db-79a312666d4f

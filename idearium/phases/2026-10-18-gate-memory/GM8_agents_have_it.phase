@@ -7,11 +7,11 @@ intent: null
 summary: GM8_agents_have_it (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854088811
+exported_at: 1792855013210
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854088811
-lastSeenAt: 1792854088811
+firstSeenAt: 1792855013210
+lastSeenAt: 1792855013210
 fingerprint: null
 payload:
   id: GM8_agents_have_it
@@ -180,7 +180,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-18-gate-memory-phasemap.spec::GM5_the_context_ladder
@@ -198,7 +198,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by GM7_the_context_panel_per_gate
+        - DAG 86519dc3b354b627 · layer 3 · blocked by GM7_the_context_panel_per_gate
         - 'depends on (2): GM5_the_context_ladder, GM7_the_context_panel_per_gate · all upstream 4'
         - 'needed by (0): —'
   uuid: 9850e8ee-a8fa-52de-b6fd-2a636448fdd4

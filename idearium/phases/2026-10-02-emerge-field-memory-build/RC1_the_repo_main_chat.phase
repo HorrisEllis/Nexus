@@ -7,11 +7,11 @@ intent: null
 summary: RC1_the_repo_main_chat (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854057644
+exported_at: 1792854980308
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057644
-lastSeenAt: 1792854057644
+firstSeenAt: 1792854980308
+lastSeenAt: 1792854980308
 fingerprint: null
 payload:
   id: RC1_the_repo_main_chat
@@ -217,7 +217,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 8
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
@@ -258,7 +258,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 8 · blocked by CB1_cfr_build_logic,
+          DAG 86519dc3b354b627 · layer 8 · blocked by CB1_cfr_build_logic,
           CB2_analysis_then_synthesis, MR3_gap_driven_search
         - >-
           depends on (3): CB1_cfr_build_logic, CB2_analysis_then_synthesis, MR3_gap_driven_search ·

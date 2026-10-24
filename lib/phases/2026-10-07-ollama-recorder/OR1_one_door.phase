@@ -7,11 +7,11 @@ intent: null
 summary: OR1_one_door (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854065497
+exported_at: 1792854988507
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854065497
-lastSeenAt: 1792854065497
+firstSeenAt: 1792854988507
+lastSeenAt: 1792854988507
 fingerprint: null
 payload:
   id: OR1_one_door
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: bcc633b4c5ff7ffb
+    hash: 847202432c12df1b
     nodes:
       - path: cortex/boot.js
         role: changes
@@ -58,11 +58,11 @@ payload:
         role: used-by
         exists: true
         system: idearium
-      - path: loom/agent-suite/index.js
+      - path: ollama/lib/dispatch.js
         role: used-by
         exists: true
-        system: loom
-      - path: ollama/lib/dispatch.js
+        system: ollama
+      - path: ollama/routes/generate.js
         role: used-by
         exists: true
         system: ollama
@@ -182,10 +182,10 @@ payload:
       - from: idearium/agent-suite/index.js
         to: ollama/lib/ollama-client.js
         kind: requires
-      - from: loom/agent-suite/index.js
+      - from: ollama/lib/dispatch.js
         to: ollama/lib/ollama-client.js
         kind: requires
-      - from: ollama/lib/dispatch.js
+      - from: ollama/routes/generate.js
         to: ollama/lib/ollama-client.js
         kind: requires
       - from: ollama/routes/jobs.js
@@ -228,12 +228,6 @@ payload:
         toSystem: ollama
         kind: system
         known: true
-      - from: loom/agent-suite/index.js
-        to: ollama/lib/ollama-client.js
-        fromSystem: loom
-        toSystem: ollama
-        kind: system
-        known: true
       - from: service/cortex-service.js
         to: cortex/boot.js
         fromSystem: service
@@ -254,7 +248,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -265,7 +259,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

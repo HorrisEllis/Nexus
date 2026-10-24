@@ -9,11 +9,11 @@ intent: null
 summary: LM3_component_registry_hooks_spec (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854042802
+exported_at: 1792854964529
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854042802
-lastSeenAt: 1792854042802
+firstSeenAt: 1792854964529
+lastSeenAt: 1792854964529
 fingerprint: null
 payload:
   id: LM3_component_registry_hooks_spec
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::LM2_per_system_living_model_completion
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by LM2_per_system_living_model_completion
+        - DAG 86519dc3b354b627 · layer 1 · blocked by LM2_per_system_living_model_completion
         - 'depends on (1): LM2_per_system_living_model_completion'
         - 'needed by (0): —'
   uuid: 6b071ee0-f4e2-5d2d-b192-f587076b4436

@@ -7,11 +7,11 @@ intent: null
 summary: VP3_the_repo_model_of_the_user (?) — 4 file(s)
 system: copilot
 tags: []
-exported_at: 1792854063783
+exported_at: 1792854986710
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854063783
-lastSeenAt: 1792854063783
+firstSeenAt: 1792854986710
+lastSeenAt: 1792854986710
 fingerprint: null
 payload:
   id: VP3_the_repo_model_of_the_user
@@ -221,7 +221,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-05-verified-primitives-phasemap.spec::VP0_map_and_atlas
@@ -234,7 +234,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): VP0_map_and_atlas'
         - 'needed by (0): —'
   uuid: 403561cc-0046-5ff2-b32b-401785a3ccab

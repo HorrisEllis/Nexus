@@ -7,11 +7,11 @@ intent: null
 summary: DB20_sealed_archetype (?) — 2 file(s)
 system: cos
 tags: []
-exported_at: 1792854087538
+exported_at: 1792855011816
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854087538
-lastSeenAt: 1792854087538
+firstSeenAt: 1792855011816
+lastSeenAt: 1792855011816
 fingerprint: null
 payload:
   id: DB20_sealed_archetype
@@ -55,7 +55,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
@@ -70,7 +70,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by DB19_genesis_sandboxed_fork
+        - DAG 86519dc3b354b627 · layer 2 · blocked by DB19_genesis_sandboxed_fork
         - 'depends on (1): DB19_genesis_sandboxed_fork · all upstream 2'
         - 'needed by (0): —'
   uuid: 3e37394c-c5f0-563a-bec7-3c1d49eb6cf8

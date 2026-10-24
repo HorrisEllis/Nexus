@@ -9,11 +9,11 @@ intent: null
 summary: FG4_context_for_any_agent (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854058152
+exported_at: 1792854980804
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854058152
-lastSeenAt: 1792854058152
+firstSeenAt: 1792854980804
+lastSeenAt: 1792854980804
 fingerprint: null
 payload:
   id: FG4_context_for_any_agent
@@ -176,7 +176,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG2_token_budget_chunking
@@ -201,7 +201,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 2 · blocked by FG2_token_budget_chunking,
+          DAG 86519dc3b354b627 · layer 2 · blocked by FG2_token_budget_chunking,
           FG3_summaries_up_the_tree
         - 'depends on (2): FG2_token_budget_chunking, FG3_summaries_up_the_tree · all upstream 3'
         - >-

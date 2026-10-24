@@ -7,11 +7,11 @@ intent: null
 summary: SF9_install_in_use (library) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854096487
+exported_at: 1792855021307
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854096487
-lastSeenAt: 1792854096487
+firstSeenAt: 1792855021307
+lastSeenAt: 1792855021307
 fingerprint: null
 payload:
   id: SF9_install_in_use
@@ -58,7 +58,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF7_bridge_automatic
@@ -77,7 +77,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 5
+        - DAG 86519dc3b354b627 · layer 5
         - 'depends on (1): SF7_bridge_automatic · all upstream 7'
         - 'needed by (0): —'
   uuid: 7942e3a5-0c13-57cd-91bf-36e0990bd60f

@@ -9,11 +9,11 @@ intent: null
 summary: CT1_cut_replies_are_finished (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792854056296
+exported_at: 1792854978922
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056296
-lastSeenAt: 1792854056296
+firstSeenAt: 1792854978922
+lastSeenAt: 1792854978922
 fingerprint: null
 payload:
   id: CT1_cut_replies_are_finished
@@ -32,7 +32,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: a589d68a25c89c99
+    hash: 758e5f61ba654cf2
     nodes:
       - path: copilot/server.js
         role: changes
@@ -70,10 +70,6 @@ payload:
         role: used-by
         exists: true
         system: lib
-      - path: loom/agent-suite/index.js
-        role: used-by
-        exists: true
-        system: loom
       - path: ollama/lib/dispatch.js
         role: used-by
         exists: true
@@ -87,6 +83,10 @@ payload:
         exists: true
         system: ollama
       - path: ollama/ollama-runtime.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: ollama/routes/generate.js
         role: used-by
         exists: true
         system: ollama
@@ -197,10 +197,10 @@ payload:
       - from: idearium/agent-suite/index.js
         to: ollama/lib/ollama-client.js
         kind: requires
-      - from: loom/agent-suite/index.js
+      - from: ollama/lib/dispatch.js
         to: ollama/lib/ollama-client.js
         kind: requires
-      - from: ollama/lib/dispatch.js
+      - from: ollama/routes/generate.js
         to: ollama/lib/ollama-client.js
         kind: requires
       - from: ollama/routes/jobs.js
@@ -240,12 +240,6 @@ payload:
         toSystem: ollama
         kind: system
         known: true
-      - from: loom/agent-suite/index.js
-        to: ollama/lib/ollama-client.js
-        fromSystem: loom
-        toSystem: ollama
-        kind: system
-        known: true
       - from: cli/nexus-repl.js
         to: ollama/config.js
         fromSystem: cli
@@ -260,7 +254,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -275,7 +269,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): BK1_blocked_is_actionable · all downstream 2 · finishing it unlocks

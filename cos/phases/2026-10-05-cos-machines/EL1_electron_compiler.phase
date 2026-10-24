@@ -7,11 +7,11 @@ intent: null
 summary: EL1_electron_compiler (?) — 2 file(s)
 system: cos
 tags: []
-exported_at: 1792854061739
+exported_at: 1792854984532
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854061739
-lastSeenAt: 1792854061739
+firstSeenAt: 1792854984532
+lastSeenAt: 1792854984532
 fingerprint: null
 payload:
   id: EL1_electron_compiler
@@ -177,7 +177,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
@@ -211,7 +211,7 @@ payload:
             - cos/testenv/provision.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by OS1_compartments_as_operating_systems
+        - DAG 86519dc3b354b627 · layer 2 · blocked by OS1_compartments_as_operating_systems
         - 'depends on (1): OS1_compartments_as_operating_systems · all upstream 2'
         - 'needed by (0): —'
         - >-

@@ -7,11 +7,11 @@ intent: null
 summary: DP7_back_to_known_good (?) — 1 file(s)
 system: diagnostic
 tags: []
-exported_at: 1792854085739
+exported_at: 1792855010006
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854085739
-lastSeenAt: 1792854085739
+firstSeenAt: 1792855010006
+lastSeenAt: 1792855010006
 fingerprint: null
 payload:
   id: DP7_back_to_known_good
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
@@ -51,7 +51,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by DP5_the_case
+        - DAG 86519dc3b354b627 · layer 2 · blocked by DP5_the_case
         - 'depends on (1): DP5_the_case · all upstream 2'
         - 'needed by (0): —'
   uuid: 821bdca9-4717-5557-ac70-c0afef0b6970

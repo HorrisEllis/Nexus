@@ -9,11 +9,11 @@ intent: null
 summary: ND4_commands_and_capabilities_from_the_schemas (backend) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854096886
+exported_at: 1792855021776
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854096886
-lastSeenAt: 1792854096886
+firstSeenAt: 1792855021776
+lastSeenAt: 1792855021776
 fingerprint: null
 payload:
   id: ND4_commands_and_capabilities_from_the_schemas
@@ -183,7 +183,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
@@ -210,7 +210,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 4 · blocked by ND3_each_server_serves_its_nodes,
+          DAG 86519dc3b354b627 · layer 4 · blocked by ND3_each_server_serves_its_nodes,
           ND_D4_schema_driven_commands
         - >-
           depends on (2): ND3_each_server_serves_its_nodes, ND_D4_schema_driven_commands · all

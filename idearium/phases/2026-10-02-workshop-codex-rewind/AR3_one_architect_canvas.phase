@@ -7,11 +7,11 @@ intent: null
 summary: AR3_one_architect_canvas (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854059427
+exported_at: 1792854982120
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854059427
-lastSeenAt: 1792854059427
+firstSeenAt: 1792854982120
+lastSeenAt: 1792854982120
 fingerprint: null
 payload:
   id: AR3_one_architect_canvas
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR2_architect_in_the_workshop
@@ -65,7 +65,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): AR2_architect_in_the_workshop · all upstream 3'
         - >-
           needed by (3): AZ1_semantic_zoom, AR4_pipeline_architect_on_the_canvas,

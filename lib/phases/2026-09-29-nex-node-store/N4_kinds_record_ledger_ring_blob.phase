@@ -7,11 +7,11 @@ intent: null
 summary: N4_kinds_record_ledger_ring_blob (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854054551
+exported_at: 1792854977220
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854054551
-lastSeenAt: 1792854054551
+firstSeenAt: 1792854977220
+lastSeenAt: 1792854977220
 fingerprint: null
 payload:
   id: N4_kinds_record_ledger_ring_blob
@@ -51,7 +51,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
@@ -80,7 +80,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by N3_projection_and_indexes
+        - DAG 86519dc3b354b627 · layer 3 · blocked by N3_projection_and_indexes
         - 'depends on (1): N3_projection_and_indexes · all upstream 4'
         - 'needed by (1): N7_views_yaml_and_nex · all downstream 11'
   uuid: 4567774a-b6a0-5609-90ab-adc4094c1249

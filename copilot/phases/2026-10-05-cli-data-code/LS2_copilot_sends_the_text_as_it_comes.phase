@@ -9,11 +9,11 @@ intent: null
 summary: LS2_copilot_sends_the_text_as_it_comes (?) — 3 file(s)
 system: copilot
 tags: []
-exported_at: 1792854060888
+exported_at: 1792854983619
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060888
-lastSeenAt: 1792854060888
+firstSeenAt: 1792854983619
+lastSeenAt: 1792854983619
 fingerprint: null
 payload:
   id: LS2_copilot_sends_the_text_as_it_comes
@@ -234,7 +234,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-05-cli-data-code-phasemap.spec::LS1_the_bridge_job_holds_what_is_written_so_far
@@ -251,7 +251,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): LS1_the_bridge_job_holds_what_is_written_so_far'
         - >-
           needed by (1): LS3_one_feed_for_every_agent · all downstream 2 · finishing it unlocks

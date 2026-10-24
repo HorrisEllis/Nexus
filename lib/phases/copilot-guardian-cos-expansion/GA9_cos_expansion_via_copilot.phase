@@ -7,11 +7,11 @@ intent: null
 summary: GA9_cos_expansion_via_copilot (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854102347
+exported_at: 1792855027791
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854102347
-lastSeenAt: 1792854102347
+firstSeenAt: 1792855027791
+lastSeenAt: 1792855027791
 fingerprint: null
 payload:
   id: GA9_cos_expansion_via_copilot
@@ -196,7 +196,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: null
       deps:
         - docs/copilot-guardian-cos-expansion-phasemap.spec::GA6_spec_builder_depth
@@ -213,7 +213,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer — · blocked by GA6_spec_builder_depth
+        - DAG 86519dc3b354b627 · layer — · blocked by GA6_spec_builder_depth
         - 'depends on (1): GA6_spec_builder_depth'
         - 'needed by (1): GA6_spec_builder_depth · finishing it unlocks GA6_spec_builder_depth'
         - 'CYCLE: GA6_spec_builder_depth → GA9_cos_expansion_via_copilot'

@@ -7,11 +7,11 @@ intent: null
 summary: GW11_a_snapshot_per_gate (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792854076767
+exported_at: 1792855000570
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076767
-lastSeenAt: 1792854076767
+firstSeenAt: 1792855000570
+lastSeenAt: 1792855000570
 fingerprint: null
 payload:
   id: GW11_a_snapshot_per_gate
@@ -169,7 +169,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
@@ -203,7 +203,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · blocked by GW3_a_contract_is_traced,
+          DAG 86519dc3b354b627 · layer 5 · blocked by GW3_a_contract_is_traced,
           GW14_copy_in_diff_out
         - 'depends on (2): GW3_a_contract_is_traced, GW14_copy_in_diff_out · all upstream 7'
         - 'needed by (1): GW18_debug_by_bisect'

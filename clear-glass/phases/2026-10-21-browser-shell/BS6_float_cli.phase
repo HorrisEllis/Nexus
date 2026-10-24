@@ -7,11 +7,11 @@ intent: null
 summary: BS6_float_cli (integration) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854094753
+exported_at: 1792855019352
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854094753
-lastSeenAt: 1792854094753
+firstSeenAt: 1792855019352
+lastSeenAt: 1792855019352
 fingerprint: null
 payload:
   id: BS6_float_cli
@@ -158,7 +158,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
@@ -176,7 +176,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (2): BS2_shell_rebuild, BS4_extensions'
         - 'needed by (1): BS7_surface · finishing it unlocks BS7_surface'
   uuid: 72a4ef4f-ce9a-57b4-bf6d-998ac45e8b2c

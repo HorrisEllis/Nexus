@@ -7,11 +7,11 @@ intent: null
 summary: R0_phasemap_history_in_cortex (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854109513
+exported_at: 1792855034957
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854109513
-lastSeenAt: 1792854109513
+firstSeenAt: 1792855034957
+lastSeenAt: 1792855034957
 fingerprint: null
 payload:
   id: R0_phasemap_history_in_cortex
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 9f7fec7fb67eb3bf
+    hash: 652fb9a3e36c3041
     nodes:
       - path: lib/component-ledger.js
         role: changes
@@ -102,10 +102,6 @@ payload:
         role: uses
         exists: true
         system: lib
-      - path: lib/diagnostic-causal.js
-        role: uses
-        exists: true
-        system: lib
       - path: lib/gap-priority.js
         role: uses
         exists: true
@@ -138,6 +134,10 @@ payload:
         role: uses
         exists: true
         system: loom
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
       - path: nexus/nexus-bus.js
         role: uses
         exists: true
@@ -147,13 +147,16 @@ payload:
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
         kind: requires
       - from: loom/ingest/index.js
         to: loom/ingest/revisions.js
+        kind: requires
+      - from: lib/component-ledger.js
+        to: cortex/memory/jaa-db.js
         kind: requires
       - from: lib/component-ledger.js
         to: nexus/nexus-bus.js
@@ -175,9 +178,6 @@ payload:
         kind: requires
       - from: lib/gap-field.js
         to: lib/gap-priority.js
-        kind: requires
-      - from: lib/gap-field.js
-        to: lib/diagnostic-causal.js
         kind: requires
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
@@ -216,11 +216,11 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
+      - from: lib/component-ledger.js
         to: cortex/memory/jaa-db.js
-        fromSystem: loom
+        fromSystem: lib
         toSystem: cortex
-        kind: system
+        kind: upward
         known: true
       - from: lib/component-ledger.js
         to: nexus/nexus-bus.js
@@ -284,7 +284,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -295,7 +295,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 94894332-aae9-5fe4-85cd-c0dc2b207f8f

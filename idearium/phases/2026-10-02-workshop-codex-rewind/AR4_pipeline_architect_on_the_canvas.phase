@@ -9,11 +9,11 @@ intent: null
 summary: AR4_pipeline_architect_on_the_canvas (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854059427
+exported_at: 1792854982120
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854059427
-lastSeenAt: 1792854059427
+firstSeenAt: 1792854982120
+lastSeenAt: 1792854982120
 fingerprint: null
 payload:
   id: AR4_pipeline_architect_on_the_canvas
@@ -55,7 +55,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
@@ -71,7 +71,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (1): AR3_one_architect_canvas · all upstream 4'
         - 'needed by (0): —'
   uuid: 9c87773e-5d3f-5d0c-812a-bc300507a33d

@@ -7,11 +7,11 @@ intent: null
 summary: GA8_sse_announcements (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854102346
+exported_at: 1792855027790
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854102346
-lastSeenAt: 1792854102346
+firstSeenAt: 1792855027790
+lastSeenAt: 1792855027790
 fingerprint: null
 payload:
   id: GA8_sse_announcements
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: baa555a4b2775b47
+    hash: af56109591afdb5b
     nodes:
       - path: nexus/nexus-connect.js
         role: changes
@@ -54,10 +54,6 @@ payload:
         role: used-by
         exists: true
         system: intelligence
-      - path: loom/server.js
-        role: used-by
-        exists: true
-        system: loom
       - path: tests/modules/test-boot-log-fixes.js
         role: used-by
         exists: true
@@ -104,9 +100,6 @@ payload:
         to: nexus/nexus-connect.js
         kind: requires
       - from: intelligence/server.js
-        to: nexus/nexus-connect.js
-        kind: requires
-      - from: loom/server.js
         to: nexus/nexus-connect.js
         kind: requires
       - from: tests/modules/test-boot-log-fixes.js
@@ -158,12 +151,6 @@ payload:
         toSystem: nexus
         kind: system
         known: true
-      - from: loom/server.js
-        to: nexus/nexus-connect.js
-        fromSystem: loom
-        toSystem: nexus
-        kind: system
-        known: true
       - from: versionium/server.js
         to: nexus/nexus-connect.js
         fromSystem: versionium
@@ -172,7 +159,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -183,7 +170,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 2689e375-808a-5036-9f11-0aa3dd4aec18

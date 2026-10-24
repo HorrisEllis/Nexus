@@ -7,11 +7,11 @@ intent: null
 summary: GN1_genesis (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056777
+exported_at: 1792854979423
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056777
-lastSeenAt: 1792854056777
+firstSeenAt: 1792854979423
+lastSeenAt: 1792854979423
 fingerprint: null
 payload:
   id: GN1_genesis
@@ -67,7 +67,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RC2_registry_as_nodes
@@ -86,7 +86,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (1): RC2_registry_as_nodes · all upstream 3'
         - >-
           needed by (1): AR1_architecture_spec · all downstream 2 · finishing it unlocks

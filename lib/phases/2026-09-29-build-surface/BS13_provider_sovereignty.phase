@@ -7,11 +7,11 @@ intent: null
 summary: BS13_provider_sovereignty (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854054123
+exported_at: 1792854976744
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854054123
-lastSeenAt: 1792854054123
+firstSeenAt: 1792854976744
+lastSeenAt: 1792854976744
 fingerprint: null
 payload:
   id: BS13_provider_sovereignty
@@ -214,7 +214,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -228,7 +228,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
   uuid: fe34ed32-6296-5ca7-80b8-898f74d99e25

@@ -9,11 +9,11 @@ intent: null
 summary: BR1_callto_component_hotswap_catalog (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854039617
+exported_at: 1792854961076
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854039617
-lastSeenAt: 1792854039617
+firstSeenAt: 1792854961076
+lastSeenAt: 1792854961076
 fingerprint: null
 payload:
   id: BR1_callto_component_hotswap_catalog
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by TX10_component_registry_discipline
+        - DAG 86519dc3b354b627 · layer 1 · blocked by TX10_component_registry_discipline
         - 'depends on (1): TX10_component_registry_discipline'
         - 'needed by (0): —'
   uuid: 500f2367-cae6-51b6-a415-009152fc6c08

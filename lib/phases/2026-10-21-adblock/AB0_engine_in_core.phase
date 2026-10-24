@@ -7,11 +7,11 @@ intent: null
 summary: AB0_engine_in_core (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854093437
+exported_at: 1792855018069
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854093437
-lastSeenAt: 1792854093437
+firstSeenAt: 1792855018069
+lastSeenAt: 1792855018069
 fingerprint: null
 payload:
   id: AB0_engine_in_core
@@ -30,7 +30,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -48,7 +48,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): AB1_engine · all downstream 5 · finishing it unlocks AB1_engine'
   uuid: 6c978b0a-ab8e-5e3c-97b2-b00cb9a6f5d2

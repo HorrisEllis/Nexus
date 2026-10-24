@@ -9,11 +9,11 @@ intent: null
 summary: RD0_raid_runs_the_contract (?) — 3 file(s)
 system: cortex
 tags: []
-exported_at: 1792854077627
+exported_at: 1792855001471
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854077627
-lastSeenAt: 1792854077627
+firstSeenAt: 1792855001471
+lastSeenAt: 1792855001471
 fingerprint: null
 payload:
   id: RD0_raid_runs_the_contract
@@ -270,7 +270,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-15-one-contract-raid-releases-phasemap.spec::GT1a_exhausted_climb_spends_its_attempt
@@ -297,7 +297,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): GT1a_exhausted_climb_spends_its_attempt'
         - >-
           needed by (2): RD1_every_build_goes_through_raid, FR1_failure_reports · all downstream 10

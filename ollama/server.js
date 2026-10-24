@@ -37,12 +37,16 @@ const VERSION   = config.VERSION;
 
 try { fs.mkdirSync(config.DATA_DIR, { recursive: true }); } catch (_) {}
 
+// 0.60.241 LM1 — in this process the kernel's ollama port calls the one door directly; other systems reach it over POST /api/generate
+require('../lib/ollama-port.js').provide({ generate: (o) => require('./lib/ollama-client.js').callOllamaRaw(o.model || require('./lib/state.js').state.defaultModel, o.prompt, o.maxTokens || null, o.timeoutMs || 120000, o.caller, { ...(o.system ? { system: o.system } : {}), ...(o.temperature != null ? { temperature: o.temperature } : {}) }) });
+
 // Route modules, tried in order. Each exports handle(req,res,ctx) -> boolean.
 const routes = [
   require('./routes/system.js'),
   require('./routes/uploads.js'),
   require('./routes/stream.js'),
   require('./routes/jobs.js'),
+  require('./routes/generate.js'),   // 0.60.241 LM1 — POST /api/generate, the door for systems that are not the bridge (lib/ollama-port.js)
   require('./routes/queue.js'),
   require('./routes/models.js'),
   require('./routes/tape.js'),     // §0.45.0 CM3 — the Ollama tape: runs and their macros

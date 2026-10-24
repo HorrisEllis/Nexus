@@ -7,11 +7,11 @@ intent: null
 summary: UI3_ideas_and_notes_as_one (interface) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854091310
+exported_at: 1792855015867
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854091310
-lastSeenAt: 1792854091310
+firstSeenAt: 1792855015867
+lastSeenAt: 1792855015867
 fingerprint: null
 payload:
   id: UI3_ideas_and_notes_as_one
@@ -101,7 +101,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
@@ -115,7 +115,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · ready
+        - DAG 86519dc3b354b627 · layer 2 · ready
         - 'depends on (1): VF1_verify_first · all upstream 2'
         - 'needed by (0): —'
   uuid: 2e9c00ec-2102-5f31-86d7-d356ade2bdf3

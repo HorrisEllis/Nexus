@@ -7,11 +7,11 @@ intent: null
 summary: FMR1_every_ledger_into_rfr2 (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854086201
+exported_at: 1792855010438
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854086201
-lastSeenAt: 1792854086201
+firstSeenAt: 1792855010438
+lastSeenAt: 1792855010438
 fingerprint: null
 payload:
   id: FMR1_every_ledger_into_rfr2
@@ -112,7 +112,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
@@ -134,7 +134,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): FMR0_causality_measured'
         - >-
           needed by (1): FMR4_the_macro_bundle · all downstream 7 · finishing it unlocks

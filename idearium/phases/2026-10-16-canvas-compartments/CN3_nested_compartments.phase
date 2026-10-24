@@ -7,11 +7,11 @@ intent: null
 summary: CN3_nested_compartments (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854080056
+exported_at: 1792855004148
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854080056
-lastSeenAt: 1792854080056
+firstSeenAt: 1792855004148
+lastSeenAt: 1792855004148
 fingerprint: null
 payload:
   id: CN3_nested_compartments
@@ -225,7 +225,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -236,7 +236,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

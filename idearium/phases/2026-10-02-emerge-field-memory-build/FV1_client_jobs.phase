@@ -7,11 +7,11 @@ intent: null
 summary: FV1_client_jobs (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854057657
+exported_at: 1792854980322
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057657
-lastSeenAt: 1792854057657
+firstSeenAt: 1792854980322
+lastSeenAt: 1792854980322
 fingerprint: null
 payload:
   id: FV1_client_jobs
@@ -46,7 +46,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 9
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
@@ -84,7 +84,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 9 · blocked by BT1_build_teams, RC1_the_repo_main_chat,
+          DAG 86519dc3b354b627 · layer 9 · blocked by BT1_build_teams, RC1_the_repo_main_chat,
           EC6_economy_and_the_tokenizer, MR8_crystallization
         - >-
           depends on (4): BT1_build_teams, RC1_the_repo_main_chat, EC6_economy_and_the_tokenizer,

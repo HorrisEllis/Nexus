@@ -9,11 +9,11 @@ intent: null
 summary: SB8_promote_with_full_block_options (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854060311
+exported_at: 1792854982977
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060311
-lastSeenAt: 1792854060311
+firstSeenAt: 1792854982977
+lastSeenAt: 1792854982977
 fingerprint: null
 payload:
   id: SB8_promote_with_full_block_options
@@ -235,7 +235,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB2_his_words_seed_the_spec
@@ -286,7 +286,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · blocked by SB9_the_spec_is_a_spec_file,
+          DAG 86519dc3b354b627 · layer 5 · blocked by SB9_the_spec_is_a_spec_file,
           SB10_reuse_first_keyed_on_the_contract, SB11_each_block_chunked
         - >-
           depends on (4): SB2_his_words_seed_the_spec, SB9_the_spec_is_a_spec_file,

@@ -9,11 +9,11 @@ intent: null
 summary: CH0_chunk_census_and_contract (foundation) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854093031
+exported_at: 1792855017624
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854093031
-lastSeenAt: 1792854093031
+firstSeenAt: 1792855017624
+lastSeenAt: 1792855017624
 fingerprint: null
 payload:
   id: CH0_chunk_census_and_contract
@@ -40,7 +40,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
@@ -69,7 +69,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by GR1_graph_primitive
+        - DAG 86519dc3b354b627 · layer 4 · blocked by GR1_graph_primitive
         - 'depends on (1): GR1_graph_primitive · all upstream 6'
         - 'needed by (1): CH1_strategies_behind_the_contract · all downstream 9'
   uuid: 3df11b8e-230d-58b7-b999-0f7e4ef27898

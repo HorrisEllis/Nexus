@@ -7,11 +7,11 @@ intent: null
 summary: GD1_raid_through_its_port (backend) — 6 file(s)
 system: guardian
 tags: []
-exported_at: 1792854099319
+exported_at: 1792855024438
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854099319
-lastSeenAt: 1792854099319
+firstSeenAt: 1792855024438
+lastSeenAt: 1792855024438
 fingerprint: null
 payload:
   id: GD1_raid_through_its_port
@@ -248,7 +248,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D0_raid_is_reached_never_loaded
@@ -261,7 +261,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): GD_D0_raid_is_reached_never_loaded'
         - 'needed by (0): —'
   uuid: 5eb61324-6d30-55eb-90b1-8490769523db

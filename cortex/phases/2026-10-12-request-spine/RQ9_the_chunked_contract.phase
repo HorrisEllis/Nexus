@@ -7,11 +7,11 @@ intent: null
 summary: RQ9_the_chunked_contract (?) — 1 file(s)
 system: cortex
 tags: []
-exported_at: 1792854071804
+exported_at: 1792854995115
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071804
-lastSeenAt: 1792854071804
+firstSeenAt: 1792854995115
+lastSeenAt: 1792854995115
 fingerprint: null
 payload:
   id: RQ9_the_chunked_contract
@@ -265,7 +265,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
@@ -311,7 +311,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 3 · blocked by RQ7_the_context_obligations,
+          DAG 86519dc3b354b627 · layer 3 · blocked by RQ7_the_context_obligations,
           RQ1_the_verifier_library
         - 'depends on (2): RQ7_the_context_obligations, RQ1_the_verifier_library · all upstream 4'
         - >-

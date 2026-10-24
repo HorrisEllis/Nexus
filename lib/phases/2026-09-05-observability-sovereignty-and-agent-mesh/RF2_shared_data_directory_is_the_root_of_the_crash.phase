@@ -9,11 +9,11 @@ intent: null
 summary: RF2_shared_data_directory_is_the_root_of_the_crash (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854043719
+exported_at: 1792854965581
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854043719
-lastSeenAt: 1792854043719
+firstSeenAt: 1792854965581
+lastSeenAt: 1792854965581
 fingerprint: null
 payload:
   id: RF2_shared_data_directory_is_the_root_of_the_crash
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: f13dc181f8f75b6c
+    hash: 2571c0d4b60cb696
     nodes:
       - path: cortex/memory/jaa-db.js
         role: changes
@@ -36,10 +36,6 @@ payload:
         role: changes
         exists: true
         system: guardian
-      - path: architect/service.js
-        role: used-by
-        exists: true
-        system: architect
       - path: clear-glass/test/copilot-cli.test.js
         role: used-by
         exists: true
@@ -77,6 +73,10 @@ payload:
         exists: true
         system: copilot
       - path: copilot/lib/grammar-router.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/lib/intent-learning.js
         role: used-by
         exists: true
         system: copilot
@@ -130,9 +130,6 @@ payload:
       - from: guardian/server.js
         to: guardian/config.js
         kind: requires
-      - from: architect/service.js
-        to: cortex/memory/jaa-db.js
-        kind: requires
       - from: clear-glass/test/copilot-cli.test.js
         to: cortex/memory/jaa-db.js
         kind: requires
@@ -163,13 +160,10 @@ payload:
       - from: copilot/lib/grammar-router.js
         to: cortex/memory/jaa-db.js
         kind: requires
-    crossings:
-      - from: architect/service.js
+      - from: copilot/lib/intent-learning.js
         to: cortex/memory/jaa-db.js
-        fromSystem: architect
-        toSystem: cortex
-        kind: system
-        known: true
+        kind: requires
+    crossings:
       - from: cli/compact.js
         to: cortex/memory/jaa-db.js
         fromSystem: cli
@@ -224,9 +218,15 @@ payload:
         toSystem: cortex
         kind: system
         known: true
+      - from: copilot/lib/intent-learning.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: copilot
+        toSystem: cortex
+        kind: system
+        known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -237,7 +237,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

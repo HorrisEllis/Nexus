@@ -7,11 +7,11 @@ intent: null
 summary: FN0_the_funnel_as_data (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854079657
+exported_at: 1792855003702
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854079657
-lastSeenAt: 1792854079657
+firstSeenAt: 1792855003702
+lastSeenAt: 1792855003702
 fingerprint: null
 payload:
   id: FN0_the_funnel_as_data
@@ -85,7 +85,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -104,7 +104,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (2): FN1_every_door_goes_through_it, FN3_every_answer_a_node · all downstream 4

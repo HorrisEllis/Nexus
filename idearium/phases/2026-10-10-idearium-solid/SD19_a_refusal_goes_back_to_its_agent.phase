@@ -9,11 +9,11 @@ intent: null
 summary: SD19_a_refusal_goes_back_to_its_agent (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854069617
+exported_at: 1792854992891
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854069617
-lastSeenAt: 1792854069617
+firstSeenAt: 1792854992891
+lastSeenAt: 1792854992891
 fingerprint: null
 payload:
   id: SD19_a_refusal_goes_back_to_its_agent
@@ -227,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-10-idearium-solid-phasemap.spec::SD18_mastermind_ready
@@ -246,7 +246,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): SD18_mastermind_ready · all upstream 2'
         - >-
           needed by (1): SD20_a_starved_machine_does_not_spin · all downstream 3 · finishing it

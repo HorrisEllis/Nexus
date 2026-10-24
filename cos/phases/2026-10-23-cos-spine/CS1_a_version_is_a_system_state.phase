@@ -7,11 +7,11 @@ intent: null
 summary: CS1_a_version_is_a_system_state (foundation) — 5 file(s)
 system: cos
 tags: []
-exported_at: 1792854097297
+exported_at: 1792855022202
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854097297
-lastSeenAt: 1792854097297
+firstSeenAt: 1792855022202
+lastSeenAt: 1792855022202
 fingerprint: null
 payload:
   id: CS1_a_version_is_a_system_state
@@ -210,7 +210,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
@@ -238,7 +238,7 @@ payload:
             - cos/compartment/qemu-runtime.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by CS_D2_a_version_is_the_whole_state
+        - DAG 86519dc3b354b627 · layer 1 · blocked by CS_D2_a_version_is_the_whole_state
         - 'depends on (1): CS_D2_a_version_is_the_whole_state'
         - >-
           needed by (3): CS2_test_every_version, CS6_rebuild_from_the_spec,

@@ -9,11 +9,11 @@ intent: null
 summary: IN1_nexus_as_claude_codes_toolbox (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854057664
+exported_at: 1792854980329
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057664
-lastSeenAt: 1792854057664
+firstSeenAt: 1792854980329
+lastSeenAt: 1792854980329
 fingerprint: null
 payload:
   id: IN1_nexus_as_claude_codes_toolbox
@@ -202,7 +202,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
@@ -219,7 +219,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · ready
+        - DAG 86519dc3b354b627 · layer 3 · ready
         - 'depends on (3): EM0_ground, GA1_guardian_source_of_truth, EV0_contracts_for_every_system'
         - 'needed by (0): —'
   uuid: edd8b1f0-6ef7-57da-af45-85511516a52c

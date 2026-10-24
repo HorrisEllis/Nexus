@@ -7,11 +7,11 @@ intent: null
 summary: IV1_invariant_kinds (foundation) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854092613
+exported_at: 1792855017171
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854092613
-lastSeenAt: 1792854092613
+firstSeenAt: 1792855017171
+lastSeenAt: 1792855017171
 fingerprint: null
 payload:
   id: IV1_invariant_kinds
@@ -39,7 +39,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::IV0_belief_census
@@ -66,7 +66,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by IV0_belief_census, GR1_graph_primitive
+        - DAG 86519dc3b354b627 · layer 4 · blocked by IV0_belief_census, GR1_graph_primitive
         - 'depends on (2): IV0_belief_census, GR1_graph_primitive · all upstream 7'
         - 'needed by (1): IV2_invariant_miner · all downstream 4'
   uuid: 9dbb3a87-35ea-5a94-a9a6-2c188f056385

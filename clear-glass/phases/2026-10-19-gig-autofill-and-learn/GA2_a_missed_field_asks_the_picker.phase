@@ -9,11 +9,11 @@ intent: null
 summary: GA2_a_missed_field_asks_the_picker (?) — 3 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854090032
+exported_at: 1792855014517
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854090032
-lastSeenAt: 1792854090032
+firstSeenAt: 1792855014517
+lastSeenAt: 1792855014517
 fingerprint: null
 payload:
   id: GA2_a_missed_field_asks_the_picker
@@ -167,7 +167,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1_copilot_fills_the_gig
@@ -189,7 +189,7 @@ payload:
             - clear-glass/src/ipc/bridge.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by GA1_copilot_fills_the_gig
+        - DAG 86519dc3b354b627 · layer 1 · blocked by GA1_copilot_fills_the_gig
         - 'depends on (1): GA1_copilot_fills_the_gig'
         - >-
           needed by (1): GA3_the_pick_is_saved_three_ways · all downstream 3 · finishing it unlocks

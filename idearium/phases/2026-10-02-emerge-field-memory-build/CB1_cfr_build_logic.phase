@@ -7,11 +7,11 @@ intent: null
 summary: CB1_cfr_build_logic (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854057633
+exported_at: 1792854980296
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057633
-lastSeenAt: 1792854057633
+firstSeenAt: 1792854980296
+lastSeenAt: 1792854980296
 fingerprint: null
 payload:
   id: CB1_cfr_build_logic
@@ -200,7 +200,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
@@ -242,7 +242,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · blocked by EM2_warp_his_own, CF1_cfr_improved_with_rfr2,
+          DAG 86519dc3b354b627 · layer 5 · blocked by EM2_warp_his_own, CF1_cfr_improved_with_rfr2,
           MR1_recall_triad_and_context_table
         - >-
           depends on (3): EM2_warp_his_own, CF1_cfr_improved_with_rfr2,

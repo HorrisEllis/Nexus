@@ -7,11 +7,11 @@ intent: null
 summary: CE8_the_cli_reads_the_surface (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854075527
+exported_at: 1792854999136
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854075527
-lastSeenAt: 1792854075527
+firstSeenAt: 1792854999136
+lastSeenAt: 1792854999136
 fingerprint: null
 payload:
   id: CE8_the_cli_reads_the_surface
@@ -225,7 +225,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
@@ -240,7 +240,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (1): CE5_events · all upstream 3'
         - 'needed by (0): —'
   uuid: b26f67c7-0249-5e81-8df3-d79767a230a5

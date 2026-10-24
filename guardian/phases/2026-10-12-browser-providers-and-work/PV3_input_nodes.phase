@@ -7,11 +7,11 @@ intent: null
 summary: PV3_input_nodes (?) — 7 file(s)
 system: guardian
 tags: []
-exported_at: 1792854071354
+exported_at: 1792854994593
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071354
-lastSeenAt: 1792854071354
+firstSeenAt: 1792854994593
+lastSeenAt: 1792854994593
 fingerprint: null
 payload:
   id: PV3_input_nodes
@@ -227,7 +227,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV2_hats_are_nodes
@@ -246,7 +246,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by PV2_hats_are_nodes
+        - DAG 86519dc3b354b627 · layer 1 · blocked by PV2_hats_are_nodes
         - 'depends on (1): PV2_hats_are_nodes'
         - >-
           needed by (2): PV4_inputs_are_history, MX4_one_system_digest · finishing it unlocks

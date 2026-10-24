@@ -7,11 +7,11 @@ intent: null
 summary: FN1_the_field_as_commands (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854070503
+exported_at: 1792854993740
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854070503
-lastSeenAt: 1792854070503
+firstSeenAt: 1792854993740
+lastSeenAt: 1792854993740
 fingerprint: null
 payload:
   id: FN1_the_field_as_commands
@@ -166,7 +166,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -181,7 +181,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): FN2_nerve_sees_the_field · all downstream 2 · finishing it unlocks

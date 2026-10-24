@@ -9,11 +9,11 @@ intent: null
 summary: S1_living_spec (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854052321
+exported_at: 1792854974893
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854052321
-lastSeenAt: 1792854052321
+firstSeenAt: 1792854974893
+lastSeenAt: 1792854974893
 fingerprint: null
 payload:
   id: S1_living_spec
@@ -216,7 +216,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -231,7 +231,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): S2_spec_tab · all downstream 2 · finishing it unlocks S2_spec_tab'
         - >-

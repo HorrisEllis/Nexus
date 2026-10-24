@@ -7,11 +7,11 @@ intent: null
 summary: LP2_split_by_system (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854104950
+exported_at: 1792855030356
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854104950
-lastSeenAt: 1792854104950
+firstSeenAt: 1792855030356
+lastSeenAt: 1792855030356
 fingerprint: null
 payload:
   id: LP2_split_by_system
@@ -25,7 +25,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 0829f785bafd438e
+    hash: 764692efaed6e9c2
     nodes:
       - path: loom/scanners/event-taxonomy-map.js
         role: changes
@@ -83,10 +83,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/event-taxonomy-pattern.js
         role: uses
         exists: true
@@ -99,6 +95,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/event-taxonomy-map.js
         to: lib/event-taxonomy-pattern.js
@@ -107,7 +107,7 @@ payload:
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -149,12 +149,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: lib/sigma-gate.js
         to: loom/scanners/event-taxonomy-map.js
         fromSystem: lib
@@ -217,7 +211,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/loom-phasemap-section-phasemap.spec::LP1_phasemap_scanner
@@ -233,7 +227,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): LP1_phasemap_scanner'
         - 'needed by (1): LP3_loom_section · finishing it unlocks LP3_loom_section'
   uuid: 8e3f1da7-68c9-5eca-8e97-68258a676ae3

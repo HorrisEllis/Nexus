@@ -7,11 +7,11 @@ intent: null
 summary: M2 (?) — 2 file(s)
 system: ollama-bridge
 tags: []
-exported_at: 1792854050281
+exported_at: 1792854972611
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854050281
-lastSeenAt: 1792854050281
+firstSeenAt: 1792854972611
+lastSeenAt: 1792854972611
 fingerprint: null
 payload:
   id: M2
@@ -145,7 +145,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -159,7 +159,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): X1 · finishing it unlocks X1'
         - >-

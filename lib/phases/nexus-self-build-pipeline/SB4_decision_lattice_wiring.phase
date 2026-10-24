@@ -7,11 +7,11 @@ intent: null
 summary: SB4_decision_lattice_wiring (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854107412
+exported_at: 1792855032832
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854107412
-lastSeenAt: 1792854107412
+firstSeenAt: 1792855032832
+lastSeenAt: 1792855032832
 fingerprint: null
 payload:
   id: SB4_decision_lattice_wiring
@@ -230,7 +230,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/nexus-self-build-pipeline-phasemap.spec::SB3_guided_build_loop
@@ -248,7 +248,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by SB3_guided_build_loop
+        - DAG 86519dc3b354b627 · layer 2 · blocked by SB3_guided_build_loop
         - 'depends on (1): SB3_guided_build_loop · all upstream 3'
         - 'needed by (1): SB5_self_modification_from_inside'
   uuid: d4bcbbeb-e8e4-5363-89c8-7e2e4e3c9664

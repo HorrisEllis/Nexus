@@ -7,11 +7,11 @@ intent: null
 summary: EM0_ground (?) — 5 file(s)
 system: loom
 tags: []
-exported_at: 1792854057589
+exported_at: 1792854980253
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057589
-lastSeenAt: 1792854057589
+firstSeenAt: 1792854980253
+lastSeenAt: 1792854980253
 fingerprint: null
 payload:
   id: EM0_ground
@@ -47,7 +47,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -123,7 +123,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (9): EV0_contracts_for_every_system, UI0_the_stations_agree, EM1_emerge_core,

@@ -9,11 +9,11 @@ intent: null
 summary: FN2_what_is_missing_is_made_first (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854079659
+exported_at: 1792855003703
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854079659
-lastSeenAt: 1792854079659
+firstSeenAt: 1792855003703
+lastSeenAt: 1792855003703
 fingerprint: null
 payload:
   id: FN2_what_is_missing_is_made_first
@@ -205,7 +205,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN1_every_door_goes_through_it
@@ -223,7 +223,7 @@ payload:
             - lib/work-funnel.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by FN1_every_door_goes_through_it
+        - DAG 86519dc3b354b627 · layer 2 · blocked by FN1_every_door_goes_through_it
         - 'depends on (1): FN1_every_door_goes_through_it · all upstream 2'
         - 'needed by (0): —'
         - 'same files as FN3_every_answer_a_node with no order between them: lib/work-funnel.js'

@@ -7,11 +7,11 @@ intent: null
 summary: M2 (?) — 2 file(s)
 system: cortex
 tags: []
-exported_at: 1792854053239
+exported_at: 1792854975839
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854053239
-lastSeenAt: 1792854053239
+firstSeenAt: 1792854975839
+lastSeenAt: 1792854975839
 fingerprint: null
 payload:
   id: M2
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 3bfe2ca613898a9e
+    hash: a0f7405b221c7887
     nodes:
       - path: cortex/memory/jaa-db.js
         role: changes
@@ -38,10 +38,6 @@ payload:
         role: changes
         exists: true
         system: guardian
-      - path: architect/service.js
-        role: used-by
-        exists: true
-        system: architect
       - path: clear-glass/test/copilot-cli.test.js
         role: used-by
         exists: true
@@ -86,6 +82,10 @@ payload:
         role: used-by
         exists: true
         system: copilot
+      - path: copilot/lib/person-model/index.js
+        role: used-by
+        exists: true
+        system: copilot
       - path: cortex/memory/tiers.js
         role: uses
         exists: true
@@ -122,9 +122,6 @@ payload:
       - from: cortex/memory/jaa-db.js
         to: cortex/memory/tiers.js
         kind: requires
-      - from: architect/service.js
-        to: cortex/memory/jaa-db.js
-        kind: requires
       - from: clear-glass/test/copilot-cli.test.js
         to: cortex/memory/jaa-db.js
         kind: requires
@@ -158,13 +155,10 @@ payload:
       - from: copilot/lib/intent-learning.js
         to: cortex/memory/jaa-db.js
         kind: requires
-    crossings:
-      - from: architect/service.js
+      - from: copilot/lib/person-model/index.js
         to: cortex/memory/jaa-db.js
-        fromSystem: architect
-        toSystem: cortex
-        kind: system
-        known: true
+        kind: requires
+    crossings:
       - from: cli/compact.js
         to: cortex/memory/jaa-db.js
         fromSystem: cli
@@ -225,9 +219,15 @@ payload:
         toSystem: cortex
         kind: system
         known: true
+      - from: copilot/lib/person-model/index.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: copilot
+        toSystem: cortex
+        kind: system
+        known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G3
@@ -251,7 +251,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by G3, M1
+        - DAG 86519dc3b354b627 · layer 4 · blocked by G3, M1
         - 'depends on (2): G3, M1 · all upstream 6'
         - 'needed by (1): M3 · finishing it unlocks M3'
   uuid: 47df94c2-d600-501c-a15b-775742a95d23

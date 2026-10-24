@@ -7,11 +7,11 @@ intent: null
 summary: AW1_guardian_reflected_in_nodes (?) — 5 file(s)
 system: guardian
 tags: []
-exported_at: 1792854070078
+exported_at: 1792854993333
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854070078
-lastSeenAt: 1792854070078
+firstSeenAt: 1792854993333
+lastSeenAt: 1792854993333
 fingerprint: null
 payload:
   id: AW1_guardian_reflected_in_nodes
@@ -219,7 +219,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-10-self-awareness-phasemap.spec::AW0_no_guessed_causes
@@ -238,7 +238,7 @@ payload:
             - guardian/lib/jobs.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by AW0_no_guessed_causes
+        - DAG 86519dc3b354b627 · layer 1 · blocked by AW0_no_guessed_causes
         - 'depends on (1): AW0_no_guessed_causes'
         - 'needed by (1): AW5_its_own_face'
         - >-

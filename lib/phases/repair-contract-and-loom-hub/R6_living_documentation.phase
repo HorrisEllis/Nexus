@@ -7,11 +7,11 @@ intent: null
 summary: R6_living_documentation (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854109518
+exported_at: 1792855034962
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854109518
-lastSeenAt: 1792854109518
+firstSeenAt: 1792855034962
+lastSeenAt: 1792855034962
 fingerprint: null
 payload:
   id: R6_living_documentation
@@ -114,7 +114,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
@@ -129,7 +129,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (2): R4_loom_ledger_awareness, R5_loom_visual_map'
         - 'needed by (0): —'
   uuid: 0ba81114-e6b5-5b57-85ac-6d6b28e388f0

@@ -7,11 +7,11 @@ intent: null
 summary: SD17_an_imported_project_continues (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854069615
+exported_at: 1792854992889
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854069615
-lastSeenAt: 1792854069615
+firstSeenAt: 1792854992889
+lastSeenAt: 1792854992889
 fingerprint: null
 payload:
   id: SD17_an_imported_project_continues
@@ -235,7 +235,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -253,7 +253,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (1): SD18_mastermind_ready · all downstream 5 · finishing it unlocks

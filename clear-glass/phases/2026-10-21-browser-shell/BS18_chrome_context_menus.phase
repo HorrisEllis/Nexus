@@ -7,11 +7,11 @@ intent: null
 summary: BS18_chrome_context_menus (surface) — 4 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854094765
+exported_at: 1792855019359
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854094765
-lastSeenAt: 1792854094765
+firstSeenAt: 1792855019359
+lastSeenAt: 1792855019359
 fingerprint: null
 payload:
   id: BS18_chrome_context_menus
@@ -53,7 +53,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-21-browser-shell-phasemap.spec::BS15_context_menu
@@ -71,7 +71,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (2): BS15_context_menu, BS17_menu_consolidated · all upstream 5'
         - 'needed by (0): —'
   uuid: 2fa48971-9824-5467-8736-f27bc2e747ee

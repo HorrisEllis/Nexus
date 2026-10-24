@@ -9,11 +9,11 @@ intent: null
 summary: PT2_phases_tagged_by_system_repo (?) — 3 file(s)
 system: loom
 tags: []
-exported_at: 1792854079241
+exported_at: 1792855003284
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854079241
-lastSeenAt: 1792854079241
+firstSeenAt: 1792855003284
+lastSeenAt: 1792855003284
 fingerprint: null
 payload:
   id: PT2_phases_tagged_by_system_repo
@@ -30,7 +30,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: abc1512198265fee
+    hash: 09a060b89c1290c0
     nodes:
       - path: idearium/ui/js/phases.js
         role: changes
@@ -92,10 +92,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/nexus-client.js
         role: uses
         exists: true
@@ -104,12 +100,16 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -151,12 +151,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
         fromSystem: idearium
@@ -213,7 +207,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::PT1_specs_tagged_per_phase
@@ -232,7 +226,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): PT1_specs_tagged_per_phase'
         - >-
           needed by (1): MP1_nexus_maps_every_phase · all downstream 4 · finishing it unlocks

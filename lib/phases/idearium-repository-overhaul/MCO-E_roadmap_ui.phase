@@ -7,11 +7,11 @@ intent: null
 summary: MCO-E_roadmap_ui (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854104506
+exported_at: 1792855029933
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854104506
-lastSeenAt: 1792854104506
+firstSeenAt: 1792855029933
+lastSeenAt: 1792855029933
 fingerprint: null
 payload:
   id: MCO-E_roadmap_ui
@@ -25,7 +25,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: b86c0d6b1a69cd1d
+    hash: 4c330abb7811446f
     nodes:
       - path: architect/schemas/index.js
         role: changes
@@ -115,10 +115,6 @@ payload:
         role: uses
         exists: true
         system: cortex
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: cortex/personas.js
         role: uses
         exists: true
@@ -151,6 +147,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
       - path: loom/scanners/source-map.js
         role: uses
         exists: true
@@ -163,7 +163,7 @@ payload:
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: architect/schemas/index.js
         to: lib/node-export.js
@@ -229,12 +229,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: lib/atlas-generate.js
         to: loom/scanners/source-map.js
         fromSystem: lib
@@ -297,7 +291,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/idearium-repository-overhaul-phasemap.spec::MCO-A_schemas
@@ -311,7 +305,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): MCO-A_schemas · all upstream 2'
         - 'needed by (0): —'
   uuid: 210b8d4e-844b-52b0-83cd-c6e2e5ef7983

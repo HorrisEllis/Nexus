@@ -7,11 +7,11 @@ intent: null
 summary: SB7_domain_file_tree_templates (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854060307
+exported_at: 1792854982975
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060307
-lastSeenAt: 1792854060307
+firstSeenAt: 1792854982975
+lastSeenAt: 1792854982975
 fingerprint: null
 payload:
   id: SB7_domain_file_tree_templates
@@ -126,7 +126,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
@@ -140,7 +140,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · ready
+        - DAG 86519dc3b354b627 · layer 2 · ready
         - 'depends on (1): SB1_templates_are_the_default_frame · all upstream 2'
         - 'needed by (0): —'
   uuid: 2c818fb9-a622-54a8-a748-911fb2310e40

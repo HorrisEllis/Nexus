@@ -7,11 +7,11 @@ intent: null
 summary: RQ19_what_nexus_can_take_over (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854071818
+exported_at: 1792854995131
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071818
-lastSeenAt: 1792854071818
+firstSeenAt: 1792854995131
+lastSeenAt: 1792854995131
 fingerprint: null
 payload:
   id: RQ19_what_nexus_can_take_over
@@ -173,7 +173,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 7
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
@@ -205,7 +205,7 @@ payload:
             - lib/component-store.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 7 · blocked by RQ14_the_spine_end_to_end
+        - DAG 86519dc3b354b627 · layer 7 · blocked by RQ14_the_spine_end_to_end
         - 'depends on (1): RQ14_the_spine_end_to_end · all upstream 15'
         - 'needed by (0): —'
         - >-

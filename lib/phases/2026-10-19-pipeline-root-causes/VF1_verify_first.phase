@@ -7,11 +7,11 @@ intent: null
 summary: VF1_verify_first (library) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854091304
+exported_at: 1792855015860
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854091304
-lastSeenAt: 1792854091304
+firstSeenAt: 1792855015860
+lastSeenAt: 1792855015860
 fingerprint: null
 payload:
   id: VF1_verify_first
@@ -231,7 +231,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
@@ -263,7 +263,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): RC4_agent_file_names_guarded'
         - >-
           needed by (6): VF2_one_response_bundle, VF3_mutation_check, VF5_verdict_cache,

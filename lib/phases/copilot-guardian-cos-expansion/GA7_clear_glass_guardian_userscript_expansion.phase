@@ -9,11 +9,11 @@ intent: null
 summary: GA7_clear_glass_guardian_userscript_expansion (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854102346
+exported_at: 1792855027789
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854102346
-lastSeenAt: 1792854102346
+firstSeenAt: 1792855027789
+lastSeenAt: 1792855027789
 fingerprint: null
 payload:
   id: GA7_clear_glass_guardian_userscript_expansion
@@ -33,7 +33,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/copilot-guardian-cos-expansion-phasemap.spec::GA3_guardian_userscript_capability_wiring
@@ -48,7 +48,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by GA3_guardian_userscript_capability_wiring
+        - DAG 86519dc3b354b627 · layer 2 · blocked by GA3_guardian_userscript_capability_wiring
         - 'depends on (1): GA3_guardian_userscript_capability_wiring · all upstream 2'
         - 'needed by (0): —'
   uuid: e0e00201-b896-5a08-b25c-e4d91741e149

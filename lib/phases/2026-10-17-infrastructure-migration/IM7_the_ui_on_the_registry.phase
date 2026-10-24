@@ -9,11 +9,11 @@ intent: null
 summary: IM7_the_ui_on_the_registry (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854086635
+exported_at: 1792855010923
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854086635
-lastSeenAt: 1792854086635
+firstSeenAt: 1792855010923
+lastSeenAt: 1792855010923
 fingerprint: null
 payload:
   id: IM7_the_ui_on_the_registry
@@ -26,7 +26,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: f9a404620163a759
+    hash: 882a617c1aab92e0
     nodes:
       - path: lib/system-store.js
         role: changes
@@ -80,10 +80,10 @@ payload:
         role: used-by
         exists: true
         system: intelligence
-      - path: lib/agent-tools/tools/execution/run-pipeline.js
+      - path: loom/lib/store.js
         role: used-by
         exists: true
-        system: lib
+        system: loom
       - path: tests/modules/test-sovereign-systems.test.js
         role: used-by
         exists: true
@@ -123,6 +123,9 @@ payload:
       - from: guardian/agents/index.js
         to: lib/system-store.js
         kind: requires
+      - from: loom/lib/store.js
+        to: lib/system-store.js
+        kind: requires
       - from: tests/modules/test-sovereign-systems.test.js
         to: lib/system-store.js
         kind: requires
@@ -148,9 +151,6 @@ payload:
         to: nexus/nexus-bus.js
         kind: requires
       - from: intelligence/server.js
-        to: nexus/nexus-bus.js
-        kind: requires
-      - from: lib/agent-tools/tools/execution/run-pipeline.js
         to: nexus/nexus-bus.js
         kind: requires
     crossings:
@@ -208,15 +208,9 @@ payload:
         toSystem: nexus
         kind: system
         known: true
-      - from: lib/agent-tools/tools/execution/run-pipeline.js
-        to: nexus/nexus-bus.js
-        fromSystem: lib
-        toSystem: nexus
-        kind: upward
-        known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -227,7 +221,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

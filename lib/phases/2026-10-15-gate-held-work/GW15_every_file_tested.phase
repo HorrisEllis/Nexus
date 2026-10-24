@@ -7,11 +7,11 @@ intent: null
 summary: GW15_every_file_tested (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854076771
+exported_at: 1792855000575
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076771
-lastSeenAt: 1792854076771
+firstSeenAt: 1792855000575
+lastSeenAt: 1792855000575
 fingerprint: null
 payload:
   id: GW15_every_file_tested
@@ -228,7 +228,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
@@ -257,7 +257,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by GW13_the_sandbox_door
+        - DAG 86519dc3b354b627 · layer 4 · blocked by GW13_the_sandbox_door
         - 'depends on (2): GW13_the_sandbox_door, GW0f_mutation_testing · all upstream 7'
         - 'needed by (1): GW16_parallel_branches_benchmark'
         - 'same files as GW12_desktop_is_optional with no order between them: cos/testenv/detect.js'

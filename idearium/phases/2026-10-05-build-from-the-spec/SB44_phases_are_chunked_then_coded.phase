@@ -9,11 +9,11 @@ intent: null
 summary: SB44_phases_are_chunked_then_coded (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854060384
+exported_at: 1792854983063
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060384
-lastSeenAt: 1792854060384
+firstSeenAt: 1792854983063
+lastSeenAt: 1792854983063
 fingerprint: null
 payload:
   id: SB44_phases_are_chunked_then_coded
@@ -222,7 +222,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 7
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB43_the_expansion_is_phased
@@ -244,7 +244,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 7
+        - DAG 86519dc3b354b627 · layer 7
         - 'depends on (1): SB43_the_expansion_is_phased · all upstream 7'
         - >-
           needed by (1): SB45_skeletons_grey_until_coded · finishing it unlocks

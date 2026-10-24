@@ -7,11 +7,11 @@ intent: null
 summary: RQ16_hypotheses_in_parallel (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854071814
+exported_at: 1792854995127
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071814
-lastSeenAt: 1792854071814
+firstSeenAt: 1792854995127
+lastSeenAt: 1792854995127
 fingerprint: null
 payload:
   id: RQ16_hypotheses_in_parallel
@@ -85,7 +85,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 8
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
@@ -118,7 +118,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 8 · blocked by RQ15_cells_in_parallel,
+          DAG 86519dc3b354b627 · layer 8 · blocked by RQ15_cells_in_parallel,
           RQ17_observe_by_request
         - 'depends on (2): RQ15_cells_in_parallel, RQ17_observe_by_request · all upstream 17'
         - 'needed by (0): —'

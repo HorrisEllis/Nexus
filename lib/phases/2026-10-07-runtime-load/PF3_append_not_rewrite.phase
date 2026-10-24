@@ -7,11 +7,11 @@ intent: null
 summary: PF3_append_not_rewrite (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854065937
+exported_at: 1792854988963
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854065937
-lastSeenAt: 1792854065937
+firstSeenAt: 1792854988963
+lastSeenAt: 1792854988963
 fingerprint: null
 payload:
   id: PF3_append_not_rewrite
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: ae5e13b4f39fc2d6
+    hash: b676b593f28310ef
     nodes:
       - path: cortex/memory/jaa-db.js
         role: changes
@@ -38,14 +38,14 @@ payload:
         role: changes
         exists: true
         system: null
-      - path: architect/service.js
-        role: used-by
-        exists: true
-        system: architect
       - path: clear-glass/test/copilot-cli.test.js
         role: used-by
         exists: true
         system: null
+      - path: cli/compact.js
+        role: used-by
+        exists: true
+        system: cli
       - path: guardian/lib/account-routing.js
         role: used-by
         exists: true
@@ -152,22 +152,22 @@ payload:
       - from: tests/modules/test-sigma-compaction.js
         to: guardian/jaa-store.js
         kind: requires
-      - from: architect/service.js
-        to: cortex/memory/jaa-db.js
-        kind: requires
       - from: clear-glass/test/copilot-cli.test.js
         to: cortex/memory/jaa-db.js
         kind: requires
-    crossings:
-      - from: architect/service.js
+      - from: cli/compact.js
         to: cortex/memory/jaa-db.js
-        fromSystem: architect
+        kind: requires
+    crossings:
+      - from: cli/compact.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: cli
         toSystem: cortex
         kind: system
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -178,7 +178,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

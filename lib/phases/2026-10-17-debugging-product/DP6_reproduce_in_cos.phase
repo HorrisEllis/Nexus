@@ -7,11 +7,11 @@ intent: null
 summary: DP6_reproduce_in_cos (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854085738
+exported_at: 1792855010005
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854085738
-lastSeenAt: 1792854085738
+firstSeenAt: 1792855010005
+lastSeenAt: 1792855010005
 fingerprint: null
 payload:
   id: DP6_reproduce_in_cos
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-17-debugging-product-phasemap.spec::DP4_every_ledger_into_rfr2
@@ -54,7 +54,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by DP4_every_ledger_into_rfr2, DP5_the_case
+        - DAG 86519dc3b354b627 · layer 2 · blocked by DP4_every_ledger_into_rfr2, DP5_the_case
         - 'depends on (2): DP4_every_ledger_into_rfr2, DP5_the_case · all upstream 3'
         - 'needed by (1): DP8_a_proven_fix · all downstream 2 · finishing it unlocks DP8_a_proven_fix'
   uuid: 038ce1a5-d29c-5032-947f-1affb6110c1c

@@ -7,11 +7,11 @@ intent: null
 summary: RR4_governed_handshake_on_handoff (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854108265
+exported_at: 1792855033685
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854108265
-lastSeenAt: 1792854108265
+firstSeenAt: 1792855033685
+lastSeenAt: 1792855033685
 fingerprint: null
 payload:
   id: RR4_governed_handshake_on_handoff
@@ -272,7 +272,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
@@ -310,7 +310,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (2): RR1_verify_and_wire_the_snr_fidelity_gate, RR2_contract_based_chunking'
         - >-
           needed by (7): IC1_context_by_uuid_injection, IC2_raid_test_env_hook,

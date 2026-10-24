@@ -9,11 +9,11 @@ intent: null
 summary: GW26_everything_declares_what_it_needs (?) — 5 file(s)
 system: cortex
 tags: []
-exported_at: 1792854076781
+exported_at: 1792855000584
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076781
-lastSeenAt: 1792854076781
+firstSeenAt: 1792855000584
+lastSeenAt: 1792855000584
 fingerprint: null
 payload:
   id: GW26_everything_declares_what_it_needs
@@ -200,7 +200,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
@@ -233,7 +233,7 @@ payload:
             - cortex/core/raid/contract-gates.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by GW1_the_baton
+        - DAG 86519dc3b354b627 · layer 1 · blocked by GW1_the_baton
         - 'depends on (1): GW1_the_baton'
         - 'needed by (0): —'
         - >-

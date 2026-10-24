@@ -7,11 +7,11 @@ intent: null
 summary: PN3_maps_rendered_from_nodes (library) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854090888
+exported_at: 1792855015417
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854090888
-lastSeenAt: 1792854090888
+firstSeenAt: 1792855015417
+lastSeenAt: 1792855015417
 fingerprint: null
 payload:
   id: PN3_maps_rendered_from_nodes
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
@@ -57,7 +57,7 @@ payload:
             - idearium/spec-engine/
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by PN2_dual_read
+        - DAG 86519dc3b354b627 · layer 4 · blocked by PN2_dual_read
         - 'depends on (1): PN2_dual_read · all upstream 4'
         - 'needed by (0): —'
         - >-

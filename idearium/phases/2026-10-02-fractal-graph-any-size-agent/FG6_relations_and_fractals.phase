@@ -9,11 +9,11 @@ intent: null
 summary: FG6_relations_and_fractals (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854058153
+exported_at: 1792854980805
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854058153
-lastSeenAt: 1792854058153
+firstSeenAt: 1792854980805
+lastSeenAt: 1792854980805
 fingerprint: null
 payload:
   id: FG6_relations_and_fractals
@@ -145,7 +145,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
@@ -159,7 +159,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by FG1_containment_tree
+        - DAG 86519dc3b354b627 · layer 1 · blocked by FG1_containment_tree
         - 'depends on (1): FG1_containment_tree'
         - 'needed by (0): —'
   uuid: c34afb07-82d6-58fd-8eb8-3e738db06b78

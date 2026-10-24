@@ -7,11 +7,11 @@ intent: null
 summary: APV2_commit_carries_it (library) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854093835
+exported_at: 1792855018489
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854093835
-lastSeenAt: 1792854093835
+firstSeenAt: 1792855018489
+lastSeenAt: 1792855018489
 fingerprint: null
 payload:
   id: APV2_commit_carries_it
@@ -239,7 +239,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
@@ -262,7 +262,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (2): APV1_change_entry, RC7_every_run_names_its_starter · all upstream 4'
         - >-
           needed by (2): APV3_changelog_read, APV4_emit_on_the_ledger · finishing it unlocks

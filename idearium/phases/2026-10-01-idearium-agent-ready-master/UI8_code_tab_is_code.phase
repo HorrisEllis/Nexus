@@ -7,11 +7,11 @@ intent: null
 summary: UI8_code_tab_is_code (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056303
+exported_at: 1792854978930
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056303
-lastSeenAt: 1792854056303
+firstSeenAt: 1792854978930
+lastSeenAt: 1792854978930
 fingerprint: null
 payload:
   id: UI8_code_tab_is_code
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI1_history_and_save_in_manage
@@ -76,7 +76,7 @@ payload:
             - idearium/ui/js/app.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by UI1_history_and_save_in_manage
+        - DAG 86519dc3b354b627 · layer 1 · blocked by UI1_history_and_save_in_manage
         - 'depends on (1): UI1_history_and_save_in_manage'
         - >-
           needed by (1): UI11_nav_and_look_restored · finishing it unlocks

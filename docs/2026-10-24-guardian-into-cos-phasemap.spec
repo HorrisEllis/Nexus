@@ -170,3 +170,11 @@ phases:
 - Found, not fixed (not boundary work, logged): booting Cortex with the test sandbox's env still ran its data-home clear-up against the
   real tree. It moved data/lattice/relationship_lattice.buffer.jsonl into cortex/data and wrote cortex/data/* and
   versionium/data/settings.json. All of it was restored. lib/data-home.js atBoot does not honour the sandbox for a booted system.
+
+## ADDENDUM 2026-10-24 (0.60.241) — a correction to the 0.60.240 finding
+The 0.60.240 addendum said booting Cortex "with the test sandbox's env" ran its data-home clear-up against the real tree, and blamed
+lib/data-home.js atBoot. That was wrong. The coder's proof script spread require('lib/test-sandbox.js').childEnv() itself, which returns
+{ env, root, cleanup }, instead of its .env, so Cortex booted with no sandbox at all. bringHome already refuses to move the tree in a test
+process. Re-run correctly in 0.60.241 (the Loom proof), nothing moved. The earlier text is kept (§0.3); the code in the tree that uses
+childEnv (lib/phase-close.js, tests/modules/run-all.js) uses .env correctly. The 0.60.239 Idearium proof had the same mistake: it said
+"sandboxed" and was not.

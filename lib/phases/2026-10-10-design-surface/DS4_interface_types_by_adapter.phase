@@ -7,11 +7,11 @@ intent: null
 summary: DS4_interface_types_by_adapter (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854068794
+exported_at: 1792854992007
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854068794
-lastSeenAt: 1792854068794
+firstSeenAt: 1792854992007
+lastSeenAt: 1792854992007
 fingerprint: null
 payload:
   id: DS4_interface_types_by_adapter
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by DS2_pick_and_edit_any_page
+        - DAG 86519dc3b354b627 · layer 3 · blocked by DS2_pick_and_edit_any_page
         - 'depends on (1): DS2_pick_and_edit_any_page · all upstream 3'
         - 'needed by (0): —'
   uuid: e46a5a5b-9f6e-59f0-9c8d-74d07f4095be

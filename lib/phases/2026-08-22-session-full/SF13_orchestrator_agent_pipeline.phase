@@ -7,11 +7,11 @@ intent: null
 summary: SF13_orchestrator_agent_pipeline (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854038513
+exported_at: 1792854959812
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854038513
-lastSeenAt: 1792854038513
+firstSeenAt: 1792854959812
+lastSeenAt: 1792854959812
 fingerprint: null
 payload:
   id: SF13_orchestrator_agent_pipeline
@@ -78,7 +78,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-08-22-session-full-phasemap.spec::SF9_account_identity_capture
@@ -93,7 +93,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (2): SF9_account_identity_capture, SF10_agent_notes'
         - 'needed by (0): —'
   uuid: a0548c60-1a3b-56bc-8b33-a8da6a0d871f

@@ -9,11 +9,11 @@ intent: null
 summary: IL1_spec_library_as_ideas (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056323
+exported_at: 1792854978948
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056323
-lastSeenAt: 1792854056323
+firstSeenAt: 1792854978948
+lastSeenAt: 1792854978948
 fingerprint: null
 payload:
   id: IL1_spec_library_as_ideas
@@ -223,7 +223,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
@@ -251,7 +251,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · blocked by FT1_file_tools_merge_patch_drop,
+          DAG 86519dc3b354b627 · layer 5 · blocked by FT1_file_tools_merge_patch_drop,
           DI1_chunking_for_data_ingestion
         - >-
           depends on (2): FT1_file_tools_merge_patch_drop, DI1_chunking_for_data_ingestion · all

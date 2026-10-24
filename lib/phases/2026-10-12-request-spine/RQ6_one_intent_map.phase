@@ -7,11 +7,11 @@ intent: null
 summary: RQ6_one_intent_map (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854071800
+exported_at: 1792854995111
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071800
-lastSeenAt: 1792854071800
+firstSeenAt: 1792854995111
+lastSeenAt: 1792854995111
 fingerprint: null
 payload:
   id: RQ6_one_intent_map
@@ -183,7 +183,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
@@ -220,7 +220,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by RQ0_the_inventory_proved
+        - DAG 86519dc3b354b627 · layer 1 · blocked by RQ0_the_inventory_proved
         - 'depends on (1): RQ0_the_inventory_proved'
         - >-
           needed by (2): RQ7_the_context_obligations, RQ17_observe_by_request · all downstream 20 ·

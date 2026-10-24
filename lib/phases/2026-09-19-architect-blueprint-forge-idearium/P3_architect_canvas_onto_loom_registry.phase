@@ -9,11 +9,11 @@ intent: null
 summary: P3_architect_canvas_onto_loom_registry (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854046910
+exported_at: 1792854969081
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854046910
-lastSeenAt: 1792854046910
+firstSeenAt: 1792854969081
+lastSeenAt: 1792854969081
 fingerprint: null
 payload:
   id: P3_architect_canvas_onto_loom_registry
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P2_decide_D1_D2_D3
@@ -57,7 +57,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by P2_decide_D1_D2_D3
+        - DAG 86519dc3b354b627 · layer 1 · blocked by P2_decide_D1_D2_D3
         - 'depends on (1): P2_decide_D1_D2_D3'
         - >-
           needed by (2): P4_blueprint_as_canvas_mode, P5_forge_as_phasemap_view · finishing it

@@ -9,11 +9,11 @@ intent: null
 summary: ET5_loom_event_taxonomy_map (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854039614
+exported_at: 1792854961074
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854039614
-lastSeenAt: 1792854039614
+firstSeenAt: 1792854961074
+lastSeenAt: 1792854961074
 fingerprint: null
 payload:
   id: ET5_loom_event_taxonomy_map
@@ -29,7 +29,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 9aaa3b469d6c50fc
+    hash: f36e63a2c410311f
     nodes:
       - path: architect/schemas/index.js
         role: changes
@@ -99,10 +99,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/event-taxonomy-pattern.js
         role: uses
         exists: true
@@ -119,12 +115,16 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -172,12 +172,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
         fromSystem: idearium
@@ -234,7 +228,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET2_guardian_event_taxonomy
@@ -262,7 +256,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 2 · blocked by ET2_guardian_event_taxonomy,
+          DAG 86519dc3b354b627 · layer 2 · blocked by ET2_guardian_event_taxonomy,
           ET3_clearglass_event_taxonomy, ET4_orchestrator_autopilot_event_taxonomy
         - >-
           depends on (3): ET2_guardian_event_taxonomy, ET3_clearglass_event_taxonomy,

@@ -9,11 +9,11 @@ intent: null
 summary: TV3_traversal_as_context (integration) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854093031
+exported_at: 1792855017624
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854093031
-lastSeenAt: 1792854093031
+firstSeenAt: 1792855017624
+lastSeenAt: 1792855017624
 fingerprint: null
 payload:
   id: TV3_traversal_as_context
@@ -85,7 +85,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 6
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
@@ -113,7 +113,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 6 · blocked by TV1_traversal_primitive,
+          DAG 86519dc3b354b627 · layer 6 · blocked by TV1_traversal_primitive,
           CH1_strategies_behind_the_contract
         - >-
           depends on (2): TV1_traversal_primitive, CH1_strategies_behind_the_contract · all upstream

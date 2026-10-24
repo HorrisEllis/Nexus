@@ -9,11 +9,11 @@ intent: null
 summary: BC2_the_build_agent_gets_all_of_the_hat_and_repo_context (?) — 8 file(s)
 system: core
 tags: []
-exported_at: 1792854060326
+exported_at: 1792854982993
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060326
-lastSeenAt: 1792854060326
+firstSeenAt: 1792854982993
+lastSeenAt: 1792854982993
 fingerprint: null
 payload:
   id: BC2_the_build_agent_gets_all_of_the_hat_and_repo_context
@@ -237,7 +237,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::BC1_build_context
@@ -253,7 +253,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): BC1_build_context'
         - >-
           needed by (1): BC3_what_a_build_was_sent_as_a_node · finishing it unlocks

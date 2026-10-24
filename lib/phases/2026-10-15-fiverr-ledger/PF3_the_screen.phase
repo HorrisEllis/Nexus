@@ -7,11 +7,11 @@ intent: null
 summary: PF3_the_screen (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854076348
+exported_at: 1792855000134
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076348
-lastSeenAt: 1792854076348
+firstSeenAt: 1792855000134
+lastSeenAt: 1792855000134
 fingerprint: null
 payload:
   id: PF3_the_screen
@@ -31,7 +31,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-15-fiverr-ledger-phasemap.spec::PF2_the_slots_into_a_gig
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by PF2_the_slots_into_a_gig
+        - DAG 86519dc3b354b627 · layer 3 · blocked by PF2_the_slots_into_a_gig
         - 'depends on (1): PF2_the_slots_into_a_gig · all upstream 3'
         - 'needed by (0): —'
   uuid: 788831a0-5938-5a31-82b7-caf3d7f88ee3

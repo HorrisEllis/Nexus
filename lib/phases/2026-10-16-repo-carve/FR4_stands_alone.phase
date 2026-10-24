@@ -7,11 +7,11 @@ intent: null
 summary: FR4_stands_alone (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854084936
+exported_at: 1792855009134
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854084936
-lastSeenAt: 1792854084936
+firstSeenAt: 1792855009134
+lastSeenAt: 1792855009134
 fingerprint: null
 payload:
   id: FR4_stands_alone
@@ -243,7 +243,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
@@ -260,7 +260,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by CV2_untangle_with_rf0
+        - DAG 86519dc3b354b627 · layer 3 · blocked by CV2_untangle_with_rf0
         - 'depends on (2): CV2_untangle_with_rf0, PB1_the_product_boundary · all upstream 3'
         - 'needed by (0): —'
   uuid: 149e12ed-c93f-57f2-9ecc-24f038821e97

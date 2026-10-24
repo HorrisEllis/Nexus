@@ -7,11 +7,11 @@ intent: null
 summary: P7_continuous_nerve_dom_to_ollama (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854101869
+exported_at: 1792855027379
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854101869
-lastSeenAt: 1792854101869
+firstSeenAt: 1792855027379
+lastSeenAt: 1792855027379
 fingerprint: null
 payload:
   id: P7_continuous_nerve_dom_to_ollama
@@ -24,7 +24,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 40f6a3bac3b56676
+    hash: aeff2bb082ceee78
     nodes:
       - path: lib/nerve/index.js
         role: changes
@@ -54,6 +54,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: lib/ollama-port.js
+        role: uses
+        exists: true
+        system: lib
       - path: ollama/config.js
         role: uses
         exists: true
@@ -75,10 +79,6 @@ payload:
         exists: true
         system: ollama
       - path: ollama/routes/jobs.js
-        role: uses
-        exists: true
-        system: ollama
-      - path: ollama/routes/queue.js
         role: uses
         exists: true
         system: ollama
@@ -117,6 +117,9 @@ payload:
         to: ollama/lib/http-utils.js
         kind: requires
       - from: ollama/server.js
+        to: lib/ollama-port.js
+        kind: requires
+      - from: ollama/server.js
         to: ollama/routes/system.js
         kind: requires
       - from: ollama/server.js
@@ -127,9 +130,6 @@ payload:
         kind: requires
       - from: ollama/server.js
         to: ollama/routes/jobs.js
-        kind: requires
-      - from: ollama/server.js
-        to: ollama/routes/queue.js
         kind: requires
       - from: cortex/boot.js
         to: lib/nerve/index.js
@@ -149,7 +149,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -160,7 +160,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (0): —'
         - >-

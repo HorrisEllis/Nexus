@@ -7,11 +7,11 @@ intent: null
 summary: P3_diagnostic_kernel (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854105799
+exported_at: 1792855031183
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854105799
-lastSeenAt: 1792854105799
+firstSeenAt: 1792855031183
+lastSeenAt: 1792855031183
 fingerprint: null
 payload:
   id: P3_diagnostic_kernel
@@ -262,7 +262,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/nexus-live-mind-phasemap.spec::P1_nervous_system_live
@@ -282,7 +282,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (2): P1_nervous_system_live, P2_snapshot_on_sigma'
         - >-
           needed by (1): P4_copilot_awareness · all downstream 3 · finishing it unlocks

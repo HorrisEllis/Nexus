@@ -7,11 +7,11 @@ intent: null
 summary: EC2_gate (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854055006
+exported_at: 1792854977671
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854055006
-lastSeenAt: 1792854055006
+firstSeenAt: 1792854977671
+lastSeenAt: 1792854977671
 fingerprint: null
 payload:
   id: EC2_gate
@@ -65,7 +65,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-29-provider-economy-phasemap.spec::EC0_policy_model
@@ -85,7 +85,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (2): EC0_policy_model, EC1_usage_ledger'
         - >-
           needed by (1): EC6_guardian_enforcement · all downstream 3 · finishing it unlocks

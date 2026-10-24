@@ -7,11 +7,11 @@ intent: null
 summary: W2_plan_always_lands (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792854055811
+exported_at: 1792854978468
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854055811
-lastSeenAt: 1792854055811
+firstSeenAt: 1792854978468
+lastSeenAt: 1792854978468
 fingerprint: null
 payload:
   id: W2_plan_always_lands
@@ -178,7 +178,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W1_idearium_never_blocks_on_git
@@ -199,7 +199,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): W1_idearium_never_blocks_on_git · all upstream 2'
         - 'needed by (1): W3_work_surface · all downstream 5 · finishing it unlocks W3_work_surface'
   uuid: 280d0302-124f-52ee-9b3f-1c832d171d85

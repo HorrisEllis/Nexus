@@ -9,11 +9,11 @@ intent: null
 summary: SB22_every_component_capability_command_events_as_nodes (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854060346
+exported_at: 1792854983015
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060346
-lastSeenAt: 1792854060346
+firstSeenAt: 1792854983015
+lastSeenAt: 1792854983015
 fingerprint: null
 payload:
   id: SB22_every_component_capability_command_events_as_nodes
@@ -181,7 +181,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
@@ -201,7 +201,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by SB20_each_system_owns_its_own
+        - DAG 86519dc3b354b627 · layer 4 · blocked by SB20_each_system_owns_its_own
         - 'depends on (1): SB20_each_system_owns_its_own · all upstream 4'
         - 'needed by (1): SB23_a_new_system_slots_in · all downstream 2'
   uuid: 5a0f9818-9df2-5294-bd0b-390b3ea978ce

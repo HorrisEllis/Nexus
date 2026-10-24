@@ -9,11 +9,11 @@ intent: null
 summary: OS2_images_downloaded_and_kept_current (?) — 3 file(s)
 system: cos
 tags: []
-exported_at: 1792854061733
+exported_at: 1792854984529
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854061733
-lastSeenAt: 1792854061733
+firstSeenAt: 1792854984529
+lastSeenAt: 1792854984529
 fingerprint: null
 payload:
   id: OS2_images_downloaded_and_kept_current
@@ -178,7 +178,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
@@ -205,7 +205,7 @@ payload:
             - cos/testenv/provision.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by OS1_compartments_as_operating_systems
+        - DAG 86519dc3b354b627 · layer 2 · blocked by OS1_compartments_as_operating_systems
         - 'depends on (1): OS1_compartments_as_operating_systems · all upstream 2'
         - >-
           needed by (2): AP1_android_build_compartment, SU1_the_setup_asks_the_os_and_its_version ·

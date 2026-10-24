@@ -7,11 +7,11 @@ intent: null
 summary: SD5_account_fallback (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854069598
+exported_at: 1792854992874
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854069598
-lastSeenAt: 1792854069598
+firstSeenAt: 1792854992874
+lastSeenAt: 1792854992874
 fingerprint: null
 payload:
   id: SD5_account_fallback
@@ -174,7 +174,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-10-idearium-solid-phasemap.spec::SD4_agents_live_in_guardian
@@ -188,7 +188,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by SD4_agents_live_in_guardian
+        - DAG 86519dc3b354b627 · layer 1 · blocked by SD4_agents_live_in_guardian
         - 'depends on (1): SD4_agents_live_in_guardian'
         - 'needed by (0): —'
   uuid: 6c0f6400-10e5-5377-8b3f-22a3e2bc3b50

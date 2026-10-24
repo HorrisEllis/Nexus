@@ -9,11 +9,11 @@ intent: null
 summary: WS5_the_whole_workshop (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854058153
+exported_at: 1792854980806
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854058153
-lastSeenAt: 1792854058153
+firstSeenAt: 1792854980806
+lastSeenAt: 1792854980806
 fingerprint: null
 payload:
   id: WS5_the_whole_workshop
@@ -57,7 +57,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
@@ -74,7 +74,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by FG4_context_for_any_agent
+        - DAG 86519dc3b354b627 · layer 3 · blocked by FG4_context_for_any_agent
         - 'depends on (1): FG4_context_for_any_agent · all upstream 4'
         - 'needed by (0): —'
   uuid: e877c20c-c678-5ea3-8162-2d8e7b48ca91

@@ -9,11 +9,11 @@ intent: null
 summary: BR2_brainos_controls_agents (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854043745
+exported_at: 1792854965632
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854043745
-lastSeenAt: 1792854043745
+firstSeenAt: 1792854965632
+lastSeenAt: 1792854965632
 fingerprint: null
 payload:
   id: BR2_brainos_controls_agents
@@ -211,7 +211,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
@@ -227,7 +227,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by TC1_tools_get_real_contracts
+        - DAG 86519dc3b354b627 · layer 1 · blocked by TC1_tools_get_real_contracts
         - 'depends on (2): DA1_fix_stale_guardian_coverage_gate, TC1_tools_get_real_contracts'
         - 'needed by (0): —'
   uuid: a3de0296-74c3-5d0d-99eb-4432a965f462

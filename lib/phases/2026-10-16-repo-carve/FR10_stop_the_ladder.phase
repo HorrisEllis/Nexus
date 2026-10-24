@@ -7,11 +7,11 @@ intent: null
 summary: FR10_stop_the_ladder (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854084940
+exported_at: 1792855009143
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854084940
-lastSeenAt: 1792854084940
+firstSeenAt: 1792855009143
+lastSeenAt: 1792855009143
 fingerprint: null
 payload:
   id: FR10_stop_the_ladder
@@ -35,7 +35,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-16-repo-carve-phasemap.spec::FR6_flight_data
@@ -51,7 +51,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): FR6_flight_data'
         - 'needed by (1): SL4_the_loop · finishing it unlocks SL4_the_loop'
   uuid: f9e6e06a-69b4-56f1-97a8-435d7a5561b6

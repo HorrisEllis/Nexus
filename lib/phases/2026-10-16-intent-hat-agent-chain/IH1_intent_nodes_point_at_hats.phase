@@ -9,11 +9,11 @@ intent: null
 summary: IH1_intent_nodes_point_at_hats (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854082486
+exported_at: 1792855006680
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854082486
-lastSeenAt: 1792854082486
+firstSeenAt: 1792855006680
+lastSeenAt: 1792855006680
 fingerprint: null
 payload:
   id: IH1_intent_nodes_point_at_hats
@@ -124,7 +124,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0a_one_vocabulary
@@ -150,7 +150,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by IH0a_one_vocabulary
+        - DAG 86519dc3b354b627 · layer 1 · blocked by IH0a_one_vocabulary
         - 'depends on (1): IH0a_one_vocabulary'
         - >-
           needed by (4): IH2_agents_bound, IH3_routers_read_the_chain, IH4_api_command_ui,

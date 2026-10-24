@@ -9,11 +9,11 @@ intent: null
 summary: CT7_the_plan_shows_current_work (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854061313
+exported_at: 1792854984118
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854061313
-lastSeenAt: 1792854061313
+firstSeenAt: 1792854984118
+lastSeenAt: 1792854984118
 fingerprint: null
 payload:
   id: CT7_the_plan_shows_current_work
@@ -38,7 +38,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT5_hooked_into_the_plan
@@ -57,7 +57,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4
+        - DAG 86519dc3b354b627 · layer 4
         - 'depends on (1): CT5_hooked_into_the_plan · all upstream 4'
         - 'needed by (1): CT9_the_plan_pull_tab · finishing it unlocks CT9_the_plan_pull_tab'
   uuid: 31ef3faa-a692-5071-a0c5-01c56fbb23d1

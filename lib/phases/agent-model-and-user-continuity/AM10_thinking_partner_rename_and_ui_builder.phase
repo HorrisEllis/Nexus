@@ -9,11 +9,11 @@ intent: null
 summary: AM10_thinking_partner_rename_and_ui_builder (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854100145
+exported_at: 1792855025701
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854100145
-lastSeenAt: 1792854100145
+firstSeenAt: 1792855025701
+lastSeenAt: 1792855025701
 fingerprint: null
 payload:
   id: AM10_thinking_partner_rename_and_ui_builder
@@ -306,7 +306,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/agent-model-and-user-continuity-phasemap.spec::AM3_open_ended_grounded_conversation
@@ -324,7 +324,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 1 · blocked by AM3_open_ended_grounded_conversation,
+          DAG 86519dc3b354b627 · layer 1 · blocked by AM3_open_ended_grounded_conversation,
           AM7_agent_switch_continuity_and_chat_recall
         - >-
           depends on (2): AM3_open_ended_grounded_conversation,

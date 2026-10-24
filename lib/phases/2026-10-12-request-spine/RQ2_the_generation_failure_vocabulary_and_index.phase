@@ -9,11 +9,11 @@ intent: null
 summary: RQ2_the_generation_failure_vocabulary_and_index (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854071794
+exported_at: 1792854995105
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071794
-lastSeenAt: 1792854071794
+firstSeenAt: 1792854995105
+lastSeenAt: 1792854995105
 fingerprint: null
 payload:
   id: RQ2_the_generation_failure_vocabulary_and_index
@@ -230,7 +230,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
@@ -263,7 +263,7 @@ payload:
             - lib/component-ledger.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by RQ1_the_verifier_library
+        - DAG 86519dc3b354b627 · layer 2 · blocked by RQ1_the_verifier_library
         - 'depends on (1): RQ1_the_verifier_library · all upstream 2'
         - >-
           needed by (2): RQ3_repair_with_the_checks_own_words, RQ24_the_gate_transaction · all

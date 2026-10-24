@@ -7,11 +7,11 @@ intent: null
 summary: ID1_ideas_wired_through (interface) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854091318
+exported_at: 1792855015875
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854091318
-lastSeenAt: 1792854091318
+firstSeenAt: 1792855015875
+lastSeenAt: 1792855015875
 fingerprint: null
 payload:
   id: ID1_ideas_wired_through
@@ -255,7 +255,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
@@ -269,7 +269,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · ready
+        - DAG 86519dc3b354b627 · layer 2 · ready
         - 'depends on (1): VF1_verify_first · all upstream 2'
         - 'needed by (0): —'
   uuid: de85013f-6c83-56bb-8b89-0cc35068a64b

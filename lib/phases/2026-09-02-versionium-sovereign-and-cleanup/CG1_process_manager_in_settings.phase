@@ -9,11 +9,11 @@ intent: null
 summary: CG1_process_manager_in_settings (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854043290
+exported_at: 1792854965034
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854043290
-lastSeenAt: 1792854043290
+firstSeenAt: 1792854965034
+lastSeenAt: 1792854965034
 fingerprint: null
 payload:
   id: CG1_process_manager_in_settings
@@ -36,7 +36,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -47,7 +47,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 4a8af1f7-3551-567a-a8f1-e207c31f7971

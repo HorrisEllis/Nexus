@@ -9,11 +9,11 @@ intent: null
 summary: P33_every_system_runs_its_node_registry (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854045191
+exported_at: 1792854967261
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854045191
-lastSeenAt: 1792854045191
+firstSeenAt: 1792854967261
+lastSeenAt: 1792854967261
 fingerprint: null
 payload:
   id: P33_every_system_runs_its_node_registry
@@ -233,7 +233,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
@@ -258,7 +258,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 1 · blocked by P3_per_system_node_schemas,
+          DAG 86519dc3b354b627 · layer 1 · blocked by P3_per_system_node_schemas,
           P5_data_folder_completion
         - 'depends on (2): P3_per_system_node_schemas, P5_data_folder_completion'
         - >-

@@ -7,11 +7,11 @@ intent: null
 summary: CS4_every_system_a_compartment (backend) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792854097300
+exported_at: 1792855022204
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854097300
-lastSeenAt: 1792854097300
+firstSeenAt: 1792855022204
+lastSeenAt: 1792855022204
 fingerprint: null
 payload:
   id: CS4_every_system_a_compartment
@@ -184,7 +184,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-23-cos-spine-phasemap.spec::CS4a_cos_boots_alone
@@ -241,7 +241,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · blocked by CS4a_cos_boots_alone,
+          DAG 86519dc3b354b627 · layer 5 · blocked by CS4a_cos_boots_alone,
           CS3_the_registry_is_the_bridge, CS_D7_sovereign_first, DB6_move_the_crossings,
           DB16_a_registry_for_each_system, DB4_one_bus_per_system,
           DB5_the_handshake_for_every_system, DB11_cos_compartment_per_system

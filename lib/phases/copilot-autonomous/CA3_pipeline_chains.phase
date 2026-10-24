@@ -7,11 +7,11 @@ intent: null
 summary: CA3_pipeline_chains (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854101046
+exported_at: 1792855026540
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854101046
-lastSeenAt: 1792854101046
+firstSeenAt: 1792855026540
+lastSeenAt: 1792855026540
 fingerprint: null
 payload:
   id: CA3_pipeline_chains
@@ -240,7 +240,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/copilot-autonomous-phasemap.spec::CA1_scheduler
@@ -259,7 +259,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (2): CA1_scheduler, CA2_triggers_conditions'
         - >-
           needed by (1): CA6_self_building_commands · all downstream 2 · finishing it unlocks

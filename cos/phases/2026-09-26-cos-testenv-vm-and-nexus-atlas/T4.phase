@@ -7,11 +7,11 @@ intent: null
 summary: T4 (?) — 1 file(s)
 system: cos
 tags: []
-exported_at: 1792854049472
+exported_at: 1792854971728
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854049472
-lastSeenAt: 1792854049472
+firstSeenAt: 1792854971728
+lastSeenAt: 1792854971728
 fingerprint: null
 payload:
   id: T4
@@ -133,7 +133,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T1
@@ -157,7 +157,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (3): T1, T2, T3'
         - 'needed by (2): T6, T7 · all downstream 3 · finishing it unlocks T6, T7'
   uuid: bb2e4b52-ea11-5aac-bb8f-54bd0a1734f3

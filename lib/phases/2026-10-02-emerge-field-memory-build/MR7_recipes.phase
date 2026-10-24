@@ -7,11 +7,11 @@ intent: null
 summary: MR7_recipes (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854057621
+exported_at: 1792854980286
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057621
-lastSeenAt: 1792854057621
+firstSeenAt: 1792854980286
+lastSeenAt: 1792854980286
 fingerprint: null
 payload:
   id: MR7_recipes
@@ -124,7 +124,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 6
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
@@ -156,7 +156,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 6 · blocked by CF1_cfr_improved_with_rfr2,
+          DAG 86519dc3b354b627 · layer 6 · blocked by CF1_cfr_improved_with_rfr2,
           CB1_cfr_build_logic
         - 'depends on (2): CF1_cfr_improved_with_rfr2, CB1_cfr_build_logic · all upstream 8'
         - 'needed by (2): MR8_crystallization, GL1_the_graphs_as_a_model · all downstream 3'

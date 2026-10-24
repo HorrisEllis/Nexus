@@ -7,11 +7,11 @@ intent: null
 summary: SB15_empty_is_not_built (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854060331
+exported_at: 1792854982999
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060331
-lastSeenAt: 1792854060331
+firstSeenAt: 1792854982999
+lastSeenAt: 1792854982999
 fingerprint: null
 payload:
   id: SB15_empty_is_not_built
@@ -166,7 +166,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 6
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB12_the_registry_is_the_component_list
@@ -184,7 +184,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 6 · ready
+        - DAG 86519dc3b354b627 · layer 6 · ready
         - 'depends on (1): SB12_the_registry_is_the_component_list · all upstream 6'
         - 'needed by (0): —'
   uuid: 0291752a-f533-5848-8490-a30b82607726

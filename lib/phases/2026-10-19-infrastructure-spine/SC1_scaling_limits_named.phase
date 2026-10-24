@@ -7,11 +7,11 @@ intent: null
 summary: SC1_scaling_limits_named (foundation) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854090886
+exported_at: 1792855015415
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854090886
-lastSeenAt: 1792854090886
+firstSeenAt: 1792855015415
+lastSeenAt: 1792855015415
 fingerprint: null
 payload:
   id: SC1_scaling_limits_named
@@ -225,7 +225,7 @@ payload:
         known: false
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN8_any_size
@@ -258,7 +258,7 @@ payload:
             - lib/phase-dag.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by IN8_any_size
+        - DAG 86519dc3b354b627 · layer 2 · blocked by IN8_any_size
         - 'depends on (1): IN8_any_size · all upstream 2'
         - 'needed by (0): —'
         - 'same files as IN3_registry_is_the_spine with no order between them: loom/bootstrap.js'

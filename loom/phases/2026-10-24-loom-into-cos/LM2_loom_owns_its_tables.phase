@@ -1,0 +1,309 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+context: pipeline phase LM2_loom_owns_its_tables of docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM2_loom_owns_its_tables (backend) — 6 file(s)
+system: loom
+tags: []
+exported_at: 1792855024864
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792855024864
+lastSeenAt: 1792855024864
+fingerprint: null
+payload:
+  id: LM2_loom_owns_its_tables
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: DONE 0.60.241 — loom/lib/store.js; LI-03 (every row brought home, Cortex's kept)
+  files:
+    - loom/server.js
+    - loom/lib/changelog.js
+    - loom/scanners/phasemap-map.js
+    - loom/lib/store.js (new)
+    - tests/modules/test-loom-into-cos.test.js (new)
+    - tests/modules/test-hook-ownership.js
+  depends_on:
+    - LM_D2_loom_owns_its_tables
+  blocks: []
+  spec: null
+  graph:
+    hash: 3729a4e8ad4bf6c3
+    nodes:
+      - path: loom/lib/changelog.js
+        role: changes
+        exists: true
+        system: loom
+      - path: loom/lib/store.js
+        role: changes
+        exists: true
+        system: loom
+      - path: loom/scanners/phasemap-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: loom/server.js
+        role: changes
+        exists: true
+        system: loom
+      - path: tests/modules/test-hook-ownership.js
+        role: changes
+        exists: true
+        system: null
+      - path: tests/modules/test-loom-into-cos.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/nexus-self.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/roadmap-import.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/roadmap.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/spec-plan.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/phase-dag.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/phase-files.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/spec-census.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: loom/test/phasemap-map.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: scripts/generate-atlases.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/lib/mco05-loom-changelog.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/component-ledger.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/connections.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/gap-field.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/hook-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/version.js
+        role: uses
+        exists: true
+        system: lib
+      - path: loom/config.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/contracts/index.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/ingest/index.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/schema/cortex-sync.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/schema/index.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/templates/system-scaffold.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: loom/server.js
+        to: lib/data-home.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/schema/index.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/contracts/index.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/schema/cortex-sync.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/ingest/index.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/templates/system-scaffold.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/gap-field.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/connections.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/config.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/version.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/hook-registry.js
+        kind: requires
+      - from: tests/lib/mco05-loom-changelog.test.js
+        to: loom/lib/changelog.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: idearium/repo/nexus-self.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: idearium/repo/phases.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: idearium/repo/roadmap-import.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: idearium/repo/roadmap.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: idearium/repo/spec-plan.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: lib/phase-dag.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: lib/phase-files.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: lib/spec-census.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: loom/test/phasemap-map.test.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: scripts/generate-atlases.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+    crossings:
+      - from: idearium/api/index.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+      - from: idearium/repo/nexus-self.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+      - from: idearium/repo/phases.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+      - from: idearium/repo/roadmap-import.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: false
+      - from: idearium/repo/roadmap.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+      - from: idearium/repo/spec-plan.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+      - from: lib/phase-dag.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: false
+      - from: lib/phase-files.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/spec-census.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 86519dc3b354b627
+      layer: 1
+      deps:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      dependents:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      upstream:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      downstream:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 86519dc3b354b627 · layer 1
+        - 'depends on (1): LM_D2_loom_owns_its_tables'
+        - >-
+          needed by (1): LM3_readers_through_its_routes · all downstream 3 · finishing it unlocks
+          LM3_readers_through_its_routes
+  uuid: 0e58afd7-e4d3-571c-bdca-82ecdea4af02

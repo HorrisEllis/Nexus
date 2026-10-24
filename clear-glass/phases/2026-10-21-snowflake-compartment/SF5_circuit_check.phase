@@ -7,11 +7,11 @@ intent: null
 summary: SF5_circuit_check (integration) — 2 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854096485
+exported_at: 1792855021305
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854096485
-lastSeenAt: 1792854096485
+firstSeenAt: 1792855021305
+lastSeenAt: 1792855021305
 fingerprint: null
 payload:
   id: SF5_circuit_check
@@ -161,7 +161,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-21-snowflake-compartment-phasemap.spec::SF1_honest_detection
@@ -181,7 +181,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): SF1_honest_detection · all upstream 2'
         - 'needed by (1): SF6_surface · all downstream 4 · finishing it unlocks SF6_surface'
   uuid: 39853fa1-41fb-5c35-a44d-71a46754ecf5

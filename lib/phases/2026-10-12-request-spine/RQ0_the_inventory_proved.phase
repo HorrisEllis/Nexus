@@ -7,11 +7,11 @@ intent: null
 summary: RQ0_the_inventory_proved (?) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854071791
+exported_at: 1792854995102
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071791
-lastSeenAt: 1792854071791
+firstSeenAt: 1792854995102
+lastSeenAt: 1792854995102
 fingerprint: null
 payload:
   id: RQ0_the_inventory_proved
@@ -40,7 +40,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -85,7 +85,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (4): RQ1_the_verifier_library, RQ6_one_intent_map,

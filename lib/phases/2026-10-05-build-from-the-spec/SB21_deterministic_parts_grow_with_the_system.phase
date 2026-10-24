@@ -9,11 +9,11 @@ intent: null
 summary: SB21_deterministic_parts_grow_with_the_system (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854060344
+exported_at: 1792854983013
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060344
-lastSeenAt: 1792854060344
+firstSeenAt: 1792854983013
+lastSeenAt: 1792854983013
 fingerprint: null
 payload:
   id: SB21_deterministic_parts_grow_with_the_system
@@ -173,7 +173,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
@@ -200,7 +200,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 4 · blocked by SB20_each_system_owns_its_own,
+          DAG 86519dc3b354b627 · layer 4 · blocked by SB20_each_system_owns_its_own,
           SB19_atlases_per_component
         - 'depends on (2): SB20_each_system_owns_its_own, SB19_atlases_per_component · all upstream 5'
         - 'needed by (1): SB23_a_new_system_slots_in · all downstream 2'

@@ -9,11 +9,11 @@ intent: null
 summary: ET6_sigma_gates_on_taxonomy (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854039616
+exported_at: 1792854961075
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854039616
-lastSeenAt: 1792854039616
+firstSeenAt: 1792854961075
+lastSeenAt: 1792854961075
 fingerprint: null
 payload:
   id: ET6_sigma_gates_on_taxonomy
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 161a85ba5515e7c0
+    hash: ddac6f5a30f26360
     nodes:
       - path: architect/schemas/index.js
         role: changes
@@ -105,10 +105,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/agent-providers.js
         role: uses
         exists: true
@@ -133,12 +129,16 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -192,12 +192,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
         fromSystem: idearium
@@ -254,7 +248,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::ET5_loom_event_taxonomy_map
@@ -272,7 +266,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by ET5_loom_event_taxonomy_map
+        - DAG 86519dc3b354b627 · layer 3 · blocked by ET5_loom_event_taxonomy_map
         - 'depends on (1): ET5_loom_event_taxonomy_map · all upstream 5'
         - 'needed by (0): —'
   uuid: f0428093-6e23-529e-bfa9-e4920736d054

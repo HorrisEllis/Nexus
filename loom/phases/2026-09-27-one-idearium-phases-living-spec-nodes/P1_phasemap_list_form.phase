@@ -9,11 +9,11 @@ intent: null
 summary: P1_phasemap_list_form (?) — 1 file(s)
 system: loom
 tags: []
-exported_at: 1792854052317
+exported_at: 1792854974890
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854052317
-lastSeenAt: 1792854052317
+firstSeenAt: 1792854974890
+lastSeenAt: 1792854974890
 fingerprint: null
 payload:
   id: P1_phasemap_list_form
@@ -27,7 +27,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 8e17fb4800a62ea5
+    hash: df9eae998e39193e
     nodes:
       - path: loom/scanners/phasemap-map.js
         role: changes
@@ -81,10 +81,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/nexus-client.js
         role: uses
         exists: true
@@ -93,12 +89,16 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -140,12 +140,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
         fromSystem: idearium
@@ -202,7 +196,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -219,7 +213,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): P2_phases_model · all downstream 4 · finishing it unlocks P2_phases_model'
         - >-

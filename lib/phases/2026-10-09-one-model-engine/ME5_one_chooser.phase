@@ -7,11 +7,11 @@ intent: null
 summary: ME5_one_chooser (?) — 13 file(s)
 system: core
 tags: []
-exported_at: 1792854067579
+exported_at: 1792854990713
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854067579
-lastSeenAt: 1792854067579
+firstSeenAt: 1792854990713
+lastSeenAt: 1792854990713
 fingerprint: null
 payload:
   id: ME5_one_chooser
@@ -324,7 +324,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 4
       deps:
         - docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
@@ -359,7 +359,7 @@ payload:
             - lib/pipeline-routing.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 4 · blocked by ME3_one_engine_one_budget
+        - DAG 86519dc3b354b627 · layer 4 · blocked by ME3_one_engine_one_budget
         - 'depends on (1): ME3_one_engine_one_budget · all upstream 4'
         - >-
           needed by (4): ME6_one_learner, ME8_the_drainers_run_the_engine,

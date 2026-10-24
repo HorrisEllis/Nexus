@@ -7,11 +7,11 @@ intent: null
 summary: RQ21_the_contract_file_is_its_record (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854071821
+exported_at: 1792854995134
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071821
-lastSeenAt: 1792854071821
+firstSeenAt: 1792854995134
+lastSeenAt: 1792854995134
 fingerprint: null
 payload:
   id: RQ21_the_contract_file_is_its_record
@@ -253,7 +253,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
@@ -273,7 +273,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by RQ0_the_inventory_proved
+        - DAG 86519dc3b354b627 · layer 1 · blocked by RQ0_the_inventory_proved
         - 'depends on (1): RQ0_the_inventory_proved'
         - >-
           needed by (3): RQ24_the_gate_transaction, RQ25_progress_is_evidence_not_activity,

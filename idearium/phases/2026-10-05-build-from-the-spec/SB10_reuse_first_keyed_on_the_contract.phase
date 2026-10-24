@@ -9,11 +9,11 @@ intent: null
 summary: SB10_reuse_first_keyed_on_the_contract (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854060315
+exported_at: 1792854982981
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060315
-lastSeenAt: 1792854060315
+firstSeenAt: 1792854982981
+lastSeenAt: 1792854982981
 fingerprint: null
 payload:
   id: SB10_reuse_first_keyed_on_the_contract
@@ -229,7 +229,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB9_the_spec_is_a_spec_file
@@ -270,7 +270,7 @@ payload:
             - idearium/spec-engine/index.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by SB9_the_spec_is_a_spec_file
+        - DAG 86519dc3b354b627 · layer 3 · blocked by SB9_the_spec_is_a_spec_file
         - 'depends on (1): SB9_the_spec_is_a_spec_file · all upstream 3'
         - >-
           needed by (2): SB8_promote_with_full_block_options, SB11_each_block_chunked · all

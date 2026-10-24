@@ -7,11 +7,11 @@ intent: null
 summary: ST1_settings (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854057661
+exported_at: 1792854980327
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854057661
-lastSeenAt: 1792854057661
+firstSeenAt: 1792854980327
+lastSeenAt: 1792854980327
 fingerprint: null
 payload:
   id: ST1_settings
@@ -216,7 +216,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
@@ -247,7 +247,7 @@ payload:
             - idearium/api/index.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · ready
+        - DAG 86519dc3b354b627 · layer 3 · ready
         - 'depends on (2): EM1_emerge_core, EV0_contracts_for_every_system · all upstream 3'
         - 'needed by (1): AC1_accounts_into_agents · all downstream 2'
         - 'same files as UI0_the_stations_agree with no order between them: idearium/ui/settings.html'

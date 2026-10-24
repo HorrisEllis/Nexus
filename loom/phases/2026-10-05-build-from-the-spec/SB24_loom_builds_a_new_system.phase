@@ -7,11 +7,11 @@ intent: null
 summary: SB24_loom_builds_a_new_system (?) — 4 file(s)
 system: loom
 tags: []
-exported_at: 1792854060349
+exported_at: 1792854983019
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854060349
-lastSeenAt: 1792854060349
+firstSeenAt: 1792854983019
+lastSeenAt: 1792854983019
 fingerprint: null
 payload:
   id: SB24_loom_builds_a_new_system
@@ -150,7 +150,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 6
       deps:
         - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB23_a_new_system_slots_in
@@ -178,7 +178,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 6 · blocked by SB23_a_new_system_slots_in,
+          DAG 86519dc3b354b627 · layer 6 · blocked by SB23_a_new_system_slots_in,
           SB25_atlas_template_in_his_structure
         - >-
           depends on (2): SB23_a_new_system_slots_in, SB25_atlas_template_in_his_structure · all

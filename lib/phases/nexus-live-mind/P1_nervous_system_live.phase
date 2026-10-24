@@ -7,11 +7,11 @@ intent: null
 summary: P1_nervous_system_live (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854105797
+exported_at: 1792855031181
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854105797
-lastSeenAt: 1792854105797
+firstSeenAt: 1792855031181
+lastSeenAt: 1792855031181
 fingerprint: null
 payload:
   id: P1_nervous_system_live
@@ -189,7 +189,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -211,7 +211,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - >-
           needed by (3): P2_snapshot_on_sigma, P3_diagnostic_kernel, P4_copilot_awareness · all

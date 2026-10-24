@@ -7,11 +7,11 @@ intent: null
 summary: AB2_lists (library) — 1 file(s)
 system: clear-glass
 tags: []
-exported_at: 1792854093439
+exported_at: 1792855018072
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854093439
-lastSeenAt: 1792854093439
+firstSeenAt: 1792855018072
+lastSeenAt: 1792855018072
 fingerprint: null
 payload:
   id: AB2_lists
@@ -72,7 +72,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-21-adblock-phasemap.spec::AB1_engine
@@ -91,7 +91,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): AB1_engine · all upstream 2'
         - 'needed by (1): AB3_wiring · all downstream 3 · finishing it unlocks AB3_wiring'
   uuid: 89b7f470-65f8-5ef0-9b76-dc25251a3923

@@ -9,11 +9,11 @@ intent: null
 summary: MX0_phases_tagged_to_components (?) — 2 file(s)
 system: loom
 tags: []
-exported_at: 1792854071370
+exported_at: 1792854994608
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854071370
-lastSeenAt: 1792854071370
+firstSeenAt: 1792854994608
+lastSeenAt: 1792854994608
 fingerprint: null
 payload:
   id: MX0_phases_tagged_to_components
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: ebed791fafbb5d61
+    hash: afdd28c6def0b69a
     nodes:
       - path: idearium/repo/roadmap.js
         role: changes
@@ -86,10 +86,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: idearium/repo/source-files.js
         role: uses
         exists: true
@@ -102,12 +98,16 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -152,12 +152,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: idearium/api/index.js
         to: loom/scanners/phasemap-map.js
         fromSystem: idearium
@@ -208,7 +202,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -222,7 +216,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (1): MX1_nothing_built_unmapped · finishing it unlocks

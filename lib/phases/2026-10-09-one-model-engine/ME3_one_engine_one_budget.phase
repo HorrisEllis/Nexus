@@ -7,11 +7,11 @@ intent: null
 summary: ME3_one_engine_one_budget (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854067577
+exported_at: 1792854990708
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854067577
-lastSeenAt: 1792854067577
+firstSeenAt: 1792854990708
+lastSeenAt: 1792854990708
 fingerprint: null
 payload:
   id: ME3_one_engine_one_budget
@@ -279,7 +279,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-09-one-model-engine-phasemap.spec::ME2_caller_policy
@@ -316,7 +316,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by ME2_caller_policy
+        - DAG 86519dc3b354b627 · layer 3 · blocked by ME2_caller_policy
         - 'depends on (1): ME2_caller_policy · all upstream 3'
         - >-
           needed by (8): ME4_one_attempt_record, ME5_one_chooser, ME7_raid_spine_joins,

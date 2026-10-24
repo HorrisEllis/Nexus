@@ -7,11 +7,11 @@ intent: null
 summary: SY2_synthesis_surfaces (?) — 3 file(s)
 system: intelligence
 tags: []
-exported_at: 1792854059038
+exported_at: 1792854981673
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854059038
-lastSeenAt: 1792854059038
+firstSeenAt: 1792854981673
+lastSeenAt: 1792854981673
 fingerprint: null
 payload:
   id: SY2_synthesis_surfaces
@@ -167,7 +167,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-02-synthesis-zoom-versionium-phasemap.spec::SY1_gap_synthesis_engine
@@ -180,7 +180,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): SY1_gap_synthesis_engine'
         - 'needed by (0): —'
   uuid: 19e36700-dd9e-5f03-834e-786b6060f45f

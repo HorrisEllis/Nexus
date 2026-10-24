@@ -7,11 +7,11 @@ intent: null
 summary: S3 (?) — 4 file(s)
 system: cos
 tags: []
-exported_at: 1792854053709
+exported_at: 1792854976291
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854053709
-lastSeenAt: 1792854053709
+firstSeenAt: 1792854976291
+lastSeenAt: 1792854976291
 fingerprint: null
 payload:
   id: S3
@@ -102,7 +102,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
@@ -128,7 +128,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · ready
+        - DAG 86519dc3b354b627 · layer 2 · ready
         - 'depends on (1): S1 · all upstream 2'
         - 'needed by (4): S4, L1, A1, X1 · all downstream 7 · finishing it unlocks S4'
   uuid: 0e07d117-8714-581a-85b5-e82dc54de5a3

@@ -7,11 +7,11 @@ intent: null
 summary: PF0_the_ledger (?) — 6 file(s)
 system: core
 tags: []
-exported_at: 1792854076347
+exported_at: 1792855000132
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076347
-lastSeenAt: 1792854076347
+firstSeenAt: 1792855000132
+lastSeenAt: 1792855000132
 fingerprint: null
 payload:
   id: PF0_the_ledger
@@ -240,7 +240,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -256,7 +256,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): PF1_the_sources · all downstream 3 · finishing it unlocks PF1_the_sources'
         - >-

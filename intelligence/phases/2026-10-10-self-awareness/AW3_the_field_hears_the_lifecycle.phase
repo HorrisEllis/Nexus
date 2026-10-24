@@ -7,11 +7,11 @@ intent: null
 summary: AW3_the_field_hears_the_lifecycle (?) — 2 file(s)
 system: intelligence
 tags: []
-exported_at: 1792854070080
+exported_at: 1792854993335
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854070080
-lastSeenAt: 1792854070080
+firstSeenAt: 1792854993335
+lastSeenAt: 1792854993335
 fingerprint: null
 payload:
   id: AW3_the_field_hears_the_lifecycle
@@ -154,7 +154,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-10-self-awareness-phasemap.spec::AW2_every_call_says_who_asked
@@ -172,7 +172,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · blocked by AW2_every_call_says_who_asked
+        - DAG 86519dc3b354b627 · layer 1 · blocked by AW2_every_call_says_who_asked
         - 'depends on (1): AW2_every_call_says_who_asked'
         - >-
           needed by (1): AW4_the_door_reads_the_lattice · all downstream 2 · finishing it unlocks

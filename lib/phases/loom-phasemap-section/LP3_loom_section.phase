@@ -7,11 +7,11 @@ intent: null
 summary: LP3_loom_section (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854104951
+exported_at: 1792855030356
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854104951
-lastSeenAt: 1792854104951
+firstSeenAt: 1792855030356
+lastSeenAt: 1792855030356
 fingerprint: null
 payload:
   id: LP3_loom_section
@@ -305,7 +305,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/loom-phasemap-section-phasemap.spec::LP2_split_by_system
@@ -319,7 +319,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): LP2_split_by_system · all upstream 2'
         - 'needed by (0): —'
   uuid: ce944687-f639-5ff9-8095-99184a0a4e72

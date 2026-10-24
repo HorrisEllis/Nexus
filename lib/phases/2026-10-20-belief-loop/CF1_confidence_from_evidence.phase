@@ -7,11 +7,11 @@ intent: null
 summary: CF1_confidence_from_evidence (library) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854092615
+exported_at: 1792855017173
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854092615
-lastSeenAt: 1792854092615
+firstSeenAt: 1792855017173
+lastSeenAt: 1792855017173
 fingerprint: null
 payload:
   id: CF1_confidence_from_evidence
@@ -37,7 +37,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 6
       deps:
         - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
@@ -71,7 +71,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 6 · ON THE CRITICAL PATH · blocked by
+          DAG 86519dc3b354b627 · layer 6 · ON THE CRITICAL PATH · blocked by
           EW1_evidence_record_and_weights
         - 'depends on (1): EW1_evidence_record_and_weights · all upstream 12'
         - >-

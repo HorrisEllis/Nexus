@@ -9,11 +9,11 @@ intent: null
 summary: V9_precommit_gate_for_raid_contracts (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854042797
+exported_at: 1792854964524
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854042797
-lastSeenAt: 1792854042797
+firstSeenAt: 1792854964524
+lastSeenAt: 1792854964524
 fingerprint: null
 payload:
   id: V9_precommit_gate_for_raid_contracts
@@ -253,7 +253,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
@@ -266,7 +266,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1 · ready
+        - DAG 86519dc3b354b627 · layer 1 · ready
         - 'depends on (1): B1_full_build_contract_schema'
         - 'needed by (0): —'
   uuid: c0b07637-2910-5d9a-8533-6063bafb8ca3

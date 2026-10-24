@@ -7,11 +7,11 @@ intent: null
 summary: PV3_prove_loop (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792854056319
+exported_at: 1792854978944
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056319
-lastSeenAt: 1792854056319
+firstSeenAt: 1792854978944
+lastSeenAt: 1792854978944
 fingerprint: null
 payload:
   id: PV3_prove_loop
@@ -210,7 +210,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
@@ -228,7 +228,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2
+        - DAG 86519dc3b354b627 · layer 2
         - 'depends on (1): PV2_repair_feedback · all upstream 2'
         - 'needed by (1): PV4_cli_and_ui · all downstream 2 · finishing it unlocks PV4_cli_and_ui'
   uuid: e72a72f0-dec8-5883-b926-7a0b96bfbe7b

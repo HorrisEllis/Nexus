@@ -7,11 +7,11 @@ intent: null
 summary: EC3_token_constraints (?) — 1 file(s)
 system: core
 tags: []
-exported_at: 1792854055007
+exported_at: 1792854977672
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854055007
-lastSeenAt: 1792854055007
+firstSeenAt: 1792854977672
+lastSeenAt: 1792854977672
 fingerprint: null
 payload:
   id: EC3_token_constraints
@@ -64,7 +64,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-29-provider-economy-phasemap.spec::EC1_usage_ledger
@@ -86,7 +86,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): EC1_usage_ledger'
         - >-
           needed by (2): EC4_learning_router, EC6_guardian_enforcement · all downstream 5 ·

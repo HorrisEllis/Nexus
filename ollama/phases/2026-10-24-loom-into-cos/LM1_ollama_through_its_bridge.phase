@@ -1,0 +1,172 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+context: pipeline phase LM1_ollama_through_its_bridge of docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM1_ollama_through_its_bridge (backend) — 5 file(s)
+system: ollama-bridge
+tags: []
+exported_at: 1792855024863
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792855024863
+lastSeenAt: 1792855024863
+fingerprint: null
+payload:
+  id: LM1_ollama_through_its_bridge
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: DONE 0.60.241 — POST /api/generate + lib/ollama-port.js; test-loom-into-cos LI-01/02
+  files:
+    - ollama/routes/generate.js (new)
+    - ollama/server.js
+    - lib/ollama-port.js (new)
+    - loom/agent-suite/index.js
+    - tests/modules/test-ollama-port.test.js (new)
+  depends_on:
+    - LM_D1_ollama_through_its_bridge
+  blocks: []
+  spec: null
+  graph:
+    hash: b2b1898bb2f27492
+    nodes:
+      - path: lib/ollama-port.js
+        role: changes
+        exists: true
+        system: lib
+      - path: loom/agent-suite/index.js
+        role: changes
+        exists: true
+        system: loom
+      - path: ollama/routes/generate.js
+        role: changes
+        exists: true
+        system: ollama
+      - path: ollama/server.js
+        role: changes
+        exists: true
+        system: ollama
+      - path: tests/modules/test-ollama-port.test.js
+        role: changes
+        exists: false
+        system: null
+      - path: loom/test/agent-suite.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: ollama/config.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/lib/dispatch.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/lib/http-utils.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/lib/ollama-client.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/lib/state.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/routes/jobs.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/routes/models.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/routes/queue.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/routes/stream.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/routes/system.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/routes/uploads.js
+        role: uses
+        exists: true
+        system: ollama
+    edges:
+      - from: ollama/routes/generate.js
+        to: ollama/lib/http-utils.js
+        kind: requires
+      - from: ollama/routes/generate.js
+        to: ollama/lib/state.js
+        kind: requires
+      - from: ollama/routes/generate.js
+        to: ollama/lib/ollama-client.js
+        kind: requires
+      - from: ollama/server.js
+        to: lib/data-home.js
+        kind: requires
+      - from: ollama/server.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/server.js
+        to: ollama/lib/dispatch.js
+        kind: requires
+      - from: ollama/server.js
+        to: ollama/routes/system.js
+        kind: requires
+      - from: ollama/server.js
+        to: ollama/routes/uploads.js
+        kind: requires
+      - from: ollama/server.js
+        to: ollama/routes/stream.js
+        kind: requires
+      - from: ollama/server.js
+        to: ollama/routes/jobs.js
+        kind: requires
+      - from: ollama/server.js
+        to: ollama/routes/queue.js
+        kind: requires
+      - from: ollama/server.js
+        to: ollama/routes/models.js
+        kind: requires
+      - from: loom/test/agent-suite.test.js
+        to: loom/agent-suite/index.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 86519dc3b354b627
+      layer: 1
+      deps:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      dependents:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      upstream:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      downstream:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 86519dc3b354b627 · layer 1
+        - 'depends on (1): LM_D1_ollama_through_its_bridge'
+        - >-
+          needed by (1): LM4_the_seal_and_into_its_compartment · all downstream 2 · finishing it
+          unlocks LM4_the_seal_and_into_its_compartment
+  uuid: 136c2e4c-3577-526e-a62a-f4d35cdd79d2

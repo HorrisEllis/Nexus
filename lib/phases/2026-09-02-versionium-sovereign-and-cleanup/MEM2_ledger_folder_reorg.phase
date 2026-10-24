@@ -9,11 +9,11 @@ intent: null
 summary: MEM2_ledger_folder_reorg (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854043292
+exported_at: 1792854965036
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854043292
-lastSeenAt: 1792854043292
+firstSeenAt: 1792854965036
+lastSeenAt: 1792854965036
 fingerprint: null
 payload:
   id: MEM2_ledger_folder_reorg
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -43,7 +43,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: 19a16c89-4874-59f2-91c8-bc541401c941

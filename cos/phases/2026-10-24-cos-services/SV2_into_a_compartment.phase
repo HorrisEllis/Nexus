@@ -7,11 +7,11 @@ intent: null
 summary: SV2_into_a_compartment (integration) — 2 file(s)
 system: cos
 tags: []
-exported_at: 1792854098537
+exported_at: 1792855023553
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854098537
-lastSeenAt: 1792854098537
+firstSeenAt: 1792855023553
+lastSeenAt: 1792855023553
 fingerprint: null
 payload:
   id: SV2_into_a_compartment
@@ -112,7 +112,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
@@ -129,7 +129,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by SV1_a_stack_per_root
+        - DAG 86519dc3b354b627 · layer 2 · blocked by SV1_a_stack_per_root
         - 'depends on (1): SV1_a_stack_per_root · all upstream 2'
         - 'needed by (1): SV4_the_doors'
   uuid: a04b581b-57d7-570e-9e6f-2ea983d29c29

@@ -7,11 +7,11 @@ intent: null
 summary: GW17_friction_and_tension_per_file (?) — 4 file(s)
 system: intelligence
 tags: []
-exported_at: 1792854076773
+exported_at: 1792855000577
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854076773
-lastSeenAt: 1792854076773
+firstSeenAt: 1792855000577
+lastSeenAt: 1792855000577
 fingerprint: null
 payload:
   id: GW17_friction_and_tension_per_file
@@ -279,7 +279,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
@@ -302,7 +302,7 @@ payload:
             - lib/fault-log.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by GW3_a_contract_is_traced
+        - DAG 86519dc3b354b627 · layer 3 · blocked by GW3_a_contract_is_traced
         - 'depends on (1): GW3_a_contract_is_traced · all upstream 4'
         - 'needed by (0): —'
         - >-

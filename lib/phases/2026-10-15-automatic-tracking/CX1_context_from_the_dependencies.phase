@@ -9,11 +9,11 @@ intent: null
 summary: CX1_context_from_the_dependencies (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854073876
+exported_at: 1792854997391
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854073876
-lastSeenAt: 1792854073876
+firstSeenAt: 1792854997391
+lastSeenAt: 1792854997391
 fingerprint: null
 payload:
   id: CX1_context_from_the_dependencies
@@ -84,7 +84,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-15-automatic-tracking-phasemap.spec::KT1_observations_on_a_semantic_tree
@@ -108,7 +108,7 @@ payload:
             - cortex/core/raid/contract-adapters.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by KT1_observations_on_a_semantic_tree
+        - DAG 86519dc3b354b627 · layer 2 · blocked by KT1_observations_on_a_semantic_tree
         - 'depends on (1): KT1_observations_on_a_semantic_tree · all upstream 2'
         - >-
           needed by (2): CP1_the_contract_panel, RT2_routed_by_intent_account_and_fallback ·

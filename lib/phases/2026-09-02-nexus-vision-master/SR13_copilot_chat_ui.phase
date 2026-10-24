@@ -7,11 +7,11 @@ intent: null
 summary: SR13_copilot_chat_ui (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854042831
+exported_at: 1792854964559
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854042831
-lastSeenAt: 1792854042831
+firstSeenAt: 1792854964559
+lastSeenAt: 1792854964559
 fingerprint: null
 payload:
   id: SR13_copilot_chat_ui
@@ -100,7 +100,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents: []
@@ -111,7 +111,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - 'needed by (0): —'
   uuid: de406676-351f-5050-8172-15befdd17083

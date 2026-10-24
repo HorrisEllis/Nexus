@@ -9,11 +9,11 @@ intent: null
 summary: D2_self_heal_migration (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854044707
+exported_at: 1792854966709
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854044707
-lastSeenAt: 1792854044707
+firstSeenAt: 1792854966709
+lastSeenAt: 1792854966709
 fingerprint: null
 payload:
   id: D2_self_heal_migration
@@ -279,7 +279,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec::D1_diagnostic_real_folder
@@ -294,7 +294,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by D1_diagnostic_real_folder
+        - DAG 86519dc3b354b627 · layer 2 · blocked by D1_diagnostic_real_folder
         - 'depends on (1): D1_diagnostic_real_folder · all upstream 2'
         - 'needed by (0): —'
   uuid: 448c1c72-3039-5f52-a251-73eeb7e219d5

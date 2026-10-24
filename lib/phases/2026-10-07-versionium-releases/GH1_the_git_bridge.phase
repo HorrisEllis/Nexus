@@ -7,11 +7,11 @@ intent: null
 summary: GH1_the_git_bridge (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854066728
+exported_at: 1792854989833
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854066728
-lastSeenAt: 1792854066728
+firstSeenAt: 1792854989833
+lastSeenAt: 1792854989833
 fingerprint: null
 payload:
   id: GH1_the_git_bridge
@@ -120,7 +120,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
@@ -135,7 +135,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · blocked by VR2_history_and_diff
+        - DAG 86519dc3b354b627 · layer 2 · blocked by VR2_history_and_diff
         - 'depends on (1): VR2_history_and_diff · all upstream 2'
         - 'needed by (0): —'
   uuid: cad10b0d-6216-5441-bd66-03e0658fa077

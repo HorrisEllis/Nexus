@@ -1,0 +1,142 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+type: phase
+id: docs_2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+context: pipeline phase LM0_the_heartbeat of docs/2026-10-24-loom-into-cos-phasemap.spec
+intent: null
+summary: LM0_the_heartbeat (foundation) — 1 file(s)
+system: loom
+tags: []
+exported_at: 1792855024862
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792855024862
+lastSeenAt: 1792855024862
+fingerprint: null
+payload:
+  id: LM0_the_heartbeat
+  map: docs/2026-10-24-loom-into-cos-phasemap.spec
+  repo: null
+  layer: foundation
+  status: DONE 0.60.241 — the kernel's pulse
+  files:
+    - loom/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph:
+    hash: 6ad11848a4c45b04
+    nodes:
+      - path: loom/server.js
+        role: changes
+        exists: true
+        system: loom
+      - path: lib/component-ledger.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/connections.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/gap-field.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/version.js
+        role: uses
+        exists: true
+        system: lib
+      - path: loom/config.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/contracts/index.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/ingest/index.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/phasemap-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/schema/cortex-sync.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/schema/index.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/templates/system-scaffold.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: loom/server.js
+        to: lib/data-home.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/schema/index.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/contracts/index.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/schema/cortex-sync.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/ingest/index.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/templates/system-scaffold.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/gap-field.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/connections.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/config.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/version.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 86519dc3b354b627
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      upstream: []
+      downstream:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM5_the_ways_in
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 86519dc3b354b627 · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (1): LM4_the_seal_and_into_its_compartment · all downstream 2 · finishing it
+          unlocks LM4_the_seal_and_into_its_compartment
+  uuid: f2ffeada-0f19-5571-934a-6846a3b328f8

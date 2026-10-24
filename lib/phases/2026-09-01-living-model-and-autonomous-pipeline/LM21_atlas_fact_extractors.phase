@@ -9,11 +9,11 @@ intent: null
 summary: LM21_atlas_fact_extractors (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854041896
+exported_at: 1792854963454
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854041896
-lastSeenAt: 1792854041896
+firstSeenAt: 1792854963454
+lastSeenAt: 1792854963454
 fingerprint: null
 payload:
   id: LM21_atlas_fact_extractors
@@ -28,7 +28,7 @@ payload:
   blocks: []
   spec: null
   graph:
-    hash: 4fdac497540c63a7
+    hash: 7ff75376bf753562
     nodes:
       - path: loom/scanners/capability-map.js
         role: changes
@@ -106,10 +106,6 @@ payload:
         role: used-by
         exists: true
         system: null
-      - path: cortex/memory/jaa-db.js
-        role: uses
-        exists: true
-        system: cortex
       - path: lib/component-ledger.js
         role: uses
         exists: true
@@ -130,6 +126,10 @@ payload:
         role: uses
         exists: true
         system: lib
+      - path: loom/lib/store.js
+        role: uses
+        exists: true
+        system: loom
     edges:
       - from: loom/scanners/event-taxonomy-map.js
         to: lib/event-taxonomy-pattern.js
@@ -138,7 +138,7 @@ payload:
         to: lib/nexus-self/systems.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
+        to: loom/lib/store.js
         kind: requires
       - from: loom/scanners/phasemap-map.js
         to: lib/nexus-client.js
@@ -186,12 +186,6 @@ payload:
         to: loom/scanners/phasemap-map.js
         kind: requires
     crossings:
-      - from: loom/scanners/phasemap-map.js
-        to: cortex/memory/jaa-db.js
-        fromSystem: loom
-        toSystem: cortex
-        kind: system
-        known: true
       - from: copilot/lib/capabilities.js
         to: loom/scanners/capability-map.js
         fromSystem: copilot
@@ -254,7 +248,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
@@ -285,7 +279,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 2 · blocked by LM19_atlas_spec_coverage_prerequisite,
+          DAG 86519dc3b354b627 · layer 2 · blocked by LM19_atlas_spec_coverage_prerequisite,
           LM20_atlas_schema_and_deterministic_seed
         - >-
           depends on (2): LM19_atlas_spec_coverage_prerequisite,

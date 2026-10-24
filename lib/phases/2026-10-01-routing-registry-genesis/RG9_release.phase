@@ -7,11 +7,11 @@ intent: null
 summary: RG9_release (?) — 5 file(s)
 system: core
 tags: []
-exported_at: 1792854056778
+exported_at: 1792854979424
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056778
-lastSeenAt: 1792854056778
+firstSeenAt: 1792854979424
+lastSeenAt: 1792854979424
 fingerprint: null
 payload:
   id: RG9_release
@@ -134,7 +134,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-01-routing-registry-genesis-phasemap.spec::AR1_architecture_spec
@@ -156,7 +156,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 5
+        - DAG 86519dc3b354b627 · layer 5
         - 'depends on (2): AR1_architecture_spec, RG4_routing_ui · all upstream 9'
         - 'needed by (0): —'
   uuid: d999b205-f4cd-5fa4-9e44-5d319d7d153c

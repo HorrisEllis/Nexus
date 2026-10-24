@@ -7,11 +7,11 @@ intent: null
 summary: PI3b_the_measured_patterns (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854078037
+exported_at: 1792855002024
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854078037
-lastSeenAt: 1792854078037
+firstSeenAt: 1792855002024
+lastSeenAt: 1792855002024
 fingerprint: null
 payload:
   id: PI3b_the_measured_patterns
@@ -190,7 +190,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-10-15-personal-chat-import-phasemap.spec::PI3_the_intelligence_pass
@@ -209,7 +209,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3 · blocked by PI3_the_intelligence_pass
+        - DAG 86519dc3b354b627 · layer 3 · blocked by PI3_the_intelligence_pass
         - 'depends on (1): PI3_the_intelligence_pass · all upstream 4'
         - 'needed by (1): PI7_the_links'
   uuid: 2e6b3309-ab90-571d-91cb-71631d1b9493

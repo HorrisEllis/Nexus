@@ -7,11 +7,11 @@ intent: null
 summary: BS9_spec_and_phase_build_ui (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854054121
+exported_at: 1792854976742
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854054121
-lastSeenAt: 1792854054121
+firstSeenAt: 1792854976742
+lastSeenAt: 1792854976742
 fingerprint: null
 payload:
   id: BS9_spec_and_phase_build_ui
@@ -41,7 +41,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 3
       deps:
         - docs/2026-09-29-build-surface-phasemap.spec::BS7_api
@@ -65,7 +65,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 3
+        - DAG 86519dc3b354b627 · layer 3
         - 'depends on (1): BS7_api · all upstream 6'
         - >-
           needed by (2): BS11_plan_panel, BS12_release · finishing it unlocks BS11_plan_panel,

@@ -9,11 +9,11 @@ intent: null
 summary: MCO12_guardian_audit_complete (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854045652
+exported_at: 1792854967721
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854045652
-lastSeenAt: 1792854045652
+firstSeenAt: 1792854967721
+lastSeenAt: 1792854967721
 fingerprint: null
 payload:
   id: MCO12_guardian_audit_complete
@@ -291,7 +291,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-09-13-axiom-5-2-raid-routing-phasemap.spec::MCO12_guardian_list_was_unreliable
@@ -304,7 +304,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): MCO12_guardian_list_was_unreliable'
         - 'needed by (0): —'
   uuid: 79605e9e-5354-57fc-8fe8-b2cd42dd3f68

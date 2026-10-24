@@ -9,11 +9,11 @@ intent: null
 summary: LM9_deterministic_agent_switch_cli (?) — 0 file(s)
 system: core
 tags: []
-exported_at: 1792854041884
+exported_at: 1792854963442
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854041884
-lastSeenAt: 1792854041884
+firstSeenAt: 1792854963442
+lastSeenAt: 1792854963442
 fingerprint: null
 payload:
   id: LM9_deterministic_agent_switch_cli
@@ -32,7 +32,7 @@ payload:
     crossings: []
     ready: false
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -49,7 +49,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0 · ready
+        - DAG 86519dc3b354b627 · layer 0 · ready
         - 'depends on (0): —'
         - >-
           needed by (2): LM10_per_agent_wake_words, LM11_copilot_ollama_guardian_toggle · finishing

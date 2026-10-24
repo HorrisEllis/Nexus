@@ -7,11 +7,11 @@ intent: null
 summary: CE7_agents_and_commands (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792854087964
+exported_at: 1792855012323
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854087964
-lastSeenAt: 1792854087964
+firstSeenAt: 1792855012323
+lastSeenAt: 1792855012323
 fingerprint: null
 payload:
   id: CE7_agents_and_commands
@@ -180,7 +180,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_bridge
@@ -202,7 +202,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · blocked by CE4_the_terminal_bridge,
+          DAG 86519dc3b354b627 · layer 5 · blocked by CE4_the_terminal_bridge,
           CE5_the_guest_file_tree
         - 'depends on (2): CE4_the_terminal_bridge, CE5_the_guest_file_tree · all upstream 6'
         - 'needed by (0): —'

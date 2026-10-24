@@ -7,11 +7,11 @@ intent: null
 summary: H3 (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792854050276
+exported_at: 1792854972603
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854050276
-lastSeenAt: 1792854050276
+firstSeenAt: 1792854972603
+lastSeenAt: 1792854972603
 fingerprint: null
 payload:
   id: H3
@@ -238,7 +238,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 0
       deps: []
       dependents:
@@ -252,7 +252,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 0
+        - DAG 86519dc3b354b627 · layer 0
         - 'depends on (0): —'
         - 'needed by (1): X1 · finishing it unlocks X1'
         - >-

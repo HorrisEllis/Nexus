@@ -9,11 +9,11 @@ intent: null
 summary: SF2_spec_framework_block (?) — 4 file(s)
 system: core
 tags: []
-exported_at: 1792854079236
+exported_at: 1792855003280
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854079236
-lastSeenAt: 1792854079236
+firstSeenAt: 1792855003280
+lastSeenAt: 1792855003280
 fingerprint: null
 payload:
   id: SF2_spec_framework_block
@@ -129,7 +129,7 @@ payload:
         known: true
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 1
       deps:
         - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF1_intent_blocks
@@ -146,7 +146,7 @@ payload:
       conflicts: []
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 1
+        - DAG 86519dc3b354b627 · layer 1
         - 'depends on (1): SF1_intent_blocks'
         - >-
           needed by (1): SF3_collect_the_spec · all downstream 2 · finishing it unlocks

@@ -7,11 +7,11 @@ intent: null
 summary: EW1_evidence_record_and_weights (library) — 2 file(s)
 system: core
 tags: []
-exported_at: 1792854092614
+exported_at: 1792855017172
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854092614
-lastSeenAt: 1792854092614
+firstSeenAt: 1792855017172
+lastSeenAt: 1792855017172
 fingerprint: null
 payload:
   id: EW1_evidence_record_and_weights
@@ -39,7 +39,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 5
       deps:
         - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
@@ -79,7 +79,7 @@ payload:
       dangling: []
       lines:
         - >-
-          DAG a0036d89ebc520f8 · layer 5 · ON THE CRITICAL PATH · blocked by GW1_gate_primitive,
+          DAG 86519dc3b354b627 · layer 5 · ON THE CRITICAL PATH · blocked by GW1_gate_primitive,
           PV1_provenance_on_every_claim
         - 'depends on (2): GW1_gate_primitive, PV1_provenance_on_every_claim · all upstream 11'
         - >-

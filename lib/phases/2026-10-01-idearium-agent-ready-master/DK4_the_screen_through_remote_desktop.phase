@@ -9,11 +9,11 @@ intent: null
 summary: DK4_the_screen_through_remote_desktop (?) — 3 file(s)
 system: core
 tags: []
-exported_at: 1792854056285
+exported_at: 1792854978911
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792854056285
-lastSeenAt: 1792854056285
+firstSeenAt: 1792854978911
+lastSeenAt: 1792854978911
 fingerprint: null
 payload:
   id: DK4_the_screen_through_remote_desktop
@@ -72,7 +72,7 @@ payload:
     crossings: []
     ready: true
     dag:
-      dagHash: a0036d89ebc520f8
+      dagHash: 86519dc3b354b627
       layer: 2
       deps:
         - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DK2_desktop_setup_popup
@@ -89,7 +89,7 @@ payload:
             - cos/testenv/provision.js
       dangling: []
       lines:
-        - DAG a0036d89ebc520f8 · layer 2 · ready
+        - DAG 86519dc3b354b627 · layer 2 · ready
         - 'depends on (1): DK2_desktop_setup_popup · all upstream 2'
         - 'needed by (0): —'
         - 'same files as DK3_vm_engines with no order between them: cos/testenv/provision.js'
