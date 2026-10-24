@@ -1564,7 +1564,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
   // All watched by fs.watch — changes take effect within 500ms
   if (top === 'auth') {
     let _auth;
-    try { _auth = require('../auth/index'); } catch(e) {
+    try { _auth = require('./auth/index'); } catch(e) {
       return json(res, 503, { ok: false, error: 'auth module unavailable: ' + e.message });
     }
 
@@ -3115,7 +3115,7 @@ server.listen(PORT, BIND_HOST, async () => {
 // ── Auth module init + hotswap ────────────────────────────────────────────────
 // auth/index.js, auth/policy.json, auth/clients/*.pub all watched live
 try {
-  const _authMod = require('../auth/index');
+  const _authMod = require('./auth/index');
   _authMod.init();
   // Watch auth/index.js itself for hotswap
   const _authFile = require.resolve('../auth/index');
@@ -3123,7 +3123,7 @@ try {
     setTimeout(() => {
       try {
         delete require.cache[_authFile];
-        const fresh = require('../auth/index');
+        const fresh = require('./auth/index');
         fresh.init();
         broadcast('orchestrator.auth.hotswapped', { ts: Date.now() });
         console.log('[auth] module hotswapped');

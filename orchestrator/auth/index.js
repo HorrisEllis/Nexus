@@ -452,7 +452,7 @@ function handleRevokeClient(uuid, res) {
 // ── Hotswap watchers ──────────────────────────────────────────────────────────
 function _watchPolicy() {
   try {
-    require('../lib/safe-watch.js').watch(POLICY_FILE, () => {
+    require('../../lib/safe-watch.js').watch(POLICY_FILE, () => {
       setTimeout(() => { loadPolicy(); console.log('[auth] policy hotswapped'); }, 200);
     });
   } catch(e) { console.warn('[auth] policy watch failed:', e.message); }
@@ -460,7 +460,7 @@ function _watchPolicy() {
 
 function _watchClients() {
   try {
-    require('../lib/safe-watch.js').watch(CLIENTS_DIR, (event, filename) => {
+    require('../../lib/safe-watch.js').watch(CLIENTS_DIR, (event, filename) => {
       if (filename?.endsWith('.pub')) {
         setTimeout(() => { loadClients(); console.log('[auth] clients hotswapped'); }, 200);
       }

@@ -191,7 +191,7 @@ const CONSUMERS = [
   [I('lib/node-index-watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('lib/queue.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the input folder watcher'],
   [I('lib/ico.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
-  [I('auth/index.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 policy and client-key watchers'],
+  [I('orchestrator/auth/index.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 policy and client-key watchers'],
   [I('architecture-spec/registry/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('cos/foundation/file-browser.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('diagnostic/nexus-diagnostic.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the ledger folder watcher'],

@@ -506,7 +506,7 @@
   "orchestrator/lib/sigma-writer.js -> nexus/nexus-bus.js",
   "orchestrator/lib/spec-drift.js -> intelligence/gap/predicate.js",
   "orchestrator/lib/versionium-auto-commit.js -> nexus/nexus-bus.js",
-  "orchestrator/orchestrator.js -> auth/index.js",
+  "orchestrator/orchestrator.js -> orchestrator/auth/index.js",
   "orchestrator/orchestrator.js -> clear-glass/src/copilot/tools.js",
   "orchestrator/orchestrator.js -> cli/boot-systems.js",
   "orchestrator/orchestrator.js -> contracts/nexus-interaction-contract.js",
