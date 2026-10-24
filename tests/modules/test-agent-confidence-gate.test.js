@@ -148,6 +148,14 @@ test('G3', 'a caller-supplied confidence or an SNR result overrides the context 
   assert.strictEqual(RA._preDispatchConfidence(null, { snr: { type: 'invariant', snr: 1 } }), 1);
 });
 
+// ── H: CG3 — gateFor (the route/command backing: a dry gate read for a message) ─
+test('H1', 'gateFor refuses a missing repo or a missing message (the route/command guard rails)', async () => {
+  const a = await RA.gateFor({ message: 'x' });
+  assert.strictEqual(a.ok, false, 'no repo → refused');
+  const b = await RA.gateFor({ repo: { uuid: 'r1' }, message: '   ' });
+  assert.strictEqual(b.ok, false, 'blank message → refused');
+});
+
 async function run() {
   for (const { id, desc, fn } of reg) {
     try { await fn(); console.log(`  ✓ ${id} ${desc}`); passed++; }

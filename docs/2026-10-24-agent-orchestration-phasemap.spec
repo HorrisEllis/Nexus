@@ -100,13 +100,18 @@ phases:
     proof: "tests/modules/test-agent-confidence-gate.test.js 12/12 — G1 rich context reads ≥75% (proceeds), G2 thin context reads <75% and the ladder runs with James asked last, G3 a caller/SNR confidence overrides the estimate; all 161 repo-agent tests still green"
 
   CG3_route_and_command:
-    status: OPEN
+    status: DONE 0.60.240
     layer: integration
     depends_on: [CG2_the_gate_on_every_dispatch]
-    files: [idearium/api/index.js, idearium/cli/route-commands.js]
+    files: [lib/repo-agent.js, idearium/api/index.js, idearium/cli/route-commands.js]
     spec: docs/brainos-in-idearium.spec
-    does: "GET/POST the gate's decision for a message (so the UI and the CLI can show what context an agent would gather before it acts); command row `agent gate <repo> <message>`."
-    proof: "the route returns proceed/confidence/steps for a message; the command prints the ladder"
+    does: >-
+      repo-agent.gateFor({ repo, repoDir, message }) gathers the same context dispatch would (contextFor + _withMemory) and runs the gate
+      as a DRY read (prereqs with record:false — nothing is written), returning proceed/confident/confidence/threshold/steps/context/prereqs.
+      POST /api/repos/:uuid/agent/gate (repo.agent.gate, READ_IDEAS) calls it; command row `repo gate <repo> "<message>"` prints the ladder
+      (the pre-send confidence, each rung, and what it would ask James). The shared _runConfidenceGate is used by both the live dispatch (CG2)
+      and this dry read, so they never drift. Naming: `repo gate` (the CLI's repo-verb convention) rather than the map's first `agent gate`.
+    proof: "tests/modules/test-agent-confidence-gate.test.js 13/13 (H1 the gateFor guard rails); the route + command parse and compose the decision"
 
   CG4_the_gate_in_the_ui:
     status: OPEN

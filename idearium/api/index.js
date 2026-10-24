@@ -3269,6 +3269,7 @@ const ROUTE_CAP = {
   'routing.agents':   CAPS.READ_IDEAS,
   'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
   'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
+  'repo.agent.gate': CAPS.READ_IDEAS,    // §CG3 — a dry read (gathers context, records nothing)
   'repo.thread': CAPS.READ_IDEAS,   // §RS9
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
@@ -3730,6 +3731,7 @@ function matchRoute(method, url) {
     ['GET',    ['api','repos',    ':uuid','agent'],           'repo.agent.status'],
     ['POST',   ['api','repos',    ':uuid','agent','prompt'],  'repo.agent.prompt'],
     ['GET',    ['api','repos',    ':uuid','agent','route'],   'repo.agent.route'],   // §CT3 — which model copilot's door would choose
+    ['POST',   ['api','repos',    ':uuid','agent','gate'],    'repo.agent.gate'],    // §CG3 — the confidence gate's decision for a message, without dispatching
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
     ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
@@ -7817,6 +7819,19 @@ async function handle(req, res, route, query, body) {
       // error — 200 with ok:false so the CLI can print it in the transcript
       // instead of api() throwing and losing the text.
       return ok(res, r);
+    }
+
+    // §CG3 0.60.240 — James: "before an agent does anything. if confidence is lower than 75%, context must be obtained …
+    // ask user last." The gate's decision for a message WITHOUT dispatching: what context an agent would gather before it
+    // acts (worksurface, dependencies, found context), the pre-send confidence, and whether it would reach the 75% floor
+    // or need to ask. A dry read — it records no prereq gaps. The Code tab (CG4) shows this before the docked agent answers.
+    case 'repo.agent.gate': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      if (!body.message || !String(body.message).trim()) return err(res, 400, 'message is required');
+      const RA = _require('../../lib/repo-agent.js');
+      const r = await RA.gateFor({ repo, repoDir: await _agentDir(params.uuid), message: body.message });
+      return ok(res, r);   // { ok, proceed, confident, confidence, threshold, steps, context, prereqs } or { ok:false, error }
     }
 
     // §CT3 0.39.349 — James: "the code tab the agent tab, work surface". The docked agent shows the model copilot's door
