@@ -534,6 +534,18 @@ export const SPEC = [
     req: () => ({ method: 'GET', path: '/api/system/heartbeat' }),
     print: (d, a, h) => { for (const b of d.systems || []) console.log(`  ${(b.status === 'up' ? h.c.mint : h.c.amber)(b.status.padEnd(8))} ${b.name.padEnd(22)} ${h.c.dim(`${b.ms != null ? b.ms + ' ms · ' : ''}${b.why}`)}`); console.log(h.c.dim(`  ${d.up} of ${(d.systems || []).length} up`)); } },
   // 0.60.127 DB9 + DB10 — a system's registry generated as its dependency graph, and its negative space (what is declared and not there, what is there and not declared)
+  // 0.60.229 DB16 — James: "then we need to resume the component registery for each system, get the mall sovereign, then cos phases to migrate."
+  { key: 'system.drafts', repo: false, usage: 'system drafts [<system>]', about: 'the registries drafted for the systems that have none (DB16), lowest friction first: routes from its contract, its event taxonomy, the files other systems reach into, and how far it is from sovereign. Drafts are his to accept (rename to registry-components.js and add to loom)',
+    req: (a) => (a.args[0] ? { method: 'GET', path: `/api/system/registry/${encodeURIComponent(a.args[0])}/draft` } : { method: 'GET', path: '/api/system/registry-drafts' }),
+    print: (d, a, h) => {
+      if (d.systems) { console.log(h.c.dim(`  ${d.order}`)); for (const s of d.systems) console.log(`  ${(s.sovereign ? h.c.mint : h.c.amber)(s.system.padEnd(15))} out ${String(s.out).padStart(2)} · ${String(s.routes).padStart(2)} routes · ${s.taxonomy ? `${s.declaredEvents} events (taxonomy) · ` : ''}${s.reachedInto} files reached into${s.written ? '' : h.c.amber(' · not written')}`); return; }
+      console.log(`  ${d.systemId} — draft ${d.written ? 'written' : 'not written'}, ${d.accepted ? 'ACCEPTED (registry-components.js exists)' : 'not accepted'}`);
+      for (const c of d.components) console.log(`  route  ${c.route.method} ${c.route.path}  ${h.c.dim(c.from)}`);
+      if (d.events.taxonomy) console.log(`  events ${d.events.declared} in ${d.events.taxonomy}`);
+      for (const r of d.reached_into.slice(0, 15)) console.log(h.c.amber(`  reached into  ${r.file}  by ${r.by.join(', ')}`));
+      if (d.sovereignty) console.log(`  sovereign: ${d.sovereignty.sovereign ? 'yes' : `no — ${d.sovereignty.out} way(s) out (data ${d.sovereignty.blockers.data}, primitive ${d.sovereignty.blockers.primitive}, capability ${d.sovereignty.blockers.capability})`}`);
+      for (const x of d.said) console.log(h.c.dim(`  ${x}`));
+    } },
   { key: 'system.registry', repo: false, usage: 'system registry [<system>] [--settle]', about: 'with no system: every system and what it depends on (the dependency graph). With one: its registry generated from the source — what it declares (routes, served), what it depends on and who consumes it, and the negative space: declared routes the source does not serve, and files other systems reach into directly. --settle records each absence as a gap',
     req: (a) => (!a.args[0] ? { method: 'GET', path: '/api/system/registry' } : a.flags && a.flags.settle ? { method: 'POST', path: `/api/system/registry/${encodeURIComponent(a.args[0])}/settle`, body: {} } : { method: 'GET', path: `/api/system/registry/${encodeURIComponent(a.args[0])}` }),
     print: (d, a, h) => {

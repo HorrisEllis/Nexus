@@ -100,6 +100,16 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-24: "then we need to resume the component registery for each system, get the mall sovereign, then cos phases to migrate."**
+  (0.60.229)
+  - **Context:** three steps in his order, registries, then sovereignty, then COS. He picked registries first over writing specs with
+    local models.
+  - **What it shows:** sequencing a migration by its preconditions. A system can't move into COS until it owns its data and declares
+    what it offers. He chose the step that unblocks the rest, and it costs no model calls. The drafts are proposals he accepts,
+    generated only from the tree.
+  - **Evidence:** `CHANGELOG-0.60.229.md`; `lib/registry-draft.js`; 16 `<system>/registry-components.draft.json`;
+    `tests/modules/test-registry-draft.test.js` 4/4.
+
 - **2026-10-24: "spec per component/capability/etc its in the specs. deocmpose all of the phases into .phase nodes including dag per
   phase."** (0.60.227)
   - **Context:** 2,046 phases across 166 maps, of which only 175 had been written as nodes.

@@ -248,7 +248,7 @@ spec:
         A system declares in its registry which of its events a person should see (toasts: [{ event, level, text }]). The UI
         toasts what the registry says instead of a list in app.js, so the UI holds no knowledge of its own (disposable).
     DB16_a_registry_for_each_system:
-      status: OPEN
+      status: "PARTLY BUILT 0.60.229 — drafted for all 16 systems with none (lib/registry-draft.js; <system>/registry-components.draft.json); OPEN: his acceptance, system by system"
       does: >-
         A registry drafted for every system that has none (cos, nexus, warp, orchestrator, meta, siso, cli, cockpit,
         diagnostic, auth, mesh; then remote-desktop, emergence, jaa, erosmancer, sentinel, security) from its source: the
@@ -414,3 +414,24 @@ spec:
         the spec: lib/drawbridge.js over the system's own registry-components.js and contracts/handshake.js, lib/tunnel.js with
         the three tunnels, sandbox.json read by COS at create. The catalog regenerated from it, as genesis's is.
       proof: "a system scaffolded from the fork refuses an undeclared crossing with a receipt and crosses each tunnel after the handshake (tests/sandbox.test.js in the skeleton passes)"
+
+## ADDENDUM 2026-10-24 (0.60.229) — DB16 drafted; the way to sovereign, measured
+James, 2026-10-24: "then we need to resume the component registery for each system, get the mall sovereign, then cos phases to migrate." · to
+the choice "1 registries per system (DB16), COS first … 2 specs via local models": "1"
+- **Built:** lib/registry-draft.js draft / missing / text. Each draft comes from the tree only: the routes its interaction-contract.json
+  declares (lib/route-contract-check.js holds those to the code), its event-taxonomy.js pointed at (the one truth for its event names, ET1),
+  the literal event names it emits and handles, the files other systems reach into today (DB1: each is a capability that needs a route,
+  DB6), and its own way out by blocker (data, primitive, capability). Written for all 16 systems with none as
+  <system>/registry-components.draft.json. GET /api/system/registry-drafts, GET /api/system/registry/:system/draft, `system drafts`.
+- **Decided by the axioms (REVERSIBILITY, USER_AUTONOMY: drafts are his to accept):** a draft is JSON under its own name. lib/system-registry.js,
+  lib/system-nodes.js and others take any <system>/registry-components.js as declared, so a draft under that name would have been in force
+  before he accepted it (the first try did that, caught before commit). JSON because siso is an ES module package and a CommonJS draft broke
+  there. Accepting one: it becomes the system's registry-components.js and the system goes onto loom's SYSTEMS list.
+- **Measured (sovereignty census, lib/system-boundary.js):** no system is sovereign today. With no way out at all (their own registry, bus,
+  handshake and compartment are what is left): auth, erosmancer, jaa, mesh, remote-desktop, security, sentinel, siso. COS: 5 ways out (1 data,
+  cos/manager.js → cortex/memory/jaa-db.js; 4 primitives into siso/warp), 39 of its files reached into by others (cos/host/index.js by four
+  systems). Orchestrator 38 ways out, cli 20, meta 12, emergence 9, nexus 8.
+- **No screen yet:** the drafts are on a route and a command; the UI is deferred, said.
+- **Found, not this change's:** test-system-boundary SB-06/SB-08 fail on the committed tree too — three crossings not in the baseline
+  (idearium/repo/roadmap-import.js → loom/scanners/phasemap-map.js since 0.60.199; lib/phase-dag.js → the same; lib/verify-first.js →
+  cos/testenv/run-target.js). Reported.

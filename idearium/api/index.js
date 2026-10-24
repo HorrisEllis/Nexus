@@ -3325,6 +3325,7 @@ const ROUTE_CAP = {
   'context.find': CAPS.READ_IDEAS, 'repo.context.find': CAPS.READ_IDEAS, 'context.sources': CAPS.READ_IDEAS,   // 0.60.156 GM5 — reads only
   'lattice.neighbours': CAPS.READ_IDEAS,   // 0.60.157 GM4 — reads only
   'system.tunnel': CAPS.READ_IDEAS, 'system.tunnel.one': CAPS.READ_IDEAS, 'system.heartbeat': CAPS.READ_IDEAS,   // 0.60.128 DB13/DB14
+  'system.registry.drafts': CAPS.READ_IDEAS, 'system.registry.draft': CAPS.READ_IDEAS,   // 0.60.229 DB16 — reads only
   'system.registry': CAPS.READ_IDEAS, 'system.registry.one': CAPS.READ_IDEAS, 'system.registry.settle': CAPS.WRITE_IDEAS,   // 0.60.127 DB9/DB10
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
@@ -3627,6 +3628,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','heartbeat'], 'system.heartbeat'],   // 0.60.128 DB14 — every system asked over its health route: up, degraded, down
     ['GET',    ['api','system','registry'], 'system.registry'],   // 0.60.127 DB9 — every system and the crossings between them: the dependency graph
     ['GET',    ['api','system','registry',':system'], 'system.registry.one'],   // 0.60.127 DB9/DB10 — one system's generated registry: declared, observed, negative space
+    ['GET',    ['api','system','registry-drafts'], 'system.registry.drafts'],   // 0.60.229 DB16 — every system with no registry: its draft from the tree, and how far from sovereign
+    ['GET',    ['api','system','registry',':system','draft'], 'system.registry.draft'],   // 0.60.229 DB16 — one system's draft (lib/registry-draft.js), not in force
     ['POST',   ['api','system','registry',':system','settle'], 'system.registry.settle'],   // 0.60.127 DB10 — the shadow settled: each absence a gap
     ['POST',   ['api','system','lean'],   'system.lean.set'],    // 0.60.20 — { on } stops/starts the held services now and saves it
     ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
@@ -6008,6 +6011,17 @@ async function handle(req, res, route, query, body) {
       return ok(res, { ...t, heartbeat: await SYS.heartbeat(t.name) });
     }
     case 'system.registry':
+    case 'system.registry.drafts': case 'system.registry.draft': {
+      // 0.60.229 DB16 — a draft is built fresh from the tree each time; whether it is written (<system>/registry-components.draft.json) and
+      // accepted (renamed to registry-components.js) is said, so the answer is never a stale copy
+      const RD = _require('../../lib/registry-draft.js');
+      const root = path.dirname(_require.resolve('../../package.json'));
+      const one = (sys) => { const d = RD.draft(sys, { root }); return { ...d, written: fs.existsSync(path.join(root, sys, 'registry-components.draft.json')), accepted: fs.existsSync(path.join(root, sys, 'registry-components.js')) }; };
+      if (action === 'system.registry.draft') { try { return ok(res, one(String(params.system || ''))); } catch (e) { return err(res, 404, e.message); } }
+      const list = RD.missing({ root }).map(one).map(d => ({ system: d.systemId, routes: d.components.length, taxonomy: d.events.taxonomy || null, declaredEvents: d.events.declared || 0, emits: d.events.emits.length, handles: d.events.handles.length, reachedInto: d.reached_into.length, sovereign: d.sovereignty && d.sovereignty.sovereign, out: d.sovereignty && d.sovereignty.out, blockers: d.sovereignty && d.sovereignty.blockers, written: d.written, said: d.said }));
+      list.sort((a, b) => (a.out - b.out) || (a.reachedInto - b.reachedInto) || a.system.localeCompare(b.system));
+      return ok(res, { systems: list, order: 'lowest friction first: fewest ways out, then fewest files others reach into (CS_D7)' });
+    }
     case 'system.registry.one':
     case 'system.registry.settle': {   // 0.60.127 DB9 + DB10 (docs/2026-10-17-system-drawbridge-phasemap.spec, addendum a)
       const SR = _require('../../lib/drawbridge-registry.js');
