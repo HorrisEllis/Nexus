@@ -56,6 +56,18 @@ export const SPEC = [
       console.log('');
     } },
 
+  // §BX2 0.60.248 — James: "What about BrainOS?" The repo's FlowGraph (phases+DAG, runs, the live mesh) — the data the BrainOS
+  // Flow canvas draws. A source that is down is named, the rest still shows (§1.2).
+  { key: 'repo.flow', repo: true, usage: 'repo flow <repo>', about: 'the BrainOS FlowGraph: the repo\'s phases by DAG layer, its runs, and the live agent mesh',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/flow` }),
+    print: (d, a, h) => {
+      if (!d || d.ok === false) { console.log(h.c.red((d && d.error) || 'no flow')); return; }
+      h.header(`${a.repo.name} — flow`);
+      console.log(`  phases ${h.c.bold(String((d.phases || []).length))}  ·  edges ${(d.edges || []).length}  ·  runs ${(d.runs || []).length}  ·  agents ${h.c.bold(String((d.agents || []).length))}`);
+      for (const s of (d.sources || [])) console.log(`  ${s.ok ? h.c.green('✓') : h.c.yellow('✗')} ${String(s.source).padEnd(11)} ${s.ok ? h.c.dim(`${s.n} item(s)`) : h.c.dim(s.error || '')}`);
+      console.log('');
+    } },
+
   // ── what its agent proposed ───────────────────────────────────────────────────────────────────────────────────────
   // §0.60.118 DK1 — James: "maybe buttons for agent tools, for the repo, to execute. replayable proceedures?" The same as the
   // Code tab's tools panel: one tool through the agent's door (this repo's scope), and .procedure files replayed in order.

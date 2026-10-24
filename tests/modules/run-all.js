@@ -539,6 +539,7 @@ const SUITES = [
   'test-snr-filter.js',
   'test-agent-confidence-gate.test.js', // 0.60.238 CG1 — before an agent acts, <75% confidence obtains context (worksurface, deps, find, ask-user LAST)
   'test-framework-trial-deploy.test.js', // 0.60.247 AU2 — the framework trial deploys itself (collect answers; judging stays blind/human)
+  'test-flow-sources.test.js',           // 0.60.248 BX2 — the BrainOS FlowGraph backend (phases+DAG, runs, mesh; each source best-effort, named on failure)
   'test-ui-registry.js',
   // Added 2026-07-06 — built alongside cortex/core/raid/snr-filter.js and
   // the real roleConfidence/topologicalProximity fitness terms this pass.

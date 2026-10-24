@@ -150,6 +150,10 @@ const FILES = [
   [I('guardian/server.js'), I('lib/raid-port.js'), '§GD1 — /build and SEAM-forge gates ask RAID through the port (fixes the undefined-raid ReferenceError in /build)'],
   [I('guardian/api-dispatch.js'), I('lib/raid-port.js'), '§GD1 — outcome() feedback to RAID through the port, with the agent'],
   [I('guardian/lib/dispatcher.js'), I('lib/raid-port.js'), '§GD1 — browser-job approval through the port, fails closed'],
+  // §0.60.248 BX2 — idearium/lib/flow-sources.js: BrainOS's FlowGraph gathered server-side. Composes phase-dag + run-state + the repo's
+  // phases view + Clear Glass's mesh (:7704), each best-effort. Consumed by idearium/api (GET …/flow, /api/flow/mesh).
+  ['idearium/lib/flow-sources.js', I('idearium/lib/flow-sources.js'), [I('lib/phase-dag.js'), I('lib/run-state.js'), I('idearium/repo/phases.js')]],
+  [I('idearium/api/index.js'), I('idearium/lib/flow-sources.js'), '§BX2 — repo.flow / flow.mesh handlers call flowFor()/mesh() (dynamic import, ESM)'],
   [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
   [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
   // §0.60.157 GM4 — the node lattice: every data node of every system, edges typed; read by route, never the files
