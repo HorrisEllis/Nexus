@@ -75,12 +75,21 @@ phases:
     proof: "cos/services present on main; its tests green; the boundary census names COS's new edges, no new crossing outside a port"
 
   BCR2_kernel_ports:
-    status: OPEN
+    status: PARTLY 0.60.242 — raid-port landed and its first consumers rewired; the rest of Guardian's RAID decoupling (GD1) and the other ports remain
     layer: integration
     depends_on: [BCR0_the_decisions, BC_D2_cos_compartments]
-    files: [lib/raid-port.js, lib/ollama-port.js, lib/spec-compiler-port.js, lib/pulse.js, lib/trust-rule.js, lib/registry-draft.js, loom/lib]
-    does: "port the kernel-port boundary model: a system reaches another only through its port; the pulse on the kernel; loom reaches into no other system."
-    proof: "the ports load; a system's cross-calls go through its port; the 6 brave-cori tests green; the ratchet shows the ports, not raw crossings"
+    files: [lib/raid-port.js, guardian/api-dispatch.js, guardian/lib/dispatcher.js, guardian/server.js, tests/modules/test-raid-port.test.js]
+    does: >-
+      DONE 0.60.242: lib/raid-port.js ported (the one door to RAID — in-process in Cortex, Cortex's routes elsewhere, approval fails closed);
+      guardian/api-dispatch.js and guardian/lib/dispatcher.js rewired to it wholesale (their only diff from main was this GD1 rewire); two
+      server.js sites rewired (the /build gate — which also FIXES a latent ReferenceError on main, `raid` was never defined in that async
+      handler — and the SEAM-forge gate). test-raid-port RP-01/02/03 green (the port's in-process / route / fail-closed behaviour).
+      REMAINS (the careful part, by REVERSIBILITY not rushed on core infra): 4 more cortex/core/raid requires in server.js — the raw-dispatch
+      DECIDE route (a bigger fix: main's comment says "_raid.decide does not exist" so RAID has never routed a raw job), the auto-chunk and
+      chat approval gates, and the queue-match — some in non-async handlers that must be made async; RP-04 (no guardian→RAID crossing) passes
+      only when all are done, so test-raid-port is NOT yet in run-all (the suite stays green). Then the other ports (ollama, spec-compiler,
+      pulse, trust-rule, registry-draft, loom/lib) and their consumers. GD1 completes with Guardian run to verify, like UI in Clear Glass.
+    proof: "raid-port RP-01/02/03 green; guardian/server.js parses; guardian-dispatch-ladder 18/18, idearium-guardian-dispatch 5/5 still green; 2 of 6 server.js crossings removed, 4 remain (RP-04 pending GD1 completion)"
 
   BCR3_emerge_and_loom_decisions:
     status: PARTLY 0.60.241 — the decisions and maps are ON main; the builds (EW/LM/GD phases) remain

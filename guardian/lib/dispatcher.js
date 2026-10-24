@@ -503,8 +503,8 @@ function createDispatcher(deps) {
     if (job.provider === 'browser') {
       let _approval;
       try {
-        const raid = require('../../cortex/core/raid');
-        _approval = raid._approveTool(job.source || 'unknown', String(job.command || ''), { action: 'browser' });
+        // 0.60.240 GD1 — Cortex's RAID through its port (fails closed: unreachable → not approved, with the reason)
+        _approval = await require('../../lib/raid-port.js').approveTool(job.source || 'unknown', String(job.command || ''), { action: 'browser' });
       } catch (e) {
         updateJob(job.id, { status: 'error', error: `RAID approval gate unavailable: ${e.message}` });
         bus.emit('guardian.job.error', { jobId: job.id, error: 'raid_unavailable', provider: 'browser' });
