@@ -213,3 +213,22 @@ James, 2026-10-24: "yes do it."
 - **Not run yet on Nexus:** a Nexus repo stays review under B, so on Nexus the loop builds and proves, and each phase waits for his apply.
   No loop was started from this session: starting one spends agent calls, and that is his to start (the rail's ⟳ start, or `repo loop
   <repo> start`).
+
+## ADDENDUM 2026-10-24 (0.60.226) — his looking-glass run, read against the loop
+James, 2026-10-24, uploading looking-glass-bundle-v0_4.zip and its error report (docs/2026-10-22-looking-glass-v0_4-error-report.md): "This is a
+few days old. But does this help. A project that had auto built 5 phases"
+- **Checked against the zip (§0.1), not taken from the report:** seven proof runs in .nexus/proof-runs, all READY. SP0–SP4's included a
+  `tests` condition that ran; SP5's (09:30 and latest.json) had one condition, "A test that proves title as the spec states it, against the
+  real code (no mock)", with check kind `file` (lib/title.js exists). SP1's own test asserts only a non-empty array of strings, and
+  lib/core_ideas.js returns twelve generic words, none of the spec's.
+- **What it changed (0.60.226):** idearium/repo/proof-run.js proofStrength — what a proof ran; "READY ON FILES ONLY" and an honest footer
+  when nothing ran; "Promised a test, checked only a file" names the conditions like SP5's. lib/phase-close.js landed and lib/trust-rule.js
+  allows refuse a files-only proof. Replayed on his seven runs: SP0–SP4 close, SP5 does not.
+- **Already fixed before his upload was read:** the "Gemini said …" files and the names cut short at a dot (E5) — lib/path-guard.js (RC4,
+  0.60.170) strips the label and refuses a cut name; checked on his four file names.
+- **Not fixed, proposed to him (not added as phases: his 2026-10-21 "stop adding more phases"):**
+  - a test that cannot fail proves nothing (E1): run the phase's own test once against its module with every export gutted (returning
+    nothing); a test that still passes is reported as unable to fail, and its pass is not a proof. Deterministic, no model.
+  - a phase spec copied from another (E3: SP5's text is SP1's with the name swapped): the map check flags two phases whose `does:` match
+    after the name is removed.
+  - a scene that fails its own schema (E6) and the README link (E5) are that project's to fix, not Nexus's.

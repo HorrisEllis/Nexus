@@ -873,7 +873,8 @@ function _runOf(runId) {
   const first = rows.find(r => r.map && r.phase) || rows[0];
   const proof = [...rows].reverse().find(r => r.state === 'proven');
   const last = rows.reduce((x, y) => ((y.ts || 0) >= (x.ts || 0) ? y : x), rows[0]);
-  return { runId: b, repoUuid: first.repoUuid, map: first.map, phase: first.phase, proven: !!proof, state: last.state, snapshot: (proof || first).snapshot || null };
+  return { runId: b, repoUuid: first.repoUuid, map: first.map, phase: first.phase, proven: !!proof, state: last.state, snapshot: (proof || first).snapshot || null,
+    strength: proof && proof.proof && proof.proof.strength || null };   // 0.60.226 what the proof ran (idearium/repo/proof-run.js proofStrength)
 }
 function _closeLog(repoUuid, kind, title, detail) {
   try { _require('../../lib/activity-log/compartment.js').record({ compartment: repoUuid, kind, status: kind.split('.').pop(), actor: 'idearium', ts: Date.now(), title, detail: detail || null }); } catch (_) {}
@@ -2155,7 +2156,7 @@ ${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}`
     }
     run = { ...r.run, against: { ...against, ...(size ? { leverage: CH.leverage({ ...size, met: r.run.met }) } : {}) } };
     if (run.verdict === 'ready') {
-      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...run.against, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
+      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...run.against, proof: { met: run.met, total: run.total, report: run.files && run.files.report, strength: run.strength || null }, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.proven', { ...pbase, attempt, met: run.met, total: run.total, report: run.files && run.files.report });
       getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'proven' });
       _landByRule(base.runId).then(() => _closeRun(base.runId, { trigger: 'proven' })).catch((e) => _closeLog(base.repoUuid, 'phase.close-failed', `${phase}: the land/close check failed`, e.message));   // §SL5 0.60.225 his rule first, then the close   // §SL1 0.60.223 — closes now if its changes are already on disk (auto mode)

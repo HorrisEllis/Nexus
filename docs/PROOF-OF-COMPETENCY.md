@@ -100,6 +100,15 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-24: "This is a few days old. But does this help. A project that had auto built 5 phases"** (0.60.226)
+  - **Context:** the day the self-building loop was finished, he brought back a run of his own. Five phases were built automatically,
+    with an independent error report on what they actually were.
+  - **What it shows:** testing a system against its own past failures. His instinct to bring real evidence back to the builder found
+    a hole the new loop would have walked into: a phase marked READY on a file check that promised a test. Bringing a failure case
+    forward instead of only new features is a QA and verification skill.
+  - **Evidence:** `CHANGELOG-0.60.226.md`; `docs/2026-10-22-looking-glass-v0_4-error-report.md`; `tests/modules/test-phase-close.test.js`
+    PC-07 uses his SP5 proof as the fixture.
+
 - **2026-10-24: "yes do it."** (0.60.225)
   - **Context:** three calls put to him with their options and the coder's recommendations: what may land without him (A, B or C),
     which of the dry run's phases to close (the 2, all 107, or his picks), and whether to start the loop. He took the recommendations.

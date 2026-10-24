@@ -249,6 +249,7 @@ export async function runProof({ repoDir, conditions, start = null, subject = nu
   } catch (_) { settled = null; }
 
   const metCount = results.filter(r => r.met).length;
+  const strength = proofStrength(results);
   const run = {
     module: MODULE_ID, subject: subject || path.basename(repoDir), startedAt, finishedAt: Date.now(),
     verdict: metCount === results.length ? 'ready' : 'not-ready', met: metCount, total: results.length,
@@ -256,6 +257,7 @@ export async function runProof({ repoDir, conditions, start = null, subject = nu
     results,
     shadow: settled ? { id: settled.shadowId, absent: settled.absent, gaps: (settled.gaps || []).map(g => g.gapId).filter(Boolean) } : null,
     modes: results.filter(r => !r.met).reduce((m, r) => { m[r.mode] = (m[r.mode] || 0) + 1; return m; }, {}),
+    strength,
   };
   if (write) {
     const put = writer || _diskWriter(repoDir);
@@ -277,6 +279,23 @@ export async function runProof({ repoDir, conditions, start = null, subject = nu
 }
 
 /** reportText(run) → the proof report in plain words, for James and for the client */
+// 0.60.226 — James, 2026-10-24, uploading the looking-glass-bundle-v0_4 error report: "This is a few days old. But does this help. A
+// project that had auto built 5 phases". Its SP5 was READY on one condition, "A test that proves title as the spec states it", checked
+// as a file: the file existed, no test ran, and the footer said every line was checked by running it. What the proof ran is now said:
+//   ran      met conditions that ran something (tests, command, page)
+//   files    met conditions that only looked at a file
+//   untested conditions whose words promise a test or a pass, checked only as a file — named, never counted as proof of behaviour
+// A proof with ran 0 is files-only: the report says so, and SL1 does not close a phase on it (lib/phase-close.js landed).
+const _PROMISES_TEST = /\b(test|tests|passes|pass|proves?|works?|returns?|behaves?)\b/i;
+export function proofStrength(results = []) {
+  const met = results.filter(r => r && r.met);
+  const kind = (r) => (r.check && r.check.kind) || r.kind || null;
+  const ran = met.filter(r => ['tests', 'command', 'page'].includes(kind(r))).length;
+  const files = met.filter(r => kind(r) === 'file').length;
+  const untested = results.filter(r => r && kind(r) === 'file' && _PROMISES_TEST.test(String(r.says || ''))).map(r => r.says);
+  return { ran, files, untested, filesOnly: met.length > 0 && ran === 0 };
+}
+
 export function reportText(run) {
   const when = new Date(run.finishedAt || Date.now()).toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
   const lines = [
@@ -284,7 +303,9 @@ export function reportText(run) {
     '',
     `Checked ${when}.`,
     '',
-    run.verdict === 'ready'
+    run.verdict === 'ready' && run.strength && run.strength.filesOnly
+      ? `**READY ON FILES ONLY.** All ${run.total} condition${run.total === 1 ? '' : 's'} met, but none of them ran a test, a command or a page: this shows the files are there, not that they work.`
+      : run.verdict === 'ready'
       ? `**READY.** All ${run.total} condition${run.total === 1 ? '' : 's'} met.`
       : `**NOT READY.** ${run.met} of ${run.total} condition${run.total === 1 ? '' : 's'} met.`,
     '',
@@ -304,7 +325,9 @@ export function reportText(run) {
   if (run.app && !run.app.started) lines.push('', `> The app was not running for the page checks: ${run.app.why}.`);
   lines.push('', '## Evidence', '', ...run.results.map(r => `- ${r.met ? '✅' : '❌'} **${r.says}** — ${r.evidence}`));
   if (run.conditionErrors && run.conditionErrors.length) lines.push('', '## Conditions that could not be checked', '', ...run.conditionErrors.map(e => `- ${e}`));
-  lines.push('', '---', '_Every line above was checked by running it, not by reading it._', '');
+  const st = run.strength || proofStrength(run.results || []);
+  if (st.untested.length) lines.push('', '## Promised a test, checked only a file', '', ...st.untested.map(u => `- ${u} — the check looked for the file; no test ran`));
+  lines.push('', '---', st.ran ? `_Every line above was checked: ${st.ran} by running a test, a command or a page${st.files ? `, ${st.files} by looking at a file` : ''}._` : '_Every line above was checked against the files: nothing was run, so this does not show that the code works._', '');
   return lines.join('\n');
 }
 
