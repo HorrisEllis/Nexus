@@ -17,7 +17,7 @@
 process.env.JAA_DATA_DIR = require('path').join(__dirname, '..', '..', '.tmp-test-jaa-raid-retry-' + Date.now());
 
 const assert = require('assert');
-const bus = require('../../nexus/nexus-bus.js');
+const bus = require('../../lib/nexus/nexus-bus.js');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');

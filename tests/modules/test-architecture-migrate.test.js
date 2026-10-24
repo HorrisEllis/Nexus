@@ -9,7 +9,7 @@ require('../../lib/test-sandbox.js').ensure();
  *          through another folder's home; R4 no evidence → unplaced, never guessed; bottom-up dependsOn
  *   AM-02  read on Nexus itself: the 15 systems are not proposed to move; every other top-level folder the census counts is
  *   AM-03  phasemap: one phase per folder, numbered keys, DAG-clean (lib/phase-dag.js), unplaced ones wait on MV0
- *   AM-04  path loads count (path.join(__dirname,'..','ui',…), join(ROOT,'sentinel/…')); comments and dynamic arguments do not
+ *   AM-04  path loads count (path.join(__dirname,'..','ui',…), join(ROOT,'sentinel/…')); comments and dynamic arguments do not (a fake tree in a temp dir)
  *   AM-05  R5 (used only by moving folders → their home); his decisions win; retire = _archive, never deleted
  */
 const assert = require('assert');
@@ -41,10 +41,10 @@ t('AM-01', 'the four rules, and bottom-up order', () => {
 });
 
 const live = AM.propose(AM.read({ root: path.join(__dirname, '../..') }));
-t('AM-02', 'on Nexus: none of the 15 moves; every other folder is proposed', () => {
+t('AM-02', 'on Nexus: none of the 15 moves; whatever is left is proposed (none, once RF2 has run)', () => {
   const S = require('../../lib/nexus-self/systems.js');
   const fifteen = new Set(S.SYSTEMS.flatMap(s => s.dirs || []).concat(['lib']));
-  assert.ok(live.length > 0);
+  // 0.60.241: every folder has moved, so the live proposal may be empty — that is the finished state, not a failure
   for (const r of live) assert.ok(!fifteen.has(r.dir), `${r.dir} is one of the 15`);
   for (const r of live.filter(x => x.placed)) assert.ok(/^[a-z-]+\/[^/]+\/$/.test(r.homeDir), r.homeDir);
 });
@@ -62,8 +62,10 @@ t('AM-04', 'path loads are uses: static joins resolve, dynamic ones are skipped'
   const fs = require('fs'), os = require('os'); const root = fs.mkdtempSync(path.join(os.tmpdir(), 'am-'));
   fs.mkdirSync(path.join(root, 'guardian'), { recursive: true }); fs.mkdirSync(path.join(root, 'cli'), { recursive: true });
   fs.writeFileSync(path.join(root, 'guardian/server.js'), "const p = path.join(__dirname, '..', 'ui', 'home', 'index.html');\n// path.join(__dirname, '..', 'tablet', 'x.html')\nconst q = path.join(__dirname, '..', someVar, 'x');\n");
-  fs.writeFileSync(path.join(root, 'cli/sentinel.js'), "const C = path.join(ROOT, 'sentinel/interaction-contract.json');\n");
-  const e = AM.pathEdges({ root, files: ['guardian/server.js', 'cli/sentinel.js'] }).map(x => `${x.from}>${x.to}`);
+  // a fake tree (temp dir): these paths are test inputs, not Nexus's own — RF2 had rewritten them once (0.60.241), restored
+  const fx = ['cli', 'sentinel.js'].join('/'), fxTarget = ['sentinel', 'interaction-contract.json'].join('/');
+  fs.writeFileSync(path.join(root, fx), `const C = path.join(ROOT, '${fxTarget}');\n`);
+  const e = AM.pathEdges({ root, files: ['guardian/server.js', fx] }).map(x => `${x.from}>${x.to}`);
   assert.deepStrictEqual(e, ['guardian>ui', 'cli>sentinel'], 'a comment and a dynamic argument are not edges');
 });
 

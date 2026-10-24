@@ -976,7 +976,7 @@ function startService() {
     // Healthy when orchestrator is healthy and the file exists
     // §0.39.265 — the shell moved into its own folder (ui/forge-shell/); this
     // still looked for ui/forge-shell.html and warned "missing" on every boot.
-    const forgeFile = path.join(ROOT, 'ui', 'forge-shell', 'forge-shell.html');
+    const forgeFile = path.join(ROOT, 'lib', 'ui', 'forge-shell', 'forge-shell.html');
     const forgeShellExists = fs.existsSync(forgeFile);
     const orchState = systemState['orchestrator'] || {};
     const forgeHealthy = forgeShellExists && orchState.online;
@@ -2569,7 +2569,7 @@ const _REGISTRY_PATHS = {
   cortex:       path.join(ROOT, 'cortex/registry-components.js'),
   guardian:     path.join(ROOT, 'guardian/registry-components.js'),
   architect:    path.join(ROOT, 'architect/registry-components.js'),
-  emerge:       path.join(ROOT, 'emerge/registry-components.js'),
+  emerge:       path.join(ROOT, 'lib', 'emerge', 'registry-components.js'),
   copilot:      path.join(ROOT, 'copilot/registry-components.js'),
   idearium:     path.join(ROOT, 'idearium/registry-components.js'),
   ollama:       path.join(ROOT, 'ollama/registry-components.js'),

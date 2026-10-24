@@ -7,11 +7,11 @@ intent: null
 summary: DL3_rewire_writers (integration) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678041
+exported_at: 1792841756165
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678041
-lastSeenAt: 1792787678041
+firstSeenAt: 1792841756165
+lastSeenAt: 1792841756165
 fingerprint: null
 payload:
   id: DL3_rewire_writers
@@ -34,4 +34,4 @@ payload:
   blocks:
     - MOD-REWIRE
   spec: docs/data-layout.spec
-  graph: 7dbe9cbe6436f155
+  graph: 2b1d23ec8083fbe8

@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB1_the_census_and_the_ratchet
 context: pipeline phase DB1_the_census_and_the_ratchet of docs/2026-10-17-system-drawbridge-phasemap.spec
 intent: null
-summary: DB1_the_census_and_the_ratchet (?) — 4 file(s)
+summary: DB1_the_census_and_the_ratchet (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792820507925
+exported_at: 1792841755833
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792820507925
-lastSeenAt: 1792820507925
+firstSeenAt: 1792841755833
+lastSeenAt: 1792841755833
 fingerprint: null
 payload:
   id: DB1_the_census_and_the_ratchet
@@ -21,10 +21,8 @@ payload:
   status: OPEN
   files:
     - lib/system-boundary.js
-    - contracts/drawbridge-baseline.json
     - loom/maps/run-state-map.js
-    - contracts/event-contract-baseline.json
   depends_on: []
   blocks: []
   spec: null
-  graph: cd96632b0252b4fb
+  graph: df65321d35b5c991

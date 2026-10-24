@@ -9,11 +9,11 @@ intent: null
 summary: GM6_crystallized_from_what_was_approved (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677871
+exported_at: 1792841755921
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677871
-lastSeenAt: 1792787677871
+firstSeenAt: 1792841755921
+lastSeenAt: 1792841755921
 fingerprint: null
 payload:
   id: GM6_crystallized_from_what_was_approved
@@ -22,11 +22,11 @@ payload:
   layer: null
   status: OPEN
   files:
-    - meta/crystal-lattice.js
+    - lib/meta/crystal-lattice.js
     - cortex/core/raid/contract-index.js
   depends_on:
     - GM3_the_fulfilled_contract_index
     - FMR10_it_compounds
   blocks: []
   spec: null
-  graph: 6f4f97b6125f3591
+  graph: 9f08175e8bc52a55

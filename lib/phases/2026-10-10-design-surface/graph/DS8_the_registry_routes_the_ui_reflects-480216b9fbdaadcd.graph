@@ -1,0 +1,147 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DS8_the_registry_routes_the_ui_reflects:480216b9fbdaadcd
+type: graph
+id: phase:DS8_the_registry_routes_the_ui_reflects:480216b9fbdaadcd
+context: dependency graph of phase DS8_the_registry_routes_the_ui_reflects
+intent: null
+summary: 16 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755087
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755087
+lastSeenAt: 1792841755087
+fingerprint: null
+payload:
+  for: DS8_the_registry_routes_the_ui_reflects
+  kind: phase
+  repo: null
+  hash: 480216b9fbdaadcd
+  nodes:
+    - path: eravos/ui/kernel/kernel.js
+      role: changes
+      exists: false
+      system: null
+    - path: eravos/ui/runtime/wire-system.js
+      role: changes
+      exists: false
+      system: null
+    - path: lib/nexus/nexus-bus.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/driver.js
+      role: changes
+      exists: false
+      system: loom
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/alk/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/execution/run-pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/constitutional-ai.js
+      role: used-by
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/agent-tools/tools/execution/run-pipeline.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/constitutional-ai.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+    dependents: []
+    upstream:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      - docs/2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
+      - docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+      - docs/2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+    downstream: []
+    blockedBy:
+      - docs/2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by DS7_tools_are_mods
+      - 'depends on (1): DS7_tools_are_mods · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+        kind: declared

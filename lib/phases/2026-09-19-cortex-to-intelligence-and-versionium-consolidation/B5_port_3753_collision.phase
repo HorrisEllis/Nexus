@@ -6,14 +6,14 @@ context: >-
   pipeline phase B5_port_3753_collision of
   docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
 intent: null
-summary: B5_port_3753_collision (?) — 6 file(s)
+summary: B5_port_3753_collision (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675960
+exported_at: 1792841753887
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675960
-lastSeenAt: 1792787675960
+firstSeenAt: 1792841753887
+lastSeenAt: 1792841753887
 fingerprint: null
 payload:
   id: B5_port_3753_collision
@@ -23,12 +23,11 @@ payload:
   status: OPEN
   files:
     - intelligence/config.js
-    - nexus/autopilot.js
     - orchestrator/orchestrator.config.json
-    - cli/nexus-repl.js
     - diagnostic/nexus-diagnostic.js
     - lib/uid/component-map.js
+    - lib/cli/nexus-repl.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 3d6b1fadb758d77c
+  graph: 9440f35a365841f9

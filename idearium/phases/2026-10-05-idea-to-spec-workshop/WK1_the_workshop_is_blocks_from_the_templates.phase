@@ -9,11 +9,11 @@ intent: null
 summary: WK1_the_workshop_is_blocks_from_the_templates (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677035
+exported_at: 1792841754934
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677035
-lastSeenAt: 1792787677035
+firstSeenAt: 1792841754934
+lastSeenAt: 1792841754934
 fingerprint: null
 payload:
   id: WK1_the_workshop_is_blocks_from_the_templates
@@ -28,4 +28,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 7118b38fec612014
+  graph: 18f97e63dddb6369

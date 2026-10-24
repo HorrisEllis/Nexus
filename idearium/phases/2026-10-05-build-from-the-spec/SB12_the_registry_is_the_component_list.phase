@@ -9,11 +9,11 @@ intent: null
 summary: SB12_the_registry_is_the_component_list (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676837
+exported_at: 1792841754664
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676837
-lastSeenAt: 1792787676837
+firstSeenAt: 1792841754664
+lastSeenAt: 1792841754664
 fingerprint: null
 payload:
   id: SB12_the_registry_is_the_component_list
@@ -31,4 +31,4 @@ payload:
     - SB11_each_block_chunked
   blocks: []
   spec: null
-  graph: 663b7c8d93d31c6f
+  graph: 736d743c1e5f2f48

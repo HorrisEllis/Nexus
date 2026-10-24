@@ -308,7 +308,7 @@ function _registerContractQaQc() {
   if (_qaqcRegistered) return;
   _qaqcRegistered = true;
   let realQaQc = null;
-  try { realQaQc = require('../../../meta/adversary-suite').runQAQC; } catch (_) { /* stays null — real checks just won't run */ }
+  try { realQaQc = require('../../../lib/meta/adversary-suite').runQAQC; } catch (_) { /* stays null — real checks just won't run */ }
 
   compartmentEngine._registerExtensions({
     qaqcLayer: async (compartment) => {
@@ -986,7 +986,7 @@ async function processNext(executor) {
   // they do not re-enter the ladder.
   if (finalStatus === STATUS.FAIL && queued.source !== 'self-heal') {
     try {
-      require('../../../nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
+      require('../../../lib/nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
         gapType: 'raid_contract_exhausted',
         gapUuid: queued.uuid,
         body: `RAID contract "${queued.title || queued.uuid}" (source: ${queued.source}) failed with no further retry/fallback available. verdict: ${resolved.trace_log?.find(t => t.event === 'QA_QC')?.data?.verdict ?? 'none'}`,
@@ -1140,7 +1140,7 @@ function _realAxiomRefs() {
   return _axiomRefsCache;
 }
 
-const WARP_PRIMITIVES = new Set(Object.keys(require('../../../warp/core')).filter(k => ['Event', 'Gate', 'Axiom', 'Stream', 'StreamLog'].includes(k)));
+const WARP_PRIMITIVES = new Set(Object.keys(require('../../../lib/warp/core')).filter(k => ['Event', 'Gate', 'Axiom', 'Stream', 'StreamLog'].includes(k)));
 
 /**
  * synthesizeContract(req) -> submitContract()'s own real result, or
@@ -1405,7 +1405,7 @@ function _tracker({ queueId, p, source, title, versioning, compartment, onEvent 
     const pr = progress(last);
     tell({ ...e, progress: pr });
     try { jaaDB.update(TABLE, queueId, { progress: pr, updatedAt: Date.now() }); } catch (err) { warn('progress not written on the queue row', err); }
-    try { require('../../../nexus/nexus-bus.js').emit('RAID_GATE_MOVED', { queueId, source, title, ...e, progress: pr }, { source: 'raid-contract-intake' }); } catch (err) { warn('RAID_GATE_MOVED not emitted', err); }
+    try { require('../../../lib/nexus/nexus-bus.js').emit('RAID_GATE_MOVED', { queueId, source, title, ...e, progress: pr }, { source: 'raid-contract-intake' }); } catch (err) { warn('RAID_GATE_MOVED not emitted', err); }
     if (compartment) {
       try {
         require('../../../lib/activity-log/compartment.js').record({ compartment, kind: 'gate', status: e.status === 'PASSED' ? 'ok' : e.status === 'FAILED' ? 'failed' : 'info',
@@ -1483,7 +1483,7 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
   _raidLedger.record(`raid.contract.v2.${status}`, { queueId, title: row.title, failedBricks, blockedBricks, rounds: res.rounds || 0 }, { source: 'raid', causedBy: queueId });
   if (status === STATUS.FAIL && source !== 'self-heal') {
     try {
-      require('../../../nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
+      require('../../../lib/nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
         gapType: 'raid_contract_exhausted', gapUuid: queueId,
         body: `RAID contract "${row.title}" (source: ${source}) did not complete: ${verdict}${failedBricks.length ? ` — failed: ${failedBricks.map(b => `${b.id}${b.class ? ` (${b.class})` : ''}`).join(', ')}` : ''}${blockedBricks.length ? ` — set aside: ${blockedBricks.map(b => b.id).join(', ')}` : ''}`,
         bricks: failedBricks, blocked: blockedBricks,
@@ -1588,7 +1588,7 @@ function reconcileOnBoot() {
     _raidLedger.record('raid.contract.reconciled.escalated', { queueId: row.uuid, stage: row.stage, priorStatus: row.status }, { source: 'raid', causedBy: row.uuid });
     if (row.source !== 'self-heal') {
       try {
-        require('../../../nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
+        require('../../../lib/nexus/nexus-bus.js').emit('HEAL_REQUESTED', {
           gapType: 'raid_contract_orphaned_at_boot',
           gapUuid: row.uuid,
           body: `RAID contract "${row.title || row.uuid}" (source: ${row.source}) was found at stage "${row.stage}" at boot with no real output — a prior process died mid-job.`,

@@ -1,0 +1,165 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P2_intelligence_gains_routes:aec4b8d557a9011c
+type: graph
+id: phase:P2_intelligence_gains_routes:aec4b8d557a9011c
+context: dependency graph of phase P2_intelligence_gains_routes
+intent: null
+summary: 13 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753891
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753891
+lastSeenAt: 1792841753891
+fingerprint: null
+payload:
+  for: P2_intelligence_gains_routes
+  kind: phase
+  repo: null
+  hash: aec4b8d557a9011c
+  nodes:
+    - path: intelligence/server.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/config.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/field-provider.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/framework-builder.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal-space/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/self-register-remote.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/config.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/cfr/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/framework-builder.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/field-provider.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/self-register-remote.js
+      kind: requires
+    - from: intelligence/server.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/warp/core/index.js
+      kind: requires
+  crossings:
+    - from: intelligence/server.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+      - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::D1
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D4_names
+    dependents:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P3_cortex_becomes_forwarder
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D5_new
+    upstream:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D4_names
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P0_map
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+      - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::D1
+    downstream:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D3_snapshot
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D5_new
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P3_cortex_becomes_forwarder
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P4_repoint_callers
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P5_retire_second_runtime
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P7_hostile_verify_and_ship
+    blockedBy:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D4_names
+    unlocks:
+      - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P3_cortex_becomes_forwarder
+    conflicts:
+      - with: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::B6_two_intelligence_runtimes
+        files:
+          - intelligence/server.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by P1_characterization, D4_names
+      - 'depends on (3): P1_characterization, D1, D4_names · all upstream 4'
+      - >-
+        needed by (2): P3_cortex_becomes_forwarder, D5_new · all downstream 6 · finishing it unlocks
+        P3_cortex_becomes_forwarder
+      - >-
+        same files as B6_two_intelligence_runtimes with no order between them:
+        intelligence/server.js
+    edges:
+      - from: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+        kind: declared
+      - from: docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::D1
+        kind: declared
+      - from: docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D4_names
+        kind: declared

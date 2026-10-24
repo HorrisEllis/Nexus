@@ -9,11 +9,11 @@ intent: null
 summary: SP3_the_browser_agent_reads_the_tree (?) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677471
+exported_at: 1792841755424
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677471
-lastSeenAt: 1792787677471
+firstSeenAt: 1792841755424
+lastSeenAt: 1792841755424
 fingerprint: null
 payload:
   id: SP3_the_browser_agent_reads_the_tree
@@ -36,4 +36,4 @@ payload:
     - SP1_semantic_page_tree
   blocks: []
   spec: null
-  graph: 0f6a46c1ba15a7e6
+  graph: fa83b2fda889b092

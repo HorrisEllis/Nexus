@@ -9,11 +9,11 @@ intent: null
 summary: IN1_nexus_as_claude_codes_toolbox (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676691
+exported_at: 1792841754525
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676691
-lastSeenAt: 1792787676691
+firstSeenAt: 1792841754525
+lastSeenAt: 1792841754525
 fingerprint: null
 payload:
   id: IN1_nexus_as_claude_codes_toolbox
@@ -33,4 +33,4 @@ payload:
     - EV0_contracts_for_every_system
   blocks: []
   spec: null
-  graph: ea1bc06a4bc07a29
+  graph: 67f1cdcf38587233

@@ -1,0 +1,247 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BR2_brainos_controls_agents:5bb6eb8127717696
+type: graph
+id: phase:BR2_brainos_controls_agents:5bb6eb8127717696
+context: dependency graph of phase BR2_brainos_controls_agents
+intent: null
+summary: 27 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753718
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753718
+lastSeenAt: 1792841753718
+fingerprint: null
+payload:
+  for: BR2_brainos_controls_agents
+  kind: phase
+  repo: null
+  hash: 5bb6eb8127717696
+  nodes:
+    - path: cortex/memory/jaa-db.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/grammar-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/healer/api/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/diagnostic/nexus-heal.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-status.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cli/compartments.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-registry.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-tunnel.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/tiers.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contracts/SYSTEM-CONTRACTS.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cos-bridge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/local-vector-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ollama-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: lib/system-registry.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/system-registry.js
+      to: lib/cos-bridge.js
+      kind: requires
+    - from: lib/version.js
+      to: lib/contracts/SYSTEM-CONTRACTS.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: lib/local-vector-index.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: lib/ollama-activity.js
+      kind: requires
+    - from: diagnostic/healer/api/index.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/agent-tools/tools/diagnostic/nexus-heal.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-status.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/cli/compartments.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-system-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: tests/modules/test-system-tunnel.test.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+  crossings:
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::TC1_tools_get_real_contracts
+    dependents: []
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG1_ncp_events_real
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::CG2_route_ncp_onto_guardian_sse
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF2_shared_data_directory_is_the_root_of_the_crash
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF5_agent_registry_is_hardcoded
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF6_tools_have_no_contracts
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::TC1_tools_get_real_contracts
+    downstream: []
+    blockedBy:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::TC1_tools_get_real_contracts
+    unlocks: []
+    conflicts:
+      - with: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
+        files:
+          - cortex/memory/jaa-db.js
+      - with: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::SPEC1_rewrite_nexus_spec
+        files:
+          - lib/version.js
+    dangling: []
+    lines:
+      - layer 6 · blocked by TC1_tools_get_real_contracts
+      - >-
+        depends on (2): DA1_fix_stale_guardian_coverage_gate, TC1_tools_get_real_contracts · all
+        upstream 9
+      - 'needed by (0): —'
+      - >-
+        same files as DF2_cortex_and_versionium_off_root_data with no order between them:
+        cortex/memory/jaa-db.js
+      - 'same files as SPEC1_rewrite_nexus_spec with no order between them: lib/version.js'
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+        kind: declared
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::TC1_tools_get_real_contracts
+        kind: declared

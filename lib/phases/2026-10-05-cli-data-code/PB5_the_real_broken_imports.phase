@@ -7,11 +7,11 @@ intent: null
 summary: PB5_the_real_broken_imports (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792822477218
+exported_at: 1792841754896
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822477218
-lastSeenAt: 1792822477218
+firstSeenAt: 1792841754896
+lastSeenAt: 1792841754896
 fingerprint: null
 payload:
   id: PB5_the_real_broken_imports
@@ -20,10 +20,10 @@ payload:
   layer: null
   status: OPEN
   files:
-    - cli/run-supervised.js
+    - lib/cli/run-supervised.js
     - erosmancer/erosmancer-os/tests/run.js
   depends_on:
     - PB4_imports_inside_text_are_not_imports
   blocks: []
   spec: null
-  graph: 7736bfcd3a2587b3
+  graph: f79b01df14fbfb10

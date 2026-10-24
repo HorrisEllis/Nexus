@@ -1,0 +1,152 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CY0_one_crystal_schema:81657527b04b462b
+type: graph
+id: phase:CY0_one_crystal_schema:81657527b04b462b
+context: dependency graph of phase CY0_one_crystal_schema
+intent: null
+summary: 14 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841756073
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841756073
+lastSeenAt: 1792841756073
+fingerprint: null
+payload:
+  for: CY0_one_crystal_schema
+  kind: phase
+  repo: null
+  hash: 81657527b04b462b
+  nodes:
+    - path: intelligence/liminal-space/index.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/crystal.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/meta/crystal-lattice.js
+      role: changes
+      exists: true
+      system: lib
+    - path: intelligence/routes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/case-library.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/meta/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/request-handler.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/crystal-lattice.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-liminal-space.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/lib/domain-nodes.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: lib/meta/crystal-lattice.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/liminal-space/index.js
+      to: intelligence/lib/domain-nodes.js
+      kind: requires
+    - from: lib/case-library.js
+      to: lib/meta/crystal-lattice.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/meta/crystal-lattice.js
+      kind: requires
+    - from: lib/meta/index.js
+      to: lib/meta/crystal-lattice.js
+      kind: requires
+    - from: tests/modules/crystal-lattice.test.js
+      to: lib/meta/crystal-lattice.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: lib/shadow.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: orchestrator/lib/request-handler.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: tests/modules/test-liminal-space.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+  crossings:
+    - from: lib/meta/crystal-lattice.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/shadow.js
+      to: intelligence/liminal-space/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: orchestrator/lib/request-handler.js
+      to: intelligence/liminal-space/index.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+    upstream: []
+    downstream:
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+      - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (2): CY1_lifecycle_and_injection, CY2_invariants_are_crystals · all downstream 4'
+    edges: []

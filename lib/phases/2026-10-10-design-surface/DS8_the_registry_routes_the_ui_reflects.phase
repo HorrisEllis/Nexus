@@ -9,11 +9,11 @@ intent: null
 summary: DS8_the_registry_routes_the_ui_reflects (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677203
+exported_at: 1792841755087
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677203
-lastSeenAt: 1792787677203
+firstSeenAt: 1792841755087
+lastSeenAt: 1792841755087
 fingerprint: null
 payload:
   id: DS8_the_registry_routes_the_ui_reflects
@@ -25,9 +25,9 @@ payload:
     - eravos/ui/kernel/kernel.js
     - eravos/ui/runtime/wire-system.js
     - loom/driver.js
-    - nexus/nexus-bus.js
+    - lib/nexus/nexus-bus.js
   depends_on:
     - DS7_tools_are_mods
   blocks: []
   spec: null
-  graph: 9db061f88abf55a1
+  graph: 480216b9fbdaadcd

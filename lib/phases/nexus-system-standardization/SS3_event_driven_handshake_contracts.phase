@@ -9,11 +9,11 @@ intent: null
 summary: SS3_event_driven_handshake_contracts (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678307
+exported_at: 1792841756511
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678307
-lastSeenAt: 1792787678307
+firstSeenAt: 1792841756511
+lastSeenAt: 1792841756511
 fingerprint: null
 payload:
   id: SS3_event_driven_handshake_contracts
@@ -22,9 +22,9 @@ payload:
   layer: null
   status: OPEN
   files:
-    - contracts/SYSTEM-CONTRACTS.js
+    - lib/contracts/SYSTEM-CONTRACTS.js
   depends_on:
     - SS1_system_manifest
   blocks: []
   spec: null
-  graph: 7fca6f4123a25be4
+  graph: be17a05a7ed43aa7

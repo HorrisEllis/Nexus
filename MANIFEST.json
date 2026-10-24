@@ -45,7 +45,7 @@
   "siso": {
     "version": "1.0.0",
     "source": "canonical",
-    "path": "siso/"
+    "path": "lib/siso/"
   },
   "jaa": {
     "version": "1.0.0",

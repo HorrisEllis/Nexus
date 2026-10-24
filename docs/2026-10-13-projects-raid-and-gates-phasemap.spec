@@ -164,7 +164,7 @@ spec:
       component: lib.repo-history
       status: "DONE — 0.60.7 (cli/import-history.js scanZip/orderScans reused; clearglass-gig-import's two zips became two versions in order)"
       james: '"past, present and future"'
-      files: [lib/history-import-job.js, cli/import-history.js]
+      files: [lib/history-import-job.js, lib/cli/import-history.js]
       does: >-
         The N30 archive importer (built for Nexus's own archives) for any project: several zips of one project (MASTERMIND
         v0.1.x, nexus 4.x) are ordered by their version and become one repo's history, one commit per zip, dry run first.

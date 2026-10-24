@@ -1,0 +1,224 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PF2_yielding_ingest:5800af0c56705480
+type: graph
+id: phase:PF2_yielding_ingest:5800af0c56705480
+context: dependency graph of phase PF2_yielding_ingest
+intent: null
+summary: 25 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754240
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754240
+lastSeenAt: 1792841754240
+fingerprint: null
+payload:
+  for: PF2_yielding_ingest
+  kind: phase
+  repo: null
+  hash: 5800af0c56705480
+  nodes:
+    - path: idearium/spec-engine/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/compiler-t0.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/test/e2e-pipeline.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/seam/cross-system-status.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/idearium-auto-repo-creation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-chunk-dependencies.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-loop.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/chunk-nodes.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/data-dir.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/db.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/templates.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/build-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chunker/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/registry-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-digest.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/spec-engine/index.js
+      to: idearium/spec-engine/templates.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/lib/db.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/lib/chunk-nodes.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/lib/data-dir.cjs
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/warp/core/index.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: idearium/index.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/build-context.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/spec-digest.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/registry-plan.js
+      kind: requires
+    - from: idearium/spec-engine/index.js
+      to: lib/chunker/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/spec-engine/compiler-t0.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/test/e2e-pipeline.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: lib/seam/cross-system-status.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-auto-repo-creation.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-chunk-dependencies.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: tests/modules/idearium-loop.test.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/contract-intake.js
+      to: idearium/spec-engine/index.js
+      fromSystem: cortex
+      toSystem: idearium
+      kind: system
+      known: true
+    - from: lib/seam/cross-system-status.js
+      to: idearium/spec-engine/index.js
+      fromSystem: lib
+      toSystem: idearium
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

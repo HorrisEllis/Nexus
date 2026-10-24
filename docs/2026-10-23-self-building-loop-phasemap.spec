@@ -242,7 +242,7 @@ phases_added_2026_10_23:
     status: DONE 0.60.229 — test-phase-nodes-all 5/5; 1939 phases written beside 14 owner systems, a second pass writes nothing
     layer: library
     depends_on: [SL3_the_backlog_groomed, PS1_phase_specs]
-    files: [emerge/compiler/phase-specs.js, lib/phase-dag.js, lib/phase-deps-gate.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, tests/modules/test-phase-nodes-all.test.js]
+    files: [lib/emerge/compiler/phase-specs.js, lib/phase-dag.js, lib/phase-deps-gate.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, tests/modules/test-phase-nodes-all.test.js]
     spec: docs/self-building-loop.spec
     blocks: [MOD-SL-NODES]
     does: >-

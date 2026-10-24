@@ -31,7 +31,7 @@ spec:
       Phases don't call each other. The sequencer does.
 
   files:
-    - path: "siso/"
+    - path: "lib/siso/"
       description: "SISO pattern utilities and reference implementations"
 
   credit: "Jonathan Bailey — architect of SISO/Jaa architecture"

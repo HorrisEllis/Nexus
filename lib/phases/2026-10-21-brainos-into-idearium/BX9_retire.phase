@@ -7,11 +7,11 @@ intent: null
 summary: BX9_retire (surface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678012
+exported_at: 1792841756131
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678012
-lastSeenAt: 1792787678012
+firstSeenAt: 1792841756131
+lastSeenAt: 1792841756131
 fingerprint: null
 payload:
   id: BX9_retire
@@ -20,7 +20,7 @@ payload:
   layer: surface
   status: PLANNED
   files:
-    - ui/brainos/index.html
+    - lib/ui/brainos/index.html
     - clear-glass/src/main/index.js
     - tests/known-gaps.yaml
     - loom/maps/run-state-map.js
@@ -32,4 +32,4 @@ payload:
   blocks:
     - MOD-BX-RETIRE
   spec: docs/brainos-in-idearium.spec
-  graph: 0c410c080c84da17
+  graph: 31cdf6b71645e192

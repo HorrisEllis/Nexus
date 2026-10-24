@@ -7,11 +7,11 @@ intent: null
 summary: AV1_adversarial_review (service) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792456303353
+exported_at: 1792841756080
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303353
-lastSeenAt: 1792456303353
+firstSeenAt: 1792841756080
+lastSeenAt: 1792841756080
 fingerprint: null
 payload:
   id: AV1_adversarial_review
@@ -21,7 +21,7 @@ payload:
   status: OPEN
   files:
     - lib/adversarial-review.js
-    - meta/adversary-suite.js
+    - lib/meta/adversary-suite.js
     - intelligence/adversarial.js
     - copilot/lifeline.js
   depends_on:
@@ -30,4 +30,4 @@ payload:
   blocks:
     - MOD-ADVERSARIAL-REVIEW
   spec: docs/belief-loop.spec
-  graph: 4309464edd8b01e4
+  graph: a8189001b2fec75b

@@ -1,0 +1,145 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GH1_the_git_bridge:97998ba3afae84c1
+type: graph
+id: phase:GH1_the_git_bridge:97998ba3afae84c1
+context: dependency graph of phase GH1_the_git_bridge
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755013
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755013
+lastSeenAt: 1792841755013
+fingerprint: null
+payload:
+  for: GH1_the_git_bridge
+  kind: phase
+  repo: null
+  hash: 97998ba3afae84c1
+  nodes:
+    - path: docs/2026-10-15-one-contract-raid-releases-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: versionium/lib/releases.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: versionium/routes/versionium.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: lib/contracts/SYSTEM-CONTRACTS.js
+      role: uses
+      exists: true
+      system: lib
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: versionium/lib/releases.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: lib/version.js
+      to: lib/contracts/SYSTEM-CONTRACTS.js
+      kind: requires
+    - from: versionium/routes/versionium.js
+      to: versionium/lib/releases.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
+    dependents: []
+    upstream:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
+    downstream: []
+    blockedBy:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-07-versionium-releases-phasemap.spec::RN2_cortex_is_the_bookkeeper
+        files:
+          - lib/version.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by VR2_history_and_diff
+      - 'depends on (1): VR2_history_and_diff · all upstream 2'
+      - 'needed by (0): —'
+      - 'same files as RN2_cortex_is_the_bookkeeper with no order between them: lib/version.js'
+    edges:
+      - from: docs/2026-10-07-versionium-releases-phasemap.spec::VR2_history_and_diff
+        kind: declared

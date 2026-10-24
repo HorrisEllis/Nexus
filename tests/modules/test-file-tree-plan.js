@@ -126,8 +126,8 @@ async function run() {
 
   // ── failures say why ──
   const { createWarpDispatch } = require(path.join(ROOT, 'lib', 'seam', 'adapters', 'warp-cascade.js'));
-  const { FlatFileCrystallizer } = require(path.join(ROOT, 'warp', 'plugins', 'crystallizer-flatfile.js'));
-  const { PopulationStore } = require(path.join(ROOT, 'warp', 'dispatch', 'population.js'));
+  const { FlatFileCrystallizer } = require(path.join(ROOT, 'lib', 'warp', 'plugins', 'crystallizer-flatfile.js'));
+  const { PopulationStore } = require(path.join(ROOT, 'lib', 'warp', 'dispatch', 'population.js'));
   const d = createWarpDispatch({ generate: async (prov) => { throw new Error(`${prov} tab not connected`); },
     crystallizer: new FlatFileCrystallizer({ path: path.join(process.env.IDEARIUM_DATA_DIR, 'c.json') }), population: new PopulationStore({ maxPerClass: 8 }), maxAttempts: 3 });
   const r = await d({ seam_uuid: `t:${Date.now()}`, seam_id: 't', description: 't', preferredProvider: 'claude', contract: { exports: [] } }, [{ id: 'x', severity: 'hard', check: () => true }]);

@@ -6,14 +6,14 @@ context: >-
   pipeline phase R8_ui_diagnostic_surfaces_wired_together of
   docs/repair-contract-and-loom-hub-phasemap.spec
 intent: null
-summary: R8_ui_diagnostic_surfaces_wired_together (?) — 9 file(s)
+summary: R8_ui_diagnostic_surfaces_wired_together (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678342
+exported_at: 1792841756553
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678342
-lastSeenAt: 1792787678342
+firstSeenAt: 1792841756553
+lastSeenAt: 1792841756553
 fingerprint: null
 payload:
   id: R8_ui_diagnostic_surfaces_wired_together
@@ -24,8 +24,6 @@ payload:
   files:
     - lib/nerve-gap-bridge.js
     - lib/nerve/index.js
-    - ui/tv-shell/nerve/nerve.js
-    - ui/tv-shell/spotlight/spotlight.js
     - clear-glass/src/diagnostic/error-capture.js
     - lib/nexus-config.js
     - lib/repo-activity.js
@@ -35,4 +33,4 @@ payload:
     - R1_repair_contract_schema
   blocks: []
   spec: null
-  graph: 89ea8783a73fb339
+  graph: 0df5fa77d14e88f1

@@ -7,11 +7,11 @@ intent: null
 summary: IM3_ideas_mapped_to_nexus (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677897
+exported_at: 1792841755959
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677897
-lastSeenAt: 1792787677897
+firstSeenAt: 1792841755959
+lastSeenAt: 1792841755959
 fingerprint: null
 payload:
   id: IM3_ideas_mapped_to_nexus
@@ -26,4 +26,4 @@ payload:
     - IM1_ideas_and_notes_as_one
   blocks: []
   spec: null
-  graph: 4ab9902894ad0c86
+  graph: 5e5195c7fd8a967b

@@ -1,0 +1,288 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GW3_a_contract_is_traced:c12c67f35dae6aa5
+type: graph
+id: phase:GW3_a_contract_is_traced:c12c67f35dae6aa5
+context: dependency graph of phase GW3_a_contract_is_traced
+intent: null
+summary: 29 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755538
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755538
+lastSeenAt: 1792841755538
+fingerprint: null
+payload:
+  for: GW3_a_contract_is_traced
+  kind: phase
+  repo: null
+  hash: c12c67f35dae6aa5
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: guardian/lib/response-sink.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/component-ledger.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-versions.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/person-model/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cos/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/lib/diagnostic-contract.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/sigma.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/predicate.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/query/ambiguity-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/component-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/activity-log/compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intake.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reply-kind.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/component-ledger.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-store.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: lib/component-ledger.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: lib/run-state.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/reply-kind.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/intake.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: lib/repo-versions.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: lib/repo-versions.js
+      to: lib/activity-log/compartment.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: cos/kernel.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/lib/diagnostic-contract.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/cfr/sigma.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/gap/predicate.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: intelligence/index.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/ambiguity-pull.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/component-registry.js
+      to: lib/component-ledger.js
+      kind: requires
+  crossings:
+    - from: lib/component-ledger.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: guardian/lib/response-sink.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: guardian
+      toSystem: clear-glass
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+    dependents:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW6_the_intelligence_system_on_every_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW8_causal_graph_and_failure_mode_field
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW9_the_contract_panel
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW17_friction_and_tension_per_file
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW0_what_is_a_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+    downstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW15_every_file_tested
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW17_friction_and_tension_per_file
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW18_debug_by_bisect
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW22_find_before_generate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW23_wire_what_exists
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW25_the_systems_at_the_gate_moments
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW6_the_intelligence_system_on_every_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW8_causal_graph_and_failure_mode_field
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW9_the_contract_panel
+    blockedBy:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+    unlocks:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW6_the_intelligence_system_on_every_gate
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW17_friction_and_tension_per_file
+    conflicts:
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+        files:
+          - cortex/core/raid/contract-gates.js
+      - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW26_everything_declares_what_it_needs
+        files:
+          - cortex/core/raid/contract-gates.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by GW2_the_run_follows_the_gate
+      - 'depends on (1): GW2_the_run_follows_the_gate · all upstream 3'
+      - >-
+        needed by (7): GW6_the_intelligence_system_on_every_gate, GW7_failure_macro_and_rewind,
+        GW8_causal_graph_and_failure_mode_field, GW9_the_contract_panel, GW11_a_snapshot_per_gate,
+        GW13_the_sandbox_door, GW17_friction_and_tension_per_file · all downstream 14 · finishing it
+        unlocks GW6_the_intelligence_system_on_every_gate, GW7_failure_macro_and_rewind,
+        GW13_the_sandbox_door, GW17_friction_and_tension_per_file
+      - >-
+        same files as GW24_the_gate_holds_the_agent_gets_a_projection with no order between them:
+        cortex/core/raid/contract-gates.js
+      - >-
+        same files as GW26_everything_declares_what_it_needs with no order between them:
+        cortex/core/raid/contract-gates.js
+    edges:
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+        kind: declared

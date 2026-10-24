@@ -7,11 +7,11 @@ intent: null
 summary: SH1_shadow_space (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676674
+exported_at: 1792841754500
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676674
-lastSeenAt: 1792787676674
+firstSeenAt: 1792841754500
+lastSeenAt: 1792841754500
 fingerprint: null
 payload:
   id: SH1_shadow_space
@@ -21,10 +21,10 @@ payload:
   status: OPEN
   files:
     - lib/shadow.js
-    - emergence/vendor/rfr2/liminal/shadow.js
+    - lib/emergence/vendor/rfr2/liminal/shadow.js
   depends_on:
     - EM0_ground
     - EV0_contracts_for_every_system
   blocks: []
   spec: null
-  graph: f4d22958311863ce
+  graph: d19ee22cc5559ae5

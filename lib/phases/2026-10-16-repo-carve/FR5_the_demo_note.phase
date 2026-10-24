@@ -7,11 +7,11 @@ intent: null
 summary: FR5_the_demo_note (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677755
+exported_at: 1792841755760
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677755
-lastSeenAt: 1792787677755
+firstSeenAt: 1792841755760
+lastSeenAt: 1792841755760
 fingerprint: null
 payload:
   id: FR5_the_demo_note
@@ -26,4 +26,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 332d5e981a6108fb
+  graph: ea7ae2e77b8e0485

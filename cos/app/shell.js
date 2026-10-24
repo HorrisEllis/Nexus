@@ -64,7 +64,7 @@ function plan(root, project, line, opts = {}) {
   const cwd = path.join(root, 'projects', project, 'versions', st.current);
   if (!fs.existsSync(cwd)) return { ok: false, error: `the current version folder is missing: ${cwd}` };
   let file, args;
-  if (w === 'nexus') { file = 'cli/nexus.js'; args = t.slice(1); }
+  if (w === 'nexus') { file = ['lib/cli/nexus.js', 'cli/nexus.js'].find(f => fs.existsSync(path.join(cwd, f))) || 'lib/cli/nexus.js'; args = t.slice(1); }   // 0.60.241: cli/ moved into lib/; older releases keep cli/
   else if (w === 'node') {
     if (!t[1]) return { ok: false, error: 'node needs a file inside the current version (node cli/nexus.js status)' };
     if (!inside(cwd, t[1])) return { ok: false, error: `${t[1]} is outside the current version (${st.current}): COS runs only files inside it` };
@@ -84,7 +84,7 @@ function plan(root, project, line, opts = {}) {
   if (!fs.existsSync(path.join(cwd, file))) return { ok: false, error: `${file} does not exist in ${project} ${st.current}` };
   const modules = opts.modulesDir === undefined ? RT.defaultModulesDir() : opts.modulesDir;
   const env = { ...process.env, ...(opts.env || {}), NEXUS_DATA_ROOT: path.join(root, 'projects', project, 'data'), ...(modules ? { NODE_PATH: [modules, process.env.NODE_PATH].filter(Boolean).join(path.delimiter) } : {}), ...(process.versions.electron ? { ELECTRON_RUN_AS_NODE: '1' } : {}) };
-  const boots = /(^|[\\/])nexus[\\/]autopilot\.js$/.test(file.replace(/\\/g, '/')) || file.replace(/\\/g, '/') === 'nexus/autopilot.js';
+  const boots = /(^|[\\/])nexus[\\/]autopilot\.js$/.test(file.replace(/\\/g, '/')) || file.replace(/\\/g, '/') === 'lib/nexus/autopilot.js';
   return { ok: true, kind: 'run', display: `${w === 'npm' ? line.trim() : `${w} ${t.slice(1).join(' ')}`.trim()}  →  node ${[file, ...args].join(' ')}  (${project} ${st.current})`, cmd: opts.node || process.execPath, args: [file, ...args], cwd, env, boots, version: st.current };
 }
 

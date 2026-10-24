@@ -7,11 +7,11 @@ intent: null
 summary: SB2_his_words_seed_the_spec (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676796
+exported_at: 1792841754634
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676796
-lastSeenAt: 1792787676796
+firstSeenAt: 1792841754634
+lastSeenAt: 1792841754634
 fingerprint: null
 payload:
   id: SB2_his_words_seed_the_spec
@@ -27,4 +27,4 @@ payload:
     - SB1_templates_are_the_default_frame
   blocks: []
   spec: null
-  graph: c38006264a07413e
+  graph: 300c2c85f224f44c

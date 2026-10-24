@@ -7,11 +7,11 @@ intent: null
 summary: P2_constitution_on_the_approve_path (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792814557524
+exported_at: 1792841756524
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792814557524
-lastSeenAt: 1792814557524
+firstSeenAt: 1792841756524
+lastSeenAt: 1792841756524
 fingerprint: null
 payload:
   id: P2_constitution_on_the_approve_path
@@ -27,4 +27,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: c2b44c2f71d1648f
+  graph: e3c19a94da91f374

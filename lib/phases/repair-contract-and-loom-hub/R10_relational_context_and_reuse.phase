@@ -4,14 +4,14 @@ type: phase
 id: docs_repair-contract-and-loom-hub-phasemap.spec::R10_relational_context_and_reuse
 context: pipeline phase R10_relational_context_and_reuse of docs/repair-contract-and-loom-hub-phasemap.spec
 intent: null
-summary: R10_relational_context_and_reuse (?) — 15 file(s)
+summary: R10_relational_context_and_reuse (?) — 14 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678344
+exported_at: 1792841756555
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678344
-lastSeenAt: 1792787678344
+firstSeenAt: 1792841756555
+lastSeenAt: 1792841756555
 fingerprint: null
 payload:
   id: R10_relational_context_and_reuse
@@ -28,7 +28,6 @@ payload:
     - lib/replay-engine.js
     - cortex/snapshot/index.js
     - loom/ui/index.html
-    - ui/tv-shell/index.html
     - lib/gap-field.js
     - lib/diagnostic-causal.js
     - lib/agent-build-learning.js
@@ -38,4 +37,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 0e23e7835362642d
+  graph: 9bc7eb109a1d3f9a

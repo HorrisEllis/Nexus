@@ -83,12 +83,13 @@ test('SV-07 an unreachable intelligence is said, never faked', async () => {
 });
 test('SV-08 the census: which systems are sovereign, and each blocker named (data / primitive / capability), on the route and the command', async () => {
   const SB = require('../../lib/system-boundary.js');
-  assert.deepStrictEqual(['cortex/memory/jaa-db.js', 'nexus/nexus-bus.js', 'intelligence/cfr/field.js'].map(SB.blockerOf), ['data', 'primitive', 'capability']);
+  assert.deepStrictEqual(['cortex/memory/jaa-db.js', 'lib/nexus/nexus-bus.js', 'intelligence/cfr/field.js'].map(SB.blockerOf), ['data', 'primitive', 'capability']);
   const r = SB.sovereignty({ root: REPO });
-  assert.ok(r.sovereign.includes('sentinel') && !r.sovereign.includes('nexus-healer'), 'nexus-healer is no system of its own now');
+  // 0.60.241 RF2: sentinel/ moved into lib/ (the kernel), so it is no system of its own now; components stays sovereign
+  assert.ok(r.sovereign.includes('components') && !r.sovereign.includes('sentinel') && !r.sovereign.includes('nexus-healer'), 'nexus-healer and sentinel are no systems of their own now');
   const one = SB.sovereignty({ root: REPO, system: 'versionium' }).systems[0];
   assert.ok(!one.sovereign && one.list && one.list.data.length === one.blockers.data, JSON.stringify(one.blockers));
-  const g = await quiet(async () => { const api = await import(path.join(REPO, 'idearium/api/index.js')); return api._route('GET', '/api/system/sovereign?system=sentinel'); });
+  const g = await quiet(async () => { const api = await import(path.join(REPO, 'idearium/api/index.js')); return api._route('GET', '/api/system/sovereign?system=components'); });
   const d = g.json.data || g.json;
   assert.strictEqual(g.status, 200); assert.strictEqual(d.systems[0].sovereign, true);
   const { SPEC } = require('../../idearium/cli/route-commands.js');

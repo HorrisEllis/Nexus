@@ -9,11 +9,11 @@ intent: null
 summary: CB4_the_emergence_loop_builds (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676660
+exported_at: 1792841754485
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676660
-lastSeenAt: 1792787676660
+firstSeenAt: 1792841754485
+lastSeenAt: 1792841754485
 fingerprint: null
 payload:
   id: CB4_the_emergence_loop_builds
@@ -22,11 +22,11 @@ payload:
   layer: null
   status: OPEN
   files:
-    - emergence/loop.js
+    - lib/emergence/loop.js
   depends_on:
     - CB1_cfr_build_logic
     - CB2_analysis_then_synthesis
     - MR2_vector_space_for_the_field
   blocks: []
   spec: null
-  graph: f55b34562227851d
+  graph: 46cb0a76928bacd7

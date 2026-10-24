@@ -7,11 +7,11 @@ intent: null
 summary: P5_autonomous_multiagent_loop (?) — 13 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678200
+exported_at: 1792841756391
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678200
-lastSeenAt: 1792787678200
+firstSeenAt: 1792841756391
+lastSeenAt: 1792841756391
 fingerprint: null
 payload:
   id: P5_autonomous_multiagent_loop
@@ -24,9 +24,9 @@ payload:
     - lib/chunk-service.js
     - lib/gemini-toolbox/injection.js
     - copilot/lib/self-model.js
-    - contracts/nexus-interaction-contract.js
     - copilot/lib/lifeline-contracts.js
     - lib/agent-system/contracts.js
+    - lib/contracts/nexus-interaction-contract.js
     - lib/agent-router.js
     - idearium/spec-engine/chunk-dispatch.js
     - lib/seam/chunk-lifecycle.js
@@ -40,4 +40,4 @@ payload:
     - P4_structured_agent_to_agent
   blocks: []
   spec: null
-  graph: 7a74916704cceb5b
+  graph: a2a4807ff38b06e1

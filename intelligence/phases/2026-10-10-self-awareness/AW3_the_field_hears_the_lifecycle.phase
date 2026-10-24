@@ -7,11 +7,11 @@ intent: null
 summary: AW3_the_field_hears_the_lifecycle (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677256
+exported_at: 1792841755142
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677256
-lastSeenAt: 1792787677256
+firstSeenAt: 1792841755142
+lastSeenAt: 1792841755142
 fingerprint: null
 payload:
   id: AW3_the_field_hears_the_lifecycle
@@ -26,4 +26,4 @@ payload:
     - AW2_every_call_says_who_asked
   blocks: []
   spec: null
-  graph: 79083f2ccb474917
+  graph: e1deb2d5dd156ebc

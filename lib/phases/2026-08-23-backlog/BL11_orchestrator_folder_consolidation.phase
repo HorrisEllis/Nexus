@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-08-23-backlog-phasemap.spec::BL11_orchestrator_folder_consolidation
 context: pipeline phase BL11_orchestrator_folder_consolidation of docs/2026-08-23-backlog-phasemap.spec
 intent: null
-summary: BL11_orchestrator_folder_consolidation (?) — 20 file(s)
+summary: BL11_orchestrator_folder_consolidation (?) — 19 file(s)
 system: idearium
 tags: []
-exported_at: 1792822701748
+exported_at: 1792841753343
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822701748
-lastSeenAt: 1792822701748
+firstSeenAt: 1792841753343
+lastSeenAt: 1792841753343
 fingerprint: null
 payload:
   id: BL11_orchestrator_folder_consolidation
@@ -20,13 +20,11 @@ payload:
   layer: null
   status: OPEN
   files:
-    - cli/diagnose.js
     - scripts/verify-boot.js
     - scripts/verify-wires.js
     - lib/system-check.js
     - lib/file-integrity.js
     - lib/uid/component-map.js
-    - contracts/SYSTEM-CONTRACTS.js
     - lib/nexus-config.js
     - data/registry.json
     - tests/nexus-full-audit.js
@@ -35,12 +33,13 @@ payload:
     - clear-glass/src/driver/page-resolver.js
     - clear-glass/src/net/policy.js
     - cos/archetype/components/index.js
-    - cli/nexus-repl.js
+    - lib/cli/nexus-repl.js
     - diagnostic/nexus-diagnostic.js
     - cos/runtime/syntax-check.cjs
+    - lib/contracts/SYSTEM-CONTRACTS.js
     - intelligence/cfr/contract-verifier.js
     - clear-glass/fix-orchestrator.js
   depends_on: []
   blocks: []
   spec: null
-  graph: e8629d7afc8fe155
+  graph: 364ff8619db01d40

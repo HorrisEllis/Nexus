@@ -7,11 +7,11 @@ intent: null
 summary: CON8_nexus_server_hook (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677686
+exported_at: 1792841755693
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677686
-lastSeenAt: 1792787677686
+firstSeenAt: 1792841755693
+lastSeenAt: 1792841755693
 fingerprint: null
 payload:
   id: CON8_nexus_server_hook
@@ -26,4 +26,4 @@ payload:
     - CON1_one_door_client
   blocks: []
   spec: null
-  graph: fd911e37cdaf9fee
+  graph: d26dbb814f8ec235

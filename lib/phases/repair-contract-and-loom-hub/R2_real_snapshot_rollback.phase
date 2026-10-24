@@ -4,14 +4,14 @@ type: phase
 id: docs_repair-contract-and-loom-hub-phasemap.spec::R2_real_snapshot_rollback
 context: pipeline phase R2_real_snapshot_rollback of docs/repair-contract-and-loom-hub-phasemap.spec
 intent: null
-summary: R2_real_snapshot_rollback (?) — 16 file(s)
+summary: R2_real_snapshot_rollback (?) — 15 file(s)
 system: idearium
 tags: []
-exported_at: 1792822478766
+exported_at: 1792841756547
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478766
-lastSeenAt: 1792822478766
+firstSeenAt: 1792841756547
+lastSeenAt: 1792841756547
 fingerprint: null
 payload:
   id: R2_real_snapshot_rollback
@@ -24,7 +24,6 @@ payload:
     - lib/replay-engine.js
     - docs/versionium.spec
     - lib/file-integrity.js
-    - ui/tv-shell/index.html
     - cortex/boot.js
     - clear-glass/renderer/settings/core.js
     - cos/remote-desktop/bridge-os-core/bridge-sngate/index.js
@@ -39,4 +38,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: b681fb6ca7cb6813
+  graph: f664d7c28996c65a

@@ -7,11 +7,11 @@ intent: null
 summary: GG1_graphs_generate_code (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676729
+exported_at: 1792841754566
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676729
-lastSeenAt: 1792787676729
+firstSeenAt: 1792841754566
+lastSeenAt: 1792841754566
 fingerprint: null
 payload:
   id: GG1_graphs_generate_code
@@ -20,8 +20,8 @@ payload:
   layer: null
   status: OPEN
   files:
-    - emerge/compiler/index.js
-    - emerge/compiler/emit.js
+    - lib/emerge/compiler/index.js
+    - lib/emerge/compiler/emit.js
     - idearium/repo/graph.js
     - idearium/lib/wiring-gen.js
   depends_on:
@@ -29,4 +29,4 @@ payload:
     - EV0_contracts_for_every_system
   blocks: []
   spec: null
-  graph: e8989d4b9064ae28
+  graph: 348d5e8a4911190d

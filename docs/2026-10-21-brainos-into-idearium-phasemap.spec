@@ -196,7 +196,7 @@ phases:
     layer: surface
     status: PLANNED
     depends_on: [BX0b_retire_brainos_page, BX6_pipeline_edit, BX7_automation, BX8_dock_panels]
-    files: [ui/brainos/index.html, clear-glass/src/main/index.js, tests/known-gaps.yaml, loom/maps/run-state-map.js]
+    files: [lib/ui/brainos/index.html, clear-glass/src/main/index.js, tests/known-gaps.yaml, loom/maps/run-state-map.js]
     spec: docs/brainos-in-idearium.spec
     blocks: [MOD-BX-RETIRE]
     does: "Per his BX0b: ui/brainos archived, the menu row opens Code → Flow, stale tests and contract replaced, loom wired."
@@ -206,7 +206,7 @@ phases:
     layer: surface
     status: PLANNED
     depends_on: [BX0c_float, BX2_flow_sources]
-    files: [clear-glass/src/providers/provider-widget.js, clear-glass/renderer/provider-widget.html, ui/brainos-float/brainos-float.js]
+    files: [clear-glass/src/providers/provider-widget.js, clear-glass/renderer/provider-widget.html, lib/ui/brainos-float/brainos-float.js]
     spec: docs/brainos-in-idearium.spec
     blocks: [MOD-BX-FLOAT]
     does: "His BX0c: a small widget on Clear Glass's provider pages, its contents following the provider (agent node and health, queue and job, account, userscript, route); the old float archived."

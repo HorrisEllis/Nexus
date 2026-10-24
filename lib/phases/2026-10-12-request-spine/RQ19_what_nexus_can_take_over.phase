@@ -7,11 +7,11 @@ intent: null
 summary: RQ19_what_nexus_can_take_over (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677375
+exported_at: 1792841755302
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677375
-lastSeenAt: 1792787677375
+firstSeenAt: 1792841755302
+lastSeenAt: 1792841755302
 fingerprint: null
 payload:
   id: RQ19_what_nexus_can_take_over
@@ -29,4 +29,4 @@ payload:
     - RQ14_the_spine_end_to_end
   blocks: []
   spec: null
-  graph: 18b7aa141588697b
+  graph: 5e3605ba044ebc79

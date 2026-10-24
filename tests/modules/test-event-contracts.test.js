@@ -144,7 +144,7 @@ test('EC-05b', 'an emit added without a declaration fails the check (the proof E
 });
 
 test('EC-06', 'wired: the CLI verb and loom', () => {
-  const cli = fs.readFileSync(path.join(ROOT, 'cli/nexus.js'), 'utf8');
+  const cli = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'nexus.js'), 'utf8');
   assert.ok(cli.includes('async contracts()') && cli.includes("require('../lib/event-contract-check.js')"), 'nexus contracts check');
   // loom's tree scan registers lib/*.js with its real require() edges (a hand-map entry would collide with it)
   const reg = JSON.parse(fs.readFileSync(path.join(ROOT, 'loom/data/registry.json'), 'utf8'));

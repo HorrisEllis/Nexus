@@ -50,21 +50,21 @@ function main() {
     /kind:\s*'chat'/.test(fs.readFileSync(path.join(ROOT, 'clear-glass', 'src', 'downloads', 'artifact-chat-index.js'), 'utf8')));
 
   // ── brainos phasemap's cited facts ────────────────────────────────────
-  const BRAINOS_HTML = fs.readFileSync(path.join(ROOT, 'ui', 'brainos', 'index.html'), 'utf8');
+  const BRAINOS_HTML = fs.readFileSync(path.join(ROOT, 'lib', 'ui', 'brainos', 'index.html'), 'utf8');
   const tabs = [...BRAINOS_HTML.matchAll(/data-tab="([a-z-]+)"/g)].map(m => m[1]);
   check('BrainOS still has exactly the 5 tabs the phasemap diagnosed (canvas/deploy/bayes/pipeline/automation) — none of the 8 named systems',
     new Set(tabs).size === 5 && ['canvas', 'deploy', 'bayes', 'pipeline', 'automation'].every(t => tabs.includes(t)));
   check('none of the 5 real BrainOS tabs are named for any of the 8 systems James asked for (copilot/ollama/guardian/hats/tools/injection/module-manager/reader)',
     !tabs.some(t => /copilot|ollama|guardian|hat|tool|inject|module|reader/.test(t)));
 
-  check('lib/hat-forge.js still has zero UI callers — HT1\'s whole premise', !fs.existsSync(path.join(ROOT, 'ui')) ||
+  check('lib/hat-forge.js still has zero UI callers — HT1\'s whole premise', !fs.existsSync(path.join(ROOT, 'lib', 'ui')) ||
     (() => {
       const uiFiles = [];
       const walk = (dir) => { for (const f of fs.readdirSync(dir, { withFileTypes: true })) {
         const p = path.join(dir, f.name);
         if (f.isDirectory()) walk(p); else if (f.name.endsWith('.js') || f.name.endsWith('.html')) uiFiles.push(p);
       } };
-      walk(path.join(ROOT, 'ui'));
+      walk(path.join(ROOT, 'lib', 'ui'));
       return uiFiles.every(f => !fs.readFileSync(f, 'utf8').includes('hat-forge'));
     })());
 
@@ -76,7 +76,7 @@ function main() {
         const p = path.join(dir, f.name);
         if (f.isDirectory()) walk(p); else if (f.name.endsWith('.js') || f.name.endsWith('.html')) uiFiles.push(p);
       } };
-      walk(path.join(ROOT, 'ui'));
+      walk(path.join(ROOT, 'lib', 'ui'));
       return uiFiles.every(f => !fs.readFileSync(f, 'utf8').includes('inject-config') && !fs.readFileSync(f, 'utf8').includes('inject_rule'));
     })());
 

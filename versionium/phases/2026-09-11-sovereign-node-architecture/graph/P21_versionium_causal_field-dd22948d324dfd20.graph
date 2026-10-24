@@ -1,0 +1,199 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P21_versionium_causal_field:dd22948d324dfd20
+type: graph
+id: phase:P21_versionium_causal_field:dd22948d324dfd20
+context: dependency graph of phase P21_versionium_causal_field
+intent: null
+summary: 16 node(s), 8 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841753835
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753835
+lastSeenAt: 1792841753835
+fingerprint: null
+payload:
+  for: P21_versionium_causal_field
+  kind: phase
+  repo: null
+  hash: dd22948d324dfd20
+  nodes:
+    - path: intelligence/cfr/field.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: versionium/lib/causality.js
+      role: changes
+      exists: true
+      system: versionium
+    - path: copilot/diagnostics.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/movement-map.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: intelligence/cfr/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/cfr/ledger.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/field-provider.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/lattice/associative-lattice.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/cli/cfr-debug.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/sigma-writer.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: versionium/server.js
+      role: used-by
+      exists: true
+      system: versionium
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/graph.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: versionium/lib/store.js
+      role: uses
+      exists: true
+      system: versionium
+  edges:
+    - from: versionium/lib/causality.js
+      to: versionium/lib/store.js
+      kind: requires
+    - from: versionium/lib/causality.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: versionium/lib/causality.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: versionium/server.js
+      to: versionium/lib/causality.js
+      kind: requires
+    - from: copilot/diagnostics.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: copilot/movement-map.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/cfr/index.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/cfr/ledger.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/field-provider.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: intelligence/lattice/associative-lattice.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: intelligence/cfr/field.js
+      kind: requires
+    - from: orchestrator/lib/sigma-writer.js
+      to: intelligence/cfr/field.js
+      kind: requires
+  crossings:
+    - from: versionium/lib/causality.js
+      to: intelligence/cfr/graph.js
+      fromSystem: versionium
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: versionium/lib/causality.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: versionium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/diagnostics.js
+      to: intelligence/cfr/field.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: copilot/movement-map.js
+      to: intelligence/cfr/field.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: diagnostic/nexus-diagnostic.js
+      to: intelligence/cfr/field.js
+      fromSystem: diagnostic
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/cfr-debug.js
+      to: intelligence/cfr/field.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: lib/nexus/autopilot.js
+      to: intelligence/cfr/field.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+    - from: orchestrator/lib/sigma-writer.js
+      to: intelligence/cfr/field.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P20_intelligence_reflexive_cfr_field
+    dependents: []
+    upstream:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P20_intelligence_reflexive_cfr_field
+    downstream: []
+    blockedBy:
+      - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P20_intelligence_reflexive_cfr_field
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by P20_intelligence_reflexive_cfr_field
+      - 'depends on (1): P20_intelligence_reflexive_cfr_field'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P20_intelligence_reflexive_cfr_field
+        kind: inferred

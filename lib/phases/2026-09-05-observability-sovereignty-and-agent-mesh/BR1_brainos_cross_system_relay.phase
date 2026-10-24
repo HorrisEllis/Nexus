@@ -9,11 +9,11 @@ intent: null
 summary: BR1_brainos_cross_system_relay (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675768
+exported_at: 1792841753715
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675768
-lastSeenAt: 1792787675768
+firstSeenAt: 1792841753715
+lastSeenAt: 1792841753715
 fingerprint: null
 payload:
   id: BR1_brainos_cross_system_relay
@@ -22,9 +22,9 @@ payload:
   layer: null
   status: OPEN
   files:
-    - ui/brainos/brainos-canvas.js
+    - lib/ui/brainos/brainos-canvas.js
   depends_on:
     - CG3_relay_into_cortex_sse
   blocks: []
   spec: null
-  graph: 74f187aeb527e717
+  graph: 6ed826ba86e978f7

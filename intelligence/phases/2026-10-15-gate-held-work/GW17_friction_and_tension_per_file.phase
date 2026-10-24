@@ -7,11 +7,11 @@ intent: null
 summary: GW17_friction_and_tension_per_file (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677575
+exported_at: 1792841755576
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677575
-lastSeenAt: 1792787677575
+firstSeenAt: 1792841755576
+lastSeenAt: 1792841755576
 fingerprint: null
 payload:
   id: GW17_friction_and_tension_per_file
@@ -28,4 +28,4 @@ payload:
     - GW3_a_contract_is_traced
   blocks: []
   spec: null
-  graph: f7852ec8e72a97a8
+  graph: 71b12cf5e05c8f04

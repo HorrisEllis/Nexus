@@ -7,11 +7,11 @@ intent: null
 summary: TL6_proof_and_wiring (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677696
+exported_at: 1792841755701
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677696
-lastSeenAt: 1792787677696
+firstSeenAt: 1792841755701
+lastSeenAt: 1792841755701
 fingerprint: null
 payload:
   id: TL6_proof_and_wiring
@@ -31,4 +31,4 @@ payload:
     - TL1_chunks_land_as_they_arrive
   blocks: []
   spec: null
-  graph: 2b6b52d3b29be7d3
+  graph: 5918341c06decdcb

@@ -22,15 +22,15 @@ const P = start();
 const ROOT = P.ROOT;
 const REF = process.argv[2] || '30a0c24';
 let git;
-try { git = (p) => execFileSync('git', ['-C', ROOT, 'show', `${REF}:${p}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }); git('ui/home/home.css'); }
+try { git = (p) => execFileSync('git', ['-C', ROOT, 'show', `${REF}:${p}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }); git('lib/ui/home/home.css'); }
 catch (e) { console.log(JSON.stringify({ skip: `REF_COMMIT ${REF} is not in this checkout's history — pass one that is` })); process.exit(3); }
 
-const src = git('ui/home/index.html').split('\n');
+const src = git('lib/ui/home/index.html').split('\n');
 const a = src.findIndex(l => l.startsWith('// ── Failure / event logging'));
 const bIdx = src.findIndex((l, i) => i > a && l.startsWith('// ── Forge Shell tile'));
 const top = src.indexOf("'use strict';") + 1;
 const orig = [...src.slice(0, top), ...src.slice(a, bIdx), ...src.slice(top, a), ...src.slice(bIdx)].join('\n');
-const ORIG_CSS = git('ui/home/home.css');
+const ORIG_CSS = git('lib/ui/home/home.css');
 const body = orig.slice(orig.indexOf("<script>\n'use strict';"));
 const names = [...new Set([...body.matchAll(/^(?:async\s+)?(?:function\s+([A-Za-z_$][\w$]*)|class\s+([A-Za-z_$][\w$]*)|(?:const|let|var)\s+([A-Za-z_$][\w$]*))/gm)].map(m => m[1] || m[2] || m[3]))].sort();
 const SNAP = () => { const out = {}; const props = ['display', 'visibility', 'opacity', 'position', 'z-index', 'color', 'background-color', 'font-size', 'font-family', 'width', 'height', 'top', 'left', 'right', 'bottom', 'transform', 'pointer-events', 'border-top-color', 'border-radius', 'padding-top', 'margin-top', 'overflow', 'flex-direction', 'grid-template-columns', 'animation-name', 'filter', 'box-shadow', 'transition-property', 'transition-duration', 'animation-duration', 'cursor', 'user-select', 'text-decoration-line', 'border-left-color', 'letter-spacing', 'line-height', 'font-weight', 'gap', 'justify-content', 'align-items'];
@@ -73,7 +73,7 @@ async function run(browser, url, stored, port) {
 (async () => {
   await new Promise(r => srv.listen(0, '127.0.0.1', r));
   const port = srv.address().port;
-  const origHtml = path.join(ROOT, 'ui/home/__orig.html'), origCss = path.join(ROOT, 'ui/home/__orig-home.css');
+  const origHtml = path.join(ROOT, 'lib', 'ui', 'home', '__orig.html'), origCss = path.join(ROOT, 'lib', 'ui', 'home', '__orig-home.css');
   fs.writeFileSync(origHtml, orig.replace('/ui/home/home.css', '/ui/home/__orig-home.css')); fs.writeFileSync(origCss, ORIG_CSS);
   const b = await P.glass.chromium.launch();
   const mode = /const MODE_CONFIG = \{\s*\n\s*'?([\w-]+)'?\s*:/.exec(orig)[1];

@@ -1,0 +1,287 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CE1_the_run_state:12752a28ba5339e2
+type: graph
+id: phase:CE1_the_run_state:12752a28ba5339e2
+context: dependency graph of phase CE1_the_run_state
+intent: null
+summary: 30 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755479
+lastSeenAt: 1792841755479
+fingerprint: null
+payload:
+  for: CE1_the_run_state
+  kind: phase
+  repo: null
+  hash: 12752a28ba5339e2
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/analysis.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/lib/response-sink.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/change-record.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gig-ledger-listener.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-procedures.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/bin/flight-recorder.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-gig-ledger.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-procedures.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/lib/response-sink.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/idearium/code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/chat-logger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/extract-code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/run-state.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/extract-code.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/chat-logger.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/idearium/code.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/nexus/tool-layers.js
+      kind: requires
+    - from: clear-glass/src/downloads/artifact-chat-index.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/run-state.js
+      kind: requires
+    - from: guardian/lib/response-sink.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/change-record.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/gig-ledger-listener.js
+      to: lib/run-state.js
+      kind: requires
+    - from: lib/repo-procedures.js
+      to: lib/run-state.js
+      kind: requires
+    - from: products/flight-recorder/bin/flight-recorder.js
+      to: lib/run-state.js
+      kind: requires
+    - from: tests/modules/test-gig-ledger.test.js
+      to: lib/run-state.js
+      kind: requires
+    - from: tests/modules/test-repo-procedures.test.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/analysis.js
+      to: lib/agent-memory.js
+      kind: requires
+  crossings:
+    - from: lib/agent-memory.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+    - from: lib/agent-memory.js
+      to: guardian/lib/response-sink.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE2_the_task_header
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE3_reply_on_task_gate
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE4_reply_kind_and_tags
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE7_ai_assisted_editing
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE10_lost_jobs_fall_back
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE11_contract_panel_and_context
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE12_proof_and_wiring
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV3_file_rewind
+    upstream: []
+    downstream:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE10_lost_jobs_fall_back
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE11_contract_panel_and_context
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE12_proof_and_wiring
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE2_the_task_header
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE3_reply_on_task_gate
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE4_reply_kind_and_tags
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE7_ai_assisted_editing
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE8_the_cli_reads_the_surface
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE9_the_panels
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV2_a_version_per_diff
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV3_file_rewind
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV4_tagged_history
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV5_universal_versioning
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE2_the_task_header
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE3_reply_on_task_gate
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE4_reply_kind_and_tags
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE7_ai_assisted_editing
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE10_lost_jobs_fall_back
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE11_contract_panel_and_context
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE12_proof_and_wiring
+      - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV3_file_rewind
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - >-
+        needed by (9): CE2_the_task_header, CE3_reply_on_task_gate, CE4_reply_kind_and_tags,
+        CE5_events, CE7_ai_assisted_editing, CE10_lost_jobs_fall_back,
+        CE11_contract_panel_and_context, CE12_proof_and_wiring, CV3_file_rewind · all downstream 14
+        · finishing it unlocks CE2_the_task_header, CE3_reply_on_task_gate, CE4_reply_kind_and_tags,
+        CE5_events, CE7_ai_assisted_editing, CE10_lost_jobs_fall_back,
+        CE11_contract_panel_and_context, CE12_proof_and_wiring, CV3_file_rewind
+    edges: []

@@ -9,11 +9,11 @@ intent: null
 summary: VS2_ring_buffer_and_causal_field (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675734
+exported_at: 1792841753680
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675734
-lastSeenAt: 1792787675734
+firstSeenAt: 1792841753680
+lastSeenAt: 1792841753680
 fingerprint: null
 payload:
   id: VS2_ring_buffer_and_causal_field
@@ -24,9 +24,9 @@ payload:
   files:
     - intelligence/rfr2/kernel/index.js
     - lib/ess.js
-    - emerge/compiler/ring-buffer.js
+    - lib/emerge/compiler/ring-buffer.js
   depends_on:
     - VS1_sovereign_folder_and_foundation
   blocks: []
   spec: null
-  graph: a136f794f2a44987
+  graph: '6074082303329969'

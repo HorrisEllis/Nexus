@@ -30,7 +30,7 @@ origin:
 found:
   # §8.6, read in code 2026-10-18. Each system already answers one part of the question; none of them asks the others.
   intelligence_crystallization_memory:
-    files: [intelligence/index.js, warp/plugins/crystallizer-flatfile.js, warp/dispatch/deltaCache.js, lib/context-atlas.js]
+    files: [intelligence/index.js, lib/warp/plugins/crystallizer-flatfile.js, lib/warp/dispatch/deltaCache.js, lib/context-atlas.js]
     gives: >-
       Patterns that recur graduate: intelligence/index.js crystallises BEP pairs (threshold 3 for rare types, 10 for common)
       into bep_patterns / crystals, served at GET /api/intelligence/patterns and /crystals; WARP's crystallizer promotes a

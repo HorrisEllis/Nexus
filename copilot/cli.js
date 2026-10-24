@@ -354,11 +354,11 @@ async function exec(input) {
 
     const MODULE_CLI = {
       '/guardian': 'guardian/cli.js',
-      '/cockpit':  'cockpit/cli.js',
-      '/forge':    'cockpit/cli.js',
+      '/cockpit':  'lib/cockpit/cli.js',
+      '/forge':    'lib/cockpit/cli.js',
       '/cortex':   'cortex/cortex.js',
       '/idearium': 'idearium/cli/index.js',
-      '/nexus':    'cli/nexus.js',       // utility commands: status, jobs, watch, gaps, snr, tag, ...
+      '/nexus':    'lib/cli/nexus.js',       // utility commands: status, jobs, watch, gaps, snr, tag, ...
       '/copilot':  'copilot/cli.js',
       '/cp':       'copilot/cli.js',
     };

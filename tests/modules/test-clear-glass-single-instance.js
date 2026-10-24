@@ -64,7 +64,7 @@ test('CGSI-005', 'the retry-once mechanism itself is untouched — still useful 
 });
 
 test('CGSI-006', "autopilot's own crash-vs-intentional tracking does not depend on clear-glass's exit code, so this fix cannot break autopilot's circuit breaker either way", () => {
-  const autopilotSrc = fs.readFileSync(path.join(__dirname, '../../nexus/autopilot.js'), 'utf8');
+  const autopilotSrc = fs.readFileSync(path.join(__dirname, '..', '..', 'lib', 'nexus', 'autopilot.js'), 'utf8');
   const exitHandlerMatch = autopilotSrc.match(/proc\.on\('exit',\s*\(code,\s*signal\)\s*=>\s*\{[\s\S]*?\n {2}\}\);/);
   assert.ok(exitHandlerMatch, "autopilot.js's proc.on('exit', ...) handler must be locatable");
   const handler = exitHandlerMatch[0];

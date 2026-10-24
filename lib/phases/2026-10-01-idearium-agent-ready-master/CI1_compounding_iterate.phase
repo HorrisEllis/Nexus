@@ -9,11 +9,11 @@ intent: null
 summary: CI1_compounding_iterate (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792822476686
+exported_at: 1792841754278
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822476686
-lastSeenAt: 1792822476686
+firstSeenAt: 1792841754278
+lastSeenAt: 1792841754278
 fingerprint: null
 payload:
   id: CI1_compounding_iterate
@@ -29,4 +29,4 @@ payload:
     - DT2_failure_mode_field
   blocks: []
   spec: null
-  graph: 0f034aae1bf65fb7
+  graph: 920d6558763b2685

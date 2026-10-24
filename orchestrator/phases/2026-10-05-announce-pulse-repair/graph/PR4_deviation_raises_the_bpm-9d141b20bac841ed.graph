@@ -1,0 +1,208 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PR4_deviation_raises_the_bpm:9d141b20bac841ed
+type: graph
+id: phase:PR4_deviation_raises_the_bpm:9d141b20bac841ed
+context: dependency graph of phase PR4_deviation_raises_the_bpm
+intent: null
+summary: 19 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754616
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754616
+lastSeenAt: 1792841754616
+fingerprint: null
+payload:
+  for: PR4_deviation_raises_the_bpm
+  kind: phase
+  repo: null
+  hash: 9d141b20bac841ed
+  nodes:
+    - path: orchestrator/lib/pulse.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: clear-glass/wire/nexus-wire.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-connect.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cli/boot-systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-cfr-influence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-knowledge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-query.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/cli/boot-systems.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-query.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-knowledge.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-cfr-influence.js
+      kind: requires
+    - from: clear-glass/wire/nexus-wire.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: lib/nexus/nexus-connect.js
+      to: orchestrator/lib/pulse.js
+      kind: requires
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: clear-glass/wire/nexus-wire.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: clear-glass
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: cortex/boot.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: cortex
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: idearium
+      toSystem: orchestrator
+      kind: system
+      known: true
+    - from: lib/nexus/nexus-connect.js
+      to: orchestrator/lib/pulse.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+    dependents: []
+    upstream:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR1_the_announced_registry_is_the_list
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - 'depends on (1): PR3_negative_space_for_missed_heartbeats · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+        kind: declared

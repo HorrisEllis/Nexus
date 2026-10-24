@@ -7,11 +7,11 @@ intent: null
 summary: MR7_recipes (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676635
+exported_at: 1792841754457
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676635
-lastSeenAt: 1792787676635
+firstSeenAt: 1792841754457
+lastSeenAt: 1792841754457
 fingerprint: null
 payload:
   id: MR7_recipes
@@ -22,10 +22,10 @@ payload:
   files:
     - lib/case-library.js
     - lib/repo-hat-memory.js
-    - meta/crystal-lattice.js
+    - lib/meta/crystal-lattice.js
   depends_on:
     - CF1_cfr_improved_with_rfr2
     - CB1_cfr_build_logic
   blocks: []
   spec: null
-  graph: dba6a7b218cea00c
+  graph: 8b1c5a2f5b5e135b

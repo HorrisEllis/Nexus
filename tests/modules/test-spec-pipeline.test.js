@@ -84,7 +84,7 @@ const BAD = 'spec:\n  meta:\n    name: ledger\n  modules:\n    - id: ledger-stor
     if (!(r && r.error && /no spec-engine/.test(r.error))) repo = r && (r.repo || r);
     else await new Promise(res => setTimeout(res, 250));
   }
-  const bus = require(path.join(ROOT, 'nexus/nexus-bus.js'));
+  const bus = require(path.join(ROOT, 'lib', 'nexus', 'nexus-bus.js'));
   const heard = []; bus.on('idearium.spec.collected', (e) => heard.push(e && e.payload !== undefined ? e.payload : e));
   const DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'spec-pipe-idx-'));
 

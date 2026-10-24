@@ -9,11 +9,11 @@ intent: null
 summary: AM3_agent_mesh_folder_consolidation (?) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675574
+exported_at: 1792841753497
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675574
-lastSeenAt: 1792787675574
+firstSeenAt: 1792841753497
+lastSeenAt: 1792841753497
 fingerprint: null
 payload:
   id: AM3_agent_mesh_folder_consolidation
@@ -22,7 +22,7 @@ payload:
   layer: null
   status: OPEN
   files:
-    - ui/home/areas/agent-suite.js
+    - lib/ui/home/areas/agent-suite.js
     - lib/tool-forge.js
     - clear-glass/src/mesh/agent-mesh.js
     - lib/agent-tools/tools/identity/hat-forge.js
@@ -35,4 +35,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 6a436c038ec43868
+  graph: 5ed8f87ae9176e2e

@@ -7,11 +7,11 @@ intent: null
 summary: MCO0_audit_real_coverage (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678282
+exported_at: 1792841756481
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678282
-lastSeenAt: 1792787678282
+firstSeenAt: 1792841756481
+lastSeenAt: 1792841756481
 fingerprint: null
 payload:
   id: MCO0_audit_real_coverage
@@ -23,9 +23,9 @@ payload:
     - idearium/repo/index.js
     - idearium/agent-suite/index.js
     - idearium/repo/import-pipeline.js
-    - ui/home/areas/agent-suite.js
+    - lib/ui/home/areas/agent-suite.js
     - scripts/precommit-check.js
   depends_on: []
   blocks: []
   spec: null
-  graph: d1328f345333d6df
+  graph: 2f526d1ded4fee66

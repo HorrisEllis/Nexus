@@ -229,7 +229,7 @@ spec:
 
     - id: IF-CRYSTAL-PRODUCERS
       name: crystal-producers
-      path: meta/crystal-lattice.js
+      path: lib/meta/crystal-lattice.js
       description: "The two producers writing crystals today: meta/crystal-lattice.js (domain:verb:outcome ≥3 → crystal) and intelligence/liminal-space (evidence ≥5 @0.75, or focal-point confirmation)."
       exports: ["crystal-lattice _maybeCrystallize(compartment, outcomeKind)", "liminal-space hold(focalPoint, item) → _checkCrystallisation"]
       behavioral_contracts: ["both insert into JAA `crystals` with their own schemas (2026-10-20 census)"]
@@ -277,7 +277,7 @@ spec:
 
     - id: IF-ADVERSARIES
       name: adversaries
-      path: meta/adversary-suite.js
+      path: lib/meta/adversary-suite.js
       description: "meta/adversary-suite.js (6 attack classes), intelligence/adversarial.js compare() (contradiction score), copilot/lifeline.js (ask other agents), lib/agent-council.js (independent answers)."
       exports: ["adversary-suite attack classes", "compare({ left, right }) → { contradictionScore }", "lifeline ask(...)"]
       behavioral_contracts: ["RAID governs dispatch"]

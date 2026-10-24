@@ -9,11 +9,11 @@ intent: null
 summary: MR10_the_field_between_james_and_the_agents (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676645
+exported_at: 1792841754465
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676645
-lastSeenAt: 1792787676645
+firstSeenAt: 1792841754465
+lastSeenAt: 1792841754465
 fingerprint: null
 payload:
   id: MR10_the_field_between_james_and_the_agents
@@ -22,10 +22,10 @@ payload:
   layer: null
   status: OPEN
   files:
-    - emergence/vendor/rfr2/field/relational.js
+    - lib/emergence/vendor/rfr2/field/relational.js
     - lib/repo-hat-memory.js
   depends_on:
     - MR9_liminal_on_the_agents
   blocks: []
   spec: null
-  graph: 26426e0877de2189
+  graph: 727ed92f6cab8eaa

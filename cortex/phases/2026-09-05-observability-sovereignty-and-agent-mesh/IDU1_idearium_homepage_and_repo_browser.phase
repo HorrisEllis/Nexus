@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::IDU1_idearium_homepage_and_repo_browser
+type: phase
+id: docs_2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::IDU1_idearium_homepage_and_repo_browser
+context: >-
+  pipeline phase IDU1_idearium_homepage_and_repo_browser of
+  docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+intent: null
+summary: IDU1_idearium_homepage_and_repo_browser (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1792841753755
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841753755
+lastSeenAt: 1792841753755
+fingerprint: null
+payload:
+  id: IDU1_idearium_homepage_and_repo_browser
+  map: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - ID2_verify_idearium_reconciliation_reads_right_store
+  blocks: []
+  spec: null
+  graph: 59239d65a2593d97

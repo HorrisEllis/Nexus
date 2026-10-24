@@ -19,7 +19,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const ROOT = path.join(__dirname, '../..');
-const P = require(path.join(ROOT, 'emerge/compiler/phase-specs.js'));
+const P = require(path.join(ROOT, 'lib', 'emerge', 'compiler', 'phase-specs.js'));
 const NE = require(path.join(ROOT, 'lib/node-export.js'));
 
 let passed = 0, failed = 0;

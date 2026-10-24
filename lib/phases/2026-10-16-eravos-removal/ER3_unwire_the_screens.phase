@@ -7,11 +7,11 @@ intent: null
 summary: ER3_unwire_the_screens (?) — 19 file(s)
 system: idearium
 tags: []
-exported_at: 1792822478020
+exported_at: 1792841755704
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478020
-lastSeenAt: 1792822478020
+firstSeenAt: 1792841755704
+lastSeenAt: 1792841755704
 fingerprint: null
 payload:
   id: ER3_unwire_the_screens
@@ -27,19 +27,19 @@ payload:
     - idearium/test/ui-restructure.smoke.cjs
     - lib/file-tree-plan.js
     - lib/spec-collect.js
-    - ui/home/index.html
-    - ui/home/core/config.js
-    - ui/home/areas/shell.js
-    - ui/home/areas/rail.js
-    - ui/tv-shell/index.html
-    - ui/tv-shell/warp-ui/nexus-shell.js
-    - ui/tv-shell/nerve/nerve.js
-    - ui/brainos/brainos-app.js
-    - ui/brainos/brainos-automation.js
-    - ui/brainos/brainos-canvas.js
+    - lib/ui/home/index.html
+    - lib/ui/home/core/config.js
+    - lib/ui/home/areas/shell.js
+    - lib/ui/home/areas/rail.js
+    - lib/ui/tv-shell/index.html
+    - lib/ui/tv-shell/warp-ui/nexus-shell.js
+    - lib/ui/tv-shell/nerve/nerve.js
+    - lib/ui/brainos/brainos-app.js
+    - lib/ui/brainos/brainos-automation.js
+    - lib/ui/brainos/brainos-canvas.js
     - clear-glass/renderer/library/sections/downloads.js
     - clear-glass/renderer/guardian-picker.js
   depends_on: []
   blocks: []
   spec: null
-  graph: b77762163146e22d
+  graph: efd23783f363d8e1

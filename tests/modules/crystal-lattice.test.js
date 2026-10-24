@@ -36,7 +36,7 @@ require.cache[require.resolve('../../cortex/memory/jaa-db')] = {
   },
 };
 
-const cl = require('../../meta/crystal-lattice');
+const cl = require('../../lib/meta/crystal-lattice');
 
 function fakeCompartment(overrides = {}) {
   return { id: 'c-' + Math.random().toString(36).slice(2, 8), _declaredDomain: 'cortex', _declaredVerb: 'read', constraint_frame: { risk_ceiling: 'READ' }, ...overrides };

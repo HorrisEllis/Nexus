@@ -27,13 +27,13 @@ phases:
   ER1_delete_the_system:
     status: BUILT 0.60.83
     systems: [eravos, core]
-    files: [eravos/ (deleted), ui/eravos/ (deleted), hooks/eravos.hooks.js (deleted), hooks/index.js, docs/eravos.spec (deleted), docs/eravos-agnostic-canvas.spec (deleted), tests/modules/test-eravos-pulse-migration.js (deleted), run-all.js, tests/modules/run-all.js]
+    files: [eravos/ (deleted), ui/eravos/ (deleted), hooks/eravos.hooks.js (deleted), lib/hooks/index.js, docs/eravos.spec (deleted), docs/eravos-agnostic-canvas.spec (deleted), tests/modules/test-eravos-pulse-migration.js (deleted), run-all.js, tests/modules/run-all.js]
     does: "The system, its UI, its hook declarations, its two specs and its own test are deleted."
 
   ER2_unwire_the_platform:
     status: BUILT 0.60.83
     systems: [orchestrator, core, guardian, loom, diagnostic]
-    files: [orchestrator/orchestrator.config.json, orchestrator/orchestrator.js, orchestrator/lib/contract-poller.js, orchestrator/lib/contract-handshake.js, orchestrator/lib/mcp-server.js, nexus/autopilot.js, lib/system-check.js, lib/nexus-self/systems.js, lib/blueprint-index.js, lib/gap-priority.js, lib/lean-mode.js, lib/agent-tools/naming.js, lib/agent-tools/tools/coordination/capability-tools.js, scripts/precommit-check.js, diagnostic/nexus-diagnostic.js, guardian/server.js, guardian/interaction-contract.json, hooks/guardian.hooks.js, loom/maps/session-2026-08-14-map.js, loom/maps/cos-testenv-map.js, loom/scanners/capability-map.js, loom/ui/index.html]
+    files: [orchestrator/orchestrator.config.json, orchestrator/orchestrator.js, orchestrator/lib/contract-poller.js, orchestrator/lib/contract-handshake.js, orchestrator/lib/mcp-server.js, lib/nexus/autopilot.js, lib/system-check.js, lib/nexus-self/systems.js, lib/blueprint-index.js, lib/gap-priority.js, lib/lean-mode.js, lib/agent-tools/naming.js, lib/agent-tools/tools/coordination/capability-tools.js, scripts/precommit-check.js, diagnostic/nexus-diagnostic.js, guardian/server.js, guardian/interaction-contract.json, lib/hooks/guardian.hooks.js, loom/maps/session-2026-08-14-map.js, loom/maps/cos-testenv-map.js, loom/scanners/capability-map.js, loom/ui/index.html]
     does: >-
       Out of every list of live systems: the port, the orchestrator's systems, autopilot boot, health checks,
       contract polling and handshake, lean mode, gap priority, the blueprint index, the nexus-self system table,
@@ -43,7 +43,7 @@ phases:
   ER3_unwire_the_screens:
     status: BUILT 0.60.83
     systems: [idearium, ui, clear-glass]
-    files: [idearium/ui/index.html, idearium/ui/js/app.js, idearium/ui/js/compartment.js, idearium/api/index.js, idearium/test/ui-restructure.smoke.cjs, lib/file-tree-plan.js, lib/spec-collect.js, ui/home/index.html, ui/home/core/config.js, ui/home/areas/shell.js, ui/home/areas/rail.js, ui/tv-shell/index.html, ui/tv-shell/warp-ui/nexus-shell.js, ui/tv-shell/nerve/nerve.js, ui/brainos/brainos-app.js, ui/brainos/brainos-automation.js, ui/brainos/brainos-canvas.js, clear-glass/renderer/library/sections/downloads.js, clear-glass/renderer/guardian-picker.js]
+    files: [idearium/ui/index.html, idearium/ui/js/app.js, idearium/ui/js/compartment.js, idearium/api/index.js, idearium/test/ui-restructure.smoke.cjs, lib/file-tree-plan.js, lib/spec-collect.js, lib/ui/home/index.html, lib/ui/home/core/config.js, lib/ui/home/areas/shell.js, lib/ui/home/areas/rail.js, lib/ui/tv-shell/index.html, lib/ui/tv-shell/warp-ui/nexus-shell.js, lib/ui/tv-shell/nerve/nerve.js, lib/ui/brainos/brainos-app.js, lib/ui/brainos/brainos-automation.js, lib/ui/brainos/brainos-canvas.js, clear-glass/renderer/library/sections/downloads.js, clear-glass/renderer/guardian-picker.js]
     does: >-
       The following go: Idearium's Build › Eravos tab, its iframe and its organism.create handler; the ERAVOS-mod
       templates; the Canvas channel (an iframe of :3751) on the Home and TV pages; ERAVOS's node and port on BrainOS

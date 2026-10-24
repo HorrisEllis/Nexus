@@ -1,0 +1,228 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RC3_windows_safe_node_names:dd2d7013c9f63d75
+type: graph
+id: phase:RC3_windows_safe_node_names:dd2d7013c9f63d75
+context: dependency graph of phase RC3_windows_safe_node_names
+intent: null
+summary: 28 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755993
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755993
+lastSeenAt: 1792841755993
+fingerprint: null
+payload:
+  for: RC3_windows_safe_node_names
+  kind: phase
+  repo: null
+  hash: dd2d7013c9f63d75
+  nodes:
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/node-export.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/pipeline-nodes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: architect/schemas/index.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/schemas/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/nodes.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/schemas/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/schemas/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/failure-mode-forensics.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/schemas/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/lib/agent-facts.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-schemas.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/safe-watch.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/node-registry.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-index.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/safe-watch.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/system-registry.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: architect/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: clear-glass/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: clear-glass/src/automation/nodes.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/self-heal/failure-mode-forensics.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/node-export.js
+      kind: requires
+    - from: diagnostic/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/agent-facts.js
+      to: lib/node-export.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC2_linear_node_scan
+    dependents: []
+    upstream:
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC2_linear_node_scan
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): RC2_linear_node_scan · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC2_linear_node_scan
+        kind: inferred

@@ -7,11 +7,11 @@ intent: null
 summary: DP11_the_product_boundary (?) — 19 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677772
+exported_at: 1792841755779
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677772
-lastSeenAt: 1792787677772
+firstSeenAt: 1792841755779
+lastSeenAt: 1792841755779
 fingerprint: null
 payload:
   id: DP11_the_product_boundary
@@ -43,4 +43,4 @@ payload:
     - DP0a_one_product_or_two
   blocks: []
   spec: null
-  graph: 899986b367f9bf2d
+  graph: df7c7dcdd1ab6a91

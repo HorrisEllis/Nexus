@@ -10,7 +10,7 @@ const { declareMap } = require('./declare-map');
 const I = (rel) => idFor(rel);
 
 const FILES = [
-  ['lib/run-state.js',   I('lib/run-state.js'),   [I('lib/node-export.js'), I('nexus/nexus-bus.js')]],
+  ['lib/run-state.js',   I('lib/run-state.js'),   [I('lib/node-export.js'), I('lib/nexus/nexus-bus.js')]],
   ['lib/reply-kind.js',  I('lib/reply-kind.js'),  [I('lib/step-gate.js')]],
   ['lib/gig-ledger.js',  I('lib/gig-ledger.js'),  []],   // §0.60.53 PF0
   ['lib/checks/ck-248-toolchain.js', I('lib/checks/ck-248-toolchain.js'), []],   // §0.60.77 MB5: 18 languages, each by its own parser; selfTest/coverage/checkText
@@ -94,7 +94,7 @@ const FILES = [
   ['clear-glass/src/fingerprint/firefox-version.js', I('clear-glass/src/fingerprint/firefox-version.js'), []],   // §0.60.108 GS3: the Firefox version from Mozilla's calendar
   ['clear-glass/src/preload/google-signin.js', I('clear-glass/src/preload/google-signin.js'), []],   // §0.60.108 GS4: the sign-in page reads as Firefox, no debugger   // §0.60.106 GS1: Google's sign-in as Firefox, consistently
   ['clear-glass/src/tls/helper.js', I('clear-glass/src/tls/helper.js'), []],   // §0.60.109 TLS2: runs cg-tls-helper (clear-glass/tls-helper, Go + uTLS); its CA trust for personas
-  ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('nexus/nexus-bus.js')]],
+  ['lib/gig-ledger-listener.js', I('lib/gig-ledger-listener.js'), [I('lib/gig-ledger.js'), I('lib/run-state.js'), I('lib/nexus/nexus-bus.js')]],
   ['lib/repo-procedures.js', I('lib/repo-procedures.js'), [I('lib/node-export.js'), I('lib/run-state.js'), I('idearium/lib/data-dir.cjs')]],   // §0.60.118 DK1: .procedure files, replayed through an injected tool runner
   ['idearium/ui/js/ui-editor-doc.js', I('idearium/ui/js/ui-editor-doc.js'), []],   // §0.60.122 UE1: the page ↔ editor round trip (pure)
   ['idearium/ui/js/ui-editor.js', I('idearium/ui/js/ui-editor.js'), [I('idearium/ui/js/ui-editor-doc.js')]],   // §0.60.122 UE1: the editor page on vendored GrapesJS (idearium/ui/vendor/grapesjs, BSD-3-Clause)
@@ -104,7 +104,7 @@ const FILES = [
   ['lib/architecture-migrate.js', I('lib/architecture-migrate.js'), [I('lib/system-boundary.js'), I('lib/nexus-self/systems.js')]],
   ['lib/data-home.js', I('lib/data-home.js'), [I('lib/system-registry.js'), I('lib/data-clearup.js'), I('lib/test-sandbox.js'), I('lib/version.js')]],   // §0.60.207 DL2 one resolver; each system brings its own data home at boot
   ['lib/data-clearup.js', I('lib/data-clearup.js'), []],   // §0.60.177 DL0/DL1 census + clear-up tool; its rules are docs/data-layout.spec ownership: (read at run time, not a require)
-  ['emerge/compiler/phase-specs.js', I('emerge/compiler/phase-specs.js'), [I('emerge/compiler/kg-builder.js'), I('lib/phase-dag.js'), I('lib/phase-graph.js'), I('lib/phase-map-auto.js'), I('lib/pipeline-nodes.js'), I('lib/phase-plan.js')]],   // §0.60.176 PS1 each phase specced again: .phase + .graph (dag slice) beside its owner
+  ['lib/emerge/compiler/phase-specs.js', I('lib/emerge/compiler/phase-specs.js'), [I('lib/emerge/compiler/kg-builder.js'), I('lib/phase-dag.js'), I('lib/phase-graph.js'), I('lib/phase-map-auto.js'), I('lib/pipeline-nodes.js'), I('lib/phase-plan.js')]],   // §0.60.176 PS1 each phase specced again: .phase + .graph (dag slice) beside its owner
   ['lib/upload-placement.js', I('lib/upload-placement.js'), []],   // §0.60.173 UP1/UP2 a zip's files placed against a repo (strip, exists, same bytes, folders, intent, his learned rules); requires/requiredBy
   ['idearium/ui/js/upload-intent.js', I('idearium/ui/js/upload-intent.js'), [I('idearium/ui/js/code-tab-panels.js')]],   // §0.60.173 UP4 the Code tab's upload panel (page globals: CX, _cxPaintPanel, api)
   ['lib/phase-dag.js', I('lib/phase-dag.js'), [I('loom/scanners/phasemap-map.js')]],   // §0.60.172 DG3 the whole DAG of every phasemap
@@ -131,12 +131,12 @@ const FILES = [
   ['idearium/ui/js/code-dock.js', I('idearium/ui/js/code-dock.js'), [I('idearium/ui/js/work-surface.js'), I('idearium/ui/js/repo-tasks.js'), I('idearium/ui/js/plan-panel.js')]],   // §0.60.118 DK2: the dock — _wsCard, _rtTree/_rtRow, _ppContext reused (page globals)
 ];
 const CONSUMERS = [
-  [I('emerge/compiler/phase-specs.js'), I('emerge/compiler/kg-builder.js'), '§0.60.176 PS1 specIds(): what a spec declares, through emerge\'s own knowledge-graph build'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/phase-dag.js'), '§0.60.176 PS1 the whole DAG and each phase\'s slice'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/phase-graph.js'), '§0.60.176 PS1 graphFor(): files with roles and crossings'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/phase-map-auto.js'), '§0.60.176 PS1 mapPhase() over envFromTree()'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/pipeline-nodes.js'), '§0.60.176 PS1 phaseNode / graphNode (graphNode now keeps the dag slice)'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/phase-plan.js'), '§0.60.176 PS1 targetSystem(): the owner of each phase'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/emerge/compiler/kg-builder.js'), '§0.60.176 PS1 specIds(): what a spec declares, through emerge\'s own knowledge-graph build'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/phase-dag.js'), '§0.60.176 PS1 the whole DAG and each phase\'s slice'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/phase-graph.js'), '§0.60.176 PS1 graphFor(): files with roles and crossings'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/phase-map-auto.js'), '§0.60.176 PS1 mapPhase() over envFromTree()'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/pipeline-nodes.js'), '§0.60.176 PS1 phaseNode / graphNode (graphNode now keeps the dag slice)'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/phase-plan.js'), '§0.60.176 PS1 targetSystem(): the owner of each phase'],
   [I('idearium/api/index.js'), I('lib/upload-placement.js'), '§0.60.173 UP3 repo.uploads.{create,list,get,answer}: plan → needs-you; his answer → repo-inject propose/apply (text) and writeSourceBytes (binaries); learn()'],
   [I('idearium/api/index.js'), I('lib/zip-ingest.js'), '§0.60.173 UP3 the uploaded zip read with the importer\'s own bounds (project-import.config ZIP)'],
   [I('idearium/api/index.js'), I('lib/repo-inject.js'), '§0.60.173 UP3 an upload\'s text files land through propose() and apply() — the one door'],
@@ -166,7 +166,7 @@ const CONSUMERS = [
   [I('idearium/cli/route-commands.js'), I('lib/phase-groom.js'), '0.60.227 SL3 `repo groom <repo> [--apply]` through the route'],
   [I('idearium/ui/js/phases.js'), I('lib/phase-groom.js'), '0.60.227 SL3 the rail\'s "groom the graph" through POST …/phases/groom'],
   [I('lib/phase-deps-gate.js'), I('lib/phase-dag.js'), '0.60.227 SL3 refKey/items/decisionsOf: one depends_on reader; DG1 reads every phase as the DAG does'],
-  [I('emerge/compiler/phase-specs.js'), I('lib/phase-dag.js'), '0.60.229 SL9 writeAll/checkAll: one DAG, parsePhasemap through lib (no emerge → loom crossing)'],
+  [I('lib/emerge/compiler/phase-specs.js'), I('lib/phase-dag.js'), '0.60.229 SL9 writeAll/checkAll: one DAG, parsePhasemap through lib (no emerge → loom crossing)'],
   [I('lib/phase-deps-gate.js'), I('lib/phase-dag.js'), '0.60.229 parsePhasemap: DG1 reads loom\'s parser through the DAG (the SL3 lib → loom crossing designed out)'],
   [I('idearium/api/index.js'), I('lib/node-export.js'), '0.60.229 SL9 repo.phases.nodes reads the written .phase nodes (no idearium → emerge crossing)'],
   [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '0.60.229 SL9 `repo nodes <repo>` through GET …/phases/nodes'],
@@ -195,7 +195,7 @@ const CONSUMERS = [
   [I('idearium/architecture-spec/registry/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('cos/foundation/file-browser.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('diagnostic/nexus-diagnostic.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 the ledger folder watcher'],
-  [I('emerge/emerge-kernel.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
+  [I('lib/emerge/emerge-kernel.js'), I('lib/safe-watch.js'), '§0.60.170 RC1'],
   [I('idearium/repo/watcher.js'), I('lib/safe-watch.js'), '§0.60.170 RC1 (ESM import) the drop folder watcher'],
   [I('lib/repo-inject.js'), I('lib/path-guard.js'), '§0.60.170 RC4 propose(): check(path, { exists }) before anything else; a change is kept as pathNote'],
   [I('lib/pipeline-nodes.js'), I('lib/node-export.js'), '§0.60.170 RC3 writeNode names the file with fileIdOf (Windows-safe)'],
@@ -379,7 +379,7 @@ const CONSUMERS = [
   [I('guardian/artifact-upload.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/input'],
   [I('lib/seam/queue.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/seam-artifacts'],
   [I('service/guardian-service.js'), I('lib/data-home.js'), '§0.60.208 DL3 atBoot before it creates any folder; pid, ledger, queue under guardian/data'],
-  [I('cli/clear-idearium.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/jobs'],
+  [I('lib/cli/clear-idearium.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/jobs'],
   [I('lib/ledger-writer.js'), I('lib/data-home.js'), '§0.60.208 DL3 a rewired system (REWIRED) writes in its own folder'],
   [I('lib/cortex-write.js'), I('lib/data-home.js'), '§0.60.208 DL3 a rewired system buffers in its own folder; the drain reads both'],
   [I('versionium/config.js'), I('lib/data-home.js'), '§0.60.209 DL3 DATA_DIR = versionium/data'],

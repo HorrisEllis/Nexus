@@ -18,7 +18,7 @@ async function test(id, desc, fn) {
   catch (e) { console.error(`  ✗ ${id} ${desc}\n    ${e.message}`); failed++; }
 }
 
-const as = require('../../meta/adversary-suite');
+const as = require('../../lib/meta/adversary-suite');
 
 function makeCompartment(overrides = {}) {
   return {

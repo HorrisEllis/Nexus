@@ -112,7 +112,7 @@ phases:
     layer: foundation
     status: OPEN
     depends_on: [CS_D7_sovereign_first, COSA3_run_and_supervise]
-    files: [cos/spine/boot.js, cos/app/runtime.js, nexus/autopilot.js, cos/compartment/process-runner.js]
+    files: [cos/spine/boot.js, cos/app/runtime.js, lib/nexus/autopilot.js, cos/compartment/process-runner.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-BOOT]
     does: >-
@@ -137,7 +137,7 @@ phases:
     layer: integration
     status: OPEN
     depends_on: [CS1_a_version_is_a_system_state, CS4_every_system_a_compartment, CS_D3_the_spec_rebuilds_the_system]
-    files: [cos/spine/rebuild.js, cos/spine/version.js, cos/workspace/index.js, emerge/compiler/kg-builder.js, emerge/compiler/phase-specs.js]
+    files: [cos/spine/rebuild.js, cos/spine/version.js, cos/workspace/index.js, lib/emerge/compiler/kg-builder.js, lib/emerge/compiler/phase-specs.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-REBUILD]
     does: >-

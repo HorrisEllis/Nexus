@@ -7,11 +7,11 @@ intent: null
 summary: SD7_blocks_that_generate_themselves (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677230
+exported_at: 1792841755112
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677230
-lastSeenAt: 1792787677230
+firstSeenAt: 1792841755112
+lastSeenAt: 1792841755112
 fingerprint: null
 payload:
   id: SD7_blocks_that_generate_themselves
@@ -26,4 +26,4 @@ payload:
     - SD6_an_idea_logged_asked_expanded
   blocks: []
   spec: null
-  graph: 0d8df190210c4970
+  graph: 02b6b91faaa2cecc

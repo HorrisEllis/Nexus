@@ -7,11 +7,11 @@ intent: null
 summary: SB46_every_step_by_hand (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676939
+exported_at: 1792841754824
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676939
-lastSeenAt: 1792787676939
+firstSeenAt: 1792841754824
+lastSeenAt: 1792841754824
 fingerprint: null
 payload:
   id: SB46_every_step_by_hand
@@ -28,4 +28,4 @@ payload:
     - SB42_a_repo_expands_from_its_spec
   blocks: []
   spec: null
-  graph: 357aee72b6d95aa7
+  graph: 383c1c89fb6a9c6d

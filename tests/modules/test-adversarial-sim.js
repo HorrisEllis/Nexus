@@ -86,7 +86,7 @@ test('AS-004', 'ACK VALIDATES THE FAULT EXISTS — it previously reported ok:tru
   // EVIDENCE. An operator could "clear" a typo, believe a real fault was
   // handled, and the ledger would agree with them permanently. Same shape as
   // SEN-7: reporting success for work that did not happen.
-  const r = spawnSync(process.execPath, [path.join(ROOT, 'cli/sentinel.js'), 'faults', 'ack', 'definitely-not-a-real-uuid', '--json'],
+  const r = spawnSync(process.execPath, [path.join(ROOT, 'lib', 'cli', 'sentinel.js'), 'faults', 'ack', 'definitely-not-a-real-uuid', '--json'],
     { cwd: ROOT, encoding: 'utf8', timeout: 60000 });
   let d = null; try { d = JSON.parse(r.stdout); } catch (_) {}
   assert.ok(d, `ack must emit parseable JSON, got: ${r.stdout.slice(0, 200)}`);
@@ -97,13 +97,13 @@ test('AS-004', 'ACK VALIDATES THE FAULT EXISTS — it previously reported ok:tru
 });
 
 test('AS-005', 'an ack records WHICH fault it cleared, so the row is auditable later', () => {
-  const src = fs.readFileSync(path.join(ROOT, 'cli/sentinel.js'), 'utf8');
+  const src = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'sentinel.js'), 'utf8');
   assert.ok(/faultType: target\.type/.test(src), 'the row must capture the fault as it stood when acknowledged');
   assert.ok(/manufacture evidence/.test(src), 'and the reasoning must be recorded where the check lives');
 });
 
 test('AS-006', 'an UNREADABLE store refuses the ack rather than acknowledging blind', () => {
-  const src = fs.readFileSync(path.join(ROOT, 'cli/sentinel.js'), 'utf8');
+  const src = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'sentinel.js'), 'utf8');
   assert.ok(/cannot verify the fault exists/.test(src),
     'if the store cannot be read the fault cannot be verified, and acknowledging it would record a fact nobody established');
 });

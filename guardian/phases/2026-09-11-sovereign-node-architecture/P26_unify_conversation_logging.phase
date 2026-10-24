@@ -9,11 +9,11 @@ intent: null
 summary: P26_unify_conversation_logging (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675918
+exported_at: 1792841753843
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675918
-lastSeenAt: 1792787675918
+firstSeenAt: 1792841753843
+lastSeenAt: 1792841753843
 fingerprint: null
 payload:
   id: P26_unify_conversation_logging
@@ -25,10 +25,10 @@ payload:
     - guardian/lib/ncp-handler.js
     - guardian/api-dispatch.js
     - clear-glass/src/page/nexus-chat.js
-    - cli/diagnose.js
     - cos/plugin/host-api.js
+    - cos/remote-desktop/tests/test-input-auth.js
     - lib/chat-logger.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 77d4192f746b7566
+  graph: eb0d9d989d2ffbd4

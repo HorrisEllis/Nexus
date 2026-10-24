@@ -76,7 +76,7 @@ spec:
         This gap is the single largest reason this spec exists.
 
     cli_diagnose:
-      path: cli/diagnose.js
+      path: lib/cli/diagnose.js
       size: ~1490 lines
       status: LIVE — but was 100% DEAD until 2026-07-24
       note: >

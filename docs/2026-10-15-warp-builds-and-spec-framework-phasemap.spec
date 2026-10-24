@@ -94,7 +94,7 @@ phases:
   SF4_compile_on_collect:
     status: DONE (0.60.67)
     systems: [idearium, core]
-    files: [lib/spec-collect.js, emerge/compiler/index.js, lib/repo-inject.js, idearium/lib/config-core.cjs, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/app.js, tests/modules/test-spec-pipeline.test.js]
+    files: [lib/spec-collect.js, lib/emerge/compiler/index.js, lib/repo-inject.js, idearium/lib/config-core.cjs, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/app.js, tests/modules/test-spec-pipeline.test.js]
     depends_on: [SF3_collect_the_spec]
     specs: [docs/spec-compiler.spec, idearium/spec/idearium.spec]
     does: "per-repo setting: a collected spec runs T0/T1 (zero tokens); its files arrive as proposed .inject nodes."

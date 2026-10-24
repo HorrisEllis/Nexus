@@ -7,11 +7,11 @@ intent: null
 summary: DL7_cortex_snapshot_out (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792822478403
+exported_at: 1792841756168
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822478403
-lastSeenAt: 1792822478403
+firstSeenAt: 1792841756168
+lastSeenAt: 1792841756168
 fingerprint: null
 payload:
   id: DL7_cortex_snapshot_out
@@ -29,4 +29,4 @@ payload:
   blocks:
     - MOD-SNAPSHOT-SHIM
   spec: docs/data-layout.spec
-  graph: ca8ba5f6619be0de
+  graph: ca2714bccb2c5ef5

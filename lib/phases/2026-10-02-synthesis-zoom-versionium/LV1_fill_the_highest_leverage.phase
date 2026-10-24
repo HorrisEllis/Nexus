@@ -9,11 +9,11 @@ intent: null
 summary: LV1_fill_the_highest_leverage (?) — 11 file(s)
 system: idearium
 tags: []
-exported_at: 1792787676753
+exported_at: 1792841754590
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676753
-lastSeenAt: 1792787676753
+firstSeenAt: 1792841754590
+lastSeenAt: 1792841754590
 fingerprint: null
 payload:
   id: LV1_fill_the_highest_leverage
@@ -37,4 +37,4 @@ payload:
     - SY1_gap_synthesis_engine
   blocks: []
   spec: null
-  graph: cb833cd372794400
+  graph: f6008957730c5715

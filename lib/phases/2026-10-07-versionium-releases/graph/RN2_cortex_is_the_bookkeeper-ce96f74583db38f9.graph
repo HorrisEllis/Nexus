@@ -1,0 +1,130 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RN2_cortex_is_the_bookkeeper:ce96f74583db38f9
+type: graph
+id: phase:RN2_cortex_is_the_bookkeeper:ce96f74583db38f9
+context: dependency graph of phase RN2_cortex_is_the_bookkeeper
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841755012
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841755012
+lastSeenAt: 1792841755012
+fingerprint: null
+payload:
+  for: RN2_cortex_is_the_bookkeeper
+  kind: phase
+  repo: null
+  hash: ce96f74583db38f9
+  nodes:
+    - path: lib/version.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/nexus-awareness.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/data-home.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/release-version.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/server.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/lib/spec-drift.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: lib/contracts/SYSTEM-CONTRACTS.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/version.js
+      to: lib/contracts/SYSTEM-CONTRACTS.js
+      kind: requires
+    - from: copilot/lib/nexus-awareness.js
+      to: lib/version.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/data-home.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/release-version.js
+      to: lib/version.js
+      kind: requires
+    - from: loom/server.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/lib/spec-drift.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN1_release_is_a_node_and_a_tag
+      - docs/2026-10-07-versionium-releases-phasemap.spec::LT1_provenance_lattice
+    dependents:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN3_releases_section
+    upstream:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::LT1_provenance_lattice
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN1_release_is_a_node_and_a_tag
+      - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+    downstream:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN3_releases_section
+    blockedBy:
+      - docs/2026-10-07-versionium-releases-phasemap.spec::RN1_release_is_a_node_and_a_tag
+      - docs/2026-10-07-versionium-releases-phasemap.spec::LT1_provenance_lattice
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-07-versionium-releases-phasemap.spec::GH1_the_git_bridge
+        files:
+          - lib/version.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by RN1_release_is_a_node_and_a_tag, LT1_provenance_lattice
+      - 'depends on (2): RN1_release_is_a_node_and_a_tag, LT1_provenance_lattice · all upstream 3'
+      - 'needed by (1): RN3_releases_section'
+      - 'same files as GH1_the_git_bridge with no order between them: lib/version.js'
+    edges:
+      - from: docs/2026-10-07-versionium-releases-phasemap.spec::RN1_release_is_a_node_and_a_tag
+        kind: declared
+      - from: docs/2026-10-07-versionium-releases-phasemap.spec::LT1_provenance_lattice
+        kind: declared

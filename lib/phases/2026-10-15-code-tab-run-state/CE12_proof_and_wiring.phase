@@ -7,11 +7,11 @@ intent: null
 summary: CE12_proof_and_wiring (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677513
+exported_at: 1792841755497
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677513
-lastSeenAt: 1792787677513
+firstSeenAt: 1792841755497
+lastSeenAt: 1792841755497
 fingerprint: null
 payload:
   id: CE12_proof_and_wiring
@@ -28,4 +28,4 @@ payload:
     - CE1_the_run_state
   blocks: []
   spec: null
-  graph: dc6801d7a1de9fef
+  graph: 8944ffb9c6217b6f

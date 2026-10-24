@@ -1,0 +1,187 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SH1_shadow_space:d19ee22cc5559ae5
+type: graph
+id: phase:SH1_shadow_space:d19ee22cc5559ae5
+context: dependency graph of phase SH1_shadow_space
+intent: null
+summary: 15 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792841754500
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792841754500
+lastSeenAt: 1792841754500
+fingerprint: null
+payload:
+  for: SH1_shadow_space
+  kind: phase
+  repo: null
+  hash: d19ee22cc5559ae5
+  nodes:
+    - path: lib/emergence/vendor/rfr2/liminal/shadow.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/proof-run.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-230-shadow.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/drawbridge-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/shadow-space.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: intelligence/liminal-space/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/emergence/vendor/rfr2/liminal/bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emergence/vendor/rfr2/liminal/core.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/shadow.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: lib/shadow.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/shadow.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: lib/emergence/vendor/rfr2/liminal/shadow.js
+      to: lib/emergence/vendor/rfr2/liminal/bus.js
+      kind: requires
+    - from: lib/emergence/vendor/rfr2/liminal/shadow.js
+      to: lib/emergence/vendor/rfr2/liminal/core.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/repo/proof-run.js
+      to: lib/shadow.js
+      kind: requires
+    - from: lib/checks/ck-230-shadow.js
+      to: lib/shadow.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/shadow.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/shadow.js
+      kind: requires
+    - from: lib/shadow-space.js
+      to: lib/shadow.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: lib/shadow.js
+      kind: requires
+  crossings:
+    - from: lib/shadow.js
+      to: intelligence/liminal-space/index.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+    dependents:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+    upstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+    downstream:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LN1_lenses_on_the_canvas
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR6_contradictions_held
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (2): EM0_ground, EV0_contracts_for_every_system'
+      - >-
+        needed by (4): EM2_warp_his_own, BT1_build_teams, IN2_claude_code_inside_nexus,
+        LB1_the_end_state_lab · all downstream 28 · finishing it unlocks EM2_warp_his_own
+    edges:
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        kind: declared
+      - from: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        kind: declared

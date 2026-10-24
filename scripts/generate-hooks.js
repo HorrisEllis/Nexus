@@ -87,7 +87,7 @@ function render(surface, port, route, method, file, seq) {
 
 function main() {
   const write = process.argv.includes('--write');
-  const hooksIdx = require(path.join(ROOT, 'hooks/index.js'));
+  const hooksIdx = require(path.join(ROOT, 'lib', 'hooks', 'index.js'));
   const declared = new Set(hooksIdx.allHooks().map(h => h.config?.path).filter(Boolean));
 
   let total = 0;

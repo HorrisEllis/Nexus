@@ -10,7 +10,7 @@ const ROOT = path.join(__dirname, '../..');
 const SHOT = process.env.PROBE_SHOT_DIR || os.tmpdir();
 
 (async () => {
-  const NERVE = path.join(ROOT, 'ui/tv-shell/nerve');
+  const NERVE = path.join(ROOT, 'lib', 'ui', 'tv-shell', 'nerve');
   const now = () => Date.now();
   const server = http.createServer((req, rs) => {
     const send = (type, body) => { rs.writeHead(200, { 'Content-Type': type, 'Access-Control-Allow-Origin': '*' }); rs.end(body); };
