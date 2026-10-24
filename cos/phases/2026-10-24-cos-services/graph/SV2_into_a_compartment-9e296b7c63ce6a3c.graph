@@ -1,0 +1,124 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SV2_into_a_compartment:9e296b7c63ce6a3c
+type: graph
+id: phase:SV2_into_a_compartment:9e296b7c63ce6a3c
+context: dependency graph of phase SV2_into_a_compartment
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792836303457
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792836303457
+lastSeenAt: 1792836303457
+fingerprint: null
+payload:
+  for: SV2_into_a_compartment
+  kind: phase
+  repo: null
+  hash: 9e296b7c63ce6a3c
+  nodes:
+    - path: cos/compartment/process-runner.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/services/deploy.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/cli/commands/run.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/status.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/foundation/snapshot.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/gates/process.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/watchdog/monitor.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Event.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/compartment/process-runner.js
+      to: cos/siso/Event.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/cli/commands/run.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/cli/commands/status.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/host/gates/process.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/test/test.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/watchdog/monitor.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    dagHash: 5d462f7d1ef5a06b
+    layer: 2
+    deps:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+    dependents:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV4_the_doors
+    upstream:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+    downstream:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV4_the_doors
+    blockedBy:
+      - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 5d462f7d1ef5a06b · layer 2 · blocked by SV1_a_stack_per_root
+      - 'depends on (1): SV1_a_stack_per_root · all upstream 2'
+      - 'needed by (1): SV4_the_doors'
+  phaseUuid: a04b581b-57d7-570e-9e6f-2ea983d29c29

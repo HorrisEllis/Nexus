@@ -1,0 +1,44 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
+type: phase
+id: docs_2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
+context: pipeline phase SV0_the_engines_in_cos of docs/2026-10-24-cos-services-phasemap.spec
+intent: null
+summary: SV0_the_engines_in_cos (foundation) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1792836303455
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792836303455
+lastSeenAt: 1792836303455
+fingerprint: null
+payload:
+  id: SV0_the_engines_in_cos
+  map: docs/2026-10-24-cos-services-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - cos/services/anonymous/nexus.js
+    - cos/services/anonymous/engines/_engine.js
+    - cos/services/anonymous/README.md
+    - tests/modules/test-cos-services.test.js
+  depends_on: []
+  blocks:
+    - MOD-SV-KERNEL
+    - MOD-SV-SDK
+    - MOD-SV-ENGINES
+  spec: cos/spec/cos-services.spec
+  graph: 10563f8683cec09f
+  uuid: 9d67fab1-dae4-54d1-bc4a-87149ff2b51b
+  specLink:
+    how: declared
+    spec: cos/spec/cos-services.spec
+    modules:
+      - id: MOD-SV-KERNEL
+        uuid: null
+      - id: MOD-SV-SDK
+        uuid: null
+      - id: MOD-SV-ENGINES
+        uuid: null

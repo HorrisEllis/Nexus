@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+type: phase
+id: docs_2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+context: pipeline phase SV3_on_the_cos_bus of docs/2026-10-24-cos-services-phasemap.spec
+intent: null
+summary: SV3_on_the_cos_bus (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792836303458
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792836303458
+lastSeenAt: 1792836303458
+fingerprint: null
+payload:
+  id: SV3_on_the_cos_bus
+  map: docs/2026-10-24-cos-services-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/services/route.js
+  depends_on:
+    - SV1_a_stack_per_root
+    - CS3_the_registry_is_the_bridge
+  blocks:
+    - MOD-SV-ROUTE
+  spec: cos/spec/cos-services.spec
+  graph: f0c4d36c618e41dd
+  uuid: d33aa6a0-da98-5326-8342-1df70e6e041a
+  specLink:
+    how: declared
+    spec: cos/spec/cos-services.spec
+    modules:
+      - id: MOD-SV-ROUTE
+        uuid: null

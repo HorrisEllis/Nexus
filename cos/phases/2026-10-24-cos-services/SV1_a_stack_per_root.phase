@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+type: phase
+id: docs_2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+context: pipeline phase SV1_a_stack_per_root of docs/2026-10-24-cos-services-phasemap.spec
+intent: null
+summary: SV1_a_stack_per_root (backend) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792836303456
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792836303456
+lastSeenAt: 1792836303456
+fingerprint: null
+payload:
+  id: SV1_a_stack_per_root
+  map: docs/2026-10-24-cos-services-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - cos/services/stack.js
+    - tests/modules/test-cos-services.test.js
+  depends_on:
+    - SV0_the_engines_in_cos
+  blocks:
+    - MOD-SV-STACK
+  spec: cos/spec/cos-services.spec
+  graph: 6edc1e028c93dde2
+  uuid: d0fdb4af-ec93-5e89-8644-abe66cbb3585
+  specLink:
+    how: declared
+    spec: cos/spec/cos-services.spec
+    modules:
+      - id: MOD-SV-STACK
+        uuid: null

@@ -311,3 +311,22 @@ James, 2026-10-24, uploading anonymousservers-nexus-4-12.zip: "look at this for 
   (`new Function('r', 'return (' + payload.gate + ')(r)')`): any process on the channel runs code in the kernel. COS's bridge sends only
   what a contract declares (CS3), and never evaluates a string as code.
 - **The upload** stays his; it is read, not copied into the tree (each idea above cites the file and function it came from).
+
+## ADDENDUM 2026-10-24 — his correction: the engines themselves, as Nexus's networking backend (SV0–SV4)
+James, 2026-10-24: "im saying for web servers, dns, firewall, email smtp, like integrating into deployable. i want to use those engines for
+test env, web servers, etc all of them" · "this is all the networking backend for anything needed netwroking wise"
+- **His correction of the coder's reading** (the addendum above said "the hosting engines are that product, not COS"; kept, §0.3): the
+  engines themselves come in, all of them, as services COS deploys, and as the networking backend for anything in Nexus that needs it.
+- **Spec first (his 2026-10-20 rule):** cos/spec/cos-services.spec (MOD-SV-KERNEL, -SDK, -ENGINES, -STACK, -DEPLOY, -ROUTE, -DOORS; compiles
+  at full depth). Its phases SV0–SV4 are in their own map, docs/2026-10-24-cos-services-phasemap.spec (one spec, one map: the convention
+  tests/modules/test-substrate-spec.test.js SS-02 holds); SV3 depends on this map's CS3.
+- **Decided by the axioms:** where it lives — cos/services/anonymous/ (code belongs to the system it serves; the stacks are COS's). How many
+  run — one kernel per root, so each compartment or test environment has its own stack (his platform already reads everything from
+  NEXUS_ROOT). What is off by default — the engines that reach past their own root (firewall's host rules and UPnP, tunnel, peer, relay,
+  autodns, registrar, ssh), on only where he allows them for a stack (USER_AUTONOMY: what touches his machine and network is his).
+- **Found in the upload, said:** its conf/ holds live secrets (a DKIM private key, a 128-character jwtSecret, a 64-character billing
+  encryptionKey, a peer identity). None comes into the tree; each stack writes its own. If that conf was ever used on a live server, those
+  keys should be rotated.
+- **Open, to map against what it replaces (not a phase yet):** Nexus's networking that already exists — Clear Glass's net posture and
+  transports (clear-glass/src/net, docs/2026-10-15-clear-glass-network-posture-phasemap.spec), the TLS layer (docs/2026-10-16-tls-layer-phasemap.spec,
+  clear-glass/tls-helper). Each moves onto these services as its own phase once SV1 runs; nothing is replaced silently.
