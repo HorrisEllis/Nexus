@@ -55,7 +55,7 @@ spec:
 
     5:
       name:    diagnostic service never started
-      file:    cli/boot-systems.js
+      file:    lib/cli/boot-systems.js
       status:  fixed
       root_cause: >
         service/nexus-diagnostic.js exists and serves :7825 but was never

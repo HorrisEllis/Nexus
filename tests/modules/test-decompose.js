@@ -24,7 +24,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '../..');
-const DECOMPOSE = path.join(ROOT, 'cli/decompose.js');
+const DECOMPOSE = path.join(ROOT, 'lib', 'cli', 'decompose.js');
 
 let passed = 0, failed = 0;
 function test(id, desc, fn) {

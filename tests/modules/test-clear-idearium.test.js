@@ -19,7 +19,7 @@ const ROOT = path.resolve(__dirname, '..', '..');
 process.env.GUARDIAN_JOBS_DIR = path.join(root, 'guardian-jobs');
 // Ports nothing listens on, so the live-system refusal does not fire here —
 // the refusal itself is checked separately below.
-const CLI = path.join(ROOT, 'cli', 'clear-idearium.js');
+const CLI = path.join(ROOT, 'lib', 'cli', 'clear-idearium.js');
 
 let pass = 0, fail = 0;
 function check(name, cond, detail) {

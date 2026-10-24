@@ -130,7 +130,7 @@ const { buildIntentMap } = require('./lib/intent-map');  // Gap 2: intent-map en
 // §3.1 load order is law — all imports declared before any logic runs.
 let BootSequence, _bootSystems, createCFRLedger, spawnChild;
 try { ({ BootSequence } = require('../lib/boot-sequence')); } catch(e) { console.warn('[orchestrator] boot-sequence not found:', e.message); BootSequence = null; }
-try { ({ _bootSystems } = require('../cli/boot-systems')); } catch(e) { console.warn('[orchestrator] boot-systems not found:', e.message); _bootSystems = null; }
+try { ({ _bootSystems } = require('../lib/cli/boot-systems')); } catch(e) { console.warn('[orchestrator] boot-systems not found:', e.message); _bootSystems = null; }
 // §CFR-WIRE-01: orchestrator now runs the CFR-Ω ledger (sigma/delta/field on
 // every ledgerWrite) instead of the plain event-ledger. ledgerWrite() below is
 // already the single funnel point, so this is a drop-in swap — same .record()/
@@ -3162,7 +3162,7 @@ try {
       // here instead of trusting closure scope across a 2600-line file.
       const VERSION = require('../lib/version').services.orchestrator;
       const spawn = spawnChild;
-      const cliScript = path.join(ROOT, 'cli', 'nexus-repl.js');
+      const cliScript = path.join(ROOT, 'lib', 'cli', 'nexus-repl.js');
       const args = [cliScript, '--repl', `--port=${PORT}`];
       const terminals = [
         ['cmd',    ['/c','start','cmd','/k','node',...args]],

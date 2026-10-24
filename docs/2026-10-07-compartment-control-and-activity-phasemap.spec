@@ -98,7 +98,7 @@ spec:
       systems: [idearium]
       status: "DONE (0.39.374) — idearium/cli/route-commands.js: one table, one runner; idearium/cli/store-chatter.js keeps stdout the answer. test-cli-route-commands 8/8."
       james: '"That was fantastic. Everything needs to be available as commands."'
-      files: [idearium/cli/route-commands.js, idearium/cli/store-chatter.js, idearium/cli/index.js, cli/nexus.js]
+      files: [idearium/cli/route-commands.js, idearium/cli/store-chatter.js, idearium/cli/index.js, lib/cli/nexus.js]
       does: "Every capability above, and the repo agent, its proposals and its charter, as an idearium command (and through nexus /idearium): one row each in a table run by one runner, --json for scripts and agents."
       proof: "the real CLI, as its own process, against the real API: help lists every row; agent, ask, changes, apply, activity, tasks, charter set/check; refusals exit 1 with the reason"
 

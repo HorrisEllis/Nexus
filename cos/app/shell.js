@@ -64,7 +64,7 @@ function plan(root, project, line, opts = {}) {
   const cwd = path.join(root, 'projects', project, 'versions', st.current);
   if (!fs.existsSync(cwd)) return { ok: false, error: `the current version folder is missing: ${cwd}` };
   let file, args;
-  if (w === 'nexus') { file = 'cli/nexus.js'; args = t.slice(1); }
+  if (w === 'nexus') { file = 'lib/cli/nexus.js'; args = t.slice(1); }
   else if (w === 'node') {
     if (!t[1]) return { ok: false, error: 'node needs a file inside the current version (node cli/nexus.js status)' };
     if (!inside(cwd, t[1])) return { ok: false, error: `${t[1]} is outside the current version (${st.current}): COS runs only files inside it` };

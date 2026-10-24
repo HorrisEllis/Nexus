@@ -28,7 +28,7 @@ function testAsync(id, desc, fn) { _async.push([id, desc, fn]); }
 
 const ROOT = path.join(__dirname, '../..');
 const DIAG = fs.readFileSync(path.join(ROOT, 'diagnostic/nexus-diagnostic.js'), 'utf8');
-const CLI  = fs.readFileSync(path.join(ROOT, 'cli/diagnose.js'), 'utf8');
+const CLI  = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'diagnose.js'), 'utf8');
 const LEDG = fs.readFileSync(path.join(ROOT, 'lib/component-ledger.js'), 'utf8');
 const NC   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'nexus-connect.js'), 'utf8');
 const AP   = fs.readFileSync(path.join(ROOT, 'lib', 'nexus', 'autopilot.js'), 'utf8');

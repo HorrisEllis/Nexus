@@ -939,14 +939,14 @@ if (section('§28 nexus-connect.js')) {
 
 // ─── §29 cli/session.js ──────────────────────────────────────────────────────
 if (section('§29 cli/session.js')) {
-  test('file exists',()=>{assert(fs.existsSync(path.join(ROOT,'cli/session.js')))},{invariant:true,expect:'cli/session.js exists'});
+  test('file exists',()=>{assert(fs.existsSync(path.join(ROOT, 'lib', 'cli', 'session.js')))},{invariant:true,expect:'cli/session.js exists'});
   test('required markers present',()=>{
-    const src=fs.readFileSync(path.join(ROOT,'cli/session.js'),'utf8');
+    const src=fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'session.js'),'utf8');
     assert(src.includes('SESSION.md'));assert(src.includes('DO NOT EDIT'));
     assert(src.includes('Bridge ledger'));assert(src.includes('probeAll'));
   },{invariant:true,expect:'session.js contains SESSION.md,DO NOT EDIT,Bridge ledger,probeAll'});
   test('references all 6 systems',()=>{
-    const src=fs.readFileSync(path.join(ROOT,'cli/session.js'),'utf8');
+    const src=fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'session.js'),'utf8');
     for(const s of ['bridge','cortex','guardian','idearium','emerge','orchestrator'])
       assert(src.includes(`'${s}'`)||src.includes(`"${s}"`),`references ${s}`);
   },{invariant:true,expect:'session.js references all 6 systems'});

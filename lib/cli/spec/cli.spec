@@ -20,7 +20,7 @@ spec:
 
   modules:
     - id: diagnose
-      path: "cli/diagnose.js"
+      path: "lib/cli/diagnose.js"
       lines: 1450
       description: >
         Runs all 12 diagnostic engines against a system's ledger.
@@ -30,7 +30,7 @@ spec:
         entropy rate, fault tree, homeostasis score.
 
     - id: boot-systems
-      path: "cli/boot-systems.js"
+      path: "lib/cli/boot-systems.js"
       description: >
         Starts all NEXUS subsystems in sequence.
         Called by orchestrator after its own boot sequence completes.
@@ -51,7 +51,7 @@ spec:
         didn't exist before, verified missing before adding it).
 
     - id: nexus-cli
-      path: "cli/nexus-cli.js"
+      path: "lib/cli/nexus-cli.js"
       status: built
       bugs_fixed_this_session: >
         James reported it was broken last used, several updates ago, never
@@ -78,7 +78,7 @@ spec:
         model Phase 36 brings nexus-repl up to.
 
     - id: nexus-repl
-      path: "cli/nexus-repl.js"
+      path: "lib/cli/nexus-repl.js"
       lines: 882
       status: phase_36_in_progress
       description: >
@@ -95,7 +95,7 @@ spec:
         into component-registry, so other consumers (nexus-cli.js, future
         Phase 40.5 CLI projection) couldn't discover or resolve them.
       phase_36_built:
-        file: "cli/nexus-repl-descriptors.js"
+        file: "lib/cli/nexus-repl-descriptors.js"
         scope: >
           forge, heal, and snapshot now registered — was only forge.
           heal and snapshot were blocked on missing orchestrator proxy

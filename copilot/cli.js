@@ -358,7 +358,7 @@ async function exec(input) {
       '/forge':    'lib/cockpit/cli.js',
       '/cortex':   'cortex/cortex.js',
       '/idearium': 'idearium/cli/index.js',
-      '/nexus':    'cli/nexus.js',       // utility commands: status, jobs, watch, gaps, snr, tag, ...
+      '/nexus':    'lib/cli/nexus.js',       // utility commands: status, jobs, watch, gaps, snr, tag, ...
       '/copilot':  'copilot/cli.js',
       '/cp':       'copilot/cli.js',
     };

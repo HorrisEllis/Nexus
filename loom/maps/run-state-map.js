@@ -379,7 +379,7 @@ const CONSUMERS = [
   [I('guardian/artifact-upload.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/input'],
   [I('lib/seam/queue.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/seam-artifacts'],
   [I('service/guardian-service.js'), I('lib/data-home.js'), '§0.60.208 DL3 atBoot before it creates any folder; pid, ledger, queue under guardian/data'],
-  [I('cli/clear-idearium.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/jobs'],
+  [I('lib/cli/clear-idearium.js'), I('lib/data-home.js'), '§0.60.208 DL3 guardian/data/jobs'],
   [I('lib/ledger-writer.js'), I('lib/data-home.js'), '§0.60.208 DL3 a rewired system (REWIRED) writes in its own folder'],
   [I('lib/cortex-write.js'), I('lib/data-home.js'), '§0.60.208 DL3 a rewired system buffers in its own folder; the drain reads both'],
   [I('versionium/config.js'), I('lib/data-home.js'), '§0.60.209 DL3 DATA_DIR = versionium/data'],

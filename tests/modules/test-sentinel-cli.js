@@ -30,7 +30,7 @@ function test(id, desc, fn) {
 }
 
 const ROOT = path.join(__dirname, '../..');
-const CLI = path.join(ROOT, 'cli/sentinel.js');
+const CLI = path.join(ROOT, 'lib', 'cli', 'sentinel.js');
 const run = (args) => spawnSync(process.execPath, [CLI, ...args], { cwd: ROOT, encoding: 'utf8', timeout: 90000 });
 const runJson = (args) => {
   const r = run([...args, '--json']);

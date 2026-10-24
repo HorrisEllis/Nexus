@@ -36,19 +36,19 @@ test('T-004', 'the one CLI can drive the tv-ui (/tv spotlight/nerve)', () => {
 });
 
 test('T-005', 'cli/nexus-cli.js is now a SLIM shim (duplicate runtime removed, §16.5)', () => {
-  const shim = fs.readFileSync(path.join(ROOT, 'cli/nexus-cli.js'), 'utf8');
+  const shim = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'nexus-cli.js'), 'utf8');
   const lines = shim.split('\n').length;
   assert.ok(lines < 100, `shim must be slim (was 478), got ${lines}`);
   assert.ok(/require\('\.\.\/copilot\/cli'\)/.test(shim), 'shim must re-export the canonical CLI');
 });
 
 test('T-006', 'the shim preserves _copilotAsk (the one thing a test still imports — nothing broken)', () => {
-  const shim = require(path.join(ROOT, 'cli/nexus-cli.js'));
+  const shim = require(path.join(ROOT, 'lib', 'cli', 'nexus-cli.js'));
   assert.strictEqual(typeof shim._copilotAsk, 'function');
 });
 
 test('T-007', 'the shim re-exports the canonical CLI surface (run/exec/start)', () => {
-  const shim = require(path.join(ROOT, 'cli/nexus-cli.js'));
+  const shim = require(path.join(ROOT, 'lib', 'cli', 'nexus-cli.js'));
   for (const fn of ['run', 'exec', 'start']) assert.strictEqual(typeof shim[fn], 'function', `must re-export ${fn}`);
 });
 

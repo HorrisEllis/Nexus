@@ -13,7 +13,7 @@ const FILES = {
   'tools/exit3.js': "console.error('bad'); process.exit(3)",
   'tools/tree.js': "const c = require('child_process').spawn(process.execPath, ['-e', 'setInterval(()=>{},1000)'], { stdio: 'ignore' }); console.log('GRANDCHILD ' + c.pid); setInterval(() => {}, 1000)",
   'lib/nexus/autopilot.js': "setInterval(() => {}, 1000)",
-  'cli/nexus.js': "console.log('nexus cli ' + process.argv.slice(2).join(' '))",
+  'lib/cli/nexus.js': "console.log('nexus cli ' + process.argv.slice(2).join(' '))",
 };
 function install(root, v = '0.60.70') {
   const t = `nexus-${v}`; const z = path.join(tmp(), t + '.zip');

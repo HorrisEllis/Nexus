@@ -75,7 +75,7 @@ spec:
     A5: {title: copilot awareness — L7/L8 layers, answerAbout, every Clear Glass tool in the chat, tool-guide coverage, catalog, closes: [M7],
          files: [copilot/lib/copilot-context.js, copilot/lib/nexus-awareness.js, copilot/server.js, lib/agent-tools/tool-guide.js, lib/agent-tools/tool-catalog.js, lib/hat-seed.js]}
     B1: {title: opportunity pipeline reusing Clear Glass autofill identity + proposal guides, closes: [M8],
-         files: [lib/opportunity/*, lib/agent-tools/tools/opportunity/opportunity.js, cli/opportunity.js, copilot/routes/opportunity.js, clear-glass/src/toolbar/commands.js, clear-glass/renderer/browser.js]}
+         files: [lib/opportunity/*, lib/agent-tools/tools/opportunity/opportunity.js, lib/cli/opportunity.js, copilot/routes/opportunity.js, clear-glass/src/toolbar/commands.js, clear-glass/renderer/browser.js]}
     C1: {title: "context atlas (agent memory + JAA + graphs + prose) — its own {atlas}/{directory} blocks beside {memory}", closes: [M9],
          files: [lib/context-atlas.js, lib/agent-tools/tools/query/context-atlas.js, lib/repo-prompt-blocks.js, lib/repo-agent.js, idearium/api/index.js, idearium/ui/js/app.js]}
     L1: {title: site memory — every browser action outcome per host; hints returned with read(), closes: [M10], files: [lib/cg-learning.js]}

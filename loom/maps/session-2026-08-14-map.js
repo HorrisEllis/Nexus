@@ -240,7 +240,7 @@ const FILES = [
   // merged, tested that turn.
   ['lib/pressure-window.js', 'nexus.lib.pressure-window', 'lib', []],
   ['lib/intake.js', 'nexus.lib.intake', 'lib', []],
-  ['cli/pressure.js', 'nexus.cli.pressure', 'cli', []],
+  ['lib/cli/pressure.js', 'nexus.cli.pressure', 'cli', []],
   ['lib/tool-config.js', 'nexus.lib.tool-config', 'lib', []],
   ['lib/agent-reach.js', 'nexus.lib.agent-reach', 'lib', []],
   ['lib/agent-tools/tools/governance/tool-config.js', 'nexus.lib.agent-tools.governance.tool-config', 'lib/agent-tools/tools/governance', []],

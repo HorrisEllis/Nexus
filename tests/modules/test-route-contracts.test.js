@@ -49,7 +49,7 @@ test('RC-03', 'cos, emerge and warp: each contract matches its code', () => {
 });
 
 test('RC-04', 'wired: the CLI verb and loom', () => {
-  const cli = fs.readFileSync(path.join(ROOT, 'cli/nexus.js'), 'utf8');
+  const cli = fs.readFileSync(path.join(ROOT, 'lib', 'cli', 'nexus.js'), 'utf8');
   assert.ok(cli.includes("require('../lib/route-contract-check.js')"), 'nexus contracts check runs it');
   const reg = JSON.parse(fs.readFileSync(path.join(ROOT, 'loom/data/registry.json'), 'utf8'));
   assert.ok(reg.component['nexus.lib.route-contract-check'], 'a loom component');

@@ -62,8 +62,8 @@ t('AM-04', 'path loads are uses: static joins resolve, dynamic ones are skipped'
   const fs = require('fs'), os = require('os'); const root = fs.mkdtempSync(path.join(os.tmpdir(), 'am-'));
   fs.mkdirSync(path.join(root, 'guardian'), { recursive: true }); fs.mkdirSync(path.join(root, 'cli'), { recursive: true });
   fs.writeFileSync(path.join(root, 'guardian/server.js'), "const p = path.join(__dirname, '..', 'ui', 'home', 'index.html');\n// path.join(__dirname, '..', 'tablet', 'x.html')\nconst q = path.join(__dirname, '..', someVar, 'x');\n");
-  fs.writeFileSync(path.join(root, 'cli/sentinel.js'), "const C = path.join(ROOT, 'lib', 'sentinel', 'interaction-contract.json');\n");
-  const e = AM.pathEdges({ root, files: ['guardian/server.js', 'cli/sentinel.js'] }).map(x => `${x.from}>${x.to}`);
+  fs.writeFileSync(path.join(root, 'lib/cli/sentinel.js'), "const C = path.join(ROOT, 'lib', 'sentinel', 'interaction-contract.json');\n");
+  const e = AM.pathEdges({ root, files: ['guardian/server.js', 'lib/cli/sentinel.js'] }).map(x => `${x.from}>${x.to}`);
   assert.deepStrictEqual(e, ['guardian>ui', 'cli>sentinel'], 'a comment and a dynamic argument are not edges');
 });
 
