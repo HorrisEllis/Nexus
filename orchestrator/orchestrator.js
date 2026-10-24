@@ -1188,7 +1188,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
 
   // ── /api/contract — Unified Interaction Contract ──────────────────────────
   if (u.pathname === '/api/contract' && M === 'GET') {    try {
-      const { getVersionedContract } = require('../contracts/nexus-interaction-contract');
+      const { getVersionedContract } = require('../lib/contracts/nexus-interaction-contract');
       const version = u.searchParams?.get('version') || null;
       const contract = getVersionedContract(version);
       if (!contract) return json(res, 404, { ok:false, error:`contract version not found: ${version}` });
@@ -1197,11 +1197,11 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
   }
   if (u.pathname.startsWith('/api/contract/') && M === 'GET') {
     try {
-      const { getVersionedContract } = require('../contracts/nexus-interaction-contract');
+      const { getVersionedContract } = require('../lib/contracts/nexus-interaction-contract');
       const seg = u.pathname.split('/');
       const system = seg[3];
       if (system === 'snapshots') {
-        const { listSnapshots } = require('../contracts/nexus-interaction-contract');
+        const { listSnapshots } = require('../lib/contracts/nexus-interaction-contract');
         return json(res, 200, { ok:true, snapshots: listSnapshots() });
       }
       const contract = getVersionedContract();
@@ -1212,7 +1212,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
   }
   if (u.pathname === '/api/contract/validate' && M === 'POST') {
     try {
-      const { validateRequestAt, getVersionedContract } = require('../contracts/nexus-interaction-contract');
+      const { validateRequestAt, getVersionedContract } = require('../lib/contracts/nexus-interaction-contract');
       const body = await readBody(req);
       // Use snapshot-bound validation — deterministic
       const current = getVersionedContract();
@@ -1427,7 +1427,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
     if (systemId === 'orchestrator') {
       try {
         const hs = require('./lib/contract-handshake');
-        const { getVersionedContract } = require('../contracts/nexus-interaction-contract');
+        const { getVersionedContract } = require('../lib/contracts/nexus-interaction-contract');
         const full = getVersionedContract();
         const orchContract = full?.systems?.orchestrator || full;
         const crypto = require('crypto');

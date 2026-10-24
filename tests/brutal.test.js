@@ -864,7 +864,7 @@ if (section('§26 gap-hunter.js')) {
 
 // ─── §27 SYSTEM-CONTRACTS.js ─────────────────────────────────────────────────
 if (section('§27 SYSTEM-CONTRACTS.js')) {
-  const C=require(path.join(ROOT,'contracts/SYSTEM-CONTRACTS'));
+  const C=require(path.join(ROOT, 'lib', 'contracts', 'SYSTEM-CONTRACTS'));
 
   test('7 systems',()=>{assert.strictEqual(Object.keys(C.SYSTEMS).length,7)},{invariant:true,expect:'exactly 7 systems'});
   test('BRIDGE port=9999 bootOrder=1',()=>{assert.strictEqual(C.SYSTEMS.BRIDGE.port,9999);assert.strictEqual(C.SYSTEMS.BRIDGE.bootOrder,1)},{invariant:true,expect:'BRIDGE port=9999, bootOrder=1'});

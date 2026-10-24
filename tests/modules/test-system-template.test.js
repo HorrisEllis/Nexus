@@ -34,7 +34,7 @@ test('ST-01', 'his words, the tree, the registry and the rules — nothing else'
 
 test('ST-02', 'Guardian\'s shape, with contracts/, routes as nodes and a bundle per capability', () => {
   for (const p of ['server.js', 'cli.js', 'config.js', '<system>.config.json', 'compartment.json', 'registry-components.js', 'interaction-contract.json',
-    'event-taxonomy.js', 'jaa-store.js', 'contracts/', 'schemas/', 'schema.<type>', 'data/', 'nodes/', 'node-index/', 'ledger/<session>/', 'baseline/',
+    'event-taxonomy.js', 'jaa-store.js', 'lib/contracts/', 'schemas/', 'schema.<type>', 'data/', 'nodes/', 'node-index/', 'ledger/<session>/', 'baseline/',
     'input/', 'output/', 'lib/', 'spec/', 'ui/']) assert.ok(t.tree.includes(p), p);
   for (const n of ['bundle/<capability-id>.bundle', 'component/<id>.component', 'capability/<id>.capability', 'command/<id>.command', 'event/<id>.event',
     'route/<id>.route', 'hook/<id>.hook', 'wire/<id>.wire', 'toast/<id>.toast']) assert.ok(t.tree.includes(n), n);
