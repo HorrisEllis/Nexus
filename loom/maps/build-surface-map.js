@@ -145,6 +145,11 @@ const FILES = [
   // §0.60.238 CG1 — James: "before an agent does anything. if confidence is lower than 75%, context must be obtained. build worksurface, compile list of dependancies, find the context, ask user last." The pre-dispatch gate; lazily composes repo-agent.contextFor (worksurface + find context) and context-atlas (the stores' graphs). Map: docs/2026-10-24-agent-orchestration-phasemap.spec.
   ['lib/agent-confidence-gate.js', I('lib/agent-confidence-gate.js'), [I('lib/repo-agent.js'), I('lib/context-atlas.js')]],
   [I('lib/repo-agent.js'), I('lib/agent-confidence-gate.js'), '§0.60.239 CG2 — _dispatch runs the gate after context is gathered, before the send; the decision on the record (ctxInfo.gate)'],
+  // §0.60.242 GD1 (BCR2) — lib/raid-port.js: the one door to RAID (RAID reached, never loaded). Ported from the brave-cori line.
+  ['lib/raid-port.js', I('lib/raid-port.js'), [I('lib/nexus-self/systems.js')]],   // Cortex's port by systems.js when not in-process
+  [I('guardian/server.js'), I('lib/raid-port.js'), '§GD1 — /build and SEAM-forge gates ask RAID through the port (fixes the undefined-raid ReferenceError in /build)'],
+  [I('guardian/api-dispatch.js'), I('lib/raid-port.js'), '§GD1 — outcome() feedback to RAID through the port, with the agent'],
+  [I('guardian/lib/dispatcher.js'), I('lib/raid-port.js'), '§GD1 — browser-job approval through the port, fails closed'],
   [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
   [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
   // §0.60.157 GM4 — the node lattice: every data node of every system, edges typed; read by route, never the files

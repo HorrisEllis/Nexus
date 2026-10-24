@@ -3051,8 +3051,10 @@ function handleExtendedRoutes(req, res, url, method) {
         return;
       }
 
-      // RAID gate — building touches the filesystem
-      const approval = raid._approveTool('guardian.build', 'emerge-compiler',
+      // RAID gate — building touches the filesystem. §0.60.242 GD1 (BCR2): through RAID's port — Cortex's one RAID, not a
+      // copy loaded here — which also fixes a latent bug on main: `raid` was never defined in this async handler, so /build
+      // threw a ReferenceError the moment it was hit. The port fails closed (unreachable → not approved, with the reason).
+      const approval = await require('../lib/raid-port.js').approveTool('guardian.build', 'emerge-compiler',
         { action:'build', proof:body.proof });
       if (!approval.approved) {
         pRes(res, 403, { ok:false, denied:true, reason:approval.reason });
@@ -3479,8 +3481,8 @@ function handleExtendedRoutes(req, res, url, method) {
           // 'forge' is the right fit — already in every provider's
           // contract, no new vocabulary needed.
           try {
-            const raid = require('../cortex/core/raid');
-            const approval = raid._approveTool(body.source || 'unknown', specText.slice(0, 200), { action: 'forge', proof: body.proof });
+            // §0.60.242 GD1 (BCR2) — RAID through its port (Cortex's one RAID), fails closed with the reason
+            const approval = await require('../lib/raid-port.js').approveTool(body.source || 'unknown', specText.slice(0, 200), { action: 'forge', proof: body.proof });
             if (!approval.approved) {
               pRes(res, 403, { ok: false, error: `RAID denied SEAM queue creation: ${approval.reason}` });
               return;
