@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
 intent: null
 summary: UP5_registry_wires_on_apply (integration) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830633681
+exported_at: 1792852547402
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830633681
-lastSeenAt: 1792830633681
+firstSeenAt: 1792852547402
+lastSeenAt: 1792852547402
 fingerprint: null
 payload:
   id: UP5_registry_wires_on_apply
@@ -28,7 +28,72 @@ payload:
     - UP3_upload_routes_and_commands
   blocks: []
   spec: null
-  graph: ebe8af443a1f3079
+  graph:
+    hash: ebe8af443a1f3079
+    nodes:
+      - path: lib/upload-placement.js
+        role: changes
+        exists: true
+        system: lib
+      - path: loom/maps/run-state-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: loom/bootstrap.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/maps/declare-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/source-map.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: loom/maps/run-state-map.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/maps/run-state-map.js
+        to: loom/maps/declare-map.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/upload-placement.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/run-state-map.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP3_upload_routes_and_commands
+      dependents:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP6_model_for_the_unplaced
+      upstream:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP1_placement_tool
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP2_learned_placements
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP3_upload_routes_and_commands
+      downstream:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP6_model_for_the_unplaced
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP6_model_for_the_unplaced
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - 'depends on (1): UP3_upload_routes_and_commands · all upstream 3'
+        - >-
+          needed by (1): UP6_model_for_the_unplaced · finishing it unlocks
+          UP6_model_for_the_unplaced
   uuid: 3f8fe68c-54f6-54d4-bbdc-0ce0062e05b4
   specLink:
     how: discovered:path

@@ -5,13 +5,13 @@ id: docs_2026-10-21-adblock-phasemap.spec::AB0_engine_in_core
 context: pipeline phase AB0_engine_in_core of docs/2026-10-21-adblock-phasemap.spec
 intent: null
 summary: AB0_engine_in_core (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830634929
+exported_at: 1792852548608
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830634929
-lastSeenAt: 1792830634929
+firstSeenAt: 1792852548608
+lastSeenAt: 1792852548608
 fingerprint: null
 payload:
   id: AB0_engine_in_core
@@ -23,5 +23,32 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 00894718c2cca324
+  graph:
+    hash: 00894718c2cca324
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-21-adblock-phasemap.spec::AB1_engine
+      upstream: []
+      downstream:
+        - docs/2026-10-21-adblock-phasemap.spec::AB1_engine
+        - docs/2026-10-21-adblock-phasemap.spec::AB2_lists
+        - docs/2026-10-21-adblock-phasemap.spec::AB3_wiring
+        - docs/2026-10-21-adblock-phasemap.spec::AB4_surface
+        - docs/2026-10-21-adblock-phasemap.spec::AB5_import
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-adblock-phasemap.spec::AB1_engine
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): AB1_engine · all downstream 5 · finishing it unlocks AB1_engine'
   uuid: 6c978b0a-ab8e-5e3c-97b2-b00cb9a6f5d2

@@ -5,13 +5,13 @@ id: docs_2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
 context: pipeline phase CD1_magnet_parse of docs/2026-10-21-compartment-downloads-phasemap.spec
 intent: null
 summary: CD1_magnet_parse (foundation) — 1 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830636642
+exported_at: 1792852550197
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830636642
-lastSeenAt: 1792830636642
+firstSeenAt: 1792852550197
+lastSeenAt: 1792852550197
 fingerprint: null
 payload:
   id: CD1_magnet_parse
@@ -25,7 +25,49 @@ payload:
   blocks:
     - MOD-CDL-MAGNET
   spec: clear-glass/spec/compartment-downloads.spec
-  graph: e3defc132656fe7c
+  graph:
+    hash: e3defc132656fe7c
+    nodes:
+      - path: clear-glass/src/net/magnet.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/quarantine.js
+        role: used-by
+        exists: true
+        system: clear-glass
+    edges:
+      - from: clear-glass/src/net/quarantine.js
+        to: clear-glass/src/net/magnet.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+      upstream: []
+      downstream:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_downloads
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (2): CD2_quarantine_downloads, CD3_verified_handoff · all downstream 5 ·
+          finishing it unlocks CD2_quarantine_downloads, CD3_verified_handoff
   uuid: fda78ae5-479b-5817-b2ef-0013d39d4c29
   specLink:
     how: declared

@@ -5,13 +5,13 @@ id: docs_raid-warp-verification-phasemap.spec::P11_diagnose_and_repair_on_prompt
 context: pipeline phase P11_diagnose_and_repair_on_prompt of docs/raid-warp-verification-phasemap.spec
 intent: null
 summary: P11_diagnose_and_repair_on_prompt (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830648237
+exported_at: 1792852562991
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830648237
-lastSeenAt: 1792830648237
+firstSeenAt: 1792852562991
+lastSeenAt: 1792852562991
 fingerprint: null
 payload:
   id: P11_diagnose_and_repair_on_prompt
@@ -23,5 +23,224 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: e6dd297bac4f591a
+  graph:
+    hash: e6dd297bac4f591a
+    nodes:
+      - path: clear-glass/src/net/qbittorrent.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/providers/registry.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: cortex/core/raid/index.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: lib/execution-pipeline.js
+        role: changes
+        exists: true
+        system: lib
+      - path: clear-glass/src/contexts/session-headers.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/ipc/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/service.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/providers/host.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/providers/selector-assign.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/test/phase2.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/officiator.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/routing-ir.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: tests/modules/nexus-options-autoboot.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/contract/index.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/snr-filter.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/tunables.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: intelligence/bda/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/sigma.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/agent-facts-hash.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-router.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/build-pipeline.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/constitutional-ai.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/replay-engine.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: clear-glass/src/providers/registry.js
+        to: lib/agent-facts-hash.js
+        kind: requires
+      - from: clear-glass/src/providers/registry.js
+        to: lib/data-home.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/core/raid/snr-filter.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/core/raid/tunables.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/contract/index.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/replay-engine.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: intelligence/cfr/sigma.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: intelligence/bda/index.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/constitutional-ai.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/agent-router.js
+        kind: requires
+      - from: lib/execution-pipeline.js
+        to: lib/build-pipeline.js
+        kind: requires
+      - from: clear-glass/src/net/service.js
+        to: clear-glass/src/net/qbittorrent.js
+        kind: requires
+      - from: clear-glass/src/contexts/session-headers.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/src/providers/host.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/src/providers/selector-assign.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/test/phase2.test.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: tests/modules/nexus-options-autoboot.test.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/core/raid/officiator.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/core/raid/routing-ir.js
+        to: cortex/core/raid/index.js
+        kind: requires
+    crossings:
+      - from: cortex/core/raid/index.js
+        to: intelligence/cfr/sigma.js
+        fromSystem: cortex
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: cortex/core/raid/index.js
+        to: intelligence/bda/index.js
+        fromSystem: cortex
+        toSystem: intelligence
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 6ab7d3b3-4aae-50b8-b917-3c06708ed4fb

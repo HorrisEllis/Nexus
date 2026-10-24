@@ -9,11 +9,11 @@ intent: null
 summary: UI11_nav_and_look_restored (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830597797
+exported_at: 1792852511799
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830597797
-lastSeenAt: 1792830597797
+firstSeenAt: 1792852511799
+lastSeenAt: 1792852511799
 fingerprint: null
 payload:
   id: UI11_nav_and_look_restored
@@ -29,5 +29,75 @@ payload:
     - UI8_code_tab_is_code
   blocks: []
   spec: null
-  graph: bf1ee50b5fb1fd60
+  graph:
+    hash: bf1ee50b5fb1fd60
+    nodes:
+      - path: idearium/ui/index.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/app.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
+      dependents: []
+      upstream:
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI1_history_and_save_in_manage
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
+      downstream: []
+      blockedBy:
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI8_code_tab_is_code
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI2_desktop_environment_menu
+          files:
+            - idearium/ui/js/app.js
+            - idearium/ui/css/
+        - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI3_settings_tab_retheme_collapse
+          files:
+            - idearium/ui/js/app.js
+        - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI6_idea_and_phases_one_tab
+          files:
+            - idearium/ui/js/app.js
+        - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI9_plan_and_work_surface_panels
+          files:
+            - idearium/ui/css/
+        - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI10_debug_and_intelligence_one_tab
+          files:
+            - idearium/ui/js/app.js
+        - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+          files:
+            - idearium/ui/js/app.js
+        - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::TP1_promote_to_spec_templates
+          files:
+            - idearium/ui/js/app.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by UI8_code_tab_is_code
+        - 'depends on (1): UI8_code_tab_is_code · all upstream 2'
+        - 'needed by (0): —'
+        - >-
+          same files as UI2_desktop_environment_menu with no order between them:
+          idearium/ui/js/app.js, idearium/ui/css/
+        - >-
+          same files as UI3_settings_tab_retheme_collapse with no order between them:
+          idearium/ui/js/app.js
+        - >-
+          same files as UI6_idea_and_phases_one_tab with no order between them:
+          idearium/ui/js/app.js
+        - >-
+          same files as UI9_plan_and_work_surface_panels with no order between them:
+          idearium/ui/css/
+        - >-
+          same files as UI10_debug_and_intelligence_one_tab with no order between them:
+          idearium/ui/js/app.js
+        - … and 2 more phases sharing its files without an order
   uuid: 0ea13bbe-fe7e-5a27-918c-a38de9c64f82

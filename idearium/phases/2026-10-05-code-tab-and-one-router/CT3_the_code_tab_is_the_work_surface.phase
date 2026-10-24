@@ -9,11 +9,11 @@ intent: null
 summary: CT3_the_code_tab_is_the_work_surface (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830602552
+exported_at: 1792852516955
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830602552
-lastSeenAt: 1792830602552
+firstSeenAt: 1792852516955
+lastSeenAt: 1792852516955
 fingerprint: null
 payload:
   id: CT3_the_code_tab_is_the_work_surface
@@ -29,5 +29,62 @@ payload:
     - CT2_it_learns_and_switches
   blocks: []
   spec: null
-  graph: 05771164854f548f
+  graph:
+    hash: 05771164854f548f
+    nodes:
+      - path: idearium/repo/work-surface.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/app.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/work-surface.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/api/build-surface.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+    edges:
+      - from: idearium/api/build-surface.js
+        to: idearium/repo/work-surface.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/repo/work-surface.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT2_it_learns_and_switches
+      dependents:
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT5_hooked_into_the_plan
+      upstream:
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT1_one_door_for_models
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT2_it_learns_and_switches
+      downstream:
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT5_hooked_into_the_plan
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT7_the_plan_shows_current_work
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT8_live_agent_activity
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT9_the_plan_pull_tab
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT5_hooked_into_the_plan
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (1): CT2_it_learns_and_switches · all upstream 2'
+        - >-
+          needed by (1): CT5_hooked_into_the_plan · all downstream 4 · finishing it unlocks
+          CT5_hooked_into_the_plan
   uuid: 24f39426-1f77-5c35-bb6a-065ce905871e

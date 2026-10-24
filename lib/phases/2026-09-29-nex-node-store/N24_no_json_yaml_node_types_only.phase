@@ -5,13 +5,13 @@ id: docs_2026-09-29-nex-node-store-phasemap.spec::N24_no_json_yaml_node_types_on
 context: pipeline phase N24_no_json_yaml_node_types_only of docs/2026-09-29-nex-node-store-phasemap.spec
 intent: null
 summary: N24_no_json_yaml_node_types_only (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830596182
+exported_at: 1792852509986
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830596182
-lastSeenAt: 1792830596182
+firstSeenAt: 1792852509986
+lastSeenAt: 1792852509986
 fingerprint: null
 payload:
   id: N24_no_json_yaml_node_types_only
@@ -26,5 +26,108 @@ payload:
     - N18_hardcode_census
   blocks: []
   spec: null
-  graph: 2e2bc510c6a525a5
+  graph:
+    hash: 2e2bc510c6a525a5
+    nodes:
+      - path: lib/node-schemas.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/lib/inject-config.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/tools/table-materializer.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: guardian/lib/node-registry.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: intelligence/lib/domain-nodes.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/node-registry.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-pipeline-nodes.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/node-export-idea-tagged-query.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/node-schemas-split.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/node-schemas.js
+        to: lib/node-export.js
+        kind: requires
+      - from: copilot/lib/inject-config.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: cortex/tools/table-materializer.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: guardian/lib/node-registry.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: intelligence/lib/domain-nodes.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: tests/modules/test-pipeline-nodes.test.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: tests/node-export-idea-tagged-query.test.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: tests/node-schemas-split.test.js
+        to: lib/node-schemas.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N18_hardcode_census
+      dependents: []
+      upstream:
+        - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+        - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N18_hardcode_census
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N4_kinds_record_ledger_ring_blob
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N6_time
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+      downstream: []
+      blockedBy:
+        - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N18_hardcode_census
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 5 · blocked by N2, N7_views_yaml_and_nex, N18_hardcode_census
+        - 'depends on (3): N2, N7_views_yaml_and_nex, N18_hardcode_census · all upstream 10'
+        - 'needed by (0): —'
   uuid: 993e9685-2455-5ab2-b2ec-dc00d4564523

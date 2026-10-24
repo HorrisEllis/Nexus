@@ -5,13 +5,13 @@ id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CG9_history_via_rewind_en
 context: pipeline phase CG9_history_via_rewind_engine of docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: CG9_history_via_rewind_engine (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584897
+exported_at: 1792852498334
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584897
-lastSeenAt: 1792830584897
+firstSeenAt: 1792852498334
+lastSeenAt: 1792852498334
 fingerprint: null
 payload:
   id: CG9_history_via_rewind_engine
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 236f3a18df458ec9
+  graph:
+    hash: 236f3a18df458ec9
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 28e50746-a152-5d6c-b21c-509f43302b7a

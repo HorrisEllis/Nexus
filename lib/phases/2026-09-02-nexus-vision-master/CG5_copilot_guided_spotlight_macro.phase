@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: CG5_copilot_guided_spotlight_macro (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584893
+exported_at: 1792852498330
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584893
-lastSeenAt: 1792830584893
+firstSeenAt: 1792852498330
+lastSeenAt: 1792852498330
 fingerprint: null
 payload:
   id: CG5_copilot_guided_spotlight_macro
@@ -26,5 +26,28 @@ payload:
     - CG4_macros_plugin_autofill
   blocks: []
   spec: null
-  graph: c2df75d5133452f2
+  graph:
+    hash: c2df75d5133452f2
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG4_macros_plugin_autofill
+      dependents: []
+      upstream:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG4_macros_plugin_autofill
+      downstream: []
+      blockedBy:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG4_macros_plugin_autofill
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by CG4_macros_plugin_autofill
+        - 'depends on (1): CG4_macros_plugin_autofill'
+        - 'needed by (0): —'
   uuid: 5a8810c9-197f-5f6f-92f9-e3303fc9c1ef

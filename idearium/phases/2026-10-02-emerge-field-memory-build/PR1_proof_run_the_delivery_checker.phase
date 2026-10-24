@@ -9,11 +9,11 @@ intent: null
 summary: PR1_proof_run_the_delivery_checker (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830599129
+exported_at: 1792852513257
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830599129
-lastSeenAt: 1792830599129
+firstSeenAt: 1792852513257
+lastSeenAt: 1792852513257
 fingerprint: null
 payload:
   id: PR1_proof_run_the_delivery_checker
@@ -31,5 +31,254 @@ payload:
     - EM0_ground
   blocks: []
   spec: null
-  graph: 621112f06399821f
+  graph:
+    hash: 621112f06399821f
+    nodes:
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/cli/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/event-taxonomy.cjs
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/repo/proof-run.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/shadow.js
+        role: changes
+        exists: true
+        system: lib
+      - path: service/idearium-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: tests/modules/idearium-build-queue-poller.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-guardian-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-ingest-stability.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-agent-hat-agnostic.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-build-context.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-change-record.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-failure-modes.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-flight-data.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-projects-overview.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-repo-carve.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-undo-any-change.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: idearium/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/core/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/access.cjs
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: intelligence/spatial/lattice.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/economy/tokens.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/event-taxonomy-pattern.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-client.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/warp-rung.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: idearium/event-taxonomy.cjs
+        to: lib/event-taxonomy-pattern.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/data-home.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/warp-rung.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/access.cjs
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/economy/tokens.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: intelligence/spatial/lattice.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/core/index.js
+        kind: requires
+      - from: tests/modules/test-build-context.test.js
+        to: idearium/event-taxonomy.cjs
+        kind: requires
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-build-queue-poller.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-guardian-dispatch.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-ingest-stability.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-agent-hat-agnostic.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-change-record.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-failure-modes.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-flight-data.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-projects-overview.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-repo-carve.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-undo-any-change.test.js
+        to: idearium/api/index.js
+        kind: requires
+    crossings:
+      - from: idearium/api/index.js
+        to: intelligence/spatial/lattice.js
+        fromSystem: idearium
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        fromSystem: service
+        toSystem: idearium
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      dependents:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV0_fulfil_a_taken_order
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::DA1_domain_agnostic_end_states
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      downstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_lab
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::DA1_domain_agnostic_end_states
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV0_fulfil_a_taken_order
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV0_fulfil_a_taken_order
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::DA1_domain_agnostic_end_states
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): EM0_ground'
+        - >-
+          needed by (7): FV0_fulfil_a_taken_order, PR2_screenshots_through_clear_glass,
+          LB1_the_end_state_lab, FM1_mining_failure_modes, RD1_raid_complete_or_build,
+          DA1_domain_agnostic_end_states, PH1_phase_runs_end_in_proof · all downstream 11 ·
+          finishing it unlocks FV0_fulfil_a_taken_order, PR2_screenshots_through_clear_glass,
+          DA1_domain_agnostic_end_states, PH1_phase_runs_end_in_proof
   uuid: 67f47748-5b95-5fe6-93d0-5809185765ab

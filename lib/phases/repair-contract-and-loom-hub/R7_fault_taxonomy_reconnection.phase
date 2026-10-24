@@ -5,13 +5,13 @@ id: docs_repair-contract-and-loom-hub-phasemap.spec::R7_fault_taxonomy_reconnect
 context: pipeline phase R7_fault_taxonomy_reconnection of docs/repair-contract-and-loom-hub-phasemap.spec
 intent: null
 summary: R7_fault_taxonomy_reconnection (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830648644
+exported_at: 1792852563411
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830648644
-lastSeenAt: 1792830648644
+firstSeenAt: 1792852563411
+lastSeenAt: 1792852563411
 fingerprint: null
 payload:
   id: R7_fault_taxonomy_reconnection
@@ -23,5 +23,271 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: abe9e773e82c4bb0
+  graph:
+    hash: abe9e773e82c4bb0
+    nodes:
+      - path: cortex/core/raid/snr-filter.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: cortex/self-heal/fault-taxonomy.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: diagnostic/nexus-diagnostic.js
+        role: changes
+        exists: true
+        system: diagnostic
+      - path: docs/escalation.spec
+        role: changes
+        exists: true
+        system: null
+      - path: docs/self-heal.spec
+        role: changes
+        exists: true
+        system: null
+      - path: lib/constitutional-ai.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/replay-engine.js
+        role: changes
+        exists: true
+        system: lib
+      - path: orchestrator/lib/request-handler.js
+        role: changes
+        exists: true
+        system: orchestrator
+      - path: service/nexus-diagnostic.js
+        role: changes
+        exists: false
+        system: service
+      - path: cortex/core/raid/index.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/self-heal/escalation.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/self-heal/index.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: diagnostic/cli.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: diagnostic/server.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: intelligence/gap/predicate.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/agent-tools/tools/governance/raid-snr.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/blueprint.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/modules/test-diagnostic-heal-path.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-fault-taxonomy.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-snr-filter.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: diagnostic/config.js
+        role: uses
+        exists: true
+        system: diagnostic
+      - path: diagnostic/lib/wire-integrity.js
+        role: uses
+        exists: true
+        system: diagnostic
+      - path: intelligence/baseline.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/contract-verifier.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/field.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/telemetry-codec/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/diagnostic-engines.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ico.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ledger-fanin/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: loom/schema/index.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: cortex/self-heal/fault-taxonomy.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/data-home.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/ico.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/cfr/contract-verifier.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/cfr/field.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/baseline.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: loom/schema/index.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: diagnostic/lib/wire-integrity.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/telemetry-codec/index.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/diagnostic-engines.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: diagnostic/config.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/ledger-fanin/index.js
+        kind: requires
+      - from: cortex/self-heal/escalation.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: cortex/self-heal/index.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: intelligence/gap/predicate.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: tests/modules/test-diagnostic-heal-path.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: tests/modules/test-fault-taxonomy.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: diagnostic/cli.js
+        to: diagnostic/nexus-diagnostic.js
+        kind: requires
+      - from: diagnostic/server.js
+        to: diagnostic/nexus-diagnostic.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/core/raid/snr-filter.js
+        kind: requires
+      - from: lib/agent-tools/tools/governance/raid-snr.js
+        to: cortex/core/raid/snr-filter.js
+        kind: requires
+      - from: tests/modules/test-snr-filter.js
+        to: cortex/core/raid/snr-filter.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: orchestrator/lib/request-handler.js
+        kind: requires
+      - from: lib/blueprint.js
+        to: lib/constitutional-ai.js
+        kind: requires
+    crossings:
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/cfr/contract-verifier.js
+        fromSystem: diagnostic
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/cfr/field.js
+        fromSystem: diagnostic
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/baseline.js
+        fromSystem: diagnostic
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: diagnostic/nexus-diagnostic.js
+        to: loom/schema/index.js
+        fromSystem: diagnostic
+        toSystem: loom
+        kind: system
+        known: true
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/telemetry-codec/index.js
+        fromSystem: diagnostic
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: intelligence/gap/predicate.js
+        to: cortex/self-heal/fault-taxonomy.js
+        fromSystem: intelligence
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: lib/agent-tools/tools/governance/raid-snr.js
+        to: cortex/core/raid/snr-filter.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 2d815a4f-975b-5356-9ca4-a79592b15bfd

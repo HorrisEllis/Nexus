@@ -5,13 +5,13 @@ id: docs_2026-10-19-infrastructure-spine-phasemap.spec::VC2_changelogs_rendered
 context: pipeline phase VC2_changelogs_rendered of docs/2026-10-19-infrastructure-spine-phasemap.spec
 intent: null
 summary: VC2_changelogs_rendered (interface) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632384
+exported_at: 1792852546182
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632384
-lastSeenAt: 1792830632384
+firstSeenAt: 1792852546182
+lastSeenAt: 1792852546182
 fingerprint: null
 payload:
   id: VC2_changelogs_rendered
@@ -27,5 +27,42 @@ payload:
     - IN2_quotes_ledger
   blocks: []
   spec: null
-  graph: 991430c3f767143b
+  graph:
+    hash: 991430c3f767143b
+    nodes:
+      - path: idearium/ui/js/repo-versions.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: scripts/render-changelog.js
+        role: changes
+        exists: false
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::VC1_a_change_entry_for_every_event
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+      dependents: []
+      upstream:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::VC1_a_change_entry_for_every_event
+      downstream: []
+      blockedBy:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::VC1_a_change_entry_for_every_event
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 2 · blocked by VC1_a_change_entry_for_every_event,
+          IN2_quotes_ledger
+        - 'depends on (2): VC1_a_change_entry_for_every_event, IN2_quotes_ledger · all upstream 3'
+        - 'needed by (0): —'
   uuid: 9616b216-5401-524f-9e44-7c89fcfd82cf

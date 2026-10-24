@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-18-compartment-environment-phasemap.spec
 intent: null
 summary: CE0a_one_compartment_per_what (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830629339
+exported_at: 1792852543279
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830629339
-lastSeenAt: 1792830629339
+firstSeenAt: 1792852543279
+lastSeenAt: 1792852543279
 fingerprint: null
 payload:
   id: CE0a_one_compartment_per_what
@@ -25,5 +25,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 8cd55916eb32ec0e
+  graph:
+    hash: 8cd55916eb32ec0e
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 1b06460e-e83e-5f15-b7d8-c36856f51a95

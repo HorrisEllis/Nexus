@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion-phasemap.spec
 intent: null
 summary: TR2_tab_lifecycle_and_visibility (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830590455
+exported_at: 1792852504148
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830590455
-lastSeenAt: 1792830590455
+firstSeenAt: 1792852504148
+lastSeenAt: 1792852504148
 fingerprint: null
 payload:
   id: TR2_tab_lifecycle_and_visibility
@@ -25,5 +25,178 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: f48c6d68235b7c84
+  graph:
+    hash: f48c6d68235b7c84
+    nodes:
+      - path: lib/repo-agent.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/spec-census.js
+        role: changes
+        exists: true
+        system: lib
+      - path: tests/modules/test-workshop-full.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/api/build-surface.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/gate-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent-node.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-registry-harness.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-repo-agent-provider.js
+        role: used-by
+        exists: true
+        system: null
+      - path: clear-glass/src/driver/glass.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/agent-providers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tool-guide.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/idearium/code.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/nexus/tool-layers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/systems.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-context.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-hat-memory.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-hat.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+      - path: loom/scanners/phasemap-map.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: lib/spec-census.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: lib/spec-census.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: tests/modules/test-workshop-full.test.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: tests/modules/test-workshop-full.test.js
+        to: clear-glass/src/driver/glass.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-hat-memory.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-providers.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tools/idearium/code.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tools/nexus/tool-layers.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tool-guide.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-context.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-census.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: lib/gate-context.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: lib/repo-agent-node.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: tests/modules/test-registry-harness.test.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: tests/modules/test-repo-agent-provider.js
+        to: lib/repo-agent.js
+        kind: requires
+    crossings:
+      - from: lib/spec-census.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/repo-agent.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: d347ff34-a51c-59b9-84ec-b5b7c71f9a7d

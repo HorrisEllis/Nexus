@@ -9,11 +9,11 @@ intent: null
 summary: SD1_rewind_and_versions_on_the_repo_card (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830610973
+exported_at: 1792852524900
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830610973
-lastSeenAt: 1792830610973
+firstSeenAt: 1792852524900
+lastSeenAt: 1792852524900
 fingerprint: null
 payload:
   id: SD1_rewind_and_versions_on_the_repo_card
@@ -28,5 +28,37 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 2652c3fb731ca33b
+  graph:
+    hash: 2652c3fb731ca33b
+    nodes:
+      - path: idearium/ui/js/app.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/repo-drawer-views.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/repo-tasks.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 0391cdec-1a19-5475-9982-e2a04c73fc0d

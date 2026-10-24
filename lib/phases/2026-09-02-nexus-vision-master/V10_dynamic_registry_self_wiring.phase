@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: V10_dynamic_registry_self_wiring (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584905
+exported_at: 1792852498342
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584905
-lastSeenAt: 1792830584905
+firstSeenAt: 1792852498342
+lastSeenAt: 1792852498342
 fingerprint: null
 payload:
   id: V10_dynamic_registry_self_wiring
@@ -26,5 +26,28 @@ payload:
     - VM1_versionium_owns_loom_map_sync
   blocks: []
   spec: null
-  graph: c55603e97de1585c
+  graph:
+    hash: c55603e97de1585c
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+      dependents: []
+      upstream:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+      downstream: []
+      blockedBy:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::VM1_versionium_owns_loom_map_sync
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by VM1_versionium_owns_loom_map_sync
+        - 'depends on (1): VM1_versionium_owns_loom_map_sync'
+        - 'needed by (0): —'
   uuid: a5ac0292-1bbd-582b-b8c5-bfeccbed5b7e

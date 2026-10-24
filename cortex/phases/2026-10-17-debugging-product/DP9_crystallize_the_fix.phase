@@ -5,13 +5,13 @@ id: docs_2026-10-17-debugging-product-phasemap.spec::DP9_crystallize_the_fix
 context: pipeline phase DP9_crystallize_the_fix of docs/2026-10-17-debugging-product-phasemap.spec
 intent: null
 summary: DP9_crystallize_the_fix (?) — 2 file(s)
-system: idearium
+system: cortex
 tags: []
-exported_at: 1792830627250
+exported_at: 1792852541165
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830627250
-lastSeenAt: 1792830627250
+firstSeenAt: 1792852541165
+lastSeenAt: 1792852541165
 fingerprint: null
 payload:
   id: DP9_crystallize_the_fix
@@ -26,5 +26,75 @@ payload:
     - DP8_a_proven_fix
   blocks: []
   spec: null
-  graph: bb202e146d2c087f
+  graph:
+    hash: bb202e146d2c087f
+    nodes:
+      - path: cortex/memory/fix-map.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: diagnostic/lib/case.js
+        role: changes
+        exists: false
+        system: diagnostic
+      - path: cortex/memory/bep-lookup.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/push-recall.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/self-heal/failure-report.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/self-heal/index.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+    edges:
+      - from: cortex/memory/fix-map.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cortex/memory/bep-lookup.js
+        to: cortex/memory/fix-map.js
+        kind: requires
+      - from: cortex/push-recall.js
+        to: cortex/memory/fix-map.js
+        kind: requires
+      - from: cortex/self-heal/failure-report.js
+        to: cortex/memory/fix-map.js
+        kind: requires
+      - from: cortex/self-heal/index.js
+        to: cortex/memory/fix-map.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+      dependents: []
+      upstream:
+        - docs/2026-10-17-debugging-product-phasemap.spec::DP2_one_gap_door
+        - docs/2026-10-17-debugging-product-phasemap.spec::DP4_every_ledger_into_rfr2
+        - docs/2026-10-17-debugging-product-phasemap.spec::DP5_the_case
+        - docs/2026-10-17-debugging-product-phasemap.spec::DP6_reproduce_in_cos
+        - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+      downstream: []
+      blockedBy:
+        - docs/2026-10-17-debugging-product-phasemap.spec::DP8_a_proven_fix
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by DP8_a_proven_fix
+        - 'depends on (1): DP8_a_proven_fix · all upstream 5'
+        - 'needed by (0): —'
   uuid: 55af2238-5232-5e71-b190-a714ea601432

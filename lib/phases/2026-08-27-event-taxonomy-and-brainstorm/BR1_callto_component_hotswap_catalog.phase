@@ -7,13 +7,13 @@ context: >-
   docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec
 intent: null
 summary: BR1_callto_component_hotswap_catalog (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830582306
+exported_at: 1792852495390
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830582306
-lastSeenAt: 1792830582306
+firstSeenAt: 1792852495390
+lastSeenAt: 1792852495390
 fingerprint: null
 payload:
   id: BR1_callto_component_hotswap_catalog
@@ -26,5 +26,28 @@ payload:
     - TX10_component_registry_discipline
   blocks: []
   spec: null
-  graph: e6e82690ee483733
+  graph:
+    hash: e6e82690ee483733
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
+      dependents: []
+      upstream:
+        - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
+      downstream: []
+      blockedBy:
+        - docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec::TX10_component_registry_discipline
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by TX10_component_registry_discipline
+        - 'depends on (1): TX10_component_registry_discipline'
+        - 'needed by (0): —'
   uuid: 500f2367-cae6-51b6-a415-009152fc6c08

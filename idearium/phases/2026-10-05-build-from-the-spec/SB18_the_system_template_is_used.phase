@@ -9,11 +9,11 @@ intent: null
 summary: SB18_the_system_template_is_used (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830601620
+exported_at: 1792852515903
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830601620
-lastSeenAt: 1792830601620
+firstSeenAt: 1792852515903
+lastSeenAt: 1792852515903
 fingerprint: null
 payload:
   id: SB18_the_system_template_is_used
@@ -30,5 +30,256 @@ payload:
     - SB1_templates_are_the_default_frame
   blocks: []
   spec: null
-  graph: 518b2cbff03e266a
+  graph:
+    hash: 8cec30f639de64be
+    nodes:
+      - path: idearium/spec-engine/blocks.yaml
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/templates.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/cli/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/compiler-t0.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/test/e2e-pipeline.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/seam/cross-system-status.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/idearium-auto-repo-creation.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-build-queue-poller.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-chunk-dependencies.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-guardian-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-ingest-stability.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-loop.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: idearium/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/chunk-nodes.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/data-dir.cjs
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/db.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: lib/agent-providers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/sandbox/cos-compartment.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/build-context.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/chunker/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/registry-plan.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-digest.js
+        role: uses
+        exists: true
+        system: lib
+      - path: warp/core/index.js
+        role: uses
+        exists: true
+        system: null
+    edges:
+      - from: idearium/spec-engine/templates.js
+        to: lib/agent-tools/tools/sandbox/cos-compartment.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/lib/db.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/lib/chunk-nodes.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/lib/data-dir.cjs
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: warp/core/index.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: lib/agent-providers.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/index.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: lib/build-context.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: lib/spec-digest.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: lib/registry-plan.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: lib/chunker/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-engine/templates.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: idearium/cli/index.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: idearium/spec-engine/compiler-t0.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: idearium/test/e2e-pipeline.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: lib/seam/cross-system-status.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-auto-repo-creation.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-build-queue-poller.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-chunk-dependencies.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-guardian-dispatch.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-ingest-stability.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-loop.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+    crossings:
+      - from: cortex/core/raid/contract-intake.js
+        to: idearium/spec-engine/index.js
+        fromSystem: cortex
+        toSystem: idearium
+        kind: system
+        known: true
+      - from: lib/seam/cross-system-status.js
+        to: idearium/spec-engine/index.js
+        fromSystem: lib
+        toSystem: idearium
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      dependents: []
+      upstream:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB1_templates_are_the_default_frame
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB8_promote_with_full_block_options
+          files:
+            - idearium/spec-engine/index.js
+            - idearium/spec-engine/blocks.yaml
+        - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB9_the_spec_is_a_spec_file
+          files:
+            - idearium/spec-engine/index.js
+        - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB10_reuse_first_keyed_on_the_contract
+          files:
+            - idearium/spec-engine/index.js
+        - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB11_each_block_chunked
+          files:
+            - idearium/spec-engine/index.js
+        - with: docs/2026-10-05-build-from-the-spec-phasemap.spec::SB13_each_component_chunked
+          files:
+            - idearium/spec-engine/index.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - >-
+          depends on (2): SB17_the_system_template_is_complete, SB1_templates_are_the_default_frame
+          · all upstream 4
+        - 'needed by (0): —'
+        - >-
+          same files as SB8_promote_with_full_block_options with no order between them:
+          idearium/spec-engine/index.js, idearium/spec-engine/blocks.yaml
+        - >-
+          same files as SB9_the_spec_is_a_spec_file with no order between them:
+          idearium/spec-engine/index.js
+        - >-
+          same files as SB10_reuse_first_keyed_on_the_contract with no order between them:
+          idearium/spec-engine/index.js
+        - >-
+          same files as SB11_each_block_chunked with no order between them:
+          idearium/spec-engine/index.js
+        - >-
+          same files as SB13_each_component_chunked with no order between them:
+          idearium/spec-engine/index.js
   uuid: 7fb02ad2-6aee-5cf3-a790-3031b62a275e

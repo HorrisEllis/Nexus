@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-13-track-b-sovereignty-phasemap.spec
 intent: null
 summary: MCO18_interaction_contract_split_scoped (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830587951
+exported_at: 1792852501601
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830587951
-lastSeenAt: 1792830587951
+firstSeenAt: 1792852501601
+lastSeenAt: 1792852501601
 fingerprint: null
 payload:
   id: MCO18_interaction_contract_split_scoped
@@ -25,5 +25,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: cdf5f24602f5099b
+  graph:
+    hash: cdf5f24602f5099b
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 8173439c-6f16-5a9f-aeae-9cbda885bd66

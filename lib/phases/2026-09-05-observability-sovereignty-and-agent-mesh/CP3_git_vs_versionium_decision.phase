@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
 intent: null
 summary: CP3_git_vs_versionium_decision (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830585850
+exported_at: 1792852499327
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830585850
-lastSeenAt: 1792830585850
+firstSeenAt: 1792852499327
+lastSeenAt: 1792852499327
 fingerprint: null
 payload:
   id: CP3_git_vs_versionium_decision
@@ -25,5 +25,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 5596e1b70a39c284
+  graph:
+    hash: 5596e1b70a39c284
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 9317cd3a-04c1-5714-80fc-00d8ff11c266

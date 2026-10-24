@@ -5,13 +5,13 @@ id: docs_copilot-full-capability-phasemap.spec::P3_cos_toolkit_tools
 context: pipeline phase P3_cos_toolkit_tools of docs/copilot-full-capability-phasemap.spec
 intent: null
 summary: P3_cos_toolkit_tools (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830641753
+exported_at: 1792852556182
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830641753
-lastSeenAt: 1792830641753
+firstSeenAt: 1792852556182
+lastSeenAt: 1792852556182
 fingerprint: null
 payload:
   id: P3_cos_toolkit_tools
@@ -23,5 +23,58 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 242126ebcb2eda89
+  graph:
+    hash: 242126ebcb2eda89
+    nodes:
+      - path: cos/playground/llm-lab.js
+        role: changes
+        exists: true
+        system: cos
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: lib/agent-tools/tools/sandbox/cos-simulate.js
+        role: used-by
+        exists: true
+        system: lib
+    edges:
+      - from: guardian/server.js
+        to: cos/playground/llm-lab.js
+        kind: requires
+      - from: lib/agent-tools/tools/sandbox/cos-simulate.js
+        to: cos/playground/llm-lab.js
+        kind: requires
+    crossings:
+      - from: guardian/server.js
+        to: cos/playground/llm-lab.js
+        fromSystem: guardian
+        toSystem: cos
+        kind: system
+        known: true
+      - from: lib/agent-tools/tools/sandbox/cos-simulate.js
+        to: cos/playground/llm-lab.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: b8e7bfdd-963f-5ead-af4d-14a55f2319b9

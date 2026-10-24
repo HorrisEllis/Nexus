@@ -5,13 +5,13 @@ id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR0c_first_replay_route
 context: pipeline phase FMR0c_first_replay_route of docs/2026-10-17-failure-mode-report-phasemap.spec
 intent: null
 summary: FMR0c_first_replay_route (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830627659
+exported_at: 1792852541594
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830627659
-lastSeenAt: 1792830627659
+firstSeenAt: 1792852541594
+lastSeenAt: 1792852541594
 fingerprint: null
 payload:
   id: FMR0c_first_replay_route
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 0112c26335404499
+  graph:
+    hash: 0112c26335404499
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: f560c8b6-f10a-5e88-a31c-d8d69631b0f5

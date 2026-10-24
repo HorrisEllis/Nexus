@@ -7,11 +7,11 @@ intent: null
 summary: W5_theme_and_css (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830597352
+exported_at: 1792852511339
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830597352
-lastSeenAt: 1792830597352
+firstSeenAt: 1792852511339
+lastSeenAt: 1792852511339
 fingerprint: null
 payload:
   id: W5_theme_and_css
@@ -30,5 +30,97 @@ payload:
     - W4_navigation
   blocks: []
   spec: null
-  graph: ec86ed1c0f589dd1
+  graph:
+    hash: ec86ed1c0f589dd1
+    nodes:
+      - path: idearium/lib/config-core.cjs
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/css/nexus-theme.css
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/css/work-surface.css
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/index.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/theme.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/settings.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/lib/chunk-nodes.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/lib/config.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/project-import.config.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-repo-agent-provider.js
+        role: used-by
+        exists: true
+        system: null
+    edges:
+      - from: idearium/lib/chunk-nodes.js
+        to: idearium/lib/config-core.cjs
+        kind: requires
+      - from: idearium/lib/config.js
+        to: idearium/lib/config-core.cjs
+        kind: requires
+      - from: lib/project-import.config.js
+        to: idearium/lib/config-core.cjs
+        kind: requires
+      - from: tests/modules/test-repo-agent-provider.js
+        to: idearium/lib/config-core.cjs
+        kind: requires
+    crossings:
+      - from: lib/project-import.config.js
+        to: idearium/lib/config-core.cjs
+        fromSystem: lib
+        toSystem: idearium
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W4_navigation
+      dependents:
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W7_next_mapped_2026_09_30
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W6_release
+      upstream:
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W0_map
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W1_idearium_never_blocks_on_git
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W2_plan_always_lands
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W3_work_surface
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W4_navigation
+      downstream:
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W6_release
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W7_next_mapped_2026_09_30
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W7_next_mapped_2026_09_30
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W6_release
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 5
+        - 'depends on (1): W4_navigation · all upstream 5'
+        - >-
+          needed by (2): W7_next_mapped_2026_09_30, W6_release · finishing it unlocks
+          W7_next_mapped_2026_09_30, W6_release
   uuid: 1586abd1-d390-52fa-a1a6-a224ffbae4f2

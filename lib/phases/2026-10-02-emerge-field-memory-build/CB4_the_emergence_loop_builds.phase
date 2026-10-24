@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-02-emerge-field-memory-build-phasemap.spec
 intent: null
 summary: CB4_the_emergence_loop_builds (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830599097
+exported_at: 1792852513226
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830599097
-lastSeenAt: 1792830599097
+firstSeenAt: 1792852513226
+lastSeenAt: 1792852513226
 fingerprint: null
 payload:
   id: CB4_the_emergence_loop_builds
@@ -29,5 +29,51 @@ payload:
     - MR2_vector_space_for_the_field
   blocks: []
   spec: null
-  graph: f55b34562227851d
+  graph:
+    hash: ce53ad7e62521d5f
+    nodes:
+      - path: emergence/loop.js
+        role: changes
+        exists: false
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 8
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+      dependents: []
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      downstream: []
+      blockedBy:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 8 · blocked by CB1_cfr_build_logic,
+          CB2_analysis_then_synthesis, MR2_vector_space_for_the_field
+        - >-
+          depends on (3): CB1_cfr_build_logic, CB2_analysis_then_synthesis,
+          MR2_vector_space_for_the_field · all upstream 12
+        - 'needed by (0): —'
   uuid: 652116dc-d249-516e-8691-ef921b0a99f9

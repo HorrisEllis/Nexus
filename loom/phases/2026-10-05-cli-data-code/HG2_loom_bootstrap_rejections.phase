@@ -5,13 +5,13 @@ id: docs_2026-10-05-cli-data-code-phasemap.spec::HG2_loom_bootstrap_rejections
 context: pipeline phase HG2_loom_bootstrap_rejections of docs/2026-10-05-cli-data-code-phasemap.spec
 intent: null
 summary: HG2_loom_bootstrap_rejections (?) — 2 file(s)
-system: idearium
+system: loom
 tags: []
-exported_at: 1792830602129
+exported_at: 1792852516509
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830602129
-lastSeenAt: 1792830602129
+firstSeenAt: 1792852516509
+lastSeenAt: 1792852516509
 fingerprint: null
 payload:
   id: HG2_loom_bootstrap_rejections
@@ -25,5 +25,119 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 966dd95e7e861011
+  graph:
+    hash: 966dd95e7e861011
+    nodes:
+      - path: loom/bootstrap.js
+        role: changes
+        exists: true
+        system: loom
+      - path: loom/maps/accounts-authority-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/copilot-capability-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/cos-testenv-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/observability-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/raid-events-and-tools-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/session-2026-08-14-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/ui-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/warp-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/capability-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/source-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/spec-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/schema/index.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: loom/bootstrap.js
+        to: loom/schema/index.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/warp-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/observability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/copilot-capability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/session-2026-08-14-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/ui-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/raid-events-and-tools-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/accounts-authority-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/spec-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/cos-testenv-map.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-05-cli-data-code-phasemap.spec::HG5_bootstrap_keeps_registration_times
+          files:
+            - loom/bootstrap.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          same files as HG5_bootstrap_keeps_registration_times with no order between them:
+          loom/bootstrap.js
   uuid: 2a481f13-6c20-583e-ab76-5f2d9a39d9f0

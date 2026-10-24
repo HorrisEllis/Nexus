@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: LM2_per_system_living_model_completion (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584906
+exported_at: 1792852498343
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584906
-lastSeenAt: 1792830584906
+firstSeenAt: 1792852498343
+lastSeenAt: 1792852498343
 fingerprint: null
 payload:
   id: LM2_per_system_living_model_completion
@@ -25,5 +25,33 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 9102177dca43ea27
+  graph:
+    hash: 9102177dca43ea27
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::LM3_component_registry_hooks_spec
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::LM6_model_template
+      upstream: []
+      downstream:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::LM3_component_registry_hooks_spec
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::LM6_model_template
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::LM3_component_registry_hooks_spec
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::LM6_model_template
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - >-
+          needed by (2): LM3_component_registry_hooks_spec, LM6_model_template · finishing it
+          unlocks LM3_component_registry_hooks_spec, LM6_model_template
   uuid: e191abd8-73e9-5bb7-9591-a0c64fab6711

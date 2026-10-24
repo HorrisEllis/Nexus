@@ -7,13 +7,13 @@ context: >-
   docs/nexus-system-standardization-phasemap.spec
 intent: null
 summary: SS3_event_driven_handshake_contracts (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830647084
+exported_at: 1792852561763
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830647084
-lastSeenAt: 1792830647084
+firstSeenAt: 1792852561763
+lastSeenAt: 1792852561763
 fingerprint: null
 payload:
   id: SS3_event_driven_handshake_contracts
@@ -26,5 +26,123 @@ payload:
     - SS1_system_manifest
   blocks: []
   spec: null
-  graph: 7fca6f4123a25be4
+  graph:
+    hash: 7fca6f4123a25be4
+    nodes:
+      - path: contracts/SYSTEM-CONTRACTS.js
+        role: changes
+        exists: true
+        system: contracts
+      - path: contracts/nodes/axioms.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/bottlenecks.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/deltas.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/divergent.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/edges.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/events.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/faults.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/gaps.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/interaction-contracts.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/ledgers.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/systems.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/verification-contracts.node.js
+        role: uses
+        exists: true
+        system: contracts
+    edges:
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/axioms.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/systems.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/events.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/gaps.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/faults.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/edges.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/deltas.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/divergent.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/bottlenecks.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/ledgers.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/interaction-contracts.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/verification-contracts.node.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
+      dependents:
+        - docs/nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+        - docs/nexus-system-standardization-phasemap.spec::SS7_decoupling_audit
+      upstream:
+        - docs/nexus-system-standardization-phasemap.spec::SS0_clear_clutter
+        - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
+      downstream:
+        - docs/nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+        - docs/nexus-system-standardization-phasemap.spec::SS5_diagnostics_reads_and_fixes
+        - docs/nexus-system-standardization-phasemap.spec::SS6_dynamic_commands_and_cortex_data
+        - docs/nexus-system-standardization-phasemap.spec::SS7_decoupling_audit
+      blockedBy:
+        - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by SS1_system_manifest
+        - 'depends on (1): SS1_system_manifest · all upstream 2'
+        - 'needed by (2): SS4_full_logging_per_system, SS7_decoupling_audit · all downstream 4'
   uuid: 0006b877-6cd1-5b14-95a9-7fc78bead932

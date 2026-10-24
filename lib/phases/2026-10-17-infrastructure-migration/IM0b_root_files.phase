@@ -5,13 +5,13 @@ id: docs_2026-10-17-infrastructure-migration-phasemap.spec::IM0b_root_files
 context: pipeline phase IM0b_root_files of docs/2026-10-17-infrastructure-migration-phasemap.spec
 intent: null
 summary: IM0b_root_files (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830628070
+exported_at: 1792852542012
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830628070
-lastSeenAt: 1792830628070
+firstSeenAt: 1792852542012
+lastSeenAt: 1792852542012
 fingerprint: null
 payload:
   id: IM0b_root_files
@@ -23,5 +23,35 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: b08632fab89cee9e
+  graph:
+    hash: b08632fab89cee9e
+    nodes:
+      - path: docs/2026-10-17-decisions-by-the-axioms.spec
+        role: changes
+        exists: true
+        system: null
+      - path: scripts/release-zip.js
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM2_clean_the_redundant
+      upstream: []
+      downstream:
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM2_clean_the_redundant
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): IM2_clean_the_redundant'
   uuid: f9b2142c-dbb9-5e1e-a539-17d8b72a918b

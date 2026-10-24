@@ -7,11 +7,11 @@ intent: null
 summary: SB16_genesis_nodes_domain (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830601616
+exported_at: 1792852515900
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830601616
-lastSeenAt: 1792830601616
+firstSeenAt: 1792852515900
+lastSeenAt: 1792852515900
 fingerprint: null
 payload:
   id: SB16_genesis_nodes_domain
@@ -25,5 +25,62 @@ payload:
     - SB0_map
   blocks: []
   spec: null
-  graph: c9ee88ad2a876a14
+  graph:
+    hash: c9ee88ad2a876a14
+    nodes:
+      - path: idearium/spec-engine/templates/genesis.spec
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      dependents:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      upstream:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+      downstream:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB14_reuse_compounds
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB18_the_system_template_is_used
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB19_atlases_per_component
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB20_each_system_owns_its_own
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB21_deterministic_parts_grow_with_the_system
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB22_every_component_capability_command_events_as_nodes
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB23_a_new_system_slots_in
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB24_loom_builds_a_new_system
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB25_atlas_template_in_his_structure
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB26_an_imported_project_shows_its_progress
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB27_expanding_a_repo_keeps_its_spec_and_phases_current
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB28_genesis_in_the_shape_nexus_systems_have
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB29_the_build_flow_in_his_order
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB30_the_template_is_a_skeleton
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB43_the_expansion_is_phased
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB44_phases_are_chunked_then_coded
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB45_skeletons_grey_until_coded
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB46_every_step_by_hand
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB47_built_and_run_in_cos
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB48_proof_in_cos_closes_the_phase
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB49_an_idea_runs_through_by_itself
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB4_template_fidelity
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB5_nexus_rebuilds_a_system_from_its_spec
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB6_hundreds_of_specs
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): SB0_map'
+        - >-
+          needed by (1): SB17_the_system_template_is_complete · all downstream 27 · finishing it
+          unlocks SB17_the_system_template_is_complete
   uuid: 2acfdae1-8f1f-5e59-8bc4-84e2b776f4f6

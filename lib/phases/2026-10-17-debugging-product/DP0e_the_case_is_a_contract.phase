@@ -5,13 +5,13 @@ id: docs_2026-10-17-debugging-product-phasemap.spec::DP0e_the_case_is_a_contract
 context: pipeline phase DP0e_the_case_is_a_contract of docs/2026-10-17-debugging-product-phasemap.spec
 intent: null
 summary: DP0e_the_case_is_a_contract (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830627242
+exported_at: 1792852541157
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830627242
-lastSeenAt: 1792830627242
+firstSeenAt: 1792852541157
+lastSeenAt: 1792852541157
 fingerprint: null
 payload:
   id: DP0e_the_case_is_a_contract
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: d1e350bd74765544
+  graph:
+    hash: d1e350bd74765544
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 06bd1785-0722-5cce-b2a0-47ee2af44532

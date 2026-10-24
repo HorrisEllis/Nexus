@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: CG11_ublock_adblocker_native_features (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584900
+exported_at: 1792852498337
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584900
-lastSeenAt: 1792830584900
+firstSeenAt: 1792852498337
+lastSeenAt: 1792852498337
 fingerprint: null
 payload:
   id: CG11_ublock_adblocker_native_features
@@ -25,5 +25,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: fed21457aecdec12
+  graph:
+    hash: fed21457aecdec12
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: b3cf69e9-7b55-52b5-8ef1-627602d3149b

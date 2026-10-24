@@ -7,11 +7,11 @@ intent: null
 summary: DB19_genesis_sandboxed_fork (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830628923
+exported_at: 1792852542844
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830628923
-lastSeenAt: 1792830628923
+firstSeenAt: 1792852542844
+lastSeenAt: 1792852542844
 fingerprint: null
 payload:
   id: DB19_genesis_sandboxed_fork
@@ -26,5 +26,59 @@ payload:
     - DB13_the_tunnel
   blocks: []
   spec: null
-  graph: 68f0ea951c3c9dae
+  graph:
+    hash: 68f0ea951c3c9dae
+    nodes:
+      - path: idearium/spec-engine/templates.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/templates/genesis-sandboxed.spec
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/agent-tools/tools/sandbox/cos-compartment.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: idearium/spec-engine/templates.js
+        to: lib/agent-tools/tools/sandbox/cos-compartment.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-engine/templates.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/spec-engine/templates.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      dependents:
+        - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
+      upstream:
+        - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      downstream:
+        - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): DB13_the_tunnel'
+        - 'needed by (1): DB20_sealed_archetype · finishing it unlocks DB20_sealed_archetype'
   uuid: 53792b2a-b12b-54a6-8fb2-0043f93eb102

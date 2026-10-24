@@ -5,13 +5,13 @@ id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::CL1_the_component_l
 context: pipeline phase CL1_the_component_lab of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
 intent: null
 summary: CL1_the_component_lab (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830599152
+exported_at: 1792852513277
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830599152
-lastSeenAt: 1792830599152
+firstSeenAt: 1792852513277
+lastSeenAt: 1792852513277
 fingerprint: null
 payload:
   id: CL1_the_component_lab
@@ -29,5 +29,206 @@ payload:
     - CX0_codex_component_store
   blocks: []
   spec: null
-  graph: a2eea2a6f08f0b6a
+  graph:
+    hash: a2eea2a6f08f0b6a
+    nodes:
+      - path: cos/playground/sandbox.js
+        role: changes
+        exists: true
+        system: cos
+      - path: idearium/repo/proof-run.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/component-store.js
+        role: changes
+        exists: true
+        system: lib
+      - path: cos/ci/index.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/atlas-generate.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/build-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/context-sources.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/project-decompose.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/project-registry.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/registry-harness.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-build-context.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-build-verify.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-component-store.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-project-registry.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cos/foundation/axioms.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/foundation/constants.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/playground/branch.js
+        role: uses
+        exists: true
+        system: cos
+      - path: lib/shadow.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/component-store.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: idearium/repo/proof-run.js
+        to: lib/shadow.js
+        kind: requires
+      - from: cos/playground/sandbox.js
+        to: cos/foundation/constants.js
+        kind: requires
+      - from: cos/playground/sandbox.js
+        to: cos/foundation/axioms.js
+        kind: requires
+      - from: cos/playground/sandbox.js
+        to: cos/playground/branch.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/atlas-generate.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/build-context.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/context-sources.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/project-decompose.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/project-registry.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/registry-harness.js
+        to: lib/component-store.js
+        kind: requires
+      - from: tests/modules/test-build-context.test.js
+        to: lib/component-store.js
+        kind: requires
+      - from: tests/modules/test-build-verify.test.js
+        to: lib/component-store.js
+        kind: requires
+      - from: tests/modules/test-component-store.test.js
+        to: lib/component-store.js
+        kind: requires
+      - from: tests/modules/test-project-registry.test.js
+        to: lib/component-store.js
+        kind: requires
+      - from: cos/ci/index.js
+        to: cos/playground/sandbox.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CX0_codex_component_store
+      dependents: []
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CX0_codex_component_store
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PH1_phase_runs_end_in_proof
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+      downstream: []
+      blockedBy:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GG1_graphs_generate_code
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CX0_codex_component_store
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV0_fulfil_a_taken_order
+          files:
+            - idearium/repo/proof-run.js
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+          files:
+            - idearium/repo/proof-run.js
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+          files:
+            - cos/playground/sandbox.js
+            - idearium/repo/proof-run.js
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+          files:
+            - idearium/repo/proof-run.js
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+          files:
+            - idearium/repo/proof-run.js
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::DA1_domain_agnostic_end_states
+          files:
+            - idearium/repo/proof-run.js
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 4 · blocked by GG1_graphs_generate_code,
+          CX0_codex_component_store
+        - >-
+          depends on (3): PH1_phase_runs_end_in_proof, GG1_graphs_generate_code,
+          CX0_codex_component_store · all upstream 6
+        - 'needed by (0): —'
+        - >-
+          same files as FV0_fulfil_a_taken_order with no order between them:
+          idearium/repo/proof-run.js
+        - >-
+          same files as PR2_screenshots_through_clear_glass with no order between them:
+          idearium/repo/proof-run.js
+        - >-
+          same files as LB1_the_end_state_lab with no order between them: cos/playground/sandbox.js,
+          idearium/repo/proof-run.js
+        - >-
+          same files as FM1_mining_failure_modes with no order between them:
+          idearium/repo/proof-run.js
+        - >-
+          same files as RD1_raid_complete_or_build with no order between them:
+          idearium/repo/proof-run.js
+        - … and 1 more phases sharing its files without an order
   uuid: b9a9f302-c8f5-5c78-92ba-e5e9748bbfdd

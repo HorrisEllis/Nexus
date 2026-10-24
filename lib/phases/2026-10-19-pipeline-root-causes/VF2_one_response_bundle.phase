@@ -5,13 +5,13 @@ id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF2_one_response_bundle
 context: pipeline phase VF2_one_response_bundle of docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
 summary: VF2_one_response_bundle (library) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632801
+exported_at: 1792852546581
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632801
-lastSeenAt: 1792830632801
+firstSeenAt: 1792852546581
+lastSeenAt: 1792852546581
 fingerprint: null
 payload:
   id: VF2_one_response_bundle
@@ -26,5 +26,125 @@ payload:
     - VF1_verify_first
   blocks: []
   spec: null
-  graph: 48017c6b7737540e
+  graph:
+    hash: 48017c6b7737540e
+    nodes:
+      - path: lib/repo-hat.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/verify-first.js
+        role: changes
+        exists: true
+        system: lib
+      - path: guardian/lib/jobs.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/code-api.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/coder-brief.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent-node.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-hat.smoke.cjs
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-prompt-blocks.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cos/testenv/run-target.js
+        role: uses
+        exists: true
+        system: cos
+      - path: lib/phase-plan.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-hat-memory.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/verify-first.js
+        to: lib/phase-plan.js
+        kind: requires
+      - from: lib/verify-first.js
+        to: cos/testenv/run-target.js
+        kind: requires
+      - from: lib/repo-hat.js
+        to: lib/repo-hat-memory.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/verify-first.js
+        kind: requires
+      - from: lib/coder-brief.js
+        to: lib/verify-first.js
+        kind: requires
+      - from: guardian/lib/jobs.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: idearium/repo/code-api.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-agent-node.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-hat.smoke.cjs
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-prompt-blocks.js
+        to: lib/repo-hat.js
+        kind: requires
+    crossings:
+      - from: lib/verify-first.js
+        to: cos/testenv/run-target.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: false
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      dependents:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF4_second_opinion_on_need
+      upstream:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      downstream:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF4_second_opinion_on_need
+      blockedBy: []
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF5_verdict_cache
+          files:
+            - lib/verify-first.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - 'depends on (1): VF1_verify_first · all upstream 2'
+        - 'needed by (1): VF4_second_opinion_on_need'
+        - 'same files as VF5_verdict_cache with no order between them: lib/verify-first.js'
   uuid: db84ec27-ebb4-5c7a-b0a6-c7bd223c6a5d

@@ -5,13 +5,13 @@ id: docs_2026-10-16-nexus-git-sync-phasemap.spec::GS0c_his_copy
 context: pipeline phase GS0c_his_copy of docs/2026-10-16-nexus-git-sync-phasemap.spec
 intent: null
 summary: GS0c_his_copy (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830624758
+exported_at: 1792852538741
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830624758
-lastSeenAt: 1792830624758
+firstSeenAt: 1792852538741
+lastSeenAt: 1792852538741
 fingerprint: null
 payload:
   id: GS0c_his_copy
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: b248aa3dbb1c9cee
+  graph:
+    hash: b248aa3dbb1c9cee
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 767b1658-af4c-53e0-834e-a89694da2dc7

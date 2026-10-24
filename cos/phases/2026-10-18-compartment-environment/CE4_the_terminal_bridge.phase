@@ -5,13 +5,13 @@ id: docs_2026-10-18-compartment-environment-phasemap.spec::CE4_the_terminal_brid
 context: pipeline phase CE4_the_terminal_bridge of docs/2026-10-18-compartment-environment-phasemap.spec
 intent: null
 summary: CE4_the_terminal_bridge (?) — 4 file(s)
-system: idearium
+system: cos
 tags: []
-exported_at: 1792830629346
+exported_at: 1792852543290
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830629346
-lastSeenAt: 1792830629346
+firstSeenAt: 1792852543290
+lastSeenAt: 1792852543290
 fingerprint: null
 payload:
   id: CE4_the_terminal_bridge
@@ -28,5 +28,238 @@ payload:
     - CE3_the_handshake
   blocks: []
   spec: null
-  graph: 008607ecef551be9
+  graph:
+    hash: 008607ecef551be9
+    nodes:
+      - path: cos/compartment/terminal.js
+        role: changes
+        exists: false
+        system: cos
+      - path: cos/server.js
+        role: changes
+        exists: false
+        system: cos
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: package.json
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/cli/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: service/idearium-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: tests/modules/idearium-build-queue-poller.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-guardian-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-ingest-stability.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-agent-hat-agnostic.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-change-record.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-failure-modes.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-flight-data.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-projects-overview.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-repo-carve.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-undo-any-change.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: idearium/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/core/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/access.cjs
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: intelligence/spatial/lattice.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/economy/tokens.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-client.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/warp-rung.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: idearium/api/index.js
+        to: idearium/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/data-home.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/warp-rung.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/access.cjs
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/economy/tokens.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: intelligence/spatial/lattice.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/core/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: idearium/cli/index.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-build-queue-poller.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-guardian-dispatch.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-ingest-stability.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-agent-hat-agnostic.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-change-record.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-failure-modes.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-flight-data.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-projects-overview.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-repo-carve.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-undo-any-change.test.js
+        to: idearium/api/index.js
+        kind: requires
+    crossings:
+      - from: idearium/api/index.js
+        to: intelligence/spatial/lattice.js
+        fromSystem: idearium
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        fromSystem: service
+        toSystem: idearium
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      dependents:
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE6_the_code_tab
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE7_agents_and_commands
+      upstream:
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      downstream:
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE6_the_code_tab
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE7_agents_and_commands
+      blockedBy:
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-18-compartment-environment-phasemap.spec::CE5_the_guest_file_tree
+          files:
+            - cos/server.js
+            - idearium/api/index.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by CE3_the_handshake
+        - 'depends on (1): CE3_the_handshake · all upstream 4'
+        - 'needed by (2): CE6_the_code_tab, CE7_agents_and_commands'
+        - >-
+          same files as CE5_the_guest_file_tree with no order between them: cos/server.js,
+          idearium/api/index.js
   uuid: 13746110-a50c-523c-af9e-5e19d9728090

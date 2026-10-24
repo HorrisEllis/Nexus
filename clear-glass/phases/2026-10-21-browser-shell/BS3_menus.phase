@@ -5,13 +5,13 @@ id: docs_2026-10-21-browser-shell-phasemap.spec::BS3_menus
 context: pipeline phase BS3_menus of docs/2026-10-21-browser-shell-phasemap.spec
 intent: null
 summary: BS3_menus (surface) — 2 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830636212
+exported_at: 1792852549782
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830636212
-lastSeenAt: 1792830636212
+firstSeenAt: 1792852549782
+lastSeenAt: 1792852549782
 fingerprint: null
 payload:
   id: BS3_menus
@@ -27,7 +27,46 @@ payload:
   blocks:
     - MOD-BSH-MENUS
   spec: clear-glass/spec/browser-shell.spec
-  graph: d4a6503f3fdadee9
+  graph:
+    hash: d4a6503f3fdadee9
+    nodes:
+      - path: clear-glass/renderer/browser.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/shell/menus.js
+        role: changes
+        exists: true
+        system: clear-glass
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+      dependents:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS17_menu_consolidated
+      upstream:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+      downstream:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS17_menu_consolidated
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS18_chrome_context_menus
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS7_surface
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS17_menu_consolidated
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): BS2_shell_rebuild'
+        - >-
+          needed by (2): BS7_surface, BS17_menu_consolidated · all downstream 3 · finishing it
+          unlocks BS7_surface, BS17_menu_consolidated
   uuid: 256cbd5c-337f-5e64-b82a-c954a86d654f
   specLink:
     how: declared

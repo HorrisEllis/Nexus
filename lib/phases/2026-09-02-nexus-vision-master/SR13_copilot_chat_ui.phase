@@ -5,13 +5,13 @@ id: docs_2026-09-02-nexus-vision-master-phasemap.spec::SR13_copilot_chat_ui
 context: pipeline phase SR13_copilot_chat_ui of docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: SR13_copilot_chat_ui (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584943
+exported_at: 1792852498371
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584943
-lastSeenAt: 1792830584943
+firstSeenAt: 1792852498371
+lastSeenAt: 1792852498371
 fingerprint: null
 payload:
   id: SR13_copilot_chat_ui
@@ -23,5 +23,95 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: e499bedb9ffdcc47
+  graph:
+    hash: e499bedb9ffdcc47
+    nodes:
+      - path: lib/loom-map.js
+        role: changes
+        exists: true
+        system: lib
+      - path: ui/agents/chatgpt/index.html
+        role: changes
+        exists: true
+        system: ui
+      - path: copilot/module-builder.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: diagnostic/nexus-diagnostic.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: intelligence/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/component-ledger.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/component-ledger.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/gap-field.js
+        role: uses
+        exists: true
+        system: lib
+      - path: loom/schema/driver.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: lib/loom-map.js
+        to: loom/schema/driver.js
+        kind: requires
+      - from: lib/loom-map.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: lib/loom-map.js
+        to: lib/gap-field.js
+        kind: requires
+      - from: copilot/module-builder.js
+        to: lib/loom-map.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/loom-map.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/loom-map.js
+        kind: requires
+      - from: intelligence/index.js
+        to: lib/loom-map.js
+        kind: requires
+      - from: lib/component-ledger.js
+        to: lib/loom-map.js
+        kind: requires
+    crossings:
+      - from: lib/loom-map.js
+        to: loom/schema/driver.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: de406676-351f-5050-8172-15befdd17083

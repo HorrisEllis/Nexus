@@ -5,13 +5,13 @@ id: docs_repair-contract-and-loom-hub-phasemap.spec::R4_loom_ledger_awareness
 context: pipeline phase R4_loom_ledger_awareness of docs/repair-contract-and-loom-hub-phasemap.spec
 intent: null
 summary: R4_loom_ledger_awareness (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830648642
+exported_at: 1792852563408
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830648642
-lastSeenAt: 1792830648642
+firstSeenAt: 1792852563408
+lastSeenAt: 1792852563408
 fingerprint: null
 payload:
   id: R4_loom_ledger_awareness
@@ -23,5 +23,175 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: ac8920781ee27229
+  graph:
+    hash: ac8920781ee27229
+    nodes:
+      - path: lib/component-ledger.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/lib/person-model/index.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cos/kernel.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: diagnostic/lib/diagnostic-contract.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: diagnostic/nexus-diagnostic.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: guardian/lib/ncp-handler.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/ncp.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: intelligence/cfr/sigma.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/gap/predicate.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/agent-tools/tools/query/ambiguity-pull.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/component-registry.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/component-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ledger-fanin/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ledger-store.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/loom-map.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: lib/component-ledger.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/component-ledger.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/component-ledger.js
+        to: lib/ledger-store.js
+        kind: requires
+      - from: lib/component-ledger.js
+        to: lib/ledger-fanin/index.js
+        kind: requires
+      - from: lib/component-ledger.js
+        to: lib/loom-map.js
+        kind: requires
+      - from: lib/component-ledger.js
+        to: lib/component-registry.js
+        kind: requires
+      - from: copilot/lib/person-model/index.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: cos/kernel.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: diagnostic/lib/diagnostic-contract.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: guardian/lib/ncp-handler.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: guardian/lib/ncp.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: intelligence/cfr/sigma.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: intelligence/gap/predicate.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: intelligence/index.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: lib/agent-tools/tools/query/ambiguity-pull.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: lib/component-registry.js
+        to: lib/component-ledger.js
+        kind: requires
+    crossings:
+      - from: lib/component-ledger.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/component-ledger.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+        - docs/repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+      upstream: []
+      downstream:
+        - docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+        - docs/repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+      blockedBy: []
+      unlocks:
+        - docs/repair-contract-and-loom-hub-phasemap.spec::R5_loom_visual_map
+        - docs/repair-contract-and-loom-hub-phasemap.spec::R6_living_documentation
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (2): R5_loom_visual_map, R6_living_documentation · finishing it unlocks
+          R5_loom_visual_map, R6_living_documentation
   uuid: 7b2a4e68-00fd-5e93-ac6b-131872c809d6

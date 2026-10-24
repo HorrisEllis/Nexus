@@ -5,13 +5,13 @@ id: docs_repair-contract-and-loom-hub-phasemap.spec::R9_ui_design_philosophy
 context: pipeline phase R9_ui_design_philosophy of docs/repair-contract-and-loom-hub-phasemap.spec
 intent: null
 summary: R9_ui_design_philosophy (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830648645
+exported_at: 1792852563413
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830648645
-lastSeenAt: 1792830648645
+firstSeenAt: 1792852563413
+lastSeenAt: 1792852563413
 fingerprint: null
 payload:
   id: R9_ui_design_philosophy
@@ -23,5 +23,121 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 725c33759e56b1d7
+  graph:
+    hash: 725c33759e56b1d7
+    nodes:
+      - path: clear-glass/src/diagnostic/error-capture.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: copilot/lib/autonomy-router.js
+        role: changes
+        exists: true
+        system: copilot
+      - path: docs/UI-DESIGN-PHILOSOPHY.md
+        role: changes
+        exists: true
+        system: null
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: tests/modules/error-capture.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: copilot/lib/capabilities.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: copilot/lib/intent-learning.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: copilot/lib/user-model.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: lib/command-builder.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/constant-autonomy.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/idea-provenance.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/scheduler.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/system-control.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/triggers.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: copilot/lib/autonomy-router.js
+        to: copilot/lib/intent-learning.js
+        kind: requires
+      - from: copilot/lib/autonomy-router.js
+        to: copilot/lib/user-model.js
+        kind: requires
+      - from: copilot/lib/autonomy-router.js
+        to: copilot/lib/capabilities.js
+        kind: requires
+      - from: copilot/lib/autonomy-router.js
+        to: lib/scheduler.js
+        kind: requires
+      - from: copilot/lib/autonomy-router.js
+        to: lib/idea-provenance.js
+        kind: requires
+      - from: copilot/lib/autonomy-router.js
+        to: lib/triggers.js
+        kind: requires
+      - from: copilot/lib/autonomy-router.js
+        to: lib/system-control.js
+        kind: requires
+      - from: copilot/lib/autonomy-router.js
+        to: lib/command-builder.js
+        kind: requires
+      - from: copilot/lib/autonomy-router.js
+        to: lib/constant-autonomy.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/lib/autonomy-router.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: clear-glass/src/diagnostic/error-capture.js
+        kind: requires
+      - from: tests/modules/error-capture.test.js
+        to: clear-glass/src/diagnostic/error-capture.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 08782fe2-f2d7-53a1-9b51-cab03ffa0376

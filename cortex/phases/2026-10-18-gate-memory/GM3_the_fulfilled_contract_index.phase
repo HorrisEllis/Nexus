@@ -5,13 +5,13 @@ id: docs_2026-10-18-gate-memory-phasemap.spec::GM3_the_fulfilled_contract_index
 context: pipeline phase GM3_the_fulfilled_contract_index of docs/2026-10-18-gate-memory-phasemap.spec
 intent: null
 summary: GM3_the_fulfilled_contract_index (?) — 3 file(s)
-system: idearium
+system: cortex
 tags: []
-exported_at: 1792830630224
+exported_at: 1792852544172
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830630224
-lastSeenAt: 1792830630224
+firstSeenAt: 1792852544172
+lastSeenAt: 1792852544172
 fingerprint: null
 payload:
   id: GM3_the_fulfilled_contract_index
@@ -27,5 +27,152 @@ payload:
     - GM1_the_gate_record
   blocks: []
   spec: null
-  graph: 5f982253e7259033
+  graph:
+    hash: 5f982253e7259033
+    nodes:
+      - path: cortex/core/raid/contract-gates.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-index.js
+        role: changes
+        exists: false
+        system: cortex
+      - path: lib/component-store.js
+        role: changes
+        exists: true
+        system: lib
+      - path: cortex/core/raid/contract-adapters.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/cli/route-commands.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/atlas-generate.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/build-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/checks/ck-247-decomposition.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/context-sources.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/project-decompose.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/project-registry.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/registry-harness.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-build-context.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/component-store.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: cortex/core/raid/contract-adapters.js
+        to: cortex/core/raid/contract-gates.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: cortex/core/raid/contract-gates.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: cortex/core/raid/contract-gates.js
+        kind: requires
+      - from: idearium/cli/route-commands.js
+        to: cortex/core/raid/contract-gates.js
+        kind: requires
+      - from: lib/checks/ck-247-decomposition.js
+        to: cortex/core/raid/contract-gates.js
+        kind: requires
+      - from: lib/atlas-generate.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/build-context.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/context-sources.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/project-decompose.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/project-registry.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/registry-harness.js
+        to: lib/component-store.js
+        kind: requires
+      - from: tests/modules/test-build-context.test.js
+        to: lib/component-store.js
+        kind: requires
+    crossings:
+      - from: idearium/api/index.js
+        to: cortex/core/raid/contract-gates.js
+        fromSystem: idearium
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: idearium/cli/route-commands.js
+        to: cortex/core/raid/contract-gates.js
+        fromSystem: idearium
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: lib/checks/ck-247-decomposition.js
+        to: cortex/core/raid/contract-gates.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-18-gate-memory-phasemap.spec::GM1_the_gate_record
+      dependents:
+        - docs/2026-10-18-gate-memory-phasemap.spec::GM6_crystallized_from_what_was_approved
+      upstream:
+        - docs/2026-10-18-gate-memory-phasemap.spec::GM0a_the_precommit_compartment
+        - docs/2026-10-18-gate-memory-phasemap.spec::GM1_the_gate_record
+      downstream:
+        - docs/2026-10-18-gate-memory-phasemap.spec::GM6_crystallized_from_what_was_approved
+      blockedBy:
+        - docs/2026-10-18-gate-memory-phasemap.spec::GM1_the_gate_record
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by GM1_the_gate_record
+        - 'depends on (1): GM1_the_gate_record · all upstream 2'
+        - 'needed by (1): GM6_crystallized_from_what_was_approved'
   uuid: a51ce7b0-d8b3-5109-a5de-478386345a08

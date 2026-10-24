@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
 intent: null
 summary: SF3_collect_the_spec (?) — 7 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830620658
+exported_at: 1792852534610
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830620658
-lastSeenAt: 1792830620658
+firstSeenAt: 1792852534610
+lastSeenAt: 1792852534610
 fingerprint: null
 payload:
   id: SF3_collect_the_spec
@@ -35,5 +35,241 @@ payload:
     - SF2_spec_framework_block
   blocks: []
   spec: null
-  graph: 2752c0d140f6df49
+  graph:
+    hash: 2752c0d140f6df49
+    nodes:
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/repo-agent.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/step-gate.js
+        role: changes
+        exists: true
+        system: lib
+      - path: tests/modules/test-spec-pipeline.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: copilot/tool-runtime.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: idearium/api/build-surface.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/code-api.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/gate-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/proposal-evidence.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/reply-kind.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-prompt-blocks.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: products/flight-recorder/lib/project.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-inject-screen.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-language-checks.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-inject-approval.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-proposal-evidence.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: guardian/lib/code-artifact.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: lib/activity-log/compartment.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/change-entry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/inject-gate.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/path-guard.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/proposal-evidence.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-activity.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-versions.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+      - path: versionium/lib/merge3.js
+        role: uses
+        exists: true
+        system: versionium
+    edges:
+      - from: lib/repo-inject.js
+        to: lib/node-export.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: guardian/lib/code-artifact.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/nexus-self/inject-gate.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/change-entry.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/repo-versions.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/path-guard.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/proposal-evidence.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: versionium/lib/merge3.js
+        kind: requires
+      - from: idearium/repo/code-api.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: lib/proposal-evidence.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: products/flight-recorder/lib/project.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: tests/modules/test-inject-screen.test.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: tests/modules/test-nexus-inject-approval.test.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: tests/modules/test-proposal-evidence.test.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: lib/repo-prompt-blocks.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: copilot/tool-runtime.js
+        to: lib/step-gate.js
+        kind: requires
+      - from: lib/reply-kind.js
+        to: lib/step-gate.js
+        kind: requires
+      - from: tests/modules/test-language-checks.test.js
+        to: lib/step-gate.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: lib/gate-context.js
+        to: lib/repo-agent.js
+        kind: requires
+    crossings:
+      - from: lib/repo-inject.js
+        to: guardian/lib/code-artifact.js
+        fromSystem: lib
+        toSystem: guardian
+        kind: upward
+        known: true
+      - from: lib/repo-inject.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/repo-inject.js
+        to: versionium/lib/merge3.js
+        fromSystem: lib
+        toSystem: versionium
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF2_spec_framework_block
+      dependents:
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF4_compile_on_collect
+      upstream:
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF1_intent_blocks
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF2_spec_framework_block
+      downstream:
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF4_compile_on_collect
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF4_compile_on_collect
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (1): SF2_spec_framework_block · all upstream 2'
+        - 'needed by (1): SF4_compile_on_collect · finishing it unlocks SF4_compile_on_collect'
   uuid: 1cd43912-2b9b-584e-a9ac-fd2f38e52bc5

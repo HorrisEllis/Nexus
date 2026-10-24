@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-12-browser-providers-and-work-phasemap.spec
 intent: null
 summary: JB5_varied_wording_true_facts (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830612693
+exported_at: 1792852526584
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830612693
-lastSeenAt: 1792830612693
+firstSeenAt: 1792852526584
+lastSeenAt: 1792852526584
 fingerprint: null
 payload:
   id: JB5_varied_wording_true_facts
@@ -28,5 +28,70 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 88d2ca99cff642c0
+  graph:
+    hash: 88d2ca99cff642c0
+    nodes:
+      - path: copilot/lib/reword.js
+        role: changes
+        exists: true
+        system: copilot
+      - path: guardian/lib/eros-typist.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/semantic-variant.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: copilot/lifeline.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/semantic-variant.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: copilot/lib/reword.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/lib/reword.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/lib/eros-typist.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB7_the_follow_up
+      upstream: []
+      downstream:
+        - docs/2026-10-12-browser-providers-and-work-phasemap.spec::JB7_the_follow_up
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (1): JB7_the_follow_up'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 670463d5-69e1-534e-b71f-76740e571d55

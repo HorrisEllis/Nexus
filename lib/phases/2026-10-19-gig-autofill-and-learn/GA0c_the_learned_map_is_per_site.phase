@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
 intent: null
 summary: GA0c_the_learned_map_is_per_site (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830631530
+exported_at: 1792852545374
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830631530
-lastSeenAt: 1792830631530
+firstSeenAt: 1792852545374
+lastSeenAt: 1792852545374
 fingerprint: null
 payload:
   id: GA0c_the_learned_map_is_per_site
@@ -25,5 +25,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 369955e98964c84b
+  graph:
+    hash: 369955e98964c84b
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 5bec7275-6ad7-5dda-b49e-8539b663137a

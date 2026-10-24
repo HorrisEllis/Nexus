@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
 intent: null
 summary: IDU1_idearium_homepage_and_repo_browser (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830585854
+exported_at: 1792852499330
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830585854
-lastSeenAt: 1792830585854
+firstSeenAt: 1792852499330
+lastSeenAt: 1792852499330
 fingerprint: null
 payload:
   id: IDU1_idearium_homepage_and_repo_browser
@@ -26,5 +26,33 @@ payload:
     - ID2_verify_idearium_reconciliation_reads_right_store
   blocks: []
   spec: null
-  graph: 59239d65a2593d97
+  graph:
+    hash: 59239d65a2593d97
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+      dependents: []
+      upstream:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
+      downstream: []
+      blockedBy:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::ID2_verify_idearium_reconciliation_reads_right_store
+      unlocks: []
+      conflicts: []
+      dangling:
+        - REPO_PAGE1
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 2 · blocked by
+          ID2_verify_idearium_reconciliation_reads_right_store
+        - 'depends on (1): ID2_verify_idearium_reconciliation_reads_right_store · all upstream 2'
+        - 'needed by (0): —'
+        - 'DANGLING depends_on: REPO_PAGE1'
   uuid: 44af9212-d0ae-5fa7-9e6c-4d15b44f4171

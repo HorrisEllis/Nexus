@@ -5,13 +5,13 @@ id: docs_2026-10-09-one-roadmap-phasemap.spec::OR7_the_shelf_combed
 context: pipeline phase OR7_the_shelf_combed of docs/2026-10-09-one-roadmap-phasemap.spec
 intent: null
 summary: OR7_the_shelf_combed (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830609309
+exported_at: 1792852523309
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830609309
-lastSeenAt: 1792830609309
+firstSeenAt: 1792852523309
+lastSeenAt: 1792852523309
 fingerprint: null
 payload:
   id: OR7_the_shelf_combed
@@ -25,5 +25,31 @@ payload:
     - OR3_his_decisions_applied
   blocks: []
   spec: null
-  graph: 5e186047ef132114
+  graph:
+    hash: 5e186047ef132114
+    nodes:
+      - path: docs/the-path.md
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR3_his_decisions_applied
+      dependents: []
+      upstream:
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR3_his_decisions_applied
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): OR3_his_decisions_applied'
+        - 'needed by (0): —'
   uuid: 0cf5b39a-ab67-5703-ac92-ae3933b2ff11

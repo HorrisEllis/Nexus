@@ -5,13 +5,13 @@ id: docs_2026-09-02-nexus-vision-master-phasemap.spec::T3_tool_to_event_mapping
 context: pipeline phase T3_tool_to_event_mapping of docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: T3_tool_to_event_mapping (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584862
+exported_at: 1792852498299
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584862
-lastSeenAt: 1792830584862
+firstSeenAt: 1792852498299
+lastSeenAt: 1792852498299
 fingerprint: null
 payload:
   id: T3_tool_to_event_mapping
@@ -25,5 +25,33 @@ payload:
     - T2_event_taxonomy_per_system
   blocks: []
   spec: null
-  graph: 963fe75d4ce7268a
+  graph:
+    hash: 963fe75d4ce7268a
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::T2_event_taxonomy_per_system
+      dependents: []
+      upstream:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::T2_event_taxonomy_per_system
+      downstream: []
+      blockedBy:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::T1_tool_listing_command
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::T2_event_taxonomy_per_system
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 1 · blocked by T1_tool_listing_command,
+          T2_event_taxonomy_per_system
+        - 'depends on (2): T1_tool_listing_command, T2_event_taxonomy_per_system'
+        - 'needed by (0): —'
   uuid: 9a214a82-77eb-5c04-917f-51050740a9c3

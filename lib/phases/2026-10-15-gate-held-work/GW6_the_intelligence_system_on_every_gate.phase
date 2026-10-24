@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-15-gate-held-work-phasemap.spec
 intent: null
 summary: GW6_the_intelligence_system_on_every_gate (?) — 5 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830618161
+exported_at: 1792852532112
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830618161
-lastSeenAt: 1792830618161
+firstSeenAt: 1792852532112
+lastSeenAt: 1792852532112
 fingerprint: null
 payload:
   id: GW6_the_intelligence_system_on_every_gate
@@ -31,5 +31,182 @@ payload:
     - GW3_a_contract_is_traced
   blocks: []
   spec: null
-  graph: 88688bb77b7d9ade
+  graph:
+    hash: 88688bb77b7d9ade
+    nodes:
+      - path: copilot/adaptive-fulfillment.js
+        role: changes
+        exists: true
+        system: copilot
+      - path: cortex/self-heal/fault-taxonomy.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: lib/fault-log.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/phase-faults.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/lib/self-model.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/self-heal/escalation.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/self-heal/index.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: diagnostic/nexus-diagnostic.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: intelligence/gap/predicate.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/agent-model.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/flight-data.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-diagnostic-heal-path.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-fault-taxonomy.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/activity-log/compartment.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/pipeline-routing.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: cortex/self-heal/fault-taxonomy.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/phase-faults.js
+        to: lib/pipeline-routing.js
+        kind: requires
+      - from: lib/fault-log.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/adaptive-fulfillment.js
+        kind: requires
+      - from: cortex/self-heal/escalation.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: cortex/self-heal/index.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: intelligence/gap/predicate.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: tests/modules/test-diagnostic-heal-path.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: tests/modules/test-fault-taxonomy.js
+        to: cortex/self-heal/fault-taxonomy.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/phase-faults.js
+        kind: requires
+      - from: lib/flight-data.js
+        to: lib/phase-faults.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/phase-faults.js
+        kind: requires
+      - from: copilot/lib/self-model.js
+        to: lib/fault-log.js
+        kind: requires
+      - from: lib/agent-model.js
+        to: lib/fault-log.js
+        kind: requires
+    crossings:
+      - from: diagnostic/nexus-diagnostic.js
+        to: cortex/self-heal/fault-taxonomy.js
+        fromSystem: diagnostic
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: intelligence/gap/predicate.js
+        to: cortex/self-heal/fault-taxonomy.js
+        fromSystem: intelligence
+        toSystem: cortex
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      dependents:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW8_causal_graph_and_failure_mode_field
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW25_the_systems_at_the_gate_moments
+      upstream:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW0_what_is_a_gate
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      downstream:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW25_the_systems_at_the_gate_moments
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW8_causal_graph_and_failure_mode_field
+      blockedBy:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW4_copilot_on_the_gates
+          files:
+            - copilot/adaptive-fulfillment.js
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW17_friction_and_tension_per_file
+          files:
+            - lib/fault-log.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by GW3_a_contract_is_traced
+        - 'depends on (1): GW3_a_contract_is_traced · all upstream 4'
+        - >-
+          needed by (2): GW8_causal_graph_and_failure_mode_field,
+          GW25_the_systems_at_the_gate_moments
+        - >-
+          same files as GW4_copilot_on_the_gates with no order between them:
+          copilot/adaptive-fulfillment.js
+        - >-
+          same files as GW17_friction_and_tension_per_file with no order between them:
+          lib/fault-log.js
   uuid: cd87fa58-c727-502b-8c3c-7801fecf09ec

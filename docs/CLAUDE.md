@@ -303,3 +303,10 @@ see what you mean but there are way more idearium phases than that."
   the axioms do not settle it, they conflict, or it is his by USER_AUTONOMY (what he meant, the direction) — and then with the axioms named.
 - What he reports seeing is evidence (§0.0 truth is supreme, §0.1 evidence over memory). When the code seems to say otherwise, the gap is
   traced, not argued.
+
+
+## ADDENDUM 2026-10-24 (0.60.238 PS4) — a phase is one file, kept with its system
+James, 2026-10-24: ".phase/.graph should be one file i feel like?" · "need to keep at the sovereignty of each system"
+Step 3 of the 2026-10-20 rule above now writes one file per phase: <owner>/phases/<map-id>/<phase>.phase, holding what is authored and, under
+graph:, its related files with roles, its crossings and its slice of the whole DAG. There is no separate graph/*.graph any more (that text is
+kept above, §0.3). The owner is the system its files belong to, and the node says so (system:).

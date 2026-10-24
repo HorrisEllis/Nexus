@@ -5,13 +5,13 @@ id: docs_2026-10-10-design-surface-phasemap.spec::DS1_tokens_edited_live
 context: pipeline phase DS1_tokens_edited_live of docs/2026-10-10-design-surface-phasemap.spec
 intent: null
 summary: DS1_tokens_edited_live (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830610172
+exported_at: 1792852524103
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830610172
-lastSeenAt: 1792830610172
+firstSeenAt: 1792852524103
+lastSeenAt: 1792852524103
 fingerprint: null
 payload:
   id: DS1_tokens_edited_live
@@ -24,5 +24,35 @@ payload:
     - DS0_one_token_source
   blocks: []
   spec: null
-  graph: 8d477dcf2270ac45
+  graph:
+    hash: 8d477dcf2270ac45
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      dependents:
+        - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+      upstream:
+        - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      downstream:
+        - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+        - docs/2026-10-10-design-surface-phasemap.spec::DS4_interface_types_by_adapter
+        - docs/2026-10-10-design-surface-phasemap.spec::DS5_the_agents_design_too
+      blockedBy:
+        - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      unlocks:
+        - docs/2026-10-10-design-surface-phasemap.spec::DS2_pick_and_edit_any_page
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by DS0_one_token_source
+        - 'depends on (1): DS0_one_token_source'
+        - >-
+          needed by (1): DS2_pick_and_edit_any_page · all downstream 3 · finishing it unlocks
+          DS2_pick_and_edit_any_page
   uuid: 53938fa2-0b42-5c7a-b28f-53ac0f44941d

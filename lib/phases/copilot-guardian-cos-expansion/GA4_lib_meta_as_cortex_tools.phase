@@ -5,13 +5,13 @@ id: docs_copilot-guardian-cos-expansion-phasemap.spec::GA4_lib_meta_as_cortex_to
 context: pipeline phase GA4_lib_meta_as_cortex_tools of docs/copilot-guardian-cos-expansion-phasemap.spec
 intent: null
 summary: GA4_lib_meta_as_cortex_tools (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830642128
+exported_at: 1792852556577
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830642128
-lastSeenAt: 1792830642128
+firstSeenAt: 1792852556577
+lastSeenAt: 1792852556577
 fingerprint: null
 payload:
   id: GA4_lib_meta_as_cortex_tools
@@ -23,5 +23,30 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: f334e2fccb2cff97
+  graph:
+    hash: f334e2fccb2cff97
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/copilot-guardian-cos-expansion-phasemap.spec::GA10_copilot_capability_self_awareness
+      upstream: []
+      downstream:
+        - docs/copilot-guardian-cos-expansion-phasemap.spec::GA10_copilot_capability_self_awareness
+      blockedBy: []
+      unlocks:
+        - docs/copilot-guardian-cos-expansion-phasemap.spec::GA10_copilot_capability_self_awareness
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - >-
+          needed by (1): GA10_copilot_capability_self_awareness · finishing it unlocks
+          GA10_copilot_capability_self_awareness
   uuid: 7946b9e0-5afd-527c-b87e-c1dae5e367f8

@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-23-site-profile-processes-phasemap.spec
 intent: null
 summary: SP3_the_site_settings_screen (ui) — 6 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830639453
+exported_at: 1792852552991
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830639453
-lastSeenAt: 1792830639453
+firstSeenAt: 1792852552991
+lastSeenAt: 1792852552991
 fingerprint: null
 payload:
   id: SP3_the_site_settings_screen
@@ -35,7 +35,56 @@ payload:
   blocks:
     - MOD-SP-UI
   spec: clear-glass/spec/site-profile.spec
-  graph: 344ad9a833e51ca5
+  graph:
+    hash: 344ad9a833e51ca5
+    nodes:
+      - path: clear-glass/renderer/browser.html
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/browser.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/settings.html
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/settings/sections/sites.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/site-profile-groups.css
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/site-profile-groups.js
+        role: changes
+        exists: true
+        system: clear-glass
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
+      dependents: []
+      upstream:
+        - docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
+        - docs/2026-10-23-site-profile-processes-phasemap.spec::SP2_each_feature_reads_its_site_value
+        - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D1_one_store_one_resolver
+        - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D2_defaults_are_todays_behaviour
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3
+        - 'depends on (1): SP2_each_feature_reads_its_site_value · all upstream 4'
+        - 'needed by (0): —'
   uuid: 55dd8c7b-54fa-5519-8732-b95044327d16
   specLink:
     how: declared

@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-11-sovereign-node-architecture-phasemap.spec
 intent: null
 summary: P37_the_ui_floats_on_the_registry (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830587143
+exported_at: 1792852500757
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830587143
-lastSeenAt: 1792830587143
+firstSeenAt: 1792852500757
+lastSeenAt: 1792852500757
 fingerprint: null
 payload:
   id: P37_the_ui_floats_on_the_registry
@@ -27,5 +27,33 @@ payload:
     - P36_an_event_ledger_per_registry
   blocks: []
   spec: null
-  graph: c73e397fa682657f
+  graph:
+    hash: c73e397fa682657f
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P8_per_system_component_registry
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P36_an_event_ledger_per_registry
+      dependents: []
+      upstream:
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P36_an_event_ledger_per_registry
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P8_per_system_component_registry
+      downstream: []
+      blockedBy:
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P8_per_system_component_registry
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P36_an_event_ledger_per_registry
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 2 · blocked by P8_per_system_component_registry,
+          P36_an_event_ledger_per_registry
+        - 'depends on (2): P8_per_system_component_registry, P36_an_event_ledger_per_registry'
+        - 'needed by (0): —'
   uuid: 51086e49-f7cd-5fc0-ab9f-3d64b1263f9a

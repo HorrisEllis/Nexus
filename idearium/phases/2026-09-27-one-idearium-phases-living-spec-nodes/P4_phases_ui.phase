@@ -7,11 +7,11 @@ intent: null
 summary: P4_phases_ui (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830594109
+exported_at: 1792852507735
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830594109
-lastSeenAt: 1792830594109
+firstSeenAt: 1792852507735
+lastSeenAt: 1792852507735
 fingerprint: null
 payload:
   id: P4_phases_ui
@@ -27,5 +27,41 @@ payload:
     - P3_phase_build
   blocks: []
   spec: null
-  graph: 35f5c870235cabfb
+  graph:
+    hash: 35f5c870235cabfb
+    nodes:
+      - path: idearium/ui/index.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/app.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P2_phases_model
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P3_phase_build
+      dependents:
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+      upstream:
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P1_phasemap_list_form
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P2_phases_model
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::P3_phase_build
+      downstream:
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3
+        - 'depends on (2): P2_phases_model, P3_phase_build · all upstream 3'
+        - 'needed by (1): Z1_release · finishing it unlocks Z1_release'
   uuid: 99b8944b-4e53-5b00-ae2b-0dab2053dc91

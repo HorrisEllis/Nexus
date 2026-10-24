@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-02-emerge-field-memory-build-phasemap.spec
 intent: null
 summary: EC6_economy_and_the_tokenizer (?) — 5 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830599107
+exported_at: 1792852513234
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830599107
-lastSeenAt: 1792830599107
+firstSeenAt: 1792852513234
+lastSeenAt: 1792852513234
 fingerprint: null
 payload:
   id: EC6_economy_and_the_tokenizer
@@ -32,5 +32,111 @@ payload:
     - EV0_contracts_for_every_system
   blocks: []
   spec: null
-  graph: 8672a4aa6309a394
+  graph:
+    hash: 8672a4aa6309a394
+    nodes:
+      - path: lib/economy/ledger.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/economy/router.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/economy/tokenizer/bpe.js
+        role: changes
+        exists: false
+        system: lib
+      - path: lib/economy/tokenizer/gguf.js
+        role: changes
+        exists: false
+        system: lib
+      - path: lib/economy/tokens.js
+        role: changes
+        exists: true
+        system: lib
+      - path: guardian/lib/economy-guard.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/economy/store.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/pipeline-routing.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/seam/adapters/warp-cascade.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-guardian-stack-sim.test.js
+        role: used-by
+        exists: true
+        system: null
+    edges:
+      - from: guardian/lib/economy-guard.js
+        to: lib/economy/tokens.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/economy/tokens.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/economy/tokens.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/economy/tokens.js
+        kind: requires
+      - from: lib/pipeline-routing.js
+        to: lib/economy/router.js
+        kind: requires
+      - from: lib/seam/adapters/warp-cascade.js
+        to: lib/economy/router.js
+        kind: requires
+      - from: lib/economy/store.js
+        to: lib/economy/ledger.js
+        kind: requires
+      - from: tests/modules/test-guardian-stack-sim.test.js
+        to: lib/economy/ledger.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      dependents:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_agents
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      downstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_agents
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - 'depends on (2): EM1_emerge_core, EV0_contracts_for_every_system · all upstream 3'
+        - 'needed by (2): FV1_client_jobs, AC1_accounts_into_agents · all downstream 3'
   uuid: 8e7f57d7-7d4a-5417-9b89-305b895a2117

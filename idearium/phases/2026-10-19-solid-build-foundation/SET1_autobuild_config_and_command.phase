@@ -9,11 +9,11 @@ intent: null
 summary: SET1_autobuild_config_and_command (cli) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830633241
+exported_at: 1792852547007
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830633241
-lastSeenAt: 1792830633241
+firstSeenAt: 1792852547007
+lastSeenAt: 1792852547007
 fingerprint: null
 payload:
   id: SET1_autobuild_config_and_command
@@ -29,5 +29,191 @@ payload:
   blocks:
     - '"autobuild_config"'
   spec: null
-  graph: 8ba4dcf5e6c54fd0
+  graph:
+    hash: 8ba4dcf5e6c54fd0
+    nodes:
+      - path: idearium/cli/route-commands.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/lib/config-core.cjs
+        role: changes
+        exists: true
+        system: idearium
+      - path: diagnostic/tests/causality.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/cli/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/lib/chunk-nodes.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/lib/config.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/project-import.config.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-cos-compartment-template.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-drawbridge-registry.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-node-registry-system.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-release-deliver.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-repo-agent-provider.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-sovereign-systems.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/core/raid/contract-adapters.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-gates.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/nexus-client.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-read.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/resource-monitor.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: idearium/cli/route-commands.js
+        to: cortex/core/raid/contract-gates.js
+        kind: requires
+      - from: idearium/cli/route-commands.js
+        to: lib/node-export.js
+        kind: requires
+      - from: idearium/cli/route-commands.js
+        to: cortex/core/raid/contract-adapters.js
+        kind: requires
+      - from: idearium/cli/route-commands.js
+        to: lib/resource-monitor.js
+        kind: requires
+      - from: idearium/cli/route-commands.js
+        to: lib/nexus-read.js
+        kind: requires
+      - from: idearium/cli/route-commands.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: idearium/lib/chunk-nodes.js
+        to: idearium/lib/config-core.cjs
+        kind: requires
+      - from: idearium/lib/config.js
+        to: idearium/lib/config-core.cjs
+        kind: requires
+      - from: lib/project-import.config.js
+        to: idearium/lib/config-core.cjs
+        kind: requires
+      - from: tests/modules/test-repo-agent-provider.js
+        to: idearium/lib/config-core.cjs
+        kind: requires
+      - from: diagnostic/tests/causality.test.js
+        to: idearium/cli/route-commands.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/cli/route-commands.js
+        kind: requires
+      - from: idearium/cli/index.js
+        to: idearium/cli/route-commands.js
+        kind: requires
+      - from: tests/modules/test-cos-compartment-template.test.js
+        to: idearium/cli/route-commands.js
+        kind: requires
+      - from: tests/modules/test-drawbridge-registry.test.js
+        to: idearium/cli/route-commands.js
+        kind: requires
+      - from: tests/modules/test-node-registry-system.test.js
+        to: idearium/cli/route-commands.js
+        kind: requires
+      - from: tests/modules/test-release-deliver.test.js
+        to: idearium/cli/route-commands.js
+        kind: requires
+      - from: tests/modules/test-sovereign-systems.test.js
+        to: idearium/cli/route-commands.js
+        kind: requires
+    crossings:
+      - from: idearium/cli/route-commands.js
+        to: cortex/core/raid/contract-gates.js
+        fromSystem: idearium
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: idearium/cli/route-commands.js
+        to: cortex/core/raid/contract-adapters.js
+        fromSystem: idearium
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: lib/project-import.config.js
+        to: idearium/lib/config-core.cjs
+        fromSystem: lib
+        toSystem: idearium
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB1_autobuild_loop_and_resume
+      dependents:
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET2_autobuild_settings_ui
+      upstream:
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::AB1_autobuild_loop_and_resume
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::DC1_dynamic_chunk_at_plan
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ2_brick_gate_runs_the_test
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ3_brick_tests
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ4_phase_gate_keeps_the_test
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+      downstream:
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET2_autobuild_settings_ui
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::SET2_autobuild_settings_ui
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 5 · ready
+        - 'depends on (1): AB1_autobuild_loop_and_resume · all upstream 8'
+        - >-
+          needed by (1): SET2_autobuild_settings_ui · finishing it unlocks
+          SET2_autobuild_settings_ui
   uuid: fb5b50df-b1f3-5de0-8f81-f493c9c710d6

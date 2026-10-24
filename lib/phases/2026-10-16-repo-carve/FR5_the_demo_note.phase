@@ -5,13 +5,13 @@ id: docs_2026-10-16-repo-carve-phasemap.spec::FR5_the_demo_note
 context: pipeline phase FR5_the_demo_note of docs/2026-10-16-repo-carve-phasemap.spec
 intent: null
 summary: FR5_the_demo_note (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830626357
+exported_at: 1792852540345
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830626357
-lastSeenAt: 1792830626357
+firstSeenAt: 1792852540345
+lastSeenAt: 1792852540345
 fingerprint: null
 payload:
   id: FR5_the_demo_note
@@ -23,5 +23,216 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: d6b5e03ef86c5fb0
+  graph:
+    hash: d6b5e03ef86c5fb0
+    nodes:
+      - path: intelligence/cfr/delta.js
+        role: changes
+        exists: true
+        system: intelligence
+      - path: lib/flight-data.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/nexus-client.js
+        role: changes
+        exists: true
+        system: lib
+      - path: clear-glass/src/ipc/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: cli/cfr-debug.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: copilot/adversarial.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/lifeline.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/movement-map.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cos/host/index.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: guardian/agents/index.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: intelligence/cfr/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/ledger.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/routes.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: cortex/core/raid/index.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/routing-ir.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/personas.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/nexus-config.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-cost.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-faults.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/run-watch.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/flight-data.js
+        to: lib/run-watch.js
+        kind: requires
+      - from: lib/flight-data.js
+        to: lib/phase-cost.js
+        kind: requires
+      - from: lib/flight-data.js
+        to: lib/phase-faults.js
+        kind: requires
+      - from: lib/nexus-client.js
+        to: cortex/core/raid/routing-ir.js
+        kind: requires
+      - from: lib/nexus-client.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/nexus-client.js
+        to: cortex/personas.js
+        kind: requires
+      - from: lib/nexus-client.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/nexus-client.js
+        to: lib/nexus-config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/flight-data.js
+        kind: requires
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/delta.js
+        kind: requires
+      - from: copilot/movement-map.js
+        to: intelligence/cfr/delta.js
+        kind: requires
+      - from: intelligence/cfr/index.js
+        to: intelligence/cfr/delta.js
+        kind: requires
+      - from: intelligence/cfr/ledger.js
+        to: intelligence/cfr/delta.js
+        kind: requires
+      - from: intelligence/routes.js
+        to: intelligence/cfr/delta.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: copilot/adversarial.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: copilot/lifeline.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: cos/host/index.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: guardian/agents/index.js
+        to: lib/nexus-client.js
+        kind: requires
+    crossings:
+      - from: lib/nexus-client.js
+        to: cortex/core/raid/routing-ir.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/nexus-client.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/nexus-client.js
+        to: cortex/personas.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/nexus-client.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/delta.js
+        fromSystem: cli
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: copilot/movement-map.js
+        to: intelligence/cfr/delta.js
+        fromSystem: copilot
+        toSystem: intelligence
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: e2631c2a-0e23-53dc-9062-b2cda2d6e5d9

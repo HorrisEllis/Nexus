@@ -5,13 +5,13 @@ id: docs_2026-08-23-backlog-phasemap.spec::BL10_nexus_roadmap_html_files
 context: pipeline phase BL10_nexus_roadmap_html_files of docs/2026-08-23-backlog-phasemap.spec
 intent: null
 summary: BL10_nexus_roadmap_html_files (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581822
+exported_at: 1792852494905
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581822
-lastSeenAt: 1792830581822
+firstSeenAt: 1792852494905
+lastSeenAt: 1792852494905
 fingerprint: null
 payload:
   id: BL10_nexus_roadmap_html_files
@@ -24,5 +24,29 @@ payload:
     - BL9_per_system_phasemap_folders
   blocks: []
   spec: null
-  graph: 80b8c025c01b3474
+  graph:
+    hash: 80b8c025c01b3474
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-08-23-backlog-phasemap.spec::BL9_per_system_phasemap_folders
+      dependents: []
+      upstream:
+        - docs/2026-08-23-backlog-phasemap.spec::BL8_docs_consolidation
+        - docs/2026-08-23-backlog-phasemap.spec::BL9_per_system_phasemap_folders
+      downstream: []
+      blockedBy:
+        - docs/2026-08-23-backlog-phasemap.spec::BL9_per_system_phasemap_folders
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by BL9_per_system_phasemap_folders
+        - 'depends on (1): BL9_per_system_phasemap_folders · all upstream 2'
+        - 'needed by (0): —'
   uuid: 3f9befdf-6d62-56f2-a909-a21bb21029f0

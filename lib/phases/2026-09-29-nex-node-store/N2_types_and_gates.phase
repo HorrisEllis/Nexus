@@ -5,13 +5,13 @@ id: docs_2026-09-29-nex-node-store-phasemap.spec::N2_types_and_gates
 context: pipeline phase N2_types_and_gates of docs/2026-09-29-nex-node-store-phasemap.spec
 intent: null
 summary: N2_types_and_gates (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830596158
+exported_at: 1792852509960
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830596158
-lastSeenAt: 1792830596158
+firstSeenAt: 1792852509960
+lastSeenAt: 1792852509960
 fingerprint: null
 payload:
   id: N2_types_and_gates
@@ -25,5 +25,38 @@ payload:
     - N0_census
   blocks: []
   spec: null
-  graph: 5e4c8e5f9b3fa871
+  graph:
+    hash: a3d199d6447538e7
+    nodes:
+      - path: lib/nexstore/types.js
+        role: changes
+        exists: true
+        system: lib
+      - path: warp/core/Axiom.js
+        role: uses
+        exists: true
+        system: null
+    edges:
+      - from: lib/nexstore/types.js
+        to: warp/core/Axiom.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
+      dependents: []
+      upstream:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N0_census
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): N0_census'
+        - 'needed by (0): —'
   uuid: 9abef316-281a-5831-8983-3d7a970dae61

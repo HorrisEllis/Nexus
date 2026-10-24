@@ -5,13 +5,13 @@ id: docs_2026-10-07-compartment-control-and-activity-phasemap.spec::AL1_activity
 context: pipeline phase AL1_activity_log of docs/2026-10-07-compartment-control-and-activity-phasemap.spec
 intent: null
 summary: AL1_activity_log (?) — 4 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830605482
+exported_at: 1792852519740
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830605482
-lastSeenAt: 1792830605482
+firstSeenAt: 1792852519740
+lastSeenAt: 1792852519740
 fingerprint: null
 payload:
   id: AL1_activity_log
@@ -28,5 +28,245 @@ payload:
     - CC1_claude_code_lands_like_every_agent
   blocks: []
   spec: null
-  graph: f60e21ab10d46017
+  graph:
+    hash: f60e21ab10d46017
+    nodes:
+      - path: docs/nexstore-writers.yaml
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/activity-log/compartment.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-activity.js
+        role: changes
+        exists: true
+        system: lib
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: idearium/api/build-surface.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/cli/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/cos-run.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/fault-log.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-versions.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: ollama/lib/tape.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: products/flight-recorder/bin/flight-recorder.js
+        role: used-by
+        exists: true
+        system: null
+      - path: service/idearium-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: tests/modules/idearium-build-queue-poller.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: idearium/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/core/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/access.cjs
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: intelligence/spatial/lattice.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/economy/tokens.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-client.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/warp-rung.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/activity-log/compartment.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/data-home.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/warp-rung.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/access.cjs
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/economy/tokens.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: intelligence/spatial/lattice.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/core/index.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: lib/fault-log.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: lib/repo-versions.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: products/flight-recorder/bin/flight-recorder.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: ollama/lib/tape.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: idearium/cli/index.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-build-queue-poller.test.js
+        to: idearium/api/index.js
+        kind: requires
+    crossings:
+      - from: lib/activity-log/compartment.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: idearium/api/index.js
+        to: intelligence/spatial/lattice.js
+        fromSystem: idearium
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        fromSystem: service
+        toSystem: idearium
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CC1_claude_code_lands_like_every_agent
+      dependents:
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL2_log_tab
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DT1_desktop_into_the_log
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::NC2_nexus_systems_as_compartments
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::BO1_brainos_reads_the_log
+      upstream:
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::CC1_claude_code_lands_like_every_agent
+      downstream:
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL2_log_tab
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::BO1_brainos_reads_the_log
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DT1_desktop_into_the_log
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::NC2_nexus_systems_as_compartments
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::VM1_checkpoints_on_the_log
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::AL2_log_tab
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::DT1_desktop_into_the_log
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::NC2_nexus_systems_as_compartments
+        - docs/2026-10-07-compartment-control-and-activity-phasemap.spec::BO1_brainos_reads_the_log
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): CC1_claude_code_lands_like_every_agent'
+        - >-
+          needed by (4): AL2_log_tab, DT1_desktop_into_the_log, NC2_nexus_systems_as_compartments,
+          BO1_brainos_reads_the_log · all downstream 5 · finishing it unlocks AL2_log_tab,
+          DT1_desktop_into_the_log, NC2_nexus_systems_as_compartments, BO1_brainos_reads_the_log
   uuid: 4baa5b3e-d0e9-513d-9698-1100a972a14e

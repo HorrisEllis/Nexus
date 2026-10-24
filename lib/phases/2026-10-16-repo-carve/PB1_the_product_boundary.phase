@@ -5,13 +5,13 @@ id: docs_2026-10-16-repo-carve-phasemap.spec::PB1_the_product_boundary
 context: pipeline phase PB1_the_product_boundary of docs/2026-10-16-repo-carve-phasemap.spec
 intent: null
 summary: PB1_the_product_boundary (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830626346
+exported_at: 1792852540334
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830626346
-lastSeenAt: 1792830626346
+firstSeenAt: 1792852540334
+lastSeenAt: 1792852540334
 fingerprint: null
 payload:
   id: PB1_the_product_boundary
@@ -26,5 +26,225 @@ payload:
     - CV2_untangle_with_rf0
   blocks: []
   spec: null
-  graph: cb390adf322a5601
+  graph:
+    hash: cb390adf322a5601
+    nodes:
+      - path: lib/change-record.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/proposal-evidence.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-carve.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/run-state.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/test-map.js
+        role: changes
+        exists: true
+        system: lib
+      - path: products/flight-recorder/bin/flight-recorder.js
+        role: changes
+        exists: true
+        system: null
+      - path: products/flight-recorder/product.json
+        role: changes
+        exists: true
+        system: null
+      - path: clear-glass/src/downloads/artifact-chat-index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/tool-runtime.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/lib/response-sink.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/gate-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/gig-ledger-listener.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-procedures.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: products/flight-recorder/lib/project.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-gig-ledger.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-repo-procedures.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/activity-log/compartment.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/checks/ck-248-toolchain.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-activity.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/step-gate.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+      - path: products/flight-recorder/lib/project.js
+        role: uses
+        exists: true
+        system: null
+      - path: products/flight-recorder/lib/versions.js
+        role: uses
+        exists: true
+        system: null
+      - path: versionium/lib/text-diff.js
+        role: uses
+        exists: true
+        system: versionium
+    edges:
+      - from: products/flight-recorder/bin/flight-recorder.js
+        to: products/flight-recorder/lib/project.js
+        kind: requires
+      - from: products/flight-recorder/bin/flight-recorder.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: products/flight-recorder/bin/flight-recorder.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: products/flight-recorder/bin/flight-recorder.js
+        to: products/flight-recorder/lib/versions.js
+        kind: requires
+      - from: lib/change-record.js
+        to: versionium/lib/text-diff.js
+        kind: requires
+      - from: lib/run-state.js
+        to: lib/node-export.js
+        kind: requires
+      - from: lib/run-state.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/proposal-evidence.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: lib/proposal-evidence.js
+        to: lib/step-gate.js
+        kind: requires
+      - from: lib/proposal-evidence.js
+        to: lib/checks/ck-248-toolchain.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-carve.js
+        kind: requires
+      - from: products/flight-recorder/lib/project.js
+        to: lib/change-record.js
+        kind: requires
+      - from: clear-glass/src/downloads/artifact-chat-index.js
+        to: lib/run-state.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/run-state.js
+        kind: requires
+      - from: copilot/tool-runtime.js
+        to: lib/run-state.js
+        kind: requires
+      - from: guardian/lib/response-sink.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/gate-context.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/gig-ledger-listener.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/repo-procedures.js
+        to: lib/run-state.js
+        kind: requires
+      - from: tests/modules/test-gig-ledger.test.js
+        to: lib/run-state.js
+        kind: requires
+      - from: tests/modules/test-repo-procedures.test.js
+        to: lib/run-state.js
+        kind: requires
+    crossings:
+      - from: lib/change-record.js
+        to: versionium/lib/text-diff.js
+        fromSystem: lib
+        toSystem: versionium
+        kind: upward
+        known: true
+      - from: lib/run-state.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+      dependents:
+        - docs/2026-10-16-repo-carve-phasemap.spec::FR4_stands_alone
+      upstream:
+        - docs/2026-10-16-repo-carve-phasemap.spec::CV1_carve_backend_route_command_ui
+        - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+      downstream:
+        - docs/2026-10-16-repo-carve-phasemap.spec::FR4_stands_alone
+      blockedBy:
+        - docs/2026-10-16-repo-carve-phasemap.spec::CV2_untangle_with_rf0
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by CV2_untangle_with_rf0
+        - 'depends on (1): CV2_untangle_with_rf0 · all upstream 2'
+        - 'needed by (1): FR4_stands_alone'
   uuid: 6ffbf686-af6c-564e-9098-64d9e4944b87

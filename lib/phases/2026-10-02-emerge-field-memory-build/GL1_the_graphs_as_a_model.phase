@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-02-emerge-field-memory-build-phasemap.spec
 intent: null
 summary: GL1_the_graphs_as_a_model (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830599145
+exported_at: 1792852513271
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830599145
-lastSeenAt: 1792830599145
+firstSeenAt: 1792852513271
+lastSeenAt: 1792852513271
 fingerprint: null
 payload:
   id: GL1_the_graphs_as_a_model
@@ -28,5 +28,47 @@ payload:
     - FM1_mining_failure_modes
   blocks: []
   spec: null
-  graph: 590458d74b8d9a0a
+  graph:
+    hash: 590458d74b8d9a0a
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 7
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+      dependents: []
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR1_proof_run_the_delivery_checker
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      downstream: []
+      blockedBy:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 7 · blocked by RF1_relational_field, MR7_recipes,
+          FM1_mining_failure_modes
+        - >-
+          depends on (3): RF1_relational_field, MR7_recipes, FM1_mining_failure_modes · all upstream
+          12
+        - 'needed by (0): —'
   uuid: 7952ded5-05f7-5cd1-b7f0-88fb676fa192

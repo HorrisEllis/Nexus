@@ -5,13 +5,13 @@ id: docs_2026-08-23-backlog-phasemap.spec::BL13_cortex_component_registry_move
 context: pipeline phase BL13_cortex_component_registry_move of docs/2026-08-23-backlog-phasemap.spec
 intent: null
 summary: BL13_cortex_component_registry_move (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581826
+exported_at: 1792852494909
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581826
-lastSeenAt: 1792830581826
+firstSeenAt: 1792852494909
+lastSeenAt: 1792852494909
 fingerprint: null
 payload:
   id: BL13_cortex_component_registry_move
@@ -23,5 +23,243 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 7967e5a04f2c6d03
+  graph:
+    hash: 8039d8caee432d43
+    nodes:
+      - path: copilot/server.js
+        role: changes
+        exists: true
+        system: copilot
+      - path: cortex/boot.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: guardian/server.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/component-registry.js
+        role: changes
+        exists: true
+        system: lib
+      - path: loom/server.js
+        role: changes
+        exists: true
+        system: loom
+      - path: copilot/module-builder.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/dropzone.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/grammar-fallback.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: intelligence/gap/predicate.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/blueprint.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/clear-glass-stream-bridge.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/cli-map.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: service/cortex-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: service/guardian-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: tests/modules/copilot-adversarial-wire.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/copilot-handshake-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/cortex-sse-broadcast.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/config.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/push-recall.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: hooks/index.js
+        role: uses
+        exists: true
+        system: hooks
+      - path: lib/consumer-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/lean-mode.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/migrate-ledger-per-system.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nerve/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/pulse.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/version.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: cortex/boot.js
+        to: lib/data-home.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/config.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/version.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/pulse.js
+        kind: requires
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/lean-mode.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/push-recall.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/migrate-ledger-per-system.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/nerve/index.js
+        kind: requires
+      - from: cortex/boot.js
+        to: hooks/index.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/consumer-registry.js
+        kind: requires
+      - from: service/cortex-service.js
+        to: cortex/boot.js
+        kind: requires
+      - from: tests/modules/cortex-sse-broadcast.test.js
+        to: cortex/boot.js
+        kind: requires
+      - from: guardian/dropzone.js
+        to: guardian/server.js
+        kind: requires
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        kind: requires
+      - from: lib/clear-glass-stream-bridge.js
+        to: copilot/server.js
+        kind: requires
+      - from: tests/modules/copilot-adversarial-wire.test.js
+        to: copilot/server.js
+        kind: requires
+      - from: tests/modules/copilot-handshake-dispatch.test.js
+        to: copilot/server.js
+        kind: requires
+      - from: copilot/module-builder.js
+        to: lib/component-registry.js
+        kind: requires
+      - from: guardian/lib/grammar-fallback.js
+        to: lib/component-registry.js
+        kind: requires
+      - from: intelligence/gap/predicate.js
+        to: lib/component-registry.js
+        kind: requires
+      - from: lib/blueprint.js
+        to: lib/component-registry.js
+        kind: requires
+      - from: lib/cli-map.js
+        to: lib/component-registry.js
+        kind: requires
+    crossings:
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        fromSystem: cortex
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: cortex/boot.js
+        to: hooks/index.js
+        fromSystem: cortex
+        toSystem: hooks
+        kind: system
+        known: true
+      - from: service/cortex-service.js
+        to: cortex/boot.js
+        fromSystem: service
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        fromSystem: service
+        toSystem: guardian
+        kind: system
+        known: true
+      - from: lib/clear-glass-stream-bridge.js
+        to: copilot/server.js
+        fromSystem: lib
+        toSystem: copilot
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 82bbf6ce-cef7-565a-b758-19dda6549e57

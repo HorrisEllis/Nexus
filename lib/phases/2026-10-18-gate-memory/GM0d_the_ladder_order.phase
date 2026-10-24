@@ -5,13 +5,13 @@ id: docs_2026-10-18-gate-memory-phasemap.spec::GM0d_the_ladder_order
 context: pipeline phase GM0d_the_ladder_order of docs/2026-10-18-gate-memory-phasemap.spec
 intent: null
 summary: GM0d_the_ladder_order (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830630222
+exported_at: 1792852544168
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830630222
-lastSeenAt: 1792830630222
+firstSeenAt: 1792852544168
+lastSeenAt: 1792852544168
 fingerprint: null
 payload:
   id: GM0d_the_ladder_order
@@ -23,5 +23,29 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 6da079f573fd57a4
+  graph:
+    hash: 6da079f573fd57a4
+    nodes:
+      - path: docs/CLAUDE.md
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 306840cf-b48b-5052-888a-0503e8258ff0

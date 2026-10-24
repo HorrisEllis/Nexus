@@ -5,13 +5,13 @@ id: docs_2026-08-23-backlog-phasemap.spec::BL18_tools_per_url
 context: pipeline phase BL18_tools_per_url of docs/2026-08-23-backlog-phasemap.spec
 intent: null
 summary: BL18_tools_per_url (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581833
+exported_at: 1792852494916
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581833
-lastSeenAt: 1792830581833
+firstSeenAt: 1792852494916
+lastSeenAt: 1792852494916
 fingerprint: null
 payload:
   id: BL18_tools_per_url
@@ -24,5 +24,28 @@ payload:
     - BL17_nexus_url_scheme
   blocks: []
   spec: null
-  graph: 6e529aec0748e9ba
+  graph:
+    hash: 6e529aec0748e9ba
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-08-23-backlog-phasemap.spec::BL17_nexus_url_scheme
+      dependents: []
+      upstream:
+        - docs/2026-08-23-backlog-phasemap.spec::BL17_nexus_url_scheme
+      downstream: []
+      blockedBy:
+        - docs/2026-08-23-backlog-phasemap.spec::BL17_nexus_url_scheme
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by BL17_nexus_url_scheme
+        - 'depends on (1): BL17_nexus_url_scheme'
+        - 'needed by (0): —'
   uuid: 2b893ae6-a0af-554b-8311-93b6092a0ff0

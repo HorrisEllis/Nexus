@@ -5,13 +5,13 @@ id: docs_2026-10-09-one-model-engine-phasemap.spec::ME14_across_callers
 context: pipeline phase ME14_across_callers of docs/2026-10-09-one-model-engine-phasemap.spec
 intent: null
 summary: ME14_across_callers (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830608828
+exported_at: 1792852522907
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830608828
-lastSeenAt: 1792830608828
+firstSeenAt: 1792852522907
+lastSeenAt: 1792852522907
 fingerprint: null
 payload:
   id: ME14_across_callers
@@ -25,5 +25,45 @@ payload:
     - ME12_callers_moved
   blocks: []
   spec: null
-  graph: 0d67fbee2de537c0
+  graph:
+    hash: 0d67fbee2de537c0
+    nodes:
+      - path: tests/modules/test-one-model-engine.test.js
+        role: changes
+        exists: false
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 7
+      deps:
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+      dependents: []
+      upstream:
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME0_the_inventory_proved
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME11_old_settings_translated
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME2_caller_policy
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME4_one_attempt_record
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME5_one_chooser
+      downstream: []
+      blockedBy:
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-09-one-model-engine-phasemap.spec::ME13_no_bypass
+          files:
+            - tests/modules/test-one-model-engine.test.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by ME12_callers_moved
+        - 'depends on (1): ME12_callers_moved · all upstream 8'
+        - 'needed by (0): —'
+        - >-
+          same files as ME13_no_bypass with no order between them:
+          tests/modules/test-one-model-engine.test.js
   uuid: 11404e9e-d39b-5ece-82c0-f03430c5d685

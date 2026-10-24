@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
 intent: null
 summary: CG2_route_ncp_onto_guardian_sse (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830585818
+exported_at: 1792852499298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830585818
-lastSeenAt: 1792830585818
+firstSeenAt: 1792852499298
+lastSeenAt: 1792852499298
 fingerprint: null
 payload:
   id: CG2_route_ncp_onto_guardian_sse
@@ -25,5 +25,221 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: e281aee5bb036b1d
+  graph:
+    hash: e281aee5bb036b1d
+    nodes:
+      - path: clear-glass/renderer/guardian-picker.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/core/bus.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/test/session-hub.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: guardian/server.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: clear-glass/seam/watchdog-gates.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/copilot/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/downloads/adapter.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/downloads/intake-bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/ipc/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.pre-userscripts.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/network/install.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/plugins/host.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/plugins/permission-adapter.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/plugins/webrequest-adapter.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/sse/server.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/siso/index.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/cookies/session-hub.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/providers/account-switch.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: guardian/config.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/event-taxonomy.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/ncp.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: intelligence/cfr/ledger.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/gap/hunter.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/event-taxonomy-pattern.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/seam/detector.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/seam/queue.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: clear-glass/src/core/bus.js
+        to: clear-glass/siso/index.js
+        kind: requires
+      - from: clear-glass/test/session-hub.test.js
+        to: clear-glass/src/cookies/session-hub.js
+        kind: requires
+      - from: clear-glass/test/session-hub.test.js
+        to: clear-glass/src/providers/account-switch.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/data-home.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/config.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/event-taxonomy.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/event-taxonomy-pattern.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/lib/ncp.js
+        kind: requires
+      - from: guardian/server.js
+        to: intelligence/cfr/ledger.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/detector.js
+        kind: requires
+      - from: guardian/server.js
+        to: intelligence/gap/hunter.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/queue.js
+        kind: requires
+      - from: clear-glass/seam/watchdog-gates.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/copilot/bridge.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/downloads/adapter.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/downloads/intake-bridge.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/main/index.pre-userscripts.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/network/install.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/plugins/host.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/plugins/permission-adapter.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/plugins/webrequest-adapter.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/sse/server.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+    crossings:
+      - from: guardian/server.js
+        to: intelligence/cfr/ledger.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: guardian/server.js
+        to: intelligence/gap/hunter.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 6fd754a5-23e2-5fab-ad1f-8f211585380f

@@ -5,13 +5,13 @@ id: docs_2026-08-28-definition-of-complete-phasemap.spec::DOD1_fully_autonomous
 context: pipeline phase DOD1_fully_autonomous of docs/2026-08-28-definition-of-complete-phasemap.spec
 intent: null
 summary: DOD1_fully_autonomous (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830582734
+exported_at: 1792852495851
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830582734
-lastSeenAt: 1792830582734
+firstSeenAt: 1792852495851
+lastSeenAt: 1792852495851
 fingerprint: null
 payload:
   id: DOD1_fully_autonomous
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: e5fd79a1162932ba
+  graph:
+    hash: e5fd79a1162932ba
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: cc07968f-6dbf-5a4f-b064-ac5bf041f25e

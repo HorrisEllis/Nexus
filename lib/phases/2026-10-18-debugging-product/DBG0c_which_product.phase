@@ -5,13 +5,13 @@ id: docs_2026-10-18-debugging-product-phasemap.spec::DBG0c_which_product
 context: pipeline phase DBG0c_which_product of docs/2026-10-18-debugging-product-phasemap.spec
 intent: null
 summary: DBG0c_which_product (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830629747
+exported_at: 1792852543777
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830629747
-lastSeenAt: 1792830629747
+firstSeenAt: 1792852543777
+lastSeenAt: 1792852543777
 fingerprint: null
 payload:
   id: DBG0c_which_product
@@ -23,5 +23,31 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 5660fd2408793875
+  graph:
+    hash: 5660fd2408793875
+    nodes:
+      - path: docs/CLAUDE.md
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-18-debugging-product-phasemap.spec::DBG8_in_the_product
+      upstream: []
+      downstream:
+        - docs/2026-10-18-debugging-product-phasemap.spec::DBG8_in_the_product
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (1): DBG8_in_the_product'
   uuid: 6783d1ae-6a71-54d4-8f11-26d5ecc38a95

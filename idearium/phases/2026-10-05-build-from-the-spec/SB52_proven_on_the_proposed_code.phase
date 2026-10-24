@@ -9,11 +9,11 @@ intent: null
 summary: SB52_proven_on_the_proposed_code (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830601684
+exported_at: 1792852515968
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830601684
-lastSeenAt: 1792830601684
+firstSeenAt: 1792852515968
+lastSeenAt: 1792852515968
 fingerprint: null
 payload:
   id: SB52_proven_on_the_proposed_code
@@ -30,5 +30,229 @@ payload:
     - SB51_a_phase_built_in_chunks
   blocks: []
   spec: null
-  graph: e7942c807caa456b
+  graph:
+    hash: e7942c807caa456b
+    nodes:
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/repo/build-plan.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/plan-panel.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/proof-overlay.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/cli/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: service/idearium-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: tests/modules/idearium-build-queue-poller.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-guardian-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-ingest-stability.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-agent-hat-agnostic.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-change-record.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-failure-modes.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-flight-data.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-projects-overview.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-repo-carve.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-undo-any-change.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: idearium/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/core/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/access.cjs
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: intelligence/spatial/lattice.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/economy/tokens.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-client.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/warp-rung.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: idearium/api/index.js
+        to: idearium/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/data-home.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/warp-rung.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/access.cjs
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/economy/tokens.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: intelligence/spatial/lattice.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/core/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: idearium/cli/index.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-build-queue-poller.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-guardian-dispatch.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-ingest-stability.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-agent-hat-agnostic.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-change-record.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-failure-modes.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-flight-data.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-projects-overview.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-repo-carve.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-undo-any-change.test.js
+        to: idearium/api/index.js
+        kind: requires
+    crossings:
+      - from: idearium/api/index.js
+        to: intelligence/spatial/lattice.js
+        fromSystem: idearium
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        fromSystem: service
+        toSystem: idearium
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB51_a_phase_built_in_chunks
+      dependents:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::CH1_compartment_charter
+      upstream:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB51_a_phase_built_in_chunks
+      downstream:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::CH1_compartment_charter
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::WS1_agents_use_the_work_surface
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::CH1_compartment_charter
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): SB51_a_phase_built_in_chunks'
+        - >-
+          needed by (1): CH1_compartment_charter · all downstream 2 · finishing it unlocks
+          CH1_compartment_charter
   uuid: a1568589-6d64-5b80-a8a6-5337bd7a423d

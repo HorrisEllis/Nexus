@@ -7,11 +7,11 @@ intent: null
 summary: HP6_the_build_surface_opens (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830608400
+exported_at: 1792852522465
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830608400
-lastSeenAt: 1792830608400
+firstSeenAt: 1792852522465
+lastSeenAt: 1792852522465
 fingerprint: null
 payload:
   id: HP6_the_build_surface_opens
@@ -24,5 +24,29 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: ed70fce51132cf3d
+  graph:
+    hash: ed70fce51132cf3d
+    nodes:
+      - path: idearium/ui/js/phases.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 7cb54432-b115-511e-9659-e6567b0ba67e

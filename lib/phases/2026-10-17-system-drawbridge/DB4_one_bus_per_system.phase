@@ -5,13 +5,13 @@ id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
 context: pipeline phase DB4_one_bus_per_system of docs/2026-10-17-system-drawbridge-phasemap.spec
 intent: null
 summary: DB4_one_bus_per_system (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830628901
+exported_at: 1792852542825
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830628901
-lastSeenAt: 1792830628901
+firstSeenAt: 1792852542825
+lastSeenAt: 1792852542825
 fingerprint: null
 payload:
   id: DB4_one_bus_per_system
@@ -23,5 +23,200 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 2212630faddc3883
+  graph:
+    hash: 2212630faddc3883
+    nodes:
+      - path: cortex/core/raid/event-taxonomy.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: idearium/event-taxonomy.cjs
+        role: changes
+        exists: true
+        system: idearium
+      - path: nexus/nexus-bus.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: intelligence/alk/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/gap/predicate.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/routes.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/server.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/agent-tools/tools/execution/run-pipeline.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/compartment-engine.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/component-ledger.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-build-context.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/event-taxonomy-pattern.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: idearium/event-taxonomy.cjs
+        to: lib/event-taxonomy-pattern.js
+        kind: requires
+      - from: tests/modules/test-build-context.test.js
+        to: idearium/event-taxonomy.cjs
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: cortex/core/raid/event-taxonomy.js
+        kind: requires
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: guardian/server.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/alk/index.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/gap/predicate.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/index.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/routes.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/server.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/agent-tools/tools/execution/run-pipeline.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/compartment-engine.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/component-ledger.js
+        to: nexus/nexus-bus.js
+        kind: requires
+    crossings:
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        fromSystem: cortex
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: guardian/server.js
+        to: nexus/nexus-bus.js
+        fromSystem: guardian
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/alk/index.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/gap/predicate.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/index.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/routes.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/server.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: lib/agent-tools/tools/execution/run-pipeline.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+      - from: lib/compartment-engine.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+      - from: lib/component-ledger.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+      upstream: []
+      downstream:
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (1): CS4_every_system_a_compartment · all downstream 8'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 265bf8e0-c628-5c5a-bc69-2969759c43ae

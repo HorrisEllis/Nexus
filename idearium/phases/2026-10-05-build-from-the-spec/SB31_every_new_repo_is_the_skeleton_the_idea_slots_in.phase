@@ -9,11 +9,11 @@ intent: null
 summary: SB31_every_new_repo_is_the_skeleton_the_idea_slots_in (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830601646
+exported_at: 1792852515927
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830601646
-lastSeenAt: 1792830601646
+firstSeenAt: 1792852515927
+lastSeenAt: 1792852515927
 fingerprint: null
 payload:
   id: SB31_every_new_repo_is_the_skeleton_the_idea_slots_in
@@ -31,5 +31,230 @@ payload:
     - SB30_the_template_is_a_skeleton
   blocks: []
   spec: null
-  graph: a632e63c0a0c153d
+  graph:
+    hash: a632e63c0a0c153d
+    nodes:
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/repo/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/templates/architecture-spec.template.yaml
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/file-tree-plan.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/registry-plan.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/cli/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/test/e2e-pipeline.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-auto-repo-creation.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-loop.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-materialize-physical.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-dangling-hooks-and-idearium-load.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-atlas-and-glass.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-inject-approval.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-self-and-cos-run.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-self-incremental.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-self-visible.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-specs-and-ideas-cleanup.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: idearium/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/access.cjs
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/db.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/repo/import-pipeline.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/repo/source-files.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/economy/tokens.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-client.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/warp-rung.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: idearium/repo/index.js
+        to: idearium/lib/db.js
+        kind: requires
+      - from: idearium/repo/index.js
+        to: idearium/repo/import-pipeline.js
+        kind: requires
+      - from: idearium/repo/index.js
+        to: idearium/repo/source-files.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/data-home.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/warp-rung.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/access.cjs
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/economy/tokens.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: idearium/cli/index.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: idearium/test/e2e-pipeline.test.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: tests/modules/idearium-auto-repo-creation.test.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: tests/modules/idearium-loop.test.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: tests/modules/idearium-materialize-physical.test.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: tests/modules/test-dangling-hooks-and-idearium-load.test.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: tests/modules/test-nexus-atlas-and-glass.test.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: tests/modules/test-nexus-inject-approval.test.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: tests/modules/test-nexus-self-and-cos-run.test.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: tests/modules/test-nexus-self-incremental.test.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: tests/modules/test-nexus-self-visible.test.js
+        to: idearium/repo/index.js
+        kind: requires
+      - from: tests/modules/test-nexus-specs-and-ideas-cleanup.test.js
+        to: idearium/repo/index.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB30_the_template_is_a_skeleton
+      dependents:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+      upstream:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB30_the_template_is_a_skeleton
+      downstream:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB43_the_expansion_is_phased
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB44_phases_are_chunked_then_coded
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB45_skeletons_grey_until_coded
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB46_every_step_by_hand
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB47_built_and_run_in_cos
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB48_proof_in_cos_closes_the_phase
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB49_an_idea_runs_through_by_itself
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB42_a_repo_expands_from_its_spec
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4
+        - 'depends on (1): SB30_the_template_is_a_skeleton · all upstream 4'
+        - >-
+          needed by (1): SB42_a_repo_expands_from_its_spec · all downstream 8 · finishing it unlocks
+          SB42_a_repo_expands_from_its_spec
   uuid: f57ab26e-f171-552d-b307-0a337c8feeec

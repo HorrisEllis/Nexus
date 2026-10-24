@@ -1,0 +1,172 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+context: pipeline phase EM2_warp_his_own of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: EM2_warp_his_own (?) — 8 file(s)
+system: emerge
+tags: []
+exported_at: 1792852513184
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792852513184
+lastSeenAt: 1792852513184
+fingerprint: null
+payload:
+  id: EM2_warp_his_own
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - warp/core/Link.js
+    - warp/core/Expectation.js
+    - warp/core/Engine.js
+    - warp/core/Ledger.js
+    - warp/core/Axiom.js
+    - warp/adapters/siso-gates.js
+    - warp/spec/warp.spec
+    - warp/MANIFEST.json
+  depends_on:
+    - EM1_emerge_core
+    - SH1_shadow_space
+  blocks: []
+  spec: null
+  graph:
+    hash: d95fa6359592fbd4
+    nodes:
+      - path: warp/adapters/siso-gates.js
+        role: changes
+        exists: true
+        system: null
+      - path: warp/core/Axiom.js
+        role: changes
+        exists: true
+        system: null
+      - path: warp/core/Engine.js
+        role: changes
+        exists: true
+        system: null
+      - path: warp/core/Expectation.js
+        role: changes
+        exists: true
+        system: null
+      - path: warp/core/Ledger.js
+        role: changes
+        exists: true
+        system: null
+      - path: warp/core/Link.js
+        role: changes
+        exists: true
+        system: null
+      - path: warp/MANIFEST.json
+        role: changes
+        exists: true
+        system: null
+      - path: warp/spec/warp.spec
+        role: changes
+        exists: true
+        system: null
+      - path: diagnostic/lib/pulse-watch.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: lib/nexstore/types.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/seam/adapters/warp-cascade.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: nexus/autopilot.js
+        role: used-by
+        exists: true
+        system: nexus
+      - path: ollama/lib/dispatch.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: warp/core/index.js
+        role: used-by
+        exists: true
+        system: null
+    edges:
+      - from: warp/core/index.js
+        to: warp/core/Link.js
+        kind: requires
+      - from: diagnostic/lib/pulse-watch.js
+        to: warp/core/Engine.js
+        kind: requires
+      - from: lib/nexstore/types.js
+        to: warp/core/Axiom.js
+        kind: requires
+      - from: lib/seam/adapters/warp-cascade.js
+        to: warp/core/Axiom.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: warp/core/Axiom.js
+        kind: requires
+      - from: ollama/lib/dispatch.js
+        to: warp/core/Axiom.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      dependents:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      downstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB2_analysis_then_synthesis
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB3_the_causal_spec_block
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB4_the_emergence_loop_builds
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FM1_mining_failure_modes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GL1_the_graphs_as_a_model
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LB1_the_end_state_lab
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LN1_lenses_on_the_canvas
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR11_rewind_the_mind
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR2_vector_space_for_the_field
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR4_field_memory
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR5_fractal_levels_with_the_field
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR6_contradictions_held
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR9_liminal_on_the_agents
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MS1_mental_simulation
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::OT1_one_write_path
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RC1_the_repo_main_chat
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RD1_raid_complete_or_build
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+      blockedBy:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      unlocks:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by SH1_shadow_space
+        - 'depends on (2): EM1_emerge_core, SH1_shadow_space · all upstream 4'
+        - >-
+          needed by (4): CF1_cfr_improved_with_rfr2, MR8_crystallization, CB1_cfr_build_logic,
+          CB3_the_causal_spec_block · all downstream 26 · finishing it unlocks
+          CF1_cfr_improved_with_rfr2
+  uuid: a577c5e1-d886-535c-915c-e5ca99443cff

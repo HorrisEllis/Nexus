@@ -5,13 +5,13 @@ id: docs_2026-10-15-cos-app-phasemap.spec::COSA0c_update_source
 context: pipeline phase COSA0c_update_source of docs/2026-10-15-cos-app-phasemap.spec
 intent: null
 summary: COSA0c_update_source (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830617303
+exported_at: 1792852531298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830617303
-lastSeenAt: 1792830617303
+firstSeenAt: 1792852531298
+lastSeenAt: 1792852531298
 fingerprint: null
 payload:
   id: COSA0c_update_source
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: e45f91959c1d594a
+  graph:
+    hash: e45f91959c1d594a
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 9f378839-3ab9-5abe-a8c6-45e7528ed683

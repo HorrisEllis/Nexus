@@ -93,7 +93,7 @@ phases:
     proof: "a planted good reply is collected, registered and tagged to its phase; a bad one returns its errors, nothing registered"
   SF4_compile_on_collect:
     status: DONE (0.60.67)
-    systems: [idearium, core]
+    systems: [idearium, core, emerge]   # 0.60.238: emerge/compiler is emerge's since EW1 (0.60.237), until EW3 moves it to idearium
     files: [lib/spec-collect.js, emerge/compiler/index.js, lib/repo-inject.js, idearium/lib/config-core.cjs, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/app.js, tests/modules/test-spec-pipeline.test.js]
     depends_on: [SF3_collect_the_spec]
     specs: [docs/spec-compiler.spec, idearium/spec/idearium.spec]

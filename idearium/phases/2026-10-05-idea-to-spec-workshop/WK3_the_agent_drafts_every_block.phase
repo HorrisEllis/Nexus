@@ -9,11 +9,11 @@ intent: null
 summary: WK3_the_agent_drafts_every_block (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830604253
+exported_at: 1792852518574
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830604253
-lastSeenAt: 1792830604253
+firstSeenAt: 1792852518574
+lastSeenAt: 1792852518574
 fingerprint: null
 payload:
   id: WK3_the_agent_drafts_every_block
@@ -28,5 +28,52 @@ payload:
     - WK1_the_workshop_is_blocks_from_the_templates
   blocks: []
   spec: null
-  graph: 06035725e06b5b37
+  graph:
+    hash: 06035725e06b5b37
+    nodes:
+      - path: idearium/lib/workshop.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/workshop.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/lib/void.js
+        role: used-by
+        exists: true
+        system: idearium
+    edges:
+      - from: idearium/api/index.js
+        to: idearium/lib/workshop.js
+        kind: requires
+      - from: idearium/lib/void.js
+        to: idearium/lib/workshop.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK1_the_workshop_is_blocks_from_the_templates
+      dependents:
+        - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK6_enterprise_grade
+      upstream:
+        - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK1_the_workshop_is_blocks_from_the_templates
+      downstream:
+        - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK6_enterprise_grade
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK6_enterprise_grade
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): WK1_the_workshop_is_blocks_from_the_templates'
+        - 'needed by (1): WK6_enterprise_grade · finishing it unlocks WK6_enterprise_grade'
   uuid: 1fb92d71-eab6-513d-927c-cbb2afcaa141

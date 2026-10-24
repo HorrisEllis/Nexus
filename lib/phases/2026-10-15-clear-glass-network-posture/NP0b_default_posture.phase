@@ -5,13 +5,13 @@ id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP0b_default_post
 context: pipeline phase NP0b_default_posture of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
 intent: null
 summary: NP0b_default_posture (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830616018
+exported_at: 1792852529983
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830616018
-lastSeenAt: 1792830616018
+firstSeenAt: 1792852529983
+lastSeenAt: 1792852529983
 fingerprint: null
 payload:
   id: NP0b_default_posture
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: d5fb7b0917037e83
+  graph:
+    hash: d5fb7b0917037e83
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 6787ecf6-f374-5463-9169-1ad8caa168a3

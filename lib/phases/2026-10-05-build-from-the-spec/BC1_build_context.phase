@@ -5,13 +5,13 @@ id: docs_2026-10-05-build-from-the-spec-phasemap.spec::BC1_build_context
 context: pipeline phase BC1_build_context of docs/2026-10-05-build-from-the-spec-phasemap.spec
 intent: null
 summary: BC1_build_context (?) — 4 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830601606
+exported_at: 1792852515889
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830601606
-lastSeenAt: 1792830601606
+firstSeenAt: 1792852515889
+lastSeenAt: 1792852515889
 fingerprint: null
 payload:
   id: BC1_build_context
@@ -27,5 +27,232 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: a104b548fa539506
+  graph:
+    hash: 2a861b14265326ff
+    nodes:
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/build-context.js
+        role: changes
+        exists: true
+        system: lib
+      - path: tests/modules/test-build-context.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: idearium/cli/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/compiler-t0.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/test/e2e-pipeline.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/seam/cross-system-status.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/idearium-auto-repo-creation.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-build-queue-poller.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-chunk-dependencies.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-guardian-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-ingest-stability.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-loop.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-materialize-physical.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: idearium/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/chunk-nodes.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/data-dir.cjs
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/db.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/templates.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: lib/agent-providers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/chunk-glyph.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/component-store.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/registry-harness.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-digest.js
+        role: uses
+        exists: true
+        system: lib
+      - path: warp/core/index.js
+        role: uses
+        exists: true
+        system: null
+    edges:
+      - from: lib/build-context.js
+        to: lib/chunk-glyph.js
+        kind: requires
+      - from: lib/build-context.js
+        to: lib/registry-harness.js
+        kind: requires
+      - from: lib/build-context.js
+        to: lib/component-store.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/spec-engine/templates.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/lib/db.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/lib/chunk-nodes.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/lib/data-dir.cjs
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: warp/core/index.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: lib/agent-providers.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: idearium/index.js
+        kind: requires
+      - from: idearium/spec-engine/index.js
+        to: lib/spec-digest.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: idearium/cli/index.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: idearium/spec-engine/compiler-t0.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: idearium/test/e2e-pipeline.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: lib/seam/cross-system-status.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-auto-repo-creation.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-build-queue-poller.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-chunk-dependencies.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-guardian-dispatch.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-ingest-stability.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-loop.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+      - from: tests/modules/idearium-materialize-physical.test.js
+        to: idearium/spec-engine/index.js
+        kind: requires
+    crossings:
+      - from: cortex/core/raid/contract-intake.js
+        to: idearium/spec-engine/index.js
+        fromSystem: cortex
+        toSystem: idearium
+        kind: system
+        known: true
+      - from: lib/seam/cross-system-status.js
+        to: idearium/spec-engine/index.js
+        fromSystem: lib
+        toSystem: idearium
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::BC2_the_build_agent_gets_all_of_the_hat_and_repo_context
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::BC4_relational_context_wired_or_archived
+      upstream: []
+      downstream:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::BC2_the_build_agent_gets_all_of_the_hat_and_repo_context
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::BC3_what_a_build_was_sent_as_a_node
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::BC4_relational_context_wired_or_archived
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::BC2_the_build_agent_gets_all_of_the_hat_and_repo_context
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::BC4_relational_context_wired_or_archived
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (2): BC2_the_build_agent_gets_all_of_the_hat_and_repo_context,
+          BC4_relational_context_wired_or_archived · all downstream 3 · finishing it unlocks
+          BC2_the_build_agent_gets_all_of_the_hat_and_repo_context,
+          BC4_relational_context_wired_or_archived
   uuid: fcf303b8-a504-5bb6-8d76-6ea6993d4063

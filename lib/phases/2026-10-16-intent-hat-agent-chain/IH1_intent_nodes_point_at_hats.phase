@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-16-intent-hat-agent-chain-phasemap.spec
 intent: null
 summary: IH1_intent_nodes_point_at_hats (?) — 4 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830623952
+exported_at: 1792852537939
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830623952
-lastSeenAt: 1792830623952
+firstSeenAt: 1792852537939
+lastSeenAt: 1792852537939
 fingerprint: null
 payload:
   id: IH1_intent_nodes_point_at_hats
@@ -30,5 +30,130 @@ payload:
     - IH0a_one_vocabulary
   blocks: []
   spec: null
-  graph: 7a8dccf49acfd507
+  graph:
+    hash: 7a8dccf49acfd507
+    nodes:
+      - path: lib/hat-seed.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/intent-chain.js
+        role: changes
+        exists: false
+        system: lib
+      - path: lib/intent-hat-router.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/lib/jobs.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: lib/agent-tools/tools/identity/intent-hat.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-agent-hat-agnostic.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: copilot/lib/self-model.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/agent-tools/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/hat-forge.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/intent-classifier.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/intent-hat-router.js
+        to: copilot/lib/self-model.js
+        kind: requires
+      - from: lib/intent-hat-router.js
+        to: lib/intent-classifier.js
+        kind: requires
+      - from: lib/intent-hat-router.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: lib/hat-seed.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/hat-seed.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: guardian/lib/jobs.js
+        to: lib/intent-hat-router.js
+        kind: requires
+      - from: lib/agent-tools/tools/identity/intent-hat.js
+        to: lib/intent-hat-router.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/hat-seed.js
+        kind: requires
+      - from: tests/modules/test-agent-hat-agnostic.test.js
+        to: lib/hat-seed.js
+        kind: requires
+    crossings:
+      - from: lib/intent-hat-router.js
+        to: copilot/lib/self-model.js
+        fromSystem: lib
+        toSystem: copilot
+        kind: upward
+        known: true
+      - from: lib/hat-seed.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0a_one_vocabulary
+      dependents:
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH2_agents_bound
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH3_routers_read_the_chain
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH4_api_command_ui
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH5_proof_and_wiring
+      upstream:
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0a_one_vocabulary
+      downstream:
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH2_agents_bound
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH3_routers_read_the_chain
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH4_api_command_ui
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH5_proof_and_wiring
+      blockedBy:
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0a_one_vocabulary
+      unlocks:
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH2_agents_bound
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH3_routers_read_the_chain
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH4_api_command_ui
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH5_proof_and_wiring
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by IH0a_one_vocabulary
+        - 'depends on (1): IH0a_one_vocabulary'
+        - >-
+          needed by (4): IH2_agents_bound, IH3_routers_read_the_chain, IH4_api_command_ui,
+          IH5_proof_and_wiring · finishing it unlocks IH2_agents_bound, IH3_routers_read_the_chain,
+          IH4_api_command_ui, IH5_proof_and_wiring
   uuid: 760121c9-6519-5081-8354-0d8b3ffec402

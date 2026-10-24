@@ -1,0 +1,165 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+type: phase
+id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
+context: pipeline phase MR8_crystallization of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+intent: null
+summary: MR8_crystallization (?) — 2 file(s)
+system: emerge
+tags: []
+exported_at: 1792852513211
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792852513211
+lastSeenAt: 1792852513211
+fingerprint: null
+payload:
+  id: MR8_crystallization
+  map: docs/2026-10-02-emerge-field-memory-build-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - warp/dispatch/population.js
+    - emerge/core/constraint.js
+  depends_on:
+    - MR7_recipes
+    - EM2_warp_his_own
+  blocks: []
+  spec: null
+  graph:
+    hash: c7ff0c9451918cd9
+    nodes:
+      - path: emerge/core/constraint.js
+        role: changes
+        exists: true
+        system: emerge
+      - path: warp/dispatch/population.js
+        role: changes
+        exists: true
+        system: null
+      - path: emerge/core/budget.js
+        role: used-by
+        exists: true
+        system: emerge
+      - path: emerge/core/field.js
+        role: used-by
+        exists: true
+        system: emerge
+      - path: emerge/core/index.js
+        role: used-by
+        exists: true
+        system: emerge
+      - path: idearium/spec-engine/warp-build-dispatch.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/warp-rung.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: ollama/lib/dispatch.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: warp/dispatch/benchmark.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/dispatch/index.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/index.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/test/dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/test/v1.1.0-additions.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/test/v1.4-additions.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/dispatch/canonicalize.js
+        role: uses
+        exists: true
+        system: null
+    edges:
+      - from: warp/dispatch/population.js
+        to: warp/dispatch/canonicalize.js
+        kind: requires
+      - from: idearium/spec-engine/warp-build-dispatch.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: lib/warp-rung.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: ollama/lib/dispatch.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/dispatch/benchmark.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/dispatch/index.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/index.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/test/dispatch.test.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/test/v1.1.0-additions.test.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/test/v1.4-additions.test.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: emerge/core/budget.js
+        to: emerge/core/constraint.js
+        kind: requires
+      - from: emerge/core/field.js
+        to: emerge/core/constraint.js
+        kind: requires
+      - from: emerge/core/index.js
+        to: emerge/core/constraint.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 7
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      dependents:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CB1_cfr_build_logic
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR1_recall_triad_and_context_table
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      downstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+      blockedBy:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR7_recipes
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by MR7_recipes, EM2_warp_his_own
+        - 'depends on (2): MR7_recipes, EM2_warp_his_own · all upstream 9'
+        - 'needed by (1): FV1_client_jobs'
+  uuid: 9f0bf26a-e28f-52b2-9102-8a53dda0cee0

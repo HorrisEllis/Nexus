@@ -5,13 +5,13 @@ id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP0_binaries
 context: pipeline phase NP0_binaries of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
 intent: null
 summary: NP0_binaries (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830616017
+exported_at: 1792852529982
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830616017
-lastSeenAt: 1792830616017
+firstSeenAt: 1792852529982
+lastSeenAt: 1792852529982
 fingerprint: null
 payload:
   id: NP0_binaries
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 01c536f4a6fe2aac
+  graph:
+    hash: 01c536f4a6fe2aac
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 49cf0c8a-a188-55d2-a9e2-aacbf0a4bf44

@@ -5,13 +5,13 @@ id: docs_2026-10-18-compartment-environment-phasemap.spec::CE0b_the_os
 context: pipeline phase CE0b_the_os of docs/2026-10-18-compartment-environment-phasemap.spec
 intent: null
 summary: CE0b_the_os (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830629339
+exported_at: 1792852543280
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830629339
-lastSeenAt: 1792830629339
+firstSeenAt: 1792852543280
+lastSeenAt: 1792852543280
 fingerprint: null
 payload:
   id: CE0b_the_os
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: a8dbfe000313cd16
+  graph:
+    hash: a8dbfe000313cd16
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: a3ee3bd7-b162-50a6-b388-7f33a2af43f6

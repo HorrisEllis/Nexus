@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
 intent: null
 summary: P4_repoint_callers (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830589188
+exported_at: 1792852502818
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830589188
-lastSeenAt: 1792830589188
+firstSeenAt: 1792852502818
+lastSeenAt: 1792852502818
 fingerprint: null
 payload:
   id: P4_repoint_callers
@@ -26,5 +26,110 @@ payload:
     - P3_cortex_becomes_forwarder
   blocks: []
   spec: null
-  graph: 052187ecb12107d5
+  graph:
+    hash: 052187ecb12107d5
+    nodes:
+      - path: lib/agent-tools/tools/query/query-intelligence.js
+        role: changes
+        exists: true
+        system: lib
+      - path: orchestrator/lib/mcp-server.js
+        role: changes
+        exists: true
+        system: orchestrator
+      - path: cli/nexus.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: lib/agent-tools/index.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: orchestrator/lib/mcp-stdio.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/nexus-full-audit.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/agent-tools/tools/nexus/command.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/event-contract-check.js
+        role: uses
+        exists: true
+        system: lib
+      - path: orchestrator/lib/mcp-tools-tokensave.js
+        role: uses
+        exists: true
+        system: orchestrator
+    edges:
+      - from: orchestrator/lib/mcp-server.js
+        to: lib/event-contract-check.js
+        kind: requires
+      - from: orchestrator/lib/mcp-server.js
+        to: lib/agent-tools/tools/nexus/command.js
+        kind: requires
+      - from: orchestrator/lib/mcp-server.js
+        to: orchestrator/lib/mcp-tools-tokensave.js
+        kind: requires
+      - from: cli/nexus.js
+        to: orchestrator/lib/mcp-server.js
+        kind: requires
+      - from: orchestrator/lib/mcp-stdio.js
+        to: orchestrator/lib/mcp-server.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: orchestrator/lib/mcp-server.js
+        kind: requires
+      - from: tests/nexus-full-audit.js
+        to: orchestrator/lib/mcp-server.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/agent-tools/tools/query/query-intelligence.js
+        kind: requires
+    crossings:
+      - from: cli/nexus.js
+        to: orchestrator/lib/mcp-server.js
+        fromSystem: cli
+        toSystem: orchestrator
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P3_cortex_becomes_forwarder
+      dependents:
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P5_retire_second_runtime
+      upstream:
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::D4_names
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P0_map
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P1_characterization
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P2_intelligence_gains_routes
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P3_cortex_becomes_forwarder
+        - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::D1
+        - docs/2026-10-01-work-visibility-job-reuse-phasemap.spec::D2
+      downstream:
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P5_retire_second_runtime
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P7_hostile_verify_and_ship
+      blockedBy:
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P3_cortex_becomes_forwarder
+      unlocks:
+        - docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec::P5_retire_second_runtime
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by P3_cortex_becomes_forwarder
+        - 'depends on (1): P3_cortex_becomes_forwarder · all upstream 7'
+        - >-
+          needed by (1): P5_retire_second_runtime · all downstream 2 · finishing it unlocks
+          P5_retire_second_runtime
   uuid: ec99c7fd-f6ec-5e62-91b1-2b449994d016

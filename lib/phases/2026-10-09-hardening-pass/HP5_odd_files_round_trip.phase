@@ -5,13 +5,13 @@ id: docs_2026-10-09-hardening-pass-phasemap.spec::HP5_odd_files_round_trip
 context: pipeline phase HP5_odd_files_round_trip of docs/2026-10-09-hardening-pass-phasemap.spec
 intent: null
 summary: HP5_odd_files_round_trip (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830608399
+exported_at: 1792852522464
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830608399
-lastSeenAt: 1792830608399
+firstSeenAt: 1792852522464
+lastSeenAt: 1792852522464
 fingerprint: null
 payload:
   id: HP5_odd_files_round_trip
@@ -25,5 +25,47 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: a3b1cad180508350
+  graph:
+    hash: a3b1cad180508350
+    nodes:
+      - path: lib/spec-document.js
+        role: changes
+        exists: true
+        system: lib
+      - path: tests/modules/test-spec-document.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/spec-plan.js
+        role: used-by
+        exists: true
+        system: idearium
+    edges:
+      - from: idearium/api/index.js
+        to: lib/spec-document.js
+        kind: requires
+      - from: idearium/repo/spec-plan.js
+        to: lib/spec-document.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 8bb86a2e-5a9d-5d61-9ba3-345a7162f402

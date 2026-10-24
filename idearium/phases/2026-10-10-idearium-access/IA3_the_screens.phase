@@ -7,11 +7,11 @@ intent: null
 summary: IA3_the_screens (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830610575
+exported_at: 1792852524504
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830610575
-lastSeenAt: 1792830610575
+firstSeenAt: 1792852524504
+lastSeenAt: 1792852524504
 fingerprint: null
 payload:
   id: IA3_the_screens
@@ -26,5 +26,36 @@ payload:
     - IA1_the_routes
   blocks: []
   spec: null
-  graph: 84728ca7fed20a3f
+  graph:
+    hash: 84728ca7fed20a3f
+    nodes:
+      - path: idearium/ui/login.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/settings.html
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-10-idearium-access-phasemap.spec::IA1_the_routes
+      dependents: []
+      upstream:
+        - docs/2026-10-10-idearium-access-phasemap.spec::IA0_the_door_checks_who_is_asking
+        - docs/2026-10-10-idearium-access-phasemap.spec::IA1_the_routes
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (1): IA1_the_routes · all upstream 2'
+        - 'needed by (0): —'
   uuid: c3553bf7-6b59-5470-86ac-c7065148f2a1

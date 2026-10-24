@@ -5,13 +5,13 @@ id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV1
 context: pipeline phase SV1 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
 intent: null
 summary: SV1 (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830594905
+exported_at: 1792852508610
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830594905
-lastSeenAt: 1792830594905
+firstSeenAt: 1792852508610
+lastSeenAt: 1792852508610
 fingerprint: null
 payload:
   id: SV1
@@ -27,5 +27,40 @@ payload:
     - SV0
   blocks: []
   spec: null
-  graph: aba511479e53415c
+  graph:
+    hash: aba511479e53415c
+    nodes:
+      - path: guardian/interaction-contract.json
+        role: changes
+        exists: true
+        system: guardian
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV0
+      dependents:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV2
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV3
+      upstream:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G0
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G1
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G2
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV0
+      downstream:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV2
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV3
+      blockedBy:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV0
+      unlocks:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::SV3
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by SV0
+        - 'depends on (1): SV0 · all upstream 4'
+        - 'needed by (2): SV2, SV3 · finishing it unlocks SV3'
   uuid: a390b017-b1a3-5417-b434-7580ca2e3184

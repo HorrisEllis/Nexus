@@ -5,13 +5,13 @@ id: docs_2026-08-23-backlog-phasemap.spec::BL20_loom_map_becomes_real_visual_gra
 context: pipeline phase BL20_loom_map_becomes_real_visual_graph of docs/2026-08-23-backlog-phasemap.spec
 intent: null
 summary: BL20_loom_map_becomes_real_visual_graph (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581830
+exported_at: 1792852494914
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581830
-lastSeenAt: 1792830581830
+firstSeenAt: 1792852494914
+lastSeenAt: 1792852494914
 fingerprint: null
 payload:
   id: BL20_loom_map_becomes_real_visual_graph
@@ -23,5 +23,113 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 762077890aeb5d5d
+  graph:
+    hash: 762077890aeb5d5d
+    nodes:
+      - path: loom/bootstrap.js
+        role: changes
+        exists: true
+        system: loom
+      - path: loom/maps/accounts-authority-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/copilot-capability-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/cos-testenv-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/observability-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/raid-events-and-tools-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/session-2026-08-14-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/ui-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/warp-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/capability-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/source-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/spec-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/schema/index.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: loom/bootstrap.js
+        to: loom/schema/index.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/warp-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/observability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/copilot-capability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/session-2026-08-14-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/ui-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/raid-events-and-tools-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/accounts-authority-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/spec-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/cos-testenv-map.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 8178fe24-b427-584c-a07b-cda3448eb831

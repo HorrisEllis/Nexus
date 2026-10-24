@@ -5,13 +5,13 @@ id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CV5_universal_versioning
 context: pipeline phase CV5_universal_versioning of docs/2026-10-15-code-tab-run-state-phasemap.spec
 intent: null
 summary: CV5_universal_versioning (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830616884
+exported_at: 1792852530887
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830616884
-lastSeenAt: 1792830616884
+firstSeenAt: 1792852530887
+lastSeenAt: 1792852530887
 fingerprint: null
 payload:
   id: CV5_universal_versioning
@@ -27,5 +27,163 @@ payload:
     - CV4_tagged_history
   blocks: []
   spec: null
-  graph: caf16dc4d08f56cc
+  graph:
+    hash: caf16dc4d08f56cc
+    nodes:
+      - path: lib/node-export.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-versions.js
+        role: changes
+        exists: true
+        system: lib
+      - path: versionium/lib/files.js
+        role: changes
+        exists: true
+        system: versionium
+      - path: architect/schemas/index.js
+        role: used-by
+        exists: true
+        system: architect
+      - path: clear-glass/schemas/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/automation/nodes.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: copilot/lib/inject-config.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/schemas/index.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/tool-runtime.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/schemas/index.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/self-heal/failure-mode-forensics.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: products/flight-recorder/lib/versions.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-versionium-repo-history.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: versionium/routes/files.js
+        role: used-by
+        exists: true
+        system: versionium
+      - path: lib/activity-log/compartment.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-activity.js
+        role: uses
+        exists: true
+        system: lib
+      - path: versionium/config.js
+        role: uses
+        exists: true
+        system: versionium
+      - path: versionium/lib/store.js
+        role: uses
+        exists: true
+        system: versionium
+      - path: versionium/lib/text-diff.js
+        role: uses
+        exists: true
+        system: versionium
+    edges:
+      - from: versionium/lib/files.js
+        to: versionium/lib/store.js
+        kind: requires
+      - from: versionium/lib/files.js
+        to: versionium/config.js
+        kind: requires
+      - from: versionium/lib/files.js
+        to: versionium/lib/text-diff.js
+        kind: requires
+      - from: lib/repo-versions.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: lib/repo-versions.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: products/flight-recorder/lib/versions.js
+        to: versionium/lib/files.js
+        kind: requires
+      - from: tests/modules/test-versionium-repo-history.test.js
+        to: versionium/lib/files.js
+        kind: requires
+      - from: versionium/routes/files.js
+        to: versionium/lib/files.js
+        kind: requires
+      - from: architect/schemas/index.js
+        to: lib/node-export.js
+        kind: requires
+      - from: clear-glass/schemas/index.js
+        to: lib/node-export.js
+        kind: requires
+      - from: clear-glass/src/automation/nodes.js
+        to: lib/node-export.js
+        kind: requires
+      - from: copilot/lib/inject-config.js
+        to: lib/node-export.js
+        kind: requires
+      - from: copilot/schemas/index.js
+        to: lib/node-export.js
+        kind: requires
+      - from: copilot/tool-runtime.js
+        to: lib/node-export.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: lib/node-export.js
+        kind: requires
+      - from: cortex/schemas/index.js
+        to: lib/node-export.js
+        kind: requires
+      - from: cortex/self-heal/failure-mode-forensics.js
+        to: lib/node-export.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 6
+      deps:
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV4_tagged_history
+      dependents: []
+      upstream:
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE3_reply_on_task_gate
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE7_ai_assisted_editing
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV2_a_version_per_diff
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV4_tagged_history
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 6 · ready
+        - 'depends on (1): CV4_tagged_history · all upstream 6'
+        - 'needed by (0): —'
   uuid: b7b2ab96-ebf5-5782-86f4-b4d49c8a5658

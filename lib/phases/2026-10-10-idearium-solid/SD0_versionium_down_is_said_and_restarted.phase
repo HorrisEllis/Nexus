@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-10-idearium-solid-phasemap.spec
 intent: null
 summary: SD0_versionium_down_is_said_and_restarted (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830610972
+exported_at: 1792852524899
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830610972
-lastSeenAt: 1792830610972
+firstSeenAt: 1792852524899
+lastSeenAt: 1792852524899
 fingerprint: null
 payload:
   id: SD0_versionium_down_is_said_and_restarted
@@ -28,5 +28,183 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: d745c23ff321527a
+  graph:
+    hash: 6dc2dacd25a07eea
+    nodes:
+      - path: lib/repo-layer.js
+        role: changes
+        exists: false
+        system: lib
+      - path: nexus/autopilot.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: versionium/server.js
+        role: changes
+        exists: true
+        system: versionium
+      - path: tests/modules/test-alk-lattice-live.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-autopilot-boot-gates.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-autopilot-idle.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-boot-phases.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-spawn-guard.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-tablet-container-api.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-tablet-graph-api.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-tablet-ledger-api.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/autopilot-intelligence.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/bus-subscriptions.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/error-log.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ledger-fanin/boot.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ledger-fanin/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ledger-sse.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/resource-monitor.js
+        role: uses
+        exists: true
+        system: lib
+      - path: warp/core/Axiom.js
+        role: uses
+        exists: true
+        system: null
+      - path: warp/core/Event.js
+        role: uses
+        exists: true
+        system: null
+      - path: warp/core/Stream.js
+        role: uses
+        exists: true
+        system: null
+      - path: warp/core/StreamLog.js
+        role: uses
+        exists: true
+        system: null
+    edges:
+      - from: nexus/autopilot.js
+        to: lib/resource-monitor.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/ledger-fanin/boot.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/ledger-sse.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/error-log.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/ledger-fanin/index.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/autopilot-intelligence.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: warp/core/Stream.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: warp/core/StreamLog.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: warp/core/Axiom.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: warp/core/Event.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/bus-subscriptions.js
+        kind: requires
+      - from: tests/modules/test-alk-lattice-live.js
+        to: nexus/autopilot.js
+        kind: requires
+      - from: tests/modules/test-autopilot-boot-gates.js
+        to: nexus/autopilot.js
+        kind: requires
+      - from: tests/modules/test-autopilot-idle.test.js
+        to: nexus/autopilot.js
+        kind: requires
+      - from: tests/modules/test-boot-phases.js
+        to: nexus/autopilot.js
+        kind: requires
+      - from: tests/modules/test-spawn-guard.js
+        to: nexus/autopilot.js
+        kind: requires
+      - from: tests/modules/test-tablet-container-api.js
+        to: nexus/autopilot.js
+        kind: requires
+      - from: tests/modules/test-tablet-graph-api.js
+        to: nexus/autopilot.js
+        kind: requires
+      - from: tests/modules/test-tablet-ledger-api.js
+        to: nexus/autopilot.js
+        kind: requires
+    crossings:
+      - from: nexus/autopilot.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: nexus
+        toSystem: cortex
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: e8063cf1-075d-5f05-bcd8-ed116fea127f

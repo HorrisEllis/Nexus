@@ -9,11 +9,11 @@ intent: null
 summary: AR5_repo_architect_on_the_canvas (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830600797
+exported_at: 1792852515060
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830600797
-lastSeenAt: 1792830600797
+firstSeenAt: 1792852515060
+lastSeenAt: 1792852515060
 fingerprint: null
 payload:
   id: AR5_repo_architect_on_the_canvas
@@ -28,5 +28,38 @@ payload:
     - AR3_one_architect_canvas
   blocks: []
   spec: null
-  graph: c7fee44243c248cf
+  graph:
+    hash: c7fee44243c248cf
+    nodes:
+      - path: idearium/ui/index.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/app.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+      dependents: []
+      upstream:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR2_architect_in_the_workshop
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::AR3_one_architect_canvas
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::SW1_spec_workshop
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3
+        - 'depends on (1): AR3_one_architect_canvas · all upstream 4'
+        - 'needed by (0): —'
   uuid: e851de22-8fd2-5d12-9ed9-169fddac8520

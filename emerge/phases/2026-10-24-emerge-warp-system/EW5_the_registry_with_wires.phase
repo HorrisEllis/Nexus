@@ -5,13 +5,13 @@ id: docs_2026-10-24-emerge-warp-system-phasemap.spec::EW5_the_registry_with_wire
 context: pipeline phase EW5_the_registry_with_wires of docs/2026-10-24-emerge-warp-system-phasemap.spec
 intent: null
 summary: EW5_the_registry_with_wires (integration) — 2 file(s)
-system: idearium
+system: emerge
 tags: []
-exported_at: 1792851610906
+exported_at: 1792852553778
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792851610906
-lastSeenAt: 1792851610906
+firstSeenAt: 1792852553778
+lastSeenAt: 1792852553778
 fingerprint: null
 payload:
   id: EW5_the_registry_with_wires
@@ -26,5 +26,56 @@ payload:
     - EW4_the_ide_into_idearium
   blocks: []
   spec: docs/2026-10-17-system-drawbridge-phasemap.spec
-  graph: 00f4a76f5739c053
+  graph:
+    hash: 00f4a76f5739c053
+    nodes:
+      - path: emerge/registry-components.js
+        role: changes
+        exists: true
+        system: emerge
+      - path: loom/maps/observability-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: emerge/emerge-ide.js
+        role: used-by
+        exists: true
+        system: emerge
+      - path: loom/bootstrap.js
+        role: used-by
+        exists: true
+        system: loom
+    edges:
+      - from: emerge/emerge-ide.js
+        to: emerge/registry-components.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/observability-map.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+      dependents: []
+      upstream:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW1_emerge_and_warp_one_system
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D2_the_runtime_is_not_a_crossing
+      downstream: []
+      blockedBy:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 5 · blocked by EW4_the_ide_into_idearium
+        - 'depends on (1): EW4_the_ide_into_idearium · all upstream 7'
+        - 'needed by (0): —'
   uuid: 16f4a999-75c5-5e0d-adba-8ede2bddb7c5

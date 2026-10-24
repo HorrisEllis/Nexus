@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
 summary: DG5_dag_in_the_brief_and_the_ui (interface) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632810
+exported_at: 1792852546591
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632810
-lastSeenAt: 1792830632810
+firstSeenAt: 1792852546591
+lastSeenAt: 1792852546591
 fingerprint: null
 payload:
   id: DG5_dag_in_the_brief_and_the_ui
@@ -26,5 +26,27 @@ payload:
     - DG3_the_whole_dag
   blocks: []
   spec: null
-  graph: 7c64f9ae4e29eb6a
+  graph:
+    hash: 7c64f9ae4e29eb6a
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG3_the_whole_dag
+      dependents: []
+      upstream:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::DG3_the_whole_dag
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): DG3_the_whole_dag'
+        - 'needed by (0): —'
   uuid: d956be2a-b2b6-509c-980c-3d78f78b5f40

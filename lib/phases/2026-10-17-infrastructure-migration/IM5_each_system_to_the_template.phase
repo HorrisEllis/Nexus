@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-17-infrastructure-migration-phasemap.spec
 intent: null
 summary: IM5_each_system_to_the_template (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830628075
+exported_at: 1792852542017
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830628075
-lastSeenAt: 1792830628075
+firstSeenAt: 1792852542017
+lastSeenAt: 1792852542017
 fingerprint: null
 payload:
   id: IM5_each_system_to_the_template
@@ -28,5 +28,43 @@ payload:
     - IM4_the_kernel_boundary
   blocks: []
   spec: null
-  graph: aebf66ab8872db55
+  graph:
+    hash: aebf66ab8872db55
+    nodes:
+      - path: lib/boundary.js
+        role: changes
+        exists: false
+        system: lib
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM1_the_shape_census_as_a_command
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM3_wire_what_exists
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM4_the_kernel_boundary
+      dependents: []
+      upstream:
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM0d_lib_is_the_kernel
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM1_the_shape_census_as_a_command
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM3_wire_what_exists
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM4_the_kernel_boundary
+      downstream: []
+      blockedBy:
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM1_the_shape_census_as_a_command
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM3_wire_what_exists
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM4_the_kernel_boundary
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 2 · blocked by IM1_the_shape_census_as_a_command,
+          IM3_wire_what_exists, IM4_the_kernel_boundary
+        - >-
+          depends on (3): IM1_the_shape_census_as_a_command, IM3_wire_what_exists,
+          IM4_the_kernel_boundary · all upstream 4
+        - 'needed by (0): —'
   uuid: 42857574-4cef-5f84-9222-46a7b268125c

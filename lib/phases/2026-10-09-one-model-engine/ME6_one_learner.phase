@@ -5,13 +5,13 @@ id: docs_2026-10-09-one-model-engine-phasemap.spec::ME6_one_learner
 context: pipeline phase ME6_one_learner of docs/2026-10-09-one-model-engine-phasemap.spec
 intent: null
 summary: ME6_one_learner (?) — 5 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830608819
+exported_at: 1792852522898
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830608819
-lastSeenAt: 1792830608819
+firstSeenAt: 1792852522898
+lastSeenAt: 1792852522898
 fingerprint: null
 payload:
   id: ME6_one_learner
@@ -30,5 +30,262 @@ payload:
     - ME5_one_chooser
   blocks: []
   spec: null
-  graph: a3c93c03d487932a
+  graph:
+    hash: a3c93c03d487932a
+    nodes:
+      - path: cortex/core/raid/index.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: guardian/lib/raid-feedback.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/agent-build-learning.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/agent-record.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/economy/router.js
+        role: changes
+        exists: true
+        system: lib
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/officiator.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/routing-ir.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: diagnostic/lib/heal-loop.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: guardian/api-dispatch.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/dispatcher.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/spec-engine/chunk-dispatch.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/agent-system/submit.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/pipeline-routing.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/seam/adapters/warp-cascade.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cortex/contract/index.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/snr-filter.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/tunables.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: intelligence/bda/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/sigma.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/agent-router.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/constitutional-ai.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/execution-pipeline.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/pipeline-routing.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/replay-engine.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: cortex/core/raid/index.js
+        to: cortex/core/raid/snr-filter.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/core/raid/tunables.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/contract/index.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/execution-pipeline.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/replay-engine.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: intelligence/cfr/sigma.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: intelligence/bda/index.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/constitutional-ai.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/agent-router.js
+        kind: requires
+      - from: lib/agent-record.js
+        to: lib/pipeline-routing.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/economy/router.js
+        kind: requires
+      - from: lib/pipeline-routing.js
+        to: lib/economy/router.js
+        kind: requires
+      - from: lib/seam/adapters/warp-cascade.js
+        to: lib/economy/router.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/core/raid/officiator.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/core/raid/routing-ir.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: diagnostic/lib/heal-loop.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: guardian/api-dispatch.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: idearium/spec-engine/chunk-dispatch.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-system/submit.js
+        to: cortex/core/raid/index.js
+        kind: requires
+    crossings:
+      - from: cortex/core/raid/index.js
+        to: intelligence/cfr/sigma.js
+        fromSystem: cortex
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: cortex/core/raid/index.js
+        to: intelligence/bda/index.js
+        fromSystem: cortex
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: diagnostic/lib/heal-loop.js
+        to: cortex/core/raid/index.js
+        fromSystem: diagnostic
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: guardian/api-dispatch.js
+        to: cortex/core/raid/index.js
+        fromSystem: guardian
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: guardian/lib/dispatcher.js
+        to: cortex/core/raid/index.js
+        fromSystem: guardian
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: idearium/spec-engine/chunk-dispatch.js
+        to: cortex/core/raid/index.js
+        fromSystem: idearium
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: lib/agent-system/submit.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME4_one_attempt_record
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME5_one_chooser
+      dependents: []
+      upstream:
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME0_the_inventory_proved
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME2_caller_policy
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME4_one_attempt_record
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME5_one_chooser
+      downstream: []
+      blockedBy:
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME4_one_attempt_record
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME5_one_chooser
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-09-one-model-engine-phasemap.spec::ME7_raid_spine_joins
+          files:
+            - cortex/core/raid/index.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 5 · blocked by ME4_one_attempt_record, ME5_one_chooser
+        - 'depends on (2): ME4_one_attempt_record, ME5_one_chooser · all upstream 6'
+        - 'needed by (0): —'
+        - 'same files as ME7_raid_spine_joins with no order between them: cortex/core/raid/index.js'
   uuid: 5ded4e4a-2d4c-5453-b0be-c8281c55c6d3

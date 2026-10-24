@@ -5,13 +5,13 @@ id: docs_2026-10-05-cos-machines-phasemap.spec::EL1_electron_compiler
 context: pipeline phase EL1_electron_compiler of docs/2026-10-05-cos-machines-phasemap.spec
 intent: null
 summary: EL1_electron_compiler (?) — 2 file(s)
-system: idearium
+system: cos
 tags: []
-exported_at: 1792830602961
+exported_at: 1792852517371
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830602961
-lastSeenAt: 1792830602961
+firstSeenAt: 1792852517371
+lastSeenAt: 1792852517371
 fingerprint: null
 payload:
   id: EL1_electron_compiler
@@ -26,5 +26,206 @@ payload:
     - OS1_compartments_as_operating_systems
   blocks: []
   spec: null
-  graph: 1d546cb97bd68077
+  graph:
+    hash: 1d546cb97bd68077
+    nodes:
+      - path: cos/testenv/provision.js
+        role: changes
+        exists: true
+        system: cos
+      - path: lib/cos-run.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/code-api.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/build-verify.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-nexus-self-and-cos-run.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cos/compartment/guest-agent.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/compartment/qemu-runtime.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/playground/branch.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/runtime/run.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/detect.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/host.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/index.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/installer.js
+        role: uses
+        exists: true
+        system: cos
+      - path: lib/nexus-self/branch.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/store.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/systems.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-activity.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: cos/testenv/provision.js
+        to: cos/testenv/host.js
+        kind: requires
+      - from: cos/testenv/provision.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cos/testenv/provision.js
+        to: cos/compartment/guest-agent.js
+        kind: requires
+      - from: cos/testenv/provision.js
+        to: cos/testenv/index.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: cos/runtime/run.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: lib/nexus-self/store.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: cos/testenv/detect.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: cos/testenv/installer.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: lib/nexus-self/branch.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: cos/playground/branch.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/cos-run.js
+        kind: requires
+      - from: idearium/repo/code-api.js
+        to: lib/cos-run.js
+        kind: requires
+      - from: lib/build-verify.js
+        to: lib/cos-run.js
+        kind: requires
+      - from: tests/modules/test-nexus-self-and-cos-run.test.js
+        to: lib/cos-run.js
+        kind: requires
+    crossings:
+      - from: lib/cos-run.js
+        to: cos/runtime/run.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/cos-run.js
+        to: cos/testenv/detect.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/cos-run.js
+        to: cos/testenv/installer.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/cos-run.js
+        to: cos/playground/branch.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
+      dependents: []
+      upstream:
+        - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
+        - docs/2026-10-05-cos-machines-phasemap.spec::VM1_control_like_vmware
+      downstream: []
+      blockedBy:
+        - docs/2026-10-05-cos-machines-phasemap.spec::OS1_compartments_as_operating_systems
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-05-cos-machines-phasemap.spec::OS2_images_downloaded_and_kept_current
+          files:
+            - cos/testenv/provision.js
+        - with: docs/2026-10-05-cos-machines-phasemap.spec::AP1_android_build_compartment
+          files:
+            - cos/testenv/provision.js
+            - lib/cos-run.js
+        - with: docs/2026-10-05-cos-machines-phasemap.spec::AP2_test_on_the_android_compartment
+          files:
+            - lib/cos-run.js
+        - with: docs/2026-10-05-cos-machines-phasemap.spec::AP3_release_like_an_enterprise
+          files:
+            - lib/cos-run.js
+        - with: docs/2026-10-05-cos-machines-phasemap.spec::SU1_the_setup_asks_the_os_and_its_version
+          files:
+            - cos/testenv/provision.js
+        - with: docs/2026-10-05-cos-machines-phasemap.spec::SU2_every_language_and_the_repos_own_dependencies
+          files:
+            - cos/testenv/provision.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by OS1_compartments_as_operating_systems
+        - 'depends on (1): OS1_compartments_as_operating_systems · all upstream 2'
+        - 'needed by (0): —'
+        - >-
+          same files as OS2_images_downloaded_and_kept_current with no order between them:
+          cos/testenv/provision.js
+        - >-
+          same files as AP1_android_build_compartment with no order between them:
+          cos/testenv/provision.js, lib/cos-run.js
+        - >-
+          same files as AP2_test_on_the_android_compartment with no order between them:
+          lib/cos-run.js
+        - 'same files as AP3_release_like_an_enterprise with no order between them: lib/cos-run.js'
+        - >-
+          same files as SU1_the_setup_asks_the_os_and_its_version with no order between them:
+          cos/testenv/provision.js
+        - … and 1 more phases sharing its files without an order
   uuid: 3de661e9-a263-512e-a943-29c20a0888a1

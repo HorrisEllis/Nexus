@@ -5,13 +5,13 @@ id: docs_2026-10-22-system-node-db-phasemap.spec::ND2_one_node_route_for_every_s
 context: pipeline phase ND2_one_node_route_for_every_system of docs/2026-10-22-system-node-db-phasemap.spec
 intent: null
 summary: ND2_one_node_route_for_every_system (backend) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830638284
+exported_at: 1792852551794
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830638284
-lastSeenAt: 1792830638284
+firstSeenAt: 1792852551794
+lastSeenAt: 1792852551794
 fingerprint: null
 payload:
   id: ND2_one_node_route_for_every_system
@@ -29,7 +29,187 @@ payload:
   blocks:
     - MOD-ND-ROUTES
   spec: docs/system-node-db.spec
-  graph: 15ec1ac071c27e69
+  graph:
+    hash: 15ec1ac071c27e69
+    nodes:
+      - path: lib/node-registry.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/node-routes.js
+        role: changes
+        exists: false
+        system: lib
+      - path: architect/service.js
+        role: used-by
+        exists: true
+        system: architect
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: diagnostic/nexus-diagnostic.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: intelligence/server.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/system-nodes.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: loom/server.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: ollama/server.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: lib/jaa-store.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-schemas.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/safe-watch.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/system-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/node-registry.js
+        to: lib/jaa-store.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/node-export.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/node-index.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/safe-watch.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/system-registry.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: architect/service.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: intelligence/server.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: lib/system-nodes.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: ollama/server.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: lib/node-registry.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND_D1_the_file_is_the_node
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND_D3_generated_types_are_not_agents_to_write
+      dependents:
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+      upstream:
+        - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND_D1_the_file_is_the_node
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND_D3_generated_types_are_not_agents_to_write
+      downstream:
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND4_commands_and_capabilities_from_the_schemas
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND6_the_nodes_screen
+      blockedBy:
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND_D1_the_file_is_the_node
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND_D3_generated_types_are_not_agents_to_write
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 2 · blocked by ND1_every_system_has_its_database,
+          ND_D1_the_file_is_the_node, ND_D3_generated_types_are_not_agents_to_write
+        - >-
+          depends on (3): ND1_every_system_has_its_database, ND_D1_the_file_is_the_node,
+          ND_D3_generated_types_are_not_agents_to_write · all upstream 4
+        - 'needed by (1): ND3_each_server_serves_its_nodes · all downstream 4'
   uuid: d39c0ab1-885b-57df-8f42-22005bb59f38
   specLink:
     how: declared

@@ -5,13 +5,13 @@ id: docs_2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T2
 context: pipeline phase T2 of docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec
 intent: null
 summary: T2 (?) — 1 file(s)
-system: idearium
+system: cos
 tags: []
-exported_at: 1792830591240
+exported_at: 1792852504904
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830591240
-lastSeenAt: 1792830591240
+firstSeenAt: 1792852504904
+lastSeenAt: 1792852504904
 fingerprint: null
 payload:
   id: T2
@@ -24,5 +24,63 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: b9eb08e456c5fca6
+  graph:
+    hash: b9eb08e456c5fca6
+    nodes:
+      - path: cos/testenv/detect.js
+        role: changes
+        exists: true
+        system: cos
+      - path: cos/testenv/environment.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: lib/cos-run.js
+        role: used-by
+        exists: true
+        system: lib
+    edges:
+      - from: cos/testenv/environment.js
+        to: cos/testenv/detect.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: cos/testenv/detect.js
+        kind: requires
+    crossings:
+      - from: lib/cos-run.js
+        to: cos/testenv/detect.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+      upstream: []
+      downstream:
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T6
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T7
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::T4
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::T3_debug_report
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (2): T4, T3_debug_report · all downstream 5 · finishing it unlocks T4,
+          T3_debug_report
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 32565fc6-2119-5884-bc99-2fd9fe9fd6d4

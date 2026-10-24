@@ -5,13 +5,13 @@ id: docs_2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
 context: pipeline phase EW1_evidence_record_and_weights of docs/2026-10-20-belief-loop-phasemap.spec
 intent: null
 summary: EW1_evidence_record_and_weights (library) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830634099
+exported_at: 1792852547811
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830634099
-lastSeenAt: 1792830634099
+firstSeenAt: 1792852547811
+lastSeenAt: 1792852547811
 fingerprint: null
 payload:
   id: EW1_evidence_record_and_weights
@@ -28,7 +28,64 @@ payload:
   blocks:
     - MOD-EVIDENCE
   spec: docs/belief-loop.spec
-  graph: a4ae8dbe0712bb23
+  graph:
+    hash: a4ae8dbe0712bb23
+    nodes:
+      - path: lib/evidence.js
+        role: changes
+        exists: false
+        system: lib
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+        - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+      dependents:
+        - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+        - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+        - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+      upstream:
+        - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+        - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+      downstream:
+        - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
+        - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+        - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+        - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+        - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+        - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+        - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+        - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+        - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+      blockedBy:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+        - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+      unlocks:
+        - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 5 · ON THE CRITICAL PATH · blocked by GW1_gate_primitive,
+          PV1_provenance_on_every_claim
+        - 'depends on (2): GW1_gate_primitive, PV1_provenance_on_every_claim · all upstream 11'
+        - >-
+          needed by (3): CF1_confidence_from_evidence, RA1_root_cause_through_provenance,
+          XD1_cross_domain_verification · all downstream 9 · finishing it unlocks
+          CF1_confidence_from_evidence
   uuid: bd5a46d4-1326-5a90-8a4a-a86e78fdf092
   specLink:
     how: declared

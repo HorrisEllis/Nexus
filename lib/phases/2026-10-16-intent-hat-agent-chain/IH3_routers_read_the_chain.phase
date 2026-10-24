@@ -5,13 +5,13 @@ id: docs_2026-10-16-intent-hat-agent-chain-phasemap.spec::IH3_routers_read_the_c
 context: pipeline phase IH3_routers_read_the_chain of docs/2026-10-16-intent-hat-agent-chain-phasemap.spec
 intent: null
 summary: IH3_routers_read_the_chain (?) — 5 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830623953
+exported_at: 1792852537940
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830623953
-lastSeenAt: 1792830623953
+firstSeenAt: 1792852537940
+lastSeenAt: 1792852537940
 fingerprint: null
 payload:
   id: IH3_routers_read_the_chain
@@ -29,5 +29,229 @@ payload:
     - IH1_intent_nodes_point_at_hats
   blocks: []
   spec: null
-  graph: 7b604cd3c79ab423
+  graph:
+    hash: 7b604cd3c79ab423
+    nodes:
+      - path: cortex/core/raid/index.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: guardian/lib/jobs.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/intent-hat-router.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/pipeline-routing.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-prompt-blocks.js
+        role: changes
+        exists: true
+        system: lib
+      - path: guardian/lib/index.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/agent-record.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/identity/intent-hat.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/model-door.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/phase-faults.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/guardian-job-persistence.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-agent-memory.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-agent-tools-and-graph.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-build-context.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: copilot/lib/self-model.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: guardian/lib/job-retry.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: lib/agent-providers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/economy/ledger.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/economy/router.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/hat-forge.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/intent-classifier.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-hat.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: guardian/lib/jobs.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: guardian/lib/jobs.js
+        to: lib/node-export.js
+        kind: requires
+      - from: guardian/lib/jobs.js
+        to: lib/data-home.js
+        kind: requires
+      - from: guardian/lib/jobs.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: guardian/lib/jobs.js
+        to: guardian/lib/job-retry.js
+        kind: requires
+      - from: lib/intent-hat-router.js
+        to: copilot/lib/self-model.js
+        kind: requires
+      - from: lib/intent-hat-router.js
+        to: lib/intent-classifier.js
+        kind: requires
+      - from: lib/repo-prompt-blocks.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/repo-prompt-blocks.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: lib/pipeline-routing.js
+        to: lib/agent-providers.js
+        kind: requires
+      - from: lib/pipeline-routing.js
+        to: lib/economy/router.js
+        kind: requires
+      - from: lib/pipeline-routing.js
+        to: lib/economy/ledger.js
+        kind: requires
+      - from: guardian/lib/index.js
+        to: guardian/lib/jobs.js
+        kind: requires
+      - from: tests/modules/guardian-job-persistence.test.js
+        to: guardian/lib/jobs.js
+        kind: requires
+      - from: tests/modules/test-agent-memory.test.js
+        to: guardian/lib/jobs.js
+        kind: requires
+      - from: lib/agent-tools/tools/identity/intent-hat.js
+        to: lib/intent-hat-router.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-prompt-blocks.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-prompt-blocks.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/repo-prompt-blocks.js
+        kind: requires
+      - from: tests/modules/test-agent-tools-and-graph.test.js
+        to: lib/repo-prompt-blocks.js
+        kind: requires
+      - from: tests/modules/test-build-context.test.js
+        to: lib/repo-prompt-blocks.js
+        kind: requires
+      - from: lib/agent-record.js
+        to: lib/pipeline-routing.js
+        kind: requires
+      - from: lib/model-door.js
+        to: lib/pipeline-routing.js
+        kind: requires
+      - from: lib/phase-faults.js
+        to: lib/pipeline-routing.js
+        kind: requires
+    crossings:
+      - from: lib/intent-hat-router.js
+        to: copilot/lib/self-model.js
+        fromSystem: lib
+        toSystem: copilot
+        kind: upward
+        known: true
+      - from: lib/repo-prompt-blocks.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+      dependents: []
+      upstream:
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0a_one_vocabulary
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+      downstream: []
+      blockedBy:
+        - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by IH1_intent_nodes_point_at_hats
+        - 'depends on (1): IH1_intent_nodes_point_at_hats · all upstream 2'
+        - 'needed by (0): —'
   uuid: 0a170992-3a71-5ecb-b6df-5cd5a4251fa4

@@ -1,0 +1,286 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF4_compile_on_collect
+type: phase
+id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF4_compile_on_collect
+context: >-
+  pipeline phase SF4_compile_on_collect of
+  docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+intent: null
+summary: SF4_compile_on_collect (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792852534611
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792852534611
+lastSeenAt: 1792852534611
+fingerprint: null
+payload:
+  id: SF4_compile_on_collect
+  map: docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE (0.60.67)
+  files:
+    - lib/spec-collect.js
+    - emerge/compiler/index.js
+    - lib/repo-inject.js
+    - idearium/lib/config-core.cjs
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+    - idearium/ui/js/app.js
+    - tests/modules/test-spec-pipeline.test.js
+  depends_on:
+    - SF3_collect_the_spec
+  blocks: []
+  spec: null
+  graph:
+    hash: aadcbf4561eb1533
+    nodes:
+      - path: emerge/compiler/index.js
+        role: changes
+        exists: true
+        system: emerge
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/cli/route-commands.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/lib/config-core.cjs
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/app.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/repo-inject.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: changes
+        exists: true
+        system: lib
+      - path: tests/modules/test-spec-pipeline.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: emerge/verify.js
+        role: used-by
+        exists: true
+        system: emerge
+      - path: idearium/compiler-bridge.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/lib/chunk-nodes.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/code-api.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/proposal-evidence.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-prompt-blocks.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/step-gate.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: products/flight-recorder/lib/project.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-inject-screen.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-inject-approval.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-proposal-evidence.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: emerge/cortex-query/index.js
+        role: uses
+        exists: true
+        system: emerge
+      - path: emerge/cortex-query/writeback.js
+        role: uses
+        exists: true
+        system: emerge
+      - path: emerge/version.js
+        role: uses
+        exists: true
+        system: emerge
+      - path: guardian/lib/code-artifact.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: lib/change-entry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/file-tree-plan.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/inject-gate.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-versions.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: lib/spec-collect.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/spec-collect.js
+        to: lib/file-tree-plan.js
+        kind: requires
+      - from: emerge/compiler/index.js
+        to: emerge/cortex-query/index.js
+        kind: requires
+      - from: emerge/compiler/index.js
+        to: emerge/cortex-query/writeback.js
+        kind: requires
+      - from: emerge/compiler/index.js
+        to: emerge/version.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/node-export.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: guardian/lib/code-artifact.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/nexus-self/inject-gate.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/change-entry.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/repo-versions.js
+        kind: requires
+      - from: lib/repo-prompt-blocks.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: lib/step-gate.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: emerge/verify.js
+        to: emerge/compiler/index.js
+        kind: requires
+      - from: idearium/compiler-bridge.js
+        to: emerge/compiler/index.js
+        kind: requires
+      - from: idearium/repo/code-api.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: lib/proposal-evidence.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: products/flight-recorder/lib/project.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: tests/modules/test-inject-screen.test.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: tests/modules/test-nexus-inject-approval.test.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: tests/modules/test-proposal-evidence.test.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: idearium/lib/chunk-nodes.js
+        to: idearium/lib/config-core.cjs
+        kind: requires
+    crossings:
+      - from: lib/spec-collect.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+      - from: lib/repo-inject.js
+        to: guardian/lib/code-artifact.js
+        fromSystem: lib
+        toSystem: guardian
+        kind: upward
+        known: true
+      - from: lib/repo-inject.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: idearium/compiler-bridge.js
+        to: emerge/compiler/index.js
+        fromSystem: idearium
+        toSystem: emerge
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF3_collect_the_spec
+      dependents: []
+      upstream:
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF1_intent_blocks
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF2_spec_framework_block
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::SF3_collect_the_spec
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3
+        - 'depends on (1): SF3_collect_the_spec · all upstream 3'
+        - 'needed by (0): —'
+  uuid: 196311c7-9302-57e0-84bc-0b36e9a3102b

@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
 intent: null
 summary: LM3_interaction_contract_wired_to_registry (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584031
+exported_at: 1792852497416
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584031
-lastSeenAt: 1792830584031
+firstSeenAt: 1792852497416
+lastSeenAt: 1792852497416
 fingerprint: null
 payload:
   id: LM3_interaction_contract_wired_to_registry
@@ -26,5 +26,36 @@ payload:
     - LM2_registry_as_hub_with_watchdog
   blocks: []
   spec: null
-  graph: 449bc0047be37e21
+  graph:
+    hash: 449bc0047be37e21
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+      dependents:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
+      upstream:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM1_spec_as_living_model
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+      downstream:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM7_agent_mesh_intent_programming
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM8_full_pipeline_wiring
+      blockedBy:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+      unlocks:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by LM2_registry_as_hub_with_watchdog
+        - 'depends on (1): LM2_registry_as_hub_with_watchdog · all upstream 2'
+        - >-
+          needed by (1): LM6_who_creates_contracts · all downstream 3 · finishing it unlocks
+          LM6_who_creates_contracts
   uuid: 56bc5c06-69dc-5696-a96e-82b8a571b9b4

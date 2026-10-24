@@ -5,13 +5,13 @@ id: docs_2026-10-16-agent-work-funnel-phasemap.spec::FN0_the_funnel_as_data
 context: pipeline phase FN0_the_funnel_as_data of docs/2026-10-16-agent-work-funnel-phasemap.spec
 intent: null
 summary: FN0_the_funnel_as_data (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830621076
+exported_at: 1792852535062
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830621076
-lastSeenAt: 1792830621076
+firstSeenAt: 1792852535062
+lastSeenAt: 1792852535062
 fingerprint: null
 payload:
   id: FN0_the_funnel_as_data
@@ -28,5 +28,85 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 36bff935bc611507
+  graph:
+    hash: 36bff935bc611507
+    nodes:
+      - path: lib/work-funnel.js
+        role: changes
+        exists: true
+        system: lib
+      - path: tests/modules/test-work-funnel.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: lib/context-prereqs.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-files.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-map-auto.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-plan.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/work-funnel.js
+        to: lib/phase-map-auto.js
+        kind: requires
+      - from: lib/work-funnel.js
+        to: lib/context-prereqs.js
+        kind: requires
+      - from: lib/work-funnel.js
+        to: lib/phase-files.js
+        kind: requires
+      - from: lib/work-funnel.js
+        to: lib/phase-plan.js
+        kind: requires
+      - from: tests/modules/test-work-funnel.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/work-funnel.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN1_every_door_goes_through_it
+        - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN3_every_answer_a_node
+      upstream: []
+      downstream:
+        - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN1_every_door_goes_through_it
+        - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN2_what_is_missing_is_made_first
+        - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN3_every_answer_a_node
+        - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN4_the_screen
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN1_every_door_goes_through_it
+        - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN3_every_answer_a_node
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (2): FN1_every_door_goes_through_it, FN3_every_answer_a_node · all downstream 4
+          · finishing it unlocks FN1_every_door_goes_through_it, FN3_every_answer_a_node
   uuid: d32157cd-83c8-51f2-8a70-f828334367aa

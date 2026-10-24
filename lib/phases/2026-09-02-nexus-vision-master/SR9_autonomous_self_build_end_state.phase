@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: SR9_autonomous_self_build_end_state (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584936
+exported_at: 1792852498365
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584936
-lastSeenAt: 1792830584936
+firstSeenAt: 1792852498365
+lastSeenAt: 1792852498365
 fingerprint: null
 payload:
   id: SR9_autonomous_self_build_end_state
@@ -27,5 +27,297 @@ payload:
     - SR3_artifact_extraction_introspect_bridge
   blocks: []
   spec: null
-  graph: 5e2b9a8991cf1a0d
+  graph:
+    hash: 5e2b9a8991cf1a0d
+    nodes:
+      - path: cortex/core/raid/index.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: cortex/snapshot/index.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: guardian/lib/provider-routing.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/end-state.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/execution-pipeline.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/self-build-loop.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/version.js
+        role: changes
+        exists: true
+        system: lib
+      - path: loom/scanners/source-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: nexus/nexus-bus.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: tests/modules/test-self-build-loop.js
+        role: changes
+        exists: true
+        system: null
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/officiator.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/routing-ir.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: diagnostic/lib/heal-loop.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: guardian/api-dispatch.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/dispatcher.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/spec-engine/chunk-dispatch.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/agent-system/submit.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/generate-agent-nodes.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/index.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cortex/contract/index.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/snr-filter.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/tunables.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cos/playground/index.js
+        role: uses
+        exists: true
+        system: cos
+      - path: intelligence/bda/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/sigma.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/agent-router.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/build-pipeline.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/component-ledger.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/constitutional-ai.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/replay-engine.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/self-build-loop.js
+        to: lib/component-ledger.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/core/raid/snr-filter.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/core/raid/tunables.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/contract/index.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/replay-engine.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: intelligence/cfr/sigma.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: intelligence/bda/index.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/constitutional-ai.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/agent-router.js
+        kind: requires
+      - from: lib/execution-pipeline.js
+        to: lib/build-pipeline.js
+        kind: requires
+      - from: lib/execution-pipeline.js
+        to: cos/playground/index.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/self-build-loop.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/core/raid/officiator.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: cortex/core/raid/routing-ir.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: diagnostic/lib/heal-loop.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: guardian/api-dispatch.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: idearium/spec-engine/chunk-dispatch.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-system/submit.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-tools/generate-agent-nodes.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: cortex/core/raid/index.js
+        kind: requires
+    crossings:
+      - from: cortex/core/raid/index.js
+        to: intelligence/cfr/sigma.js
+        fromSystem: cortex
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: cortex/core/raid/index.js
+        to: intelligence/bda/index.js
+        fromSystem: cortex
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: lib/execution-pipeline.js
+        to: cos/playground/index.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: diagnostic/lib/heal-loop.js
+        to: cortex/core/raid/index.js
+        fromSystem: diagnostic
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: guardian/api-dispatch.js
+        to: cortex/core/raid/index.js
+        fromSystem: guardian
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: guardian/lib/dispatcher.js
+        to: cortex/core/raid/index.js
+        fromSystem: guardian
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: idearium/spec-engine/chunk-dispatch.js
+        to: cortex/core/raid/index.js
+        fromSystem: idearium
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: lib/agent-system/submit.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/agent-tools/generate-agent-nodes.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/agent-tools/index.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
+      dependents: []
+      upstream:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::B1_full_build_contract_schema
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::SR3_artifact_extraction_introspect_bridge
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (2): B1_full_build_contract_schema, SR3_artifact_extraction_introspect_bridge'
+        - 'needed by (0): —'
   uuid: 2e27e748-06ff-51c4-b545-53c55a906fa1

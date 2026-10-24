@@ -5,13 +5,13 @@ id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CG4_macros_plugin_autofil
 context: pipeline phase CG4_macros_plugin_autofill of docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: CG4_macros_plugin_autofill (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584891
+exported_at: 1792852498329
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584891
-lastSeenAt: 1792830584891
+firstSeenAt: 1792852498329
+lastSeenAt: 1792852498329
 fingerprint: null
 payload:
   id: CG4_macros_plugin_autofill
@@ -23,5 +23,33 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 28b2a325170ef2f1
+  graph:
+    hash: 28b2a325170ef2f1
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG5_copilot_guided_spotlight_macro
+      upstream: []
+      downstream:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG5_copilot_guided_spotlight_macro
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-02-nexus-vision-master-phasemap.spec::CG5_copilot_guided_spotlight_macro
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - >-
+          needed by (1): CG5_copilot_guided_spotlight_macro · finishing it unlocks
+          CG5_copilot_guided_spotlight_macro
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 8f9992f6-30e9-5bbd-97ec-e5da4e14dc76

@@ -7,11 +7,11 @@ intent: null
 summary: RG4_routing_ui (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830598247
+exported_at: 1792852512298
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830598247
-lastSeenAt: 1792830598247
+firstSeenAt: 1792852512298
+lastSeenAt: 1792852512298
 fingerprint: null
 payload:
   id: RG4_routing_ui
@@ -25,5 +25,37 @@ payload:
     - RG3_dispatch_uses_the_route
   blocks: []
   spec: null
-  graph: 0480ecf02ae62d8c
+  graph:
+    hash: 0480ecf02ae62d8c
+    nodes:
+      - path: idearium/ui/settings.html
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG3_dispatch_uses_the_route
+      dependents:
+        - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG9_release
+      upstream:
+        - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG0_map
+        - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG1_routing_policy_library
+        - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG2_routing_config_api_cli
+        - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG3_dispatch_uses_the_route
+      downstream:
+        - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG9_release
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-01-routing-registry-genesis-phasemap.spec::RG9_release
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4
+        - 'depends on (1): RG3_dispatch_uses_the_route · all upstream 4'
+        - 'needed by (1): RG9_release · finishing it unlocks RG9_release'
   uuid: d0c3fd25-ba8b-5c54-a261-52ad70462b98

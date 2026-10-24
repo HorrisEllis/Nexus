@@ -350,3 +350,19 @@ all with a id or uuid that matches them." · then: "only map if it's a good idea
   graphNode { phaseUuid }. The .phase is the bundle's head: its graph by hash, its spec and modules by their uuids (no third file per phase).
 - The link rule is decided by the axioms (TRUTH_OVER_COHERENCE; NC0's evidence rule): declared, or discovered by a file only one module
   declares and at most 5 phases name; never a hub file. 157 phases linked; the coverage report has the rest.
+
+## ADDENDUM 2026-10-24 (0.60.238) — PS4: one file per phase, kept with the system that owns it
+James, 2026-10-24: ".phase/.graph should be one file i feel like?" · "need to keep at the sovereignty of each system"
+Context: his question came after the coder found the README overflowing from 4,195 phase nodes. Read as a direction, with his question mark;
+the coder agreed on the evidence:
+- the .graph is derived entirely from the phase;
+- every edit of a map wrote one more .graph beside the last (2,140 for 2,055 phases; EW1 had two with the same 21 nodes);
+- a run keeps its own copy of the graph it was built against (idearium/api/index.js, the run's node dir), so the tree's copies kept no
+  history git does not.
+This supersedes the handoff's PN1 layout (2026-10-19: graph/<phase>-<hash>.graph beside the .phase, kept in this map's PS1 entry, §0.3).
+- <owner>/phases/<map-id>/<phase>.phase now carries graph: { hash, nodes, edges, crossings, ready, dag } (lib/pipeline-nodes.js graphBody);
+  check() compares it and names a changed hash.
+- The envelope's system is the phase's owner. It said 'idearium' for every phase, including lib/'s and cos/'s.
+- A phase lives with its system only. When the owner changes, the old copy is moved (EW1 made 12 phases emerge's; their lib/ copies went).
+- Dropped as true duplicates, and reported: the 2,149 .graph files and the 12 moved copies (all in git history).
+- Proof: 2,056 .phase files and 0 .graph files in the tree; test-phase-specs 7/7, test-phase-specs-tag 7/7.

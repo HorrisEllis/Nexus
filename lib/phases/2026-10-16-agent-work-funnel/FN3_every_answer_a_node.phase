@@ -5,13 +5,13 @@ id: docs_2026-10-16-agent-work-funnel-phasemap.spec::FN3_every_answer_a_node
 context: pipeline phase FN3_every_answer_a_node of docs/2026-10-16-agent-work-funnel-phasemap.spec
 intent: null
 summary: FN3_every_answer_a_node (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830621079
+exported_at: 1792852535065
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830621079
-lastSeenAt: 1792830621079
+firstSeenAt: 1792852535065
+lastSeenAt: 1792852535065
 fingerprint: null
 payload:
   id: FN3_every_answer_a_node
@@ -27,7 +27,155 @@ payload:
     - FN0_the_funnel_as_data
   blocks: []
   spec: null
-  graph: f0fd6a276c7d1d69
+  graph:
+    hash: f0fd6a276c7d1d69
+    nodes:
+      - path: lib/node-export.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/work-funnel.js
+        role: changes
+        exists: true
+        system: lib
+      - path: architect/schemas/index.js
+        role: used-by
+        exists: true
+        system: architect
+      - path: clear-glass/schemas/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/automation/nodes.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: copilot/lib/inject-config.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/schemas/index.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/tool-runtime.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/schemas/index.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/self-heal/failure-mode-forensics.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/tools/table-materializer.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: diagnostic/schemas/index.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/context-prereqs.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-files.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-map-auto.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-plan.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/work-funnel.js
+        to: lib/phase-map-auto.js
+        kind: requires
+      - from: lib/work-funnel.js
+        to: lib/context-prereqs.js
+        kind: requires
+      - from: lib/work-funnel.js
+        to: lib/phase-files.js
+        kind: requires
+      - from: lib/work-funnel.js
+        to: lib/phase-plan.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/work-funnel.js
+        kind: requires
+      - from: architect/schemas/index.js
+        to: lib/node-export.js
+        kind: requires
+      - from: clear-glass/schemas/index.js
+        to: lib/node-export.js
+        kind: requires
+      - from: clear-glass/src/automation/nodes.js
+        to: lib/node-export.js
+        kind: requires
+      - from: copilot/lib/inject-config.js
+        to: lib/node-export.js
+        kind: requires
+      - from: copilot/schemas/index.js
+        to: lib/node-export.js
+        kind: requires
+      - from: copilot/tool-runtime.js
+        to: lib/node-export.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: lib/node-export.js
+        kind: requires
+      - from: cortex/schemas/index.js
+        to: lib/node-export.js
+        kind: requires
+      - from: cortex/self-heal/failure-mode-forensics.js
+        to: lib/node-export.js
+        kind: requires
+      - from: cortex/tools/table-materializer.js
+        to: lib/node-export.js
+        kind: requires
+      - from: diagnostic/schemas/index.js
+        to: lib/node-export.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN0_the_funnel_as_data
+      dependents: []
+      upstream:
+        - docs/2026-10-16-agent-work-funnel-phasemap.spec::FN0_the_funnel_as_data
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-16-agent-work-funnel-phasemap.spec::FN2_what_is_missing_is_made_first
+          files:
+            - lib/work-funnel.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): FN0_the_funnel_as_data'
+        - 'needed by (0): —'
+        - >-
+          same files as FN2_what_is_missing_is_made_first with no order between them:
+          lib/work-funnel.js
   uuid: b699862c-0a21-5803-9605-391f4bfbfb3a
   specLink:
     how: discovered:path

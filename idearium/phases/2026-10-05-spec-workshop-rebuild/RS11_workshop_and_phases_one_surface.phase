@@ -9,11 +9,11 @@ intent: null
 summary: RS11_workshop_and_phases_one_surface (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830604662
+exported_at: 1792852518974
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830604662
-lastSeenAt: 1792830604662
+firstSeenAt: 1792852518974
+lastSeenAt: 1792852518974
 fingerprint: null
 payload:
   id: RS11_workshop_and_phases_one_surface
@@ -30,5 +30,50 @@ payload:
     - RS10_the_phases_tab_rebuilt
   blocks: []
   spec: null
-  graph: 0c60b2ce6d21565f
+  graph:
+    hash: 0c60b2ce6d21565f
+    nodes:
+      - path: idearium/ui/js/phases.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/spec-editor.js
+        role: changes
+        exists: false
+        system: idearium
+      - path: idearium/ui/workshop.html
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS10_the_phases_tab_rebuilt
+      dependents: []
+      upstream:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS10_the_phases_tab_rebuilt
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS2_replay_rewind_branch
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS5_the_template_picker
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS9_the_thread
+      downstream: []
+      blockedBy:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by RS6_the_workshop_as_the_editor
+        - >-
+          depends on (2): RS6_the_workshop_as_the_editor, RS10_the_phases_tab_rebuilt · all upstream
+          8
+        - 'needed by (0): —'
   uuid: 6ad4247c-33af-5833-b182-9e0ed1fffde4

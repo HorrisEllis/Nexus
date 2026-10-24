@@ -7,11 +7,11 @@ intent: null
 summary: N25_manage_button_enterprise (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830596183
+exported_at: 1792852509987
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830596183
-lastSeenAt: 1792830596183
+firstSeenAt: 1792852509987
+lastSeenAt: 1792852509987
 fingerprint: null
 payload:
   id: N25_manage_button_enterprise
@@ -24,5 +24,34 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 76b8735454ef17a9
+  graph:
+    hash: 76b8735454ef17a9
+    nodes:
+      - path: idearium/ui/js/file-manage.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N26_work_surface_and_tv_ui_from_contracts
+      upstream: []
+      downstream:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N26_work_surface_and_tv_ui_from_contracts
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N26_work_surface_and_tv_ui_from_contracts
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (1): N26_work_surface_and_tv_ui_from_contracts · finishing it unlocks
+          N26_work_surface_and_tv_ui_from_contracts
   uuid: 65bb7f08-8096-5a37-b9e5-95e7cae9c1c2

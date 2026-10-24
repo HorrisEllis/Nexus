@@ -5,13 +5,13 @@ id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::M3
 context: pipeline phase M3 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
 intent: null
 summary: M3 (?) — 3 file(s)
-system: idearium
+system: cortex
 tags: []
-exported_at: 1792830594919
+exported_at: 1792852508626
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830594919
-lastSeenAt: 1792830594919
+firstSeenAt: 1792852508626
+lastSeenAt: 1792852508626
 fingerprint: null
 payload:
   id: M3
@@ -27,5 +27,286 @@ payload:
     - M2
   blocks: []
   spec: null
-  graph: bad6fa3cd17bd889
+  graph:
+    hash: 79fde30c10c63399
+    nodes:
+      - path: cortex/boot.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: guardian/jaa-store.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: architect/service.js
+        role: used-by
+        exists: true
+        system: architect
+      - path: clear-glass/test/copilot-cli.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cli/compact.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: cli/dedup.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: cli/opportunity.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: cli/semantic-dedup.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: cockpit/live.js
+        role: used-by
+        exists: true
+        system: cockpit
+      - path: copilot/axiom-manager.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/diagnostics.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/lib/activity-recall.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/lib/grammar-router.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/lib/intent-learning.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/config.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/memory/tiers.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/push-recall.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/jaa-store.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/lean-mode.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/pulse.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/schema-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/vector-memory.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/version.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: cortex/memory/jaa-db.js
+        to: lib/jaa-store.js
+        kind: requires
+      - from: cortex/memory/jaa-db.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: cortex/memory/jaa-db.js
+        to: lib/vector-memory.js
+        kind: requires
+      - from: cortex/memory/jaa-db.js
+        to: lib/schema-registry.js
+        kind: requires
+      - from: cortex/memory/jaa-db.js
+        to: cortex/memory/tiers.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/data-home.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/config.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/version.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/pulse.js
+        kind: requires
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/lean-mode.js
+        kind: requires
+      - from: cortex/boot.js
+        to: cortex/push-recall.js
+        kind: requires
+      - from: architect/service.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: clear-glass/test/copilot-cli.test.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cli/compact.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cli/dedup.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cli/opportunity.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cli/semantic-dedup.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cockpit/live.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: copilot/axiom-manager.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: copilot/diagnostics.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: copilot/lib/activity-recall.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: copilot/lib/grammar-router.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: copilot/lib/intent-learning.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+    crossings:
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        fromSystem: cortex
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: architect/service.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: architect
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: cli/compact.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: cli
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: cli/dedup.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: cli
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: cli/opportunity.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: cli
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: cli/semantic-dedup.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: cli
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: cockpit/live.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: cockpit
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: copilot/axiom-manager.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: copilot
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: copilot/diagnostics.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: copilot
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: copilot/lib/activity-recall.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: copilot
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: copilot/lib/grammar-router.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: copilot
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: copilot/lib/intent-learning.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: copilot
+        toSystem: cortex
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M2
+      dependents: []
+      upstream:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G0
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G1
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G2
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::G3
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M0
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M1
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M2
+      downstream: []
+      blockedBy:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::M2
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 5 · blocked by M2
+        - 'depends on (1): M2 · all upstream 7'
+        - 'needed by (0): —'
   uuid: a9f99fc4-14c4-5061-8ee3-479664e4159e

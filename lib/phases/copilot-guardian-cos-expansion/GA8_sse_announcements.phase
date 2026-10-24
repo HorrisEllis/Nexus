@@ -5,13 +5,13 @@ id: docs_copilot-guardian-cos-expansion-phasemap.spec::GA8_sse_announcements
 context: pipeline phase GA8_sse_announcements of docs/copilot-guardian-cos-expansion-phasemap.spec
 intent: null
 summary: GA8_sse_announcements (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830642130
+exported_at: 1792852556579
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830642130
-lastSeenAt: 1792830642130
+firstSeenAt: 1792852556579
+lastSeenAt: 1792852556579
 fingerprint: null
 payload:
   id: GA8_sse_announcements
@@ -23,5 +23,167 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 2285f347862e5b5c
+  graph:
+    hash: baa555a4b2775b47
+    nodes:
+      - path: nexus/nexus-connect.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: architect/service.js
+        role: used-by
+        exists: true
+        system: architect
+      - path: cli/boot-systems.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: cli/diagnose.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: intelligence/server.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: loom/server.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: tests/modules/test-boot-log-fixes.js
+        role: used-by
+        exists: true
+        system: null
+      - path: versionium/server.js
+        role: used-by
+        exists: true
+        system: versionium
+      - path: intelligence/lattice/associative-lattice.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/heartbeat.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/pulse.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: nexus/nexus-connect.js
+        to: lib/heartbeat.js
+        kind: requires
+      - from: nexus/nexus-connect.js
+        to: intelligence/lattice/associative-lattice.js
+        kind: requires
+      - from: nexus/nexus-connect.js
+        to: lib/pulse.js
+        kind: requires
+      - from: architect/service.js
+        to: nexus/nexus-connect.js
+        kind: requires
+      - from: cli/boot-systems.js
+        to: nexus/nexus-connect.js
+        kind: requires
+      - from: cli/diagnose.js
+        to: nexus/nexus-connect.js
+        kind: requires
+      - from: copilot/server.js
+        to: nexus/nexus-connect.js
+        kind: requires
+      - from: guardian/server.js
+        to: nexus/nexus-connect.js
+        kind: requires
+      - from: intelligence/server.js
+        to: nexus/nexus-connect.js
+        kind: requires
+      - from: loom/server.js
+        to: nexus/nexus-connect.js
+        kind: requires
+      - from: tests/modules/test-boot-log-fixes.js
+        to: nexus/nexus-connect.js
+        kind: requires
+      - from: versionium/server.js
+        to: nexus/nexus-connect.js
+        kind: requires
+    crossings:
+      - from: nexus/nexus-connect.js
+        to: intelligence/lattice/associative-lattice.js
+        fromSystem: nexus
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: architect/service.js
+        to: nexus/nexus-connect.js
+        fromSystem: architect
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: cli/boot-systems.js
+        to: nexus/nexus-connect.js
+        fromSystem: cli
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: cli/diagnose.js
+        to: nexus/nexus-connect.js
+        fromSystem: cli
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: copilot/server.js
+        to: nexus/nexus-connect.js
+        fromSystem: copilot
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: guardian/server.js
+        to: nexus/nexus-connect.js
+        fromSystem: guardian
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/server.js
+        to: nexus/nexus-connect.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: loom/server.js
+        to: nexus/nexus-connect.js
+        fromSystem: loom
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: versionium/server.js
+        to: nexus/nexus-connect.js
+        fromSystem: versionium
+        toSystem: nexus
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 2689e375-808a-5036-9f11-0aa3dd4aec18

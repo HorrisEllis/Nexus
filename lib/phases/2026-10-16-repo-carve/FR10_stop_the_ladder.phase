@@ -5,13 +5,13 @@ id: docs_2026-10-16-repo-carve-phasemap.spec::FR10_stop_the_ladder
 context: pipeline phase FR10_stop_the_ladder of docs/2026-10-16-repo-carve-phasemap.spec
 intent: null
 summary: FR10_stop_the_ladder (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830626356
+exported_at: 1792852540345
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830626356
-lastSeenAt: 1792830626356
+firstSeenAt: 1792852540345
+lastSeenAt: 1792852540345
 fingerprint: null
 payload:
   id: FR10_stop_the_ladder
@@ -24,5 +24,34 @@ payload:
     - FR6_flight_data
   blocks: []
   spec: null
-  graph: fdadb47c70248a9e
+  graph:
+    hash: fdadb47c70248a9e
+    nodes:
+      - path: docs/2026-10-17-debugging-product-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-16-repo-carve-phasemap.spec::FR6_flight_data
+      dependents:
+        - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
+      upstream:
+        - docs/2026-10-16-repo-carve-phasemap.spec::FR6_flight_data
+      downstream:
+        - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-23-self-building-loop-phasemap.spec::SL4_the_loop
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): FR6_flight_data'
+        - 'needed by (1): SL4_the_loop · finishing it unlocks SL4_the_loop'
   uuid: f9e6e06a-69b4-56f1-97a8-435d7a5561b6

@@ -5,13 +5,13 @@ id: docs_2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
 context: pipeline phase XD1_cross_domain_verification of docs/2026-10-20-belief-loop-phasemap.spec
 intent: null
 summary: XD1_cross_domain_verification (integration) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830634102
+exported_at: 1792852547814
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830634102
-lastSeenAt: 1792830634102
+firstSeenAt: 1792852547814
+lastSeenAt: 1792852547814
 fingerprint: null
 payload:
   id: XD1_cross_domain_verification
@@ -29,7 +29,61 @@ payload:
   blocks:
     - MOD-CROSS-DOMAIN
   spec: docs/belief-loop.spec
-  graph: b5b39aa978305a84
+  graph:
+    hash: b5b39aa978305a84
+    nodes:
+      - path: lib/cross-domain.js
+        role: changes
+        exists: false
+        system: lib
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 6
+      deps:
+        - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+      dependents:
+        - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      upstream:
+        - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::CT1_cos_test_runner
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::GQ1_quality_stream
+        - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+        - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW0_gate_census
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+      downstream:
+        - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      blockedBy:
+        - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 6 · blocked by EW1_evidence_record_and_weights,
+          GR2_graph_views, AD2_javascript_adapter, PRC1_phase_reality_check
+        - >-
+          depends on (4): EW1_evidence_record_and_weights, GR2_graph_views, AD2_javascript_adapter,
+          PRC1_phase_reality_check · all upstream 16
+        - 'needed by (1): BW1_borrowing'
   uuid: 46765820-5f24-599b-866a-f23535dcf272
   specLink:
     how: declared

@@ -5,13 +5,13 @@ id: docs_2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB0_census
 context: pipeline phase WB0_census of docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec
 intent: null
 summary: WB0_census (?) — 5 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830620651
+exported_at: 1792852534604
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830620651
-lastSeenAt: 1792830620651
+firstSeenAt: 1792852534604
+lastSeenAt: 1792852534604
 fingerprint: null
 payload:
   id: WB0_census
@@ -28,5 +28,128 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 9a044eef08fa5b1b
+  graph:
+    hash: 9a044eef08fa5b1b
+    nodes:
+      - path: cos/spec/check-catalogue.spec
+        role: changes
+        exists: true
+        system: cos
+      - path: lib/build-paths.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/check-catalogue.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/checks/ck-255-warp-builds.js
+        role: changes
+        exists: true
+        system: lib
+      - path: tests/modules/test-build-paths.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/checks/ck-230-shadow.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/checks/ck-231-half-states.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/checks/ck-233-deny.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/checks/ck-237-verifiable.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/checks/ck-239-two-ends.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/checks/ck-247-decomposition.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/checks/ck-248-toolchain.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/checks/ck-252-primitive.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/checks/ck-253-versions.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/checks/ck-254-surface.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/check-catalogue.js
+        to: lib/checks/ck-230-shadow.js
+        kind: requires
+      - from: lib/check-catalogue.js
+        to: lib/checks/ck-233-deny.js
+        kind: requires
+      - from: lib/check-catalogue.js
+        to: lib/checks/ck-247-decomposition.js
+        kind: requires
+      - from: lib/check-catalogue.js
+        to: lib/checks/ck-248-toolchain.js
+        kind: requires
+      - from: lib/check-catalogue.js
+        to: lib/checks/ck-253-versions.js
+        kind: requires
+      - from: lib/check-catalogue.js
+        to: lib/checks/ck-254-surface.js
+        kind: requires
+      - from: lib/check-catalogue.js
+        to: lib/checks/ck-231-half-states.js
+        kind: requires
+      - from: lib/check-catalogue.js
+        to: lib/checks/ck-237-verifiable.js
+        kind: requires
+      - from: lib/check-catalogue.js
+        to: lib/checks/ck-239-two-ends.js
+        kind: requires
+      - from: lib/check-catalogue.js
+        to: lib/checks/ck-252-primitive.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/check-catalogue.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB1_warp_at_the_rung
+      upstream: []
+      downstream:
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB1_warp_at_the_rung
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB2_raid_bricks_and_officiator_through_warp
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-15-warp-builds-and-spec-framework-phasemap.spec::WB1_warp_at_the_rung
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (1): WB1_warp_at_the_rung · all downstream 2 · finishing it unlocks
+          WB1_warp_at_the_rung
   uuid: e9eb67fe-56a3-5f28-8641-043d85b8a22d

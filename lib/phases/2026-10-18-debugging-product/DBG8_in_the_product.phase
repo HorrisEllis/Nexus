@@ -5,13 +5,13 @@ id: docs_2026-10-18-debugging-product-phasemap.spec::DBG8_in_the_product
 context: pipeline phase DBG8_in_the_product of docs/2026-10-18-debugging-product-phasemap.spec
 intent: null
 summary: DBG8_in_the_product (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830629755
+exported_at: 1792852543784
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830629755
-lastSeenAt: 1792830629755
+firstSeenAt: 1792852543784
+lastSeenAt: 1792852543784
 fingerprint: null
 payload:
   id: DBG8_in_the_product
@@ -28,5 +28,80 @@ payload:
     - DBG0c_which_product
   blocks: []
   spec: null
-  graph: fb23f2c646765085
+  graph:
+    hash: fb23f2c646765085
+    nodes:
+      - path: products/flight-recorder/bin/flight-recorder.js
+        role: changes
+        exists: true
+        system: null
+      - path: products/flight-recorder/product.json
+        role: changes
+        exists: true
+        system: null
+      - path: products/flight-recorder/README.md
+        role: changes
+        exists: true
+        system: null
+      - path: lib/activity-log/compartment.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-activity.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/run-state.js
+        role: uses
+        exists: true
+        system: lib
+      - path: products/flight-recorder/lib/project.js
+        role: uses
+        exists: true
+        system: null
+      - path: products/flight-recorder/lib/versions.js
+        role: uses
+        exists: true
+        system: null
+    edges:
+      - from: products/flight-recorder/bin/flight-recorder.js
+        to: products/flight-recorder/lib/project.js
+        kind: requires
+      - from: products/flight-recorder/bin/flight-recorder.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: products/flight-recorder/bin/flight-recorder.js
+        to: lib/run-state.js
+        kind: requires
+      - from: products/flight-recorder/bin/flight-recorder.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: products/flight-recorder/bin/flight-recorder.js
+        to: products/flight-recorder/lib/versions.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+        - docs/2026-10-18-debugging-product-phasemap.spec::DBG0c_which_product
+      dependents: []
+      upstream:
+        - docs/2026-10-18-debugging-product-phasemap.spec::DBG0a_synchronized_ids
+        - docs/2026-10-18-debugging-product-phasemap.spec::DBG0c_which_product
+        - docs/2026-10-18-debugging-product-phasemap.spec::DBG1_the_key
+        - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+      downstream: []
+      blockedBy:
+        - docs/2026-10-18-debugging-product-phasemap.spec::DBG2_the_case
+        - docs/2026-10-18-debugging-product-phasemap.spec::DBG0c_which_product
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by DBG2_the_case, DBG0c_which_product
+        - 'depends on (2): DBG2_the_case, DBG0c_which_product · all upstream 4'
+        - 'needed by (0): —'
   uuid: ea241f0c-fc08-5809-bc51-495c4bfaff26

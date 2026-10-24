@@ -5,13 +5,13 @@ id: docs_2026-10-15-personal-chat-import-phasemap.spec::PI0c_the_listener_defaul
 context: pipeline phase PI0c_the_listener_default of docs/2026-10-15-personal-chat-import-phasemap.spec
 intent: null
 summary: PI0c_the_listener_default (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830619446
+exported_at: 1792852533431
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830619446
-lastSeenAt: 1792830619446
+firstSeenAt: 1792852533431
+lastSeenAt: 1792852533431
 fingerprint: null
 payload:
   id: PI0c_the_listener_default
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 8a18429a7cfb1d1f
+  graph:
+    hash: 8a18429a7cfb1d1f
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 44d990dd-1ec6-5885-8820-58b7b3d0803a

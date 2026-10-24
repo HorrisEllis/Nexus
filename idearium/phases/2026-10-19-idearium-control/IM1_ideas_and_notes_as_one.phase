@@ -7,11 +7,11 @@ intent: null
 summary: IM1_ideas_and_notes_as_one (interface) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830631965
+exported_at: 1792852545779
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830631965
-lastSeenAt: 1792830631965
+firstSeenAt: 1792852545779
+lastSeenAt: 1792852545779
 fingerprint: null
 payload:
   id: IM1_ideas_and_notes_as_one
@@ -27,5 +27,78 @@ payload:
     - IX1_everything_linked
   blocks: []
   spec: null
-  graph: b11d0d8dc6b1eec4
+  graph:
+    hash: b11d0d8dc6b1eec4
+    nodes:
+      - path: idearium/ui/index.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/repo-notes.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/repo-notes.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/import-checks.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+    edges:
+      - from: lib/repo-notes.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-notes.js
+        kind: requires
+      - from: lib/import-checks.js
+        to: lib/repo-notes.js
+        kind: requires
+    crossings:
+      - from: lib/repo-notes.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-19-idearium-control-phasemap.spec::IX1_everything_linked
+      dependents:
+        - docs/2026-10-19-idearium-control-phasemap.spec::IM2_promote_to_phase
+        - docs/2026-10-19-idearium-control-phasemap.spec::IM3_ideas_mapped_to_nexus
+      upstream:
+        - docs/2026-10-19-idearium-control-phasemap.spec::IX1_everything_linked
+      downstream:
+        - docs/2026-10-19-idearium-control-phasemap.spec::IM2_promote_to_phase
+        - docs/2026-10-19-idearium-control-phasemap.spec::IM3_ideas_mapped_to_nexus
+      blockedBy:
+        - docs/2026-10-19-idearium-control-phasemap.spec::IX1_everything_linked
+      unlocks:
+        - docs/2026-10-19-idearium-control-phasemap.spec::IM3_ideas_mapped_to_nexus
+      conflicts:
+        - with: docs/2026-10-19-idearium-control-phasemap.spec::CT1_fewer_wider_tabs
+          files:
+            - idearium/ui/index.html
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by IX1_everything_linked
+        - 'depends on (1): IX1_everything_linked'
+        - >-
+          needed by (2): IM2_promote_to_phase, IM3_ideas_mapped_to_nexus · finishing it unlocks
+          IM3_ideas_mapped_to_nexus
+        - 'same files as CT1_fewer_wider_tabs with no order between them: idearium/ui/index.html'
   uuid: 2f33afdd-f038-53d1-9d5d-aa3eafc82eb4

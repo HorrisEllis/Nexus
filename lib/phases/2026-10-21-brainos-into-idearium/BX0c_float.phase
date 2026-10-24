@@ -5,13 +5,13 @@ id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX0c_float
 context: pipeline phase BX0c_float of docs/2026-10-21-brainos-into-idearium-phasemap.spec
 intent: null
 summary: BX0c_float (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830635765
+exported_at: 1792852549383
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830635765
-lastSeenAt: 1792830635765
+firstSeenAt: 1792852549383
+lastSeenAt: 1792852549383
 fingerprint: null
 payload:
   id: BX0c_float
@@ -23,5 +23,27 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 46828bfaac71f296
+  graph:
+    hash: 46828bfaac71f296
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX10_float
+      upstream: []
+      downstream:
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX10_float
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): BX10_float'
   uuid: a45805da-5f97-5524-b6db-79a312666d4f

@@ -5,13 +5,13 @@ id: docs_2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
 context: pipeline phase M0_map of docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
 intent: null
 summary: M0_map (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830597738
+exported_at: 1792852511746
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830597738
-lastSeenAt: 1792830597738
+firstSeenAt: 1792852511746
+lastSeenAt: 1792852511746
 fingerprint: null
 payload:
   id: M0_map
@@ -25,5 +25,60 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 8ffcfde00fa30d75
+  graph:
+    hash: 8ffcfde00fa30d75
+    nodes:
+      - path: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+      - path: docs/SPEC-REGISTRY.spec
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+      upstream: []
+      downstream:
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::AG1_coding_agent_provider
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DI1_chunking_for_data_ingestion
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4_registry_block_to_nodes
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT4b_registry_chunk_in_repo_chunking
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::GL1_gate_verify_fix_loop
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::RM1_registry_driven_moves
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI7_phasemaps_out_of_files_and_tree_ops
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (1): DT1_persistence_census · all downstream 20 · finishing it unlocks
+          DT1_persistence_census
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 7031464d-44c8-5fb4-8f43-c386f9b10f7c

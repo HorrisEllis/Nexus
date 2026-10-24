@@ -5,13 +5,13 @@ id: docs_2026-09-29-build-surface-phasemap.spec::BS19_copilot_atlas_guide
 context: pipeline phase BS19_copilot_atlas_guide of docs/2026-09-29-build-surface-phasemap.spec
 intent: null
 summary: BS19_copilot_atlas_guide (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830595769
+exported_at: 1792852509506
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830595769
-lastSeenAt: 1792830595769
+firstSeenAt: 1792852509506
+lastSeenAt: 1792852509506
 fingerprint: null
 payload:
   id: BS19_copilot_atlas_guide
@@ -26,5 +26,45 @@ payload:
     - BS17_copilot_browser_verbs
   blocks: []
   spec: null
-  graph: 8cfe36554eded916
+  graph:
+    hash: 8cfe36554eded916
+    nodes:
+      - path: docs/atlases/copilot-atlas.md
+        role: changes
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-atlas-refs.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: tests/modules/test-nexus-atlas-refs.test.js
+        to: lib/test-sandbox.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
+      dependents:
+        - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      upstream:
+        - docs/2026-09-29-build-surface-phasemap.spec::BS17_copilot_browser_verbs
+      downstream:
+        - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): BS17_copilot_browser_verbs'
+        - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
   uuid: b1e7f895-fd34-5294-9203-ee1428d51e1c

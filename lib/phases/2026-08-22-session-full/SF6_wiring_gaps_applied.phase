@@ -5,13 +5,13 @@ id: docs_2026-08-22-session-full-phasemap.spec::SF6_wiring_gaps_applied
 context: pipeline phase SF6_wiring_gaps_applied of docs/2026-08-22-session-full-phasemap.spec
 intent: null
 summary: SF6_wiring_gaps_applied (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581327
+exported_at: 1792852494429
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581327
-lastSeenAt: 1792830581327
+firstSeenAt: 1792852494429
+lastSeenAt: 1792852494429
 fingerprint: null
 payload:
   id: SF6_wiring_gaps_applied
@@ -24,5 +24,143 @@ payload:
     - SF5_wiring_gap_bridge
   blocks: []
   spec: null
-  graph: 2514d77da46a8488
+  graph:
+    hash: 2514d77da46a8488
+    nodes:
+      - path: cos/test.js
+        role: changes
+        exists: false
+        system: cos
+      - path: loom/scanners/source-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/atlas-generate.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/registry-harness.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/self-build-loop.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: loom/bootstrap.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/maps/agent-memory-map.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/maps/build-context-map.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/maps/build-surface-map.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/maps/chat-ledger-map.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/maps/compartment-activity-map.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/maps/component-intake-map.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/maps/cos-testenv-map.js
+        role: used-by
+        exists: true
+        system: loom
+    edges:
+      - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: lib/atlas-generate.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: lib/registry-harness.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: lib/self-build-loop.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/maps/agent-memory-map.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/maps/build-context-map.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/maps/build-surface-map.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/maps/chat-ledger-map.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/maps/compartment-activity-map.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/maps/component-intake-map.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/maps/cos-testenv-map.js
+        to: loom/scanners/source-map.js
+        kind: requires
+    crossings:
+      - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+        to: loom/scanners/source-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/atlas-generate.js
+        to: loom/scanners/source-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/registry-harness.js
+        to: loom/scanners/source-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/self-build-loop.js
+        to: loom/scanners/source-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-08-22-session-full-phasemap.spec::SF5_wiring_gap_bridge
+      dependents: []
+      upstream:
+        - docs/2026-08-22-session-full-phasemap.spec::SF5_wiring_gap_bridge
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): SF5_wiring_gap_bridge'
+        - 'needed by (0): —'
   uuid: 4efd2f9a-d3aa-5cb1-8dc1-7e5a75174df6

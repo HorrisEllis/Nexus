@@ -9,11 +9,11 @@ intent: null
 summary: OP4_environment_and_desktop_one_menu (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830611840
+exported_at: 1792852525746
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830611840
-lastSeenAt: 1792830611840
+firstSeenAt: 1792852525746
+lastSeenAt: 1792852525746
 fingerprint: null
 payload:
   id: OP4_environment_and_desktop_one_menu
@@ -26,5 +26,29 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: f9648ccd1a2a07d5
+  graph:
+    hash: f9648ccd1a2a07d5
+    nodes:
+      - path: idearium/ui/js/repo-settings.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 7bf07eb9-b548-598e-974d-e5367e13599c

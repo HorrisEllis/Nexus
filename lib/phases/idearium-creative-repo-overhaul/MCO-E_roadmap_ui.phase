@@ -5,13 +5,13 @@ id: docs_idearium-creative-repo-overhaul-phasemap.spec::MCO-E_roadmap_ui
 context: pipeline phase MCO-E_roadmap_ui of docs/idearium-creative-repo-overhaul-phasemap.spec
 intent: null
 summary: MCO-E_roadmap_ui (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830643639
+exported_at: 1792852558156
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830643639
-lastSeenAt: 1792830643639
+firstSeenAt: 1792852558156
+lastSeenAt: 1792852558156
 fingerprint: null
 payload:
   id: MCO-E_roadmap_ui
@@ -24,5 +24,45 @@ payload:
     - MCO-A_schemas
   blocks: []
   spec: null
-  graph: 2258bb8a5d931465
+  graph:
+    hash: 2258bb8a5d931465
+    nodes:
+      - path: idearium/spec-engine/manifest/graph.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/compiler-t0.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/manifest/wire-check.js
+        role: used-by
+        exists: true
+        system: idearium
+    edges:
+      - from: idearium/spec-engine/compiler-t0.js
+        to: idearium/spec-engine/manifest/graph.js
+        kind: requires
+      - from: idearium/spec-engine/manifest/wire-check.js
+        to: idearium/spec-engine/manifest/graph.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-A_schemas
+      dependents: []
+      upstream:
+        - docs/idearium-creative-repo-overhaul-phasemap.spec::MCO-A_schemas
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): MCO-A_schemas'
+        - 'needed by (0): —'
   uuid: 2b18b4f1-357b-5e96-bd34-4a543221598c

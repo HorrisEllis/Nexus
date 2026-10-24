@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
 intent: null
 summary: D1_canvas_authority (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830588786
+exported_at: 1792852502406
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830588786
-lastSeenAt: 1792830588786
+firstSeenAt: 1792852502406
+lastSeenAt: 1792852502406
 fingerprint: null
 payload:
   id: D1_canvas_authority
@@ -25,5 +25,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: d0dc896558286d1e
+  graph:
+    hash: d0dc896558286d1e
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: a3425f44-028f-503c-b40f-f4ef4b70407b

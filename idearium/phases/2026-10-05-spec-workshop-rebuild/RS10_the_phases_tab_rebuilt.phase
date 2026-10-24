@@ -7,11 +7,11 @@ intent: null
 summary: RS10_the_phases_tab_rebuilt (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830604659
+exported_at: 1792852518974
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830604659
-lastSeenAt: 1792830604659
+firstSeenAt: 1792852518974
+lastSeenAt: 1792852518974
 fingerprint: null
 payload:
   id: RS10_the_phases_tab_rebuilt
@@ -26,5 +26,38 @@ payload:
     - RS9_the_thread
   blocks: []
   spec: null
-  graph: 2b8342c245cb1a43
+  graph:
+    hash: 2b8342c245cb1a43
+    nodes:
+      - path: idearium/ui/css/phases.css
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/phases.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS9_the_thread
+      dependents:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS11_workshop_and_phases_one_surface
+      upstream:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS9_the_thread
+      downstream:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS11_workshop_and_phases_one_surface
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (1): RS9_the_thread · all upstream 2'
+        - 'needed by (1): RS11_workshop_and_phases_one_surface'
   uuid: e7fa91d3-284a-5978-a350-1114fca99bef

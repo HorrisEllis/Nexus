@@ -7,11 +7,11 @@ intent: null
 summary: SD11_the_desktop_inside_idearium (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830610985
+exported_at: 1792852524911
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830610985
-lastSeenAt: 1792830610985
+firstSeenAt: 1792852524911
+lastSeenAt: 1792852524911
 fingerprint: null
 payload:
   id: SD11_the_desktop_inside_idearium
@@ -27,5 +27,109 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 355bfb9bb8b0c1e5
+  graph:
+    hash: 355bfb9bb8b0c1e5
+    nodes:
+      - path: cos/workspace/index.js
+        role: changes
+        exists: true
+        system: cos
+      - path: idearium/ui/desktop.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/app.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/repo-settings.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: cos/workspace/vm-control.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: lib/cos-bridge.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/shadow-space.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cos/compartment/guest-agent.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/compartment/qemu-runtime.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/host.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/tar.js
+        role: uses
+        exists: true
+        system: cos
+    edges:
+      - from: cos/workspace/index.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/testenv/host.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/testenv/tar.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/compartment/guest-agent.js
+        kind: requires
+      - from: cos/workspace/vm-control.js
+        to: cos/workspace/index.js
+        kind: requires
+      - from: lib/cos-bridge.js
+        to: cos/workspace/index.js
+        kind: requires
+      - from: lib/shadow-space.js
+        to: cos/workspace/index.js
+        kind: requires
+    crossings:
+      - from: lib/cos-bridge.js
+        to: cos/workspace/index.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/shadow-space.js
+        to: cos/workspace/index.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-10-idearium-solid-phasemap.spec::SD13_the_machine_is_cos
+          files:
+            - idearium/ui/desktop.html
+            - cos/workspace/index.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          same files as SD13_the_machine_is_cos with no order between them:
+          idearium/ui/desktop.html, cos/workspace/index.js
   uuid: 0190f5e0-b4ec-501a-952a-45e0bef25b3f

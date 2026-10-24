@@ -5,13 +5,13 @@ id: docs_2026-08-22-session-full-phasemap.spec::SF13_orchestrator_agent_pipeline
 context: pipeline phase SF13_orchestrator_agent_pipeline of docs/2026-08-22-session-full-phasemap.spec
 intent: null
 summary: SF13_orchestrator_agent_pipeline (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581335
+exported_at: 1792852494435
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581335
-lastSeenAt: 1792830581335
+firstSeenAt: 1792852494435
+lastSeenAt: 1792852494435
 fingerprint: null
 payload:
   id: SF13_orchestrator_agent_pipeline
@@ -25,5 +25,75 @@ payload:
     - SF10_agent_notes
   blocks: []
   spec: null
-  graph: de5ad9a019286d15
+  graph:
+    hash: de5ad9a019286d15
+    nodes:
+      - path: docs/idearium-agent-pipeline.spec
+        role: changes
+        exists: true
+        system: null
+      - path: lib/end-state.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/seam/stream.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/agent-build-loop.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/project-container.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/seam/index.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+    edges:
+      - from: lib/end-state.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/seam/index.js
+        to: lib/seam/stream.js
+        kind: requires
+      - from: lib/agent-build-loop.js
+        to: lib/end-state.js
+        kind: requires
+      - from: lib/project-container.js
+        to: lib/end-state.js
+        kind: requires
+    crossings:
+      - from: lib/end-state.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-08-22-session-full-phasemap.spec::SF9_account_identity_capture
+        - docs/2026-08-22-session-full-phasemap.spec::SF10_agent_notes
+      dependents: []
+      upstream:
+        - docs/2026-08-22-session-full-phasemap.spec::SF10_agent_notes
+        - docs/2026-08-22-session-full-phasemap.spec::SF9_account_identity_capture
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (2): SF9_account_identity_capture, SF10_agent_notes'
+        - 'needed by (0): —'
   uuid: a0548c60-1a3b-56bc-8b33-a8da6a0d871f

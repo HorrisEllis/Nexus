@@ -5,13 +5,13 @@ id: docs_2026-09-27-registry-harness-and-stability-phasemap.spec::H4
 context: pipeline phase H4 of docs/2026-09-27-registry-harness-and-stability-phasemap.spec
 intent: null
 summary: H4 (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830594512
+exported_at: 1792852508186
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830594512
-lastSeenAt: 1792830594512
+firstSeenAt: 1792852508186
+lastSeenAt: 1792852508186
 fingerprint: null
 payload:
   id: H4
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 92d77964b48812eb
+  graph:
+    hash: 92d77964b48812eb
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: c15ecff6-1ae9-5f45-91a3-ce904a7ccd4d

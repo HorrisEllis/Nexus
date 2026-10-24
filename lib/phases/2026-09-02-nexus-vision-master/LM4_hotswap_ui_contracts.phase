@@ -5,13 +5,13 @@ id: docs_2026-09-02-nexus-vision-master-phasemap.spec::LM4_hotswap_ui_contracts
 context: pipeline phase LM4_hotswap_ui_contracts of docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: LM4_hotswap_ui_contracts (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584908
+exported_at: 1792852498345
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584908
-lastSeenAt: 1792830584908
+firstSeenAt: 1792852498345
+lastSeenAt: 1792852498345
 fingerprint: null
 payload:
   id: LM4_hotswap_ui_contracts
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 3793f13db0642bcf
+  graph:
+    hash: 3793f13db0642bcf
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: fdc3b48e-4b8d-541d-9e53-646a62446a05

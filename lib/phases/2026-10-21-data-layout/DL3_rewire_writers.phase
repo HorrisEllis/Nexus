@@ -5,13 +5,13 @@ id: docs_2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
 context: pipeline phase DL3_rewire_writers of docs/2026-10-21-data-layout-phasemap.spec
 intent: null
 summary: DL3_rewire_writers (integration) — 6 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830637070
+exported_at: 1792852550602
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830637070
-lastSeenAt: 1792830637070
+firstSeenAt: 1792852550602
+lastSeenAt: 1792852550602
 fingerprint: null
 payload:
   id: DL3_rewire_writers
@@ -35,7 +35,255 @@ payload:
   blocks:
     - MOD-REWIRE
   spec: docs/data-layout.spec
-  graph: 7dbe9cbe6436f155
+  graph:
+    hash: 7dbe9cbe6436f155
+    nodes:
+      - path: diagnostic/nexus-diagnostic.js
+        role: changes
+        exists: true
+        system: diagnostic
+      - path: lib/data-home.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/ledger-store.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/ledger-writer.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/vector-memory.js
+        role: changes
+        exists: true
+        system: lib
+      - path: architect/service.js
+        role: used-by
+        exists: true
+        system: architect
+      - path: clear-glass/src/ipc/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/providers/registry.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: cli/clear-idearium.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: copilot/recursive-diagnose.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: guardian/artifact-upload.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/config.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/account-routing.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/agent-registry.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: diagnostic/lib/wire-integrity.js
+        role: uses
+        exists: true
+        system: diagnostic
+      - path: intelligence/baseline.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/contract-verifier.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/field.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/telemetry-codec/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-clearup.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/diagnostic-engines.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ico.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/system-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/version.js
+        role: uses
+        exists: true
+        system: lib
+      - path: loom/schema/index.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: lib/data-home.js
+        to: lib/system-registry.js
+        kind: requires
+      - from: lib/data-home.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: lib/data-home.js
+        to: lib/data-clearup.js
+        kind: requires
+      - from: lib/data-home.js
+        to: lib/version.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/ico.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/cfr/contract-verifier.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/cfr/field.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/baseline.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: loom/schema/index.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: diagnostic/lib/wire-integrity.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/telemetry-codec/index.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/diagnostic-engines.js
+        kind: requires
+      - from: architect/service.js
+        to: lib/data-home.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: lib/data-home.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: lib/data-home.js
+        kind: requires
+      - from: clear-glass/src/providers/registry.js
+        to: lib/data-home.js
+        kind: requires
+      - from: cli/clear-idearium.js
+        to: lib/data-home.js
+        kind: requires
+      - from: copilot/recursive-diagnose.js
+        to: lib/data-home.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/data-home.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/data-home.js
+        kind: requires
+      - from: guardian/artifact-upload.js
+        to: lib/data-home.js
+        kind: requires
+      - from: guardian/config.js
+        to: lib/data-home.js
+        kind: requires
+      - from: guardian/lib/account-routing.js
+        to: lib/data-home.js
+        kind: requires
+      - from: guardian/lib/agent-registry.js
+        to: lib/data-home.js
+        kind: requires
+    crossings:
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/cfr/contract-verifier.js
+        fromSystem: diagnostic
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/cfr/field.js
+        fromSystem: diagnostic
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/baseline.js
+        fromSystem: diagnostic
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: diagnostic/nexus-diagnostic.js
+        to: loom/schema/index.js
+        fromSystem: diagnostic
+        toSystem: loom
+        kind: system
+        known: true
+      - from: diagnostic/nexus-diagnostic.js
+        to: intelligence/telemetry-codec/index.js
+        fromSystem: diagnostic
+        toSystem: intelligence
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+      dependents:
+        - docs/2026-10-21-data-layout-phasemap.spec::DL5_memory_in_cortex
+      upstream:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+        - docs/2026-10-21-data-layout-phasemap.spec::DL0_data_census
+        - docs/2026-10-21-data-layout-phasemap.spec::DL1_clearup_tool
+        - docs/2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
+      downstream:
+        - docs/2026-10-21-data-layout-phasemap.spec::DL5_memory_in_cortex
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-data-layout-phasemap.spec::DL5_memory_in_cortex
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - 'depends on (2): DL2_one_resolver, SS1_system_store_adoption · all upstream 5'
+        - 'needed by (1): DL5_memory_in_cortex · finishing it unlocks DL5_memory_in_cortex'
   uuid: c1ded5d9-9b99-5119-bdd6-feffea042814
   specLink:
     how: declared

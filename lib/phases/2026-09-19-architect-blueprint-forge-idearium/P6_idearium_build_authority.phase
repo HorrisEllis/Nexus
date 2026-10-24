@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
 intent: null
 summary: P6_idearium_build_authority (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830588792
+exported_at: 1792852502412
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830588792
-lastSeenAt: 1792830588792
+firstSeenAt: 1792852502412
+lastSeenAt: 1792852502412
 fingerprint: null
 payload:
   id: P6_idearium_build_authority
@@ -26,5 +26,28 @@ payload:
     - P2_decide_D1_D2_D3
   blocks: []
   spec: null
-  graph: 6a967cacc9231f14
+  graph:
+    hash: 6a967cacc9231f14
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P2_decide_D1_D2_D3
+      dependents: []
+      upstream:
+        - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P2_decide_D1_D2_D3
+      downstream: []
+      blockedBy:
+        - docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::P2_decide_D1_D2_D3
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by P2_decide_D1_D2_D3
+        - 'depends on (1): P2_decide_D1_D2_D3'
+        - 'needed by (0): —'
   uuid: 50970ca8-5279-50ec-b0c8-b9efab0fb288

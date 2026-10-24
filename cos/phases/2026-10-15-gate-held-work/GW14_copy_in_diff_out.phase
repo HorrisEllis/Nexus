@@ -5,13 +5,13 @@ id: docs_2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
 context: pipeline phase GW14_copy_in_diff_out of docs/2026-10-15-gate-held-work-phasemap.spec
 intent: null
 summary: GW14_copy_in_diff_out (?) — 4 file(s)
-system: idearium
+system: cos
 tags: []
-exported_at: 1792830618171
+exported_at: 1792852532124
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830618171
-lastSeenAt: 1792830618171
+firstSeenAt: 1792852532124
+lastSeenAt: 1792852532124
 fingerprint: null
 payload:
   id: GW14_copy_in_diff_out
@@ -28,5 +28,241 @@ payload:
     - GW13_the_sandbox_door
   blocks: []
   spec: null
-  graph: 581149a84eca7d04
+  graph:
+    hash: 581149a84eca7d04
+    nodes:
+      - path: cos/testenv/provision.js
+        role: changes
+        exists: true
+        system: cos
+      - path: cos/testenv/tar.js
+        role: changes
+        exists: true
+        system: cos
+      - path: lib/repo-inject.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-versions.js
+        role: changes
+        exists: true
+        system: lib
+      - path: cos/testenv/index.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/workspace/index.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/code-api.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/proposal-evidence.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: products/flight-recorder/lib/project.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-inject-screen.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-inject-approval.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-proposal-evidence.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: guardian/lib/code-artifact.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: lib/activity-log/compartment.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/change-entry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/inject-gate.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/path-guard.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-faults.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/proposal-evidence.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-activity.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+      - path: versionium/lib/merge3.js
+        role: uses
+        exists: true
+        system: versionium
+    edges:
+      - from: lib/repo-inject.js
+        to: lib/node-export.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: guardian/lib/code-artifact.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/nexus-self/inject-gate.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/change-entry.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/activity-log/compartment.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/path-guard.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/proposal-evidence.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: versionium/lib/merge3.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/phase-faults.js
+        kind: requires
+      - from: cos/testenv/index.js
+        to: cos/testenv/tar.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/testenv/tar.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: idearium/repo/code-api.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: lib/proposal-evidence.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: lib/spec-collect.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: products/flight-recorder/lib/project.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: tests/modules/test-inject-screen.test.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: tests/modules/test-nexus-inject-approval.test.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: tests/modules/test-proposal-evidence.test.js
+        to: lib/repo-inject.js
+        kind: requires
+    crossings:
+      - from: lib/repo-inject.js
+        to: guardian/lib/code-artifact.js
+        fromSystem: lib
+        toSystem: guardian
+        kind: upward
+        known: true
+      - from: lib/repo-inject.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/repo-inject.js
+        to: versionium/lib/merge3.js
+        fromSystem: lib
+        toSystem: versionium
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+      dependents:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+      upstream:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW0_what_is_a_gate
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW0e_sandbox_egress
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      downstream:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW18_debug_by_bisect
+      blockedBy:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW12_desktop_is_optional
+          files:
+            - cos/testenv/provision.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by GW13_the_sandbox_door
+        - 'depends on (1): GW13_the_sandbox_door · all upstream 6'
+        - >-
+          needed by (2): GW11_a_snapshot_per_gate, GW16_parallel_branches_benchmark · all downstream
+          3
+        - >-
+          same files as GW12_desktop_is_optional with no order between them:
+          cos/testenv/provision.js
   uuid: 76511d41-2648-560d-a776-f6d90120fcca

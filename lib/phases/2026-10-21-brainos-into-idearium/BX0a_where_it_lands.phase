@@ -5,13 +5,13 @@ id: docs_2026-10-21-brainos-into-idearium-phasemap.spec::BX0a_where_it_lands
 context: pipeline phase BX0a_where_it_lands of docs/2026-10-21-brainos-into-idearium-phasemap.spec
 intent: null
 summary: BX0a_where_it_lands (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830635764
+exported_at: 1792852549381
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830635764
-lastSeenAt: 1792830635764
+firstSeenAt: 1792852549381
+lastSeenAt: 1792852549381
 fingerprint: null
 payload:
   id: BX0a_where_it_lands
@@ -23,5 +23,37 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 887c778fe1bb2e80
+  graph:
+    hash: 887c778fe1bb2e80
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
+      upstream: []
+      downstream:
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX10_float
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX2_flow_sources
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX3_flow_canvas
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX4_agents_layer
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX5_node_controls
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX6_pipeline_edit
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX7_automation
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX8_dock_panels
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX9_retire
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-brainos-into-idearium-phasemap.spec::BX1_census
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): BX1_census · all downstream 10 · finishing it unlocks BX1_census'
   uuid: 1003c9b2-1e7c-5324-ba62-42532a2d95b7

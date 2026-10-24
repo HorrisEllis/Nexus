@@ -5,13 +5,13 @@ id: docs_2026-10-21-compartment-downloads-phasemap.spec::CD2_quarantine_download
 context: pipeline phase CD2_quarantine_downloads of docs/2026-10-21-compartment-downloads-phasemap.spec
 intent: null
 summary: CD2_quarantine_downloads (library) — 1 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830636643
+exported_at: 1792852550197
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830636643
-lastSeenAt: 1792830636643
+firstSeenAt: 1792852550197
+lastSeenAt: 1792852550197
 fingerprint: null
 payload:
   id: CD2_quarantine_downloads
@@ -26,7 +26,54 @@ payload:
   blocks:
     - MOD-CDL-QUARANTINE
   spec: clear-glass/spec/compartment-downloads.spec
-  graph: 3d4f0cd284c268ef
+  graph:
+    hash: 3d4f0cd284c268ef
+    nodes:
+      - path: clear-glass/src/net/quarantine.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/service.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/magnet.js
+        role: uses
+        exists: true
+        system: clear-glass
+    edges:
+      - from: clear-glass/src/net/quarantine.js
+        to: clear-glass/src/net/magnet.js
+        kind: requires
+      - from: clear-glass/src/net/service.js
+        to: clear-glass/src/net/quarantine.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+      dependents:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+      upstream:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+      downstream:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): CD1_magnet_parse'
+        - >-
+          needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks
+          CD4_kill_on_disconnect
   uuid: 50b54786-9605-5851-b02f-4033474ea92e
   specLink:
     how: declared

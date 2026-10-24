@@ -5,13 +5,13 @@ id: docs_2026-10-21-compartment-downloads-phasemap.spec::CD3_verified_handoff
 context: pipeline phase CD3_verified_handoff of docs/2026-10-21-compartment-downloads-phasemap.spec
 intent: null
 summary: CD3_verified_handoff (library) — 1 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830636643
+exported_at: 1792852550198
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830636643
-lastSeenAt: 1792830636643
+firstSeenAt: 1792852550198
+lastSeenAt: 1792852550198
 fingerprint: null
 payload:
   id: CD3_verified_handoff
@@ -27,7 +27,49 @@ payload:
   blocks:
     - MOD-CDL-QBIT
   spec: clear-glass/spec/compartment-downloads.spec
-  graph: b1f1f8ce8c648a8f
+  graph:
+    hash: b1f1f8ce8c648a8f
+    nodes:
+      - path: clear-glass/src/net/qbittorrent.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/service.js
+        role: used-by
+        exists: true
+        system: clear-glass
+    edges:
+      - from: clear-glass/src/net/service.js
+        to: clear-glass/src/net/qbittorrent.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD0_magnet_client
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+      dependents:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+      upstream:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD0_magnet_client
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD1_magnet_parse
+      downstream:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (2): CD0_magnet_client, CD1_magnet_parse'
+        - >-
+          needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks
+          CD4_kill_on_disconnect
   uuid: 56e58a91-4d2c-5298-bbba-17e2d86951a1
   specLink:
     how: declared

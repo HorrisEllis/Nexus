@@ -5,13 +5,13 @@ id: docs_2026-10-21-passwords-phasemap.spec::PW2_page
 context: pipeline phase PW2_page of docs/2026-10-21-passwords-phasemap.spec
 intent: null
 summary: PW2_page (integration) — 1 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830637480
+exported_at: 1792852551020
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830637480
-lastSeenAt: 1792830637480
+firstSeenAt: 1792852551020
+lastSeenAt: 1792852551020
 fingerprint: null
 payload:
   id: PW2_page
@@ -26,7 +26,38 @@ payload:
   blocks:
     - MOD-PW-PAGE
   spec: clear-glass/spec/passwords.spec
-  graph: a3c8be28c7f429ea
+  graph:
+    hash: a3c8be28c7f429ea
+    nodes:
+      - path: clear-glass/src/preload/passwords.js
+        role: changes
+        exists: true
+        system: clear-glass
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-21-passwords-phasemap.spec::PW1_service
+      dependents:
+        - docs/2026-10-21-passwords-phasemap.spec::PW3_wiring
+      upstream:
+        - docs/2026-10-21-passwords-phasemap.spec::PW0_where_passwords_live
+        - docs/2026-10-21-passwords-phasemap.spec::PW1_service
+      downstream:
+        - docs/2026-10-21-passwords-phasemap.spec::PW3_wiring
+        - docs/2026-10-21-passwords-phasemap.spec::PW4_surface
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-passwords-phasemap.spec::PW3_wiring
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (1): PW1_service · all upstream 2'
+        - 'needed by (1): PW3_wiring · all downstream 2 · finishing it unlocks PW3_wiring'
   uuid: 3d5e6c5e-78f9-534b-9baa-bc0222e169c5
   specLink:
     how: declared

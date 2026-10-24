@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
 intent: null
 summary: C1_cli_per_system_split (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830586670
+exported_at: 1792852500277
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830586670
-lastSeenAt: 1792830586670
+firstSeenAt: 1792852500277
+lastSeenAt: 1792852500277
 fingerprint: null
 payload:
   id: C1_cli_per_system_split
@@ -25,5 +25,226 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: c001edf00d734977
+  graph:
+    hash: 40b09b59e676fb7a
+    nodes:
+      - path: cli/boot-systems.js
+        role: changes
+        exists: true
+        system: cli
+      - path: cli/cfr-debug.js
+        role: changes
+        exists: true
+        system: cli
+      - path: cli/copilot-window.js
+        role: changes
+        exists: true
+        system: cli
+      - path: cli/nexus-cli.js
+        role: changes
+        exists: true
+        system: cli
+      - path: cli/nexus-movement.js
+        role: changes
+        exists: true
+        system: cli
+      - path: cli/nexus-repl-descriptors.js
+        role: changes
+        exists: true
+        system: cli
+      - path: cli/nexus-repl.js
+        role: changes
+        exists: true
+        system: cli
+      - path: cli/run-supervised.js
+        role: changes
+        exists: true
+        system: cli
+      - path: cli/sentinel.js
+        role: changes
+        exists: false
+        system: cli
+      - path: cli/nexus.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/modules/cli-copilot-fallback.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/nexus-repl-descriptors.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: copilot/cli.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: intelligence/cfr/contract-verifier.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/delta.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/field.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/graph.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/sigma.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/context-builder.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/grammar-engine.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-connect.js
+        role: uses
+        exists: true
+        system: nexus
+      - path: ollama/config.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: orchestrator/orchestrator.js
+        role: uses
+        exists: true
+        system: orchestrator
+    edges:
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/field.js
+        kind: requires
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/sigma.js
+        kind: requires
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/delta.js
+        kind: requires
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/graph.js
+        kind: requires
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/contract-verifier.js
+        kind: requires
+      - from: cli/nexus-cli.js
+        to: copilot/cli.js
+        kind: requires
+      - from: cli/boot-systems.js
+        to: nexus/nexus-connect.js
+        kind: requires
+      - from: cli/nexus-repl.js
+        to: lib/grammar-engine.js
+        kind: requires
+      - from: cli/nexus-repl.js
+        to: ollama/config.js
+        kind: requires
+      - from: cli/nexus-repl.js
+        to: lib/context-builder.js
+        kind: requires
+      - from: cli/run-supervised.js
+        to: orchestrator/orchestrator.js
+        kind: requires
+      - from: cli/nexus.js
+        to: cli/copilot-window.js
+        kind: requires
+      - from: tests/modules/cli-copilot-fallback.test.js
+        to: cli/nexus-cli.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: cli/boot-systems.js
+        kind: requires
+      - from: tests/modules/nexus-repl-descriptors.test.js
+        to: cli/nexus-repl-descriptors.js
+        kind: requires
+    crossings:
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/field.js
+        fromSystem: cli
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/sigma.js
+        fromSystem: cli
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/delta.js
+        fromSystem: cli
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/graph.js
+        fromSystem: cli
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: cli/cfr-debug.js
+        to: intelligence/cfr/contract-verifier.js
+        fromSystem: cli
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: cli/nexus-cli.js
+        to: copilot/cli.js
+        fromSystem: cli
+        toSystem: copilot
+        kind: system
+        known: true
+      - from: cli/boot-systems.js
+        to: nexus/nexus-connect.js
+        fromSystem: cli
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: cli/nexus-repl.js
+        to: ollama/config.js
+        fromSystem: cli
+        toSystem: ollama
+        kind: system
+        known: true
+      - from: cli/run-supervised.js
+        to: orchestrator/orchestrator.js
+        fromSystem: cli
+        toSystem: orchestrator
+        kind: system
+        known: true
+      - from: orchestrator/orchestrator.js
+        to: cli/boot-systems.js
+        fromSystem: orchestrator
+        toSystem: cli
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: e77ef368-9ec3-5eeb-87fd-94e277e551bc

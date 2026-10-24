@@ -5,13 +5,13 @@ id: docs_2026-10-12-browser-providers-and-work-phasemap.spec::PV2_hats_are_nodes
 context: pipeline phase PV2_hats_are_nodes of docs/2026-10-12-browser-providers-and-work-phasemap.spec
 intent: null
 summary: PV2_hats_are_nodes (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830612679
+exported_at: 1792852526570
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830612679
-lastSeenAt: 1792830612679
+firstSeenAt: 1792852526570
+lastSeenAt: 1792852526570
 fingerprint: null
 payload:
   id: PV2_hats_are_nodes
@@ -26,5 +26,153 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 66c258dbf8ec8139
+  graph:
+    hash: 66c258dbf8ec8139
+    nodes:
+      - path: guardian/lib/node-registry.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/hat-forge.js
+        role: changes
+        exists: true
+        system: lib
+      - path: clear-glass/src/copilot/hat.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/ipc/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: copilot/lib/self-model.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/officiator.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: guardian/lib/jobs.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/agent-intent-contract.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/identity/hat-forge.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/hat-seed-ollama-personalities.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/hat-seed.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-schemas.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/safe-watch.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/hat-forge.js
+        to: lib/node-export.js
+        kind: requires
+      - from: guardian/lib/node-registry.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: guardian/lib/node-registry.js
+        to: lib/node-index.js
+        kind: requires
+      - from: guardian/lib/node-registry.js
+        to: lib/safe-watch.js
+        kind: requires
+      - from: clear-glass/src/copilot/hat.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: copilot/lib/self-model.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: cortex/core/raid/officiator.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: guardian/lib/jobs.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: lib/agent-intent-contract.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: lib/agent-tools/tools/identity/hat-forge.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: lib/hat-seed-ollama-personalities.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: lib/hat-seed.js
+        to: lib/hat-forge.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV3_input_nodes
+      upstream: []
+      downstream:
+        - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX4_one_system_digest
+        - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV3_input_nodes
+        - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV4_inputs_are_history
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-12-browser-providers-and-work-phasemap.spec::PV3_input_nodes
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (1): PV3_input_nodes · all downstream 3 · finishing it unlocks PV3_input_nodes'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 012b766b-c8c4-533b-9d5e-25242b52b33a

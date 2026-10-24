@@ -5,13 +5,13 @@ id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC2_linear_node_scan
 context: pipeline phase RC2_linear_node_scan of docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
 summary: RC2_linear_node_scan (foundation) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632798
+exported_at: 1792852546578
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632798
-lastSeenAt: 1792830632798
+firstSeenAt: 1792852546578
+lastSeenAt: 1792852546578
 fingerprint: null
 payload:
   id: RC2_linear_node_scan
@@ -24,5 +24,162 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 77759fcaf402a194
+  graph:
+    hash: 77759fcaf402a194
+    nodes:
+      - path: lib/node-registry.js
+        role: changes
+        exists: true
+        system: lib
+      - path: architect/service.js
+        role: used-by
+        exists: true
+        system: architect
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: diagnostic/nexus-diagnostic.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: intelligence/server.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/system-nodes.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: loom/server.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: ollama/server.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: lib/jaa-store.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-schemas.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/safe-watch.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/system-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/node-registry.js
+        to: lib/jaa-store.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/node-export.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/node-index.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/safe-watch.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/system-registry.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: architect/service.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: intelligence/server.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: lib/system-nodes.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: loom/server.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: ollama/server.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: lib/node-registry.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: fb40a44c-4778-5492-8ad4-1ceef74ac31a

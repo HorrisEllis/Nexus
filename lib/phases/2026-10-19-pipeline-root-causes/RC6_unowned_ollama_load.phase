@@ -5,13 +5,13 @@ id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::RC6_unowned_ollama_load
 context: pipeline phase RC6_unowned_ollama_load of docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
 summary: RC6_unowned_ollama_load (foundation) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632811
+exported_at: 1792852546592
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632811
-lastSeenAt: 1792830632811
+firstSeenAt: 1792852546592
+lastSeenAt: 1792852546592
 fingerprint: null
 payload:
   id: RC6_unowned_ollama_load
@@ -23,5 +23,33 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 67b8e7d0ffd6cf9d
+  graph:
+    hash: 67b8e7d0ffd6cf9d
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC7_every_run_names_its_starter
+      upstream: []
+      downstream:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC7_every_run_names_its_starter
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV3_changelog_read
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV4_emit_on_the_ledger
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC7_every_run_names_its_starter
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (1): RC7_every_run_names_its_starter · all downstream 4 · finishing it unlocks
+          RC7_every_run_names_its_starter
   uuid: 966a1e66-66c8-5e1e-8b76-4a58b8a285b6

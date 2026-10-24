@@ -9,11 +9,11 @@ intent: null
 summary: CT7_the_plan_shows_current_work (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830602556
+exported_at: 1792852516959
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830602556
-lastSeenAt: 1792830602556
+firstSeenAt: 1792852516959
+lastSeenAt: 1792852516959
 fingerprint: null
 payload:
   id: CT7_the_plan_shows_current_work
@@ -27,5 +27,37 @@ payload:
     - CT5_hooked_into_the_plan
   blocks: []
   spec: null
-  graph: a52abee8ded7dd97
+  graph:
+    hash: a52abee8ded7dd97
+    nodes:
+      - path: idearium/ui/js/plan-panel.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT5_hooked_into_the_plan
+      dependents:
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT9_the_plan_pull_tab
+      upstream:
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT1_one_door_for_models
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT2_it_learns_and_switches
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT3_the_code_tab_is_the_work_surface
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT5_hooked_into_the_plan
+      downstream:
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT9_the_plan_pull_tab
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-05-code-tab-and-one-router-phasemap.spec::CT9_the_plan_pull_tab
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4
+        - 'depends on (1): CT5_hooked_into_the_plan · all upstream 4'
+        - 'needed by (1): CT9_the_plan_pull_tab · finishing it unlocks CT9_the_plan_pull_tab'
   uuid: 31ef3faa-a692-5071-a0c5-01c56fbb23d1

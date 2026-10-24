@@ -5,13 +5,13 @@ id: docs_copilot-guardian-cos-expansion-phasemap.spec::GA5_history_and_spec_inte
 context: pipeline phase GA5_history_and_spec_integrity of docs/copilot-guardian-cos-expansion-phasemap.spec
 intent: null
 summary: GA5_history_and_spec_integrity (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830642129
+exported_at: 1792852556577
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830642129
-lastSeenAt: 1792830642129
+firstSeenAt: 1792852556577
+lastSeenAt: 1792852556577
 fingerprint: null
 payload:
   id: GA5_history_and_spec_integrity
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: aa8b6dbf976bed84
+  graph:
+    hash: aa8b6dbf976bed84
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: a5bfbeed-b608-5f77-a11b-64fd8fe48ead

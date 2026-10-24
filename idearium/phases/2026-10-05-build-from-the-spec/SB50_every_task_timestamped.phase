@@ -7,11 +7,11 @@ intent: null
 summary: SB50_every_task_timestamped (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830601680
+exported_at: 1792852515964
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830601680
-lastSeenAt: 1792830601680
+firstSeenAt: 1792852515964
+lastSeenAt: 1792852515964
 fingerprint: null
 payload:
   id: SB50_every_task_timestamped
@@ -27,5 +27,150 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 655bed31e0471a71
+  graph:
+    hash: 655bed31e0471a71
+    nodes:
+      - path: idearium/api/build-surface.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/repo/build-plan.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/repo/phases.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/plan-panel.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: cos/testenv/environment.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/index.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/setup-job.js
+        role: uses
+        exists: true
+        system: cos
+      - path: idearium/repo/deviation.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/repo/file-state.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/repo/snapshot-files.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/repo/snapshot.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/repo/spec-plan.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/repo/work-surface.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: lib/repo-activity.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/shadow.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: idearium/api/build-surface.js
+        to: idearium/repo/snapshot-files.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: idearium/repo/snapshot.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: idearium/repo/file-state.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: idearium/repo/deviation.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: cos/testenv/environment.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: cos/testenv/index.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: cos/testenv/setup-job.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: lib/repo-activity.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: idearium/repo/spec-plan.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: lib/shadow.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: idearium/repo/work-surface.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/api/build-surface.js
+        kind: requires
+    crossings:
+      - from: idearium/api/build-surface.js
+        to: cos/testenv/environment.js
+        fromSystem: idearium
+        toSystem: cos
+        kind: system
+        known: true
+      - from: idearium/api/build-surface.js
+        to: cos/testenv/index.js
+        fromSystem: idearium
+        toSystem: cos
+        kind: system
+        known: true
+      - from: idearium/api/build-surface.js
+        to: cos/testenv/setup-job.js
+        fromSystem: idearium
+        toSystem: cos
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 150ed4ae-d6f2-5800-b6b0-668bfa85c55b

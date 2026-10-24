@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-11-sovereign-node-architecture-phasemap.spec
 intent: null
 summary: P35_copilot_reads_edits_creates_nodes (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830587140
+exported_at: 1792852500754
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830587140
-lastSeenAt: 1792830587140
+firstSeenAt: 1792852500754
+lastSeenAt: 1792852500754
 fingerprint: null
 payload:
   id: P35_copilot_reads_edits_creates_nodes
@@ -26,5 +26,33 @@ payload:
     - P33_every_system_runs_its_node_registry
   blocks: []
   spec: null
-  graph: 4c5e2012491d8686
+  graph:
+    hash: 4c5e2012491d8686
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+      dependents:
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+      upstream:
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P5_data_folder_completion
+      downstream:
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND6_the_nodes_screen
+      blockedBy:
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by P33_every_system_runs_its_node_registry
+        - 'depends on (1): P33_every_system_runs_its_node_registry · all upstream 3'
+        - 'needed by (1): ND5_every_agent_reaches_every_system · all downstream 2'
   uuid: 8cd0c04f-1428-5872-ac03-f4fa89913998

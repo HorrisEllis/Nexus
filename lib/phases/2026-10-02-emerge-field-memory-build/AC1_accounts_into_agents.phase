@@ -5,13 +5,13 @@ id: docs_2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_a
 context: pipeline phase AC1_accounts_into_agents of docs/2026-10-02-emerge-field-memory-build-phasemap.spec
 intent: null
 summary: AC1_accounts_into_agents (?) — 7 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830599126
+exported_at: 1792852513255
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830599126
-lastSeenAt: 1792830599126
+firstSeenAt: 1792852513255
+lastSeenAt: 1792852513255
 fingerprint: null
 payload:
   id: AC1_accounts_into_agents
@@ -33,5 +33,246 @@ payload:
     - ST1_settings
   blocks: []
   spec: null
-  graph: b0a53df2fc8f1dea
+  graph:
+    hash: b0a53df2fc8f1dea
+    nodes:
+      - path: guardian/lib/cg-account-authority.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: idearium/ui/settings.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/economy/gate.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/economy/ledger.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/economy/policy.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/economy/router.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: changes
+        exists: true
+        system: lib
+      - path: guardian/lib/economy-guard.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/build-surface.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/economy/store.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/gate-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/pipeline-routing.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent-node.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/seam/adapters/warp-cascade.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-guardian-stack-sim.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-registry-harness.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-repo-agent-provider.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/agent-providers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tool-guide.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/idearium/code.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/nexus/tool-layers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/code-intel/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/context-atlas.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/context-prereqs.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/registry-harness.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-context.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-hat-memory.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-hat.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/repo-agent.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-hat-memory.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-providers.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tools/idearium/code.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tools/nexus/tool-layers.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tool-guide.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-context.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/registry-harness.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/code-intel/index.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/context-atlas.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/context-prereqs.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/lib/cg-account-authority.js
+        kind: requires
+      - from: lib/economy/store.js
+        to: lib/economy/policy.js
+        kind: requires
+      - from: guardian/lib/economy-guard.js
+        to: lib/economy/ledger.js
+        kind: requires
+      - from: lib/pipeline-routing.js
+        to: lib/economy/ledger.js
+        kind: requires
+      - from: lib/seam/adapters/warp-cascade.js
+        to: lib/economy/ledger.js
+        kind: requires
+      - from: tests/modules/test-guardian-stack-sim.test.js
+        to: lib/economy/ledger.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: lib/gate-context.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: lib/repo-agent-node.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: tests/modules/test-registry-harness.test.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: tests/modules/test-repo-agent-provider.js
+        to: lib/repo-agent.js
+        kind: requires
+    crossings:
+      - from: lib/repo-agent.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EC6_economy_and_the_tokenizer
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
+      dependents:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EC6_economy_and_the_tokenizer
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::GA1_guardian_source_of_truth
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
+      downstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+      blockedBy:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EC6_economy_and_the_tokenizer
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::UI0_the_stations_agree
+          files:
+            - idearium/ui/settings.html
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by EC6_economy_and_the_tokenizer, ST1_settings
+        - >-
+          depends on (3): GA1_guardian_source_of_truth, EC6_economy_and_the_tokenizer, ST1_settings
+          · all upstream 6
+        - 'needed by (1): IN2_claude_code_inside_nexus'
+        - 'same files as UI0_the_stations_agree with no order between them: idearium/ui/settings.html'
   uuid: eb83775a-34fa-5ab9-a68e-0b0ede27e3c6

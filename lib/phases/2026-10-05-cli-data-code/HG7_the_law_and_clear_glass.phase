@@ -5,13 +5,13 @@ id: docs_2026-10-05-cli-data-code-phasemap.spec::HG7_the_law_and_clear_glass
 context: pipeline phase HG7_the_law_and_clear_glass of docs/2026-10-05-cli-data-code-phasemap.spec
 intent: null
 summary: HG7_the_law_and_clear_glass (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830602135
+exported_at: 1792852516514
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830602135
-lastSeenAt: 1792830602135
+firstSeenAt: 1792852516514
+lastSeenAt: 1792852516514
 fingerprint: null
 payload:
   id: HG7_the_law_and_clear_glass
@@ -24,5 +24,29 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: e775e5b9fae4d6a3
+  graph:
+    hash: e775e5b9fae4d6a3
+    nodes:
+      - path: docs/AXIOMS-v3.1.md
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 1d2ed0e9-c36a-5211-953f-37d77206dd97

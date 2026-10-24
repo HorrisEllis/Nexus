@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-19-cortex-to-intelligence-and-versionium-consolidation-phasemap.spec
 intent: null
 summary: D3_snapshot_ownership (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830589184
+exported_at: 1792852502814
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830589184
-lastSeenAt: 1792830589184
+firstSeenAt: 1792852502814
+lastSeenAt: 1792852502814
 fingerprint: null
 payload:
   id: D3_snapshot_ownership
@@ -25,5 +25,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 42c05d3375ddc792
+  graph:
+    hash: 42c05d3375ddc792
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 976e60a0-73f3-5b2b-a6be-6eec574654d5

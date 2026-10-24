@@ -5,13 +5,13 @@ id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::CB2_gemini_first
 context: pipeline phase CB2_gemini_first of docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
 summary: CB2_gemini_first (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632808
+exported_at: 1792852546589
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632808
-lastSeenAt: 1792830632808
+firstSeenAt: 1792852546589
+lastSeenAt: 1792852546589
 fingerprint: null
 payload:
   id: CB2_gemini_first
@@ -24,5 +24,112 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 8a828fa8e92f645c
+  graph:
+    hash: 8a828fa8e92f645c
+    nodes:
+      - path: lib/pipeline-routing.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/agent-record.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/model-door.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/phase-faults.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-guardian-stack-sim.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-model-fit-ladder.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: guardian/lib/job-retry.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: lib/agent-providers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/economy/ledger.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/economy/router.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/pipeline-routing.js
+        to: lib/agent-providers.js
+        kind: requires
+      - from: lib/pipeline-routing.js
+        to: lib/economy/router.js
+        kind: requires
+      - from: lib/pipeline-routing.js
+        to: lib/economy/ledger.js
+        kind: requires
+      - from: lib/pipeline-routing.js
+        to: guardian/lib/job-retry.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/pipeline-routing.js
+        kind: requires
+      - from: lib/agent-record.js
+        to: lib/pipeline-routing.js
+        kind: requires
+      - from: lib/model-door.js
+        to: lib/pipeline-routing.js
+        kind: requires
+      - from: lib/phase-faults.js
+        to: lib/pipeline-routing.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/pipeline-routing.js
+        kind: requires
+      - from: tests/modules/test-guardian-stack-sim.test.js
+        to: lib/pipeline-routing.js
+        kind: requires
+      - from: tests/modules/test-model-fit-ladder.test.js
+        to: lib/pipeline-routing.js
+        kind: requires
+    crossings:
+      - from: lib/pipeline-routing.js
+        to: guardian/lib/job-retry.js
+        fromSystem: lib
+        toSystem: guardian
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 608f7ce2-32b9-5fad-962c-4b0ce7536dce

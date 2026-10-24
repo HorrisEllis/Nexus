@@ -5,13 +5,13 @@ id: docs_2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
 context: pipeline phase EW4_the_ide_into_idearium of docs/2026-10-24-emerge-warp-system-phasemap.spec
 intent: null
 summary: EW4_the_ide_into_idearium (backend) — 3 file(s)
-system: idearium
+system: emerge
 tags: []
-exported_at: 1792851610905
+exported_at: 1792852553778
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792851610905
-lastSeenAt: 1792851610905
+firstSeenAt: 1792852553778
+lastSeenAt: 1792852553778
 fingerprint: null
 payload:
   id: EW4_the_ide_into_idearium
@@ -27,5 +27,277 @@ payload:
     - EW3_the_spec_compiler_into_idearium
   blocks: []
   spec: emerge/spec/emerge.spec
-  graph: c63af4bdbc9dd6b5
+  graph:
+    hash: c63af4bdbc9dd6b5
+    nodes:
+      - path: emerge/emerge-ide.js
+        role: changes
+        exists: true
+        system: emerge
+      - path: loom/scanners/capability-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: orchestrator/orchestrator.js
+        role: changes
+        exists: true
+        system: orchestrator
+      - path: cli/run-supervised.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: copilot/lib/capabilities.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/lib/nexus-awareness.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/tools/materialize-cli.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: lib/agent-pull.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/diagnostic-causal.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/drawbridge-registry.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: loom/bootstrap.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/scanners/spec-map.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: tests/modules/test-drawbridge-registry.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cli/boot-systems.js
+        role: uses
+        exists: true
+        system: cli
+      - path: emerge/config.js
+        role: uses
+        exists: true
+        system: emerge
+      - path: emerge/registry-components.js
+        role: uses
+        exists: true
+        system: emerge
+      - path: emerge/siso/index.js
+        role: uses
+        exists: true
+        system: emerge
+      - path: intelligence/cfr/ledger.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/boot-sequence.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/event-taxonomy-pattern.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/gap-field.js
+        role: uses
+        exists: true
+        system: lib
+      - path: ollama/ollama-runtime.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: orchestrator/event-taxonomy.js
+        role: uses
+        exists: true
+        system: orchestrator
+      - path: orchestrator/lib/intent-map.js
+        role: uses
+        exists: true
+        system: orchestrator
+    edges:
+      - from: emerge/emerge-ide.js
+        to: emerge/siso/index.js
+        kind: requires
+      - from: emerge/emerge-ide.js
+        to: ollama/ollama-runtime.js
+        kind: requires
+      - from: emerge/emerge-ide.js
+        to: emerge/config.js
+        kind: requires
+      - from: emerge/emerge-ide.js
+        to: emerge/registry-components.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: lib/data-home.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: orchestrator/event-taxonomy.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: lib/event-taxonomy-pattern.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: orchestrator/lib/intent-map.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: lib/boot-sequence.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: cli/boot-systems.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: intelligence/cfr/ledger.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: lib/gap-field.js
+        kind: requires
+      - from: cli/run-supervised.js
+        to: orchestrator/orchestrator.js
+        kind: requires
+      - from: copilot/lib/capabilities.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: copilot/lib/nexus-awareness.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: cortex/tools/materialize-cli.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: lib/agent-pull.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: lib/diagnostic-causal.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: lib/drawbridge-registry.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: loom/scanners/spec-map.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: tests/modules/test-drawbridge-registry.test.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+    crossings:
+      - from: emerge/emerge-ide.js
+        to: ollama/ollama-runtime.js
+        fromSystem: emerge
+        toSystem: ollama
+        kind: system
+        known: true
+      - from: orchestrator/orchestrator.js
+        to: cli/boot-systems.js
+        fromSystem: orchestrator
+        toSystem: cli
+        kind: system
+        known: true
+      - from: orchestrator/orchestrator.js
+        to: intelligence/cfr/ledger.js
+        fromSystem: orchestrator
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: cli/run-supervised.js
+        to: orchestrator/orchestrator.js
+        fromSystem: cli
+        toSystem: orchestrator
+        kind: system
+        known: true
+      - from: copilot/lib/capabilities.js
+        to: loom/scanners/capability-map.js
+        fromSystem: copilot
+        toSystem: loom
+        kind: system
+        known: true
+      - from: copilot/lib/nexus-awareness.js
+        to: loom/scanners/capability-map.js
+        fromSystem: copilot
+        toSystem: loom
+        kind: system
+        known: true
+      - from: cortex/tools/materialize-cli.js
+        to: loom/scanners/capability-map.js
+        fromSystem: cortex
+        toSystem: loom
+        kind: system
+        known: true
+      - from: lib/agent-pull.js
+        to: loom/scanners/capability-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+        to: loom/scanners/capability-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/diagnostic-causal.js
+        to: loom/scanners/capability-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/drawbridge-registry.js
+        to: loom/scanners/capability-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+      dependents:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW5_the_registry_with_wires
+      upstream:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW1_emerge_and_warp_one_system
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW2_the_callers_outside_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D2_the_runtime_is_not_a_crossing
+      downstream:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW5_the_registry_with_wires
+      blockedBy:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+      unlocks:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW5_the_registry_with_wires
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by EW3_the_spec_compiler_into_idearium
+        - 'depends on (1): EW3_the_spec_compiler_into_idearium · all upstream 6'
+        - >-
+          needed by (1): EW5_the_registry_with_wires · finishing it unlocks
+          EW5_the_registry_with_wires
   uuid: def522dc-5269-59aa-bb93-2a26df5dbbaa

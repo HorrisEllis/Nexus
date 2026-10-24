@@ -5,13 +5,13 @@ id: docs_2026-10-19-upload-intent-and-page-map-phasemap.spec::PM2_index_and_chun
 context: pipeline phase PM2_index_and_chunks of docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
 intent: null
 summary: PM2_index_and_chunks (library) — 2 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830633682
+exported_at: 1792852547404
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830633682
-lastSeenAt: 1792830633682
+firstSeenAt: 1792852547404
+lastSeenAt: 1792852547404
 fingerprint: null
 payload:
   id: PM2_index_and_chunks
@@ -26,5 +26,59 @@ payload:
     - PM1_blocks
   blocks: []
   spec: null
-  graph: 7f6219ca6e083920
+  graph:
+    hash: 7f6219ca6e083920
+    nodes:
+      - path: clear-glass/src/page/page-map.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: tests/modules/clear-glass-page-map.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: clear-glass/src/page/page-session.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: tests/modules/clear-glass-page-map.test.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: clear-glass/src/page/page-session.js
+        to: clear-glass/src/page/page-map.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM1_blocks
+      dependents:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM3_synthesized_map_that_learns
+      upstream:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM1_blocks
+      downstream:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM3_synthesized_map_that_learns
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM4_intent_to_targets
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM5_tools_routes_commands
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM6_nerve_feel
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM7_live_injected_map
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM8_page_map_panel
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM3_synthesized_map_that_learns
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): PM1_blocks'
+        - >-
+          needed by (1): PM3_synthesized_map_that_learns · all downstream 6 · finishing it unlocks
+          PM3_synthesized_map_that_learns
   uuid: 8bdfc37d-d570-5364-ba73-556bcd68260d

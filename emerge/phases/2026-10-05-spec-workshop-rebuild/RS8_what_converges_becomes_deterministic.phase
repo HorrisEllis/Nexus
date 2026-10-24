@@ -1,0 +1,163 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS8_what_converges_becomes_deterministic
+type: phase
+id: docs_2026-10-05-spec-workshop-rebuild-phasemap.spec::RS8_what_converges_becomes_deterministic
+context: >-
+  pipeline phase RS8_what_converges_becomes_deterministic of
+  docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+intent: null
+summary: RS8_what_converges_becomes_deterministic (?) — 2 file(s)
+system: emerge
+tags: []
+exported_at: 1792852518972
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792852518972
+lastSeenAt: 1792852518972
+fingerprint: null
+payload:
+  id: RS8_what_converges_becomes_deterministic
+  map: docs/2026-10-05-spec-workshop-rebuild-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - warp/dispatch/population.js
+    - lib/component-store.js
+  depends_on:
+    - RS4_the_pipeline_on_warp2
+  blocks: []
+  spec: null
+  graph:
+    hash: 4ba503257e263231
+    nodes:
+      - path: lib/component-store.js
+        role: changes
+        exists: true
+        system: lib
+      - path: warp/dispatch/population.js
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/warp-build-dispatch.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/atlas-generate.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/build-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/warp-rung.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: ollama/lib/dispatch.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: warp/dispatch/benchmark.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/dispatch/index.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/index.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/test/dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/test/v1.1.0-additions.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: warp/test/v1.4-additions.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+      - path: warp/dispatch/canonicalize.js
+        role: uses
+        exists: true
+        system: null
+    edges:
+      - from: warp/dispatch/population.js
+        to: warp/dispatch/canonicalize.js
+        kind: requires
+      - from: lib/component-store.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: idearium/spec-engine/warp-build-dispatch.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: lib/warp-rung.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: ollama/lib/dispatch.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/dispatch/benchmark.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/dispatch/index.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/index.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/test/dispatch.test.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/test/v1.1.0-additions.test.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: warp/test/v1.4-additions.test.js
+        to: warp/dispatch/population.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/atlas-generate.js
+        to: lib/component-store.js
+        kind: requires
+      - from: lib/build-context.js
+        to: lib/component-store.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+      dependents: []
+      upstream:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+      downstream: []
+      blockedBy:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by RS4_the_pipeline_on_warp2
+        - 'depends on (1): RS4_the_pipeline_on_warp2 · all upstream 3'
+        - 'needed by (0): —'
+  uuid: 275ba9e9-23cb-5e2e-b3a3-a68fe7b3b742

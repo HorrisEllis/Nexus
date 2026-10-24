@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-17-system-drawbridge-phasemap.spec
 intent: null
 summary: DB10_shadow_and_negative_space_at_the_drawbridge (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830628909
+exported_at: 1792852542833
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830628909
-lastSeenAt: 1792830628909
+firstSeenAt: 1792852542833
+lastSeenAt: 1792852542833
 fingerprint: null
 payload:
   id: DB10_shadow_and_negative_space_at_the_drawbridge
@@ -25,5 +25,200 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 1ed4e7e5928a51c6
+  graph:
+    hash: 1ed4e7e5928a51c6
+    nodes:
+      - path: lib/drawbridge-registry.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/shadow.js
+        role: changes
+        exists: true
+        system: lib
+      - path: loom/scanners/capability-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: copilot/lib/capabilities.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/lib/nexus-awareness.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/tools/materialize-cli.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: idearium/api/build-surface.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/proof-run.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/agent-pull.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/diagnostic/loom-scan.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/diagnostic-causal.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: loom/bootstrap.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/scanners/spec-map.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: tests/modules/test-drawbridge-registry.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: intelligence/liminal-space/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/gap-field.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/system-boundary.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: lib/drawbridge-registry.js
+        to: lib/system-boundary.js
+        kind: requires
+      - from: lib/shadow.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/shadow.js
+        to: lib/gap-field.js
+        kind: requires
+      - from: lib/shadow.js
+        to: intelligence/liminal-space/index.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/drawbridge-registry.js
+        kind: requires
+      - from: tests/modules/test-drawbridge-registry.test.js
+        to: lib/drawbridge-registry.js
+        kind: requires
+      - from: copilot/lib/capabilities.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: copilot/lib/nexus-awareness.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: cortex/tools/materialize-cli.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: lib/agent-pull.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: lib/diagnostic-causal.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: loom/scanners/spec-map.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: lib/shadow.js
+        kind: requires
+      - from: idearium/repo/proof-run.js
+        to: lib/shadow.js
+        kind: requires
+    crossings:
+      - from: lib/shadow.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+      - from: lib/shadow.js
+        to: intelligence/liminal-space/index.js
+        fromSystem: lib
+        toSystem: intelligence
+        kind: upward
+        known: true
+      - from: copilot/lib/capabilities.js
+        to: loom/scanners/capability-map.js
+        fromSystem: copilot
+        toSystem: loom
+        kind: system
+        known: true
+      - from: copilot/lib/nexus-awareness.js
+        to: loom/scanners/capability-map.js
+        fromSystem: copilot
+        toSystem: loom
+        kind: system
+        known: true
+      - from: cortex/tools/materialize-cli.js
+        to: loom/scanners/capability-map.js
+        fromSystem: cortex
+        toSystem: loom
+        kind: system
+        known: true
+      - from: lib/agent-pull.js
+        to: loom/scanners/capability-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/agent-tools/tools/diagnostic/loom-scan.js
+        to: loom/scanners/capability-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/diagnostic-causal.js
+        to: loom/scanners/capability-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: ba35f339-5010-5fed-b200-eab768d6f37b

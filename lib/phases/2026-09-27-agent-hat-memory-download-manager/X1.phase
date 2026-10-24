@@ -5,13 +5,13 @@ id: docs_2026-09-27-agent-hat-memory-download-manager-phasemap.spec::X1
 context: pipeline phase X1 of docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
 intent: null
 summary: X1 (?) — 7 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830592112
+exported_at: 1792852505746
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830592112
-lastSeenAt: 1792830592112
+firstSeenAt: 1792852505746
+lastSeenAt: 1792852505746
 fingerprint: null
 payload:
   id: X1
@@ -47,5 +47,81 @@ payload:
     - M5
   blocks: []
   spec: null
-  graph: 3523be12dc3e544d
+  graph:
+    hash: 3523be12dc3e544d
+    nodes:
+      - path: docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+      - path: loom/maps/agent-memory-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: loom/bootstrap.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/scanners/source-map.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: loom/maps/agent-memory-map.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/agent-memory-map.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O1
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O2
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O3
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H1
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H2
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H3
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H4
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G1
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G2
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G3
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G4
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G5
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M1
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M2
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M3
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M4
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M5
+      dependents: []
+      upstream:
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G1
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G2
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G3
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G4
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::G5
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H1
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H2
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H3
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::H4
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M1
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M2
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M3
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M4
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::M5
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O1
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O2
+        - docs/2026-09-27-agent-hat-memory-download-manager-phasemap.spec::O3
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (17): O1, O2, O3, H1, H2, H3, H4, G1, G2, G3, G4, G5, M1, M2, M3, M4, M5'
+        - 'needed by (0): —'
   uuid: 7dcc9f27-faea-5bcf-8454-27bbbf8d522c

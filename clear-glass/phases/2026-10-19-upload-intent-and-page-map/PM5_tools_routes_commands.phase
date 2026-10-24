@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-19-upload-intent-and-page-map-phasemap.spec
 intent: null
 summary: PM5_tools_routes_commands (integration) — 4 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830633686
+exported_at: 1792852547405
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830633686
-lastSeenAt: 1792830633686
+firstSeenAt: 1792852547405
+lastSeenAt: 1792852547405
 fingerprint: null
 payload:
   id: PM5_tools_routes_commands
@@ -31,5 +31,180 @@ payload:
     - UP3_upload_routes_and_commands
   blocks: []
   spec: null
-  graph: 00c3906ed11442c9
+  graph:
+    hash: 00c3906ed11442c9
+    nodes:
+      - path: clear-glass/src/copilot/bridge.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/copilot/tools.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/driver/index.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.pre-userscripts.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/copilot-bridge-direct-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/clear-glass-agent-surface.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: clear-glass/src/copilot/chat-store.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/copilot/context-need.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/copilot/hat.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/core/zoom.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/driver/page-resolver.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/page/field.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/page/page-memory.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/page/page-session.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/page/reader.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/page/semantic-tree.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/site-settings/readers.js
+        role: uses
+        exists: true
+        system: clear-glass
+    edges:
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/site-settings/readers.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/core/zoom.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/page/reader.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/page/semantic-tree.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/main/index.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/driver/page-resolver.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/page/page-session.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/page/page-memory.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/page/field.js
+        kind: requires
+      - from: clear-glass/src/copilot/bridge.js
+        to: clear-glass/src/copilot/chat-store.js
+        kind: requires
+      - from: clear-glass/src/copilot/bridge.js
+        to: clear-glass/src/copilot/context-need.js
+        kind: requires
+      - from: clear-glass/src/copilot/bridge.js
+        to: clear-glass/src/copilot/hat.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: clear-glass/src/driver/index.js
+        kind: requires
+      - from: clear-glass/src/main/index.pre-userscripts.js
+        to: clear-glass/src/driver/index.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: clear-glass/src/copilot/tools.js
+        kind: requires
+      - from: tests/copilot-bridge-direct-dispatch.test.js
+        to: clear-glass/src/copilot/bridge.js
+        kind: requires
+      - from: tests/modules/clear-glass-agent-surface.test.js
+        to: clear-glass/src/copilot/bridge.js
+        kind: requires
+    crossings:
+      - from: orchestrator/orchestrator.js
+        to: clear-glass/src/copilot/tools.js
+        fromSystem: orchestrator
+        toSystem: clear-glass
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM4_intent_to_targets
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP3_upload_routes_and_commands
+      dependents:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM6_nerve_feel
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM8_page_map_panel
+      upstream:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM1_blocks
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM2_index_and_chunks
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM3_synthesized_map_that_learns
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM4_intent_to_targets
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP1_placement_tool
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP2_learned_placements
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::UP3_upload_routes_and_commands
+      downstream:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM6_nerve_feel
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM7_live_injected_map
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM8_page_map_panel
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM6_nerve_feel
+        - docs/2026-10-19-upload-intent-and-page-map-phasemap.spec::PM8_page_map_panel
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4
+        - 'depends on (2): PM4_intent_to_targets, UP3_upload_routes_and_commands · all upstream 7'
+        - >-
+          needed by (2): PM6_nerve_feel, PM8_page_map_panel · all downstream 3 · finishing it
+          unlocks PM6_nerve_feel, PM8_page_map_panel
   uuid: ee1fcabf-6f43-5fb6-9d76-ca6d45a45efa

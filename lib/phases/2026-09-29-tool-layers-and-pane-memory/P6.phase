@@ -5,13 +5,13 @@ id: docs_2026-09-29-tool-layers-and-pane-memory-phasemap.spec::P6
 context: pipeline phase P6 of docs/2026-09-29-tool-layers-and-pane-memory-phasemap.spec
 intent: null
 summary: P6 (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830596968
+exported_at: 1792852510915
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830596968
-lastSeenAt: 1792830596968
+firstSeenAt: 1792852510915
+lastSeenAt: 1792852510915
 fingerprint: null
 payload:
   id: P6
@@ -23,5 +23,28 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 5880174cc33d421b
+  graph:
+    hash: 5880174cc33d421b
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 5856b126-72bd-5ec1-83ed-6af94b7a2668

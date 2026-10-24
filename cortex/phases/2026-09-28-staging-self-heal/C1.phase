@@ -5,13 +5,13 @@ id: docs_2026-09-28-staging-self-heal-phasemap.spec::C1
 context: pipeline phase C1 of docs/2026-09-28-staging-self-heal-phasemap.spec
 intent: null
 summary: C1 (?) — 7 file(s)
-system: idearium
+system: cortex
 tags: []
-exported_at: 1792830595326
+exported_at: 1792852509063
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830595326
-lastSeenAt: 1792830595326
+firstSeenAt: 1792852509063
+lastSeenAt: 1792852509063
 fingerprint: null
 payload:
   id: C1
@@ -31,5 +31,124 @@ payload:
     - C0
   blocks: []
   spec: null
-  graph: 54047179b286c733
+  graph:
+    hash: 54047179b286c733
+    nodes:
+      - path: cortex/self-heal/failure-mode-forensics.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: intelligence/causal/compound.js
+        role: changes
+        exists: true
+        system: intelligence
+      - path: cortex/self-heal/failure-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/self-heal/index.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: intelligence/causal/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/ledger.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/routes.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: tests/modules/test-c1-compound-failure-mode.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/config.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: intelligence/cfr/graph.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/lib/domain-nodes.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: cortex/self-heal/failure-mode-forensics.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cortex/self-heal/failure-mode-forensics.js
+        to: lib/node-export.js
+        kind: requires
+      - from: cortex/self-heal/failure-mode-forensics.js
+        to: cortex/config.js
+        kind: requires
+      - from: intelligence/causal/compound.js
+        to: intelligence/cfr/graph.js
+        kind: requires
+      - from: intelligence/causal/compound.js
+        to: intelligence/lib/domain-nodes.js
+        kind: requires
+      - from: cortex/self-heal/failure-intake.js
+        to: cortex/self-heal/failure-mode-forensics.js
+        kind: requires
+      - from: cortex/self-heal/index.js
+        to: cortex/self-heal/failure-mode-forensics.js
+        kind: requires
+      - from: tests/modules/test-c1-compound-failure-mode.test.js
+        to: cortex/self-heal/failure-mode-forensics.js
+        kind: requires
+      - from: intelligence/causal/index.js
+        to: intelligence/causal/compound.js
+        kind: requires
+      - from: intelligence/cfr/ledger.js
+        to: intelligence/causal/compound.js
+        kind: requires
+      - from: intelligence/routes.js
+        to: intelligence/causal/compound.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::C0
+      dependents:
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+      upstream:
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::C0
+      downstream:
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::S4
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::S6
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::S7
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): C0'
+        - 'needed by (5): S4, S7, L1, A1, X1 · all downstream 7'
   uuid: 7e612f8f-b73e-510b-b727-3de7f9e4e9e9

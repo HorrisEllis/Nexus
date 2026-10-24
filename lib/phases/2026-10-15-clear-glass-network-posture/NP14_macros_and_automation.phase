@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-15-clear-glass-network-posture-phasemap.spec
 intent: null
 summary: NP14_macros_and_automation (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830616032
+exported_at: 1792852529994
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830616032
-lastSeenAt: 1792830616032
+firstSeenAt: 1792852529994
+lastSeenAt: 1792852529994
 fingerprint: null
 payload:
   id: NP14_macros_and_automation
@@ -26,5 +26,28 @@ payload:
     - NP9_cli_first
   blocks: []
   spec: null
-  graph: 2847a26c9d226bd5
+  graph:
+    hash: 2847a26c9d226bd5
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+      dependents: []
+      upstream:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+      downstream: []
+      blockedBy:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by NP9_cli_first
+        - 'depends on (1): NP9_cli_first'
+        - 'needed by (0): —'
   uuid: ace56fb8-ebfb-5826-8f6b-ad8442fc8360

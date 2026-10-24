@@ -9,11 +9,11 @@ intent: null
 summary: RS7_architect_and_blueprint_stations (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792830604657
+exported_at: 1792852518971
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830604657
-lastSeenAt: 1792830604657
+firstSeenAt: 1792852518971
+lastSeenAt: 1792852518971
 fingerprint: null
 payload:
   id: RS7_architect_and_blueprint_stations
@@ -29,5 +29,120 @@ payload:
     - RS6_the_workshop_as_the_editor
   blocks: []
   spec: null
-  graph: a3f6ef1273789a83
+  graph:
+    hash: a3f6ef1273789a83
+    nodes:
+      - path: idearium/lib/architect.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/architect.html
+        role: changes
+        exists: false
+        system: idearium
+      - path: lib/blueprint.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: intelligence/routes.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: copilot/lib/descriptor-projector.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: lib/cli-map.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/component-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/constitutional-ai.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/grammar-engine.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-config.js
+        role: uses
+        exists: true
+        system: lib
+      - path: orchestrator/lib/spec-drift.js
+        role: uses
+        exists: true
+        system: orchestrator
+    edges:
+      - from: lib/blueprint.js
+        to: lib/component-registry.js
+        kind: requires
+      - from: lib/blueprint.js
+        to: copilot/lib/descriptor-projector.js
+        kind: requires
+      - from: lib/blueprint.js
+        to: lib/cli-map.js
+        kind: requires
+      - from: lib/blueprint.js
+        to: lib/grammar-engine.js
+        kind: requires
+      - from: lib/blueprint.js
+        to: lib/constitutional-ai.js
+        kind: requires
+      - from: lib/blueprint.js
+        to: lib/nexus-config.js
+        kind: requires
+      - from: lib/blueprint.js
+        to: orchestrator/lib/spec-drift.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/architect.js
+        kind: requires
+      - from: intelligence/routes.js
+        to: lib/blueprint.js
+        kind: requires
+    crossings:
+      - from: lib/blueprint.js
+        to: copilot/lib/descriptor-projector.js
+        fromSystem: lib
+        toSystem: copilot
+        kind: upward
+        known: true
+      - from: lib/blueprint.js
+        to: orchestrator/lib/spec-drift.js
+        fromSystem: lib
+        toSystem: orchestrator
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+      dependents: []
+      upstream:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS1_the_generation_recorder
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS2_replay_rewind_branch
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS3_the_spec_document
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS4_the_pipeline_on_warp2
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS5_the_template_picker
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+      downstream: []
+      blockedBy:
+        - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6_the_workshop_as_the_editor
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by RS6_the_workshop_as_the_editor
+        - 'depends on (1): RS6_the_workshop_as_the_editor · all upstream 6'
+        - 'needed by (0): —'
   uuid: 092a58ee-9e2f-551e-83d6-0eb04d66f583

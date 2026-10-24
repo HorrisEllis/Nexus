@@ -5,13 +5,13 @@ id: docs_nexus-observability-tablet-phasemap.spec::OB2_gap_detection_diagnostic
 context: pipeline phase OB2_gap_detection_diagnostic of docs/nexus-observability-tablet-phasemap.spec
 intent: null
 summary: OB2_gap_detection_diagnostic (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830645542
+exported_at: 1792852560175
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830645542
-lastSeenAt: 1792830645542
+firstSeenAt: 1792852560175
+lastSeenAt: 1792852560175
 fingerprint: null
 payload:
   id: OB2_gap_detection_diagnostic
@@ -23,5 +23,45 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 94d6f60ae9374459
+  graph:
+    hash: 94d6f60ae9374459
+    nodes:
+      - path: guardian/lib/gap-hunter.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: intelligence/gap/hunter.js
+        role: uses
+        exists: true
+        system: intelligence
+    edges:
+      - from: guardian/lib/gap-hunter.js
+        to: intelligence/gap/hunter.js
+        kind: requires
+    crossings:
+      - from: guardian/lib/gap-hunter.js
+        to: intelligence/gap/hunter.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: b8b1dc63-8517-59d9-a47b-f896258d5355

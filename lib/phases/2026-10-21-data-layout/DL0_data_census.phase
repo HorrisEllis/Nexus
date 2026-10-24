@@ -5,13 +5,13 @@ id: docs_2026-10-21-data-layout-phasemap.spec::DL0_data_census
 context: pipeline phase DL0_data_census of docs/2026-10-21-data-layout-phasemap.spec
 intent: null
 summary: DL0_data_census (foundation) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830637068
+exported_at: 1792852550598
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830637068
-lastSeenAt: 1792830637068
+firstSeenAt: 1792852550598
+lastSeenAt: 1792852550598
 fingerprint: null
 payload:
   id: DL0_data_census
@@ -26,7 +26,58 @@ payload:
   blocks:
     - MOD-DATA-CENSUS
   spec: docs/data-layout.spec
-  graph: f0135ef7c3aeb4f1
+  graph:
+    hash: f0135ef7c3aeb4f1
+    nodes:
+      - path: docs/atlases/data-census.md
+        role: changes
+        exists: true
+        system: null
+      - path: lib/data-clearup.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/data-home.js
+        role: used-by
+        exists: true
+        system: lib
+    edges:
+      - from: idearium/api/index.js
+        to: lib/data-clearup.js
+        kind: requires
+      - from: lib/data-home.js
+        to: lib/data-clearup.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-21-data-layout-phasemap.spec::DL1_clearup_tool
+      upstream: []
+      downstream:
+        - docs/2026-10-21-data-layout-phasemap.spec::DL1_clearup_tool
+        - docs/2026-10-21-data-layout-phasemap.spec::DL2_one_resolver
+        - docs/2026-10-21-data-layout-phasemap.spec::DL3_rewire_writers
+        - docs/2026-10-21-data-layout-phasemap.spec::DL4_one_repo_folder
+        - docs/2026-10-21-data-layout-phasemap.spec::DL5_memory_in_cortex
+        - docs/2026-10-21-data-layout-phasemap.spec::DL6_cortex_server
+        - docs/2026-10-21-data-layout-phasemap.spec::DL7_cortex_snapshot_out
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-data-layout-phasemap.spec::DL1_clearup_tool
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): DL1_clearup_tool · all downstream 7 · finishing it unlocks DL1_clearup_tool'
   uuid: 29e8087b-e292-5554-845f-1c51f67fb3f2
   specLink:
     how: declared

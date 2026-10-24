@@ -5,13 +5,13 @@ id: docs_2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::A2
 context: pipeline phase A2 of docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec
 intent: null
 summary: A2 (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830591245
+exported_at: 1792852504908
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830591245
-lastSeenAt: 1792830591245
+firstSeenAt: 1792852504908
+lastSeenAt: 1792852504908
 fingerprint: null
 payload:
   id: A2
@@ -25,5 +25,41 @@ payload:
     - A1
   blocks: []
   spec: null
-  graph: fc6a51b24eaf102b
+  graph:
+    hash: fc6a51b24eaf102b
+    nodes:
+      - path: tests/modules/test-nexus-atlas-refs.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: tests/modules/test-nexus-atlas-refs.test.js
+        to: lib/test-sandbox.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::A1
+      dependents:
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+      upstream:
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::A1
+      downstream:
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-26-cos-testenv-vm-and-nexus-atlas-phasemap.spec::R1
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): A1'
+        - 'needed by (1): R1 · finishing it unlocks R1'
   uuid: 6cc14e90-c8fe-5c0f-a5ae-769a8e10c7d7

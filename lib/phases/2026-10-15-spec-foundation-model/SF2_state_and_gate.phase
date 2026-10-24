@@ -5,13 +5,13 @@ id: docs_2026-10-15-spec-foundation-model-phasemap.spec::SF2_state_and_gate
 context: pipeline phase SF2_state_and_gate of docs/2026-10-15-spec-foundation-model-phasemap.spec
 intent: null
 summary: SF2_state_and_gate (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830620252
+exported_at: 1792852534215
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830620252
-lastSeenAt: 1792830620252
+firstSeenAt: 1792852534215
+lastSeenAt: 1792852534215
 fingerprint: null
 payload:
   id: SF2_state_and_gate
@@ -24,5 +24,37 @@ payload:
     - SF1_foundation_field
   blocks: []
   spec: null
-  graph: adb0d3d7e575647a
+  graph:
+    hash: adb0d3d7e575647a
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+      dependents:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF3_evidence_not_claims
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+      upstream:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+      downstream:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF3_evidence_not_claims
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF5_hat_intent_injection
+      blockedBy:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+      unlocks:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF3_evidence_not_claims
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by SF1_foundation_field
+        - 'depends on (1): SF1_foundation_field'
+        - >-
+          needed by (2): SF3_evidence_not_claims, SF4_the_listener · all downstream 3 · finishing it
+          unlocks SF3_evidence_not_claims, SF4_the_listener
   uuid: a02c9a19-7488-5961-b778-b00801af733f

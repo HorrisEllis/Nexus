@@ -5,13 +5,13 @@ id: docs_2026-09-30-idearium-coding-flow-phasemap.spec::W0_map
 context: pipeline phase W0_map of docs/2026-09-30-idearium-coding-flow-phasemap.spec
 intent: null
 summary: W0_map (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830597348
+exported_at: 1792852511334
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830597348
-lastSeenAt: 1792830597348
+firstSeenAt: 1792852511334
+lastSeenAt: 1792852511334
 fingerprint: null
 payload:
   id: W0_map
@@ -25,5 +25,44 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 48e0fd2adc75cbe4
+  graph:
+    hash: 48e0fd2adc75cbe4
+    nodes:
+      - path: docs/2026-09-30-idearium-coding-flow-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+      - path: docs/SPEC-REGISTRY.spec
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W1_idearium_never_blocks_on_git
+      upstream: []
+      downstream:
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W1_idearium_never_blocks_on_git
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W2_plan_always_lands
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W3_work_surface
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W4_navigation
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W5_theme_and_css
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W6_release
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W7_next_mapped_2026_09_30
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-30-idearium-coding-flow-phasemap.spec::W1_idearium_never_blocks_on_git
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (1): W1_idearium_never_blocks_on_git · all downstream 7 · finishing it unlocks
+          W1_idearium_never_blocks_on_git
   uuid: 8b54a0dc-b96a-5f50-a891-63422aaa8df2

@@ -5,13 +5,13 @@ id: docs_nexus-observability-tablet-phasemap.spec::OB9_3d_visual_map
 context: pipeline phase OB9_3d_visual_map of docs/nexus-observability-tablet-phasemap.spec
 intent: null
 summary: OB9_3d_visual_map (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830645547
+exported_at: 1792852560180
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830645547
-lastSeenAt: 1792830645547
+firstSeenAt: 1792852560180
+lastSeenAt: 1792852560180
 fingerprint: null
 payload:
   id: OB9_3d_visual_map
@@ -23,5 +23,28 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 7aca0f52f9a1f8aa
+  graph:
+    hash: 7aca0f52f9a1f8aa
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: e4916676-5ac3-5525-8947-60d94d4747a3

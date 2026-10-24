@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-02-workshop-codex-rewind-phasemap.spec
 intent: null
 summary: BP1_destroy_and_rebuild_blueprint (?) — 2 file(s)
-system: idearium
+system: architect
 tags: []
-exported_at: 1792830600792
+exported_at: 1792852515053
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830600792
-lastSeenAt: 1792830600792
+firstSeenAt: 1792852515053
+lastSeenAt: 1792852515053
 fingerprint: null
 payload:
   id: BP1_destroy_and_rebuild_blueprint
@@ -28,5 +28,50 @@ payload:
     - CX0_codex_component_store
   blocks: []
   spec: null
-  graph: 62cf850a997b6f1b
+  graph:
+    hash: 62cf850a997b6f1b
+    nodes:
+      - path: architect/src/spec/Blueprint.js
+        role: changes
+        exists: true
+        system: architect
+      - path: idearium/lib/blueprint.js
+        role: changes
+        exists: false
+        system: idearium
+      - path: architect/service.js
+        role: used-by
+        exists: true
+        system: architect
+    edges:
+      - from: architect/service.js
+        to: architect/src/spec/Blueprint.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
+      dependents:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::PL1_one_entry_point
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::UI12_workshop_surface
+      upstream:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
+      downstream:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::PL1_one_entry_point
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::UI12_workshop_surface
+      blockedBy:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::CX0_codex_component_store
+      unlocks:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::PL1_one_entry_point
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by CX0_codex_component_store
+        - 'depends on (1): CX0_codex_component_store'
+        - >-
+          needed by (2): PL1_one_entry_point, UI12_workshop_surface · finishing it unlocks
+          PL1_one_entry_point
   uuid: 235bbea2-9c06-5c7c-8869-5e11a0f4d5aa

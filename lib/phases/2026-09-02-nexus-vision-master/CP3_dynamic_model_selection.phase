@@ -5,13 +5,13 @@ id: docs_2026-09-02-nexus-vision-master-phasemap.spec::CP3_dynamic_model_selecti
 context: pipeline phase CP3_dynamic_model_selection of docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: CP3_dynamic_model_selection (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584918
+exported_at: 1792852498351
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584918
-lastSeenAt: 1792830584918
+firstSeenAt: 1792852498351
+lastSeenAt: 1792852498351
 fingerprint: null
 payload:
   id: CP3_dynamic_model_selection
@@ -23,5 +23,179 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 2bda1b4b75b52bf7
+  graph:
+    hash: 2bda1b4b75b52bf7
+    nodes:
+      - path: lib/agent-tools/tools/diagnostic/resource-monitor.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/resource-monitor.js
+        role: changes
+        exists: true
+        system: lib
+      - path: ollama/config.js
+        role: changes
+        exists: true
+        system: ollama
+      - path: cli/nexus-repl.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: idearium/agent-suite/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/vector-memory.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: ollama/lib/dispatch.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: ollama/lib/model-inventory.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: ollama/lib/ollama-client.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: ollama/lib/state.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: ollama/ollama-runtime.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: ollama/routes/jobs.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: ollama/routes/models.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: ollama/routes/stream.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: ollama/routes/system.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: cos/watchdog/monitor.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/watchdog/proc-stats.js
+        role: uses
+        exists: true
+        system: cos
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/prevention.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: ollama/config.js
+        to: lib/data-home.js
+        kind: requires
+      - from: lib/agent-tools/tools/diagnostic/resource-monitor.js
+        to: cos/watchdog/proc-stats.js
+        kind: requires
+      - from: lib/agent-tools/tools/diagnostic/resource-monitor.js
+        to: cos/watchdog/monitor.js
+        kind: requires
+      - from: lib/resource-monitor.js
+        to: lib/prevention.js
+        kind: requires
+      - from: cli/nexus-repl.js
+        to: ollama/config.js
+        kind: requires
+      - from: idearium/agent-suite/index.js
+        to: ollama/config.js
+        kind: requires
+      - from: lib/vector-memory.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/lib/dispatch.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/lib/model-inventory.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/lib/ollama-client.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/lib/state.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/ollama-runtime.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/routes/jobs.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/routes/models.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/routes/stream.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/routes/system.js
+        to: ollama/config.js
+        kind: requires
+    crossings:
+      - from: lib/agent-tools/tools/diagnostic/resource-monitor.js
+        to: cos/watchdog/proc-stats.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/agent-tools/tools/diagnostic/resource-monitor.js
+        to: cos/watchdog/monitor.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: cli/nexus-repl.js
+        to: ollama/config.js
+        fromSystem: cli
+        toSystem: ollama
+        kind: system
+        known: true
+      - from: idearium/agent-suite/index.js
+        to: ollama/config.js
+        fromSystem: idearium
+        toSystem: ollama
+        kind: system
+        known: true
+      - from: lib/vector-memory.js
+        to: ollama/config.js
+        fromSystem: lib
+        toSystem: ollama
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 830aaaea-449a-59ec-923a-7b195112f261

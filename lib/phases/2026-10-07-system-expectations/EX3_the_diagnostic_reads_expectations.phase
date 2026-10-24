@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-07-system-expectations-phasemap.spec
 intent: null
 summary: EX3_the_diagnostic_reads_expectations (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830607595
+exported_at: 1792852521667
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830607595
-lastSeenAt: 1792830607595
+firstSeenAt: 1792852521667
+lastSeenAt: 1792852521667
 fingerprint: null
 payload:
   id: EX3_the_diagnostic_reads_expectations
@@ -25,5 +25,28 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 2bec3e78837d68f5
+  graph:
+    hash: 2bec3e78837d68f5
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 898b0fa6-aee1-5936-b6d4-5c203fc593e1

@@ -5,13 +5,13 @@ id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CE5_events
 context: pipeline phase CE5_events of docs/2026-10-15-code-tab-run-state-phasemap.spec
 intent: null
 summary: CE5_events (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830616873
+exported_at: 1792852530877
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830616873
-lastSeenAt: 1792830616873
+firstSeenAt: 1792852530877
+lastSeenAt: 1792852530877
 fingerprint: null
 payload:
   id: CE5_events
@@ -28,5 +28,168 @@ payload:
     - CE3_reply_on_task_gate
   blocks: []
   spec: null
-  graph: 4e7457d69c24f4b1
+  graph:
+    hash: 4e7457d69c24f4b1
+    nodes:
+      - path: idearium/event-taxonomy.cjs
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/event-contract-check.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/run-state.js
+        role: changes
+        exists: true
+        system: lib
+      - path: clear-glass/src/downloads/artifact-chat-index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: cli/nexus.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/tool-runtime.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/lib/response-sink.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/change-record.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/gate-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/gig-ledger-listener.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: orchestrator/lib/mcp-server.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/modules/test-build-context.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/event-taxonomy-pattern.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: idearium/event-taxonomy.cjs
+        to: lib/event-taxonomy-pattern.js
+        kind: requires
+      - from: lib/run-state.js
+        to: lib/node-export.js
+        kind: requires
+      - from: lib/run-state.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: tests/modules/test-build-context.test.js
+        to: idearium/event-taxonomy.cjs
+        kind: requires
+      - from: cli/nexus.js
+        to: lib/event-contract-check.js
+        kind: requires
+      - from: orchestrator/lib/mcp-server.js
+        to: lib/event-contract-check.js
+        kind: requires
+      - from: clear-glass/src/downloads/artifact-chat-index.js
+        to: lib/run-state.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/run-state.js
+        kind: requires
+      - from: copilot/tool-runtime.js
+        to: lib/run-state.js
+        kind: requires
+      - from: guardian/lib/response-sink.js
+        to: lib/run-state.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/change-record.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/gate-context.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/gig-ledger-listener.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/run-state.js
+        kind: requires
+    crossings:
+      - from: lib/run-state.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE3_reply_on_task_gate
+      dependents:
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE7_ai_assisted_editing
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE8_the_cli_reads_the_surface
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE9_the_panels
+      upstream:
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE1_the_run_state
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE3_reply_on_task_gate
+      downstream:
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE7_ai_assisted_editing
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE8_the_cli_reads_the_surface
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE9_the_panels
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV2_a_version_per_diff
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV3_file_rewind
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV4_tagged_history
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV5_universal_versioning
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE7_ai_assisted_editing
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE8_the_cli_reads_the_surface
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE9_the_panels
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (2): CE1_the_run_state, CE3_reply_on_task_gate'
+        - >-
+          needed by (3): CE7_ai_assisted_editing, CE8_the_cli_reads_the_surface, CE9_the_panels ·
+          all downstream 7 · finishing it unlocks CE7_ai_assisted_editing,
+          CE8_the_cli_reads_the_surface, CE9_the_panels
   uuid: 065a9e80-6075-5c97-b97e-41f0ab230ad2

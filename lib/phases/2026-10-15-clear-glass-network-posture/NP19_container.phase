@@ -5,13 +5,13 @@ id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP19_container
 context: pipeline phase NP19_container of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
 intent: null
 summary: NP19_container (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830616038
+exported_at: 1792852530001
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830616038
-lastSeenAt: 1792830616038
+firstSeenAt: 1792852530001
+lastSeenAt: 1792852530001
 fingerprint: null
 payload:
   id: NP19_container
@@ -24,5 +24,36 @@ payload:
     - NP1_compartment
   blocks: []
   spec: null
-  graph: ec54a18411dad545
+  graph:
+    hash: ec54a18411dad545
+    nodes:
+      - path: clear-glass/spec/snowflake.spec
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: docs/2026-10-21-snowflake-compartment-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+      dependents: []
+      upstream:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+      downstream: []
+      blockedBy:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by NP1_compartment
+        - 'depends on (1): NP1_compartment'
+        - 'needed by (0): —'
   uuid: 985fa50d-bf54-5f56-8e9f-1f6e113a36bc

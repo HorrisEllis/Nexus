@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
 intent: null
 summary: ID2_verify_idearium_reconciliation_reads_right_store (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830585838
+exported_at: 1792852499316
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830585838
-lastSeenAt: 1792830585838
+firstSeenAt: 1792852499316
+lastSeenAt: 1792852499316
 fingerprint: null
 payload:
   id: ID2_verify_idearium_reconciliation_reads_right_store
@@ -26,5 +26,57 @@ payload:
     - VSB1_fix_versionium_split_brain
   blocks: []
   spec: null
-  graph: 3298f9ee81c629d7
+  graph:
+    hash: 3298f9ee81c629d7
+    nodes:
+      - path: idearium/lib/guardian-stream.cjs
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/extract-code.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/languages.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: idearium/lib/guardian-stream.cjs
+        to: lib/extract-code.js
+        kind: requires
+      - from: idearium/lib/guardian-stream.cjs
+        to: lib/languages.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/guardian-stream.cjs
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
+      dependents:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::IDU1_idearium_homepage_and_repo_browser
+      upstream:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
+      downstream:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::IDU1_idearium_homepage_and_repo_browser
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::IDU1_idearium_homepage_and_repo_browser
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): VSB1_fix_versionium_split_brain'
+        - >-
+          needed by (1): IDU1_idearium_homepage_and_repo_browser · finishing it unlocks
+          IDU1_idearium_homepage_and_repo_browser
   uuid: 115cda25-8b67-5111-b4f9-efabdc8c9642

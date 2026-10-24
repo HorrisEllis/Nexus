@@ -5,13 +5,13 @@ id: docs_2026-09-28-graph-build-context-settings-memory-phasemap.spec::C3
 context: pipeline phase C3 of docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec
 intent: null
 summary: C3 (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830594913
+exported_at: 1792852508618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830594913
-lastSeenAt: 1792830594913
+firstSeenAt: 1792852508618
+lastSeenAt: 1792852508618
 fingerprint: null
 payload:
   id: C3
@@ -27,5 +27,198 @@ payload:
     - C1
   blocks: []
   spec: null
-  graph: d965f28349f6b6fa
+  graph:
+    hash: d965f28349f6b6fa
+    nodes:
+      - path: lib/repo-agent.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-prompt-blocks.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/api/build-surface.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/gate-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent-node.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-agent-memory.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-agent-tools-and-graph.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-build-context.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-registry-harness.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-repo-agent-provider.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/agent-providers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tool-guide.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/idearium/code.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/nexus/tool-layers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/code-intel/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/context-atlas.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/context-prereqs.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/registry-harness.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-context.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-hat-memory.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-hat.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/repo-agent.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-hat-memory.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-providers.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tools/idearium/code.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tools/nexus/tool-layers.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tool-guide.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-context.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/registry-harness.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/code-intel/index.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/context-atlas.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/context-prereqs.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: lib/gate-context.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: lib/repo-agent-node.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: tests/modules/test-registry-harness.test.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: tests/modules/test-repo-agent-provider.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/repo-prompt-blocks.js
+        kind: requires
+      - from: tests/modules/test-agent-memory.test.js
+        to: lib/repo-prompt-blocks.js
+        kind: requires
+      - from: tests/modules/test-agent-tools-and-graph.test.js
+        to: lib/repo-prompt-blocks.js
+        kind: requires
+      - from: tests/modules/test-build-context.test.js
+        to: lib/repo-prompt-blocks.js
+        kind: requires
+    crossings:
+      - from: lib/repo-agent.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C1
+      dependents: []
+      upstream:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C0
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C1
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::R0
+      downstream: []
+      blockedBy:
+        - docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec::C1
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by C1
+        - 'depends on (1): C1 · all upstream 3'
+        - 'needed by (0): —'
   uuid: dcadb520-4793-50b1-a6a0-dfb0a8c6dde3

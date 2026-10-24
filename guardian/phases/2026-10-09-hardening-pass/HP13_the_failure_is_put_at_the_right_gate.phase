@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-09-hardening-pass-phasemap.spec
 intent: null
 summary: HP13_the_failure_is_put_at_the_right_gate (?) — 1 file(s)
-system: idearium
+system: guardian
 tags: []
-exported_at: 1792830608405
+exported_at: 1792852522470
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830608405
-lastSeenAt: 1792830608405
+firstSeenAt: 1792852522470
+lastSeenAt: 1792852522470
 fingerprint: null
 payload:
   id: HP13_the_failure_is_put_at_the_right_gate
@@ -26,5 +26,46 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 17395f231ced9d63
+  graph:
+    hash: 17395f231ced9d63
+    nodes:
+      - path: guardian/lib/gate-trail.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: tests/modules/test-guardian-stack-sim.test.js
+        role: used-by
+        exists: true
+        system: null
+    edges:
+      - from: guardian/server.js
+        to: guardian/lib/gate-trail.js
+        kind: requires
+      - from: tests/modules/test-guardian-stack-sim.test.js
+        to: guardian/lib/gate-trail.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+      upstream: []
+      downstream:
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): HP19_the_simulator_stays · finishing it unlocks HP19_the_simulator_stays'
   uuid: c5751f6e-2d67-5adb-8cf9-751a935e5748

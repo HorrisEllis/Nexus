@@ -7,13 +7,13 @@ context: >-
   docs/2026-08-30-interaction-contract-context-phasemap.spec
 intent: null
 summary: IC4_idearium_system_template_update (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830583612
+exported_at: 1792852496981
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830583612
-lastSeenAt: 1792830583612
+firstSeenAt: 1792852496981
+lastSeenAt: 1792852496981
 fingerprint: null
 payload:
   id: IC4_idearium_system_template_update
@@ -28,5 +28,39 @@ payload:
     - IC2_raid_test_env_hook
   blocks: []
   spec: null
-  graph: 9f874130772add91
+  graph:
+    hash: 9f874130772add91
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+        - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC1_context_by_uuid_injection
+        - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC2_raid_test_env_hook
+      dependents: []
+      upstream:
+        - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC1_context_by_uuid_injection
+        - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC2_raid_test_env_hook
+        - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+        - docs/raid-routing-fidelity-phasemap.spec::RR2_contract_based_chunking
+        - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+      downstream: []
+      blockedBy:
+        - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC1_context_by_uuid_injection
+        - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC2_raid_test_env_hook
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 4 · blocked by IC1_context_by_uuid_injection,
+          IC2_raid_test_env_hook
+        - >-
+          depends on (3): RR4_governed_handshake_on_handoff, IC1_context_by_uuid_injection,
+          IC2_raid_test_env_hook · all upstream 5
+        - 'needed by (0): —'
   uuid: 995631a7-4f8f-5864-a3dc-31a23c87ac72

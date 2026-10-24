@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
 intent: null
 summary: HIST1_boundary_constraint_history_schema (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830585852
+exported_at: 1792852499329
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830585852
-lastSeenAt: 1792830585852
+firstSeenAt: 1792852499329
+lastSeenAt: 1792852499329
 fingerprint: null
 payload:
   id: HIST1_boundary_constraint_history_schema
@@ -25,5 +25,40 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 7a9b8b7a2b2c78de
+  graph:
+    hash: 7a9b8b7a2b2c78de
+    nodes:
+      - path: cortex/core/raid/context-gate.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-boundary.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+    edges:
+      - from: cortex/core/raid/contract-intake.js
+        to: cortex/core/raid/contract-boundary.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 7cb07049-77ac-529d-af36-9e4c772b3d2f

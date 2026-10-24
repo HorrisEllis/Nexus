@@ -5,13 +5,13 @@ id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA0a_no_gig_yet
 context: pipeline phase GA0a_no_gig_yet of docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
 intent: null
 summary: GA0a_no_gig_yet (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830631527
+exported_at: 1792852545373
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830631527
-lastSeenAt: 1792830631527
+firstSeenAt: 1792852545373
+lastSeenAt: 1792852545373
 fingerprint: null
 payload:
   id: GA0a_no_gig_yet
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 1f984d645c393eed
+  graph:
+    hash: 1f984d645c393eed
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 2f880c14-0f4e-5c5e-8102-33b0e354d454

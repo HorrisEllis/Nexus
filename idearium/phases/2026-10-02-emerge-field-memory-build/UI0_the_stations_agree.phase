@@ -7,11 +7,11 @@ intent: null
 summary: UI0_the_stations_agree (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792830599043
+exported_at: 1792852513177
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830599043
-lastSeenAt: 1792830599043
+firstSeenAt: 1792852513177
+lastSeenAt: 1792852513177
 fingerprint: null
 payload:
   id: UI0_the_stations_agree
@@ -30,5 +30,73 @@ payload:
     - EM0_ground
   blocks: []
   spec: null
-  graph: 70ddba11613a1584
+  graph:
+    hash: 70ddba11613a1584
+    nodes:
+      - path: idearium/ui/architect.html
+        role: changes
+        exists: false
+        system: idearium
+      - path: idearium/ui/css/void-theme.css
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/index.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/settings.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/spec-library.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/workshop.html
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      dependents: []
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+          files:
+            - idearium/ui/workshop.html
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::LN1_lenses_on_the_canvas
+          files:
+            - idearium/ui/architect.html
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::ST1_settings
+          files:
+            - idearium/ui/settings.html
+        - with: docs/2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_agents
+          files:
+            - idearium/ui/settings.html
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): EM0_ground'
+        - 'needed by (0): —'
+        - >-
+          same files as WS6_workshop_parts_and_modes with no order between them:
+          idearium/ui/workshop.html
+        - >-
+          same files as LN1_lenses_on_the_canvas with no order between them:
+          idearium/ui/architect.html
+        - 'same files as ST1_settings with no order between them: idearium/ui/settings.html'
+        - >-
+          same files as AC1_accounts_into_agents with no order between them:
+          idearium/ui/settings.html
   uuid: 372d8a75-b766-5a24-a703-e118c7123f09

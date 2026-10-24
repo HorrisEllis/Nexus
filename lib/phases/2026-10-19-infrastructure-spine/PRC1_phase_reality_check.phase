@@ -5,13 +5,13 @@ id: docs_2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
 context: pipeline phase PRC1_phase_reality_check of docs/2026-10-19-infrastructure-spine-phasemap.spec
 intent: null
 summary: PRC1_phase_reality_check (library) — 5 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632382
+exported_at: 1792852546181
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632382
-lastSeenAt: 1792830632382
+firstSeenAt: 1792852546181
+lastSeenAt: 1792852546181
 fingerprint: null
 payload:
   id: PRC1_phase_reality_check
@@ -28,5 +28,268 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 9f4c582a3218a9d7
+  graph:
+    hash: 9f4c582a3218a9d7
+    nodes:
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/phase-dag.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/phase-reality.js
+        role: changes
+        exists: false
+        system: lib
+      - path: lib/project-registry.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/verify-first.js
+        role: changes
+        exists: true
+        system: lib
+      - path: emerge/compiler/phase-specs.js
+        role: used-by
+        exists: true
+        system: emerge
+      - path: idearium/cli/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/build-queue.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/coder-brief.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/phase-census.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: service/idearium-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: tests/modules/idearium-build-queue-poller.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-guardian-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/idearium-ingest-stability.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-agent-hat-agnostic.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-change-record.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-project-registry.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cos/testenv/run-target.js
+        role: uses
+        exists: true
+        system: cos
+      - path: idearium/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/access.cjs
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/lib/config.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: lib/component-store.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/economy/tokens.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-plan.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/warp-rung.js
+        role: uses
+        exists: true
+        system: lib
+      - path: loom/scanners/phasemap-map.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: lib/phase-dag.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: lib/verify-first.js
+        to: lib/phase-plan.js
+        kind: requires
+      - from: lib/verify-first.js
+        to: cos/testenv/run-target.js
+        kind: requires
+      - from: lib/project-registry.js
+        to: lib/component-store.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/config.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/data-home.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/warp-rung.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/lib/access.cjs
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/economy/tokens.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: emerge/compiler/phase-specs.js
+        to: lib/phase-dag.js
+        kind: requires
+      - from: lib/build-queue.js
+        to: lib/phase-dag.js
+        kind: requires
+      - from: lib/phase-census.js
+        to: lib/phase-dag.js
+        kind: requires
+      - from: lib/coder-brief.js
+        to: lib/verify-first.js
+        kind: requires
+      - from: tests/modules/test-project-registry.test.js
+        to: lib/project-registry.js
+        kind: requires
+      - from: idearium/cli/index.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-build-queue-poller.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-guardian-dispatch.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/idearium-ingest-stability.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-agent-hat-agnostic.test.js
+        to: idearium/api/index.js
+        kind: requires
+      - from: tests/modules/test-change-record.test.js
+        to: idearium/api/index.js
+        kind: requires
+    crossings:
+      - from: lib/phase-dag.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: false
+      - from: lib/verify-first.js
+        to: cos/testenv/run-target.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: false
+      - from: service/idearium-service.js
+        to: idearium/api/index.js
+        fromSystem: service
+        toSystem: idearium
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+      upstream: []
+      downstream:
+        - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+        - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+      blockedBy: []
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+          files:
+            - lib/project-registry.js
+        - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+          files:
+            - lib/phase-dag.js
+        - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+          files:
+            - lib/phase-dag.js
+            - lib/project-registry.js
+        - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+          files:
+            - lib/verify-first.js
+        - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::SC1_scaling_limits_named
+          files:
+            - lib/phase-dag.js
+        - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+          files:
+            - lib/phase-dag.js
+        - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::VC1_a_change_entry_for_every_event
+          files:
+            - idearium/api/index.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (1): XD1_cross_domain_verification · all downstream 2'
+        - >-
+          same files as IN3_registry_is_the_spine with no order between them:
+          lib/project-registry.js
+        - >-
+          same files as IN7_every_phase_and_spec_on_the_spine with no order between them:
+          lib/phase-dag.js
+        - >-
+          same files as NC1_neutral_core_boundary with no order between them: lib/phase-dag.js,
+          lib/project-registry.js
+        - 'same files as AD2_javascript_adapter with no order between them: lib/verify-first.js'
+        - 'same files as SC1_scaling_limits_named with no order between them: lib/phase-dag.js'
+        - … and 2 more phases sharing its files without an order
   uuid: 7d2ea832-4332-56d3-b550-056dfdfc7e91

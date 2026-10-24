@@ -5,13 +5,13 @@ id: docs_2026-10-23-self-building-loop-phasemap.spec::SL6_the_loop_counts_itself
 context: pipeline phase SL6_the_loop_counts_itself of docs/2026-10-23-self-building-loop-phasemap.spec
 intent: null
 summary: SL6_the_loop_counts_itself (library) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830639078
+exported_at: 1792852552587
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830639078
-lastSeenAt: 1792830639078
+firstSeenAt: 1792852552587
+lastSeenAt: 1792852552587
 fingerprint: null
 payload:
   id: SL6_the_loop_counts_itself
@@ -27,7 +27,72 @@ payload:
   blocks:
     - MOD-SL-STATS
   spec: docs/self-building-loop.spec
-  graph: 596269867e9d3b8f
+  graph:
+    hash: 596269867e9d3b8f
+    nodes:
+      - path: lib/build-queue.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/flight-data.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/phase-cost.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-dag.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/phase-faults.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/run-watch.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/flight-data.js
+        to: lib/run-watch.js
+        kind: requires
+      - from: lib/flight-data.js
+        to: lib/phase-cost.js
+        kind: requires
+      - from: lib/flight-data.js
+        to: lib/phase-faults.js
+        kind: requires
+      - from: lib/build-queue.js
+        to: lib/phase-dag.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/flight-data.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+      dependents: []
+      upstream:
+        - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): SL0_what_can_be_built_now'
+        - 'needed by (0): —'
   uuid: 170d6c24-92c0-5894-8988-94e45384c796
   specLink:
     how: declared

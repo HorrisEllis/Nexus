@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-02-nexus-vision-master-phasemap.spec
 intent: null
 summary: AM8_element_picker_agent_wiring (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584881
+exported_at: 1792852498317
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584881
-lastSeenAt: 1792830584881
+firstSeenAt: 1792852498317
+lastSeenAt: 1792852498317
 fingerprint: null
 payload:
   id: AM8_element_picker_agent_wiring
@@ -25,5 +25,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 1e65be4bd0ebc982
+  graph:
+    hash: 1e65be4bd0ebc982
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: c642a3cd-5b5b-50f2-a0f6-c00506b9a1cd

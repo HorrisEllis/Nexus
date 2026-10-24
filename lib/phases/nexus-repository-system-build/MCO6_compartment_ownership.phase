@@ -5,13 +5,13 @@ id: docs_nexus-repository-system-build-phasemap.spec::MCO6_compartment_ownership
 context: pipeline phase MCO6_compartment_ownership of docs/nexus-repository-system-build-phasemap.spec
 intent: null
 summary: MCO6_compartment_ownership (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830646307
+exported_at: 1792852560967
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830646307
-lastSeenAt: 1792830646307
+firstSeenAt: 1792852560967
+lastSeenAt: 1792852560967
 fingerprint: null
 payload:
   id: MCO6_compartment_ownership
@@ -24,5 +24,32 @@ payload:
     - MCO0_audit_real_coverage
   blocks: []
   spec: null
-  graph: cc8efc7174f10e2c
+  graph:
+    hash: cc8efc7174f10e2c
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/nexus-repository-system-build-phasemap.spec::MCO0_audit_real_coverage
+      dependents:
+        - docs/nexus-repository-system-build-phasemap.spec::MCO7_nexus_systems_as_repo_compartments
+      upstream:
+        - docs/nexus-repository-system-build-phasemap.spec::MCO0_audit_real_coverage
+      downstream:
+        - docs/nexus-repository-system-build-phasemap.spec::MCO7_nexus_systems_as_repo_compartments
+      blockedBy: []
+      unlocks:
+        - docs/nexus-repository-system-build-phasemap.spec::MCO7_nexus_systems_as_repo_compartments
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): MCO0_audit_real_coverage'
+        - >-
+          needed by (1): MCO7_nexus_systems_as_repo_compartments · finishing it unlocks
+          MCO7_nexus_systems_as_repo_compartments
   uuid: 6700d563-07e5-52c2-8002-ffcee51995a8

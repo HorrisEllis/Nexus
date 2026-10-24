@@ -5,13 +5,13 @@ id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR1_every_ledger_into_rf
 context: pipeline phase FMR1_every_ledger_into_rfr2 of docs/2026-10-17-failure-mode-report-phasemap.spec
 intent: null
 summary: FMR1_every_ledger_into_rfr2 (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830627661
+exported_at: 1792852541598
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830627661
-lastSeenAt: 1792830627661
+firstSeenAt: 1792852541598
+lastSeenAt: 1792852541598
 fingerprint: null
 payload:
   id: FMR1_every_ledger_into_rfr2
@@ -24,5 +24,119 @@ payload:
     - FMR0_causality_measured
   blocks: []
   spec: null
-  graph: d672a060fcb71369
+  graph:
+    hash: d672a060fcb71369
+    nodes:
+      - path: cortex/self-heal/failure-mode-forensics.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: docs/2026-10-05-failure-reproduction-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+      - path: intelligence/relational-field.js
+        role: changes
+        exists: true
+        system: intelligence
+      - path: cortex/self-heal/failure-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/self-heal/index.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: intelligence/snapshot-trigger.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/diagnostic-causal.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-c1-compound-failure-mode.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/config.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/rfr2-bridge.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: cortex/self-heal/failure-mode-forensics.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: cortex/self-heal/failure-mode-forensics.js
+        to: lib/node-export.js
+        kind: requires
+      - from: cortex/self-heal/failure-mode-forensics.js
+        to: cortex/config.js
+        kind: requires
+      - from: intelligence/relational-field.js
+        to: lib/rfr2-bridge.js
+        kind: requires
+      - from: cortex/self-heal/failure-intake.js
+        to: cortex/self-heal/failure-mode-forensics.js
+        kind: requires
+      - from: cortex/self-heal/index.js
+        to: cortex/self-heal/failure-mode-forensics.js
+        kind: requires
+      - from: tests/modules/test-c1-compound-failure-mode.test.js
+        to: cortex/self-heal/failure-mode-forensics.js
+        kind: requires
+      - from: intelligence/snapshot-trigger.js
+        to: intelligence/relational-field.js
+        kind: requires
+      - from: lib/diagnostic-causal.js
+        to: intelligence/relational-field.js
+        kind: requires
+    crossings:
+      - from: lib/diagnostic-causal.js
+        to: intelligence/relational-field.js
+        fromSystem: lib
+        toSystem: intelligence
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+      dependents:
+        - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR4_the_macro_bundle
+      upstream:
+        - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR0_causality_measured
+      downstream:
+        - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR10_it_compounds
+        - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR11_import_into_any_test_env
+        - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR4_the_macro_bundle
+        - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+        - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR6_run_it_in_cos
+        - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR7_a_fix_proven_by_its_macro
+        - docs/2026-10-18-gate-memory-phasemap.spec::GM6_crystallized_from_what_was_approved
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR4_the_macro_bundle
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): FMR0_causality_measured'
+        - >-
+          needed by (1): FMR4_the_macro_bundle · all downstream 7 · finishing it unlocks
+          FMR4_the_macro_bundle
   uuid: d68ee0ff-5fd8-5a12-a652-98be664fe0c9

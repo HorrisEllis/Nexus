@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
 intent: null
 summary: CH2_chunk_laws (library) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830634522
+exported_at: 1792852548210
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830634522
-lastSeenAt: 1792830634522
+firstSeenAt: 1792852548210
+lastSeenAt: 1792852548210
 fingerprint: null
 payload:
   id: CH2_chunk_laws
@@ -28,7 +28,42 @@ payload:
   blocks:
     - MOD-CHUNK-LAWS
   spec: docs/substrate.spec
-  graph: e5eb2024e856cead
+  graph:
+    hash: e5eb2024e856cead
+    nodes:
+      - path: tests/modules/test-chunk-laws.test.js
+        role: changes
+        exists: false
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 6
+      deps:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+      dependents: []
+      upstream:
+        - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+      downstream: []
+      blockedBy:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 6 · blocked by CH1_strategies_behind_the_contract
+        - 'depends on (1): CH1_strategies_behind_the_contract · all upstream 9'
+        - 'needed by (0): —'
   uuid: 3299a28c-5676-5cda-83ba-6d26cda9c54d
   specLink:
     how: declared

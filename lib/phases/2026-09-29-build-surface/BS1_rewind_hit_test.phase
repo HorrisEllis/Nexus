@@ -5,13 +5,13 @@ id: docs_2026-09-29-build-surface-phasemap.spec::BS1_rewind_hit_test
 context: pipeline phase BS1_rewind_hit_test of docs/2026-09-29-build-surface-phasemap.spec
 intent: null
 summary: BS1_rewind_hit_test (?) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830595756
+exported_at: 1792852509493
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830595756
-lastSeenAt: 1792830595756
+firstSeenAt: 1792852509493
+lastSeenAt: 1792852509493
 fingerprint: null
 payload:
   id: BS1_rewind_hit_test
@@ -26,5 +26,44 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 338736611c96d096
+  graph:
+    hash: 338736611c96d096
+    nodes:
+      - path: tests/probe/menu-overlay-hit-chromium.js
+        role: changes
+        exists: true
+        system: null
+      - path: ui/home/areas/shell.css
+        role: changes
+        exists: true
+        system: ui
+      - path: ui/tv-shell/tv-shell.css
+        role: changes
+        exists: true
+        system: ui
+      - path: tests/probe/_glass-probe.js
+        role: uses
+        exists: true
+        system: null
+    edges:
+      - from: tests/probe/menu-overlay-hit-chromium.js
+        to: tests/probe/_glass-probe.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: eba537ab-81ad-5066-b3c8-0dab282e328c

@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-23-site-profile-processes-phasemap.spec
 intent: null
 summary: SP4_cleardriver_mesh_guardian_settings (backend) — 8 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830639454
+exported_at: 1792852552991
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830639454
-lastSeenAt: 1792830639454
+firstSeenAt: 1792852552991
+lastSeenAt: 1792852552991
 fingerprint: null
 payload:
   id: SP4_cleardriver_mesh_guardian_settings
@@ -37,7 +37,195 @@ payload:
   blocks:
     - MOD-SP-GLOBAL
   spec: clear-glass/spec/site-profile.spec
-  graph: fb57cef4503dcfda
+  graph:
+    hash: fb57cef4503dcfda
+    nodes:
+      - path: clear-glass/renderer/settings.html
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/settings/sections/driver.css
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/settings/sections/driver.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/settings/sections/guardian.css
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/settings/sections/guardian.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/settings/sections/mesh.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/mesh/agent-mesh.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/options/store.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.pre-userscripts.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: tests/modules/agent-mesh-drainer.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/agent-mesh-hostile.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/clear-glass-accounts.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/nexus-options-autoboot.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: clear-glass/src/driver/page-resolver.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/mesh/automation-engine.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/mesh/dom-transport.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/mesh/route-graph.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/network/install.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/shortcuts/registry.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/site-settings/readers.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/storage/jaa.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/toolbar/commands.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: copilot/lifeline.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: lib/agent-router.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: clear-glass/src/options/store.js
+        to: clear-glass/src/storage/jaa.js
+        kind: requires
+      - from: clear-glass/src/options/store.js
+        to: clear-glass/src/toolbar/commands.js
+        kind: requires
+      - from: clear-glass/src/options/store.js
+        to: clear-glass/src/shortcuts/registry.js
+        kind: requires
+      - from: clear-glass/src/options/store.js
+        to: clear-glass/src/site-settings/readers.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/mesh/route-graph.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/mesh/automation-engine.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/network/install.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/main/index.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: lib/agent-router.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/mesh/dom-transport.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/driver/page-resolver.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: clear-glass/src/options/store.js
+        kind: requires
+      - from: clear-glass/src/main/index.pre-userscripts.js
+        to: clear-glass/src/options/store.js
+        kind: requires
+      - from: tests/modules/clear-glass-accounts.test.js
+        to: clear-glass/src/options/store.js
+        kind: requires
+      - from: tests/modules/nexus-options-autoboot.test.js
+        to: clear-glass/src/options/store.js
+        kind: requires
+      - from: tests/modules/agent-mesh-drainer.test.js
+        to: clear-glass/src/mesh/agent-mesh.js
+        kind: requires
+      - from: tests/modules/agent-mesh-hostile.test.js
+        to: clear-glass/src/mesh/agent-mesh.js
+        kind: requires
+    crossings:
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: copilot/lifeline.js
+        fromSystem: clear-glass
+        toSystem: copilot
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
+      dependents: []
+      upstream:
+        - docs/2026-10-23-site-profile-processes-phasemap.spec::SP1_one_resolver_for_every_feature
+        - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D1_one_store_one_resolver
+        - docs/2026-10-23-site-profile-processes-phasemap.spec::SP_D2_defaults_are_todays_behaviour
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (1): SP1_one_resolver_for_every_feature · all upstream 3'
+        - 'needed by (0): —'
   uuid: 9125ed5c-6f90-545f-8a88-73a17744c37f
   specLink:
     how: declared

@@ -5,13 +5,13 @@ id: docs_2026-10-09-one-roadmap-phasemap.spec::OR0_the_census
 context: pipeline phase OR0_the_census of docs/2026-10-09-one-roadmap-phasemap.spec
 intent: null
 summary: OR0_the_census (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830609304
+exported_at: 1792852523305
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830609304
-lastSeenAt: 1792830609304
+firstSeenAt: 1792852523305
+lastSeenAt: 1792852523305
 fingerprint: null
 payload:
   id: OR0_the_census
@@ -24,5 +24,44 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: b3f330f789402a35
+  graph:
+    hash: b3f330f789402a35
+    nodes:
+      - path: docs/2026-10-09-one-roadmap-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR2_how_done_is_checked
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR6_old_code_out
+      upstream: []
+      downstream:
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR2_how_done_is_checked
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR2_the_proposal
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR4_one_roadmap_in_idearium
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR5_it_stays_decluttered
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR6_old_code_out
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR1_five_answers_for_an_open_phase
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR2_how_done_is_checked
+        - docs/2026-10-09-one-roadmap-phasemap.spec::OR6_old_code_out
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (3): OR1_five_answers_for_an_open_phase, OR2_how_done_is_checked,
+          OR6_old_code_out · all downstream 6 · finishing it unlocks
+          OR1_five_answers_for_an_open_phase, OR2_how_done_is_checked, OR6_old_code_out
   uuid: f1b68a10-56d8-532b-a5c4-39fe28335586

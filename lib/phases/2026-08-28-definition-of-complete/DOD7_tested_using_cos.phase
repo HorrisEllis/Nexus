@@ -5,13 +5,13 @@ id: docs_2026-08-28-definition-of-complete-phasemap.spec::DOD7_tested_using_cos
 context: pipeline phase DOD7_tested_using_cos of docs/2026-08-28-definition-of-complete-phasemap.spec
 intent: null
 summary: DOD7_tested_using_cos (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830582740
+exported_at: 1792852495854
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830582740
-lastSeenAt: 1792830582740
+firstSeenAt: 1792852495854
+lastSeenAt: 1792852495854
 fingerprint: null
 payload:
   id: DOD7_tested_using_cos
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: a31ec4e8442ad5dc
+  graph:
+    hash: a31ec4e8442ad5dc
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 379b603f-8c45-537c-8b8a-870c1b5da6e1

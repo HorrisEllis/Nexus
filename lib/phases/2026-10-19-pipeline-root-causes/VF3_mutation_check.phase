@@ -5,13 +5,13 @@ id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::VF3_mutation_check
 context: pipeline phase VF3_mutation_check of docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
 summary: VF3_mutation_check (library) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632801
+exported_at: 1792852546582
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632801
-lastSeenAt: 1792830632801
+firstSeenAt: 1792852546582
+lastSeenAt: 1792852546582
 fingerprint: null
 payload:
   id: VF3_mutation_check
@@ -25,5 +25,34 @@ payload:
     - VF1_verify_first
   blocks: []
   spec: null
-  graph: a28ce7f9bc7982e8
+  graph:
+    hash: a28ce7f9bc7982e8
+    nodes:
+      - path: lib/mutation-check.js
+        role: changes
+        exists: false
+        system: lib
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      dependents:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF4_second_opinion_on_need
+      upstream:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      downstream:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF4_second_opinion_on_need
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - 'depends on (1): VF1_verify_first · all upstream 2'
+        - 'needed by (1): VF4_second_opinion_on_need'
   uuid: 18e8e172-6d45-52e2-80d5-71cf632bf5d5

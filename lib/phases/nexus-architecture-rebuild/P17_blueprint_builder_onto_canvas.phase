@@ -5,13 +5,13 @@ id: docs_nexus-architecture-rebuild-phasemap.spec::P17_blueprint_builder_onto_ca
 context: pipeline phase P17_blueprint_builder_onto_canvas of docs/nexus-architecture-rebuild-phasemap.spec
 intent: null
 summary: P17_blueprint_builder_onto_canvas (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830644788
+exported_at: 1792852559374
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830644788
-lastSeenAt: 1792830644788
+firstSeenAt: 1792852559374
+lastSeenAt: 1792852559374
 fingerprint: null
 payload:
   id: P17_blueprint_builder_onto_canvas
@@ -24,5 +24,28 @@ payload:
     - P16_architect_node_canvas_in_loom
   blocks: []
   spec: null
-  graph: c9dc8279be53da93
+  graph:
+    hash: c9dc8279be53da93
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/nexus-architecture-rebuild-phasemap.spec::P16_architect_node_canvas_in_loom
+      dependents: []
+      upstream:
+        - docs/nexus-architecture-rebuild-phasemap.spec::P16_architect_node_canvas_in_loom
+      downstream: []
+      blockedBy:
+        - docs/nexus-architecture-rebuild-phasemap.spec::P16_architect_node_canvas_in_loom
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by P16_architect_node_canvas_in_loom
+        - 'depends on (1): P16_architect_node_canvas_in_loom'
+        - 'needed by (0): —'
   uuid: 594aaa1d-24d4-56b3-a3b2-2d5a3b15c3b2

@@ -5,13 +5,13 @@ id: docs_2026-10-21-approval-chain-phasemap.spec::APV5_wired_in_loom
 context: pipeline phase APV5_wired_in_loom of docs/2026-10-21-approval-chain-phasemap.spec
 intent: null
 summary: APV5_wired_in_loom (library) — 1 file(s)
-system: idearium
+system: loom
 tags: []
-exported_at: 1792830635378
+exported_at: 1792852548999
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830635378
-lastSeenAt: 1792830635378
+firstSeenAt: 1792852548999
+lastSeenAt: 1792852548999
 fingerprint: null
 payload:
   id: APV5_wired_in_loom
@@ -26,7 +26,55 @@ payload:
   blocks:
     - MOD-APV-WIRES
   spec: docs/approval-chain.spec
-  graph: 73a4e2239e5435a3
+  graph:
+    hash: 73a4e2239e5435a3
+    nodes:
+      - path: loom/maps/run-state-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: loom/bootstrap.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: loom/maps/declare-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/source-map.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: loom/maps/run-state-map.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/maps/run-state-map.js
+        to: loom/maps/declare-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/run-state-map.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
+      dependents: []
+      upstream:
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV0_one_record
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (1): APV1_change_entry · all upstream 2'
+        - 'needed by (0): —'
   uuid: 8534e5c9-3096-5b57-93fe-4db39a3ea018
   specLink:
     how: declared

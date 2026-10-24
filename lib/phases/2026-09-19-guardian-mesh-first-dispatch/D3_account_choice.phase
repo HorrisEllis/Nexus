@@ -5,13 +5,13 @@ id: docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::D3_account_choic
 context: pipeline phase D3_account_choice of docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
 intent: null
 summary: D3_account_choice (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830589584
+exported_at: 1792852503309
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830589584
-lastSeenAt: 1792830589584
+firstSeenAt: 1792852503309
+lastSeenAt: 1792852503309
 fingerprint: null
 payload:
   id: D3_account_choice
@@ -23,5 +23,28 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 5afebf8da117ef71
+  graph:
+    hash: 5afebf8da117ef71
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 991f93f5-0a9e-507c-a09c-6566aad6dd2c

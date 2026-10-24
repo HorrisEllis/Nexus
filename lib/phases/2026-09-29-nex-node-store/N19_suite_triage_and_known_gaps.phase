@@ -5,13 +5,13 @@ id: docs_2026-09-29-nex-node-store-phasemap.spec::N19_suite_triage_and_known_gap
 context: pipeline phase N19_suite_triage_and_known_gaps of docs/2026-09-29-nex-node-store-phasemap.spec
 intent: null
 summary: N19_suite_triage_and_known_gaps (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830596176
+exported_at: 1792852509981
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830596176
-lastSeenAt: 1792830596176
+firstSeenAt: 1792852509981
+lastSeenAt: 1792852509981
 fingerprint: null
 payload:
   id: N19_suite_triage_and_known_gaps
@@ -27,5 +27,45 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: e41f290ddd43afc5
+  graph:
+    hash: e41f290ddd43afc5
+    nodes:
+      - path: tests/known-gaps.yaml
+        role: changes
+        exists: true
+        system: null
+      - path: tests/modules/run-all.js
+        role: changes
+        exists: true
+        system: null
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: tests/modules/run-all.js
+        to: lib/test-sandbox.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N29_full_run_only_failures
+      upstream: []
+      downstream:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N29_full_run_only_failures
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N29_full_run_only_failures
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (1): N29_full_run_only_failures · finishing it unlocks
+          N29_full_run_only_failures
   uuid: c6ef7cc1-ab63-5a78-865d-259309c17899

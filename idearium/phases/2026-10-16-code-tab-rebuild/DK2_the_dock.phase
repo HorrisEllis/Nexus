@@ -7,11 +7,11 @@ intent: null
 summary: DK2_the_dock (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792830621915
+exported_at: 1792852535891
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830621915
-lastSeenAt: 1792830621915
+firstSeenAt: 1792852535891
+lastSeenAt: 1792852535891
 fingerprint: null
 payload:
   id: DK2_the_dock
@@ -29,5 +29,61 @@ payload:
     - DK1_procedures_backend
   blocks: []
   spec: null
-  graph: fab19127bc19d5c2
+  graph:
+    hash: fab19127bc19d5c2
+    nodes:
+      - path: idearium/ui/index.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/code-dock.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/code-surface.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/repo-tasks.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: tests/modules/test-code-dock.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: clear-glass/src/driver/glass.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: tests/modules/test-code-dock.test.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: tests/modules/test-code-dock.test.js
+        to: clear-glass/src/driver/glass.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-16-code-tab-rebuild-phasemap.spec::DK1_procedures_backend
+      dependents: []
+      upstream:
+        - docs/2026-10-16-code-tab-rebuild-phasemap.spec::DK1_procedures_backend
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): DK1_procedures_backend'
+        - 'needed by (0): —'
   uuid: d2394769-6748-5c4a-8ae1-a256f2c85440

@@ -5,13 +5,13 @@ id: docs_2026-09-28-staging-self-heal-phasemap.spec::S2
 context: pipeline phase S2 of docs/2026-09-28-staging-self-heal-phasemap.spec
 intent: null
 summary: S2 (?) — 1 file(s)
-system: idearium
+system: diagnostic
 tags: []
-exported_at: 1792830595323
+exported_at: 1792852509061
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830595323
-lastSeenAt: 1792830595323
+firstSeenAt: 1792852509061
+lastSeenAt: 1792852509061
 fingerprint: null
 payload:
   id: S2
@@ -25,5 +25,42 @@ payload:
     - S1
   blocks: []
   spec: null
-  graph: a3384fc440fa0ce2
+  graph:
+    hash: a3384fc440fa0ce2
+    nodes:
+      - path: diagnostic/nexus-heal-loop.js
+        role: changes
+        exists: false
+        system: diagnostic
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+      dependents:
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+      upstream:
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::S0
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::S1
+      downstream:
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::A1
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::L1
+        - docs/2026-09-28-staging-self-heal-phasemap.spec::X1
+      blockedBy: []
+      unlocks: []
+      conflicts:
+        - with: docs/2026-09-28-staging-self-heal-phasemap.spec::S5
+          files:
+            - diagnostic/nexus-heal-loop.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - 'depends on (1): S1 · all upstream 2'
+        - 'needed by (3): L1, A1, X1'
+        - 'same files as S5 with no order between them: diagnostic/nexus-heal-loop.js'
   uuid: 2cbb6e40-3e44-5e8a-9204-1abbffbc4c6e

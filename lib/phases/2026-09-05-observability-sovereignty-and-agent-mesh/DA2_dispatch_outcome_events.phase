@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
 intent: null
 summary: DA2_dispatch_outcome_events (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830585826
+exported_at: 1792852499305
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830585826
-lastSeenAt: 1792830585826
+firstSeenAt: 1792852499305
+lastSeenAt: 1792852499305
 fingerprint: null
 payload:
   id: DA2_dispatch_outcome_events
@@ -26,5 +26,128 @@ payload:
     - DA1_fix_stale_guardian_coverage_gate
   blocks: []
   spec: null
-  graph: 24bdcc78690144b7
+  graph:
+    hash: 24bdcc78690144b7
+    nodes:
+      - path: clear-glass/src/mesh/agent-mesh.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.pre-userscripts.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: tests/modules/agent-mesh-drainer.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/agent-mesh-hostile.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/clear-glass-accounts.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: clear-glass/src/driver/page-resolver.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/mesh/automation-engine.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/mesh/dom-transport.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/mesh/route-graph.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/network/install.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: copilot/lifeline.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: lib/agent-router.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/mesh/route-graph.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/mesh/automation-engine.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/network/install.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/main/index.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: lib/agent-router.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/mesh/dom-transport.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: clear-glass/src/driver/page-resolver.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: clear-glass/src/mesh/agent-mesh.js
+        kind: requires
+      - from: clear-glass/src/main/index.pre-userscripts.js
+        to: clear-glass/src/mesh/agent-mesh.js
+        kind: requires
+      - from: tests/modules/agent-mesh-drainer.test.js
+        to: clear-glass/src/mesh/agent-mesh.js
+        kind: requires
+      - from: tests/modules/agent-mesh-hostile.test.js
+        to: clear-glass/src/mesh/agent-mesh.js
+        kind: requires
+      - from: tests/modules/clear-glass-accounts.test.js
+        to: clear-glass/src/mesh/agent-mesh.js
+        kind: requires
+    crossings:
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: copilot/lifeline.js
+        fromSystem: clear-glass
+        toSystem: copilot
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+      dependents: []
+      upstream:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DA1_fix_stale_guardian_coverage_gate
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): DA1_fix_stale_guardian_coverage_gate'
+        - 'needed by (0): —'
   uuid: f36d7fab-41e4-5e8b-8c88-090724b0f28d

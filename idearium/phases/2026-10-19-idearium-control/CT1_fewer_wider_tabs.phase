@@ -7,11 +7,11 @@ intent: null
 summary: CT1_fewer_wider_tabs (interface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792830631962
+exported_at: 1792852545775
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830631962
-lastSeenAt: 1792830631962
+firstSeenAt: 1792852545775
+lastSeenAt: 1792852545775
 fingerprint: null
 payload:
   id: CT1_fewer_wider_tabs
@@ -29,7 +29,56 @@ payload:
     - FM1_file_manager
   blocks: []
   spec: null
-  graph: 454129e18b89f64d
+  graph:
+    hash: 454129e18b89f64d
+    nodes:
+      - path: idearium/ui/index.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/code-dock.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/code-tab-panels.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/work-surface.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-19-idearium-control-phasemap.spec::CT0_code_tab_census
+        - docs/2026-10-19-idearium-control-phasemap.spec::FM1_file_manager
+      dependents: []
+      upstream:
+        - docs/2026-10-19-idearium-control-phasemap.spec::CT0_code_tab_census
+        - docs/2026-10-19-idearium-control-phasemap.spec::FM1_file_manager
+        - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+      downstream: []
+      blockedBy:
+        - docs/2026-10-19-idearium-control-phasemap.spec::CT0_code_tab_census
+        - docs/2026-10-19-idearium-control-phasemap.spec::FM1_file_manager
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-19-idearium-control-phasemap.spec::IM1_ideas_and_notes_as_one
+          files:
+            - idearium/ui/index.html
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by CT0_code_tab_census, FM1_file_manager
+        - 'depends on (2): CT0_code_tab_census, FM1_file_manager · all upstream 3'
+        - 'needed by (0): —'
+        - >-
+          same files as IM1_ideas_and_notes_as_one with no order between them:
+          idearium/ui/index.html
   uuid: ff661ece-d771-5bac-8638-347890ea3588
   specLink:
     how: discovered:path

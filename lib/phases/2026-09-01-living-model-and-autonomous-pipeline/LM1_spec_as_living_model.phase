@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
 intent: null
 summary: LM1_spec_as_living_model (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584029
+exported_at: 1792852497414
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584029
-lastSeenAt: 1792830584029
+firstSeenAt: 1792852497414
+lastSeenAt: 1792852497414
 fingerprint: null
 payload:
   id: LM1_spec_as_living_model
@@ -25,5 +25,192 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 0fafcb56a76e6808
+  graph:
+    hash: 0fafcb56a76e6808
+    nodes:
+      - path: guardian/lib/grammar-fallback.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/loop-topology.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/open-loop-taxonomy.js
+        role: changes
+        exists: true
+        system: lib
+      - path: orchestrator/lib/mutation-contract.js
+        role: changes
+        exists: true
+        system: orchestrator
+      - path: copilot/lib/user-model.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: intelligence/routes.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/compartment-engine.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/constitutional-ai.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/execution-pipeline.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/open-loop-taxonomy.patch.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/reflection.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: orchestrator/lib/request-handler.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/modules/test-grammar-fallback.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-mutation-contract.js
+        role: used-by
+        exists: true
+        system: null
+      - path: intelligence/gap/predicate.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/component-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/diagnostic-engines.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/grammar-engine.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: guardian/lib/grammar-fallback.js
+        to: lib/grammar-engine.js
+        kind: requires
+      - from: guardian/lib/grammar-fallback.js
+        to: lib/component-registry.js
+        kind: requires
+      - from: lib/open-loop-taxonomy.js
+        to: intelligence/gap/predicate.js
+        kind: requires
+      - from: lib/loop-topology.js
+        to: lib/diagnostic-engines.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/lib/grammar-fallback.js
+        kind: requires
+      - from: tests/modules/test-grammar-fallback.js
+        to: guardian/lib/grammar-fallback.js
+        kind: requires
+      - from: lib/execution-pipeline.js
+        to: orchestrator/lib/mutation-contract.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: orchestrator/lib/mutation-contract.js
+        kind: requires
+      - from: tests/modules/test-mutation-contract.js
+        to: orchestrator/lib/mutation-contract.js
+        kind: requires
+      - from: copilot/lib/user-model.js
+        to: lib/open-loop-taxonomy.js
+        kind: requires
+      - from: intelligence/routes.js
+        to: lib/open-loop-taxonomy.js
+        kind: requires
+      - from: lib/compartment-engine.js
+        to: lib/open-loop-taxonomy.js
+        kind: requires
+      - from: lib/constitutional-ai.js
+        to: lib/open-loop-taxonomy.js
+        kind: requires
+      - from: lib/open-loop-taxonomy.patch.js
+        to: lib/open-loop-taxonomy.js
+        kind: requires
+      - from: lib/reflection.js
+        to: lib/open-loop-taxonomy.js
+        kind: requires
+      - from: orchestrator/lib/request-handler.js
+        to: lib/open-loop-taxonomy.js
+        kind: requires
+    crossings:
+      - from: lib/open-loop-taxonomy.js
+        to: intelligence/gap/predicate.js
+        fromSystem: lib
+        toSystem: intelligence
+        kind: upward
+        known: true
+      - from: lib/execution-pipeline.js
+        to: orchestrator/lib/mutation-contract.js
+        fromSystem: lib
+        toSystem: orchestrator
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM4_per_system_tool_index
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM13_guardian_agents_folder_refactor
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
+      upstream: []
+      downstream:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM13_guardian_agents_folder_refactor
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM14_components_store
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM19_atlas_spec_coverage_prerequisite
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM21_atlas_fact_extractors
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM22_atlas_structure_ledger
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM23_atlas_history_versions_calendar
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM24_atlas_prose_layer
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM25_atlas_living_update
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM26_atlas_completeness_and_release_gate
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM3_interaction_contract_wired_to_registry
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM4_per_system_tool_index
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM5_copilot_capability_zoom
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM6_who_creates_contracts
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM7_agent_mesh_intent_programming
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM8_full_pipeline_wiring
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM2_registry_as_hub_with_watchdog
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM4_per_system_tool_index
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM13_guardian_agents_folder_refactor
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - >-
+          needed by (4): LM2_registry_as_hub_with_watchdog, LM4_per_system_tool_index,
+          LM13_guardian_agents_folder_refactor, LM19_atlas_spec_coverage_prerequisite · all
+          downstream 16 · finishing it unlocks LM2_registry_as_hub_with_watchdog,
+          LM4_per_system_tool_index, LM13_guardian_agents_folder_refactor
   uuid: fe934a3f-8fcc-58e7-a21d-e3678f59b665

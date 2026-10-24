@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-13-track-b-sovereignty-phasemap.spec
 intent: null
 summary: MCO17_contract_boundary_retracted (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830587950
+exported_at: 1792852501600
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830587950
-lastSeenAt: 1792830587950
+firstSeenAt: 1792852501600
+lastSeenAt: 1792852501600
 fingerprint: null
 payload:
   id: MCO17_contract_boundary_retracted
@@ -25,5 +25,36 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 7e7a95ae7baa92ae
+  graph:
+    hash: 7e7a95ae7baa92ae
+    nodes:
+      - path: cortex/core/raid/contract-boundary.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+    edges:
+      - from: cortex/core/raid/contract-intake.js
+        to: cortex/core/raid/contract-boundary.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: a5c2c532-0c7a-5957-ad38-d353cf059869

@@ -5,13 +5,13 @@ id: docs_2026-10-21-browser-shell-phasemap.spec::BS9_agents_hub
 context: pipeline phase BS9_agents_hub of docs/2026-10-21-browser-shell-phasemap.spec
 intent: null
 summary: BS9_agents_hub (surface) — 2 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830636215
+exported_at: 1792852549785
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830636215
-lastSeenAt: 1792830636215
+firstSeenAt: 1792852549785
+lastSeenAt: 1792852549785
 fingerprint: null
 payload:
   id: BS9_agents_hub
@@ -27,7 +27,41 @@ payload:
   blocks:
     - MOD-BSH-AGENTS
   spec: clear-glass/spec/browser-shell.spec
-  graph: e6c8cd1e2f573362
+  graph:
+    hash: e6c8cd1e2f573362
+    nodes:
+      - path: clear-glass/renderer/browser.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/shell/agents.js
+        role: changes
+        exists: true
+        system: clear-glass
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+      dependents:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
+      upstream:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+      downstream:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS10_new_tab
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (1): BS8_design_system · all upstream 2'
+        - 'needed by (1): BS10_new_tab · finishing it unlocks BS10_new_tab'
   uuid: 9cad736a-a438-5564-bd0f-e40d54d3cfb6
   specLink:
     how: declared

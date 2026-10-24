@@ -9,11 +9,11 @@ intent: null
 summary: SB28_genesis_in_the_shape_nexus_systems_have (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830601640
+exported_at: 1792852515922
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830601640
-lastSeenAt: 1792830601640
+firstSeenAt: 1792852515922
+lastSeenAt: 1792852515922
 fingerprint: null
 payload:
   id: SB28_genesis_in_the_shape_nexus_systems_have
@@ -28,5 +28,37 @@ payload:
     - SB17_the_system_template_is_complete
   blocks: []
   spec: null
-  graph: 34ff7104d20a1a90
+  graph:
+    hash: 34ff7104d20a1a90
+    nodes:
+      - path: idearium/spec-engine/templates/architecture-spec.template.yaml
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/spec-engine/templates/genesis.spec
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      dependents: []
+      upstream:
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB0_map
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB16_genesis_nodes_domain
+        - docs/2026-10-05-build-from-the-spec-phasemap.spec::SB17_the_system_template_is_complete
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3
+        - 'depends on (1): SB17_the_system_template_is_complete · all upstream 3'
+        - 'needed by (0): —'
   uuid: f5bdaf2d-fe82-516b-90cc-4a1c9f556cf9

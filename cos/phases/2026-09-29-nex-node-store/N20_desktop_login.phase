@@ -5,13 +5,13 @@ id: docs_2026-09-29-nex-node-store-phasemap.spec::N20_desktop_login
 context: pipeline phase N20_desktop_login of docs/2026-09-29-nex-node-store-phasemap.spec
 intent: null
 summary: N20_desktop_login (?) — 3 file(s)
-system: idearium
+system: cos
 tags: []
-exported_at: 1792830596177
+exported_at: 1792852509982
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830596177
-lastSeenAt: 1792830596177
+firstSeenAt: 1792852509982
+lastSeenAt: 1792852509982
 fingerprint: null
 payload:
   id: N20_desktop_login
@@ -26,5 +26,65 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 4254a95488f078bd
+  graph:
+    hash: 4254a95488f078bd
+    nodes:
+      - path: cos/testenv/provision.js
+        role: changes
+        exists: true
+        system: cos
+      - path: docs/atlases/idearium-atlas.md
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/ui/desktop.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: cos/compartment/guest-agent.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/compartment/qemu-runtime.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/host.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/index.js
+        role: uses
+        exists: true
+        system: cos
+    edges:
+      - from: cos/testenv/provision.js
+        to: cos/testenv/host.js
+        kind: requires
+      - from: cos/testenv/provision.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cos/testenv/provision.js
+        to: cos/compartment/guest-agent.js
+        kind: requires
+      - from: cos/testenv/provision.js
+        to: cos/testenv/index.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: eae94a5c-1fad-50ed-8cb7-2a37631a3cc3

@@ -5,13 +5,13 @@ id: docs_2026-10-15-cos-app-phasemap.spec::COSA9_idearium_sync
 context: pipeline phase COSA9_idearium_sync of docs/2026-10-15-cos-app-phasemap.spec
 intent: null
 summary: COSA9_idearium_sync (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830617313
+exported_at: 1792852531307
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830617313
-lastSeenAt: 1792830617313
+firstSeenAt: 1792852531307
+lastSeenAt: 1792852531307
 fingerprint: null
 payload:
   id: COSA9_idearium_sync
@@ -25,5 +25,283 @@ payload:
     - COSA3_run_and_supervise
   blocks: []
   spec: null
-  graph: ddd57d8b3fb336bf
+  graph:
+    hash: 0c7bf762ea2dba37
+    nodes:
+      - path: cos/app/switch.js
+        role: changes
+        exists: true
+        system: cos
+      - path: cos/workspace/vm-control.js
+        role: changes
+        exists: true
+        system: cos
+      - path: docs/2026-10-15-pipeline-focus-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/cli/route-commands.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/lib/projects.cjs
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/repo/nexus-self.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/projects.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/repo-notes.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/cos-bridge.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/history-import-job.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/nexus-self/store.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/nexus-self/systems.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/project-decompose.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-notes.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/zip-ingest.js
+        role: changes
+        exists: true
+        system: lib
+      - path: nexus/autopilot.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/cos-run.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/import-checks.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/nexus-self/apply.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/nexus-self/branch.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/nexus-self/inject-gate.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/opportunity/index.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/registry-harness.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-nexus-atlas-and-glass.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-inject-approval.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-nexus-self-and-cos-run.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: idearium/lib/data-dir.cjs
+        role: uses
+        exists: true
+        system: idearium
+      - path: lib/autopilot-intelligence.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/error-log.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ledger-fanin/boot.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ledger-fanin/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ledger-sse.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/resource-monitor.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/zip.js
+        role: uses
+        exists: true
+        system: lib
+      - path: warp/core/Axiom.js
+        role: uses
+        exists: true
+        system: null
+      - path: warp/core/Stream.js
+        role: uses
+        exists: true
+        system: null
+      - path: warp/core/StreamLog.js
+        role: uses
+        exists: true
+        system: null
+    edges:
+      - from: lib/repo-notes.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/zip-ingest.js
+        to: lib/zip.js
+        kind: requires
+      - from: lib/nexus-self/store.js
+        to: idearium/lib/data-dir.cjs
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/resource-monitor.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/ledger-fanin/boot.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/ledger-sse.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/error-log.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/ledger-fanin/index.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: lib/autopilot-intelligence.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: warp/core/Stream.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: warp/core/StreamLog.js
+        kind: requires
+      - from: nexus/autopilot.js
+        to: warp/core/Axiom.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-notes.js
+        kind: requires
+      - from: lib/import-checks.js
+        to: lib/repo-notes.js
+        kind: requires
+      - from: lib/opportunity/index.js
+        to: lib/zip-ingest.js
+        kind: requires
+      - from: idearium/repo/phases.js
+        to: lib/nexus-self/store.js
+        kind: requires
+      - from: lib/cos-run.js
+        to: lib/nexus-self/store.js
+        kind: requires
+      - from: lib/nexus-self/apply.js
+        to: lib/nexus-self/store.js
+        kind: requires
+      - from: lib/nexus-self/branch.js
+        to: lib/nexus-self/store.js
+        kind: requires
+      - from: lib/nexus-self/inject-gate.js
+        to: lib/nexus-self/store.js
+        kind: requires
+      - from: lib/registry-harness.js
+        to: lib/nexus-self/store.js
+        kind: requires
+      - from: tests/modules/test-nexus-atlas-and-glass.test.js
+        to: lib/nexus-self/store.js
+        kind: requires
+      - from: tests/modules/test-nexus-inject-approval.test.js
+        to: lib/nexus-self/store.js
+        kind: requires
+      - from: tests/modules/test-nexus-self-and-cos-run.test.js
+        to: lib/nexus-self/store.js
+        kind: requires
+    crossings:
+      - from: lib/repo-notes.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/nexus-self/store.js
+        to: idearium/lib/data-dir.cjs
+        fromSystem: lib
+        toSystem: idearium
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      dependents:
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
+      upstream:
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA2_runtime_and_dependencies
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
+      downstream:
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA10_compartment_window
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA11_nested_tree
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
+        - docs/2026-10-16-cos-console-phasemap.spec::CON3_system_controls
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · ready
+        - 'depends on (2): COSA1_version_store_and_import, COSA3_run_and_supervise · all upstream 3'
+        - >-
+          needed by (3): COSA10_compartment_window, COSA11_nested_tree, COSA14_versionium_record ·
+          all downstream 4
   uuid: 5cf8fc9e-f895-589a-a936-0535f3e850e0

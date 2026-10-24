@@ -5,13 +5,13 @@ id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::CB1_coder_brief
 context: pipeline phase CB1_coder_brief of docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
 summary: CB1_coder_brief (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632807
+exported_at: 1792852546588
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632807
-lastSeenAt: 1792830632807
+firstSeenAt: 1792852546588
+lastSeenAt: 1792852546588
 fingerprint: null
 payload:
   id: CB1_coder_brief
@@ -25,7 +25,48 @@ payload:
     - VF1_verify_first
   blocks: []
   spec: null
-  graph: 1d43c7e9fcfca2cd
+  graph:
+    hash: 1d43c7e9fcfca2cd
+    nodes:
+      - path: lib/coder-brief.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/verify-first.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/coder-brief.js
+        to: lib/verify-first.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/coder-brief.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      dependents: []
+      upstream:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (1): VF1_verify_first · all upstream 2'
+        - 'needed by (0): —'
   uuid: b3de5efc-e0c5-5eed-8c92-3cde1a5f9578
   specLink:
     how: discovered:path

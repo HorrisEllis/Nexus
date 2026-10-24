@@ -5,13 +5,13 @@ id: docs_cortex-schema-registry-phasemap.spec::P2_conformance_check_lib
 context: pipeline phase P2_conformance_check_lib of docs/cortex-schema-registry-phasemap.spec
 intent: null
 summary: P2_conformance_check_lib (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830642887
+exported_at: 1792852557355
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830642887
-lastSeenAt: 1792830642887
+firstSeenAt: 1792852557355
+lastSeenAt: 1792852557355
 fingerprint: null
 payload:
   id: P2_conformance_check_lib
@@ -23,5 +23,77 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 9d3e03fe9b7e2d00
+  graph:
+    hash: 9d3e03fe9b7e2d00
+    nodes:
+      - path: lib/schema-registry.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/uid/config-schema.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/lib/user-model.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/memory/jaa-db.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: lib/agent-pull.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/uid/component-map.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/schema-registry.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/uid/config-schema.js
+        to: lib/uid/component-map.js
+        kind: requires
+      - from: copilot/lib/user-model.js
+        to: lib/schema-registry.js
+        kind: requires
+      - from: cortex/memory/jaa-db.js
+        to: lib/schema-registry.js
+        kind: requires
+      - from: lib/agent-pull.js
+        to: lib/schema-registry.js
+        kind: requires
+    crossings:
+      - from: lib/schema-registry.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 437a0149-5ccf-5070-886a-eb30cbb8aaf8

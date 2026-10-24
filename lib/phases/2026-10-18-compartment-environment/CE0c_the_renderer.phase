@@ -5,13 +5,13 @@ id: docs_2026-10-18-compartment-environment-phasemap.spec::CE0c_the_renderer
 context: pipeline phase CE0c_the_renderer of docs/2026-10-18-compartment-environment-phasemap.spec
 intent: null
 summary: CE0c_the_renderer (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830629340
+exported_at: 1792852543281
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830629340
-lastSeenAt: 1792830629340
+firstSeenAt: 1792852543281
+lastSeenAt: 1792852543281
 fingerprint: null
 payload:
   id: CE0c_the_renderer
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: eb8798a8843e6304
+  graph:
+    hash: eb8798a8843e6304
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 0e66f02f-3a5c-5530-b5a4-a241ec37bd2f

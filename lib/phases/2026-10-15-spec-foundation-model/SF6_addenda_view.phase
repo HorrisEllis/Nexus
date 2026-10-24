@@ -5,13 +5,13 @@ id: docs_2026-10-15-spec-foundation-model-phasemap.spec::SF6_addenda_view
 context: pipeline phase SF6_addenda_view of docs/2026-10-15-spec-foundation-model-phasemap.spec
 intent: null
 summary: SF6_addenda_view (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830620255
+exported_at: 1792852534216
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830620255
-lastSeenAt: 1792830620255
+firstSeenAt: 1792852534216
+lastSeenAt: 1792852534216
 fingerprint: null
 payload:
   id: SF6_addenda_view
@@ -24,5 +24,28 @@ payload:
     - SF1_foundation_field
   blocks: []
   spec: null
-  graph: d7b4036d0d6df1de
+  graph:
+    hash: d7b4036d0d6df1de
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+      dependents: []
+      upstream:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+      downstream: []
+      blockedBy:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by SF1_foundation_field
+        - 'depends on (1): SF1_foundation_field'
+        - 'needed by (0): —'
   uuid: d8584af3-a6e6-586f-9b20-5355b1b0f27a

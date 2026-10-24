@@ -5,13 +5,13 @@ id: docs_2026-10-15-gate-held-work-phasemap.spec::GW0f_mutation_testing
 context: pipeline phase GW0f_mutation_testing of docs/2026-10-15-gate-held-work-phasemap.spec
 intent: null
 summary: GW0f_mutation_testing (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830618147
+exported_at: 1792852532100
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830618147
-lastSeenAt: 1792830618147
+firstSeenAt: 1792852532100
+lastSeenAt: 1792852532100
 fingerprint: null
 payload:
   id: GW0f_mutation_testing
@@ -25,5 +25,35 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 0e47ea5d7cf634b5
+  graph:
+    hash: 0e47ea5d7cf634b5
+    nodes:
+      - path: docs/2026-10-17-decisions-by-the-axioms.spec
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW15_every_file_tested
+      upstream: []
+      downstream:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW15_every_file_tested
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): GW15_every_file_tested · all downstream 2'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 1c3fe1e2-d811-5320-9bfd-36ac3747cebb

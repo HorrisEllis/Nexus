@@ -5,13 +5,13 @@ id: docs_2026-08-23-backlog-phasemap.spec::BL31_architect_block_canvas_component
 context: pipeline phase BL31_architect_block_canvas_component_swap of docs/2026-08-23-backlog-phasemap.spec
 intent: null
 summary: BL31_architect_block_canvas_component_swap (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581847
+exported_at: 1792852494929
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581847
-lastSeenAt: 1792830581847
+firstSeenAt: 1792852494929
+lastSeenAt: 1792852494929
 fingerprint: null
 payload:
   id: BL31_architect_block_canvas_component_swap
@@ -24,5 +24,28 @@ payload:
     - BL30_registry_components_drift_audit
   blocks: []
   spec: null
-  graph: 5361bbb7f4319623
+  graph:
+    hash: 5361bbb7f4319623
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-08-23-backlog-phasemap.spec::BL30_registry_components_drift_audit
+      dependents: []
+      upstream:
+        - docs/2026-08-23-backlog-phasemap.spec::BL30_registry_components_drift_audit
+      downstream: []
+      blockedBy:
+        - docs/2026-08-23-backlog-phasemap.spec::BL30_registry_components_drift_audit
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by BL30_registry_components_drift_audit
+        - 'depends on (1): BL30_registry_components_drift_audit'
+        - 'needed by (0): —'
   uuid: 1c37ad5c-57f8-56cd-b25e-3af0abdc9d8b

@@ -5,13 +5,13 @@ id: docs_2026-08-23-backlog-phasemap.spec::BL19_roadmap_readability
 context: pipeline phase BL19_roadmap_readability of docs/2026-08-23-backlog-phasemap.spec
 intent: null
 summary: BL19_roadmap_readability (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581831
+exported_at: 1792852494914
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581831
-lastSeenAt: 1792830581831
+firstSeenAt: 1792852494914
+lastSeenAt: 1792852494914
 fingerprint: null
 payload:
   id: BL19_roadmap_readability
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: acd486febb7a758e
+  graph:
+    hash: acd486febb7a758e
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: e87cf75b-154e-5f39-bb61-7ff5efe7f85f

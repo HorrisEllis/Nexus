@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-10-idearium-solid-phasemap.spec
 intent: null
 summary: SD2_copilot_never_answers_ok_with_nothing (?) — 3 file(s)
-system: idearium
+system: copilot
 tags: []
-exported_at: 1792830610975
+exported_at: 1792852524901
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830610975
-lastSeenAt: 1792830610975
+firstSeenAt: 1792852524901
+lastSeenAt: 1792852524901
 fingerprint: null
 payload:
   id: SD2_copilot_never_answers_ok_with_nothing
@@ -28,5 +28,235 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 8d00d3029511847a
+  graph:
+    hash: 8d00d3029511847a
+    nodes:
+      - path: copilot/lifeline.js
+        role: changes
+        exists: true
+        system: copilot
+      - path: copilot/server.js
+        role: changes
+        exists: true
+        system: copilot
+      - path: ui/tv-shell/index.html
+        role: changes
+        exists: true
+        system: ui
+      - path: clear-glass/src/mesh/agent-mesh.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: copilot/lib/reword.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/module-builder.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/recursive-diagnose.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/officiator.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: lib/agent-tools/tools/query/ambiguity-pull.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/clear-glass-stream-bridge.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/copilot-adversarial-wire.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/copilot-confidence.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/copilot-handshake-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/lifeline-fluid-routing.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: copilot/analysis.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: copilot/config.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: copilot/intuition.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: copilot/lib/copilot-context.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: copilot/lib/expectation-watcher.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: copilot/lib/inject-config.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: copilot/module-builder.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: copilot/recursive-diagnose.js
+        role: uses
+        exists: true
+        system: copilot
+      - path: lib/blueprint-index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/cortex-write.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/version.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: copilot/server.js
+        to: lib/data-home.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/config.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/lib/inject-config.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/cortex-write.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/blueprint-index.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/lib/copilot-context.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/module-builder.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/recursive-diagnose.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/version.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/lib/expectation-watcher.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/intuition.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/analysis.js
+        kind: requires
+      - from: lib/clear-glass-stream-bridge.js
+        to: copilot/server.js
+        kind: requires
+      - from: tests/modules/copilot-adversarial-wire.test.js
+        to: copilot/server.js
+        kind: requires
+      - from: tests/modules/copilot-handshake-dispatch.test.js
+        to: copilot/server.js
+        kind: requires
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: copilot/lib/reword.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: copilot/module-builder.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: copilot/recursive-diagnose.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: cortex/core/raid/officiator.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: lib/agent-tools/tools/query/ambiguity-pull.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: tests/modules/copilot-confidence.test.js
+        to: copilot/lifeline.js
+        kind: requires
+      - from: tests/modules/lifeline-fluid-routing.test.js
+        to: copilot/lifeline.js
+        kind: requires
+    crossings:
+      - from: lib/clear-glass-stream-bridge.js
+        to: copilot/server.js
+        fromSystem: lib
+        toSystem: copilot
+        kind: upward
+        known: true
+      - from: clear-glass/src/mesh/agent-mesh.js
+        to: copilot/lifeline.js
+        fromSystem: clear-glass
+        toSystem: copilot
+        kind: system
+        known: true
+      - from: cortex/core/raid/contract-intake.js
+        to: copilot/lifeline.js
+        fromSystem: cortex
+        toSystem: copilot
+        kind: system
+        known: true
+      - from: cortex/core/raid/officiator.js
+        to: copilot/lifeline.js
+        fromSystem: cortex
+        toSystem: copilot
+        kind: system
+        known: true
+      - from: lib/agent-tools/tools/query/ambiguity-pull.js
+        to: copilot/lifeline.js
+        fromSystem: lib
+        toSystem: copilot
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: d8996d6c-2165-5649-b2f1-a41d5ffb06a6

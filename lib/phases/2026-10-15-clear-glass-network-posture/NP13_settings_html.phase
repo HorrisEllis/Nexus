@@ -5,13 +5,13 @@ id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP13_settings_htm
 context: pipeline phase NP13_settings_html of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
 intent: null
 summary: NP13_settings_html (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830616031
+exported_at: 1792852529993
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830616031
-lastSeenAt: 1792830616031
+firstSeenAt: 1792852529993
+lastSeenAt: 1792852529993
 fingerprint: null
 payload:
   id: NP13_settings_html
@@ -25,5 +25,31 @@ payload:
     - NP10_browser_surface
   blocks: []
   spec: null
-  graph: 7963737bd097d29a
+  graph:
+    hash: 7963737bd097d29a
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP10_browser_surface
+      dependents: []
+      upstream:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP10_browser_surface
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+      downstream: []
+      blockedBy:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP9_cli_first
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP10_browser_surface
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by NP9_cli_first, NP10_browser_surface
+        - 'depends on (2): NP9_cli_first, NP10_browser_surface'
+        - 'needed by (0): —'
   uuid: a8191ced-8099-59ed-b781-b11600d41d9f

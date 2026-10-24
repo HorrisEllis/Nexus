@@ -5,13 +5,13 @@ id: docs_2026-10-15-clear-glass-network-posture-phasemap.spec::NP17_hold_primiti
 context: pipeline phase NP17_hold_primitive of docs/2026-10-15-clear-glass-network-posture-phasemap.spec
 intent: null
 summary: NP17_hold_primitive (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830616035
+exported_at: 1792852529999
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830616035
-lastSeenAt: 1792830616035
+firstSeenAt: 1792852529999
+lastSeenAt: 1792852529999
 fingerprint: null
 payload:
   id: NP17_hold_primitive
@@ -24,5 +24,33 @@ payload:
     - NP15_kill_switch
   blocks: []
   spec: null
-  graph: 114f488ecf1e98c4
+  graph:
+    hash: 114f488ecf1e98c4
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+      dependents:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP18_freeze_plugin
+      upstream:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP1_compartment
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP3_apply_to_electron
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP5_leak_test
+      downstream:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP18_freeze_plugin
+      blockedBy:
+        - docs/2026-10-15-clear-glass-network-posture-phasemap.spec::NP15_kill_switch
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by NP15_kill_switch
+        - 'depends on (1): NP15_kill_switch · all upstream 4'
+        - 'needed by (1): NP18_freeze_plugin'
   uuid: a2ec81ce-f395-5601-8a43-712695295457

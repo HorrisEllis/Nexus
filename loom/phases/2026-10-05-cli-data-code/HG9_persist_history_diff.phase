@@ -5,13 +5,13 @@ id: docs_2026-10-05-cli-data-code-phasemap.spec::HG9_persist_history_diff
 context: pipeline phase HG9_persist_history_diff of docs/2026-10-05-cli-data-code-phasemap.spec
 intent: null
 summary: HG9_persist_history_diff (?) — 2 file(s)
-system: idearium
+system: loom
 tags: []
-exported_at: 1792830602137
+exported_at: 1792852516516
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830602137
-lastSeenAt: 1792830602137
+firstSeenAt: 1792852516516
+lastSeenAt: 1792852516516
 fingerprint: null
 payload:
   id: HG9_persist_history_diff
@@ -25,5 +25,198 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 95c5a644e3d78081
+  graph:
+    hash: 95c5a644e3d78081
+    nodes:
+      - path: loom/scanners/phasemap-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: loom/test/phasemap-map.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/nexus-self.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/phases.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/roadmap-import.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/roadmap.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/spec-plan.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/phase-dag.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/phase-files.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/spec-census.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: loom/server.js
+        role: used-by
+        exists: true
+        system: loom
+      - path: scripts/generate-atlases.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-loom-phasemap-status.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/nexus-client.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/systems.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: loom/scanners/phasemap-map.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: loom/scanners/phasemap-map.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: loom/scanners/phasemap-map.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: idearium/repo/nexus-self.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: idearium/repo/phases.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: idearium/repo/roadmap-import.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: idearium/repo/roadmap.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: idearium/repo/spec-plan.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: lib/phase-dag.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: lib/phase-files.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: lib/spec-census.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: loom/server.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: scripts/generate-atlases.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+      - from: tests/modules/test-loom-phasemap-status.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+    crossings:
+      - from: loom/scanners/phasemap-map.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: loom
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: idearium/api/index.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+      - from: idearium/repo/nexus-self.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+      - from: idearium/repo/phases.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+      - from: idearium/repo/roadmap-import.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: false
+      - from: idearium/repo/roadmap.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+      - from: idearium/repo/spec-plan.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: idearium
+        toSystem: loom
+        kind: system
+        known: true
+      - from: lib/phase-dag.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: false
+      - from: lib/phase-files.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+      - from: lib/spec-census.js
+        to: loom/scanners/phasemap-map.js
+        fromSystem: lib
+        toSystem: loom
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 80379eaa-ba26-5b60-a5cb-c8cec0a68bfd

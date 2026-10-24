@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-07-versionium-releases-phasemap.spec
 intent: null
 summary: RN1_release_is_a_node_and_a_tag (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830607997
+exported_at: 1792852522064
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830607997
-lastSeenAt: 1792830607997
+firstSeenAt: 1792852522064
+lastSeenAt: 1792852522064
 fingerprint: null
 payload:
   id: RN1_release_is_a_node_and_a_tag
@@ -26,5 +26,30 @@ payload:
     - VR1_every_change_a_commit
   blocks: []
   spec: null
-  graph: ac55d5c78a92cf41
+  graph:
+    hash: ac55d5c78a92cf41
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+      dependents:
+        - docs/2026-10-07-versionium-releases-phasemap.spec::RN2_cortex_is_the_bookkeeper
+      upstream:
+        - docs/2026-10-07-versionium-releases-phasemap.spec::VR1_every_change_a_commit
+      downstream:
+        - docs/2026-10-07-versionium-releases-phasemap.spec::RN2_cortex_is_the_bookkeeper
+        - docs/2026-10-07-versionium-releases-phasemap.spec::RN3_releases_section
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): VR1_every_change_a_commit'
+        - 'needed by (1): RN2_cortex_is_the_bookkeeper · all downstream 2'
   uuid: e0ba58e4-978c-54e3-901d-26563c80fd07

@@ -5,13 +5,13 @@ id: docs_2026-08-22-session-full-phasemap.spec::SF16_event_types_real_registry
 context: pipeline phase SF16_event_types_real_registry of docs/2026-08-22-session-full-phasemap.spec
 intent: null
 summary: SF16_event_types_real_registry (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581337
+exported_at: 1792852494437
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581337
-lastSeenAt: 1792830581337
+firstSeenAt: 1792852494437
+lastSeenAt: 1792852494437
 fingerprint: null
 payload:
   id: SF16_event_types_real_registry
@@ -23,5 +23,71 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 71639da711eaaf6d
+  graph:
+    hash: 71639da711eaaf6d
+    nodes:
+      - path: lib/event-types.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/lifeline.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/module-builder.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: lib/agent-tools/index.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/chunk-service.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/seam/spec-parser.js
+        role: used-by
+        exists: true
+        system: lib
+    edges:
+      - from: copilot/lifeline.js
+        to: lib/event-types.js
+        kind: requires
+      - from: copilot/module-builder.js
+        to: lib/event-types.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/event-types.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/event-types.js
+        kind: requires
+      - from: lib/chunk-service.js
+        to: lib/event-types.js
+        kind: requires
+      - from: lib/seam/spec-parser.js
+        to: lib/event-types.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 1885970a-6189-578a-a001-d36b316225ec

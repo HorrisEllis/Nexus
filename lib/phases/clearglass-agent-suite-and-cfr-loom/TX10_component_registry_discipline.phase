@@ -7,13 +7,13 @@ context: >-
   docs/clearglass-agent-suite-and-cfr-loom-phasemap.spec
 intent: null
 summary: TX10_component_registry_discipline (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830640625
+exported_at: 1792852554969
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830640625
-lastSeenAt: 1792830640625
+firstSeenAt: 1792852554969
+lastSeenAt: 1792852554969
 fingerprint: null
 payload:
   id: TX10_component_registry_discipline
@@ -25,5 +25,222 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 9cd49d46ce7b61e8
+  graph:
+    hash: 9cd49d46ce7b61e8
+    nodes:
+      - path: lib/account-registry.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/identity/hat-forge.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/query/file-tree.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/hat-forge.js
+        role: changes
+        exists: true
+        system: lib
+      - path: loom/bootstrap.js
+        role: changes
+        exists: true
+        system: loom
+      - path: loom/maps/session-2026-08-14-map.js
+        role: changes
+        exists: true
+        system: loom
+      - path: clear-glass/src/copilot/hat.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/ipc/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: copilot/lib/self-model.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/officiator.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: guardian/lib/jobs.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/agent-intent-contract.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-router.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/index.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/hat-seed-ollama-personalities.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: loom/maps/accounts-authority-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/agent-memory-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/copilot-capability-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/cos-testenv-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/observability-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/raid-events-and-tools-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/ui-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/maps/warp-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/capability-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/source-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/scanners/spec-map.js
+        role: uses
+        exists: true
+        system: loom
+      - path: loom/schema/index.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: loom/bootstrap.js
+        to: loom/schema/index.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/warp-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/observability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/copilot-capability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/ui-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/raid-events-and-tools-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/accounts-authority-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/source-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/capability-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/scanners/spec-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/cos-testenv-map.js
+        kind: requires
+      - from: loom/bootstrap.js
+        to: loom/maps/agent-memory-map.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/account-registry.js
+        kind: requires
+      - from: lib/agent-router.js
+        to: lib/account-registry.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/agent-tools/tools/identity/hat-forge.js
+        kind: requires
+      - from: clear-glass/src/copilot/hat.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: copilot/lib/self-model.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: cortex/core/raid/officiator.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: guardian/lib/jobs.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: lib/agent-intent-contract.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: lib/hat-seed-ollama-personalities.js
+        to: lib/hat-forge.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR1_callto_component_hotswap_catalog
+      upstream: []
+      downstream:
+        - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR1_callto_component_hotswap_catalog
+      blockedBy: []
+      unlocks:
+        - docs/2026-08-27-event-taxonomy-and-brainstorm-phasemap.spec::BR1_callto_component_hotswap_catalog
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - >-
+          needed by (1): BR1_callto_component_hotswap_catalog · finishing it unlocks
+          BR1_callto_component_hotswap_catalog
   uuid: cb38f45d-c87d-5fe3-a732-c0bf6e0a8d2e

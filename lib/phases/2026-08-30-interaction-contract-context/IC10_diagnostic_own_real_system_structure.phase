@@ -7,13 +7,13 @@ context: >-
   docs/2026-08-30-interaction-contract-context-phasemap.spec
 intent: null
 summary: IC10_diagnostic_own_real_system_structure (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830583615
+exported_at: 1792852496984
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830583615
-lastSeenAt: 1792830583615
+firstSeenAt: 1792852496984
+lastSeenAt: 1792852496984
 fingerprint: null
 payload:
   id: IC10_diagnostic_own_real_system_structure
@@ -25,5 +25,208 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 37d61971e616a68c
+  graph:
+    hash: 37d61971e616a68c
+    nodes:
+      - path: copilot/server.js
+        role: changes
+        exists: true
+        system: copilot
+      - path: diagnostic/nexus-diagnostic.js
+        role: changes
+        exists: true
+        system: diagnostic
+      - path: guardian/server.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: ollama/server.js
+        role: changes
+        exists: true
+        system: ollama
+      - path: service/nexus-diagnostic.js
+        role: changes
+        exists: false
+        system: service
+      - path: diagnostic/cli.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: diagnostic/server.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: guardian/dropzone.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: lib/clear-glass-stream-bridge.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: service/guardian-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: tests/modules/copilot-adversarial-wire.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/copilot-handshake-dispatch.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: guardian/config.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/event-taxonomy.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/ncp.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: intelligence/baseline.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/ledger.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/gap/hunter.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/event-taxonomy-pattern.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/queue.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/seam/detector.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/seam/queue.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/seam/spec-parser.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: guardian/server.js
+        to: lib/data-home.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/config.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/event-taxonomy.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/event-taxonomy-pattern.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/lib/ncp.js
+        kind: requires
+      - from: guardian/server.js
+        to: intelligence/cfr/ledger.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/detector.js
+        kind: requires
+      - from: guardian/server.js
+        to: intelligence/gap/hunter.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/queue.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/spec-parser.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/queue.js
+        kind: requires
+      - from: guardian/server.js
+        to: intelligence/baseline.js
+        kind: requires
+      - from: guardian/dropzone.js
+        to: guardian/server.js
+        kind: requires
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        kind: requires
+      - from: lib/clear-glass-stream-bridge.js
+        to: copilot/server.js
+        kind: requires
+      - from: tests/modules/copilot-adversarial-wire.test.js
+        to: copilot/server.js
+        kind: requires
+      - from: tests/modules/copilot-handshake-dispatch.test.js
+        to: copilot/server.js
+        kind: requires
+      - from: diagnostic/cli.js
+        to: diagnostic/nexus-diagnostic.js
+        kind: requires
+      - from: diagnostic/server.js
+        to: diagnostic/nexus-diagnostic.js
+        kind: requires
+    crossings:
+      - from: guardian/server.js
+        to: intelligence/cfr/ledger.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: guardian/server.js
+        to: intelligence/gap/hunter.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: guardian/server.js
+        to: intelligence/baseline.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        fromSystem: service
+        toSystem: guardian
+        kind: system
+        known: true
+      - from: lib/clear-glass-stream-bridge.js
+        to: copilot/server.js
+        fromSystem: lib
+        toSystem: copilot
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 591ce665-0f0e-5c11-a6d9-28931ace45a4

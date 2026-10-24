@@ -5,13 +5,13 @@ id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB0c_how_it_is_enforced
 context: pipeline phase DB0c_how_it_is_enforced of docs/2026-10-17-system-drawbridge-phasemap.spec
 intent: null
 summary: DB0c_how_it_is_enforced (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830628897
+exported_at: 1792852542821
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830628897
-lastSeenAt: 1792830628897
+firstSeenAt: 1792852542821
+lastSeenAt: 1792852542821
 fingerprint: null
 payload:
   id: DB0c_how_it_is_enforced
@@ -23,5 +23,33 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: a3bf674905f4dd0c
+  graph:
+    hash: a3bf674905f4dd0c
+    nodes:
+      - path: contracts/event-contract-baseline.json
+        role: changes
+        exists: true
+        system: contracts
+      - path: docs/2026-10-17-decisions-by-the-axioms.spec
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 34d8f228-a397-5e9f-9be4-ae84f5c6c452

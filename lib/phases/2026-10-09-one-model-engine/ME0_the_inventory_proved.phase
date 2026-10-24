@@ -5,13 +5,13 @@ id: docs_2026-10-09-one-model-engine-phasemap.spec::ME0_the_inventory_proved
 context: pipeline phase ME0_the_inventory_proved of docs/2026-10-09-one-model-engine-phasemap.spec
 intent: null
 summary: ME0_the_inventory_proved (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830608813
+exported_at: 1792852522892
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830608813
-lastSeenAt: 1792830608813
+firstSeenAt: 1792852522892
+lastSeenAt: 1792852522892
 fingerprint: null
 payload:
   id: ME0_the_inventory_proved
@@ -25,5 +25,56 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 9d64861419da9a7a
+  graph:
+    hash: 9d64861419da9a7a
+    nodes:
+      - path: docs/2026-10-09-one-model-engine-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+      - path: tests/modules/test-one-model-engine.test.js
+        role: changes
+        exists: false
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME8_the_drainers_run_the_engine
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME15_the_docs_tell_the_truth
+      upstream: []
+      downstream:
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME10_nested_ladders_folded
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME11_old_settings_translated
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME12_callers_moved
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME13_no_bypass
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME14_across_callers
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME15_the_docs_tell_the_truth
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME2_caller_policy
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME3_one_engine_one_budget
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME4_one_attempt_record
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME5_one_chooser
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME6_one_learner
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME7_raid_spine_joins
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME8_the_drainers_run_the_engine
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME9_the_layers_below_report
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME1_one_failure_list
+        - docs/2026-10-09-one-model-engine-phasemap.spec::ME15_the_docs_tell_the_truth
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - >-
+          needed by (3): ME1_one_failure_list, ME8_the_drainers_run_the_engine,
+          ME15_the_docs_tell_the_truth · all downstream 15 · finishing it unlocks
+          ME1_one_failure_list, ME15_the_docs_tell_the_truth
   uuid: c7d32e4c-2346-53b0-a65f-138c153c1be2

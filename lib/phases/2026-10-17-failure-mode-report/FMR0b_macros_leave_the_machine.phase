@@ -5,13 +5,13 @@ id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR0b_macros_leave_the_ma
 context: pipeline phase FMR0b_macros_leave_the_machine of docs/2026-10-17-failure-mode-report-phasemap.spec
 intent: null
 summary: FMR0b_macros_leave_the_machine (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830627658
+exported_at: 1792852541593
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830627658
-lastSeenAt: 1792830627658
+firstSeenAt: 1792852541593
+lastSeenAt: 1792852541593
 fingerprint: null
 payload:
   id: FMR0b_macros_leave_the_machine
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 41416307c9ee9c2c
+  graph:
+    hash: 41416307c9ee9c2c
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 8341f2d8-4da6-5979-8bfd-b7bc67e3b5de

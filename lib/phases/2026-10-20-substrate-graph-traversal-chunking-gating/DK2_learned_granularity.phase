@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
 intent: null
 summary: DK2_learned_granularity (library) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830634523
+exported_at: 1792852548212
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830634523
-lastSeenAt: 1792830634523
+firstSeenAt: 1792852548212
+lastSeenAt: 1792852548212
 fingerprint: null
 payload:
   id: DK2_learned_granularity
@@ -28,7 +28,45 @@ payload:
   blocks:
     - MOD-GRANULARITY
   spec: docs/substrate.spec
-  graph: 38954b694b124080
+  graph:
+    hash: 38954b694b124080
+    nodes:
+      - path: lib/core/chunk.js
+        role: changes
+        exists: false
+        system: lib
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 7
+      deps:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+      dependents: []
+      upstream:
+        - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::DC1_dynamic_chunk_at_plan
+        - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+      downstream: []
+      blockedBy:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by DK1_dynamic_chunking
+        - 'depends on (1): DK1_dynamic_chunking · all upstream 12'
+        - 'needed by (0): —'
   uuid: 5fb8f0ea-576e-5fb2-ada2-31546dfbc3db
   specLink:
     how: declared

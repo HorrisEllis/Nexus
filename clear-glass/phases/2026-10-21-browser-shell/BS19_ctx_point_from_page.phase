@@ -5,13 +5,13 @@ id: docs_2026-10-21-browser-shell-phasemap.spec::BS19_ctx_point_from_page
 context: pipeline phase BS19_ctx_point_from_page of docs/2026-10-21-browser-shell-phasemap.spec
 intent: null
 summary: BS19_ctx_point_from_page (integration) — 5 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830636220
+exported_at: 1792852549790
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830636220
-lastSeenAt: 1792830636220
+firstSeenAt: 1792852549790
+lastSeenAt: 1792852549790
 fingerprint: null
 payload:
   id: BS19_ctx_point_from_page
@@ -30,7 +30,65 @@ payload:
   blocks:
     - MOD-BSH-CTX-POINT
   spec: clear-glass/spec/browser-shell.spec
-  graph: c852821cbea10b9d
+  graph:
+    hash: c852821cbea10b9d
+    nodes:
+      - path: clear-glass/plugins/snowflake/index.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/plugins/snowflake/manifest.json
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/browser.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/shell/ctxmenu.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/preload/webview-bridge.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/host-import.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/service.js
+        role: uses
+        exists: true
+        system: clear-glass
+    edges:
+      - from: clear-glass/plugins/snowflake/index.js
+        to: clear-glass/src/net/service.js
+        kind: requires
+      - from: clear-glass/plugins/snowflake/index.js
+        to: clear-glass/src/net/host-import.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS15_context_menu
+      dependents: []
+      upstream:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS15_context_menu
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS2_shell_rebuild
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS8_design_system
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3
+        - 'depends on (1): BS15_context_menu · all upstream 3'
+        - 'needed by (0): —'
   uuid: 7d5e65f0-aa47-5ad7-aa59-93bf26ac4e42
   specLink:
     how: declared

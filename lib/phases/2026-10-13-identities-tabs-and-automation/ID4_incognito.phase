@@ -5,13 +5,13 @@ id: docs_2026-10-13-identities-tabs-and-automation-phasemap.spec::ID4_incognito
 context: pipeline phase ID4_incognito of docs/2026-10-13-identities-tabs-and-automation-phasemap.spec
 intent: null
 summary: ID4_incognito (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830613958
+exported_at: 1792852527909
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830613958
-lastSeenAt: 1792830613958
+firstSeenAt: 1792852527909
+lastSeenAt: 1792852527909
 fingerprint: null
 payload:
   id: ID4_incognito
@@ -24,5 +24,30 @@ payload:
     - TB1_tab_is_a_view
   blocks: []
   spec: null
-  graph: 4d6262129208311e
+  graph:
+    hash: 4d6262129208311e
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+      dependents: []
+      upstream:
+        - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID0_signed_in_where_he_signs_in
+        - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::ID1_identities
+        - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+      downstream: []
+      blockedBy:
+        - docs/2026-10-13-identities-tabs-and-automation-phasemap.spec::TB1_tab_is_a_view
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by TB1_tab_is_a_view
+        - 'depends on (1): TB1_tab_is_a_view · all upstream 3'
+        - 'needed by (0): —'
   uuid: cc0c777a-6284-56c7-b6e2-2a5d004e5192

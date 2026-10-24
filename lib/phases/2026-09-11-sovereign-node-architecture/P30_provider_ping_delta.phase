@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-11-sovereign-node-architecture-phasemap.spec
 intent: null
 summary: P30_provider_ping_delta (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830587136
+exported_at: 1792852500751
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830587136
-lastSeenAt: 1792830587136
+firstSeenAt: 1792852500751
+lastSeenAt: 1792852500751
 fingerprint: null
 payload:
   id: P30_provider_ping_delta
@@ -25,5 +25,149 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: c9fdfb1f3ada7bfc
+  graph:
+    hash: c9fdfb1f3ada7bfc
+    nodes:
+      - path: docs/2026-09-11-sovereign-node-architecture-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+      - path: guardian/api-dispatch.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/node-schemas.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/lib/inject-config.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: cortex/tools/table-materializer.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: guardian/lib/node-registry.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: intelligence/lib/domain-nodes.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/node-registry.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/modules/test-pipeline-nodes.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/node-export-idea-tagged-query.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/node-schemas-split.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/core/raid/index.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: intelligence/liminal/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/chat-logger.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: guardian/api-dispatch.js
+        to: lib/chat-logger.js
+        kind: requires
+      - from: guardian/api-dispatch.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: guardian/api-dispatch.js
+        to: intelligence/liminal/index.js
+        kind: requires
+      - from: lib/node-schemas.js
+        to: lib/node-export.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: guardian/api-dispatch.js
+        kind: requires
+      - from: copilot/lib/inject-config.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: cortex/tools/table-materializer.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: guardian/lib/node-registry.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: intelligence/lib/domain-nodes.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: lib/node-registry.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: tests/modules/test-pipeline-nodes.test.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: tests/node-export-idea-tagged-query.test.js
+        to: lib/node-schemas.js
+        kind: requires
+      - from: tests/node-schemas-split.test.js
+        to: lib/node-schemas.js
+        kind: requires
+    crossings:
+      - from: guardian/api-dispatch.js
+        to: cortex/core/raid/index.js
+        fromSystem: guardian
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: guardian/api-dispatch.js
+        to: intelligence/liminal/index.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: orchestrator/orchestrator.js
+        to: guardian/api-dispatch.js
+        fromSystem: orchestrator
+        toSystem: guardian
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 6115e9ec-ca7b-5c60-bb8a-e538ac3518c5

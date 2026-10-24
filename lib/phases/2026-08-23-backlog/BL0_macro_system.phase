@@ -5,13 +5,13 @@ id: docs_2026-08-23-backlog-phasemap.spec::BL0_macro_system
 context: pipeline phase BL0_macro_system of docs/2026-08-23-backlog-phasemap.spec
 intent: null
 summary: BL0_macro_system (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581809
+exported_at: 1792852494893
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581809
-lastSeenAt: 1792830581809
+firstSeenAt: 1792852494893
+lastSeenAt: 1792852494893
 fingerprint: null
 payload:
   id: BL0_macro_system
@@ -23,5 +23,37 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 58296859ab5e1418
+  graph:
+    hash: 58296859ab5e1418
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-08-23-backlog-phasemap.spec::BL1_macro_erosmancer_integration
+        - docs/2026-08-23-backlog-phasemap.spec::BL6_captcha_detection
+        - docs/2026-08-23-backlog-phasemap.spec::BL15_agent_tools_tree_restructure
+      upstream: []
+      downstream:
+        - docs/2026-08-23-backlog-phasemap.spec::BL15_agent_tools_tree_restructure
+        - docs/2026-08-23-backlog-phasemap.spec::BL1_macro_erosmancer_integration
+        - docs/2026-08-23-backlog-phasemap.spec::BL6_captcha_detection
+      blockedBy: []
+      unlocks:
+        - docs/2026-08-23-backlog-phasemap.spec::BL1_macro_erosmancer_integration
+        - docs/2026-08-23-backlog-phasemap.spec::BL6_captcha_detection
+        - docs/2026-08-23-backlog-phasemap.spec::BL15_agent_tools_tree_restructure
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (3): BL1_macro_erosmancer_integration, BL6_captcha_detection,
+          BL15_agent_tools_tree_restructure · finishing it unlocks BL1_macro_erosmancer_integration,
+          BL6_captcha_detection, BL15_agent_tools_tree_restructure
   uuid: 91d2a325-02f6-50be-879a-71d72f76bf2a

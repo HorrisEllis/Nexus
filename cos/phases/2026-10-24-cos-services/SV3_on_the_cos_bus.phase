@@ -5,13 +5,13 @@ id: docs_2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
 context: pipeline phase SV3_on_the_cos_bus of docs/2026-10-24-cos-services-phasemap.spec
 intent: null
 summary: SV3_on_the_cos_bus (integration) — 1 file(s)
-system: idearium
+system: cos
 tags: []
-exported_at: 1792836303458
+exported_at: 1792852553378
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792836303458
-lastSeenAt: 1792836303458
+firstSeenAt: 1792852553378
+lastSeenAt: 1792852553378
 fingerprint: null
 payload:
   id: SV3_on_the_cos_bus
@@ -27,11 +27,52 @@ payload:
   blocks:
     - MOD-SV-ROUTE
   spec: cos/spec/cos-services.spec
-  graph: f0c4d36c618e41dd
+  graph:
+    hash: 8645e14e12bfdd42
+    nodes:
+      - path: cos/services/route.js
+        role: changes
+        exists: false
+        system: cos
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      dependents: []
+      upstream:
+        - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE1_the_compartment_machine
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE1a_cos_answers_on_a_route
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE2_the_shell_is_declared
+        - docs/2026-10-18-compartment-environment-phasemap.spec::CE3_the_handshake
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS_D1_registry_is_the_bridge
+        - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
+        - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+      downstream: []
+      blockedBy:
+        - docs/2026-10-24-cos-services-phasemap.spec::SV1_a_stack_per_root
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 5 · blocked by SV1_a_stack_per_root,
+          CS3_the_registry_is_the_bridge
+        - 'depends on (2): SV1_a_stack_per_root, CS3_the_registry_is_the_bridge · all upstream 11'
+        - 'needed by (0): —'
   uuid: d33aa6a0-da98-5326-8342-1df70e6e041a
   specLink:
     how: declared
     spec: cos/spec/cos-services.spec
     modules:
       - id: MOD-SV-ROUTE
-        uuid: null
+        uuid: nexus-cos-services-route-v1-0000-2026-1024-001

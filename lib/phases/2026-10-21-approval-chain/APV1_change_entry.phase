@@ -5,13 +5,13 @@ id: docs_2026-10-21-approval-chain-phasemap.spec::APV1_change_entry
 context: pipeline phase APV1_change_entry of docs/2026-10-21-approval-chain-phasemap.spec
 intent: null
 summary: APV1_change_entry (foundation) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830635375
+exported_at: 1792852548996
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830635375
-lastSeenAt: 1792830635375
+firstSeenAt: 1792852548996
+lastSeenAt: 1792852548996
 fingerprint: null
 payload:
   id: APV1_change_entry
@@ -26,7 +26,57 @@ payload:
   blocks:
     - MOD-APV-ENTRY
   spec: docs/approval-chain.spec
-  graph: 84ec3e73d291c157
+  graph:
+    hash: 84ec3e73d291c157
+    nodes:
+      - path: lib/change-entry.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/nexus-self/inject-gate.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/change-entry.js
+        to: lib/nexus-self/inject-gate.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/change-entry.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV0_one_record
+      dependents:
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV5_wired_in_loom
+      upstream:
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV0_one_record
+      downstream:
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV3_changelog_read
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV4_emit_on_the_ledger
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV5_wired_in_loom
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV2_commit_carries_it
+        - docs/2026-10-21-approval-chain-phasemap.spec::APV5_wired_in_loom
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): APV0_one_record'
+        - >-
+          needed by (2): APV2_commit_carries_it, APV5_wired_in_loom · all downstream 4 · finishing
+          it unlocks APV2_commit_carries_it, APV5_wired_in_loom
   uuid: e5ce3ff3-04bb-55c6-ae08-ef2fde11f3c2
   specLink:
     how: declared

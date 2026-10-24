@@ -5,13 +5,13 @@ id: docs_gemini-multiagent-coding-phasemap.spec::P3_line_block_seam_sync
 context: pipeline phase P3_line_block_seam_sync of docs/gemini-multiagent-coding-phasemap.spec
 intent: null
 summary: P3_line_block_seam_sync (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830643262
+exported_at: 1792852557752
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830643262
-lastSeenAt: 1792830643262
+firstSeenAt: 1792852557752
+lastSeenAt: 1792852557752
 fingerprint: null
 payload:
   id: P3_line_block_seam_sync
@@ -24,5 +24,29 @@ payload:
     - P1_per_agent_contracts
   blocks: []
   spec: null
-  graph: 4c9b125899b7ce0f
+  graph:
+    hash: 4c9b125899b7ce0f
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
+      dependents:
+        - docs/gemini-multiagent-coding-phasemap.spec::P5_autonomous_multiagent_loop
+      upstream:
+        - docs/gemini-multiagent-coding-phasemap.spec::P1_per_agent_contracts
+      downstream:
+        - docs/gemini-multiagent-coding-phasemap.spec::P5_autonomous_multiagent_loop
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): P1_per_agent_contracts'
+        - 'needed by (1): P5_autonomous_multiagent_loop'
   uuid: 56057e8a-1e77-56a6-9f9d-0f1e360d51da

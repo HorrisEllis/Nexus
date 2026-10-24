@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-29-nex-node-store-phasemap.spec
 intent: null
 summary: N26_work_surface_and_tv_ui_from_contracts (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830596184
+exported_at: 1792852509988
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830596184
-lastSeenAt: 1792830596184
+firstSeenAt: 1792852509988
+lastSeenAt: 1792852509988
 fingerprint: null
 payload:
   id: N26_work_surface_and_tv_ui_from_contracts
@@ -28,5 +28,31 @@ payload:
     - N25_manage_button_enterprise
   blocks: []
   spec: null
-  graph: 642ec62479f9e52c
+  graph:
+    hash: 642ec62479f9e52c
+    nodes:
+      - path: ui/contract-renderer.js
+        role: changes
+        exists: true
+        system: ui
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N25_manage_button_enterprise
+      dependents: []
+      upstream:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N25_manage_button_enterprise
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): N25_manage_button_enterprise'
+        - 'needed by (0): —'
   uuid: 33572f2e-62d6-5a2f-8ebb-f04c622df7c3

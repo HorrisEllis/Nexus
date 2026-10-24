@@ -5,13 +5,13 @@ id: docs_2026-10-09-hardening-pass-phasemap.spec::HP17_no_tab_is_said_in_seconds
 context: pipeline phase HP17_no_tab_is_said_in_seconds of docs/2026-10-09-hardening-pass-phasemap.spec
 intent: null
 summary: HP17_no_tab_is_said_in_seconds (?) — 1 file(s)
-system: idearium
+system: guardian
 tags: []
-exported_at: 1792830608409
+exported_at: 1792852522473
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830608409
-lastSeenAt: 1792830608409
+firstSeenAt: 1792852522473
+lastSeenAt: 1792852522473
 fingerprint: null
 payload:
   id: HP17_no_tab_is_said_in_seconds
@@ -25,5 +25,95 @@ payload:
     - HP16_a_job_nobody_waits_for_is_not_sent_later
   blocks: []
   spec: null
-  graph: 9bc532dfbe78e5c6
+  graph:
+    hash: 9bc532dfbe78e5c6
+    nodes:
+      - path: guardian/ask.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: guardian/routes/autonomous-loop.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: tests/modules/test-guardian-stack-sim.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: guardian/lib/account-routing.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/provider-attention.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/options.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: lib/agent-tools/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-client.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: guardian/ask.js
+        to: guardian/options.js
+        kind: requires
+      - from: guardian/ask.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: guardian/ask.js
+        to: guardian/lib/account-routing.js
+        kind: requires
+      - from: guardian/ask.js
+        to: guardian/lib/provider-attention.js
+        kind: requires
+      - from: guardian/ask.js
+        to: lib/nexus-client.js
+        kind: requires
+      - from: guardian/routes/autonomous-loop.js
+        to: guardian/ask.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/ask.js
+        kind: requires
+      - from: tests/modules/test-guardian-stack-sim.test.js
+        to: guardian/ask.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
+      dependents:
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP22_a_missing_tab_is_not_a_login_wall
+      upstream:
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
+      downstream:
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP22_a_missing_tab_is_not_a_login_wall
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
+        - docs/2026-10-09-hardening-pass-phasemap.spec::HP22_a_missing_tab_is_not_a_login_wall
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): HP16_a_job_nobody_waits_for_is_not_sent_later'
+        - >-
+          needed by (2): HP19_the_simulator_stays, HP22_a_missing_tab_is_not_a_login_wall ·
+          finishing it unlocks HP19_the_simulator_stays, HP22_a_missing_tab_is_not_a_login_wall
   uuid: 7dfab843-57ac-5c31-89e9-d59829beaec0

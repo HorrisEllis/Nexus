@@ -5,13 +5,13 @@ id: docs_2026-10-15-gate-held-work-phasemap.spec::GW0g_parallel_limit
 context: pipeline phase GW0g_parallel_limit of docs/2026-10-15-gate-held-work-phasemap.spec
 intent: null
 summary: GW0g_parallel_limit (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830618148
+exported_at: 1792852532101
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830618148
-lastSeenAt: 1792830618148
+firstSeenAt: 1792852532101
+lastSeenAt: 1792852532101
 fingerprint: null
 payload:
   id: GW0g_parallel_limit
@@ -25,5 +25,34 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 774d9d0c690dce59
+  graph:
+    hash: 774d9d0c690dce59
+    nodes:
+      - path: docs/2026-10-17-decisions-by-the-axioms.spec
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+      upstream: []
+      downstream:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): GW16_parallel_branches_benchmark'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 4bd8151e-2888-5b4a-9016-5fac2d0d98f5

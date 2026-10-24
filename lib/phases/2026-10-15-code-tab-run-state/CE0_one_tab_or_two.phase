@@ -5,13 +5,13 @@ id: docs_2026-10-15-code-tab-run-state-phasemap.spec::CE0_one_tab_or_two
 context: pipeline phase CE0_one_tab_or_two of docs/2026-10-15-code-tab-run-state-phasemap.spec
 intent: null
 summary: CE0_one_tab_or_two (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830616866
+exported_at: 1792852530871
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830616866
-lastSeenAt: 1792830616866
+firstSeenAt: 1792852530871
+lastSeenAt: 1792852530871
 fingerprint: null
 payload:
   id: CE0_one_tab_or_two
@@ -23,5 +23,34 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 27e84a65935a0318
+  graph:
+    hash: 27e84a65935a0318
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE6_one_tab
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV1_one_menu
+      upstream: []
+      downstream:
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE6_one_tab
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV1_one_menu
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CE6_one_tab
+        - docs/2026-10-15-code-tab-run-state-phasemap.spec::CV1_one_menu
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (2): CE6_one_tab, CV1_one_menu · finishing it unlocks CE6_one_tab, CV1_one_menu'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 745f2b4a-5e02-5fef-bc7d-ff514d1de8d0

@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-01-idearium-agent-ready-master-phasemap.spec
 intent: null
 summary: CP1_copilot_drives_idearium_and_talks_to_its_agents (?) — 7 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830597777
+exported_at: 1792852511781
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830597777
-lastSeenAt: 1792830597777
+firstSeenAt: 1792852511781
+lastSeenAt: 1792852511781
 fingerprint: null
 payload:
   id: CP1_copilot_drives_idearium_and_talks_to_its_agents
@@ -35,5 +35,259 @@ payload:
     - CX1_context_cascade
   blocks: []
   spec: null
-  graph: 9573fd740fb5af49
+  graph:
+    hash: 9573fd740fb5af49
+    nodes:
+      - path: clear-glass/src/copilot/verbs.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: copilot/server.js
+        role: changes
+        exists: true
+        system: copilot
+      - path: idearium/api/index.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/agent-tools/index.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tool-guide.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/tool-runtime.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/ask.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/routes/autonomous-loop.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/tool-runtime.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: intelligence/framework-builder.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/agent-tools/generate-tool-nodes.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/loom/harness.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/nexus/tool-layers.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/agent-tools/user-guide-generator.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/cos-bridge.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/hat-seed.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cortex/core/raid/index.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/agent-tools/tool-call-listener.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/diagnostic/diagnose.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/execution/move-data.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/execution/run-command.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/execution/run-pipeline.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/query/read-file.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/event-types.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/fault-log.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/tool-config.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/tool-index.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/agent-tools/index.js
+        to: lib/tool-index.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/tool-config.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/fault-log.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/event-types.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/agent-tools/tool-call-listener.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: cortex/core/raid/index.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/agent-tools/tools/query/read-file.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/agent-tools/tools/execution/run-command.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/agent-tools/tools/diagnostic/diagnose.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/agent-tools/tools/execution/move-data.js
+        kind: requires
+      - from: lib/agent-tools/index.js
+        to: lib/agent-tools/tools/execution/run-pipeline.js
+        kind: requires
+      - from: copilot/tool-runtime.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: guardian/ask.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: guardian/routes/autonomous-loop.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: guardian/tool-runtime.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: intelligence/framework-builder.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: lib/agent-tools/generate-tool-nodes.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: lib/agent-tools/tools/loom/harness.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: lib/agent-tools/tools/nexus/tool-layers.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: lib/agent-tools/user-guide-generator.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: lib/cos-bridge.js
+        to: lib/agent-tools/index.js
+        kind: requires
+      - from: lib/hat-seed.js
+        to: lib/agent-tools/index.js
+        kind: requires
+    crossings:
+      - from: lib/agent-tools/index.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/agent-tools/index.js
+        to: cortex/core/raid/index.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 7
+      deps:
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV4_cli_and_ui
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+      dependents: []
+      upstream:
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DI1_chunking_for_data_ingestion
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV1_verify
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV4_cli_and_ui
+      downstream: []
+      blockedBy:
+        - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::HC1_hat_agent_to_cos_build
+          files:
+            - idearium/api/index.js
+        - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
+          files:
+            - idearium/api/index.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 7 · blocked by CX1_context_cascade
+        - >-
+          depends on (3): IL2_library_spec_into_the_pipeline, PV4_cli_and_ui, CX1_context_cascade ·
+          all upstream 14
+        - 'needed by (0): —'
+        - 'same files as HC1_hat_agent_to_cos_build with no order between them: idearium/api/index.js'
+        - >-
+          same files as BK2_phase_build_writes_code with no order between them:
+          idearium/api/index.js
   uuid: a20e7b10-94c2-59cb-8514-b5a6d571b2e6

@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec
 intent: null
 summary: RP1_repository_per_system (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830585857
+exported_at: 1792852499335
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830585857
-lastSeenAt: 1792830585857
+firstSeenAt: 1792852499335
+lastSeenAt: 1792852499335
 fingerprint: null
 payload:
   id: RP1_repository_per_system
@@ -27,5 +27,133 @@ payload:
     - DF2_cortex_and_versionium_off_root_data
   blocks: []
   spec: null
-  graph: 95bead78e697c269
+  graph:
+    hash: 95bead78e697c269
+    nodes:
+      - path: contracts/SYSTEM-CONTRACTS.js
+        role: changes
+        exists: true
+        system: contracts
+      - path: docs/AXIOMS-v3.1.md
+        role: changes
+        exists: true
+        system: null
+      - path: ui/home/areas/bridge.js
+        role: changes
+        exists: true
+        system: ui
+      - path: ui/tv-shell/index.html
+        role: changes
+        exists: true
+        system: ui
+      - path: contracts/nodes/axioms.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/bottlenecks.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/deltas.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/divergent.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/edges.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/events.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/faults.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/gaps.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/interaction-contracts.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/ledgers.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/systems.node.js
+        role: uses
+        exists: true
+        system: contracts
+      - path: contracts/nodes/verification-contracts.node.js
+        role: uses
+        exists: true
+        system: contracts
+    edges:
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/axioms.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/systems.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/events.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/gaps.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/faults.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/edges.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/deltas.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/divergent.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/bottlenecks.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/ledgers.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/interaction-contracts.node.js
+        kind: requires
+      - from: contracts/SYSTEM-CONTRACTS.js
+        to: contracts/nodes/verification-contracts.node.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
+      dependents: []
+      upstream:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF1_guardian_own_data_folder
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
+      downstream: []
+      blockedBy:
+        - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::DF2_cortex_and_versionium_off_root_data
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by DF2_cortex_and_versionium_off_root_data
+        - >-
+          depends on (2): DF1_guardian_own_data_folder, DF2_cortex_and_versionium_off_root_data ·
+          all upstream 3
+        - 'needed by (0): —'
   uuid: c9c88366-c31b-529c-af94-7e9adb71a62a

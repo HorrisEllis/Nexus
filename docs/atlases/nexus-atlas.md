@@ -161,7 +161,7 @@ It owns its declared components in `orchestrator/orchestrator-contract.json` and
 <!-- generated:readme:system:orchestrator:start -->
 #### orchestrator: every module and every file
 
-Orchestrator is 43 files in 4 modules, entry `orchestrator/orchestrator.js`, port 9000, spec `orchestrator/spec/orchestrator.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/orchestrator-atlas.md`.
+Orchestrator is 35 files in 4 modules, entry `orchestrator/orchestrator.js`, port 9000, spec `orchestrator/spec/orchestrator.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/orchestrator-atlas.md`.
 
 <details>
 <summary>`orchestrator/` · 6 files</summary>
@@ -203,13 +203,13 @@ Orchestrator is 43 files in 4 modules, entry `orchestrator/orchestrator.js`, por
 </details>
 
 <details>
-<summary>`orchestrator/phases/` · 15 files</summary>
+<summary>`orchestrator/phases/` · 7 files</summary>
 
-- `orchestrator/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 3 .phase, 3 .graph
-- `orchestrator/phases/2026-10-05-announce-pulse-repair/` — phase nodes: 1 .phase, 1 .graph
-- `orchestrator/phases/2026-10-19-infrastructure-spine/` — phase nodes: 1 .phase, 1 .graph
-- `orchestrator/phases/2026-10-20-belief-loop/` — phase nodes: 1 .phase, 1 .graph
-- `orchestrator/phases/2026-10-21-data-layout/` — phase nodes: 1 .phase, 2 .graph
+- `orchestrator/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 3 .phase, 0 .graph
+- `orchestrator/phases/2026-10-05-announce-pulse-repair/` — phase nodes: 1 .phase, 0 .graph
+- `orchestrator/phases/2026-10-19-infrastructure-spine/` — phase nodes: 1 .phase, 0 .graph
+- `orchestrator/phases/2026-10-20-belief-loop/` — phase nodes: 1 .phase, 0 .graph
+- `orchestrator/phases/2026-10-21-data-layout/` — phase nodes: 1 .phase, 0 .graph
 
 </details>
 
@@ -233,7 +233,7 @@ RAID, the routing authority every request passes through (§5.2, §9.1), lives i
 <!-- generated:readme:system:cortex:start -->
 #### cortex: every module and every file
 
-Cortex is 161 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cortex/spec/cortex.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cortex-atlas.md`.
+Cortex is 119 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cortex/spec/cortex.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cortex-atlas.md`.
 
 <details>
 <summary>`cortex/` · 9 files</summary>
@@ -324,29 +324,29 @@ Cortex is 161 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cort
 </details>
 
 <details>
-<summary>`cortex/phases/` · 83 files</summary>
+<summary>`cortex/phases/` · 41 files</summary>
 
-- `cortex/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 4 .phase, 4 .graph
-- `cortex/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 1 .graph
-- `cortex/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 1 .phase, 1 .graph
-- `cortex/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 2 .phase, 2 .graph
-- `cortex/phases/2026-10-05-cli-data-code/` — phase nodes: 2 .phase, 2 .graph
-- `cortex/phases/2026-10-09-one-model-engine/` — phase nodes: 2 .phase, 2 .graph
-- `cortex/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 1 .phase, 1 .graph
-- `cortex/phases/2026-10-12-request-spine/` — phase nodes: 2 .phase, 2 .graph
-- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/` — phase nodes: 1 .phase, 1 .graph
-- `cortex/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 3 .phase, 3 .graph
-- `cortex/phases/2026-10-15-automatic-tracking/` — phase nodes: 3 .phase, 3 .graph
-- `cortex/phases/2026-10-15-gate-held-work/` — phase nodes: 3 .phase, 3 .graph
-- `cortex/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 3 .phase, 3 .graph
-- `cortex/phases/2026-10-17-debugging-product/` — phase nodes: 1 .phase, 1 .graph
-- `cortex/phases/2026-10-17-failure-mode-report/` — phase nodes: 2 .phase, 2 .graph
-- `cortex/phases/2026-10-17-pieces-not-order/` — phase nodes: 3 .phase, 3 .graph
-- `cortex/phases/2026-10-18-gate-memory/` — phase nodes: 3 .phase, 3 .graph
-- `cortex/phases/2026-10-19-solid-build-foundation/` — phase nodes: 1 .phase, 1 .graph
-- `cortex/phases/2026-10-20-belief-loop/` — phase nodes: 1 .phase, 1 .graph
-- `cortex/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` — phase nodes: 1 .phase, 1 .graph
-- `cortex/phases/2026-10-21-data-layout/` — phase nodes: 1 .phase, 2 .graph
+- `cortex/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 4 .phase, 0 .graph
+- `cortex/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 0 .graph
+- `cortex/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 1 .phase, 0 .graph
+- `cortex/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 2 .phase, 0 .graph
+- `cortex/phases/2026-10-05-cli-data-code/` — phase nodes: 2 .phase, 0 .graph
+- `cortex/phases/2026-10-09-one-model-engine/` — phase nodes: 2 .phase, 0 .graph
+- `cortex/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 1 .phase, 0 .graph
+- `cortex/phases/2026-10-12-request-spine/` — phase nodes: 2 .phase, 0 .graph
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/` — phase nodes: 1 .phase, 0 .graph
+- `cortex/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 3 .phase, 0 .graph
+- `cortex/phases/2026-10-15-automatic-tracking/` — phase nodes: 3 .phase, 0 .graph
+- `cortex/phases/2026-10-15-gate-held-work/` — phase nodes: 3 .phase, 0 .graph
+- `cortex/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 3 .phase, 0 .graph
+- `cortex/phases/2026-10-17-debugging-product/` — phase nodes: 1 .phase, 0 .graph
+- `cortex/phases/2026-10-17-failure-mode-report/` — phase nodes: 2 .phase, 0 .graph
+- `cortex/phases/2026-10-17-pieces-not-order/` — phase nodes: 3 .phase, 0 .graph
+- `cortex/phases/2026-10-18-gate-memory/` — phase nodes: 3 .phase, 0 .graph
+- `cortex/phases/2026-10-19-solid-build-foundation/` — phase nodes: 1 .phase, 0 .graph
+- `cortex/phases/2026-10-20-belief-loop/` — phase nodes: 1 .phase, 0 .graph
+- `cortex/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` — phase nodes: 1 .phase, 0 .graph
+- `cortex/phases/2026-10-21-data-layout/` — phase nodes: 1 .phase, 0 .graph
 
 </details>
 
@@ -431,7 +431,7 @@ The provider side is the userscripts: `guardian/userscript-chatgpt.js`, `guardia
 <!-- generated:readme:system:guardian:start -->
 #### guardian: every module and every file
 
-Guardian is 259 files in 11 modules, entry `guardian/server.js`, port 7820, spec `guardian/spec/guardian.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/guardian-atlas.md`.
+Guardian is 230 files in 11 modules, entry `guardian/server.js`, port 7820, spec `guardian/spec/guardian.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/guardian-atlas.md`.
 
 <details>
 <summary>`guardian/` · 35 files</summary>
@@ -639,26 +639,26 @@ Guardian is 259 files in 11 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/` · 57 files</summary>
+<summary>`guardian/phases/` · 28 files</summary>
 
-- `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 2 .phase, 2 .graph
-- `guardian/phases/2026-09-29-build-surface/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-09-29-provider-economy/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-10-09-hardening-pass/` — phase nodes: 8 .phase, 8 .graph
-- `guardian/phases/2026-10-09-one-model-engine/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-10-10-idearium-solid/` — phase nodes: 2 .phase, 2 .graph
-- `guardian/phases/2026-10-10-self-awareness/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-10-15-code-tab-run-state/` — phase nodes: 2 .phase, 2 .graph
-- `guardian/phases/2026-10-17-failure-mode-report/` — phase nodes: 1 .phase, 1 .graph
-- `guardian/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 2 .graph
+- `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 2 .phase, 0 .graph
+- `guardian/phases/2026-09-29-build-surface/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-09-29-provider-economy/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-10-09-hardening-pass/` — phase nodes: 8 .phase, 0 .graph
+- `guardian/phases/2026-10-09-one-model-engine/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-10-10-idearium-solid/` — phase nodes: 2 .phase, 0 .graph
+- `guardian/phases/2026-10-10-self-awareness/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-10-15-code-tab-run-state/` — phase nodes: 2 .phase, 0 .graph
+- `guardian/phases/2026-10-17-failure-mode-report/` — phase nodes: 1 .phase, 0 .graph
+- `guardian/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 0 .graph
 
 </details>
 
@@ -732,7 +732,7 @@ The spec engine in `idearium/spec-engine/` turns an idea into a spec by chunking
 <!-- generated:readme:system:idearium:start -->
 #### idearium: every module and every file
 
-Idearium is 832 files in 21 modules, entry `idearium/api/index.js`, port 4800, spec `idearium/spec/idearium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/idearium-atlas.md`.
+Idearium is 516 files in 21 modules, entry `idearium/api/index.js`, port 4800, spec `idearium/spec/idearium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/idearium-atlas.md`.
 
 <details>
 <summary>`idearium/` · 12 files</summary>
@@ -822,80 +822,80 @@ Idearium is 832 files in 21 modules, entry `idearium/api/index.js`, port 4800, s
 </details>
 
 <details>
-<summary>`idearium/phases/` · 616 files</summary>
+<summary>`idearium/phases/` · 300 files</summary>
 
-- `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 3 .phase, 3 .graph
-- `idearium/phases/2026-09-27-components-store-and-atlases/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 7 .phase, 7 .graph
-- `idearium/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 3 .phase, 3 .graph
-- `idearium/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 9 .phase, 9 .graph
-- `idearium/phases/2026-09-29-build-surface/` — phase nodes: 10 .phase, 10 .graph
-- `idearium/phases/2026-09-29-nex-node-store/` — phase nodes: 3 .phase, 3 .graph
-- `idearium/phases/2026-09-29-provider-economy/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 4 .phase, 4 .graph
-- `idearium/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 29 .phase, 29 .graph
-- `idearium/phases/2026-10-01-routing-registry-genesis/` — phase nodes: 6 .phase, 6 .graph
-- `idearium/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 5 .phase, 5 .graph
-- `idearium/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 11 .phase, 11 .graph
-- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/` — phase nodes: 7 .phase, 7 .graph
-- `idearium/phases/2026-10-02-spatial-void/` — phase nodes: 6 .phase, 6 .graph
-- `idearium/phases/2026-10-02-synthesis-zoom-versionium/` — phase nodes: 3 .phase, 3 .graph
-- `idearium/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 10 .phase, 10 .graph
-- `idearium/phases/2026-10-05-build-from-the-spec/` — phase nodes: 29 .phase, 29 .graph
-- `idearium/phases/2026-10-05-cli-data-code/` — phase nodes: 5 .phase, 5 .graph
-- `idearium/phases/2026-10-05-code-tab-and-one-router/` — phase nodes: 5 .phase, 5 .graph
-- `idearium/phases/2026-10-05-failure-reproduction/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-05-idea-to-spec-workshop/` — phase nodes: 6 .phase, 6 .graph
-- `idearium/phases/2026-10-05-spec-workshop-rebuild/` — phase nodes: 7 .phase, 7 .graph
-- `idearium/phases/2026-10-05-verified-primitives/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-07-compartment-control-and-activity/` — phase nodes: 4 .phase, 4 .graph
-- `idearium/phases/2026-10-07-versionium-releases/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-09-hardening-pass/` — phase nodes: 7 .phase, 7 .graph
-- `idearium/phases/2026-10-09-one-model-engine/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-09-one-roadmap/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-10-idearium-access/` — phase nodes: 5 .phase, 5 .graph
-- `idearium/phases/2026-10-10-idearium-solid/` — phase nodes: 11 .phase, 11 .graph
-- `idearium/phases/2026-10-10-self-awareness/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-10-shape-of-nexus/` — phase nodes: 4 .phase, 4 .graph
-- `idearium/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 3 .phase, 3 .graph
-- `idearium/phases/2026-10-12-request-spine/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-10-13-identities-tabs-and-automation/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-13-nexus-memory-gates-and-contract/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 5 .phase, 5 .graph
-- `idearium/phases/2026-10-15-automatic-tracking/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-15-code-tab-run-state/` — phase nodes: 8 .phase, 8 .graph
-- `idearium/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 3 .phase, 3 .graph
-- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-10-16-agent-work-funnel/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-16-canvas-compartments/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-10-16-code-tab-rebuild/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-16-durable-work-timeline/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-16-intent-hat-agent-chain/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-16-plan-sidebar/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-10-16-reject-learn-retry/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-10-16-repo-carve/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-17-pieces-not-order/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-17-system-drawbridge/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-18-compartment-environment/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-10-18-debugging-product/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-18-gate-memory/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-10-19-gate-quality-checks/` — phase nodes: 4 .phase, 4 .graph
-- `idearium/phases/2026-10-19-gig-autofill-and-learn/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-19-idearium-control/` — phase nodes: 8 .phase, 8 .graph
-- `idearium/phases/2026-10-19-infrastructure-spine/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 3 .phase, 7 .graph
-- `idearium/phases/2026-10-19-solid-build-foundation/` — phase nodes: 4 .phase, 4 .graph
-- `idearium/phases/2026-10-19-upload-intent-and-page-map/` — phase nodes: 2 .phase, 2 .graph
-- `idearium/phases/2026-10-20-belief-loop/` — phase nodes: 1 .phase, 2 .graph
-- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` — phase nodes: 3 .phase, 6 .graph
-- `idearium/phases/2026-10-21-approval-chain/` — phase nodes: 2 .phase, 4 .graph
-- `idearium/phases/2026-10-21-brainos-into-idearium/` — phase nodes: 7 .phase, 10 .graph
-- `idearium/phases/2026-10-21-data-layout/` — phase nodes: 1 .phase, 1 .graph
-- `idearium/phases/2026-10-22-system-node-db/` — phase nodes: 2 .phase, 3 .graph
-- `idearium/phases/2026-10-23-self-building-loop/` — phase nodes: 3 .phase, 7 .graph
+- `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 3 .phase, 0 .graph
+- `idearium/phases/2026-09-27-components-store-and-atlases/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 7 .phase, 0 .graph
+- `idearium/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 3 .phase, 0 .graph
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 9 .phase, 0 .graph
+- `idearium/phases/2026-09-29-build-surface/` — phase nodes: 10 .phase, 0 .graph
+- `idearium/phases/2026-09-29-nex-node-store/` — phase nodes: 3 .phase, 0 .graph
+- `idearium/phases/2026-09-29-provider-economy/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 4 .phase, 0 .graph
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 29 .phase, 0 .graph
+- `idearium/phases/2026-10-01-routing-registry-genesis/` — phase nodes: 6 .phase, 0 .graph
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 5 .phase, 0 .graph
+- `idearium/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 11 .phase, 0 .graph
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/` — phase nodes: 7 .phase, 0 .graph
+- `idearium/phases/2026-10-02-spatial-void/` — phase nodes: 6 .phase, 0 .graph
+- `idearium/phases/2026-10-02-synthesis-zoom-versionium/` — phase nodes: 3 .phase, 0 .graph
+- `idearium/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 10 .phase, 0 .graph
+- `idearium/phases/2026-10-05-build-from-the-spec/` — phase nodes: 29 .phase, 0 .graph
+- `idearium/phases/2026-10-05-cli-data-code/` — phase nodes: 5 .phase, 0 .graph
+- `idearium/phases/2026-10-05-code-tab-and-one-router/` — phase nodes: 5 .phase, 0 .graph
+- `idearium/phases/2026-10-05-failure-reproduction/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/` — phase nodes: 6 .phase, 0 .graph
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/` — phase nodes: 7 .phase, 0 .graph
+- `idearium/phases/2026-10-05-verified-primitives/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-07-compartment-control-and-activity/` — phase nodes: 4 .phase, 0 .graph
+- `idearium/phases/2026-10-07-versionium-releases/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-09-hardening-pass/` — phase nodes: 7 .phase, 0 .graph
+- `idearium/phases/2026-10-09-one-model-engine/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-09-one-roadmap/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-10-idearium-access/` — phase nodes: 5 .phase, 0 .graph
+- `idearium/phases/2026-10-10-idearium-solid/` — phase nodes: 11 .phase, 0 .graph
+- `idearium/phases/2026-10-10-self-awareness/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-10-shape-of-nexus/` — phase nodes: 4 .phase, 0 .graph
+- `idearium/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 3 .phase, 0 .graph
+- `idearium/phases/2026-10-12-request-spine/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-10-13-identities-tabs-and-automation/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-13-nexus-memory-gates-and-contract/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 5 .phase, 0 .graph
+- `idearium/phases/2026-10-15-automatic-tracking/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-15-code-tab-run-state/` — phase nodes: 8 .phase, 0 .graph
+- `idearium/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 3 .phase, 0 .graph
+- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/` — phase nodes: 3 .phase, 0 .graph
+- `idearium/phases/2026-10-16-agent-work-funnel/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-16-canvas-compartments/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-10-16-code-tab-rebuild/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-16-durable-work-timeline/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-16-intent-hat-agent-chain/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-16-plan-sidebar/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-10-16-reject-learn-retry/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-10-16-repo-carve/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-17-pieces-not-order/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-17-system-drawbridge/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-18-compartment-environment/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-10-18-debugging-product/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-18-gate-memory/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-10-19-gate-quality-checks/` — phase nodes: 4 .phase, 0 .graph
+- `idearium/phases/2026-10-19-gig-autofill-and-learn/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-19-idearium-control/` — phase nodes: 8 .phase, 0 .graph
+- `idearium/phases/2026-10-19-infrastructure-spine/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 3 .phase, 0 .graph
+- `idearium/phases/2026-10-19-solid-build-foundation/` — phase nodes: 4 .phase, 0 .graph
+- `idearium/phases/2026-10-19-upload-intent-and-page-map/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-10-20-belief-loop/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` — phase nodes: 3 .phase, 0 .graph
+- `idearium/phases/2026-10-21-approval-chain/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-10-21-brainos-into-idearium/` — phase nodes: 7 .phase, 0 .graph
+- `idearium/phases/2026-10-21-data-layout/` — phase nodes: 1 .phase, 0 .graph
+- `idearium/phases/2026-10-22-system-node-db/` — phase nodes: 2 .phase, 0 .graph
+- `idearium/phases/2026-10-23-self-building-loop/` — phase nodes: 3 .phase, 0 .graph
 
 </details>
 
@@ -1161,7 +1161,7 @@ Its node schemas live in `architect/schemas/`, and its spec `architect/spec/arch
 <!-- generated:readme:system:architect:start -->
 #### architect: every module and every file
 
-Architect is 30 files in 7 modules, entry `architect/service.js`, port 3747, spec `architect/spec/architect.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/architect-atlas.md`.
+Architect is 27 files in 7 modules, entry `architect/service.js`, port 3747, spec `architect/spec/architect.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/architect-atlas.md`.
 
 <details>
 <summary>`architect/` · 6 files</summary>
@@ -1190,11 +1190,11 @@ Architect is 30 files in 7 modules, entry `architect/service.js`, port 3747, spe
 </details>
 
 <details>
-<summary>`architect/phases/` · 6 files</summary>
+<summary>`architect/phases/` · 3 files</summary>
 
-- `architect/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 1 .phase, 1 .graph
-- `architect/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 1 .phase, 1 .graph
-- `architect/phases/2026-10-19-infrastructure-spine/` — phase nodes: 1 .phase, 1 .graph
+- `architect/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 1 .phase, 0 .graph
+- `architect/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 1 .phase, 0 .graph
+- `architect/phases/2026-10-19-infrastructure-spine/` — phase nodes: 1 .phase, 0 .graph
 
 </details>
 
@@ -1243,7 +1243,7 @@ The system that watches the others. `diagnostic/nexus-diagnostic.js` on :7825 re
 <!-- generated:readme:system:diagnostic:start -->
 #### diagnostic: every module and every file
 
-Diagnostic is 43 files in 8 modules, entry `diagnostic/nexus-diagnostic.js`, port 7825, spec `diagnostic/spec/diagnostic.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/diagnostic-atlas.md`.
+Diagnostic is 38 files in 8 modules, entry `diagnostic/nexus-diagnostic.js`, port 7825, spec `diagnostic/spec/diagnostic.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/diagnostic-atlas.md`.
 
 <details>
 <summary>`diagnostic/` · 9 files</summary>
@@ -1287,11 +1287,11 @@ Diagnostic is 43 files in 8 modules, entry `diagnostic/nexus-diagnostic.js`, por
 </details>
 
 <details>
-<summary>`diagnostic/phases/` · 10 files</summary>
+<summary>`diagnostic/phases/` · 5 files</summary>
 
-- `diagnostic/phases/2026-09-28-staging-self-heal/` — phase nodes: 2 .phase, 2 .graph
-- `diagnostic/phases/2026-10-05-announce-pulse-repair/` — phase nodes: 1 .phase, 1 .graph
-- `diagnostic/phases/2026-10-17-debugging-product/` — phase nodes: 2 .phase, 2 .graph
+- `diagnostic/phases/2026-09-28-staging-self-heal/` — phase nodes: 2 .phase, 0 .graph
+- `diagnostic/phases/2026-10-05-announce-pulse-repair/` — phase nodes: 1 .phase, 0 .graph
+- `diagnostic/phases/2026-10-17-debugging-product/` — phase nodes: 2 .phase, 0 .graph
 
 </details>
 
@@ -1340,7 +1340,7 @@ The cognition layer, consolidated from three places that had no single home. `in
 <!-- generated:readme:system:intelligence:start -->
 #### intelligence: every module and every file
 
-Intelligence is 158 files in 38 modules, entry `intelligence/server.js`, port 3753, spec `intelligence/spec/intelligence.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/intelligence-atlas.md`.
+Intelligence is 143 files in 38 modules, entry `intelligence/server.js`, port 3753, spec `intelligence/spec/intelligence.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/intelligence-atlas.md`.
 
 <details>
 <summary>`intelligence/` · 18 files</summary>
@@ -1490,19 +1490,19 @@ Intelligence is 158 files in 38 modules, entry `intelligence/server.js`, port 37
 </details>
 
 <details>
-<summary>`intelligence/phases/` · 30 files</summary>
+<summary>`intelligence/phases/` · 15 files</summary>
 
-- `intelligence/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 1 .graph
-- `intelligence/phases/2026-09-28-staging-self-heal/` — phase nodes: 3 .phase, 3 .graph
-- `intelligence/phases/2026-09-29-nex-node-store/` — phase nodes: 1 .phase, 1 .graph
-- `intelligence/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 1 .graph
-- `intelligence/phases/2026-10-02-synthesis-zoom-versionium/` — phase nodes: 2 .phase, 2 .graph
-- `intelligence/phases/2026-10-05-failure-reproduction/` — phase nodes: 1 .phase, 1 .graph
-- `intelligence/phases/2026-10-10-self-awareness/` — phase nodes: 2 .phase, 2 .graph
-- `intelligence/phases/2026-10-10-snapshot-compartments/` — phase nodes: 1 .phase, 1 .graph
-- `intelligence/phases/2026-10-12-request-spine/` — phase nodes: 1 .phase, 1 .graph
-- `intelligence/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 1 .graph
-- `intelligence/phases/2026-10-18-gate-memory/` — phase nodes: 1 .phase, 1 .graph
+- `intelligence/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 0 .graph
+- `intelligence/phases/2026-09-28-staging-self-heal/` — phase nodes: 3 .phase, 0 .graph
+- `intelligence/phases/2026-09-29-nex-node-store/` — phase nodes: 1 .phase, 0 .graph
+- `intelligence/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 0 .graph
+- `intelligence/phases/2026-10-02-synthesis-zoom-versionium/` — phase nodes: 2 .phase, 0 .graph
+- `intelligence/phases/2026-10-05-failure-reproduction/` — phase nodes: 1 .phase, 0 .graph
+- `intelligence/phases/2026-10-10-self-awareness/` — phase nodes: 2 .phase, 0 .graph
+- `intelligence/phases/2026-10-10-snapshot-compartments/` — phase nodes: 1 .phase, 0 .graph
+- `intelligence/phases/2026-10-12-request-spine/` — phase nodes: 1 .phase, 0 .graph
+- `intelligence/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 0 .graph
+- `intelligence/phases/2026-10-18-gate-memory/` — phase nodes: 1 .phase, 0 .graph
 
 </details>
 
@@ -1720,7 +1720,7 @@ Local model dispatch, deliberately isolated from guardian: if guardian goes down
 <!-- generated:readme:system:ollama-bridge:start -->
 #### ollama-bridge: every module and every file
 
-Ollama-bridge is 62 files in 8 modules, entry `ollama/server.js`, port 3749. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/ollama-atlas.md`.
+Ollama-bridge is 59 files in 8 modules, entry `ollama/server.js`, port 3749. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/ollama-atlas.md`.
 
 <details>
 <summary>`ollama/` · 7 files</summary>
@@ -1782,11 +1782,11 @@ Ollama-bridge is 62 files in 8 modules, entry `ollama/server.js`, port 3749. Eac
 </details>
 
 <details>
-<summary>`ollama/phases/` · 6 files</summary>
+<summary>`ollama/phases/` · 3 files</summary>
 
-- `ollama/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 1 .phase, 1 .graph
-- `ollama/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 1 .graph
-- `ollama/phases/2026-10-05-cli-data-code/` — phase nodes: 1 .phase, 1 .graph
+- `ollama/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 1 .phase, 0 .graph
+- `ollama/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 0 .graph
+- `ollama/phases/2026-10-05-cli-data-code/` — phase nodes: 1 .phase, 0 .graph
 
 </details>
 
@@ -1840,7 +1840,7 @@ Causal version control: temporal replay, calendar playback, sigma-gated commits.
 <!-- generated:readme:system:versionium:start -->
 #### versionium: every module and every file
 
-Versionium is 40 files in 6 modules, entry `versionium/server.js`, port 3754, spec `versionium/spec/versionium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/versionium-atlas.md`.
+Versionium is 36 files in 6 modules, entry `versionium/server.js`, port 3754, spec `versionium/spec/versionium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/versionium-atlas.md`.
 
 <details>
 <summary>`versionium/` · 6 files</summary>
@@ -1873,12 +1873,12 @@ Versionium is 40 files in 6 modules, entry `versionium/server.js`, port 3754, sp
 </details>
 
 <details>
-<summary>`versionium/phases/` · 8 files</summary>
+<summary>`versionium/phases/` · 4 files</summary>
 
-- `versionium/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 1 .graph
-- `versionium/phases/2026-10-07-versionium-releases/` — phase nodes: 1 .phase, 1 .graph
-- `versionium/phases/2026-10-10-snapshot-compartments/` — phase nodes: 1 .phase, 1 .graph
-- `versionium/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 1 .phase, 1 .graph
+- `versionium/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 0 .graph
+- `versionium/phases/2026-10-07-versionium-releases/` — phase nodes: 1 .phase, 0 .graph
+- `versionium/phases/2026-10-10-snapshot-compartments/` — phase nodes: 1 .phase, 0 .graph
+- `versionium/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 1 .phase, 0 .graph
 
 </details>
 
@@ -1925,7 +1925,7 @@ Intelligence as opposed to dispatch: copilot receives intent, assembles context,
 <!-- generated:readme:system:copilot:start -->
 #### copilot: every module and every file
 
-Copilot is 94 files in 8 modules, entry `copilot/server.js`, port 3750, spec `copilot/spec/copilot.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/copilot-atlas.md`.
+Copilot is 79 files in 8 modules, entry `copilot/server.js`, port 3750, spec `copilot/spec/copilot.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/copilot-atlas.md`.
 
 <details>
 <summary>`copilot/` · 26 files</summary>
@@ -1991,20 +1991,20 @@ Copilot is 94 files in 8 modules, entry `copilot/server.js`, port 3750, spec `co
 </details>
 
 <details>
-<summary>`copilot/phases/` · 30 files</summary>
+<summary>`copilot/phases/` · 15 files</summary>
 
-- `copilot/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 1 .phase, 1 .graph
-- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 4 .phase, 4 .graph
-- `copilot/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 1 .phase, 1 .graph
-- `copilot/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 1 .graph
-- `copilot/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 1 .graph
-- `copilot/phases/2026-10-05-build-from-the-spec/` — phase nodes: 1 .phase, 1 .graph
-- `copilot/phases/2026-10-05-cli-data-code/` — phase nodes: 1 .phase, 1 .graph
-- `copilot/phases/2026-10-05-verified-primitives/` — phase nodes: 1 .phase, 1 .graph
-- `copilot/phases/2026-10-09-hardening-pass/` — phase nodes: 1 .phase, 1 .graph
-- `copilot/phases/2026-10-10-idearium-solid/` — phase nodes: 1 .phase, 1 .graph
-- `copilot/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 1 .graph
-- `copilot/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 1 .phase, 0 .graph
+- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 4 .phase, 0 .graph
+- `copilot/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 1 .phase, 0 .graph
+- `copilot/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 0 .graph
+- `copilot/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 0 .graph
+- `copilot/phases/2026-10-05-build-from-the-spec/` — phase nodes: 1 .phase, 0 .graph
+- `copilot/phases/2026-10-05-cli-data-code/` — phase nodes: 1 .phase, 0 .graph
+- `copilot/phases/2026-10-05-verified-primitives/` — phase nodes: 1 .phase, 0 .graph
+- `copilot/phases/2026-10-09-hardening-pass/` — phase nodes: 1 .phase, 0 .graph
+- `copilot/phases/2026-10-10-idearium-solid/` — phase nodes: 1 .phase, 0 .graph
+- `copilot/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 0 .graph
+- `copilot/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 0 .graph
 
 </details>
 
@@ -2062,7 +2062,7 @@ The registry authority. `loom/server.js` on :3752 serves the registry of compone
 <!-- generated:readme:system:loom:start -->
 #### loom: every module and every file
 
-Loom is 122 files in 15 modules, entry `loom/server.js`, port 3752, spec `loom/spec/loom.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/loom-atlas.md`.
+Loom is 102 files in 15 modules, entry `loom/server.js`, port 3752, spec `loom/spec/loom.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/loom-atlas.md`.
 
 <details>
 <summary>`loom/` · 7 files</summary>
@@ -2135,23 +2135,24 @@ Loom is 122 files in 15 modules, entry `loom/server.js`, port 3752, spec `loom/s
 </details>
 
 <details>
-<summary>`loom/phases/` · 42 files</summary>
+<summary>`loom/phases/` · 22 files</summary>
 
-- `loom/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 1 .phase, 1 .graph
-- `loom/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 1 .phase, 1 .graph
-- `loom/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 1 .graph
-- `loom/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 1 .graph
-- `loom/phases/2026-10-05-build-from-the-spec/` — phase nodes: 1 .phase, 1 .graph
-- `loom/phases/2026-10-05-cli-data-code/` — phase nodes: 4 .phase, 4 .graph
-- `loom/phases/2026-10-09-one-roadmap/` — phase nodes: 2 .phase, 2 .graph
-- `loom/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 2 .phase, 2 .graph
-- `loom/phases/2026-10-12-request-spine/` — phase nodes: 1 .phase, 1 .graph
-- `loom/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 1 .phase, 1 .graph
-- `loom/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 1 .graph
-- `loom/phases/2026-10-15-warp-builds-and-spec-framework/` — phase nodes: 2 .phase, 2 .graph
-- `loom/phases/2026-10-19-infrastructure-spine/` — phase nodes: 1 .phase, 1 .graph
-- `loom/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 1 .graph
-- `loom/phases/2026-10-21-approval-chain/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-10-05-build-from-the-spec/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-10-05-cli-data-code/` — phase nodes: 4 .phase, 0 .graph
+- `loom/phases/2026-10-09-one-roadmap/` — phase nodes: 2 .phase, 0 .graph
+- `loom/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 2 .phase, 0 .graph
+- `loom/phases/2026-10-12-request-spine/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-10-15-warp-builds-and-spec-framework/` — phase nodes: 2 .phase, 0 .graph
+- `loom/phases/2026-10-19-infrastructure-spine/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 0 .graph
+- `loom/phases/2026-10-21-approval-chain/` — phase nodes: 1 .phase, 0 .graph
 
 </details>
 
@@ -2260,7 +2261,7 @@ The sovereign browser: Electron and Chromium, with its own fingerprint control, 
 <!-- generated:readme:system:clear-glass:start -->
 #### clear-glass: every module and every file
 
-Clear-glass is 663 files in 77 modules, port 7704, spec `clear-glass/spec/clear-glass.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/clear-glass-atlas.md`.
+Clear-glass is 497 files in 77 modules, port 7704, spec `clear-glass/spec/clear-glass.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/clear-glass-atlas.md`.
 
 <details>
 <summary>`clear-glass/` · 6 files</summary>
@@ -2349,40 +2350,40 @@ Clear-glass is 663 files in 77 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/phases/` · 304 files</summary>
+<summary>`clear-glass/phases/` · 138 files</summary>
 
-- `clear-glass/phases/2026-09-29-build-surface/` — phase nodes: 2 .phase, 2 .graph
-- `clear-glass/phases/2026-09-29-provider-economy/` — phase nodes: 2 .phase, 2 .graph
-- `clear-glass/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 3 .phase, 3 .graph
-- `clear-glass/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-05-fiverr-guide/` — phase nodes: 2 .phase, 2 .graph
-- `clear-glass/phases/2026-10-05-idea-to-spec-workshop/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-07-compartment-control-and-activity/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-10-design-surface/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-10-idearium-access/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-10-idearium-solid/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-10-shape-of-nexus/` — phase nodes: 6 .phase, 6 .graph
-- `clear-glass/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 17 .phase, 17 .graph
-- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/` — phase nodes: 10 .phase, 10 .graph
-- `clear-glass/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-15-capability-specs-and-semantic-page-tree/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-15-clear-glass-network-posture/` — phase nodes: 4 .phase, 4 .graph
-- `clear-glass/phases/2026-10-15-clear-glass-surfaces/` — phase nodes: 5 .phase, 5 .graph
-- `clear-glass/phases/2026-10-15-macro-node-recording/` — phase nodes: 4 .phase, 4 .graph
-- `clear-glass/phases/2026-10-15-personal-chat-import/` — phase nodes: 2 .phase, 2 .graph
-- `clear-glass/phases/2026-10-16-google-signin/` — phase nodes: 6 .phase, 6 .graph
-- `clear-glass/phases/2026-10-16-tls-layer/` — phase nodes: 3 .phase, 3 .graph
-- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/` — phase nodes: 5 .phase, 5 .graph
-- `clear-glass/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/` — phase nodes: 7 .phase, 7 .graph
-- `clear-glass/phases/2026-10-21-adblock/` — phase nodes: 5 .phase, 9 .graph
-- `clear-glass/phases/2026-10-21-brainos-into-idearium/` — phase nodes: 1 .phase, 1 .graph
-- `clear-glass/phases/2026-10-21-browser-shell/` — phase nodes: 20 .phase, 25 .graph
-- `clear-glass/phases/2026-10-21-compartment-downloads/` — phase nodes: 5 .phase, 7 .graph
-- `clear-glass/phases/2026-10-21-passwords/` — phase nodes: 4 .phase, 6 .graph
-- `clear-glass/phases/2026-10-21-snowflake-compartment/` — phase nodes: 9 .phase, 17 .graph
-- `clear-glass/phases/2026-10-23-site-profile-processes/` — phase nodes: 6 .phase, 13 .graph
+- `clear-glass/phases/2026-09-29-build-surface/` — phase nodes: 2 .phase, 0 .graph
+- `clear-glass/phases/2026-09-29-provider-economy/` — phase nodes: 2 .phase, 0 .graph
+- `clear-glass/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 3 .phase, 0 .graph
+- `clear-glass/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-05-fiverr-guide/` — phase nodes: 2 .phase, 0 .graph
+- `clear-glass/phases/2026-10-05-idea-to-spec-workshop/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-07-compartment-control-and-activity/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-10-design-surface/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-10-idearium-access/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-10-idearium-solid/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-10-shape-of-nexus/` — phase nodes: 6 .phase, 0 .graph
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 17 .phase, 0 .graph
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/` — phase nodes: 10 .phase, 0 .graph
+- `clear-glass/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-15-capability-specs-and-semantic-page-tree/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/` — phase nodes: 4 .phase, 0 .graph
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/` — phase nodes: 5 .phase, 0 .graph
+- `clear-glass/phases/2026-10-15-macro-node-recording/` — phase nodes: 4 .phase, 0 .graph
+- `clear-glass/phases/2026-10-15-personal-chat-import/` — phase nodes: 2 .phase, 0 .graph
+- `clear-glass/phases/2026-10-16-google-signin/` — phase nodes: 6 .phase, 0 .graph
+- `clear-glass/phases/2026-10-16-tls-layer/` — phase nodes: 3 .phase, 0 .graph
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/` — phase nodes: 5 .phase, 0 .graph
+- `clear-glass/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/` — phase nodes: 7 .phase, 0 .graph
+- `clear-glass/phases/2026-10-21-adblock/` — phase nodes: 5 .phase, 0 .graph
+- `clear-glass/phases/2026-10-21-brainos-into-idearium/` — phase nodes: 1 .phase, 0 .graph
+- `clear-glass/phases/2026-10-21-browser-shell/` — phase nodes: 20 .phase, 0 .graph
+- `clear-glass/phases/2026-10-21-compartment-downloads/` — phase nodes: 5 .phase, 0 .graph
+- `clear-glass/phases/2026-10-21-passwords/` — phase nodes: 4 .phase, 0 .graph
+- `clear-glass/phases/2026-10-21-snowflake-compartment/` — phase nodes: 9 .phase, 0 .graph
+- `clear-glass/phases/2026-10-23-site-profile-processes/` — phase nodes: 6 .phase, 0 .graph
 
 </details>
 
@@ -3145,7 +3146,7 @@ The Compartment OS: isolated sandboxes with their own process, network and runti
 <!-- generated:readme:system:cos:start -->
 #### cos: every module and every file
 
-Cos is 561 files in 33 modules, spec `cos/spec/cos.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cos-atlas.md`.
+Cos is 499 files in 33 modules, spec `cos/spec/cos.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cos-atlas.md`.
 
 <details>
 <summary>`cos/` · 6 files</summary>
@@ -3513,34 +3514,34 @@ Cos is 561 files in 33 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
-<summary>`cos/phases/` · 124 files</summary>
+<summary>`cos/phases/` · 62 files</summary>
 
-- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` — phase nodes: 4 .phase, 4 .graph
-- `cos/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-09-29-build-surface/` — phase nodes: 2 .phase, 2 .graph
-- `cos/phases/2026-09-29-nex-node-store/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 2 .phase, 2 .graph
-- `cos/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-05-build-from-the-spec/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-05-cli-data-code/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-05-cos-machines/` — phase nodes: 8 .phase, 8 .graph
-- `cos/phases/2026-10-10-idearium-solid/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-10-shape-of-nexus/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-10-snapshot-compartments/` — phase nodes: 2 .phase, 2 .graph
-- `cos/phases/2026-10-12-request-spine/` — phase nodes: 2 .phase, 2 .graph
-- `cos/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-15-gate-held-work/` — phase nodes: 4 .phase, 4 .graph
-- `cos/phases/2026-10-16-canvas-compartments/` — phase nodes: 2 .phase, 2 .graph
-- `cos/phases/2026-10-17-failure-mode-report/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-17-system-drawbridge/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-18-compartment-environment/` — phase nodes: 5 .phase, 5 .graph
-- `cos/phases/2026-10-19-solid-build-foundation/` — phase nodes: 1 .phase, 1 .graph
-- `cos/phases/2026-10-23-cos-spine/` — phase nodes: 11 .phase, 11 .graph
-- `cos/phases/2026-10-24-cos-services/` — phase nodes: 5 .phase, 5 .graph
+- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` — phase nodes: 4 .phase, 0 .graph
+- `cos/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-09-29-build-surface/` — phase nodes: 2 .phase, 0 .graph
+- `cos/phases/2026-09-29-nex-node-store/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 2 .phase, 0 .graph
+- `cos/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-05-build-from-the-spec/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-05-cli-data-code/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-05-cos-machines/` — phase nodes: 8 .phase, 0 .graph
+- `cos/phases/2026-10-10-idearium-solid/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-10-shape-of-nexus/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-10-snapshot-compartments/` — phase nodes: 2 .phase, 0 .graph
+- `cos/phases/2026-10-12-request-spine/` — phase nodes: 2 .phase, 0 .graph
+- `cos/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-15-gate-held-work/` — phase nodes: 4 .phase, 0 .graph
+- `cos/phases/2026-10-16-canvas-compartments/` — phase nodes: 2 .phase, 0 .graph
+- `cos/phases/2026-10-17-failure-mode-report/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-17-system-drawbridge/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-18-compartment-environment/` — phase nodes: 5 .phase, 0 .graph
+- `cos/phases/2026-10-19-solid-build-foundation/` — phase nodes: 1 .phase, 0 .graph
+- `cos/phases/2026-10-23-cos-spine/` — phase nodes: 11 .phase, 0 .graph
+- `cos/phases/2026-10-24-cos-services/` — phase nodes: 5 .phase, 0 .graph
 
 </details>
 
@@ -3819,7 +3820,7 @@ The language and its runtime, one system since 0.60.237 (James, 2026-10-24: "oka
 <!-- generated:readme:system:emerge:start -->
 #### emerge: every module and every file
 
-Emerge is 110 files in 20 modules, spec `emerge/spec/emerge.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/emerge-atlas.md`.
+Emerge is 111 files in 20 modules, spec `emerge/spec/emerge.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/emerge-atlas.md`.
 
 <details>
 <summary>`emerge/` · 13 files</summary>
@@ -3905,9 +3906,11 @@ Emerge is 110 files in 20 modules, spec `emerge/spec/emerge.spec`. Each module b
 </details>
 
 <details>
-<summary>`emerge/phases/` · 9 files</summary>
+<summary>`emerge/phases/` · 10 files</summary>
 
-- `emerge/phases/2026-10-24-emerge-warp-system/` — phase nodes: 3 .phase, 6 .graph
+- `emerge/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 6 .phase, 0 .graph
+- `emerge/phases/2026-10-05-spec-workshop-rebuild/` — phase nodes: 1 .phase, 0 .graph
+- `emerge/phases/2026-10-24-emerge-warp-system/` — phase nodes: 3 .phase, 0 .graph
 
 </details>
 
@@ -4043,7 +4046,7 @@ Emerge is 110 files in 20 modules, spec `emerge/spec/emerge.spec`. Each module b
 
 </details>
 
-13 release notes name a file of emerge: 0.60.237., 0.60.236., 0.60.230., 0.60.229., 0.60.227., 0.60.222., 0.60.176., 0.39.323., 0.39.321., 0.39.320., 0.39.319., 0.39.318., 0.39.282.. Each is in the version history below, in his words.
+14 release notes name a file of emerge: 0.60.238., 0.60.237., 0.60.236., 0.60.230., 0.60.229., 0.60.227., 0.60.222., 0.60.176., 0.39.323., 0.39.321., 0.39.320., 0.39.319., 0.39.318., 0.39.282.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:emerge:end -->
 
@@ -4054,7 +4057,7 @@ Everything no kernel owns. Core has no port and no entry: its code runs inside w
 <!-- generated:readme:system:core:start -->
 #### core: every module and every file
 
-Core is 5411 files in 42 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
+Core is 3947 files in 42 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
 
 <details>
 <summary>the files at the top of the tree · 19 files</summary>
@@ -5288,163 +5291,163 @@ Core is 5411 files in 42 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`lib/phases/` · 2868 files</summary>
+<summary>`lib/phases/` · 1403 files</summary>
 
-- `lib/phases/2026-08-22-session-full/` — phase nodes: 19 .phase, 19 .graph
-- `lib/phases/2026-08-23-backlog/` — phase nodes: 32 .phase, 32 .graph
-- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/` — phase nodes: 16 .phase, 16 .graph
-- `lib/phases/2026-08-28-definition-of-complete/` — phase nodes: 8 .phase, 8 .graph
-- `lib/phases/2026-08-28-self-building-pipeline/` — phase nodes: 13 .phase, 13 .graph
-- `lib/phases/2026-08-30-interaction-contract-context/` — phase nodes: 13 .phase, 13 .graph
-- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/` — phase nodes: 26 .phase, 26 .graph
-- `lib/phases/2026-09-02-agent-mesh-full-map/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-09-02-nexus-vision-master/` — phase nodes: 58 .phase, 58 .graph
-- `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/` — phase nodes: 10 .phase, 10 .graph
-- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/` — phase nodes: 32 .phase, 32 .graph
-- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/` — phase nodes: 17 .phase, 17 .graph
-- `lib/phases/2026-09-11-sovereign-node-architecture/` — phase nodes: 35 .phase, 35 .graph
-- `lib/phases/2026-09-13-axiom-5-2-raid-routing/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-09-13-track-b-sovereignty/` — phase nodes: 3 .phase, 3 .graph
-- `lib/phases/2026-09-19-architect-blueprint-forge-idearium/` — phase nodes: 10 .phase, 10 .graph
-- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/` — phase nodes: 20 .phase, 21 .graph
-- `lib/phases/2026-09-19-guardian-mesh-first-dispatch/` — phase nodes: 15 .phase, 15 .graph
-- `lib/phases/2026-09-22-brainos-agent-suite/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/` — phase nodes: 8 .phase, 8 .graph
-- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 4 .phase, 4 .graph
-- `lib/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 9 .phase, 9 .graph
-- `lib/phases/2026-09-27-components-store-and-atlases/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-09-27-idearium-atlas/` — phase nodes: 4 .phase, 4 .graph
-- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 4 .phase, 4 .graph
-- `lib/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 10 .phase, 10 .graph
-- `lib/phases/2026-09-28-staging-self-heal/` — phase nodes: 4 .phase, 4 .graph
-- `lib/phases/2026-09-29-build-surface/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-09-29-nex-node-store/` — phase nodes: 26 .phase, 26 .graph
-- `lib/phases/2026-09-29-provider-economy/` — phase nodes: 8 .phase, 8 .graph
-- `lib/phases/2026-09-29-tool-layers-and-pane-memory/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 23 .phase, 23 .graph
-- `lib/phases/2026-10-01-routing-registry-genesis/` — phase nodes: 4 .phase, 4 .graph
-- `lib/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 30 .phase, 30 .graph
-- `lib/phases/2026-10-02-fractal-graph-any-size-agent/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-02-spatial-void/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-02-synthesis-zoom-versionium/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-05-announce-pulse-repair/` — phase nodes: 3 .phase, 3 .graph
-- `lib/phases/2026-10-05-build-from-the-spec/` — phase nodes: 26 .phase, 26 .graph
-- `lib/phases/2026-10-05-cli-data-code/` — phase nodes: 12 .phase, 12 .graph
-- `lib/phases/2026-10-05-code-tab-and-one-router/` — phase nodes: 4 .phase, 4 .graph
-- `lib/phases/2026-10-05-cos-machines/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-05-failure-reproduction/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-05-spec-workshop-rebuild/` — phase nodes: 4 .phase, 4 .graph
-- `lib/phases/2026-10-05-verified-primitives/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-10-07-compartment-control-and-activity/` — phase nodes: 10 .phase, 10 .graph
-- `lib/phases/2026-10-07-heal-nodes/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-10-07-idearium-one-surface/` — phase nodes: 12 .phase, 12 .graph
-- `lib/phases/2026-10-07-ollama-recorder/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-10-07-runtime-load/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-10-07-system-expectations/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-10-07-versionium-releases/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-10-09-hardening-pass/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-10-09-one-model-engine/` — phase nodes: 12 .phase, 12 .graph
-- `lib/phases/2026-10-09-one-roadmap/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-10-10-copilot-talk-to-nexus/` — phase nodes: 4 .phase, 4 .graph
-- `lib/phases/2026-10-10-design-surface/` — phase nodes: 8 .phase, 8 .graph
-- `lib/phases/2026-10-10-idearium-access/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-10-idearium-solid/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/2026-10-10-self-awareness/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-10-shape-of-nexus/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/2026-10-10-snapshot-compartments/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 8 .phase, 8 .graph
-- `lib/phases/2026-10-12-request-spine/` — phase nodes: 20 .phase, 20 .graph
-- `lib/phases/2026-10-13-gates-that-learn-and-priorities/` — phase nodes: 4 .phase, 4 .graph
-- `lib/phases/2026-10-13-identities-tabs-and-automation/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/` — phase nodes: 11 .phase, 11 .graph
-- `lib/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 10 .phase, 10 .graph
-- `lib/phases/2026-10-15-automatic-tracking/` — phase nodes: 8 .phase, 8 .graph
-- `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-10-15-clear-glass-network-posture/` — phase nodes: 24 .phase, 29 .graph
-- `lib/phases/2026-10-15-clear-glass-surfaces/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-15-code-tab-run-state/` — phase nodes: 11 .phase, 11 .graph
-- `lib/phases/2026-10-15-cos-app/` — phase nodes: 17 .phase, 17 .graph
-- `lib/phases/2026-10-15-fiverr-ledger/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-10-15-gate-held-work/` — phase nodes: 21 .phase, 21 .graph
-- `lib/phases/2026-10-15-macro-node-recording/` — phase nodes: 15 .phase, 15 .graph
-- `lib/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-10-15-personal-chat-import/` — phase nodes: 10 .phase, 10 .graph
-- `lib/phases/2026-10-15-spec-foundation-model/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/2026-10-15-warp-builds-and-spec-framework/` — phase nodes: 10 .phase, 10 .graph
-- `lib/phases/2026-10-16-agent-work-funnel/` — phase nodes: 4 .phase, 4 .graph
-- `lib/phases/2026-10-16-canvas-compartments/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-16-code-tab-rebuild/` — phase nodes: 18 .phase, 18 .graph
-- `lib/phases/2026-10-16-cos-console/` — phase nodes: 9 .phase, 12 .graph
-- `lib/phases/2026-10-16-durable-work-timeline/` — phase nodes: 8 .phase, 8 .graph
-- `lib/phases/2026-10-16-eravos-removal/` — phase nodes: 3 .phase, 3 .graph
-- `lib/phases/2026-10-16-google-signin/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-16-intent-hat-agent-chain/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-10-16-mobile-compartments/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-10-16-nexus-git-sync/` — phase nodes: 9 .phase, 9 .graph
-- `lib/phases/2026-10-16-plan-sidebar/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-16-proposal-evidence/` — phase nodes: 9 .phase, 9 .graph
-- `lib/phases/2026-10-16-reject-learn-retry/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-16-repo-carve/` — phase nodes: 13 .phase, 13 .graph
-- `lib/phases/2026-10-17-debugging-product/` — phase nodes: 14 .phase, 14 .graph
-- `lib/phases/2026-10-17-failure-mode-report/` — phase nodes: 12 .phase, 12 .graph
-- `lib/phases/2026-10-17-infrastructure-migration/` — phase nodes: 12 .phase, 12 .graph
-- `lib/phases/2026-10-17-pieces-not-order/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-10-17-system-drawbridge/` — phase nodes: 27 .phase, 27 .graph
-- `lib/phases/2026-10-18-compartment-environment/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/2026-10-18-debugging-product/` — phase nodes: 10 .phase, 10 .graph
-- `lib/phases/2026-10-18-gate-memory/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-10-18-gating-census/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/2026-10-19-gate-quality-checks/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-19-gig-autofill-and-learn/` — phase nodes: 3 .phase, 3 .graph
-- `lib/phases/2026-10-19-idearium-control/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/2026-10-19-infrastructure-spine/` — phase nodes: 20 .phase, 20 .graph
-- `lib/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 22 .phase, 30 .graph
-- `lib/phases/2026-10-19-solid-build-foundation/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/2026-10-19-upload-intent-and-page-map/` — phase nodes: 9 .phase, 9 .graph
-- `lib/phases/2026-10-20-belief-loop/` — phase nodes: 13 .phase, 13 .graph
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` — phase nodes: 14 .phase, 15 .graph
-- `lib/phases/2026-10-21-adblock/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-21-approval-chain/` — phase nodes: 3 .phase, 5 .graph
-- `lib/phases/2026-10-21-brainos-into-idearium/` — phase nodes: 9 .phase, 11 .graph
-- `lib/phases/2026-10-21-browser-shell/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-21-compartment-downloads/` — phase nodes: 2 .phase, 2 .graph
-- `lib/phases/2026-10-21-data-layout/` — phase nodes: 5 .phase, 9 .graph
-- `lib/phases/2026-10-21-passwords/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-22-system-node-db/` — phase nodes: 4 .phase, 6 .graph
-- `lib/phases/2026-10-23-cos-spine/` — phase nodes: 1 .phase, 1 .graph
-- `lib/phases/2026-10-23-self-building-loop/` — phase nodes: 5 .phase, 13 .graph
-- `lib/phases/2026-10-24-emerge-warp-system/` — phase nodes: 2 .phase, 4 .graph
-- `lib/phases/agent-intelligence-loop/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/agent-model-and-user-continuity/` — phase nodes: 10 .phase, 10 .graph
-- `lib/phases/clearglass-agent-suite-and-cfr-loom/` — phase nodes: 16 .phase, 16 .graph
-- `lib/phases/copilot-autonomous/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/copilot-awareness-routing/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/copilot-full-capability/` — phase nodes: 11 .phase, 11 .graph
-- `lib/phases/copilot-guardian-cos-expansion/` — phase nodes: 10 .phase, 10 .graph
-- `lib/phases/copilot-omniscience/` — phase nodes: 8 .phase, 8 .graph
-- `lib/phases/cortex-schema-registry/` — phase nodes: 9 .phase, 9 .graph
-- `lib/phases/gemini-multiagent-coding/` — phase nodes: 5 .phase, 5 .graph
-- `lib/phases/idearium-creative-repo-overhaul/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/idearium-repository-overhaul/` — phase nodes: 13 .phase, 13 .graph
-- `lib/phases/loom-phasemap-section/` — phase nodes: 3 .phase, 3 .graph
-- `lib/phases/nexus-architecture-rebuild/` — phase nodes: 22 .phase, 22 .graph
-- `lib/phases/nexus-live-mind/` — phase nodes: 6 .phase, 6 .graph
-- `lib/phases/nexus-observability-tablet/` — phase nodes: 11 .phase, 11 .graph
-- `lib/phases/nexus-repo-compartment-and-rich-dispatch/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/nexus-repository-system-build/` — phase nodes: 8 .phase, 8 .graph
-- `lib/phases/nexus-self-build-pipeline/` — phase nodes: 9 .phase, 9 .graph
-- `lib/phases/nexus-system-standardization/` — phase nodes: 8 .phase, 8 .graph
-- `lib/phases/raid-routing-fidelity/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/raid-verification-spine/` — phase nodes: 7 .phase, 7 .graph
-- `lib/phases/raid-warp-verification/` — phase nodes: 11 .phase, 11 .graph
-- `lib/phases/repair-contract-and-loom-hub/` — phase nodes: 11 .phase, 11 .graph
-- `lib/phases/rich-atlas/` — phase nodes: 3 .phase, 3 .graph
-- `lib/phases/snapshot-trigger/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-08-22-session-full/` — phase nodes: 19 .phase, 0 .graph
+- `lib/phases/2026-08-23-backlog/` — phase nodes: 32 .phase, 0 .graph
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/` — phase nodes: 16 .phase, 0 .graph
+- `lib/phases/2026-08-28-definition-of-complete/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/2026-08-28-self-building-pipeline/` — phase nodes: 13 .phase, 0 .graph
+- `lib/phases/2026-08-30-interaction-contract-context/` — phase nodes: 13 .phase, 0 .graph
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/` — phase nodes: 26 .phase, 0 .graph
+- `lib/phases/2026-09-02-agent-mesh-full-map/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-09-02-nexus-vision-master/` — phase nodes: 58 .phase, 0 .graph
+- `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/` — phase nodes: 10 .phase, 0 .graph
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/` — phase nodes: 32 .phase, 0 .graph
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/` — phase nodes: 17 .phase, 0 .graph
+- `lib/phases/2026-09-11-sovereign-node-architecture/` — phase nodes: 35 .phase, 0 .graph
+- `lib/phases/2026-09-13-axiom-5-2-raid-routing/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-09-13-track-b-sovereignty/` — phase nodes: 3 .phase, 0 .graph
+- `lib/phases/2026-09-19-architect-blueprint-forge-idearium/` — phase nodes: 10 .phase, 0 .graph
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/` — phase nodes: 20 .phase, 0 .graph
+- `lib/phases/2026-09-19-guardian-mesh-first-dispatch/` — phase nodes: 15 .phase, 0 .graph
+- `lib/phases/2026-09-22-brainos-agent-suite/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 9 .phase, 0 .graph
+- `lib/phases/2026-09-27-components-store-and-atlases/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-09-27-idearium-atlas/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 10 .phase, 0 .graph
+- `lib/phases/2026-09-28-staging-self-heal/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-09-29-build-surface/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-09-29-nex-node-store/` — phase nodes: 26 .phase, 0 .graph
+- `lib/phases/2026-09-29-provider-economy/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/2026-09-29-tool-layers-and-pane-memory/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 23 .phase, 0 .graph
+- `lib/phases/2026-10-01-routing-registry-genesis/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 23 .phase, 0 .graph
+- `lib/phases/2026-10-02-fractal-graph-any-size-agent/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-02-spatial-void/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-02-synthesis-zoom-versionium/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-05-announce-pulse-repair/` — phase nodes: 3 .phase, 0 .graph
+- `lib/phases/2026-10-05-build-from-the-spec/` — phase nodes: 26 .phase, 0 .graph
+- `lib/phases/2026-10-05-cli-data-code/` — phase nodes: 12 .phase, 0 .graph
+- `lib/phases/2026-10-05-code-tab-and-one-router/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-10-05-cos-machines/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-05-failure-reproduction/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-05-spec-workshop-rebuild/` — phase nodes: 3 .phase, 0 .graph
+- `lib/phases/2026-10-05-verified-primitives/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-10-07-compartment-control-and-activity/` — phase nodes: 10 .phase, 0 .graph
+- `lib/phases/2026-10-07-heal-nodes/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-10-07-idearium-one-surface/` — phase nodes: 12 .phase, 0 .graph
+- `lib/phases/2026-10-07-ollama-recorder/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-10-07-runtime-load/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-10-07-system-expectations/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-10-07-versionium-releases/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-10-09-hardening-pass/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-10-09-one-model-engine/` — phase nodes: 12 .phase, 0 .graph
+- `lib/phases/2026-10-09-one-roadmap/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-10-10-copilot-talk-to-nexus/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-10-10-design-surface/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/2026-10-10-idearium-access/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-10-idearium-solid/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/2026-10-10-self-awareness/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-10-shape-of-nexus/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/2026-10-10-snapshot-compartments/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/2026-10-12-request-spine/` — phase nodes: 20 .phase, 0 .graph
+- `lib/phases/2026-10-13-gates-that-learn-and-priorities/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-10-13-identities-tabs-and-automation/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/` — phase nodes: 11 .phase, 0 .graph
+- `lib/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 10 .phase, 0 .graph
+- `lib/phases/2026-10-15-automatic-tracking/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-10-15-clear-glass-network-posture/` — phase nodes: 23 .phase, 0 .graph
+- `lib/phases/2026-10-15-clear-glass-surfaces/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-15-code-tab-run-state/` — phase nodes: 11 .phase, 0 .graph
+- `lib/phases/2026-10-15-cos-app/` — phase nodes: 17 .phase, 0 .graph
+- `lib/phases/2026-10-15-fiverr-ledger/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-10-15-gate-held-work/` — phase nodes: 21 .phase, 0 .graph
+- `lib/phases/2026-10-15-macro-node-recording/` — phase nodes: 15 .phase, 0 .graph
+- `lib/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-10-15-personal-chat-import/` — phase nodes: 10 .phase, 0 .graph
+- `lib/phases/2026-10-15-spec-foundation-model/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/` — phase nodes: 9 .phase, 0 .graph
+- `lib/phases/2026-10-16-agent-work-funnel/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-10-16-canvas-compartments/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-16-code-tab-rebuild/` — phase nodes: 18 .phase, 0 .graph
+- `lib/phases/2026-10-16-cos-console/` — phase nodes: 9 .phase, 0 .graph
+- `lib/phases/2026-10-16-durable-work-timeline/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/2026-10-16-eravos-removal/` — phase nodes: 3 .phase, 0 .graph
+- `lib/phases/2026-10-16-google-signin/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-16-intent-hat-agent-chain/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-10-16-mobile-compartments/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-10-16-nexus-git-sync/` — phase nodes: 9 .phase, 0 .graph
+- `lib/phases/2026-10-16-plan-sidebar/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-16-proposal-evidence/` — phase nodes: 9 .phase, 0 .graph
+- `lib/phases/2026-10-16-reject-learn-retry/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-16-repo-carve/` — phase nodes: 13 .phase, 0 .graph
+- `lib/phases/2026-10-17-debugging-product/` — phase nodes: 14 .phase, 0 .graph
+- `lib/phases/2026-10-17-failure-mode-report/` — phase nodes: 12 .phase, 0 .graph
+- `lib/phases/2026-10-17-infrastructure-migration/` — phase nodes: 12 .phase, 0 .graph
+- `lib/phases/2026-10-17-pieces-not-order/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-10-17-system-drawbridge/` — phase nodes: 27 .phase, 0 .graph
+- `lib/phases/2026-10-18-compartment-environment/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/2026-10-18-debugging-product/` — phase nodes: 10 .phase, 0 .graph
+- `lib/phases/2026-10-18-gate-memory/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-10-18-gating-census/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/2026-10-19-gate-quality-checks/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-19-gig-autofill-and-learn/` — phase nodes: 3 .phase, 0 .graph
+- `lib/phases/2026-10-19-idearium-control/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-10-19-infrastructure-spine/` — phase nodes: 20 .phase, 0 .graph
+- `lib/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 22 .phase, 0 .graph
+- `lib/phases/2026-10-19-solid-build-foundation/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/2026-10-19-upload-intent-and-page-map/` — phase nodes: 9 .phase, 0 .graph
+- `lib/phases/2026-10-20-belief-loop/` — phase nodes: 13 .phase, 0 .graph
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` — phase nodes: 14 .phase, 0 .graph
+- `lib/phases/2026-10-21-adblock/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-21-approval-chain/` — phase nodes: 3 .phase, 0 .graph
+- `lib/phases/2026-10-21-brainos-into-idearium/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/2026-10-21-browser-shell/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-21-compartment-downloads/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/2026-10-21-data-layout/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/2026-10-21-passwords/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-22-system-node-db/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-10-23-cos-spine/` — phase nodes: 1 .phase, 0 .graph
+- `lib/phases/2026-10-23-self-building-loop/` — phase nodes: 4 .phase, 0 .graph
+- `lib/phases/2026-10-24-emerge-warp-system/` — phase nodes: 2 .phase, 0 .graph
+- `lib/phases/agent-intelligence-loop/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/agent-model-and-user-continuity/` — phase nodes: 10 .phase, 0 .graph
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/` — phase nodes: 16 .phase, 0 .graph
+- `lib/phases/copilot-autonomous/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/copilot-awareness-routing/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/copilot-full-capability/` — phase nodes: 11 .phase, 0 .graph
+- `lib/phases/copilot-guardian-cos-expansion/` — phase nodes: 10 .phase, 0 .graph
+- `lib/phases/copilot-omniscience/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/cortex-schema-registry/` — phase nodes: 9 .phase, 0 .graph
+- `lib/phases/gemini-multiagent-coding/` — phase nodes: 5 .phase, 0 .graph
+- `lib/phases/idearium-creative-repo-overhaul/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/idearium-repository-overhaul/` — phase nodes: 13 .phase, 0 .graph
+- `lib/phases/loom-phasemap-section/` — phase nodes: 3 .phase, 0 .graph
+- `lib/phases/nexus-architecture-rebuild/` — phase nodes: 22 .phase, 0 .graph
+- `lib/phases/nexus-live-mind/` — phase nodes: 6 .phase, 0 .graph
+- `lib/phases/nexus-observability-tablet/` — phase nodes: 11 .phase, 0 .graph
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/nexus-repository-system-build/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/nexus-self-build-pipeline/` — phase nodes: 9 .phase, 0 .graph
+- `lib/phases/nexus-system-standardization/` — phase nodes: 8 .phase, 0 .graph
+- `lib/phases/raid-routing-fidelity/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/raid-verification-spine/` — phase nodes: 7 .phase, 0 .graph
+- `lib/phases/raid-warp-verification/` — phase nodes: 11 .phase, 0 .graph
+- `lib/phases/repair-contract-and-loom-hub/` — phase nodes: 11 .phase, 0 .graph
+- `lib/phases/rich-atlas/` — phase nodes: 3 .phase, 0 .graph
+- `lib/phases/snapshot-trigger/` — phase nodes: 2 .phase, 0 .graph
 
 </details>
 
@@ -6566,9 +6569,9 @@ Core is 5411 files in 42 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>the release notes · 441 files (each is in the version history below, in his words)</summary>
+<summary>the release notes · 442 files (each is in the version history below, in his words)</summary>
 
-`CHANGELOG-0.60.237.md` · `CHANGELOG-0.60.236.md` · `CHANGELOG-0.60.235.md` · `CHANGELOG-0.60.234.md` · `CHANGELOG-0.60.233.md` · `CHANGELOG-0.60.232.md` · `CHANGELOG-0.60.231.md` · `CHANGELOG-0.60.230.md` · `CHANGELOG-0.60.229.md` · `CHANGELOG-0.60.228.md` · `CHANGELOG-0.60.227.md` · `CHANGELOG-0.60.226.md` · `CHANGELOG-0.60.225.md` · `CHANGELOG-0.60.224.md` · `CHANGELOG-0.60.223.md` · `CHANGELOG-0.60.222.md` · `CHANGELOG-0.60.221.md` · `CHANGELOG-0.60.220.md` · `CHANGELOG-0.60.219.md` · `CHANGELOG-0.60.218.md` · `CHANGELOG-0.60.217.md` · `CHANGELOG-0.60.216.md` · `CHANGELOG-0.60.215.md` · `CHANGELOG-0.60.214.md` · `CHANGELOG-0.60.213.md` · `CHANGELOG-0.60.212.md` · `CHANGELOG-0.60.211.md` · `CHANGELOG-0.60.210.md` · `CHANGELOG-0.60.209.md` · `CHANGELOG-0.60.208.md` · `CHANGELOG-0.60.207.md` · `CHANGELOG-0.60.206.md` · `CHANGELOG-0.60.205.md` · `CHANGELOG-0.60.204.md` · `CHANGELOG-0.60.203.md` · `CHANGELOG-0.60.202.md` · `CHANGELOG-0.60.201.md` · `CHANGELOG-0.60.200.md` · `CHANGELOG-0.60.199.md` · `CHANGELOG-0.60.198.md` · `CHANGELOG-0.60.197.md` · `CHANGELOG-0.60.196.md` · `CHANGELOG-0.60.195.md` · `CHANGELOG-0.60.194.md` · `CHANGELOG-0.60.193.md` · `CHANGELOG-0.60.192.md` · `CHANGELOG-0.60.191.md` · `CHANGELOG-0.60.190.md` · `CHANGELOG-0.60.189.md` · `CHANGELOG-0.60.188.md` · `CHANGELOG-0.60.187.md` · `CHANGELOG-0.60.186.md` · `CHANGELOG-0.60.185.md` · `CHANGELOG-0.60.184.md` · `CHANGELOG-0.60.183.md` · `CHANGELOG-0.60.182.md` · `CHANGELOG-0.60.181.md` · `CHANGELOG-0.60.180.md` · `CHANGELOG-0.60.179.md` · `CHANGELOG-0.60.178.md` · `CHANGELOG-0.60.177.md` · `CHANGELOG-0.60.176.md` · `CHANGELOG-0.60.175.md` · `CHANGELOG-0.60.174.md` · `CHANGELOG-0.60.173.md` · `CHANGELOG-0.60.172.md` · `CHANGELOG-0.60.171.md` · `CHANGELOG-0.60.170.md` · `CHANGELOG-0.60.168.md` · `CHANGELOG-0.60.167.md` · `CHANGELOG-0.60.166.md` · `CHANGELOG-0.60.165.md` · `CHANGELOG-0.60.164.md` · `CHANGELOG-0.60.163.md` · `CHANGELOG-0.60.162.md` · `CHANGELOG-0.60.161.md` · `CHANGELOG-0.60.160.md` · `CHANGELOG-0.60.159.md` · `CHANGELOG-0.60.158.md` · `CHANGELOG-0.60.157.md` · `CHANGELOG-0.60.156.md` · `CHANGELOG-0.60.155.md` · `CHANGELOG-0.60.154.md` · `CHANGELOG-0.60.153.md` · `CHANGELOG-0.60.152.md` · `CHANGELOG-0.60.151.md` · `CHANGELOG-0.60.150.md` · `CHANGELOG-0.60.149.md` · `CHANGELOG-0.60.148.md` · `CHANGELOG-0.60.147.md` · `CHANGELOG-0.60.146.md` · `CHANGELOG-0.60.145.md` · `CHANGELOG-0.60.144.md` · `CHANGELOG-0.60.143.md` · `CHANGELOG-0.60.142.md` · `CHANGELOG-0.60.141.md` · `CHANGELOG-0.60.140.md` · `CHANGELOG-0.60.139.md` · `CHANGELOG-0.60.138.md` · `CHANGELOG-0.60.137.md` · `CHANGELOG-0.60.136.md` · `CHANGELOG-0.60.135.md` · `CHANGELOG-0.60.134.md` · `CHANGELOG-0.60.133.md` · `CHANGELOG-0.60.132.md` · `CHANGELOG-0.60.131.md` · `CHANGELOG-0.60.130.md` · `CHANGELOG-0.60.129.md` · `CHANGELOG-0.60.128.md` · `CHANGELOG-0.60.127.md` · `CHANGELOG-0.60.126.md` · `CHANGELOG-0.60.125.md` · `CHANGELOG-0.60.124.md` · `CHANGELOG-0.60.123.md` · `CHANGELOG-0.60.122.md` · `CHANGELOG-0.60.121.md` · `CHANGELOG-0.60.120.md` · `CHANGELOG-0.60.119.md` · `CHANGELOG-0.60.118.md` · `CHANGELOG-0.60.117.md` · `CHANGELOG-0.60.116.md` · `CHANGELOG-0.60.115.md` · `CHANGELOG-0.60.114.md` · `CHANGELOG-0.60.113.md` · `CHANGELOG-0.60.112.md` · `CHANGELOG-0.60.111.md` · `CHANGELOG-0.60.110.md` · `CHANGELOG-0.60.109.md` · `CHANGELOG-0.60.108.md` · `CHANGELOG-0.60.107.md` · `CHANGELOG-0.60.106.md` · `CHANGELOG-0.60.105.md` · `CHANGELOG-0.60.104.md` · `CHANGELOG-0.60.103.md` · `CHANGELOG-0.60.102.md` · `CHANGELOG-0.60.101.md` · `CHANGELOG-0.60.100.md` · `CHANGELOG-0.60.99.md` · `CHANGELOG-0.60.98.md` · `CHANGELOG-0.60.97.md` · `CHANGELOG-0.60.96.md` · `CHANGELOG-0.60.95.md` · `CHANGELOG-0.60.94.md` · `CHANGELOG-0.60.93.md` · `CHANGELOG-0.60.92.md` · `CHANGELOG-0.60.91.md` · `CHANGELOG-0.60.90.md` · `CHANGELOG-0.60.89.md` · `CHANGELOG-0.60.88.md` · `CHANGELOG-0.60.87.md` · `CHANGELOG-0.60.86.md` · `CHANGELOG-0.60.85.md` · `CHANGELOG-0.60.84.md` · `CHANGELOG-0.60.83.md` · `CHANGELOG-0.60.82.md` · `CHANGELOG-0.60.81.md` · `CHANGELOG-0.60.80.md` · `CHANGELOG-0.60.79.md` · `CHANGELOG-0.60.78.md` · `CHANGELOG-0.60.77.md` · `CHANGELOG-0.60.76.md` · `CHANGELOG-0.60.75.md` · `CHANGELOG-0.60.74.md` · `CHANGELOG-0.60.73.md` · `CHANGELOG-0.60.72.md` · `CHANGELOG-0.60.71.md` · `CHANGELOG-0.60.70.md` · `CHANGELOG-0.60.69.md` · `CHANGELOG-0.60.68.md` · `CHANGELOG-0.60.67.md` · `CHANGELOG-0.60.66.md` · `CHANGELOG-0.60.65.md` · `CHANGELOG-0.60.64.md` · `CHANGELOG-0.60.63.md` · `CHANGELOG-0.60.62.md` · `CHANGELOG-0.60.61.md` · `CHANGELOG-0.60.60.md` · `CHANGELOG-0.60.59.md` · `CHANGELOG-0.60.58.md` · `CHANGELOG-0.60.57.md` · `CHANGELOG-0.60.56.md` · `CHANGELOG-0.60.55.md` · `CHANGELOG-0.60.54.md` · `CHANGELOG-0.60.53.md` · `CHANGELOG-0.60.52.md` · `CHANGELOG-0.60.51.md` · `CHANGELOG-0.60.50.md` · `CHANGELOG-0.60.49.md` · `CHANGELOG-0.60.48.md` · `CHANGELOG-0.60.47.md` · `CHANGELOG-0.60.46.md` · `CHANGELOG-0.60.45.md` · `CHANGELOG-0.60.44.md` · `CHANGELOG-0.60.43.md` · `CHANGELOG-0.60.42.md` · `CHANGELOG-0.60.41.md` · `CHANGELOG-0.60.40.md` · `CHANGELOG-0.60.39.md` · `CHANGELOG-0.60.38.md` · `CHANGELOG-0.60.37.md` · `CHANGELOG-0.60.36.md` · `CHANGELOG-0.60.35.md` · `CHANGELOG-0.60.34.md` · `CHANGELOG-0.60.33.md` · `CHANGELOG-0.60.32.md` · `CHANGELOG-0.60.31.md` · `CHANGELOG-0.60.30.md` · `CHANGELOG-0.60.29.md` · `CHANGELOG-0.60.28.md` · `CHANGELOG-0.60.27.md` · `CHANGELOG-0.60.26.md` · `CHANGELOG-0.60.21.md` · `CHANGELOG-0.60.20.md` · `CHANGELOG-0.60.19.md` · `CHANGELOG-0.60.18.md` · `CHANGELOG-0.60.17.md` · `CHANGELOG-0.60.16.md` · `CHANGELOG-0.60.15.md` · `CHANGELOG-0.60.14.md` · `CHANGELOG-0.60.13.md` · `CHANGELOG-0.60.12.md` · `CHANGELOG-0.60.11.md` · `CHANGELOG-0.60.10.md` · `CHANGELOG-0.60.9.md` · `CHANGELOG-0.60.8.md` · `CHANGELOG-0.60.7.md` · `CHANGELOG-0.60.6.md` · `CHANGELOG-0.60.5.md` · `CHANGELOG-0.60.4.md` · `CHANGELOG-0.60.3.md` · `CHANGELOG-0.60.2.md` · `CHANGELOG-0.60.1.md` · `CHANGELOG-0.60.0.md` · `CHANGELOG-0.59.15.md` · `CHANGELOG-0.59.14.md` · `CHANGELOG-0.59.13.md` · `CHANGELOG-0.59.12.md` · `CHANGELOG-0.59.11.md` · `CHANGELOG-0.59.10.md` · `CHANGELOG-0.59.9.md` · `CHANGELOG-0.59.8.md` · `CHANGELOG-0.59.7.md` · `CHANGELOG-0.59.6.md` · `CHANGELOG-0.59.5.md` · `CHANGELOG-0.59.4.md` · `CHANGELOG-0.59.3.md` · `CHANGELOG-0.59.2.md` · `CHANGELOG-0.59.1.md` · `CHANGELOG-0.59.0.md` · `CHANGELOG-0.58.0.md` · `CHANGELOG-0.57.1.md` · `CHANGELOG-0.57.0.md` · `CHANGELOG-0.56.0.md` · `CHANGELOG-0.55.2.md` · `CHANGELOG-0.55.1.md` · `CHANGELOG-0.55.0.md` · `CHANGELOG-0.54.2.md` · `CHANGELOG-0.54.1.md` · `CHANGELOG-0.54.0.md` · `CHANGELOG-0.53.0.md` · `CHANGELOG-0.52.0.md` · `CHANGELOG-0.51.0.md` · `CHANGELOG-0.50.0.md` · `CHANGELOG-0.49.0.md` · `CHANGELOG-0.48.0.md` · `CHANGELOG-0.47.0.md` · `CHANGELOG-0.46.0.md` · `CHANGELOG-0.45.0.md` · `CHANGELOG-0.44.0.md` · `CHANGELOG-0.43.0.md` · `CHANGELOG-0.42.0.md` · `CHANGELOG-0.41.0.md` · `CHANGELOG-0.40.1.md` · `CHANGELOG-0.40.0.md` · `CHANGELOG-0.39.376.md` · `CHANGELOG-0.39.375.md` · `CHANGELOG-0.39.374.md` · `CHANGELOG-0.39.373.md` · `CHANGELOG-0.39.372.md` · `CHANGELOG-0.39.371.md` · `CHANGELOG-0.39.370.md` · `CHANGELOG-0.39.369.md` · `CHANGELOG-0.39.368.md` · `CHANGELOG-0.39.367.md` · `CHANGELOG-0.39.366.md` · `CHANGELOG-0.39.365.md` · `CHANGELOG-0.39.364.md` · `CHANGELOG-0.39.363.md` · `CHANGELOG-0.39.362.md` · `CHANGELOG-0.39.361.md` · `CHANGELOG-0.39.360.md` · `CHANGELOG-0.39.359.md` · `CHANGELOG-0.39.358.md` · `CHANGELOG-0.39.357.md` · `CHANGELOG-0.39.356.md` · `CHANGELOG-0.39.355.md` · `CHANGELOG-0.39.354.md` · `CHANGELOG-0.39.353.md` · `CHANGELOG-0.39.352.md` · `CHANGELOG-0.39.351.md` · `CHANGELOG-0.39.350.md` · `CHANGELOG-0.39.349.md` · `CHANGELOG-0.39.348.md` · `CHANGELOG-0.39.347.md` · `CHANGELOG-0.39.346.md` · `CHANGELOG-0.39.345.md` · `CHANGELOG-0.39.344.md` · `CHANGELOG-0.39.343.md` · `CHANGELOG-0.39.342.md` · `CHANGELOG-0.39.341.md` · `CHANGELOG-0.39.340.md` · `CHANGELOG-0.39.339.md` · `CHANGELOG-0.39.338.md` · `CHANGELOG-0.39.337.md` · `CHANGELOG-0.39.336.md` · `CHANGELOG-0.39.335.md` · `CHANGELOG-0.39.334.md` · `CHANGELOG-0.39.333.md` · `CHANGELOG-0.39.332.md` · `CHANGELOG-0.39.331.md` · `CHANGELOG-0.39.330.md` · `CHANGELOG-0.39.329.md` · `CHANGELOG-0.39.328.md` · `CHANGELOG-0.39.327.md` · `CHANGELOG-0.39.326.md` · `CHANGELOG-0.39.325.md` · `CHANGELOG-0.39.324.md` · `CHANGELOG-0.39.323.md` · `CHANGELOG-0.39.322.md` · `CHANGELOG-0.39.321.md` · `CHANGELOG-0.39.320.md` · `CHANGELOG-0.39.319.md` · `CHANGELOG-0.39.318.md` · `CHANGELOG-0.39.317.md` · `CHANGELOG-0.39.316.md` · `CHANGELOG-0.39.315.md` · `CHANGELOG-0.39.314.md` · `CHANGELOG-0.39.313.md` · `CHANGELOG-0.39.312.md` · `CHANGELOG-0.39.311.md` · `CHANGELOG-0.39.310.md` · `CHANGELOG-0.39.309.md` · `CHANGELOG-0.39.308.md` · `CHANGELOG-0.39.307.md` · `CHANGELOG-0.39.306.md` · `CHANGELOG-0.39.305.md` · `CHANGELOG-0.39.304.md` · `CHANGELOG-0.39.303.md` · `CHANGELOG-0.39.302.md` · `CHANGELOG-0.39.301.md` · `CHANGELOG-0.39.300.md` · `CHANGELOG-0.39.299.md` · `CHANGELOG-0.39.298.md` · `CHANGELOG-0.39.297.md` · `CHANGELOG-0.39.296.md` · `CHANGELOG-0.39.295.md` · `CHANGELOG-0.39.294.md` · `CHANGELOG-0.39.293.md` · `CHANGELOG-0.39.292.md` · `CHANGELOG-0.39.291.md` · `CHANGELOG-0.39.290.md` · `CHANGELOG-0.39.289.md` · `CHANGELOG-0.39.288.md` · `CHANGELOG-0.39.287.md` · `CHANGELOG-0.39.286.md` · `CHANGELOG-0.39.285.md` · `CHANGELOG-0.39.284.md` · `CHANGELOG-0.39.283.md` · `CHANGELOG-0.39.282.md` · `CHANGELOG-0.39.281.md` · `CHANGELOG-0.39.280.md` · `CHANGELOG-0.39.279.md` · `CHANGELOG-0.39.278.md` · `CHANGELOG-0.39.277.md` · `CHANGELOG-0.39.276.md` · `CHANGELOG-0.39.275.md` · `CHANGELOG-0.39.274.md` · `CHANGELOG-0.39.273.md` · `CHANGELOG-0.39.272.md` · `CHANGELOG-0.39.271.md` · `CHANGELOG-0.39.270.md` · `CHANGELOG-0.39.269.md` · `CHANGELOG-0.39.268.md` · `CHANGELOG-0.39.267.md` · `CHANGELOG-0.39.266.md` · `CHANGELOG-0.39.264.md` · `CHANGELOG-0.39.263.md` · `CHANGELOG-0.39.262.md` · `CHANGELOG-0.39.261.md` · `CHANGELOG-0.39.260.md` · `CHANGELOG-0.39.259.md` · `CHANGELOG-0.39.258.md` · `CHANGELOG-0.39.257.md` · `CHANGELOG-0.39.256.md` · `CHANGELOG-0.39.255.md` · `CHANGELOG-0.39.254.md` · `CHANGELOG-0.39.253.md` · `CHANGELOG-0.39.252.md` · `CHANGELOG-0.39.251.md` · `CHANGELOG-0.39.250.md` · `CHANGELOG-0.39.249.md` · `CHANGELOG-0.39.248.md` · `CHANGELOG-0.39.247.md` · `CHANGELOG-0.39.246.md` · `CHANGELOG-0.39.245.md` · `CHANGELOG-0.39.244.md` · `CHANGELOG-0.39.243.md` · `CHANGELOG-0.39.242.md` · `CHANGELOG-0.39.241.md` · `CHANGELOG-0.39.240.md` · `CHANGELOG-0.39.239.md` · `CHANGELOG-0.39.238.md` · `CHANGELOG-0.39.237.md` · `CHANGELOG-0.39.236.md` · `CHANGELOG-0.39.228.md` · `CHANGELOG-0.39.227.md` · `CHANGELOG-0.39.223.md` · `CHANGELOG-0.39.194.md` · `CHANGELOG-0.39.193.md` · `CHANGELOG-0.39.192.md` · `CHANGELOG-0.39.191.md` · `CHANGELOG-0.39.190.md` · `CHANGELOG-0.39.188.md` · `CHANGELOG-0.39.182.md` · `CHANGELOG-0.39.181.md` · `CHANGELOG-0.39.179.md` · `CHANGELOG-0.39.178.md` · `CHANGELOG-0.39.177.md` · `CHANGELOG-0.39.176.md` · `CHANGELOG-0.39.175.md` · `CHANGELOG-0.39.174.md` · `CHANGELOG-0.39.173.md` · `CHANGELOG-0.39.172.md` · `CHANGELOG-0.39.170.md` · `CHANGELOG-0.39.169.md` · `CHANGELOG-0.39.168.md` · `CHANGELOG-0.39.167.md` · `CHANGELOG-0.39.166.md` · `CHANGELOG-0.39.165.md` · `CHANGELOG-0.39.144.md` · `CHANGELOG-0.39.144-part2.md`
+`CHANGELOG-0.60.238.md` · `CHANGELOG-0.60.237.md` · `CHANGELOG-0.60.236.md` · `CHANGELOG-0.60.235.md` · `CHANGELOG-0.60.234.md` · `CHANGELOG-0.60.233.md` · `CHANGELOG-0.60.232.md` · `CHANGELOG-0.60.231.md` · `CHANGELOG-0.60.230.md` · `CHANGELOG-0.60.229.md` · `CHANGELOG-0.60.228.md` · `CHANGELOG-0.60.227.md` · `CHANGELOG-0.60.226.md` · `CHANGELOG-0.60.225.md` · `CHANGELOG-0.60.224.md` · `CHANGELOG-0.60.223.md` · `CHANGELOG-0.60.222.md` · `CHANGELOG-0.60.221.md` · `CHANGELOG-0.60.220.md` · `CHANGELOG-0.60.219.md` · `CHANGELOG-0.60.218.md` · `CHANGELOG-0.60.217.md` · `CHANGELOG-0.60.216.md` · `CHANGELOG-0.60.215.md` · `CHANGELOG-0.60.214.md` · `CHANGELOG-0.60.213.md` · `CHANGELOG-0.60.212.md` · `CHANGELOG-0.60.211.md` · `CHANGELOG-0.60.210.md` · `CHANGELOG-0.60.209.md` · `CHANGELOG-0.60.208.md` · `CHANGELOG-0.60.207.md` · `CHANGELOG-0.60.206.md` · `CHANGELOG-0.60.205.md` · `CHANGELOG-0.60.204.md` · `CHANGELOG-0.60.203.md` · `CHANGELOG-0.60.202.md` · `CHANGELOG-0.60.201.md` · `CHANGELOG-0.60.200.md` · `CHANGELOG-0.60.199.md` · `CHANGELOG-0.60.198.md` · `CHANGELOG-0.60.197.md` · `CHANGELOG-0.60.196.md` · `CHANGELOG-0.60.195.md` · `CHANGELOG-0.60.194.md` · `CHANGELOG-0.60.193.md` · `CHANGELOG-0.60.192.md` · `CHANGELOG-0.60.191.md` · `CHANGELOG-0.60.190.md` · `CHANGELOG-0.60.189.md` · `CHANGELOG-0.60.188.md` · `CHANGELOG-0.60.187.md` · `CHANGELOG-0.60.186.md` · `CHANGELOG-0.60.185.md` · `CHANGELOG-0.60.184.md` · `CHANGELOG-0.60.183.md` · `CHANGELOG-0.60.182.md` · `CHANGELOG-0.60.181.md` · `CHANGELOG-0.60.180.md` · `CHANGELOG-0.60.179.md` · `CHANGELOG-0.60.178.md` · `CHANGELOG-0.60.177.md` · `CHANGELOG-0.60.176.md` · `CHANGELOG-0.60.175.md` · `CHANGELOG-0.60.174.md` · `CHANGELOG-0.60.173.md` · `CHANGELOG-0.60.172.md` · `CHANGELOG-0.60.171.md` · `CHANGELOG-0.60.170.md` · `CHANGELOG-0.60.168.md` · `CHANGELOG-0.60.167.md` · `CHANGELOG-0.60.166.md` · `CHANGELOG-0.60.165.md` · `CHANGELOG-0.60.164.md` · `CHANGELOG-0.60.163.md` · `CHANGELOG-0.60.162.md` · `CHANGELOG-0.60.161.md` · `CHANGELOG-0.60.160.md` · `CHANGELOG-0.60.159.md` · `CHANGELOG-0.60.158.md` · `CHANGELOG-0.60.157.md` · `CHANGELOG-0.60.156.md` · `CHANGELOG-0.60.155.md` · `CHANGELOG-0.60.154.md` · `CHANGELOG-0.60.153.md` · `CHANGELOG-0.60.152.md` · `CHANGELOG-0.60.151.md` · `CHANGELOG-0.60.150.md` · `CHANGELOG-0.60.149.md` · `CHANGELOG-0.60.148.md` · `CHANGELOG-0.60.147.md` · `CHANGELOG-0.60.146.md` · `CHANGELOG-0.60.145.md` · `CHANGELOG-0.60.144.md` · `CHANGELOG-0.60.143.md` · `CHANGELOG-0.60.142.md` · `CHANGELOG-0.60.141.md` · `CHANGELOG-0.60.140.md` · `CHANGELOG-0.60.139.md` · `CHANGELOG-0.60.138.md` · `CHANGELOG-0.60.137.md` · `CHANGELOG-0.60.136.md` · `CHANGELOG-0.60.135.md` · `CHANGELOG-0.60.134.md` · `CHANGELOG-0.60.133.md` · `CHANGELOG-0.60.132.md` · `CHANGELOG-0.60.131.md` · `CHANGELOG-0.60.130.md` · `CHANGELOG-0.60.129.md` · `CHANGELOG-0.60.128.md` · `CHANGELOG-0.60.127.md` · `CHANGELOG-0.60.126.md` · `CHANGELOG-0.60.125.md` · `CHANGELOG-0.60.124.md` · `CHANGELOG-0.60.123.md` · `CHANGELOG-0.60.122.md` · `CHANGELOG-0.60.121.md` · `CHANGELOG-0.60.120.md` · `CHANGELOG-0.60.119.md` · `CHANGELOG-0.60.118.md` · `CHANGELOG-0.60.117.md` · `CHANGELOG-0.60.116.md` · `CHANGELOG-0.60.115.md` · `CHANGELOG-0.60.114.md` · `CHANGELOG-0.60.113.md` · `CHANGELOG-0.60.112.md` · `CHANGELOG-0.60.111.md` · `CHANGELOG-0.60.110.md` · `CHANGELOG-0.60.109.md` · `CHANGELOG-0.60.108.md` · `CHANGELOG-0.60.107.md` · `CHANGELOG-0.60.106.md` · `CHANGELOG-0.60.105.md` · `CHANGELOG-0.60.104.md` · `CHANGELOG-0.60.103.md` · `CHANGELOG-0.60.102.md` · `CHANGELOG-0.60.101.md` · `CHANGELOG-0.60.100.md` · `CHANGELOG-0.60.99.md` · `CHANGELOG-0.60.98.md` · `CHANGELOG-0.60.97.md` · `CHANGELOG-0.60.96.md` · `CHANGELOG-0.60.95.md` · `CHANGELOG-0.60.94.md` · `CHANGELOG-0.60.93.md` · `CHANGELOG-0.60.92.md` · `CHANGELOG-0.60.91.md` · `CHANGELOG-0.60.90.md` · `CHANGELOG-0.60.89.md` · `CHANGELOG-0.60.88.md` · `CHANGELOG-0.60.87.md` · `CHANGELOG-0.60.86.md` · `CHANGELOG-0.60.85.md` · `CHANGELOG-0.60.84.md` · `CHANGELOG-0.60.83.md` · `CHANGELOG-0.60.82.md` · `CHANGELOG-0.60.81.md` · `CHANGELOG-0.60.80.md` · `CHANGELOG-0.60.79.md` · `CHANGELOG-0.60.78.md` · `CHANGELOG-0.60.77.md` · `CHANGELOG-0.60.76.md` · `CHANGELOG-0.60.75.md` · `CHANGELOG-0.60.74.md` · `CHANGELOG-0.60.73.md` · `CHANGELOG-0.60.72.md` · `CHANGELOG-0.60.71.md` · `CHANGELOG-0.60.70.md` · `CHANGELOG-0.60.69.md` · `CHANGELOG-0.60.68.md` · `CHANGELOG-0.60.67.md` · `CHANGELOG-0.60.66.md` · `CHANGELOG-0.60.65.md` · `CHANGELOG-0.60.64.md` · `CHANGELOG-0.60.63.md` · `CHANGELOG-0.60.62.md` · `CHANGELOG-0.60.61.md` · `CHANGELOG-0.60.60.md` · `CHANGELOG-0.60.59.md` · `CHANGELOG-0.60.58.md` · `CHANGELOG-0.60.57.md` · `CHANGELOG-0.60.56.md` · `CHANGELOG-0.60.55.md` · `CHANGELOG-0.60.54.md` · `CHANGELOG-0.60.53.md` · `CHANGELOG-0.60.52.md` · `CHANGELOG-0.60.51.md` · `CHANGELOG-0.60.50.md` · `CHANGELOG-0.60.49.md` · `CHANGELOG-0.60.48.md` · `CHANGELOG-0.60.47.md` · `CHANGELOG-0.60.46.md` · `CHANGELOG-0.60.45.md` · `CHANGELOG-0.60.44.md` · `CHANGELOG-0.60.43.md` · `CHANGELOG-0.60.42.md` · `CHANGELOG-0.60.41.md` · `CHANGELOG-0.60.40.md` · `CHANGELOG-0.60.39.md` · `CHANGELOG-0.60.38.md` · `CHANGELOG-0.60.37.md` · `CHANGELOG-0.60.36.md` · `CHANGELOG-0.60.35.md` · `CHANGELOG-0.60.34.md` · `CHANGELOG-0.60.33.md` · `CHANGELOG-0.60.32.md` · `CHANGELOG-0.60.31.md` · `CHANGELOG-0.60.30.md` · `CHANGELOG-0.60.29.md` · `CHANGELOG-0.60.28.md` · `CHANGELOG-0.60.27.md` · `CHANGELOG-0.60.26.md` · `CHANGELOG-0.60.21.md` · `CHANGELOG-0.60.20.md` · `CHANGELOG-0.60.19.md` · `CHANGELOG-0.60.18.md` · `CHANGELOG-0.60.17.md` · `CHANGELOG-0.60.16.md` · `CHANGELOG-0.60.15.md` · `CHANGELOG-0.60.14.md` · `CHANGELOG-0.60.13.md` · `CHANGELOG-0.60.12.md` · `CHANGELOG-0.60.11.md` · `CHANGELOG-0.60.10.md` · `CHANGELOG-0.60.9.md` · `CHANGELOG-0.60.8.md` · `CHANGELOG-0.60.7.md` · `CHANGELOG-0.60.6.md` · `CHANGELOG-0.60.5.md` · `CHANGELOG-0.60.4.md` · `CHANGELOG-0.60.3.md` · `CHANGELOG-0.60.2.md` · `CHANGELOG-0.60.1.md` · `CHANGELOG-0.60.0.md` · `CHANGELOG-0.59.15.md` · `CHANGELOG-0.59.14.md` · `CHANGELOG-0.59.13.md` · `CHANGELOG-0.59.12.md` · `CHANGELOG-0.59.11.md` · `CHANGELOG-0.59.10.md` · `CHANGELOG-0.59.9.md` · `CHANGELOG-0.59.8.md` · `CHANGELOG-0.59.7.md` · `CHANGELOG-0.59.6.md` · `CHANGELOG-0.59.5.md` · `CHANGELOG-0.59.4.md` · `CHANGELOG-0.59.3.md` · `CHANGELOG-0.59.2.md` · `CHANGELOG-0.59.1.md` · `CHANGELOG-0.59.0.md` · `CHANGELOG-0.58.0.md` · `CHANGELOG-0.57.1.md` · `CHANGELOG-0.57.0.md` · `CHANGELOG-0.56.0.md` · `CHANGELOG-0.55.2.md` · `CHANGELOG-0.55.1.md` · `CHANGELOG-0.55.0.md` · `CHANGELOG-0.54.2.md` · `CHANGELOG-0.54.1.md` · `CHANGELOG-0.54.0.md` · `CHANGELOG-0.53.0.md` · `CHANGELOG-0.52.0.md` · `CHANGELOG-0.51.0.md` · `CHANGELOG-0.50.0.md` · `CHANGELOG-0.49.0.md` · `CHANGELOG-0.48.0.md` · `CHANGELOG-0.47.0.md` · `CHANGELOG-0.46.0.md` · `CHANGELOG-0.45.0.md` · `CHANGELOG-0.44.0.md` · `CHANGELOG-0.43.0.md` · `CHANGELOG-0.42.0.md` · `CHANGELOG-0.41.0.md` · `CHANGELOG-0.40.1.md` · `CHANGELOG-0.40.0.md` · `CHANGELOG-0.39.376.md` · `CHANGELOG-0.39.375.md` · `CHANGELOG-0.39.374.md` · `CHANGELOG-0.39.373.md` · `CHANGELOG-0.39.372.md` · `CHANGELOG-0.39.371.md` · `CHANGELOG-0.39.370.md` · `CHANGELOG-0.39.369.md` · `CHANGELOG-0.39.368.md` · `CHANGELOG-0.39.367.md` · `CHANGELOG-0.39.366.md` · `CHANGELOG-0.39.365.md` · `CHANGELOG-0.39.364.md` · `CHANGELOG-0.39.363.md` · `CHANGELOG-0.39.362.md` · `CHANGELOG-0.39.361.md` · `CHANGELOG-0.39.360.md` · `CHANGELOG-0.39.359.md` · `CHANGELOG-0.39.358.md` · `CHANGELOG-0.39.357.md` · `CHANGELOG-0.39.356.md` · `CHANGELOG-0.39.355.md` · `CHANGELOG-0.39.354.md` · `CHANGELOG-0.39.353.md` · `CHANGELOG-0.39.352.md` · `CHANGELOG-0.39.351.md` · `CHANGELOG-0.39.350.md` · `CHANGELOG-0.39.349.md` · `CHANGELOG-0.39.348.md` · `CHANGELOG-0.39.347.md` · `CHANGELOG-0.39.346.md` · `CHANGELOG-0.39.345.md` · `CHANGELOG-0.39.344.md` · `CHANGELOG-0.39.343.md` · `CHANGELOG-0.39.342.md` · `CHANGELOG-0.39.341.md` · `CHANGELOG-0.39.340.md` · `CHANGELOG-0.39.339.md` · `CHANGELOG-0.39.338.md` · `CHANGELOG-0.39.337.md` · `CHANGELOG-0.39.336.md` · `CHANGELOG-0.39.335.md` · `CHANGELOG-0.39.334.md` · `CHANGELOG-0.39.333.md` · `CHANGELOG-0.39.332.md` · `CHANGELOG-0.39.331.md` · `CHANGELOG-0.39.330.md` · `CHANGELOG-0.39.329.md` · `CHANGELOG-0.39.328.md` · `CHANGELOG-0.39.327.md` · `CHANGELOG-0.39.326.md` · `CHANGELOG-0.39.325.md` · `CHANGELOG-0.39.324.md` · `CHANGELOG-0.39.323.md` · `CHANGELOG-0.39.322.md` · `CHANGELOG-0.39.321.md` · `CHANGELOG-0.39.320.md` · `CHANGELOG-0.39.319.md` · `CHANGELOG-0.39.318.md` · `CHANGELOG-0.39.317.md` · `CHANGELOG-0.39.316.md` · `CHANGELOG-0.39.315.md` · `CHANGELOG-0.39.314.md` · `CHANGELOG-0.39.313.md` · `CHANGELOG-0.39.312.md` · `CHANGELOG-0.39.311.md` · `CHANGELOG-0.39.310.md` · `CHANGELOG-0.39.309.md` · `CHANGELOG-0.39.308.md` · `CHANGELOG-0.39.307.md` · `CHANGELOG-0.39.306.md` · `CHANGELOG-0.39.305.md` · `CHANGELOG-0.39.304.md` · `CHANGELOG-0.39.303.md` · `CHANGELOG-0.39.302.md` · `CHANGELOG-0.39.301.md` · `CHANGELOG-0.39.300.md` · `CHANGELOG-0.39.299.md` · `CHANGELOG-0.39.298.md` · `CHANGELOG-0.39.297.md` · `CHANGELOG-0.39.296.md` · `CHANGELOG-0.39.295.md` · `CHANGELOG-0.39.294.md` · `CHANGELOG-0.39.293.md` · `CHANGELOG-0.39.292.md` · `CHANGELOG-0.39.291.md` · `CHANGELOG-0.39.290.md` · `CHANGELOG-0.39.289.md` · `CHANGELOG-0.39.288.md` · `CHANGELOG-0.39.287.md` · `CHANGELOG-0.39.286.md` · `CHANGELOG-0.39.285.md` · `CHANGELOG-0.39.284.md` · `CHANGELOG-0.39.283.md` · `CHANGELOG-0.39.282.md` · `CHANGELOG-0.39.281.md` · `CHANGELOG-0.39.280.md` · `CHANGELOG-0.39.279.md` · `CHANGELOG-0.39.278.md` · `CHANGELOG-0.39.277.md` · `CHANGELOG-0.39.276.md` · `CHANGELOG-0.39.275.md` · `CHANGELOG-0.39.274.md` · `CHANGELOG-0.39.273.md` · `CHANGELOG-0.39.272.md` · `CHANGELOG-0.39.271.md` · `CHANGELOG-0.39.270.md` · `CHANGELOG-0.39.269.md` · `CHANGELOG-0.39.268.md` · `CHANGELOG-0.39.267.md` · `CHANGELOG-0.39.266.md` · `CHANGELOG-0.39.264.md` · `CHANGELOG-0.39.263.md` · `CHANGELOG-0.39.262.md` · `CHANGELOG-0.39.261.md` · `CHANGELOG-0.39.260.md` · `CHANGELOG-0.39.259.md` · `CHANGELOG-0.39.258.md` · `CHANGELOG-0.39.257.md` · `CHANGELOG-0.39.256.md` · `CHANGELOG-0.39.255.md` · `CHANGELOG-0.39.254.md` · `CHANGELOG-0.39.253.md` · `CHANGELOG-0.39.252.md` · `CHANGELOG-0.39.251.md` · `CHANGELOG-0.39.250.md` · `CHANGELOG-0.39.249.md` · `CHANGELOG-0.39.248.md` · `CHANGELOG-0.39.247.md` · `CHANGELOG-0.39.246.md` · `CHANGELOG-0.39.245.md` · `CHANGELOG-0.39.244.md` · `CHANGELOG-0.39.243.md` · `CHANGELOG-0.39.242.md` · `CHANGELOG-0.39.241.md` · `CHANGELOG-0.39.240.md` · `CHANGELOG-0.39.239.md` · `CHANGELOG-0.39.238.md` · `CHANGELOG-0.39.237.md` · `CHANGELOG-0.39.236.md` · `CHANGELOG-0.39.228.md` · `CHANGELOG-0.39.227.md` · `CHANGELOG-0.39.223.md` · `CHANGELOG-0.39.194.md` · `CHANGELOG-0.39.193.md` · `CHANGELOG-0.39.192.md` · `CHANGELOG-0.39.191.md` · `CHANGELOG-0.39.190.md` · `CHANGELOG-0.39.188.md` · `CHANGELOG-0.39.182.md` · `CHANGELOG-0.39.181.md` · `CHANGELOG-0.39.179.md` · `CHANGELOG-0.39.178.md` · `CHANGELOG-0.39.177.md` · `CHANGELOG-0.39.176.md` · `CHANGELOG-0.39.175.md` · `CHANGELOG-0.39.174.md` · `CHANGELOG-0.39.173.md` · `CHANGELOG-0.39.172.md` · `CHANGELOG-0.39.170.md` · `CHANGELOG-0.39.169.md` · `CHANGELOG-0.39.168.md` · `CHANGELOG-0.39.167.md` · `CHANGELOG-0.39.166.md` · `CHANGELOG-0.39.165.md` · `CHANGELOG-0.39.144.md` · `CHANGELOG-0.39.144-part2.md`
 
 </details>
 
@@ -10163,11 +10166,12 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 
 ### Every release, in his words
 
-Every release note in the tree, 441 of them, newest first. Each opens with James's own words: what he asked, as he wrote it, his spelling kept. Then what was built, from the note's own section headings. The note itself is the file named, at the top of the tree. Releases are grouped by series; each series opens to its releases.
+Every release note in the tree, 442 of them, newest first. Each opens with James's own words: what he asked, as he wrote it, his spelling kept. Then what was built, from the note's own section headings. The note itself is the file named, at the top of the tree. Releases are grouped by series; each series opens to its releases.
 
 <details>
-<summary>0.60.x · 233 releases · 0.60.0. to 0.60.237.</summary>
+<summary>0.60.x · 234 releases · 0.60.0. to 0.60.238.</summary>
 
+- **0.60.238.** — 2026-10-24 — James: ".phase/.graph should be one file i feel like?" — built: PS4: one file per phase, kept with the system that owns it
 - **0.60.237.** — 2026-10-24 — James: "okay warp and emerge. / spec compiler, ide, and idearium" — built: EW1: emerge is a system, with warp folded into it · Found, not fixed · Next
 - **0.60.236.** — 2026-10-24 — James: "We need the systems sovereign." — built: Sovereign now: components, ollama, cos · Next
 - **0.60.235.** — 2026-10-24 — James: "im saying for web servers, dns, firewall, email smtp, like integrating into deployable. i want to use those engines for test env, web…" — built: Built (SV0; spec cos/spec/cos-services.spec, map… · Found: a code-execution hole, now closed · Not carried in

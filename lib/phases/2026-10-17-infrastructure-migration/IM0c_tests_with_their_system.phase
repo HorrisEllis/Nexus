@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-17-infrastructure-migration-phasemap.spec
 intent: null
 summary: IM0c_tests_with_their_system (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830628071
+exported_at: 1792852542013
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830628071
-lastSeenAt: 1792830628071
+firstSeenAt: 1792852542013
+lastSeenAt: 1792852542013
 fingerprint: null
 payload:
   id: IM0c_tests_with_their_system
@@ -25,5 +25,44 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: aec56e5460f3769b
+  graph:
+    hash: aec56e5460f3769b
+    nodes:
+      - path: docs/2026-10-17-decisions-by-the-axioms.spec
+        role: changes
+        exists: true
+        system: null
+      - path: run-all.js
+        role: changes
+        exists: true
+        system: null
+      - path: tests/modules/run-all.js
+        role: changes
+        exists: true
+        system: null
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: tests/modules/run-all.js
+        to: lib/test-sandbox.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 3f3d342c-2e0d-5acc-a073-ed549c94ded0

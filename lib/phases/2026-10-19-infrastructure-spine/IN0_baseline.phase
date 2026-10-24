@@ -5,13 +5,13 @@ id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
 context: pipeline phase IN0_baseline of docs/2026-10-19-infrastructure-spine-phasemap.spec
 intent: null
 summary: IN0_baseline (foundation) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632370
+exported_at: 1792852546169
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632370
-lastSeenAt: 1792830632370
+firstSeenAt: 1792852546169
+lastSeenAt: 1792852546169
 fingerprint: null
 payload:
   id: IN0_baseline
@@ -24,5 +24,102 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 970f2ba12e563137
+  graph:
+    hash: 970f2ba12e563137
+    nodes:
+      - path: scripts/tree-census.js
+        role: changes
+        exists: false
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN1_old_files_out
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN8_any_size
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::ST1_schema_for_everything_reusable
+      upstream: []
+      downstream:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD3_python_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD4_documents_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::FP1_feature_pilot
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN1_old_files_out
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN4_retire_hand_maps
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN5_architect_mirrors_the_registry
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN6_systems_onto_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN8_any_size
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NT1_neutrality_test
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN2_dual_read
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN3_maps_rendered_from_nodes
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::SC1_scaling_limits_named
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::ST1_schema_for_everything_reusable
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::VC2_changelogs_rendered
+        - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
+        - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+        - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+        - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+        - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+        - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+        - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+        - docs/2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
+        - docs/2026-10-20-belief-loop-phasemap.spec::IV2_invariant_miner
+        - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+        - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+        - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+        - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH2_chunk_laws
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH3_chunk_inspector
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK2_learned_granularity
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR3_graph_query_surface
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV2_invariant_guided_traversal
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV3_traversal_as_context
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS10_hats_bound_to_the_compartment
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS11_raid_in_the_exe
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS4_every_system_a_compartment
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
+        - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+        - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN1_old_files_out
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN8_any_size
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::ST1_schema_for_everything_reusable
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ON THE CRITICAL PATH · ready
+        - 'depends on (0): —'
+        - >-
+          needed by (5): IN1_old_files_out, IN2_quotes_ledger, IN3_registry_is_the_spine,
+          IN8_any_size, ST1_schema_for_everything_reusable · all downstream 59 · finishing it
+          unlocks IN1_old_files_out, IN2_quotes_ledger, IN3_registry_is_the_spine, IN8_any_size,
+          ST1_schema_for_everything_reusable
   uuid: e5e3a90d-13ca-531a-b584-351a95ee86c6

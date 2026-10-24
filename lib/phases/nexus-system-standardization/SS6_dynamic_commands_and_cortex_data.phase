@@ -7,13 +7,13 @@ context: >-
   docs/nexus-system-standardization-phasemap.spec
 intent: null
 summary: SS6_dynamic_commands_and_cortex_data (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830647086
+exported_at: 1792852561765
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830647086
-lastSeenAt: 1792830647086
+firstSeenAt: 1792852561765
+lastSeenAt: 1792852561765
 fingerprint: null
 payload:
   id: SS6_dynamic_commands_and_cortex_data
@@ -27,5 +27,38 @@ payload:
     - SS4_full_logging_per_system
   blocks: []
   spec: null
-  graph: 2d38a1102ce3d793
+  graph:
+    hash: 2d38a1102ce3d793
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/nexus-system-standardization-phasemap.spec::SS2_config_per_system
+        - docs/nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+      dependents:
+        - docs/nexus-system-standardization-phasemap.spec::SS7_decoupling_audit
+      upstream:
+        - docs/nexus-system-standardization-phasemap.spec::SS0_clear_clutter
+        - docs/nexus-system-standardization-phasemap.spec::SS1_system_manifest
+        - docs/nexus-system-standardization-phasemap.spec::SS2_config_per_system
+        - docs/nexus-system-standardization-phasemap.spec::SS3_event_driven_handshake_contracts
+        - docs/nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+      downstream:
+        - docs/nexus-system-standardization-phasemap.spec::SS7_decoupling_audit
+      blockedBy:
+        - docs/nexus-system-standardization-phasemap.spec::SS2_config_per_system
+        - docs/nexus-system-standardization-phasemap.spec::SS4_full_logging_per_system
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 4 · blocked by SS2_config_per_system,
+          SS4_full_logging_per_system
+        - 'depends on (2): SS2_config_per_system, SS4_full_logging_per_system · all upstream 5'
+        - 'needed by (1): SS7_decoupling_audit'
   uuid: d5ff1e12-42ae-5c78-b080-088858d92699

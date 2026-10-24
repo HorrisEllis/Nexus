@@ -5,13 +5,13 @@ id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::NX1_nexus_in_a_vm
 context: pipeline phase NX1_nexus_in_a_vm of docs/2026-10-02-workshop-codex-rewind-phasemap.spec
 intent: null
 summary: NX1_nexus_in_a_vm (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830600802
+exported_at: 1792852515066
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830600802
-lastSeenAt: 1792830600802
+firstSeenAt: 1792852515066
+lastSeenAt: 1792852515066
 fingerprint: null
 payload:
   id: NX1_nexus_in_a_vm
@@ -23,5 +23,51 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 588b53c22740f3cb
+  graph:
+    hash: 588b53c22740f3cb
+    nodes:
+      - path: docs/2026-10-02-spatial-void-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+      - path: idearium/ui/js/void-sky.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: loom/data/registry.json
+        role: changes
+        exists: true
+        system: loom
+      - path: tests/modules/test-spec-workshop.test.js
+        role: changes
+        exists: true
+        system: null
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: tests/modules/test-spec-workshop.test.js
+        to: lib/test-sandbox.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: f6d54116-04b9-5e10-9cd2-4e8d3a13a288

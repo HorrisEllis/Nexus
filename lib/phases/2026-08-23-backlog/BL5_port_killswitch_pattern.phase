@@ -5,13 +5,13 @@ id: docs_2026-08-23-backlog-phasemap.spec::BL5_port_killswitch_pattern
 context: pipeline phase BL5_port_killswitch_pattern of docs/2026-08-23-backlog-phasemap.spec
 intent: null
 summary: BL5_port_killswitch_pattern (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581816
+exported_at: 1792852494900
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581816
-lastSeenAt: 1792830581816
+firstSeenAt: 1792852494900
+lastSeenAt: 1792852494900
 fingerprint: null
 payload:
   id: BL5_port_killswitch_pattern
@@ -24,5 +24,27 @@ payload:
     - BL2_guardian_zip_mining_report
   blocks: []
   spec: null
-  graph: 48ab969e8779224d
+  graph:
+    hash: 48ab969e8779224d
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-08-23-backlog-phasemap.spec::BL2_guardian_zip_mining_report
+      dependents: []
+      upstream:
+        - docs/2026-08-23-backlog-phasemap.spec::BL2_guardian_zip_mining_report
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): BL2_guardian_zip_mining_report'
+        - 'needed by (0): —'
   uuid: ceac6385-cd14-56ae-a2a0-6ee50143dffd

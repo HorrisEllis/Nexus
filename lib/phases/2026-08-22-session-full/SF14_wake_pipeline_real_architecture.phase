@@ -5,13 +5,13 @@ id: docs_2026-08-22-session-full-phasemap.spec::SF14_wake_pipeline_real_architec
 context: pipeline phase SF14_wake_pipeline_real_architecture of docs/2026-08-22-session-full-phasemap.spec
 intent: null
 summary: SF14_wake_pipeline_real_architecture (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581336
+exported_at: 1792852494436
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581336
-lastSeenAt: 1792830581336
+firstSeenAt: 1792852494436
+lastSeenAt: 1792852494436
 fingerprint: null
 payload:
   id: SF14_wake_pipeline_real_architecture
@@ -23,5 +23,115 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 197e4087240a93cd
+  graph:
+    hash: 197e4087240a93cd
+    nodes:
+      - path: clear-glass/src/copilot/wake-relay.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/screen-qa/detector.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: cli/nexus-repl.js
+        role: changes
+        exists: true
+        system: cli
+      - path: cortex/cortex-v2.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: clear-glass/src/ipc/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: tests/modules/clear-glass-screen-qa.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-guardian-wake.js
+        role: used-by
+        exists: true
+        system: null
+      - path: clear-glass/src/autofill/matcher.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: cli/nexus-repl-descriptors.js
+        role: uses
+        exists: true
+        system: cli
+      - path: lib/context-builder.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/grammar-engine.js
+        role: uses
+        exists: true
+        system: lib
+      - path: ollama/config.js
+        role: uses
+        exists: true
+        system: ollama
+    edges:
+      - from: cli/nexus-repl.js
+        to: lib/grammar-engine.js
+        kind: requires
+      - from: cli/nexus-repl.js
+        to: cli/nexus-repl-descriptors.js
+        kind: requires
+      - from: cli/nexus-repl.js
+        to: ollama/config.js
+        kind: requires
+      - from: cli/nexus-repl.js
+        to: lib/context-builder.js
+        kind: requires
+      - from: clear-glass/src/screen-qa/detector.js
+        to: clear-glass/src/autofill/matcher.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/screen-qa/detector.js
+        kind: requires
+      - from: tests/modules/clear-glass-screen-qa.test.js
+        to: clear-glass/src/screen-qa/detector.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: clear-glass/src/copilot/wake-relay.js
+        kind: requires
+      - from: tests/modules/test-guardian-wake.js
+        to: clear-glass/src/copilot/wake-relay.js
+        kind: requires
+    crossings:
+      - from: cli/nexus-repl.js
+        to: ollama/config.js
+        fromSystem: cli
+        toSystem: ollama
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-08-22-session-full-phasemap.spec::SF15_wake_pipeline_real_bugs_fixed
+      upstream: []
+      downstream:
+        - docs/2026-08-22-session-full-phasemap.spec::SF15_wake_pipeline_real_bugs_fixed
+      blockedBy: []
+      unlocks:
+        - docs/2026-08-22-session-full-phasemap.spec::SF15_wake_pipeline_real_bugs_fixed
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (1): SF15_wake_pipeline_real_bugs_fixed · finishing it unlocks
+          SF15_wake_pipeline_real_bugs_fixed
   uuid: d536b00e-d9d6-50f0-a45c-ac770821ec89

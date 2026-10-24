@@ -5,13 +5,13 @@ id: docs_2026-10-17-infrastructure-migration-phasemap.spec::IM0a_state_in_git
 context: pipeline phase IM0a_state_in_git of docs/2026-10-17-infrastructure-migration-phasemap.spec
 intent: null
 summary: IM0a_state_in_git (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830628070
+exported_at: 1792852542011
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830628070
-lastSeenAt: 1792830628070
+firstSeenAt: 1792852542011
+lastSeenAt: 1792852542011
 fingerprint: null
 payload:
   id: IM0a_state_in_git
@@ -23,5 +23,119 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 281c15c9d7152a60
+  graph:
+    hash: 281c15c9d7152a60
+    nodes:
+      - path: docs/2026-10-17-decisions-by-the-axioms.spec
+        role: changes
+        exists: true
+        system: null
+      - path: lib/system-nodes.js
+        role: changes
+        exists: true
+        system: lib
+      - path: cli/nodes.js
+        role: used-by
+        exists: true
+        system: cli
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/modules/test-node-registry-system.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-system-node-relations.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/hat-forge.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/nexus-self/systems.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-registry.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-agent-node.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/system-boundary.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-sandbox.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/system-nodes.js
+        to: lib/node-export.js
+        kind: requires
+      - from: lib/system-nodes.js
+        to: lib/nexus-self/systems.js
+        kind: requires
+      - from: lib/system-nodes.js
+        to: lib/system-boundary.js
+        kind: requires
+      - from: lib/system-nodes.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: lib/system-nodes.js
+        to: lib/repo-agent-node.js
+        kind: requires
+      - from: lib/system-nodes.js
+        to: lib/test-sandbox.js
+        kind: requires
+      - from: lib/system-nodes.js
+        to: lib/node-registry.js
+        kind: requires
+      - from: cli/nodes.js
+        to: lib/system-nodes.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/system-nodes.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: lib/system-nodes.js
+        kind: requires
+      - from: tests/modules/test-node-registry-system.test.js
+        to: lib/system-nodes.js
+        kind: requires
+      - from: tests/modules/test-system-node-relations.test.js
+        to: lib/system-nodes.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM2_clean_the_redundant
+      upstream: []
+      downstream:
+        - docs/2026-10-17-infrastructure-migration-phasemap.spec::IM2_clean_the_redundant
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): IM2_clean_the_redundant'
   uuid: 6cd15222-7536-5320-b179-e9b9c9a4edda

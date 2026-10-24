@@ -7,13 +7,13 @@ context: >-
   docs/copilot-guardian-cos-expansion-phasemap.spec
 intent: null
 summary: GA7_clear_glass_guardian_userscript_expansion (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830642130
+exported_at: 1792852556578
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830642130
-lastSeenAt: 1792830642130
+firstSeenAt: 1792852556578
+lastSeenAt: 1792852556578
 fingerprint: null
 payload:
   id: GA7_clear_glass_guardian_userscript_expansion
@@ -26,5 +26,29 @@ payload:
     - GA3_guardian_userscript_capability_wiring
   blocks: []
   spec: null
-  graph: ff4aff7c9f9c1eb2
+  graph:
+    hash: ff4aff7c9f9c1eb2
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/copilot-guardian-cos-expansion-phasemap.spec::GA3_guardian_userscript_capability_wiring
+      dependents: []
+      upstream:
+        - docs/copilot-guardian-cos-expansion-phasemap.spec::GA1_guardian_nexus_reconciliation
+        - docs/copilot-guardian-cos-expansion-phasemap.spec::GA3_guardian_userscript_capability_wiring
+      downstream: []
+      blockedBy:
+        - docs/copilot-guardian-cos-expansion-phasemap.spec::GA3_guardian_userscript_capability_wiring
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by GA3_guardian_userscript_capability_wiring
+        - 'depends on (1): GA3_guardian_userscript_capability_wiring · all upstream 2'
+        - 'needed by (0): —'
   uuid: e0e00201-b896-5a08-b25c-e4d91741e149

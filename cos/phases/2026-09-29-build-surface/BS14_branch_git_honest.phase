@@ -5,13 +5,13 @@ id: docs_2026-09-29-build-surface-phasemap.spec::BS14_branch_git_honest
 context: pipeline phase BS14_branch_git_honest of docs/2026-09-29-build-surface-phasemap.spec
 intent: null
 summary: BS14_branch_git_honest (?) — 1 file(s)
-system: idearium
+system: cos
 tags: []
-exported_at: 1792830595766
+exported_at: 1792852509502
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830595766
-lastSeenAt: 1792830595766
+firstSeenAt: 1792852509502
+lastSeenAt: 1792852509502
 fingerprint: null
 payload:
   id: BS14_branch_git_honest
@@ -24,5 +24,93 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 53357f33b96239ab
+  graph:
+    hash: 53357f33b96239ab
+    nodes:
+      - path: cos/workspace/index.js
+        role: changes
+        exists: true
+        system: cos
+      - path: cos/workspace/vm-control.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: lib/cos-bridge.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/shadow-space.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cos/compartment/guest-agent.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/compartment/qemu-runtime.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/host.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/tar.js
+        role: uses
+        exists: true
+        system: cos
+    edges:
+      - from: cos/workspace/index.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/testenv/host.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/testenv/tar.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/compartment/guest-agent.js
+        kind: requires
+      - from: cos/workspace/vm-control.js
+        to: cos/workspace/index.js
+        kind: requires
+      - from: lib/cos-bridge.js
+        to: cos/workspace/index.js
+        kind: requires
+      - from: lib/shadow-space.js
+        to: cos/workspace/index.js
+        kind: requires
+    crossings:
+      - from: lib/cos-bridge.js
+        to: cos/workspace/index.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/shadow-space.js
+        to: cos/workspace/index.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      upstream: []
+      downstream:
+        - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-29-build-surface-phasemap.spec::BS12_release
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): BS12_release · finishing it unlocks BS12_release'
   uuid: 5a8a628b-61f7-5227-916e-2a83d9969b3a

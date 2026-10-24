@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-24-emerge-warp-system-phasemap.spec
 intent: null
 summary: EW2_the_callers_outside_idearium (design) — 4 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792851610900
+exported_at: 1792852553775
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792851610900
-lastSeenAt: 1792851610900
+firstSeenAt: 1792852553775
+lastSeenAt: 1792852553775
 fingerprint: null
 payload:
   id: EW2_the_callers_outside_idearium
@@ -31,5 +31,239 @@ payload:
     - EW1_emerge_and_warp_one_system
   blocks: []
   spec: docs/2026-10-17-system-drawbridge-phasemap.spec
-  graph: 4d4a9463021f9fe8
+  graph:
+    hash: 4d4a9463021f9fe8
+    nodes:
+      - path: copilot/module-builder.js
+        role: changes
+        exists: true
+        system: copilot
+      - path: guardian/server.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/build-pipeline.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/dropzone.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/agent-tools/tools/faculty/faculty-tools.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/execution-pipeline.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-prompt-blocks.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/step-gate.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: service/guardian-service.js
+        role: used-by
+        exists: true
+        system: service
+      - path: emerge/compiler/index.js
+        role: uses
+        exists: true
+        system: emerge
+      - path: emerge/compiler/t2-gate.js
+        role: uses
+        exists: true
+        system: emerge
+      - path: guardian/config.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/event-taxonomy.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: guardian/lib/ncp.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: intelligence/cfr/ledger.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/event-taxonomy-pattern.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/file-tree-plan.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/seam/detector.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: lib/build-pipeline.js
+        to: emerge/compiler/t2-gate.js
+        kind: requires
+      - from: lib/spec-collect.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/spec-collect.js
+        to: lib/file-tree-plan.js
+        kind: requires
+      - from: lib/spec-collect.js
+        to: emerge/compiler/index.js
+        kind: requires
+      - from: lib/spec-collect.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/data-home.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/config.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/event-taxonomy.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/event-taxonomy-pattern.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/lib/ncp.js
+        kind: requires
+      - from: guardian/server.js
+        to: intelligence/cfr/ledger.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/detector.js
+        kind: requires
+      - from: lib/execution-pipeline.js
+        to: lib/build-pipeline.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: lib/repo-prompt-blocks.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: lib/step-gate.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: guardian/dropzone.js
+        to: guardian/server.js
+        kind: requires
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        kind: requires
+      - from: copilot/server.js
+        to: copilot/module-builder.js
+        kind: requires
+      - from: lib/agent-tools/tools/faculty/faculty-tools.js
+        to: copilot/module-builder.js
+        kind: requires
+    crossings:
+      - from: lib/build-pipeline.js
+        to: emerge/compiler/t2-gate.js
+        fromSystem: lib
+        toSystem: emerge
+        kind: upward
+        known: true
+      - from: lib/spec-collect.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+      - from: lib/spec-collect.js
+        to: emerge/compiler/index.js
+        fromSystem: lib
+        toSystem: emerge
+        kind: upward
+        known: true
+      - from: guardian/server.js
+        to: intelligence/cfr/ledger.js
+        fromSystem: guardian
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: service/guardian-service.js
+        to: guardian/server.js
+        fromSystem: service
+        toSystem: guardian
+        kind: system
+        known: true
+      - from: lib/agent-tools/tools/faculty/faculty-tools.js
+        to: copilot/module-builder.js
+        fromSystem: lib
+        toSystem: copilot
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW1_emerge_and_warp_one_system
+      dependents:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+      upstream:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW1_emerge_and_warp_one_system
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D0_emerge_and_warp_one_system
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D1_compiler_and_ide_with_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW_D2_the_runtime_is_not_a_crossing
+      downstream:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW4_the_ide_into_idearium
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW5_the_registry_with_wires
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - >-
+          depends on (2): EW_D1_compiler_and_ide_with_idearium, EW1_emerge_and_warp_one_system · all
+          upstream 4
+        - >-
+          needed by (1): EW3_the_spec_compiler_into_idearium · all downstream 3 · finishing it
+          unlocks EW3_the_spec_compiler_into_idearium
   uuid: 77a4c6cc-a82e-5959-8eef-3829641bf4d0

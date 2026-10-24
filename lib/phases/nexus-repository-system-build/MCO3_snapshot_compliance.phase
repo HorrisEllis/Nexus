@@ -5,13 +5,13 @@ id: docs_nexus-repository-system-build-phasemap.spec::MCO3_snapshot_compliance
 context: pipeline phase MCO3_snapshot_compliance of docs/nexus-repository-system-build-phasemap.spec
 intent: null
 summary: MCO3_snapshot_compliance (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830646305
+exported_at: 1792852560964
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830646305
-lastSeenAt: 1792830646305
+firstSeenAt: 1792852560964
+lastSeenAt: 1792852560964
 fingerprint: null
 payload:
   id: MCO3_snapshot_compliance
@@ -25,5 +25,223 @@ payload:
     - MCO2_verification_deepening
   blocks: []
   spec: null
-  graph: 00fc7f80a15780aa
+  graph:
+    hash: 78a182f97af5aba4
+    nodes:
+      - path: clear-glass/renderer/selector-assign/selector-assign.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/site-profile-groups.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: cos/services/anonymous/engines/monitor.js
+        role: changes
+        exists: true
+        system: cos
+      - path: guardian/lib/wake-hint.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: idearium/repo/snapshot.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/spec/idearium.repo-snapshot.spec
+        role: changes
+        exists: true
+        system: idearium
+      - path: intelligence/bda/kernel.js
+        role: changes
+        exists: true
+        system: intelligence
+      - path: lib/reflection.js
+        role: changes
+        exists: true
+        system: lib
+      - path: tests/modules/test-mco3-repo-snapshot.js
+        role: changes
+        exists: true
+        system: null
+      - path: copilot/lib/self-model.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/build-surface.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: tests/modules/reflection.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-guardian-wake.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-versionium-repo-history.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cos/services/anonymous/engines/_engine.js
+        role: uses
+        exists: true
+        system: cos
+      - path: idearium/repo/architecture.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/repo/snapshot-files.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: idearium/repo/verify-lazy.js
+        role: uses
+        exists: true
+        system: idearium
+      - path: intelligence/bda/gaps.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/bda/ledger.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/bda/pendulum.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/bda/signals.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/code-intel/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/open-loop-taxonomy.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: idearium/repo/snapshot.js
+        to: idearium/repo/verify-lazy.js
+        kind: requires
+      - from: idearium/repo/snapshot.js
+        to: idearium/repo/snapshot-files.js
+        kind: requires
+      - from: idearium/repo/snapshot.js
+        to: idearium/repo/architecture.js
+        kind: requires
+      - from: idearium/repo/snapshot.js
+        to: lib/code-intel/index.js
+        kind: requires
+      - from: cos/services/anonymous/engines/monitor.js
+        to: cos/services/anonymous/engines/_engine.js
+        kind: requires
+      - from: intelligence/bda/kernel.js
+        to: intelligence/bda/signals.js
+        kind: requires
+      - from: intelligence/bda/kernel.js
+        to: intelligence/bda/pendulum.js
+        kind: requires
+      - from: intelligence/bda/kernel.js
+        to: intelligence/bda/gaps.js
+        kind: requires
+      - from: intelligence/bda/kernel.js
+        to: intelligence/bda/ledger.js
+        kind: requires
+      - from: lib/reflection.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/reflection.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/reflection.js
+        to: lib/open-loop-taxonomy.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: idearium/repo/snapshot.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: idearium/repo/snapshot.js
+        kind: requires
+      - from: idearium/index.js
+        to: idearium/repo/snapshot.js
+        kind: requires
+      - from: tests/modules/test-versionium-repo-history.test.js
+        to: idearium/repo/snapshot.js
+        kind: requires
+      - from: copilot/lib/self-model.js
+        to: lib/reflection.js
+        kind: requires
+      - from: tests/modules/reflection.test.js
+        to: lib/reflection.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/lib/wake-hint.js
+        kind: requires
+      - from: tests/modules/test-guardian-wake.js
+        to: guardian/lib/wake-hint.js
+        kind: requires
+    crossings:
+      - from: lib/reflection.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/reflection.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/nexus-repository-system-build-phasemap.spec::MCO1_graph_layer
+        - docs/nexus-repository-system-build-phasemap.spec::MCO2_verification_deepening
+      dependents:
+        - docs/nexus-repository-system-build-phasemap.spec::MCO5_git_integration_credentials
+      upstream:
+        - docs/nexus-repository-system-build-phasemap.spec::MCO0_audit_real_coverage
+        - docs/nexus-repository-system-build-phasemap.spec::MCO1_graph_layer
+        - docs/nexus-repository-system-build-phasemap.spec::MCO2_verification_deepening
+      downstream:
+        - docs/nexus-repository-system-build-phasemap.spec::MCO5_git_integration_credentials
+      blockedBy: []
+      unlocks:
+        - docs/nexus-repository-system-build-phasemap.spec::MCO5_git_integration_credentials
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3
+        - 'depends on (2): MCO1_graph_layer, MCO2_verification_deepening · all upstream 3'
+        - >-
+          needed by (1): MCO5_git_integration_credentials · finishing it unlocks
+          MCO5_git_integration_credentials
   uuid: d6e75a39-d329-5f38-b022-3f72f89cceed

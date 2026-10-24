@@ -35,7 +35,7 @@ test('PS-01', 'derive: blocks resolve, graphs ready with the DAG slice, owners r
   for (const d of derived) {
     assert.deepStrictEqual(d.blocks.missing, [], `${d.phase}: ${d.blocks.missing}`);
     assert.ok(d.ready, `${d.phase} graph not ready`);
-    const dag = d.graphEnv.payload.dag;
+    const dag = d.phaseEnv.payload.graph.dag;   // PS4: inside the .phase
     assert.ok(dag && dag.dagHash && Array.isArray(dag.upstream) && dag.lines.length, `${d.phase} has no dag slice`);
     assert.ok(/^(lib|[a-z-]+)\/phases\/2026-10-20-belief-loop$/.test(d.dir.split(path.sep).join('/')), d.dir);
   }
@@ -50,7 +50,10 @@ test('PS-02', 'write to a temp folder, check finds no drift; a hand edit is drif
     const rows = quiet(() => PS.write({ map: MAP, out }));
     for (const r of rows) {
       assert.ok(fs.existsSync(path.join(out, r.phaseFile)) && r.phaseFile.endsWith(`/${r.phase}.phase`), r.phaseFile);
-      assert.ok(fs.existsSync(path.join(out, r.graphFile)) && r.graphFile.endsWith(`/graph/${r.phase}-${r.graphHash}.graph`), r.graphFile);
+      // 0.60.238 PS4 (James: ".phase/.graph should be one file i feel like?"): the graph is inside the .phase, and no .graph is written
+      const p = require(path.join(ROOT, 'lib/node-export.js')).fromYaml(fs.readFileSync(path.join(out, r.phaseFile), 'utf8'));
+      assert.ok(p.payload.graph && p.payload.graph.hash === r.graphHash && Array.isArray(p.payload.graph.nodes), 'the graph, inside');
+      assert.ok(!fs.existsSync(path.join(out, path.dirname(r.phaseFile), 'graph')), 'no graph/ folder');
     }
     const clean = quiet(() => PS.check({ map: MAP, out }));
     assert.deepStrictEqual(clean.filter(c => c.drift.length).map(c => [c.phase, c.drift]), []);
@@ -100,15 +103,14 @@ test('PS-06', "every phase of every map has its .phase, and its .graph carries i
   assert.ok(n > 2000, `${n} phases`);
   assert.deepStrictEqual(missing.slice(0, 5), [], `${missing.length} phases have no .phase`);
   const one = NE.fromYaml(fs.readFileSync(path.join(ROOT, have.get('2026-09-28-graph-build-context-settings-memory/G0.phase')), 'utf8')).payload;
-  const g = path.join(ROOT, path.dirname(have.get('2026-09-28-graph-build-context-settings-memory/G0.phase')), 'graph', `G0-${one.graph}.graph`);
-  assert.ok(fs.existsSync(g), 'its graph, by its hash');
-  const dag = NE.fromYaml(fs.readFileSync(g, 'utf8')).payload.dag;
+  assert.ok(one.graph && one.graph.hash, 'its graph, inside it (PS4)');
+  const dag = one.graph.dag;
   assert.ok(dag && dag.dagHash && Array.isArray(dag.downstream), 'the graph carries its DAG slice');
 });
 
 // PS-07 — 0.60.228 PS3. James, 2026-10-24: "then we could have each .spec bundled with each .phase with each .dag. all with a id or uuid
 // that matches them."
-test('PS-07', 'one uuid per phase, the same on its .phase and its .graph; a declared spec link carries its modules\' uuids; a hub file links nothing', () => {
+test('PS-07', 'one uuid per phase (its graph is inside it, PS4); a declared spec link carries its modules\' uuids; a hub file links nothing', () => {
   const NE = require(path.join(ROOT, 'lib/node-export.js'));
   assert.strictEqual(PS.bundleUuid('docs/a-phasemap.spec', 'X1'), PS.bundleUuid('docs/a-phasemap.spec', 'X1'), 'stable');
   assert.notStrictEqual(PS.bundleUuid('docs/a-phasemap.spec', 'X1'), PS.bundleUuid('docs/b-phasemap.spec', 'X1'));
@@ -116,8 +118,8 @@ test('PS-07', 'one uuid per phase, the same on its .phase and its .graph; a decl
   const dir = path.join(ROOT, 'idearium/phases/2026-10-23-self-building-loop');
   const ph = NE.fromYaml(fs.readFileSync(path.join(dir, 'SL4_the_loop.phase'), 'utf8')).payload;
   assert.strictEqual(ph.uuid, PS.bundleUuid('docs/2026-10-23-self-building-loop-phasemap.spec', 'SL4_the_loop'));
-  const gr = NE.fromYaml(fs.readFileSync(path.join(dir, 'graph', `SL4_the_loop-${ph.graph}.graph`), 'utf8')).payload;
-  assert.strictEqual(gr.phaseUuid, ph.uuid, 'the .graph names the same bundle');
+  assert.ok(ph.graph && ph.graph.hash && !fs.existsSync(path.join(dir, 'graph')), 'one file: the graph inside, no graph/ folder');
+  assert.strictEqual(NE.fromYaml(fs.readFileSync(path.join(dir, 'SL4_the_loop.phase'), 'utf8')).system, 'idearium', 'its owner is its system (PS4)');
   assert.deepStrictEqual([ph.specLink.how, ph.specLink.spec, ph.specLink.modules[0].id, ph.specLink.modules[0].uuid], ['declared', 'docs/self-building-loop.spec', 'MOD-SL-LOOP', 'nexus-sl-autobuild-loop-v1-0000-2026-1023-001']);
   const idx = PS.moduleIndex();
   assert.strictEqual(PS.specLinkOf({ spec: null, blocks: [], files: ['idearium/api/index.js'], idx, uses: new Map([['idearium/api/index.js', 171]]) }), null, 'declared by 7 modules, named by 171 phases: identifies nothing');

@@ -5,13 +5,13 @@ id: docs_2026-10-21-compartment-downloads-phasemap.spec::CD0_kill_default
 context: pipeline phase CD0_kill_default of docs/2026-10-21-compartment-downloads-phasemap.spec
 intent: null
 summary: CD0_kill_default (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830636640
+exported_at: 1792852550195
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830636640
-lastSeenAt: 1792830636640
+firstSeenAt: 1792852550195
+lastSeenAt: 1792852550195
 fingerprint: null
 payload:
   id: CD0_kill_default
@@ -23,5 +23,32 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 11d4f021a24dcb20
+  graph:
+    hash: 11d4f021a24dcb20
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+      upstream: []
+      downstream:
+        - docs/2026-10-21-browser-shell-phasemap.spec::BS5_downloads_panel
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD5_surface
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-21-compartment-downloads-phasemap.spec::CD4_kill_on_disconnect
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (1): CD4_kill_on_disconnect · all downstream 3 · finishing it unlocks
+          CD4_kill_on_disconnect
   uuid: 634b74c9-9fd0-5868-9f6c-b9c986a9a521

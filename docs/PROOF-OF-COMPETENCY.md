@@ -1104,3 +1104,11 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   dependencies point one way.
 - **Checkable:** `CHANGELOG-0.60.237.md`; `node -e "console.log(require('./lib/system-boundary.js').sovereignty({root:'.'}).sovereign)"` →
   components, ollama, cos; `docs/2026-10-24-emerge-warp-system-phasemap.spec`.
+
+### 2026-10-24 — 0.60.238: ".phase/.graph should be one file i feel like?"
+- **His words:** ".phase/.graph should be one file i feel like?" · "need to keep at the sovereignty of each system"
+- **Context:** The coder had just reported the README overflowing from 4,195 phase nodes. He questioned the two-file layout itself rather
+  than the README. The count bore him out: the graphs were derived, duplicated on every edit, and kept nowhere else that mattered. Following
+  his sovereignty point, the coder also found that every node claimed to be Idearium's.
+- **Skill:** spotting a structural cause behind a symptom, and keeping the principle in view (a phase lives with its system).
+- **Checkable:** `CHANGELOG-0.60.238.md`; `git ls-files | grep -c '\.graph$'` gives 0 phase graphs; `tests/modules/test-phase-specs.test.js` PS-02, PS-07.

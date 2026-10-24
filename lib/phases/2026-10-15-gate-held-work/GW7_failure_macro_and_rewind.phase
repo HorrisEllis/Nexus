@@ -5,13 +5,13 @@ id: docs_2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
 context: pipeline phase GW7_failure_macro_and_rewind of docs/2026-10-15-gate-held-work-phasemap.spec
 intent: null
 summary: GW7_failure_macro_and_rewind (?) — 8 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830618163
+exported_at: 1792852532114
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830618163
-lastSeenAt: 1792830618163
+firstSeenAt: 1792852532114
+lastSeenAt: 1792852532114
 fingerprint: null
 payload:
   id: GW7_failure_macro_and_rewind
@@ -35,5 +35,273 @@ payload:
     - GW0c_replay_mode
   blocks: []
   spec: null
-  graph: 9ea220d322030fc4
+  graph:
+    hash: 9ea220d322030fc4
+    nodes:
+      - path: cortex/core/raid/contract-gates.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: cos/testenv/index.js
+        role: changes
+        exists: true
+        system: cos
+      - path: intelligence/rfr2/clip/index.js
+        role: changes
+        exists: true
+        system: intelligence
+      - path: lib/failure-macro.js
+        role: changes
+        exists: false
+        system: lib
+      - path: lib/replay-engine.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/rfr2-bridge.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/shadow-space.js
+        role: changes
+        exists: true
+        system: lib
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/index.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cos/testenv/provision.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: intelligence/mastermind.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/relational-field.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/rfr2/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/snapshot-trigger.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/integrity-revert.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: orchestrator/lib/request-handler.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/modules/test-rfr2-cjs.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-shadow-space.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: cos/compartment/qemu-runtime.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/workspace/index.js
+        role: uses
+        exists: true
+        system: cos
+      - path: intelligence/rfr2/causality/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/rfr2/compress/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/rfr2/context/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/rfr2/delta/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/rfr2/identity/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/rfr2/kernel/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/rfr2/sigma/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/rfr2/version-gate/index.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/shadow.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: intelligence/rfr2/clip/index.js
+        to: intelligence/rfr2/identity/index.js
+        kind: requires
+      - from: intelligence/rfr2/clip/index.js
+        to: intelligence/rfr2/kernel/index.js
+        kind: requires
+      - from: intelligence/rfr2/clip/index.js
+        to: intelligence/rfr2/compress/index.js
+        kind: requires
+      - from: intelligence/rfr2/clip/index.js
+        to: intelligence/rfr2/context/index.js
+        kind: requires
+      - from: intelligence/rfr2/clip/index.js
+        to: intelligence/rfr2/delta/index.js
+        kind: requires
+      - from: intelligence/rfr2/clip/index.js
+        to: intelligence/rfr2/version-gate/index.js
+        kind: requires
+      - from: intelligence/rfr2/clip/index.js
+        to: intelligence/rfr2/causality/index.js
+        kind: requires
+      - from: intelligence/rfr2/clip/index.js
+        to: intelligence/rfr2/sigma/index.js
+        kind: requires
+      - from: lib/replay-engine.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/shadow-space.js
+        to: cos/workspace/index.js
+        kind: requires
+      - from: lib/shadow-space.js
+        to: lib/shadow.js
+        kind: requires
+      - from: cos/testenv/index.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cortex/boot.js
+        to: lib/rfr2-bridge.js
+        kind: requires
+      - from: intelligence/mastermind.js
+        to: lib/rfr2-bridge.js
+        kind: requires
+      - from: intelligence/relational-field.js
+        to: lib/rfr2-bridge.js
+        kind: requires
+      - from: tests/modules/test-rfr2-cjs.js
+        to: lib/rfr2-bridge.js
+        kind: requires
+      - from: intelligence/rfr2/index.js
+        to: intelligence/rfr2/clip/index.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: lib/replay-engine.js
+        kind: requires
+      - from: cortex/core/raid/index.js
+        to: lib/replay-engine.js
+        kind: requires
+      - from: intelligence/snapshot-trigger.js
+        to: lib/replay-engine.js
+        kind: requires
+      - from: lib/integrity-revert.js
+        to: lib/replay-engine.js
+        kind: requires
+      - from: orchestrator/lib/request-handler.js
+        to: lib/replay-engine.js
+        kind: requires
+      - from: tests/modules/test-shadow-space.test.js
+        to: lib/shadow-space.js
+        kind: requires
+      - from: cos/testenv/provision.js
+        to: cos/testenv/index.js
+        kind: requires
+    crossings:
+      - from: lib/replay-engine.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+      - from: lib/shadow-space.js
+        to: cos/workspace/index.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW0c_replay_mode
+      dependents:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW9_the_contract_panel
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW18_debug_by_bisect
+      upstream:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW0_what_is_a_gate
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW0c_replay_mode
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      downstream:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW18_debug_by_bisect
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW9_the_contract_panel
+      blockedBy:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
+          files:
+            - cortex/core/raid/contract-gates.js
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW16_parallel_branches_benchmark
+          files:
+            - lib/shadow-space.js
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW23_wire_what_exists
+          files:
+            - lib/rfr2-bridge.js
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+          files:
+            - cortex/core/raid/contract-gates.js
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW26_everything_declares_what_it_needs
+          files:
+            - cortex/core/raid/contract-gates.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by GW3_a_contract_is_traced
+        - 'depends on (2): GW3_a_contract_is_traced, GW0c_replay_mode · all upstream 5'
+        - 'needed by (2): GW9_the_contract_panel, GW18_debug_by_bisect'
+        - >-
+          same files as GW11_a_snapshot_per_gate with no order between them:
+          cortex/core/raid/contract-gates.js
+        - >-
+          same files as GW16_parallel_branches_benchmark with no order between them:
+          lib/shadow-space.js
+        - 'same files as GW23_wire_what_exists with no order between them: lib/rfr2-bridge.js'
+        - >-
+          same files as GW24_the_gate_holds_the_agent_gets_a_projection with no order between them:
+          cortex/core/raid/contract-gates.js
+        - >-
+          same files as GW26_everything_declares_what_it_needs with no order between them:
+          cortex/core/raid/contract-gates.js
   uuid: 7704b338-ffd3-5c4d-9bf1-f6d52066cf8b

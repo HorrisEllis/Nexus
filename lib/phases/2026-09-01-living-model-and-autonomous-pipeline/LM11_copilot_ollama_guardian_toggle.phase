@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
 intent: null
 summary: LM11_copilot_ollama_guardian_toggle (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584040
+exported_at: 1792852497424
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584040
-lastSeenAt: 1792830584040
+firstSeenAt: 1792852497424
+lastSeenAt: 1792852497424
 fingerprint: null
 payload:
   id: LM11_copilot_ollama_guardian_toggle
@@ -26,5 +26,28 @@ payload:
     - LM9_deterministic_agent_switch_cli
   blocks: []
   spec: null
-  graph: 209243b79f19c6f8
+  graph:
+    hash: 209243b79f19c6f8
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+      dependents: []
+      upstream:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+      downstream: []
+      blockedBy:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM9_deterministic_agent_switch_cli
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by LM9_deterministic_agent_switch_cli
+        - 'depends on (1): LM9_deterministic_agent_switch_cli'
+        - 'needed by (0): —'
   uuid: fa455f9a-d62c-5161-9f08-76d94c963cc2

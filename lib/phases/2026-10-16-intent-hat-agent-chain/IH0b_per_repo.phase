@@ -5,13 +5,13 @@ id: docs_2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0b_per_repo
 context: pipeline phase IH0b_per_repo of docs/2026-10-16-intent-hat-agent-chain-phasemap.spec
 intent: null
 summary: IH0b_per_repo (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830623951
+exported_at: 1792852537938
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830623951
-lastSeenAt: 1792830623951
+firstSeenAt: 1792852537938
+lastSeenAt: 1792852537938
 fingerprint: null
 payload:
   id: IH0b_per_repo
@@ -23,5 +23,85 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: b4811868f9ca541c
+  graph:
+    hash: b4811868f9ca541c
+    nodes:
+      - path: lib/repo-hat.js
+        role: changes
+        exists: true
+        system: lib
+      - path: guardian/lib/jobs.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/code-api.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/repo-agent-node.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-hat.smoke.cjs
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-prompt-blocks.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-hat-memory.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/repo-hat.js
+        to: lib/repo-hat-memory.js
+        kind: requires
+      - from: guardian/lib/jobs.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: idearium/repo/code-api.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-agent-node.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-hat.smoke.cjs
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-prompt-blocks.js
+        to: lib/repo-hat.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: ce53f781-5de3-5c0f-bade-2728654a469b

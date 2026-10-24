@@ -5,13 +5,13 @@ id: docs_2026-09-29-nex-node-store-phasemap.spec::N9_cli
 context: pipeline phase N9_cli of docs/2026-09-29-nex-node-store-phasemap.spec
 intent: null
 summary: N9_cli (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830596165
+exported_at: 1792852509970
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830596165
-lastSeenAt: 1792830596165
+firstSeenAt: 1792852509970
+lastSeenAt: 1792852509970
 fingerprint: null
 payload:
   id: N9_cli
@@ -25,5 +25,44 @@ payload:
     - N8_service
   blocks: []
   spec: null
-  graph: 2bd8335f5d98134a
+  graph:
+    hash: 2bd8335f5d98134a
+    nodes:
+      - path: lib/nexstore/cli.js
+        role: changes
+        exists: false
+        system: lib
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 6
+      deps:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+      dependents:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+      upstream:
+        - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N1
+        - docs/2026-09-26-guardian-retry-novelty-and-installs-phasemap.spec::N2
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N4_kinds_record_ledger_ring_blob
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N6_time
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+      downstream:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N13_release
+      blockedBy:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+      unlocks:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 6 · blocked by N8_service
+        - 'depends on (1): N8_service · all upstream 9'
+        - 'needed by (1): N12_ui · all downstream 2 · finishing it unlocks N12_ui'
   uuid: f619f8d9-fe84-5a8f-b57b-8fac5e765180

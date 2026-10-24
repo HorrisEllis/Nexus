@@ -5,13 +5,13 @@ id: docs_2026-10-17-failure-mode-report-phasemap.spec::FMR0d_nerve_role
 context: pipeline phase FMR0d_nerve_role of docs/2026-10-17-failure-mode-report-phasemap.spec
 intent: null
 summary: FMR0d_nerve_role (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830627660
+exported_at: 1792852541595
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830627660
-lastSeenAt: 1792830627660
+firstSeenAt: 1792852541595
+lastSeenAt: 1792852541595
 fingerprint: null
 payload:
   id: FMR0d_nerve_role
@@ -23,5 +23,29 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 8180b034cb466ba8
+  graph:
+    hash: 8180b034cb466ba8
+    nodes:
+      - path: docs/nexus-nerve.spec
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 040a8966-e507-5230-8375-fae54f95d167

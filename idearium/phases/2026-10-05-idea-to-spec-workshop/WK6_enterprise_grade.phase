@@ -7,11 +7,11 @@ intent: null
 summary: WK6_enterprise_grade (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830604255
+exported_at: 1792852518577
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830604255
-lastSeenAt: 1792830604255
+firstSeenAt: 1792852518577
+lastSeenAt: 1792852518577
 fingerprint: null
 payload:
   id: WK6_enterprise_grade
@@ -26,5 +26,36 @@ payload:
     - WK3_the_agent_drafts_every_block
   blocks: []
   spec: null
-  graph: 0d8254a618965546
+  graph:
+    hash: 0d8254a618965546
+    nodes:
+      - path: idearium/ui/css/void-theme.css
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/workshop.html
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK3_the_agent_drafts_every_block
+      dependents: []
+      upstream:
+        - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK1_the_workshop_is_blocks_from_the_templates
+        - docs/2026-10-05-idea-to-spec-workshop-phasemap.spec::WK3_the_agent_drafts_every_block
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - 'depends on (1): WK3_the_agent_drafts_every_block · all upstream 2'
+        - 'needed by (0): —'
   uuid: a086fd18-c498-5e0e-806f-0960052d20fc

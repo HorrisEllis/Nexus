@@ -5,13 +5,13 @@ id: docs_2026-10-15-fiverr-ledger-phasemap.spec::PF0a_what_a_chat_may_claim
 context: pipeline phase PF0a_what_a_chat_may_claim of docs/2026-10-15-fiverr-ledger-phasemap.spec
 intent: null
 summary: PF0a_what_a_chat_may_claim (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830617747
+exported_at: 1792852531707
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830617747
-lastSeenAt: 1792830617747
+firstSeenAt: 1792852531707
+lastSeenAt: 1792852531707
 fingerprint: null
 payload:
   id: PF0a_what_a_chat_may_claim
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 4e2cdba97918f157
+  graph:
+    hash: 4e2cdba97918f157
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: ba47f875-c77d-50a9-9ebd-ee7177cbe241

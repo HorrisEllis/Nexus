@@ -5,13 +5,13 @@ id: docs_2026-08-22-session-full-phasemap.spec::SF3_chat_history_panel_wrong_url
 context: pipeline phase SF3_chat_history_panel_wrong_url of docs/2026-08-22-session-full-phasemap.spec
 intent: null
 summary: SF3_chat_history_panel_wrong_url (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830581318
+exported_at: 1792852494420
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830581318
-lastSeenAt: 1792830581318
+firstSeenAt: 1792852494420
+lastSeenAt: 1792852494420
 fingerprint: null
 payload:
   id: SF3_chat_history_panel_wrong_url
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: fc0dad959f17616a
+  graph:
+    hash: fc0dad959f17616a
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 442babe0-9c52-5bf1-8a17-169115638db3

@@ -5,13 +5,13 @@ id: docs_2026-10-07-idearium-one-surface-phasemap.spec::SP1_phases_from_the_sect
 context: pipeline phase SP1_phases_from_the_sections of docs/2026-10-07-idearium-one-surface-phasemap.spec
 intent: null
 summary: SP1_phases_from_the_sections (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830606331
+exported_at: 1792852520520
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830606331
-lastSeenAt: 1792830606331
+firstSeenAt: 1792852520520
+lastSeenAt: 1792852520520
 fingerprint: null
 payload:
   id: SP1_phases_from_the_sections
@@ -23,5 +23,28 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 74d13d62a255e6a3
+  graph:
+    hash: 74d13d62a255e6a3
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 177b0e73-b069-55a4-9624-0402403806f8

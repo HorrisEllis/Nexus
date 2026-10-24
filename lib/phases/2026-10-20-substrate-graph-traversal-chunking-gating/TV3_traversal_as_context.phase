@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
 intent: null
 summary: TV3_traversal_as_context (integration) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830634520
+exported_at: 1792852548208
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830634520
-lastSeenAt: 1792830634520
+firstSeenAt: 1792852548208
+lastSeenAt: 1792852548208
 fingerprint: null
 payload:
   id: TV3_traversal_as_context
@@ -31,7 +31,94 @@ payload:
   blocks:
     - MOD-TRAVERSE-CONTEXT
   spec: docs/substrate.spec
-  graph: 8a5009bb03465d08
+  graph:
+    hash: 8a5009bb03465d08
+    nodes:
+      - path: lib/chunk-glyph.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/coder-brief.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/core/traverse.js
+        role: changes
+        exists: false
+        system: lib
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/repo/import-pipeline.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/build-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-nexus-self-and-cos-run.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/verify-first.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/coder-brief.js
+        to: lib/verify-first.js
+        kind: requires
+      - from: idearium/repo/import-pipeline.js
+        to: lib/chunk-glyph.js
+        kind: requires
+      - from: lib/build-context.js
+        to: lib/chunk-glyph.js
+        kind: requires
+      - from: tests/modules/test-nexus-self-and-cos-run.test.js
+        to: lib/chunk-glyph.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/coder-brief.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 6
+      deps:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+      dependents:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV2_invariant_guided_traversal
+      upstream:
+        - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+      downstream:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV2_invariant_guided_traversal
+      blockedBy:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 6 · blocked by TV1_traversal_primitive,
+          CH1_strategies_behind_the_contract
+        - >-
+          depends on (2): TV1_traversal_primitive, CH1_strategies_behind_the_contract · all upstream
+          10
+        - 'needed by (1): TV2_invariant_guided_traversal'
   uuid: 7043afb4-c980-552d-bcea-2e6bfcf5b40b
   specLink:
     how: declared

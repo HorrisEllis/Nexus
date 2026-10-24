@@ -5,13 +5,13 @@ id: docs_2026-10-17-debugging-product-phasemap.spec::DP0b_its_name
 context: pipeline phase DP0b_its_name of docs/2026-10-17-debugging-product-phasemap.spec
 intent: null
 summary: DP0b_its_name (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830627240
+exported_at: 1792852541155
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830627240
-lastSeenAt: 1792830627240
+firstSeenAt: 1792852541155
+lastSeenAt: 1792852541155
 fingerprint: null
 payload:
   id: DP0b_its_name
@@ -23,5 +23,25 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 31f0e267b8d56d74
+  graph:
+    hash: 31f0e267b8d56d74
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: caf451f8-98d2-5e0f-bc56-591e3d7fe613

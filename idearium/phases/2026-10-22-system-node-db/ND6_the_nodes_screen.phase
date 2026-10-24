@@ -7,11 +7,11 @@ intent: null
 summary: ND6_the_nodes_screen (ui) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830638287
+exported_at: 1792852551797
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830638287
-lastSeenAt: 1792830638287
+firstSeenAt: 1792852551797
+lastSeenAt: 1792852551797
 fingerprint: null
 payload:
   id: ND6_the_nodes_screen
@@ -27,7 +27,51 @@ payload:
   blocks:
     - MOD-ND-UI
   spec: docs/system-node-db.spec
-  graph: 84631efc91474720
+  graph:
+    hash: 84631efc91474720
+    nodes:
+      - path: idearium/ui/index.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/system-nodes.js
+        role: changes
+        exists: false
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 6
+      deps:
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+      dependents: []
+      upstream:
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P35_copilot_reads_edits_creates_nodes
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P5_data_folder_completion
+        - docs/2026-10-17-system-drawbridge-phasemap.spec::P33b_each_system_runs_its_listener
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND1_every_system_has_its_database
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND2_one_node_route_for_every_system
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND3_each_server_serves_its_nodes
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND4_commands_and_capabilities_from_the_schemas
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND_D1_the_file_is_the_node
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND_D2_the_owner_writes
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND_D3_generated_types_are_not_agents_to_write
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND_D4_schema_driven_commands
+      downstream: []
+      blockedBy:
+        - docs/2026-10-22-system-node-db-phasemap.spec::ND5_every_agent_reaches_every_system
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 6 · blocked by ND5_every_agent_reaches_every_system
+        - 'depends on (1): ND5_every_agent_reaches_every_system · all upstream 14'
+        - 'needed by (0): —'
   uuid: aa58ac18-3e6c-5d70-886c-06486b62dbee
   specLink:
     how: declared

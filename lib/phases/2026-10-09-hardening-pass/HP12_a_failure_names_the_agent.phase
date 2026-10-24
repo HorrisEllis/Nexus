@@ -5,13 +5,13 @@ id: docs_2026-10-09-hardening-pass-phasemap.spec::HP12_a_failure_names_the_agent
 context: pipeline phase HP12_a_failure_names_the_agent of docs/2026-10-09-hardening-pass-phasemap.spec
 intent: null
 summary: HP12_a_failure_names_the_agent (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830608405
+exported_at: 1792852522470
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830608405
-lastSeenAt: 1792830608405
+firstSeenAt: 1792852522470
+lastSeenAt: 1792852522470
 fingerprint: null
 payload:
   id: HP12_a_failure_names_the_agent
@@ -24,5 +24,161 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: bec3f59ad333b46f
+  graph:
+    hash: bec3f59ad333b46f
+    nodes:
+      - path: lib/repo-agent.js
+        role: changes
+        exists: true
+        system: lib
+      - path: idearium/api/build-surface.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/gate-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent-node.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-registry-harness.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-repo-agent-provider.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: lib/agent-providers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tool-guide.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/idearium/code.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/agent-tools/tools/nexus/tool-layers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/code-intel/index.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/context-atlas.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/context-prereqs.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/registry-harness.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-context.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-hat-memory.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-hat.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/repo-agent.js
+        to: lib/repo-hat.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-hat-memory.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-providers.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tools/idearium/code.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tools/nexus/tool-layers.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-tools/tool-guide.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/repo-context.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/registry-harness.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/code-intel/index.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/context-atlas.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/context-prereqs.js
+        kind: requires
+      - from: idearium/api/build-surface.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: lib/gate-context.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: lib/repo-agent-node.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: tests/modules/test-registry-harness.test.js
+        to: lib/repo-agent.js
+        kind: requires
+      - from: tests/modules/test-repo-agent-provider.js
+        to: lib/repo-agent.js
+        kind: requires
+    crossings:
+      - from: lib/repo-agent.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: lib
+        toSystem: cortex
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 787c48c0-5486-529e-9f64-1d3582e06c47

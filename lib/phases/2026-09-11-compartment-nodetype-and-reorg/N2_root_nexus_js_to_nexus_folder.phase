@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-11-compartment-nodetype-and-reorg-phasemap.spec
 intent: null
 summary: N2_root_nexus_js_to_nexus_folder (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830586673
+exported_at: 1792852500279
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830586673
-lastSeenAt: 1792830586673
+firstSeenAt: 1792852500279
+lastSeenAt: 1792852500279
 fingerprint: null
 payload:
   id: N2_root_nexus_js_to_nexus_folder
@@ -25,5 +25,264 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 6d1b3e2c07a74a19
+  graph:
+    hash: 5458e38711562826
+    nodes:
+      - path: loom/templates/system-scaffold.js
+        role: changes
+        exists: true
+        system: loom
+      - path: nexus/nexus-bus.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: nexus/nexus-cfr-influence.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: nexus/nexus-connect.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: nexus/nexus-knowledge.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: nexus/nexus-query.js
+        role: changes
+        exists: true
+        system: nexus
+      - path: ollama/ollama-runtime.js
+        role: changes
+        exists: true
+        system: ollama
+      - path: cortex/boot.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: intelligence/alk/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/gap/predicate.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/index.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/routes.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: intelligence/server.js
+        role: used-by
+        exists: true
+        system: intelligence
+      - path: lib/agent-tools/tools/execution/run-pipeline.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/compartment-engine.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/component-ledger.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/constitutional-ai.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: intelligence/lattice/associative-lattice.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/heartbeat.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/ollama-activity.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/pulse.js
+        role: uses
+        exists: true
+        system: lib
+      - path: loom/schema/index.js
+        role: uses
+        exists: true
+        system: loom
+      - path: ollama/config.js
+        role: uses
+        exists: true
+        system: ollama
+      - path: ollama/lib/tape.js
+        role: uses
+        exists: true
+        system: ollama
+    edges:
+      - from: nexus/nexus-connect.js
+        to: lib/heartbeat.js
+        kind: requires
+      - from: nexus/nexus-connect.js
+        to: intelligence/lattice/associative-lattice.js
+        kind: requires
+      - from: nexus/nexus-connect.js
+        to: lib/pulse.js
+        kind: requires
+      - from: ollama/ollama-runtime.js
+        to: ollama/config.js
+        kind: requires
+      - from: ollama/ollama-runtime.js
+        to: lib/ollama-activity.js
+        kind: requires
+      - from: ollama/ollama-runtime.js
+        to: ollama/lib/tape.js
+        kind: requires
+      - from: loom/templates/system-scaffold.js
+        to: loom/schema/index.js
+        kind: requires
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: guardian/server.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/alk/index.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/gap/predicate.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/index.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/routes.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: intelligence/server.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/agent-tools/tools/execution/run-pipeline.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/compartment-engine.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/component-ledger.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/constitutional-ai.js
+        to: nexus/nexus-bus.js
+        kind: requires
+    crossings:
+      - from: nexus/nexus-connect.js
+        to: intelligence/lattice/associative-lattice.js
+        fromSystem: nexus
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: cortex/boot.js
+        to: nexus/nexus-bus.js
+        fromSystem: cortex
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: cortex/core/raid/contract-intake.js
+        to: nexus/nexus-bus.js
+        fromSystem: cortex
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: guardian/server.js
+        to: nexus/nexus-bus.js
+        fromSystem: guardian
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/alk/index.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/gap/predicate.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/index.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/routes.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: intelligence/server.js
+        to: nexus/nexus-bus.js
+        fromSystem: intelligence
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: lib/agent-tools/tools/execution/run-pipeline.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+      - from: lib/compartment-engine.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+      - from: lib/component-ledger.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+      - from: lib/constitutional-ai.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 0088a88c-b062-5805-b206-98a399a5e58e

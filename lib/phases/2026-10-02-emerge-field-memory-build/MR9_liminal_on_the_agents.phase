@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-02-emerge-field-memory-build-phasemap.spec
 intent: null
 summary: MR9_liminal_on_the_agents (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830599085
+exported_at: 1792852513213
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830599085
-lastSeenAt: 1792830599085
+firstSeenAt: 1792852513213
+lastSeenAt: 1792852513213
 fingerprint: null
 payload:
   id: MR9_liminal_on_the_agents
@@ -28,5 +28,159 @@ payload:
     - CF1_cfr_improved_with_rfr2
   blocks: []
   spec: null
-  graph: 6faebe0d8292d4ed
+  graph:
+    hash: 6faebe0d8292d4ed
+    nodes:
+      - path: lib/agent-memory.js
+        role: changes
+        exists: true
+        system: lib
+      - path: copilot/analysis.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/lifeline.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: idearium/agent-suite/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/context-atlas.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/context-prereqs.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: ollama/lib/dispatch.js
+        role: used-by
+        exists: true
+        system: ollama
+      - path: tests/modules/test-agent-memory.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: clear-glass/src/downloads/artifact-chat-index.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: guardian/lib/response-sink.js
+        role: uses
+        exists: true
+        system: guardian
+      - path: lib/agent-providers.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/chat-logger.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/extract-code.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/vector-memory.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/agent-memory.js
+        to: lib/agent-providers.js
+        kind: requires
+      - from: lib/agent-memory.js
+        to: clear-glass/src/downloads/artifact-chat-index.js
+        kind: requires
+      - from: lib/agent-memory.js
+        to: guardian/lib/response-sink.js
+        kind: requires
+      - from: lib/agent-memory.js
+        to: lib/extract-code.js
+        kind: requires
+      - from: lib/agent-memory.js
+        to: lib/chat-logger.js
+        kind: requires
+      - from: lib/agent-memory.js
+        to: lib/vector-memory.js
+        kind: requires
+      - from: copilot/analysis.js
+        to: lib/agent-memory.js
+        kind: requires
+      - from: copilot/lifeline.js
+        to: lib/agent-memory.js
+        kind: requires
+      - from: idearium/agent-suite/index.js
+        to: lib/agent-memory.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/agent-memory.js
+        kind: requires
+      - from: lib/context-atlas.js
+        to: lib/agent-memory.js
+        kind: requires
+      - from: lib/context-prereqs.js
+        to: lib/agent-memory.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/agent-memory.js
+        kind: requires
+      - from: ollama/lib/dispatch.js
+        to: lib/agent-memory.js
+        kind: requires
+      - from: tests/modules/test-agent-memory.test.js
+        to: lib/agent-memory.js
+        kind: requires
+    crossings:
+      - from: lib/agent-memory.js
+        to: clear-glass/src/downloads/artifact-chat-index.js
+        fromSystem: lib
+        toSystem: clear-glass
+        kind: upward
+        known: true
+      - from: lib/agent-memory.js
+        to: guardian/lib/response-sink.js
+        fromSystem: lib
+        toSystem: guardian
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      dependents:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM1_emerge_core
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM2_warp_his_own
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::SH1_shadow_space
+      downstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+      blockedBy:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::CF1_cfr_improved_with_rfr2
+      unlocks:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR10_the_field_between_james_and_the_agents
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 5 · blocked by CF1_cfr_improved_with_rfr2
+        - 'depends on (1): CF1_cfr_improved_with_rfr2 · all upstream 6'
+        - >-
+          needed by (1): MR10_the_field_between_james_and_the_agents · finishing it unlocks
+          MR10_the_field_between_james_and_the_agents
   uuid: 639d55f2-9e77-592a-bcab-cd57b102493e

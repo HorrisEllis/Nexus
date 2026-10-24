@@ -5,13 +5,13 @@ id: docs_2026-10-19-infrastructure-spine-phasemap.spec::IN2_quotes_ledger
 context: pipeline phase IN2_quotes_ledger of docs/2026-10-19-infrastructure-spine-phasemap.spec
 intent: null
 summary: IN2_quotes_ledger (foundation) — 3 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632371
+exported_at: 1792852546170
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632371
-lastSeenAt: 1792830632371
+firstSeenAt: 1792852546170
+lastSeenAt: 1792852546170
 fingerprint: null
 payload:
   id: IN2_quotes_ledger
@@ -27,5 +27,59 @@ payload:
     - IN0_baseline
   blocks: []
   spec: null
-  graph: 746264db652fe47c
+  graph:
+    hash: 746264db652fe47c
+    nodes:
+      - path: scripts/extract-quotes.js
+        role: changes
+        exists: false
+        system: null
+      - path: scripts/generate-atlases.js
+        role: changes
+        exists: true
+        system: null
+      - path: lib/atlas-generate.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/readme-generate.js
+        role: uses
+        exists: true
+        system: lib
+      - path: loom/scanners/phasemap-map.js
+        role: uses
+        exists: true
+        system: loom
+    edges:
+      - from: scripts/generate-atlases.js
+        to: lib/atlas-generate.js
+        kind: requires
+      - from: scripts/generate-atlases.js
+        to: lib/readme-generate.js
+        kind: requires
+      - from: scripts/generate-atlases.js
+        to: loom/scanners/phasemap-map.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      dependents:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::VC2_changelogs_rendered
+      upstream:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      downstream:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::VC2_changelogs_rendered
+      blockedBy:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by IN0_baseline
+        - 'depends on (1): IN0_baseline'
+        - 'needed by (1): VC2_changelogs_rendered'
   uuid: 8b2ed940-99a0-56dc-aa07-d281495b709b

@@ -5,13 +5,13 @@ id: docs_2026-09-29-nex-node-store-phasemap.spec::N0_census
 context: pipeline phase N0_census of docs/2026-09-29-nex-node-store-phasemap.spec
 intent: null
 summary: N0_census (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830596156
+exported_at: 1792852509958
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830596156
-lastSeenAt: 1792830596156
+firstSeenAt: 1792852509958
+lastSeenAt: 1792852509958
 fingerprint: null
 payload:
   id: N0_census
@@ -25,5 +25,49 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 9b89ddab0ca4dd15
+  graph:
+    hash: 9b89ddab0ca4dd15
+    nodes:
+      - path: docs/nexstore-type-catalogue.yaml
+        role: changes
+        exists: true
+        system: null
+      - path: lib/nexstore/census.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/nexstore/writers.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/nexstore/census.js
+        to: lib/nexstore/writers.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N2_types_and_gates
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N18_hardcode_census
+      upstream: []
+      downstream:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N18_hardcode_census
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N24_no_json_yaml_node_types_only
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N2_types_and_gates
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N2_types_and_gates
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N18_hardcode_census
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - >-
+          needed by (2): N2_types_and_gates, N18_hardcode_census · all downstream 3 · finishing it
+          unlocks N2_types_and_gates, N18_hardcode_census
   uuid: f0bec3f8-6b7d-5106-9901-7e376df83e4c

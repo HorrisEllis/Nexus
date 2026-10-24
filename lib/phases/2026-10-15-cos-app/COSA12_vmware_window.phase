@@ -5,13 +5,13 @@ id: docs_2026-10-15-cos-app-phasemap.spec::COSA12_vmware_window
 context: pipeline phase COSA12_vmware_window of docs/2026-10-15-cos-app-phasemap.spec
 intent: null
 summary: COSA12_vmware_window (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830617315
+exported_at: 1792852531310
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830617315
-lastSeenAt: 1792830617315
+firstSeenAt: 1792852531310
+lastSeenAt: 1792852531310
 fingerprint: null
 payload:
   id: COSA12_vmware_window
@@ -24,5 +24,33 @@ payload:
     - COSA6_the_exe
   blocks: []
   spec: null
-  graph: c348ed645b8dabb1
+  graph:
+    hash: c348ed645b8dabb1
+    nodes:
+      - path: docs/CLAUDE.md
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA6_the_exe
+      dependents: []
+      upstream:
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA6_the_exe
+      downstream: []
+      blockedBy:
+        - docs/2026-10-15-cos-app-phasemap.spec::COSA6_the_exe
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by COSA6_the_exe
+        - 'depends on (1): COSA6_the_exe · all upstream 2'
+        - 'needed by (0): —'
   uuid: 8d2305d6-c11c-5463-922a-0a0acdd8e95e

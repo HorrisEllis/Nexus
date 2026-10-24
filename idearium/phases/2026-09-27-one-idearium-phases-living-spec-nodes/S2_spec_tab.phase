@@ -7,11 +7,11 @@ intent: null
 summary: S2_spec_tab (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830594110
+exported_at: 1792852507737
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830594110
-lastSeenAt: 1792830594110
+firstSeenAt: 1792852507737
+lastSeenAt: 1792852507737
 fingerprint: null
 payload:
   id: S2_spec_tab
@@ -26,5 +26,38 @@ payload:
     - S1_living_spec
   blocks: []
   spec: null
-  graph: 13a6b256674ca997
+  graph:
+    hash: 13a6b256674ca997
+    nodes:
+      - path: idearium/ui/index.html
+        role: changes
+        exists: true
+        system: idearium
+      - path: idearium/ui/js/app.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::S1_living_spec
+      dependents:
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+      upstream:
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::S1_living_spec
+      downstream:
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-27-one-idearium-phases-living-spec-nodes-phasemap.spec::Z1_release
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1
+        - 'depends on (1): S1_living_spec'
+        - 'needed by (1): Z1_release · finishing it unlocks Z1_release'
   uuid: 50c017af-2478-5adf-a5d3-5933c0017692

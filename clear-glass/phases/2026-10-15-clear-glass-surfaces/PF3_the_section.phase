@@ -5,13 +5,13 @@ id: docs_2026-10-15-clear-glass-surfaces-phasemap.spec::PF3_the_section
 context: pipeline phase PF3_the_section of docs/2026-10-15-clear-glass-surfaces-phasemap.spec
 intent: null
 summary: PF3_the_section (?) — 3 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830616447
+exported_at: 1792852530449
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830616447
-lastSeenAt: 1792830616447
+firstSeenAt: 1792852530449
+lastSeenAt: 1792852530449
 fingerprint: null
 payload:
   id: PF3_the_section
@@ -27,5 +27,42 @@ payload:
     - PF2_the_items
   blocks: []
   spec: null
-  graph: 66f9578d26cb5b2c
+  graph:
+    hash: 66f9578d26cb5b2c
+    nodes:
+      - path: clear-glass/renderer/gig-panel.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/renderer/library/sections/portfolio.css
+        role: changes
+        exists: false
+        system: clear-glass
+      - path: clear-glass/renderer/library/sections/portfolio.js
+        role: changes
+        exists: false
+        system: clear-glass
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::PF2_the_items
+      dependents: []
+      upstream:
+        - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::PF0_internal_vs_client_facing
+        - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::PF1_read_the_log
+        - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::PF2_the_items
+      downstream: []
+      blockedBy:
+        - docs/2026-10-15-clear-glass-surfaces-phasemap.spec::PF2_the_items
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · blocked by PF2_the_items
+        - 'depends on (1): PF2_the_items · all upstream 3'
+        - 'needed by (0): —'
   uuid: ba1a6b46-b1cc-5380-9e34-a84848072b59

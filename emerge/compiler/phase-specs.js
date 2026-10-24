@@ -12,14 +12,17 @@
  *
  * His order, as tooling: (1) a full spec (emerge module format, compiled by emerge/compiler/kg-builder.js), (2) its phases in a
  * phasemap, each naming the spec (`spec:`) and the modules it builds (`blocks:`), (3) THIS: every phase written again as nodes —
- *   <owner>/phases/<map-id>/<phase>.phase         authored: id, map, layer, status, files, depends_on, blocks, spec, graph hash
- *   <owner>/phases/<map-id>/graph/<…>.graph       derived: files with roles (changes, uses, used-by), edges, crossings, dag slice
- * (the handoff of 2026-10-19, PN1's layout: the .phase holds what is authored; the DAG slice is derived, in its own .graph keyed by
- * its hash). Owner = lib/phase-plan.js targetSystem over the phase's files; core's home is lib/.
+ *   <owner>/phases/<map-id>/<phase>.phase   what is authored (id, map, layer, status, files, depends_on, blocks, spec) and, under graph:,
+ *                                           what is derived (its hash, files with roles, edges, crossings, its DAG slice)
+ * 0.60.238 PS4 — James, 2026-10-24: ".phase/.graph should be one file i feel like?" One file per phase. The handoff's PN1 layout (2026-10-19)
+ * kept the graph in its own graph/<phase>-<hash>.graph; every edit of a map wrote one more beside the last (2,140 for 2,055 phases), and a
+ * run keeps its own copy of the graph it was built against (idearium/api/index.js, the run's node dir), so the tree's copies were redundant.
+ * The envelope's system is the owner (it said 'idearium' for every phase). Owner = lib/phase-plan.js targetSystem over the phase's files;
+ * core's home is lib/.
  * Reuse (§8.6): phase-dag (the whole DAG, slice), phase-map-auto (files, requires, consumers), phase-graph (graphFor, crossings),
  * pipeline-nodes (phaseNode, graphNode, writeNode), emerge's kg-builder (what a spec declares). Nothing here asks a model.
  *
- *   write({ root, map, mapsDir, out }) → [{ phase, owner, phaseFile, graphFile, ready, blocks: { resolved, missing } }]
+ *   write({ root, map, mapsDir, out }) → [{ phase, owner, phaseFile, graphHash, ready, blocks: { resolved, missing }, dropped }]
  *   check({ root, map, mapsDir, out }) → [{ phase, drift: [why] }]   — re-derives and compares with the files on disk
  *   cli: node emerge/compiler/phase-specs.js <map.spec> [--check]
  */
@@ -27,7 +30,7 @@ const fs = require('fs');
 const path = require('path');
 
 const MODULE_ID = 'nexus.emerge.phase-specs';
-const VERSION = '1.2.0';   // 1.1.0 PS2 --all · 1.2.0 PS3 bundles (one uuid; spec module link)
+const VERSION = '1.3.0';   // 1.1.0 PS2 --all · 1.2.0 PS3 bundles (one uuid; spec module link) · 1.3.0 PS4 one file per phase
 const ROOT = path.resolve(__dirname, '../..');
 
 const _field = (body, k) => { const m = String(body || '').match(new RegExp(`^\\s{4}${k}:\\s*(.+)$`, 'm')); return m ? m[1].trim() : null; };
@@ -140,10 +143,9 @@ function derive({ root = ROOT, map, mapsDir = path.join(root, 'docs') } = {}) {
     const dir = path.join(_ownerDir(owner, SYS), 'phases', _mapId(mapRel));
     const uuid = bundleUuid(mapRel, ph.id);
     const specLink = specLinkOf({ spec, blocks, files, idx: moduleIndex(root), uses: fileUses });
-    const graphEnv = PN.graphNode({ ...graph, for: ph.id, phaseUuid: uuid }, { kind: 'phase' });
-    const phaseEnv = PN.phaseNode({ id: ph.id, map: mapRel, layer: _field(ph.body, 'layer'), status: _field(ph.body, 'status') || 'OPEN',
-      files, depends_on: node ? node.deps.map(d => d.split('::').pop()) : _list(_field(ph.body, 'depends_on')), blocks, spec, graph: graph.hash, uuid, specLink });
-    out.push({ phase: ph.id, owner, dir, ready: graph.ready, graphHash: graph.hash, graphEnv, phaseEnv, uuid, specLink,
+    const phaseEnv = PN.phaseNode({ system: owner, id: ph.id, map: mapRel, layer: _field(ph.body, 'layer'), status: _field(ph.body, 'status') || 'OPEN',
+      files, depends_on: node ? node.deps.map(d => d.split('::').pop()) : _list(_field(ph.body, 'depends_on')), blocks, spec, graph: PN.graphBody(graph), uuid, specLink });
+    out.push({ phase: ph.id, owner, dir, ready: graph.ready, graphHash: graph.hash, phaseEnv, uuid, specLink,
       blocks: { resolved, missing, ...(specError ? { specError } : {}) } });
   }
   return out;
@@ -153,27 +155,41 @@ function write(opts = {}) {
   const root = opts.root || ROOT, out = opts.out || root;   // out: where the nodes go (default the tree itself)
   return derive(opts).map(d => {
     const abs = path.join(out, d.dir);
-    // file names as the handoff lays them out (PN1): <phase>.phase, and graph/<phase>-<hash>.graph (immutable per hash)
     const NE = require('../../lib/node-export.js');
     const put = (env, file) => { NE.validate(env); fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, NE.toYaml(env), 'utf8'); return file; };
-    const graphFile = put(d.graphEnv, path.join(abs, 'graph', `${d.phase}-${d.graphHash}.graph`));
     const phaseFile = put(d.phaseEnv, path.join(abs, `${d.phase}.phase`));
+    // PS4: the phase's old graph/<phase>-<hash>.graph files are redundant now (the graph is inside the .phase; every earlier one is in git
+    // history, and a run keeps its own) — dropped, and said (§0.3: a true duplicate, reported)
+    const gdir = path.join(abs, 'graph'), dropped = [];
+    try { for (const g of fs.readdirSync(gdir)) if (g.startsWith(`${d.phase}-`) && g.endsWith('.graph')) { fs.unlinkSync(path.join(gdir, g)); dropped.push(g); } if (!fs.readdirSync(gdir).length) fs.rmdirSync(gdir); } catch (_) {}
+    // PS4: a phase lives with its system only. When its owner changes (0.60.237: warp's and emerge's phases became emerge's), the copy
+    // under the old owner is the same phase's earlier node — moved, not kept twice (said in moved, and in git history)
+    const moved = [];
+    const SYS = require('../../lib/nexus-self/systems.js');
+    const homes = new Set(['lib', ...SYS.SYSTEMS.map(s => _ownerDir(s.name, SYS))]);
+    for (const h of homes) {
+      const od = path.join(out, h, 'phases', path.basename(d.dir));
+      if (path.resolve(od) === path.resolve(abs)) continue;
+      for (const g of [path.join(od, `${d.phase}.phase`)]) if (fs.existsSync(g)) { fs.unlinkSync(g); moved.push(path.relative(out, g).split(path.sep).join('/')); }
+      const ogd = path.join(od, 'graph');
+      try { for (const g of fs.readdirSync(ogd)) if (g.startsWith(`${d.phase}-`) && g.endsWith('.graph')) { fs.unlinkSync(path.join(ogd, g)); dropped.push(g); } if (!fs.readdirSync(ogd).length) fs.rmdirSync(ogd); } catch (_) {}
+      try { if (!fs.readdirSync(od).length) fs.rmdirSync(od); } catch (_) {}
+    }
     return { phase: d.phase, owner: d.owner, ready: d.ready, graphHash: d.graphHash, blocks: d.blocks, uuid: d.uuid, specLink: d.specLink,
-      phaseFile: path.relative(out, phaseFile).split(path.sep).join('/'), graphFile: path.relative(out, graphFile).split(path.sep).join('/') };
+      phaseFile: path.relative(out, phaseFile).split(path.sep).join('/'), dropped, moved };
   });
 }
 
-/** check(...) — re-derive; a .phase or .graph that differs from what the tree derives now is drift, said per phase */
+/** check(...) — re-derive; a .phase (with its graph inside) that differs from what the tree derives now is drift, said per phase */
 function check(opts = {}) {
   const root = opts.out || opts.root || ROOT;
   const NE = require('../../lib/node-export.js');
   return derive(opts).map(d => {
     const drift = [];
     const pf = path.join(root, d.dir, `${d.phase}.phase`);
-    const gf = path.join(root, d.dir, 'graph', `${d.phase}-${d.graphHash}.graph`);
     if (!fs.existsSync(pf)) drift.push('no .phase written');
     else { const on = NE.fromYaml(fs.readFileSync(pf, 'utf8')); if (JSON.stringify(on.payload) !== JSON.stringify(d.phaseEnv.payload)) drift.push('the .phase differs from what the map and tree give now'); }
-    if (!fs.existsSync(gf)) drift.push(`no .graph for hash ${d.graphHash} (the graph changed, or was never written)`);
+    if (fs.existsSync(pf)) { const on = NE.fromYaml(fs.readFileSync(pf, 'utf8')); const h = on.payload && on.payload.graph && on.payload.graph.hash; if (h !== d.graphHash) drift.push(`its graph is ${h || 'missing'}, the tree gives ${d.graphHash}`); }
     if (d.blocks.missing.length) drift.push(`blocks not in the spec: ${d.blocks.missing.join(', ')}`);
     if (d.blocks.specError) drift.push(`spec unreadable: ${d.blocks.specError}`);
     return { phase: d.phase, drift };
@@ -210,7 +226,7 @@ function writeAll({ root = ROOT, check: dry = false } = {}) {
 if (require.main === module && process.argv.includes('--all')) {
   const quiet = console.log; console.log = () => {};
   let r; try { r = writeAll({ check: process.argv.includes('--dry') }); } finally { console.log = quiet; }
-  console.log(`${r.maps} maps · ${r.phases} phases · ${r.written} .phase + .graph written · ${r.withSpec} name their spec · ${r.discovered || 0} more linked to a spec module by a file it declares · ${r.ready} ready · ${r.blocksMissing} name blocks their spec lacks`);
+  console.log(`${r.maps} maps · ${r.phases} phases · ${r.written} .phase written (each with its graph inside) · ${r.withSpec} name their spec · ${r.discovered || 0} more linked to a spec module by a file it declares · ${r.ready} ready · ${r.blocksMissing} name blocks their spec lacks`);
   const mi = moduleIndex(); console.log(`  specs: ${mi.specs} · ${mi.byId.size} modules · ${mi.byPath.size} module paths · ${mi.unparsable.length} specs not YAML (not read for links)`);
   for (const [o, x] of Object.entries(r.byOwner).sort((a, b) => b[1].phases - a[1].phases)) console.log(`  ${o.padEnd(16)} ${String(x.phases).padStart(5)} phases · ${String(x.withSpec).padStart(4)} with a spec · ${String(x.discovered || 0).padStart(4)} linked by path`);
   for (const f of r.failed) console.log(`  ✗ ${f.map}: ${f.error}`);

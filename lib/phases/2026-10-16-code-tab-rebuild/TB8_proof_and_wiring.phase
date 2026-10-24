@@ -5,13 +5,13 @@ id: docs_2026-10-16-code-tab-rebuild-phasemap.spec::TB8_proof_and_wiring
 context: pipeline phase TB8_proof_and_wiring of docs/2026-10-16-code-tab-rebuild-phasemap.spec
 intent: null
 summary: TB8_proof_and_wiring (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830621907
+exported_at: 1792852535883
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830621907
-lastSeenAt: 1792830621907
+firstSeenAt: 1792852535883
+lastSeenAt: 1792852535883
 fingerprint: null
 payload:
   id: TB8_proof_and_wiring
@@ -23,5 +23,177 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 6a6396bbf3153173
+  graph:
+    hash: 6a6396bbf3153173
+    nodes:
+      - path: docs/CLAUDE.md
+        role: changes
+        exists: true
+        system: null
+      - path: guardian/lib/gate-trail.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: idearium/ui/js/plan-panel.js
+        role: changes
+        exists: true
+        system: idearium
+      - path: lib/intent-chain.js
+        role: changes
+        exists: false
+        system: lib
+      - path: lib/run-state.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/step-gate.js
+        role: changes
+        exists: true
+        system: lib
+      - path: clear-glass/src/downloads/artifact-chat-index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/tool-runtime.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: guardian/lib/response-sink.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/change-record.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/gate-context.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/gig-ledger-listener.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-agent.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-procedures.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/modules/test-guardian-stack-sim.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/checks/ck-248-toolchain.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/gap-field.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/spec-collect.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: lib/run-state.js
+        to: lib/node-export.js
+        kind: requires
+      - from: lib/run-state.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: lib/step-gate.js
+        to: lib/spec-collect.js
+        kind: requires
+      - from: lib/step-gate.js
+        to: lib/checks/ck-248-toolchain.js
+        kind: requires
+      - from: lib/step-gate.js
+        to: lib/gap-field.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/lib/gate-trail.js
+        kind: requires
+      - from: tests/modules/test-guardian-stack-sim.test.js
+        to: guardian/lib/gate-trail.js
+        kind: requires
+      - from: clear-glass/src/downloads/artifact-chat-index.js
+        to: lib/run-state.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/run-state.js
+        kind: requires
+      - from: copilot/tool-runtime.js
+        to: lib/run-state.js
+        kind: requires
+      - from: guardian/lib/response-sink.js
+        to: lib/run-state.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/change-record.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/gate-context.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/gig-ledger-listener.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/repo-agent.js
+        to: lib/run-state.js
+        kind: requires
+      - from: lib/repo-procedures.js
+        to: lib/run-state.js
+        kind: requires
+    crossings:
+      - from: lib/run-state.js
+        to: nexus/nexus-bus.js
+        fromSystem: lib
+        toSystem: nexus
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 573d1200-3c61-5418-a7e7-e2913daa08d5

@@ -5,13 +5,13 @@ id: docs_2026-10-16-proposal-evidence-phasemap.spec::PE2_evidence
 context: pipeline phase PE2_evidence of docs/2026-10-16-proposal-evidence-phasemap.spec
 intent: null
 summary: PE2_evidence (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830625546
+exported_at: 1792852539506
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830625546
-lastSeenAt: 1792830625546
+firstSeenAt: 1792852539506
+lastSeenAt: 1792852539506
 fingerprint: null
 payload:
   id: PE2_evidence
@@ -23,5 +23,109 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 87adde4d74c5c418
+  graph:
+    hash: 87adde4d74c5c418
+    nodes:
+      - path: lib/proposal-evidence.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/code-edit.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/expectation-tests.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/test-first.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: products/flight-recorder/lib/project.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-language-checks.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-proposal-evidence.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/checks/ck-248-toolchain.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/repo-inject.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/step-gate.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/test-map.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/proposal-evidence.js
+        to: lib/repo-inject.js
+        kind: requires
+      - from: lib/proposal-evidence.js
+        to: lib/step-gate.js
+        kind: requires
+      - from: lib/proposal-evidence.js
+        to: lib/checks/ck-248-toolchain.js
+        kind: requires
+      - from: lib/proposal-evidence.js
+        to: lib/test-map.js
+        kind: requires
+      - from: lib/code-edit.js
+        to: lib/proposal-evidence.js
+        kind: requires
+      - from: lib/expectation-tests.js
+        to: lib/proposal-evidence.js
+        kind: requires
+      - from: lib/repo-inject.js
+        to: lib/proposal-evidence.js
+        kind: requires
+      - from: lib/test-first.js
+        to: lib/proposal-evidence.js
+        kind: requires
+      - from: products/flight-recorder/lib/project.js
+        to: lib/proposal-evidence.js
+        kind: requires
+      - from: tests/modules/test-language-checks.test.js
+        to: lib/proposal-evidence.js
+        kind: requires
+      - from: tests/modules/test-proposal-evidence.test.js
+        to: lib/proposal-evidence.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 2c2021a8-ba78-5e51-be5e-259cea5e07b8

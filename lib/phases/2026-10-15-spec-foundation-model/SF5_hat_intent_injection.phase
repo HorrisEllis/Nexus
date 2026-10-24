@@ -5,13 +5,13 @@ id: docs_2026-10-15-spec-foundation-model-phasemap.spec::SF5_hat_intent_injectio
 context: pipeline phase SF5_hat_intent_injection of docs/2026-10-15-spec-foundation-model-phasemap.spec
 intent: null
 summary: SF5_hat_intent_injection (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830620254
+exported_at: 1792852534216
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830620254
-lastSeenAt: 1792830620254
+firstSeenAt: 1792852534216
+lastSeenAt: 1792852534216
 fingerprint: null
 payload:
   id: SF5_hat_intent_injection
@@ -24,5 +24,30 @@ payload:
     - SF4_the_listener
   blocks: []
   spec: null
-  graph: 10e5a79bbc7cf1e9
+  graph:
+    hash: 10e5a79bbc7cf1e9
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+      dependents: []
+      upstream:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF1_foundation_field
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF2_state_and_gate
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+      downstream: []
+      blockedBy:
+        - docs/2026-10-15-spec-foundation-model-phasemap.spec::SF4_the_listener
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 3 · blocked by SF4_the_listener
+        - 'depends on (1): SF4_the_listener · all upstream 3'
+        - 'needed by (0): —'
   uuid: e9ed8c0f-19aa-5f66-9dd8-353950538134

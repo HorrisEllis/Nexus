@@ -7,11 +7,11 @@ intent: null
 summary: CT2_the_code_tab (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792830602127
+exported_at: 1792852516507
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830602127
-lastSeenAt: 1792830602127
+firstSeenAt: 1792852516507
+lastSeenAt: 1792852516507
 fingerprint: null
 payload:
   id: CT2_the_code_tab
@@ -26,5 +26,36 @@ payload:
     - CT1_one_pending_change_path
   blocks: []
   spec: null
-  graph: 4c5f7f3919966700
+  graph:
+    hash: 4c5f7f3919966700
+    nodes:
+      - path: idearium/ui/js/code-tab.js
+        role: changes
+        exists: false
+        system: idearium
+      - path: idearium/ui/js/work-surface.js
+        role: changes
+        exists: true
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-05-cli-data-code-phasemap.spec::CT1_one_pending_change_path
+      dependents: []
+      upstream:
+        - docs/2026-10-05-cli-data-code-phasemap.spec::CT1_one_pending_change_path
+      downstream: []
+      blockedBy:
+        - docs/2026-10-05-cli-data-code-phasemap.spec::CT1_one_pending_change_path
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by CT1_one_pending_change_path
+        - 'depends on (1): CT1_one_pending_change_path'
+        - 'needed by (0): —'
   uuid: 2592fd03-cf4b-5e96-be05-7a56b774faf5

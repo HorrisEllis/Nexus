@@ -5,13 +5,13 @@ id: docs_2026-10-17-system-drawbridge-phasemap.spec::DB7_the_ui_floats_on_top
 context: pipeline phase DB7_the_ui_floats_on_top of docs/2026-10-17-system-drawbridge-phasemap.spec
 intent: null
 summary: DB7_the_ui_floats_on_top (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830628904
+exported_at: 1792852542827
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830628904
-lastSeenAt: 1792830628904
+firstSeenAt: 1792852542827
+lastSeenAt: 1792852542827
 fingerprint: null
 payload:
   id: DB7_the_ui_floats_on_top
@@ -23,5 +23,28 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 3edb553849e9c3bc
+  graph:
+    hash: 3edb553849e9c3bc
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
+        - >-
+          no depends_on line in its map — the standard is to write one ([] when it depends on
+          nothing)
   uuid: 351bdc43-742b-5ed6-9aa9-eb9c1036a328

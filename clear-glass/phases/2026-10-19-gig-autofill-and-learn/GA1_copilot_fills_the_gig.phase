@@ -5,13 +5,13 @@ id: docs_2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1_copilot_fills_the_
 context: pipeline phase GA1_copilot_fills_the_gig of docs/2026-10-19-gig-autofill-and-learn-phasemap.spec
 intent: null
 summary: GA1_copilot_fills_the_gig (?) — 3 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830631531
+exported_at: 1792852545375
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830631531
-lastSeenAt: 1792830631531
+firstSeenAt: 1792852545375
+lastSeenAt: 1792852545375
 fingerprint: null
 payload:
   id: GA1_copilot_fills_the_gig
@@ -26,5 +26,183 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 6d8a7e5ce0db2455
+  graph:
+    hash: 6d8a7e5ce0db2455
+    nodes:
+      - path: clear-glass/src/copilot/hat.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/copilot/tools.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/ipc/bridge.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/copilot/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.pre-userscripts.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/test/copilot-cli.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: tests/modules/test-cg-gig-autofill.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: clear-glass/src/adblock/lists.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/autofill/matcher.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/core/bus.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/dom/archaeology.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/ipc/handler-registry.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/bridge-sources.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/host-import.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/kill-switch.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/net/service.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/screen-qa/detector.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: lib/hat-forge.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/micro-http.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: clear-glass/src/copilot/hat.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: lib/micro-http.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/ipc/handler-registry.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/core/bus.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/autofill/matcher.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/screen-qa/detector.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/dom/archaeology.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/net/service.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/net/bridge-sources.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/net/kill-switch.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/adblock/lists.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/net/host-import.js
+        kind: requires
+      - from: clear-glass/src/copilot/bridge.js
+        to: clear-glass/src/copilot/tools.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: clear-glass/src/copilot/tools.js
+        kind: requires
+      - from: clear-glass/test/copilot-cli.test.js
+        to: clear-glass/src/copilot/hat.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: clear-glass/src/ipc/bridge.js
+        kind: requires
+      - from: clear-glass/src/main/index.pre-userscripts.js
+        to: clear-glass/src/ipc/bridge.js
+        kind: requires
+      - from: tests/modules/test-cg-gig-autofill.test.js
+        to: clear-glass/src/ipc/bridge.js
+        kind: requires
+    crossings:
+      - from: orchestrator/orchestrator.js
+        to: clear-glass/src/copilot/tools.js
+        fromSystem: orchestrator
+        toSystem: clear-glass
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA2_a_missed_field_asks_the_picker
+      upstream: []
+      downstream:
+        - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA2_a_missed_field_asks_the_picker
+        - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA3_the_pick_is_saved_three_ways
+        - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA4_the_matcher_learns
+        - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA5_commands_and_the_panel
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA2_a_missed_field_asks_the_picker
+      conflicts:
+        - with: docs/2026-10-19-gig-autofill-and-learn-phasemap.spec::GA1a_a_written_gig_is_remembered
+          files:
+            - clear-glass/src/ipc/bridge.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - >-
+          needed by (1): GA2_a_missed_field_asks_the_picker · all downstream 4 · finishing it
+          unlocks GA2_a_missed_field_asks_the_picker
+        - >-
+          same files as GA1a_a_written_gig_is_remembered with no order between them:
+          clear-glass/src/ipc/bridge.js
   uuid: f0b7b028-0918-5023-8bb4-e737add4d3e4

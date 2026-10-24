@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec
 intent: null
 summary: LM9_deterministic_agent_switch_cli (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830584038
+exported_at: 1792852497422
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830584038
-lastSeenAt: 1792830584038
+firstSeenAt: 1792852497422
+lastSeenAt: 1792852497422
 fingerprint: null
 payload:
   id: LM9_deterministic_agent_switch_cli
@@ -25,5 +25,33 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: e66e4bcde0f0b933
+  graph:
+    hash: e66e4bcde0f0b933
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM10_per_agent_wake_words
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM11_copilot_ollama_guardian_toggle
+      upstream: []
+      downstream:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM10_per_agent_wake_words
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM11_copilot_ollama_guardian_toggle
+      blockedBy: []
+      unlocks:
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM10_per_agent_wake_words
+        - docs/2026-09-01-living-model-and-autonomous-pipeline-phasemap.spec::LM11_copilot_ollama_guardian_toggle
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - >-
+          needed by (2): LM10_per_agent_wake_words, LM11_copilot_ollama_guardian_toggle · finishing
+          it unlocks LM10_per_agent_wake_words, LM11_copilot_ollama_guardian_toggle
   uuid: c5236419-db74-5d66-a150-19f9efa55935

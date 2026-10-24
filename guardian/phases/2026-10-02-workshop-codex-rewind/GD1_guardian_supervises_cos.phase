@@ -5,13 +5,13 @@ id: docs_2026-10-02-workshop-codex-rewind-phasemap.spec::GD1_guardian_supervises
 context: pipeline phase GD1_guardian_supervises_cos of docs/2026-10-02-workshop-codex-rewind-phasemap.spec
 intent: null
 summary: GD1_guardian_supervises_cos (?) — 2 file(s)
-system: idearium
+system: guardian
 tags: []
-exported_at: 1792830600799
+exported_at: 1792852515062
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830600799
-lastSeenAt: 1792830600799
+firstSeenAt: 1792852515062
+lastSeenAt: 1792852515062
 fingerprint: null
 payload:
   id: GD1_guardian_supervises_cos
@@ -26,5 +26,97 @@ payload:
     - RW1_rewind_engine_vm_snapshots
   blocks: []
   spec: null
-  graph: 1d0485d9b5519bbc
+  graph:
+    hash: 1d0485d9b5519bbc
+    nodes:
+      - path: cos/workspace/index.js
+        role: changes
+        exists: true
+        system: cos
+      - path: guardian/lib/cos-supervisor.js
+        role: changes
+        exists: false
+        system: guardian
+      - path: cos/workspace/vm-control.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: lib/cos-bridge.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/shadow-space.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: cos/compartment/guest-agent.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/compartment/qemu-runtime.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/host.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/testenv/tar.js
+        role: uses
+        exists: true
+        system: cos
+    edges:
+      - from: cos/workspace/index.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/testenv/host.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/testenv/tar.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/compartment/guest-agent.js
+        kind: requires
+      - from: cos/workspace/vm-control.js
+        to: cos/workspace/index.js
+        kind: requires
+      - from: lib/cos-bridge.js
+        to: cos/workspace/index.js
+        kind: requires
+      - from: lib/shadow-space.js
+        to: cos/workspace/index.js
+        kind: requires
+    crossings:
+      - from: lib/cos-bridge.js
+        to: cos/workspace/index.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: lib/shadow-space.js
+        to: cos/workspace/index.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::RW1_rewind_engine_vm_snapshots
+      dependents: []
+      upstream:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::RW1_rewind_engine_vm_snapshots
+      downstream: []
+      blockedBy:
+        - docs/2026-10-02-workshop-codex-rewind-phasemap.spec::RW1_rewind_engine_vm_snapshots
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by RW1_rewind_engine_vm_snapshots
+        - 'depends on (1): RW1_rewind_engine_vm_snapshots'
+        - 'needed by (0): —'
   uuid: d8e6bf0e-79d3-5780-a1f8-616bb8206eac

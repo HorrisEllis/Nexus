@@ -5,13 +5,13 @@ id: docs_2026-10-15-gate-held-work-phasemap.spec::GW11_a_snapshot_per_gate
 context: pipeline phase GW11_a_snapshot_per_gate of docs/2026-10-15-gate-held-work-phasemap.spec
 intent: null
 summary: GW11_a_snapshot_per_gate (?) — 4 file(s)
-system: idearium
+system: cos
 tags: []
-exported_at: 1792830618167
+exported_at: 1792852532118
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830618167
-lastSeenAt: 1792830618167
+firstSeenAt: 1792852532118
+lastSeenAt: 1792852532118
 fingerprint: null
 payload:
   id: GW11_a_snapshot_per_gate
@@ -29,5 +29,191 @@ payload:
     - GW14_copy_in_diff_out
   blocks: []
   spec: null
-  graph: c999f94ef6a49515
+  graph:
+    hash: c999f94ef6a49515
+    nodes:
+      - path: cortex/core/raid/contract-gates.js
+        role: changes
+        exists: true
+        system: cortex
+      - path: cos/compartment/qemu-runtime.js
+        role: changes
+        exists: true
+        system: cos
+      - path: cos/workspace/vm-control.js
+        role: changes
+        exists: true
+        system: cos
+      - path: versionium/lib/releases.js
+        role: changes
+        exists: true
+        system: versionium
+      - path: cortex/core/raid/contract-adapters.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cortex/core/raid/contract-intake.js
+        role: used-by
+        exists: true
+        system: cortex
+      - path: cos/cli/commands/vm.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/compartment/process-runner.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/testenv/index.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/testenv/provision.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/testenv/setup-job.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: cos/workspace/index.js
+        role: used-by
+        exists: true
+        system: cos
+      - path: idearium/api/index.js
+        role: used-by
+        exists: true
+        system: idearium
+      - path: lib/cos-bridge.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: tests/helpers/cos-mini-guest.js
+        role: used-by
+        exists: true
+        system: null
+      - path: tests/modules/test-cos-vm-shell.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: cos/testenv/host.js
+        role: uses
+        exists: true
+        system: cos
+      - path: cos/workspace/index.js
+        role: uses
+        exists: true
+        system: cos
+      - path: versionium/lib/store.js
+        role: uses
+        exists: true
+        system: versionium
+    edges:
+      - from: cos/compartment/qemu-runtime.js
+        to: cos/testenv/host.js
+        kind: requires
+      - from: cos/workspace/vm-control.js
+        to: cos/workspace/index.js
+        kind: requires
+      - from: versionium/lib/releases.js
+        to: versionium/lib/store.js
+        kind: requires
+      - from: cos/cli/commands/vm.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cos/compartment/process-runner.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cos/testenv/index.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cos/testenv/provision.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cos/testenv/setup-job.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: cos/workspace/index.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: tests/helpers/cos-mini-guest.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: tests/modules/test-cos-vm-shell.test.js
+        to: cos/compartment/qemu-runtime.js
+        kind: requires
+      - from: lib/cos-bridge.js
+        to: cos/workspace/vm-control.js
+        kind: requires
+      - from: cortex/core/raid/contract-adapters.js
+        to: cortex/core/raid/contract-gates.js
+        kind: requires
+      - from: cortex/core/raid/contract-intake.js
+        to: cortex/core/raid/contract-gates.js
+        kind: requires
+      - from: idearium/api/index.js
+        to: cortex/core/raid/contract-gates.js
+        kind: requires
+    crossings:
+      - from: lib/cos-bridge.js
+        to: cos/workspace/vm-control.js
+        fromSystem: lib
+        toSystem: cos
+        kind: upward
+        known: true
+      - from: idearium/api/index.js
+        to: cortex/core/raid/contract-gates.js
+        fromSystem: idearium
+        toSystem: cortex
+        kind: system
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+      dependents:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW18_debug_by_bisect
+      upstream:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW0_what_is_a_gate
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW0e_sandbox_egress
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW13_the_sandbox_door
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW2_the_run_follows_the_gate
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+      downstream:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW18_debug_by_bisect
+      blockedBy:
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW3_a_contract_is_traced
+        - docs/2026-10-15-gate-held-work-phasemap.spec::GW14_copy_in_diff_out
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW7_failure_macro_and_rewind
+          files:
+            - cortex/core/raid/contract-gates.js
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+          files:
+            - cortex/core/raid/contract-gates.js
+        - with: docs/2026-10-15-gate-held-work-phasemap.spec::GW26_everything_declares_what_it_needs
+          files:
+            - cortex/core/raid/contract-gates.js
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 5 · blocked by GW3_a_contract_is_traced,
+          GW14_copy_in_diff_out
+        - 'depends on (2): GW3_a_contract_is_traced, GW14_copy_in_diff_out · all upstream 7'
+        - 'needed by (1): GW18_debug_by_bisect'
+        - >-
+          same files as GW7_failure_macro_and_rewind with no order between them:
+          cortex/core/raid/contract-gates.js
+        - >-
+          same files as GW24_the_gate_holds_the_agent_gets_a_projection with no order between them:
+          cortex/core/raid/contract-gates.js
+        - >-
+          same files as GW26_everything_declares_what_it_needs with no order between them:
+          cortex/core/raid/contract-gates.js
   uuid: cde7eeec-08bc-57cc-a32e-2c5db19e77dd

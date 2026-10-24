@@ -5,13 +5,13 @@ id: docs_2026-09-29-nex-node-store-phasemap.spec::N1_record_and_log
 context: pipeline phase N1_record_and_log of docs/2026-09-29-nex-node-store-phasemap.spec
 intent: null
 summary: N1_record_and_log (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830596157
+exported_at: 1792852509959
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830596157
-lastSeenAt: 1792830596157
+firstSeenAt: 1792852509959
+lastSeenAt: 1792852509959
 fingerprint: null
 payload:
   id: N1_record_and_log
@@ -25,5 +25,53 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 6d4e3abb4292bf6a
+  graph:
+    hash: 6d4e3abb4292bf6a
+    nodes:
+      - path: lib/nexstore/log.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/nexstore/record.js
+        role: changes
+        exists: true
+        system: lib
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+      upstream: []
+      downstream:
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N10_migration
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N11_adopters
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N12_ui
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N13_release
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N14_failure_mode_field
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N15_contract_history
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N16_settings_without_iframes
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N17_data_migration_to_owning_systems
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N21_no_empty_generation_event_gates
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N22_shadow_and_negative_space_reasoning
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N23_ollama_first_build_then_agent_review
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N24_no_json_yaml_node_types_only
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N3_projection_and_indexes
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N4_kinds_record_ledger_ring_blob
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N5_kinds_edge_and_lattice
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N6_time
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N7_views_yaml_and_nex
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N8_service
+        - docs/2026-09-29-nex-node-store-phasemap.spec::N9_cli
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0
+        - 'depends on (0): —'
+        - 'needed by (1): N3_projection_and_indexes · all downstream 19'
   uuid: a50ad5ca-f86d-5263-96f8-8a790a786603

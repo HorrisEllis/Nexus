@@ -5,13 +5,13 @@ id: docs_2026-10-19-pipeline-root-causes-phasemap.spec::MEM1_cortex_keeps_the_bo
 context: pipeline phase MEM1_cortex_keeps_the_books of docs/2026-10-19-pipeline-root-causes-phasemap.spec
 intent: null
 summary: MEM1_cortex_keeps_the_books (foundation) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632812
+exported_at: 1792852546593
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632812
-lastSeenAt: 1792830632812
+firstSeenAt: 1792852546593
+lastSeenAt: 1792852546593
 fingerprint: null
 payload:
   id: MEM1_cortex_keeps_the_books
@@ -24,5 +24,60 @@ payload:
     - SS1_system_store_adoption
   blocks: []
   spec: null
-  graph: 5dc59a5287acfba0
+  graph:
+    hash: 5dc59a5287acfba0
+    nodes:
+      - path: lib/system-store.js
+        role: changes
+        exists: true
+        system: lib
+      - path: diagnostic/healer/api/index.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: guardian/agents/index.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: tests/modules/test-sovereign-systems.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/jaa-store.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: lib/system-store.js
+        to: lib/jaa-store.js
+        kind: requires
+      - from: diagnostic/healer/api/index.js
+        to: lib/system-store.js
+        kind: requires
+      - from: guardian/agents/index.js
+        to: lib/system-store.js
+        kind: requires
+      - from: tests/modules/test-sovereign-systems.test.js
+        to: lib/system-store.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+      dependents: []
+      upstream:
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC1_watchers_never_kill_a_kernel
+        - docs/2026-10-19-pipeline-root-causes-phasemap.spec::SS1_system_store_adoption
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2 · ready
+        - 'depends on (1): SS1_system_store_adoption · all upstream 2'
+        - 'needed by (0): —'
   uuid: 43e0a74a-1c02-5021-9406-6fca83ee7f85

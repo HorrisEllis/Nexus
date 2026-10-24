@@ -5,13 +5,13 @@ id: docs_2026-09-19-architect-blueprint-forge-idearium-phasemap.spec::D3_forge_h
 context: pipeline phase D3_forge_home of docs/2026-09-19-architect-blueprint-forge-idearium-phasemap.spec
 intent: null
 summary: D3_forge_home (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830588788
+exported_at: 1792852502408
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830588788
-lastSeenAt: 1792830588788
+firstSeenAt: 1792852502408
+lastSeenAt: 1792852502408
 fingerprint: null
 payload:
   id: D3_forge_home
@@ -23,5 +23,29 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 7ff7551fb29251f8
+  graph:
+    hash: 7ff7551fb29251f8
+    nodes:
+      - path: cockpit/cockpit.spec
+        role: changes
+        exists: true
+        system: cockpit
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: 5ccf24d8-b4bd-51f2-aead-619ccc01f28b

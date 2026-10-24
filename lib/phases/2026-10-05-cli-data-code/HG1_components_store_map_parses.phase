@@ -5,13 +5,13 @@ id: docs_2026-10-05-cli-data-code-phasemap.spec::HG1_components_store_map_parses
 context: pipeline phase HG1_components_store_map_parses of docs/2026-10-05-cli-data-code-phasemap.spec
 intent: null
 summary: HG1_components_store_map_parses (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830602128
+exported_at: 1792852516508
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830602128
-lastSeenAt: 1792830602128
+firstSeenAt: 1792852516508
+lastSeenAt: 1792852516508
 fingerprint: null
 payload:
   id: HG1_components_store_map_parses
@@ -24,5 +24,29 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: dcd4302a4f92f533
+  graph:
+    hash: dcd4302a4f92f533
+    nodes:
+      - path: docs/2026-09-27-components-store-and-atlases-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 0
+      deps: []
+      dependents: []
+      upstream: []
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 0 · ready
+        - 'depends on (0): —'
+        - 'needed by (0): —'
   uuid: f08929a1-f457-5a3c-8001-84fbcad1e8ca

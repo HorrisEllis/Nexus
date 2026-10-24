@@ -9,11 +9,11 @@ intent: null
 summary: FG3_summaries_up_the_tree (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792830599574
+exported_at: 1792852513799
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830599574
-lastSeenAt: 1792830599574
+firstSeenAt: 1792852513799
+lastSeenAt: 1792852513799
 fingerprint: null
 payload:
   id: FG3_summaries_up_the_tree
@@ -27,5 +27,36 @@ payload:
     - FG1_containment_tree
   blocks: []
   spec: null
-  graph: b2a59b562ac95c2c
+  graph:
+    hash: b2a59b562ac95c2c
+    nodes:
+      - path: idearium/repo/summaries.js
+        role: changes
+        exists: false
+        system: idearium
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+      dependents:
+        - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+      upstream:
+        - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+      downstream:
+        - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG4_context_for_any_agent
+        - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG5_recursive_build
+        - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::WS5_the_whole_workshop
+      blockedBy:
+        - docs/2026-10-02-fractal-graph-any-size-agent-phasemap.spec::FG1_containment_tree
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by FG1_containment_tree
+        - 'depends on (1): FG1_containment_tree'
+        - 'needed by (1): FG4_context_for_any_agent · all downstream 3'
   uuid: c35fa2d3-d3ef-5375-9431-dc76f8079ae6

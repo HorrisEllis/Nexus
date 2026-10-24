@@ -5,13 +5,13 @@ id: docs_2026-10-15-macro-node-recording-phasemap.spec::MR7_bind_and_trigger
 context: pipeline phase MR7_bind_and_trigger of docs/2026-10-15-macro-node-recording-phasemap.spec
 intent: null
 summary: MR7_bind_and_trigger (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830618627
+exported_at: 1792852532593
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830618627
-lastSeenAt: 1792830618627
+firstSeenAt: 1792852532593
+lastSeenAt: 1792852532593
 fingerprint: null
 payload:
   id: MR7_bind_and_trigger
@@ -24,5 +24,27 @@ payload:
     - MR1_live_node
   blocks: []
   spec: null
-  graph: 85a2b68eacd68d1f
+  graph:
+    hash: 85a2b68eacd68d1f
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-15-macro-node-recording-phasemap.spec::MR1_live_node
+      dependents: []
+      upstream:
+        - docs/2026-10-15-macro-node-recording-phasemap.spec::MR1_live_node
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): MR1_live_node'
+        - 'needed by (0): —'
   uuid: e6a1c5c2-162e-56d5-92ae-866cc61f5fe2

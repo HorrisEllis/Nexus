@@ -7,13 +7,13 @@ context: >-
   docs/2026-08-30-interaction-contract-context-phasemap.spec
 intent: null
 summary: IC12_universal_gap_and_symmetry_detection (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830583617
+exported_at: 1792852496986
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830583617
-lastSeenAt: 1792830583617
+firstSeenAt: 1792852496986
+lastSeenAt: 1792852496986
 fingerprint: null
 payload:
   id: IC12_universal_gap_and_symmetry_detection
@@ -27,5 +27,184 @@ payload:
     - IC5_full_input_queue_output_qc_lifecycle
   blocks: []
   spec: null
-  graph: 4c68e3f3c0900e7c
+  graph:
+    hash: 4c68e3f3c0900e7c
+    nodes:
+      - path: docs/2026-08-28-definition-of-complete-phasemap.spec
+        role: changes
+        exists: true
+        system: null
+      - path: lib/file-integrity.js
+        role: changes
+        exists: true
+        system: lib
+      - path: lib/seam/spec-parser.js
+        role: changes
+        exists: true
+        system: lib
+      - path: orchestrator/lib/sigma-writer.js
+        role: changes
+        exists: true
+        system: orchestrator
+      - path: diagnostic/nexus-diagnostic.js
+        role: used-by
+        exists: true
+        system: diagnostic
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: lib/integrity-revert.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/nexus-expansion-boot.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/seam/index.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: lib/spec-from-markdown.js
+        role: used-by
+        exists: true
+        system: lib
+      - path: orchestrator/orchestrator.js
+        role: used-by
+        exists: true
+        system: orchestrator
+      - path: cortex/memory/jaa-db.js
+        role: uses
+        exists: true
+        system: cortex
+      - path: idearium/lib/event-ledger.cjs
+        role: uses
+        exists: true
+        system: idearium
+      - path: intelligence/cfr/field.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: intelligence/cfr/sigma.js
+        role: uses
+        exists: true
+        system: intelligence
+      - path: lib/agent-router.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/event-types.js
+        role: uses
+        exists: true
+        system: lib
+      - path: nexus/nexus-bus.js
+        role: uses
+        exists: true
+        system: nexus
+    edges:
+      - from: orchestrator/lib/sigma-writer.js
+        to: cortex/memory/jaa-db.js
+        kind: requires
+      - from: orchestrator/lib/sigma-writer.js
+        to: nexus/nexus-bus.js
+        kind: requires
+      - from: orchestrator/lib/sigma-writer.js
+        to: idearium/lib/event-ledger.cjs
+        kind: requires
+      - from: orchestrator/lib/sigma-writer.js
+        to: intelligence/cfr/field.js
+        kind: requires
+      - from: orchestrator/lib/sigma-writer.js
+        to: intelligence/cfr/sigma.js
+        kind: requires
+      - from: lib/seam/spec-parser.js
+        to: lib/agent-router.js
+        kind: requires
+      - from: lib/seam/spec-parser.js
+        to: lib/event-types.js
+        kind: requires
+      - from: diagnostic/nexus-diagnostic.js
+        to: lib/file-integrity.js
+        kind: requires
+      - from: lib/integrity-revert.js
+        to: lib/file-integrity.js
+        kind: requires
+      - from: lib/nexus-expansion-boot.js
+        to: orchestrator/lib/sigma-writer.js
+        kind: requires
+      - from: orchestrator/orchestrator.js
+        to: orchestrator/lib/sigma-writer.js
+        kind: requires
+      - from: guardian/server.js
+        to: lib/seam/spec-parser.js
+        kind: requires
+      - from: lib/seam/index.js
+        to: lib/seam/spec-parser.js
+        kind: requires
+      - from: lib/spec-from-markdown.js
+        to: lib/seam/spec-parser.js
+        kind: requires
+    crossings:
+      - from: orchestrator/lib/sigma-writer.js
+        to: cortex/memory/jaa-db.js
+        fromSystem: orchestrator
+        toSystem: cortex
+        kind: system
+        known: true
+      - from: orchestrator/lib/sigma-writer.js
+        to: nexus/nexus-bus.js
+        fromSystem: orchestrator
+        toSystem: nexus
+        kind: system
+        known: true
+      - from: orchestrator/lib/sigma-writer.js
+        to: idearium/lib/event-ledger.cjs
+        fromSystem: orchestrator
+        toSystem: idearium
+        kind: system
+        known: true
+      - from: orchestrator/lib/sigma-writer.js
+        to: intelligence/cfr/field.js
+        fromSystem: orchestrator
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: orchestrator/lib/sigma-writer.js
+        to: intelligence/cfr/sigma.js
+        fromSystem: orchestrator
+        toSystem: intelligence
+        kind: system
+        known: true
+      - from: lib/nexus-expansion-boot.js
+        to: orchestrator/lib/sigma-writer.js
+        fromSystem: lib
+        toSystem: orchestrator
+        kind: upward
+        known: true
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 4
+      deps:
+        - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+        - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC5_full_input_queue_output_qc_lifecycle
+      dependents: []
+      upstream:
+        - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC5_full_input_queue_output_qc_lifecycle
+        - docs/raid-routing-fidelity-phasemap.spec::RR1_verify_and_wire_the_snr_fidelity_gate
+        - docs/raid-routing-fidelity-phasemap.spec::RR2_contract_based_chunking
+        - docs/raid-routing-fidelity-phasemap.spec::RR4_governed_handshake_on_handoff
+      downstream: []
+      blockedBy:
+        - docs/2026-08-30-interaction-contract-context-phasemap.spec::IC5_full_input_queue_output_qc_lifecycle
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 4 · blocked by IC5_full_input_queue_output_qc_lifecycle
+        - >-
+          depends on (2): RR4_governed_handshake_on_handoff,
+          IC5_full_input_queue_output_qc_lifecycle · all upstream 4
+        - 'needed by (0): —'
   uuid: 96eb9863-8d27-5178-8c66-0904693ef31b

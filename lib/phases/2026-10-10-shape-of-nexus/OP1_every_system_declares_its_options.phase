@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-10-shape-of-nexus-phasemap.spec
 intent: null
 summary: OP1_every_system_declares_its_options (?) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830611838
+exported_at: 1792852525743
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830611838
-lastSeenAt: 1792830611838
+firstSeenAt: 1792852525743
+lastSeenAt: 1792852525743
 fingerprint: null
 payload:
   id: OP1_every_system_declares_its_options
@@ -27,5 +27,101 @@ payload:
     - OP0_one_options_shape_for_every_system
   blocks: []
   spec: null
-  graph: 954ea8eee677f68e
+  graph:
+    hash: 954ea8eee677f68e
+    nodes:
+      - path: guardian/options.js
+        role: changes
+        exists: true
+        system: guardian
+      - path: guardian/ask.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/dispatch-ladder.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/dispatcher.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/job-retry.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/ncp-handler.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/provider-attention.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/lib/wake-loop.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: guardian/server.js
+        role: used-by
+        exists: true
+        system: guardian
+      - path: lib/options.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: guardian/options.js
+        to: lib/options.js
+        kind: requires
+      - from: guardian/ask.js
+        to: guardian/options.js
+        kind: requires
+      - from: guardian/lib/dispatch-ladder.js
+        to: guardian/options.js
+        kind: requires
+      - from: guardian/lib/dispatcher.js
+        to: guardian/options.js
+        kind: requires
+      - from: guardian/lib/job-retry.js
+        to: guardian/options.js
+        kind: requires
+      - from: guardian/lib/ncp-handler.js
+        to: guardian/options.js
+        kind: requires
+      - from: guardian/lib/provider-attention.js
+        to: guardian/options.js
+        kind: requires
+      - from: guardian/lib/wake-loop.js
+        to: guardian/options.js
+        kind: requires
+      - from: guardian/server.js
+        to: guardian/options.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP0_one_options_shape_for_every_system
+      dependents:
+        - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP2_the_system_settings_in_its_repo
+      upstream:
+        - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP0_one_options_shape_for_every_system
+      downstream:
+        - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP2_the_system_settings_in_its_repo
+        - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP3_copilot_reads_and_sets_options
+        - docs/2026-10-10-shape-of-nexus-phasemap.spec::SH2_explain_this_anywhere
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-10-shape-of-nexus-phasemap.spec::OP2_the_system_settings_in_its_repo
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): OP0_one_options_shape_for_every_system'
+        - >-
+          needed by (1): OP2_the_system_settings_in_its_repo · all downstream 3 · finishing it
+          unlocks OP2_the_system_settings_in_its_repo
   uuid: f8252b7f-04d6-51b9-8cf3-a78850f52fcd

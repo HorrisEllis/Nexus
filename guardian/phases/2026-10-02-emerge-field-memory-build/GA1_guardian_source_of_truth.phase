@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-02-emerge-field-memory-build-phasemap.spec
 intent: null
 summary: GA1_guardian_source_of_truth (?) — 8 file(s)
-system: idearium
+system: guardian
 tags: []
-exported_at: 1792830599111
+exported_at: 1792852513239
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830599111
-lastSeenAt: 1792830599111
+firstSeenAt: 1792852513239
+lastSeenAt: 1792852513239
 fingerprint: null
 payload:
   id: GA1_guardian_source_of_truth
@@ -35,5 +35,175 @@ payload:
     - EV0_contracts_for_every_system
   blocks: []
   spec: null
-  graph: ccca30879096d636
+  graph:
+    hash: ccca30879096d636
+    nodes:
+      - path: clear-glass/src/providers/registry.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/userscripts/manager.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: docs/guardian.spec
+        role: changes
+        exists: true
+        system: null
+      - path: guardian/spec/guardian.spec
+        role: changes
+        exists: true
+        system: guardian
+      - path: guardian/userscripts.yaml
+        role: changes
+        exists: true
+        system: guardian
+      - path: lib/hat-forge.js
+        role: changes
+        exists: true
+        system: lib
+      - path: clear-glass/src/contexts/session-headers.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/copilot/hat.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/ipc/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/providers/host.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/providers/selector-assign.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/test/phase2.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: clear-glass/test/userscripts-dedupe.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: clear-glass/test/userscripts-manifest.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: copilot/lib/self-model.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: copilot/server.js
+        role: used-by
+        exists: true
+        system: copilot
+      - path: tests/modules/nexus-options-autoboot.test.js
+        role: used-by
+        exists: true
+        system: null
+      - path: lib/agent-facts-hash.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/data-home.js
+        role: uses
+        exists: true
+        system: lib
+      - path: lib/node-export.js
+        role: uses
+        exists: true
+        system: lib
+    edges:
+      - from: clear-glass/src/providers/registry.js
+        to: lib/agent-facts-hash.js
+        kind: requires
+      - from: clear-glass/src/providers/registry.js
+        to: lib/data-home.js
+        kind: requires
+      - from: lib/hat-forge.js
+        to: lib/node-export.js
+        kind: requires
+      - from: clear-glass/src/contexts/session-headers.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/src/providers/host.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/src/providers/selector-assign.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/test/phase2.test.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: tests/modules/nexus-options-autoboot.test.js
+        to: clear-glass/src/providers/registry.js
+        kind: requires
+      - from: clear-glass/test/userscripts-dedupe.test.js
+        to: clear-glass/src/userscripts/manager.js
+        kind: requires
+      - from: clear-glass/test/userscripts-manifest.test.js
+        to: clear-glass/src/userscripts/manager.js
+        kind: requires
+      - from: clear-glass/src/copilot/hat.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: copilot/lib/self-model.js
+        to: lib/hat-forge.js
+        kind: requires
+      - from: copilot/server.js
+        to: lib/hat-forge.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      dependents:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN1_nexus_as_claude_codes_toolbox
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_agents
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+      upstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EM0_ground
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::EV0_contracts_for_every_system
+      downstream:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::AC1_accounts_into_agents
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::BT1_build_teams
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN1_nexus_as_claude_codes_toolbox
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN2_claude_code_inside_nexus
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+      blockedBy: []
+      unlocks:
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::IN1_nexus_as_claude_codes_toolbox
+        - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::PR2_screenshots_through_clear_glass
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 2
+        - 'depends on (2): EM0_ground, EV0_contracts_for_every_system'
+        - >-
+          needed by (5): BT1_build_teams, IN1_nexus_as_claude_codes_toolbox,
+          IN2_claude_code_inside_nexus, AC1_accounts_into_agents,
+          PR2_screenshots_through_clear_glass · all downstream 6 · finishing it unlocks
+          IN1_nexus_as_claude_codes_toolbox, PR2_screenshots_through_clear_glass
   uuid: c486f0b7-ef5d-5a11-9d67-6131b1af64c0

@@ -5,13 +5,13 @@ id: docs_2026-10-05-fiverr-guide-phasemap.spec::FR2_show_me_on_the_page
 context: pipeline phase FR2_show_me_on_the_page of docs/2026-10-05-fiverr-guide-phasemap.spec
 intent: null
 summary: FR2_show_me_on_the_page (?) — 3 file(s)
-system: idearium
+system: clear-glass
 tags: []
-exported_at: 1792830603820
+exported_at: 1792852518156
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830603820
-lastSeenAt: 1792830603820
+firstSeenAt: 1792852518156
+lastSeenAt: 1792852518156
 fingerprint: null
 payload:
   id: FR2_show_me_on_the_page
@@ -27,5 +27,124 @@ payload:
     - FR1_the_guide
   blocks: []
   spec: null
-  graph: b6e7861ffe663d01
+  graph:
+    hash: b6e7861ffe663d01
+    nodes:
+      - path: clear-glass/src/dom/archaeology.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/driver/index.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/page/field.js
+        role: changes
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/copilot/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/ipc/bridge.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.pre-userscripts.js
+        role: used-by
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/core/zoom.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/driver/page-resolver.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/main/index.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/page/page-memory.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/page/page-session.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/page/reader.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/page/semantic-tree.js
+        role: uses
+        exists: true
+        system: clear-glass
+      - path: clear-glass/src/site-settings/readers.js
+        role: uses
+        exists: true
+        system: clear-glass
+    edges:
+      - from: clear-glass/src/dom/archaeology.js
+        to: clear-glass/src/driver/page-resolver.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/site-settings/readers.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/core/zoom.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/page/reader.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/page/semantic-tree.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/main/index.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/page/page-session.js
+        kind: requires
+      - from: clear-glass/src/driver/index.js
+        to: clear-glass/src/page/page-memory.js
+        kind: requires
+      - from: clear-glass/src/ipc/bridge.js
+        to: clear-glass/src/dom/archaeology.js
+        kind: requires
+      - from: clear-glass/src/main/index.js
+        to: clear-glass/src/dom/archaeology.js
+        kind: requires
+      - from: clear-glass/src/main/index.pre-userscripts.js
+        to: clear-glass/src/dom/archaeology.js
+        kind: requires
+      - from: clear-glass/src/copilot/bridge.js
+        to: clear-glass/src/page/field.js
+        kind: requires
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-05-fiverr-guide-phasemap.spec::FR1_the_guide
+      dependents: []
+      upstream:
+        - docs/2026-10-05-fiverr-guide-phasemap.spec::FR1_the_guide
+      downstream: []
+      blockedBy:
+        - docs/2026-10-05-fiverr-guide-phasemap.spec::FR1_the_guide
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by FR1_the_guide
+        - 'depends on (1): FR1_the_guide'
+        - 'needed by (0): —'
   uuid: bdc37598-7ed4-51a3-8e9d-4013348def8d

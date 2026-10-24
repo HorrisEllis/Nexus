@@ -5,13 +5,13 @@ id: docs_2026-10-10-idearium-access-phasemap.spec::IA7_the_hat_is_the_actor
 context: pipeline phase IA7_the_hat_is_the_actor of docs/2026-10-10-idearium-access-phasemap.spec
 intent: null
 summary: IA7_the_hat_is_the_actor (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830610578
+exported_at: 1792852524506
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830610578
-lastSeenAt: 1792830610578
+firstSeenAt: 1792852524506
+lastSeenAt: 1792852524506
 fingerprint: null
 payload:
   id: IA7_the_hat_is_the_actor
@@ -24,5 +24,27 @@ payload:
     - IA0_the_door_checks_who_is_asking
   blocks: []
   spec: null
-  graph: cff039c2c9e53264
+  graph:
+    hash: cff039c2c9e53264
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-10-idearium-access-phasemap.spec::IA0_the_door_checks_who_is_asking
+      dependents: []
+      upstream:
+        - docs/2026-10-10-idearium-access-phasemap.spec::IA0_the_door_checks_who_is_asking
+      downstream: []
+      blockedBy: []
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · ready
+        - 'depends on (1): IA0_the_door_checks_who_is_asking'
+        - 'needed by (0): —'
   uuid: 1b492a3f-d972-5242-bbc2-efc4ba735d08

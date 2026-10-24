@@ -7,13 +7,13 @@ context: >-
   docs/2026-09-11-sovereign-node-architecture-phasemap.spec
 intent: null
 summary: P34_nodes_in_the_lattice (?) — 0 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830587139
+exported_at: 1792852500754
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830587139
-lastSeenAt: 1792830587139
+firstSeenAt: 1792852500754
+lastSeenAt: 1792852500754
 fingerprint: null
 payload:
   id: P34_nodes_in_the_lattice
@@ -27,5 +27,37 @@ payload:
     - P19_dynamic_nodes_via_causal_graph
   blocks: []
   spec: null
-  graph: 2e02ff3713ff6e57
+  graph:
+    hash: 2e02ff3713ff6e57
+    nodes: []
+    edges: []
+    crossings: []
+    ready: false
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 2
+      deps:
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+      dependents: []
+      upstream:
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P3_per_system_node_schemas
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P5_data_folder_completion
+      downstream: []
+      blockedBy:
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P33_every_system_runs_its_node_registry
+        - docs/2026-09-11-sovereign-node-architecture-phasemap.spec::P19_dynamic_nodes_via_causal_graph
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 2 · blocked by P33_every_system_runs_its_node_registry,
+          P19_dynamic_nodes_via_causal_graph
+        - >-
+          depends on (2): P33_every_system_runs_its_node_registry,
+          P19_dynamic_nodes_via_causal_graph · all upstream 4
+        - 'needed by (0): —'
   uuid: 04dce024-9753-5896-83a7-ba4851606d04

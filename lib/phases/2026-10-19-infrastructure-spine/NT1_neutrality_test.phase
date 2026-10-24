@@ -5,13 +5,13 @@ id: docs_2026-10-19-infrastructure-spine-phasemap.spec::NT1_neutrality_test
 context: pipeline phase NT1_neutrality_test of docs/2026-10-19-infrastructure-spine-phasemap.spec
 intent: null
 summary: NT1_neutrality_test (integration) — 1 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830632378
+exported_at: 1792852546177
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830632378
-lastSeenAt: 1792830632378
+firstSeenAt: 1792852546177
+lastSeenAt: 1792852546177
 fingerprint: null
 payload:
   id: NT1_neutrality_test
@@ -27,5 +27,46 @@ payload:
     - AD4_documents_adapter
   blocks: []
   spec: null
-  graph: a331400b0767c9a0
+  graph:
+    hash: a331400b0767c9a0
+    nodes:
+      - path: tests/modules/test-neutrality.test.js
+        role: changes
+        exists: false
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 5
+      deps:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD3_python_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD4_documents_adapter
+      dependents: []
+      upstream:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD1_adapter_contract
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD3_python_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD4_documents_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+      downstream: []
+      blockedBy:
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD2_javascript_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD3_python_adapter
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::AD4_documents_adapter
+      unlocks: []
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 5 · blocked by AD2_javascript_adapter, AD3_python_adapter,
+          AD4_documents_adapter
+        - >-
+          depends on (3): AD2_javascript_adapter, AD3_python_adapter, AD4_documents_adapter · all
+          upstream 7
+        - 'needed by (0): —'
   uuid: e19d214e-eae0-5342-9721-03696ce06280

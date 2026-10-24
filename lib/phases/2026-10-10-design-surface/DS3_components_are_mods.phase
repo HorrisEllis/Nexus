@@ -5,13 +5,13 @@ id: docs_2026-10-10-design-surface-phasemap.spec::DS3_components_are_mods
 context: pipeline phase DS3_components_are_mods of docs/2026-10-10-design-surface-phasemap.spec
 intent: null
 summary: DS3_components_are_mods (?) — 2 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830610173
+exported_at: 1792852524104
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830610173
-lastSeenAt: 1792830610173
+firstSeenAt: 1792852524104
+lastSeenAt: 1792852524104
 fingerprint: null
 payload:
   id: DS3_components_are_mods
@@ -26,5 +26,44 @@ payload:
     - DS0_one_token_source
   blocks: []
   spec: null
-  graph: bb967cfd589a6163
+  graph:
+    hash: bb967cfd589a6163
+    nodes:
+      - path: eravos/ui/runtime/mod-factory.js
+        role: changes
+        exists: false
+        system: null
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 1
+      deps:
+        - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      dependents: []
+      upstream:
+        - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      downstream: []
+      blockedBy:
+        - docs/2026-10-10-design-surface-phasemap.spec::DS0_one_token_source
+      unlocks: []
+      conflicts:
+        - with: docs/2026-10-10-design-surface-phasemap.spec::DS6_one_module_contract_nested
+          files:
+            - eravos/ui/runtime/mod-factory.js
+        - with: docs/2026-10-10-design-surface-phasemap.spec::DS7_tools_are_mods
+          files:
+            - eravos/ui/runtime/mod-factory.js
+      dangling: []
+      lines:
+        - DAG 83f93cbcbb0fa46f · layer 1 · blocked by DS0_one_token_source
+        - 'depends on (1): DS0_one_token_source'
+        - 'needed by (0): —'
+        - >-
+          same files as DS6_one_module_contract_nested with no order between them:
+          eravos/ui/runtime/mod-factory.js
+        - >-
+          same files as DS7_tools_are_mods with no order between them:
+          eravos/ui/runtime/mod-factory.js
   uuid: 70da60bb-71cc-597e-8ba5-80da0ec8204f

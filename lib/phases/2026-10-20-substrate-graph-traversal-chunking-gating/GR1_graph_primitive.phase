@@ -7,13 +7,13 @@ context: >-
   docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
 intent: null
 summary: GR1_graph_primitive (foundation) — 4 file(s)
-system: idearium
+system: core
 tags: []
-exported_at: 1792830634516
+exported_at: 1792852548205
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792830634516
-lastSeenAt: 1792830634516
+firstSeenAt: 1792852548205
+lastSeenAt: 1792852548205
 fingerprint: null
 payload:
   id: GR1_graph_primitive
@@ -33,7 +33,85 @@ payload:
   blocks:
     - MOD-GRAPH
   spec: docs/substrate.spec
-  graph: 8e94a4d6d6d8e5b6
+  graph:
+    hash: 8e94a4d6d6d8e5b6
+    nodes:
+      - path: lib/core/graph.js
+        role: changes
+        exists: false
+        system: lib
+    edges: []
+    crossings: []
+    ready: true
+    dag:
+      dagHash: 83f93cbcbb0fa46f
+      layer: 3
+      deps:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+      dependents:
+        - docs/2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
+        - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+      upstream:
+        - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+      downstream:
+        - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
+        - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+        - docs/2026-10-20-belief-loop-phasemap.spec::CF1_confidence_from_evidence
+        - docs/2026-10-20-belief-loop-phasemap.spec::CY1_lifecycle_and_injection
+        - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
+        - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
+        - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
+        - docs/2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
+        - docs/2026-10-20-belief-loop-phasemap.spec::IV2_invariant_miner
+        - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
+        - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
+        - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
+        - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH2_chunk_laws
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH3_chunk_inspector
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK2_learned_granularity
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR3_graph_query_surface
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV2_invariant_guided_traversal
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV3_traversal_as_context
+      blockedBy:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+        - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+      unlocks:
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
+        - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
+      conflicts: []
+      dangling: []
+      lines:
+        - >-
+          DAG 83f93cbcbb0fa46f · layer 3 · ON THE CRITICAL PATH · blocked by GR0_graph_census,
+          NC1_neutral_core_boundary, NM1_one_name_per_file
+        - >-
+          depends on (3): GR0_graph_census, NC1_neutral_core_boundary, NM1_one_name_per_file · all
+          upstream 5
+        - >-
+          needed by (6): IV1_invariant_kinds, PV1_provenance_on_every_claim, GR2_graph_views,
+          TV1_traversal_primitive, CH0_chunk_census_and_contract, GW1_gate_primitive · all
+          downstream 27 · finishing it unlocks TV1_traversal_primitive,
+          CH0_chunk_census_and_contract
   uuid: 9aa13c86-52e8-5b02-b63c-489de109dfac
   specLink:
     how: declared
