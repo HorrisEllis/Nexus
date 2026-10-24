@@ -7,11 +7,11 @@ intent: null
 summary: P10_load_balancer (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792787678168
+exported_at: 1792879046078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787678168
-lastSeenAt: 1792787678168
+firstSeenAt: 1792879046078
+lastSeenAt: 1792879046078
 fingerprint: null
 payload:
   id: P10_load_balancer
@@ -25,4 +25,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 3732489409fd4b99
+  graph: e5a0ee48959aede5

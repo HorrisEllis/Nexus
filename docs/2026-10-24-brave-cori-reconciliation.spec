@@ -75,7 +75,7 @@ phases:
     proof: "cos/services present on main; its tests green; the boundary census names COS's new edges, no new crossing outside a port"
 
   BCR2_kernel_ports:
-    status: "PARTLY — GD1 DONE 0.60.246: Guardian's last 4 RAID loads go through lib/raid-port.js (intake queue match, decide, the chunking and chat gates); RP-04 passes and test-raid-port is in run-all. REMAIN: the other ports (ollama, spec-compiler, pulse, trust-rule, registry-draft, loom/lib) and their consumers."
+    status: "PARTLY — GD1 DONE 0.60.246 (Guardian's last 4 RAID loads through lib/raid-port.js; RP-04 in run-all); the pulse DONE 0.60.247 (lib/pulse.js); LM0–LM3 DONE 0.60.248 (lib/ollama-port.js, loom/lib/store.js; Loom 0 ways out). REMAIN: LM4 (Loom's compartment), the spec-compiler port (EW2/EW3), registry-draft (DB16), trust-rule (with brave-cori's SL5, to compare with main's own SL line first)."
     layer: integration
     depends_on: [BCR0_the_decisions, BC_D2_cos_compartments]
     files: [lib/raid-port.js, guardian/api-dispatch.js, guardian/lib/dispatcher.js, guardian/server.js, tests/modules/test-raid-port.test.js]

@@ -1,0 +1,242 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DF2_cortex_and_versionium_off_root_data:856432573b584fcc
+type: graph
+id: phase:DF2_cortex_and_versionium_off_root_data:856432573b584fcc
+context: dependency graph of phase DF2_cortex_and_versionium_off_root_data
+intent: null
+summary: 18 node(s), 11 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792879042636
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879042636
+lastSeenAt: 1792879042636
+fingerprint: null
+payload:
+  for: DF2_cortex_and_versionium_off_root_data
+  kind: phase
+  repo: null
+  hash: 856432573b584fcc
+  nodes:
+    - path: cortex/memory/jaa-db.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: clear-glass/test/copilot-cli.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/axiom-manager.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/diagnostics.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/activity-recall.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/grammar-router.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/intent-learning.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/person-model/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/memory/tiers.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/schema-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/memory/jaa-db.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: lib/schema-registry.js
+      kind: requires
+    - from: cortex/memory/jaa-db.js
+      to: cortex/memory/tiers.js
+      kind: requires
+    - from: clear-glass/test/copilot-cli.test.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/axiom-manager.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/diagnostics.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/activity-recall.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/grammar-router.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/intent-learning.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/person-model/index.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/server.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+  crossings:
+    - from: copilot/axiom-manager.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/diagnostics.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/activity-recall.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/grammar-router.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/intent-learning.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/person-model/index.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/self-model.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lib/user-model.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/lifeline.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/module-builder.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/server.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
+    dependents:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RP1_repository_per_system
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF4_versionium_split_brain
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
+    downstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RP1_repository_per_system
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RP1_repository_per_system
+    conflicts:
+      - with: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR2_brainos_controls_agents
+        files:
+          - cortex/memory/jaa-db.js
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (1): VSB1_fix_versionium_split_brain · all upstream 2'
+      - 'needed by (1): RP1_repository_per_system · finishing it unlocks RP1_repository_per_system'
+      - >-
+        same files as BR2_brainos_controls_agents with no order between them:
+        cortex/memory/jaa-db.js
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::VSB1_fix_versionium_split_brain
+        kind: declared

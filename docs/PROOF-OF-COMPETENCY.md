@@ -1162,3 +1162,22 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
   Every learned field can be seen and undone on screen (Forget), so a wrong pick costs one click.
 
   Not yet shown: a fill on a live listing (his login).
+
+<!-- The entries below were written on brave-cori (claude/brave-cori-eczug1) and ported to main at 0.60.248 (his "Port it phase-by-phase"), unchanged. Their version numbers are that line's; on main the same work landed as GD1 0.60.246 and LM0–LM3 0.60.248. -->
+### 2026-10-24 — 0.60.240: "maybe start with one at a time? like guardian?"
+- **His words:** "focus on just decoupling so we can get every system in a cos compartment. maybe start with one at a time? like guardian?"
+- **Context:** Facing twelve systems still coupled, he chose to go one at a time, and to start with Guardian, the system everything sends its
+  agent work through. Mapping Guardian's 33 crossings found that it ran a second copy of RAID inside itself. Removing it fixed three silent
+  defects, among them /build, which had never reached RAID.
+- **Skill:** incremental migration. Proving each system's isolation completely before the next keeps every step checkable. Decoupling
+  also surfaces hidden defects, because a copy that "works" in-process stops looking like it works once it has to go through a contract.
+- **Checkable:** `CHANGELOG-0.60.240.md`; `tests/modules/test-raid-port.test.js`; `docs/2026-10-24-guardian-into-cos-phasemap.spec` (census:).
+
+### 2026-10-24 — 0.60.241: "Isn't loom in a compartment already or clearglass?"
+- **His words:** "Isn't loom in a compartment already or clearglass?" · "Do it."
+- **Context:** Mid-way through Guardian, he asked whether a system was already in a compartment. The question turned up two facts: every
+  system's compartment is only a read-only mirror, and Loom was 5 requires from sovereign against Guardian's 20. He switched to Loom to
+  prove the path on the shortest case first. Loom then reached 0 ways out in one release, and the move also made a dead Architect route
+  work.
+- **Skill:** asking the question that changes the plan. Checking current state before continuing turned a long migration into a fast proof.
+- **Checkable:** `CHANGELOG-0.60.241.md`; `tests/modules/test-loom-into-cos.test.js` LI-04 (Loom reaches into no other system).

@@ -138,7 +138,7 @@ function summary() {
  * versionium's files): await it for { ok, written, total }.
  */
 const TABLE = 'phasemap_history';
-function _jaa() { try { return require('../../cortex/memory/jaa-db').jaaDB; } catch (_) { return null; } }
+function _jaa() { try { return require('../lib/store.js').store(); } catch (_) { return null; } }   // 0.60.241 LM2 — Loom's own store, not Cortex's
 // the version of one .spec file: the newest versionium commit whose copy has these exact bytes
 async function _versionFor(specFile, { client } = {}) {
   const full = path.join(DOCS, specFile + '.spec');
@@ -174,7 +174,7 @@ async function _persistHistory(opts = {}) {
     return vcache.get(map);
   };
   const jaa = opts.jaa || _jaa();
-  if (!jaa) return { ok: false, reason: 'cortex unavailable' };
+  if (!jaa) return { ok: false, reason: 'loom\'s store unavailable' };
 
   const current = loadAll();
   const currentByKey = new Map(current.phases.map(p => [`${p.map}::${p.id}`, p]));

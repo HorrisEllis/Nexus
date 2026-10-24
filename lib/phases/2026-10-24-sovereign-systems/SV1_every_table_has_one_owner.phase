@@ -7,11 +7,11 @@ intent: null
 summary: SV1_every_table_has_one_owner (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792878423755
+exported_at: 1792879045954
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792878423755
-lastSeenAt: 1792878423755
+firstSeenAt: 1792879045954
+lastSeenAt: 1792879045954
 fingerprint: null
 payload:
   id: SV1_every_table_has_one_owner
@@ -30,4 +30,4 @@ payload:
     - SV0_the_census_tells_the_truth
   blocks: []
   spec: null
-  graph: b8284fa1af987a99
+  graph: 5d5d302b43b93e43

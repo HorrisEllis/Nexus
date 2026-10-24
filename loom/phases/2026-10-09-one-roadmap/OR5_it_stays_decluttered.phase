@@ -7,11 +7,11 @@ intent: null
 summary: OR5_it_stays_decluttered (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792877162485
+exported_at: 1792879044428
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877162485
-lastSeenAt: 1792877162485
+firstSeenAt: 1792879044428
+lastSeenAt: 1792879044428
 fingerprint: null
 payload:
   id: OR5_it_stays_decluttered
@@ -27,4 +27,4 @@ payload:
     - OR4_one_roadmap_in_idearium
   blocks: []
   spec: null
-  graph: 420a8979838a54ee
+  graph: 78b639c6ae2f18d5

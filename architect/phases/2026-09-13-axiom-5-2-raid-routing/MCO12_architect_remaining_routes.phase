@@ -9,11 +9,11 @@ intent: null
 summary: MCO12_architect_remaining_routes (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792841753868
+exported_at: 1792879042826
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841753868
-lastSeenAt: 1792841753868
+firstSeenAt: 1792879042826
+lastSeenAt: 1792879042826
 fingerprint: null
 payload:
   id: MCO12_architect_remaining_routes
@@ -27,4 +27,4 @@ payload:
     - MCO8_wire_the_honest_subset
   blocks: []
   spec: null
-  graph: 125ecc9255aedbe7
+  graph: ba0443956354f889

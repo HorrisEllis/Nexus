@@ -7,11 +7,11 @@ intent: null
 summary: LM1_ollama_through_its_bridge (backend) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792877325050
+exported_at: 1792879045932
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877325050
-lastSeenAt: 1792877325050
+firstSeenAt: 1792879045932
+lastSeenAt: 1792879045932
 fingerprint: null
 payload:
   id: LM1_ollama_through_its_bridge
@@ -29,4 +29,4 @@ payload:
     - LM_D1_ollama_through_its_bridge
   blocks: []
   spec: null
-  graph: 1e0512b79bf981b2
+  graph: b2b1898bb2f27492

@@ -12,7 +12,8 @@
 const { findStuck, markStuck, reportStuck, dispatch, STATUS } = require('../../lib/contract-queue');
 
 const POLL_INTERVAL_MS = parseInt(process.env.CONTRACT_POLL_MS || '15000');
-const KNOWN_SYSTEMS    = ['guardian','cortex','ollama','copilot','idearium','architect','emerge','bridge'];
+// 0.60.248 — Idearium's list, the one truth (lib/nexus-self/systems.js), not a second copy that had kept 'bridge' (retired) and missed the rest
+const KNOWN_SYSTEMS    = (() => { try { return require('../../lib/nexus-self/systems.js').names().filter(n => n !== 'core'); } catch (_) { return ['guardian','cortex','ollama','copilot','idearium','architect']; } })();
 
 let _timer  = null;
 let _counts = { scanned: 0, stuck: 0, retried: 0 };
