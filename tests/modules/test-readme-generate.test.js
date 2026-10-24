@@ -33,7 +33,8 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
   const RG = require(path.join(ROOT, 'lib/readme-generate.js'));
 
   await test('RG-01', 'every system, module and file; every phase; every release; the data; every Idearium route', () => {
-    assert.strictEqual(S.SYSTEMS.length, 15, 'fifteen systems');
+    // 0.60.237 EW1 — James, 2026-10-24: "okay warp and emerge." emerge (with warp, its runtime) is the 16th system (docs/2026-10-24-emerge-warp-system-phasemap.spec).
+    assert.strictEqual(S.SYSTEMS.length, 16, 'sixteen systems');
     const files = AG.walk();
     for (const s of S.SYSTEMS) {
       const a = atlas.indexOf(`<!-- generated:readme:system:${s.name}:start -->`), b = atlas.indexOf(`<!-- generated:readme:system:${s.name}:end -->`);
@@ -41,7 +42,9 @@ function done() { console.log(`\n  ${passed} passed, ${failed} failed${skipped ?
       const head = atlas.search(new RegExp(`^### ${s.name.replace(/[-.]/g, '\\$&')}\\s*$`, 'm'));
       assert.ok(head > 0 && head < a && !/^### /m.test(atlas.slice(head + 4, a)), `${s.name}'s block is inside its own section`);
     }
-    const missing = files.filter(f => !atlas.includes('`' + f + '`')).filter(f => !/^CHANGELOG-/.test(f));
+    // 0.60.237 — a phase node is named by its map folder with its counts (lib/readme-generate.js), so the folder must be there
+    const PN = /^(.*\/phases\/[^/]+)\/(?:graph\/)?[^/]+\.(phase|graph)$/;
+    const missing = files.filter(f => { const m = PN.exec(f); return !atlas.includes('`' + (m ? m[1] + '/' : f) + '`'); }).filter(f => !/^CHANGELOG-/.test(f));
     // the atlas was generated from this tree a moment ago (scripts/generate-atlases.js); a file added since is named here, not hidden
     assert.ok(missing.length <= 3, `files not in the README: ${missing.slice(0, 10).join(', ')}`);
     const P = require(path.join(ROOT, 'loom/scanners/phasemap-map.js')).loadAll();

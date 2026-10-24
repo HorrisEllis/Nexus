@@ -1093,3 +1093,14 @@ New entries go at the top: date, his words, context, what it shows, evidence.
   - `tests/modules/test-site-profile`, `test-site-readers` (7, each feature's own code), `test-site-settings-ui`, `test-global-settings`,
     `test-processes` and `test-processes-ui`. The screens are driven in Clear Glass;
   - docs/2026-10-23-site-profile-processes-phasemap.spec SP1–SP6.
+
+### 2026-10-24 — 0.60.237: "emerge, warp, and idearium merge?" → "okay warp and emerge."
+- **His words:** "Look at emerge. Deeply Custom" · "Either way it comes off the archive list." · "okay warp and emerge. / spec compiler, ide,
+  and idearium"
+- **Context:** Earlier the same day emerge was on his own archive list. He went back, read it, and took it off. He then asked about a
+  three-way merge. The coder's count showed nine systems using warp, which would all sit under Idearium. He chose the split the evidence
+  supported: the language and its runtime in one system, and the tools that build from specs with Idearium.
+- **Skill:** systems design. Revisiting his own archive call on reading the code, and then choosing the layering where the
+  dependencies point one way.
+- **Checkable:** `CHANGELOG-0.60.237.md`; `node -e "console.log(require('./lib/system-boundary.js').sovereignty({root:'.'}).sovereign)"` →
+  components, ollama, cos; `docs/2026-10-24-emerge-warp-system-phasemap.spec`.

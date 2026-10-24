@@ -70,3 +70,9 @@ spec:
     - "compile() on a known-good .eg file produces deterministic output (§CC-002)"
     - "hot.load follows QUARANTINE→PROVE→INTEGRATE→MONITOR, rolls back on sigma > 0.70"
     - "SNR gate rejects a low-fidelity .eg file before parser runs"
+
+## ADDENDUM 2026-10-24 (0.60.237) — emerge is a system, with warp as its runtime
+James, 2026-10-24: "Look at emerge. Deeply Custom" · "okay warp and emerge. / spec compiler, ide, and idearium". emerge (the language) and warp
+(its runtime) are one system, the 16th on Idearium's list. The spec compiler (compiler/) and the IDE (emerge-ide.js) move to Idearium (EW3,
+EW4). Found: core/history.js and core/level.js require intelligence/rfr2, so the core is not yet zero-dependency (E10). Map:
+docs/2026-10-24-emerge-warp-system-phasemap.spec.

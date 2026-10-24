@@ -29,7 +29,7 @@ test('SB-02 each crossing is found once per file pair and named by kind: system,
     ['lib/up.js', 'alpha/a.js', 'upward'],
   ]);
   const c = SB.census({ root });
-  assert.deepStrictEqual(c.byKind, { system: 1, upward: 1, kernel: 1 });
+  assert.deepStrictEqual(c.byKind, { system: 1, upward: 1, kernel: 1, language: 0 });
 });
 test('SB-03 the ratchet: the baseline holds system and upward edges only (kernel is allowed while DB0a is open)', () => {
   const b = SB.baseline({ root });

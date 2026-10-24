@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+type: phase
+id: docs_2026-10-24-emerge-warp-system-phasemap.spec::EW3_the_spec_compiler_into_idearium
+context: >-
+  pipeline phase EW3_the_spec_compiler_into_idearium of
+  docs/2026-10-24-emerge-warp-system-phasemap.spec
+intent: null
+summary: EW3_the_spec_compiler_into_idearium (backend) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1792851610904
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792851610904
+lastSeenAt: 1792851610904
+fingerprint: null
+payload:
+  id: EW3_the_spec_compiler_into_idearium
+  map: docs/2026-10-24-emerge-warp-system-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - emerge/compiler/index.js
+    - emerge/compiler/pipeline.js
+    - emerge/compiler/kg-builder.js
+    - emerge/compiler/invariants-engine.js
+    - emerge/compiler/t2-gate.js
+    - emerge/compiler/phase-specs.js
+    - emerge/idearium/client.js
+    - idearium/compiler-bridge.js
+    - tests/modules/test-phase-specs.test.js
+    - tests/modules/test-substrate-spec.test.js
+  depends_on:
+    - EW2_the_callers_outside_idearium
+  blocks: []
+  spec: emerge/SPEC_COMPILER.spec
+  graph: e6e14bb96f79a1ee
+  uuid: 7cf8fdbb-187a-5cc1-8318-353bcbac1401
+  specLink:
+    how: discovered:path
+    spec: docs/substrate.spec
+    specs:
+      - docs/substrate.spec
+    covers: 1/10 files
+    modules:
+      - spec: docs/substrate.spec
+        id: MOD-PHASE-SPECS
+        uuid: nexus-substrate-phase-specs-v1-0000-2026-1020-001
+        file: emerge/compiler/phase-specs.js

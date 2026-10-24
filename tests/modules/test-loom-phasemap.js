@@ -40,8 +40,8 @@ test('T-006', 'a phase\'s own systems: line wins and is marked declared; every t
   const txt = ['spec:', '  phases:', '    A1_declared:', '      systems: [Warp, cos, raid]', '      does: talks about cortex and guardian', '      status: OPEN',
     '    A2_guessed:', '      does: the cortex and the economy', '      status: OPEN', '    A3_nothing:', '      does: just words', '      status: OPEN'].join('\n');
   const ps = pm.parsePhasemapText(txt, 'm');
-  assert.deepStrictEqual([ps[0].systems, ps[0].tags, ps[0].systemsFrom], [['core', 'cos', 'cortex'], ['warp', 'cos', 'raid'], 'declared'],
-    'warp is core\'s directory, cos is its own system (SY2), raid is cortex\'s; the prose (cortex, guardian) is not added');
+  assert.deepStrictEqual([ps[0].systems, ps[0].tags, ps[0].systemsFrom], [['emerge', 'cos', 'cortex'], ['warp', 'cos', 'raid'], 'declared'],
+    'warp is emerge\'s directory (EW1), cos is its own system (SY2), raid is cortex\'s; the prose (cortex, guardian) is not added');
   assert.deepStrictEqual([ps[1].systems, ps[1].systemsFrom], [['cortex'], 'guessed'], 'economy is not a system');
   assert.deepStrictEqual([ps[2].systems, ps[2].systemsFrom], [['core'], 'guessed'], 'nothing named → core (was "general", not a system)');
   const list = pm.parsePhasemapText(['phases:', '  - id: L1', '    systems: [nexstore]', '    status: built'].join('\n'), 'l');
@@ -51,7 +51,8 @@ test('T-007', 'only the systems in systems.js: every phase\'s systems are Ideari
   const NS = require('../../lib/nexus-self/systems.js');
   const all = pm.loadAll();
   // ER1 (0.60.83, docs/2026-10-16-eravos-removal-phasemap.spec) — James: "can you remove eravos?" → "Delete it outright.": 16 − eravos
-  assert.strictEqual(NS.names().length, 15, 'the 15 of SY1 + cos (SY2, James: "Its own system (16th)") − eravos (ER1, deleted 0.60.83)');
+  // 0.60.237 EW1 — James, 2026-10-24: "okay warp and emerge." emerge (with warp, its runtime) is the 16th system (docs/2026-10-24-emerge-warp-system-phasemap.spec).
+  assert.strictEqual(NS.names().length, 16, 'the 15 of SY1 + cos (SY2, James: "Its own system (16th)") − eravos (ER1, deleted 0.60.83) + emerge (EW1)');
   assert.ok(!NS.names().includes('eravos'), 'eravos is gone (ER1)');
   assert.ok(NS.names().includes('cos'));
   const outside = all.phases.filter(p => p.systems.some(x => !NS.names().includes(x))).map(p => `${p.map}:${p.id} ${p.systems}`);

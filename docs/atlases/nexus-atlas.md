@@ -161,16 +161,17 @@ It owns its declared components in `orchestrator/orchestrator-contract.json` and
 <!-- generated:readme:system:orchestrator:start -->
 #### orchestrator: every module and every file
 
-Orchestrator is 31 files in 4 modules, entry `orchestrator/orchestrator.js`, port 9000, spec `orchestrator/spec/orchestrator.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/orchestrator-atlas.md`.
+Orchestrator is 43 files in 4 modules, entry `orchestrator/orchestrator.js`, port 9000, spec `orchestrator/spec/orchestrator.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/orchestrator-atlas.md`.
 
 <details>
-<summary>`orchestrator/` · 5 files</summary>
+<summary>`orchestrator/` · 6 files</summary>
 
 - `orchestrator/event-taxonomy.js` — // orchestrator/event-taxonomy.js — ET4_orchestrator_autopilot_event_taxonomy. // Conforms to…
 - `orchestrator/interaction-contract.json`
 - `orchestrator/orchestrator-contract.json`
 - `orchestrator/orchestrator.config.json`
-- `orchestrator/orchestrator.js` — // ════════════════════════════════════════════════════════════════════════════ // NEXUS ORCHESTRATOR — v2.0.0
+- `orchestrator/orchestrator.js` — // 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come…
+- `orchestrator/registry-components.draft.json`
 
 </details>
 
@@ -202,12 +203,13 @@ Orchestrator is 31 files in 4 modules, entry `orchestrator/orchestrator.js`, por
 </details>
 
 <details>
-<summary>`orchestrator/phases/` · 4 files</summary>
+<summary>`orchestrator/phases/` · 15 files</summary>
 
-- `orchestrator/phases/2026-10-20-belief-loop/RA0_rca_says_what_it_does.phase`
-- `orchestrator/phases/2026-10-20-belief-loop/graph/RA0_rca_says_what_it_does-a63f882b1b3c07af.graph`
-- `orchestrator/phases/2026-10-21-data-layout/DL7_cortex_snapshot_out.phase`
-- `orchestrator/phases/2026-10-21-data-layout/graph/DL7_cortex_snapshot_out-af1c908b9a84788d.graph`
+- `orchestrator/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 3 .phase, 3 .graph
+- `orchestrator/phases/2026-10-05-announce-pulse-repair/` — phase nodes: 1 .phase, 1 .graph
+- `orchestrator/phases/2026-10-19-infrastructure-spine/` — phase nodes: 1 .phase, 1 .graph
+- `orchestrator/phases/2026-10-20-belief-loop/` — phase nodes: 1 .phase, 1 .graph
+- `orchestrator/phases/2026-10-21-data-layout/` — phase nodes: 1 .phase, 2 .graph
 
 </details>
 
@@ -218,7 +220,7 @@ Orchestrator is 31 files in 4 modules, entry `orchestrator/orchestrator.js`, por
 
 </details>
 
-6 release notes name a file of orchestrator: 0.60.131., 0.60.126., 0.39.355., 0.39.277., 0.39.173., 0.39.172.. Each is in the version history below, in his words.
+8 release notes name a file of orchestrator: 0.60.236., 0.60.230., 0.60.131., 0.60.126., 0.39.355., 0.39.277., 0.39.173., 0.39.172.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:orchestrator:end -->
 
@@ -231,7 +233,7 @@ RAID, the routing authority every request passes through (§5.2, §9.1), lives i
 <!-- generated:readme:system:cortex:start -->
 #### cortex: every module and every file
 
-Cortex is 84 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cortex/spec/cortex.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cortex-atlas.md`.
+Cortex is 161 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `cortex/spec/cortex.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cortex-atlas.md`.
 
 <details>
 <summary>`cortex/` · 9 files</summary>
@@ -322,14 +324,29 @@ Cortex is 84 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `corte
 </details>
 
 <details>
-<summary>`cortex/phases/` · 6 files</summary>
+<summary>`cortex/phases/` · 83 files</summary>
 
-- `cortex/phases/2026-10-20-belief-loop/CY1_lifecycle_and_injection.phase`
-- `cortex/phases/2026-10-20-belief-loop/graph/CY1_lifecycle_and_injection-f9114a7b5b7207b8.graph`
-- `cortex/phases/2026-10-20-substrate-graph-traversal-chunking-gating/DK1_dynamic_chunking.phase`
-- `cortex/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/DK1_dynamic_chunking-2e1c9985830b2941.graph`
-- `cortex/phases/2026-10-21-data-layout/DL6_cortex_server.phase`
-- `cortex/phases/2026-10-21-data-layout/graph/DL6_cortex_server-1ac803216ae293ca.graph`
+- `cortex/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 4 .phase, 4 .graph
+- `cortex/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 1 .graph
+- `cortex/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 1 .phase, 1 .graph
+- `cortex/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 2 .phase, 2 .graph
+- `cortex/phases/2026-10-05-cli-data-code/` — phase nodes: 2 .phase, 2 .graph
+- `cortex/phases/2026-10-09-one-model-engine/` — phase nodes: 2 .phase, 2 .graph
+- `cortex/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 1 .phase, 1 .graph
+- `cortex/phases/2026-10-12-request-spine/` — phase nodes: 2 .phase, 2 .graph
+- `cortex/phases/2026-10-13-nexus-memory-gates-and-contract/` — phase nodes: 1 .phase, 1 .graph
+- `cortex/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 3 .phase, 3 .graph
+- `cortex/phases/2026-10-15-automatic-tracking/` — phase nodes: 3 .phase, 3 .graph
+- `cortex/phases/2026-10-15-gate-held-work/` — phase nodes: 3 .phase, 3 .graph
+- `cortex/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 3 .phase, 3 .graph
+- `cortex/phases/2026-10-17-debugging-product/` — phase nodes: 1 .phase, 1 .graph
+- `cortex/phases/2026-10-17-failure-mode-report/` — phase nodes: 2 .phase, 2 .graph
+- `cortex/phases/2026-10-17-pieces-not-order/` — phase nodes: 3 .phase, 3 .graph
+- `cortex/phases/2026-10-18-gate-memory/` — phase nodes: 3 .phase, 3 .graph
+- `cortex/phases/2026-10-19-solid-build-foundation/` — phase nodes: 1 .phase, 1 .graph
+- `cortex/phases/2026-10-20-belief-loop/` — phase nodes: 1 .phase, 1 .graph
+- `cortex/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` — phase nodes: 1 .phase, 1 .graph
+- `cortex/phases/2026-10-21-data-layout/` — phase nodes: 1 .phase, 2 .graph
 
 </details>
 
@@ -401,7 +418,7 @@ Cortex is 84 files in 14 modules, entry `cortex/boot.js`, port 3748, spec `corte
 
 </details>
 
-30 release notes name a file of cortex: 0.60.177., 0.60.158., 0.60.157., 0.60.150., 0.60.149., 0.60.147., 0.60.145., 0.60.133., 0.60.132., 0.60.131., 0.60.94., 0.60.79., 0.60.78., 0.60.75., 0.60.73., 0.60.36., 0.60.30., 0.60.29., 0.60.18., 0.60.16., 0.60.15., 0.60.3., 0.59.6., 0.43.0., 0.39.342., 0.39.333., 0.39.277., 0.39.267., 0.39.236., 0.39.181.. Each is in the version history below, in his words.
+34 release notes name a file of cortex: 0.60.236., 0.60.229., 0.60.224., 0.60.203., 0.60.177., 0.60.158., 0.60.157., 0.60.150., 0.60.149., 0.60.147., 0.60.145., 0.60.133., 0.60.132., 0.60.131., 0.60.94., 0.60.79., 0.60.78., 0.60.75., 0.60.73., 0.60.36., 0.60.30., 0.60.29., 0.60.18., 0.60.16., 0.60.15., 0.60.3., 0.59.6., 0.43.0., 0.39.342., 0.39.333., 0.39.277., 0.39.267., 0.39.236., 0.39.181.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:cortex:end -->
 
@@ -414,7 +431,7 @@ The provider side is the userscripts: `guardian/userscript-chatgpt.js`, `guardia
 <!-- generated:readme:system:guardian:start -->
 #### guardian: every module and every file
 
-Guardian is 204 files in 11 modules, entry `guardian/server.js`, port 7820, spec `guardian/spec/guardian.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/guardian-atlas.md`.
+Guardian is 259 files in 11 modules, entry `guardian/server.js`, port 7820, spec `guardian/spec/guardian.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/guardian-atlas.md`.
 
 <details>
 <summary>`guardian/` · 35 files</summary>
@@ -622,10 +639,26 @@ Guardian is 204 files in 11 modules, entry `guardian/server.js`, port 7820, spec
 </details>
 
 <details>
-<summary>`guardian/phases/2026-10-19-pipeline-root-causes/` · 2 files</summary>
+<summary>`guardian/phases/` · 57 files</summary>
 
-- `guardian/phases/2026-10-19-pipeline-root-causes/RC5_find_where_the_label_enters.phase`
-- `guardian/phases/2026-10-19-pipeline-root-causes/graph/RC5_find_where_the_label_enters-c11e275559f4451a.graph`
+- `guardian/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 2 .phase, 2 .graph
+- `guardian/phases/2026-09-29-build-surface/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-09-29-provider-economy/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-10-09-hardening-pass/` — phase nodes: 8 .phase, 8 .graph
+- `guardian/phases/2026-10-09-one-model-engine/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-10-10-idearium-solid/` — phase nodes: 2 .phase, 2 .graph
+- `guardian/phases/2026-10-10-self-awareness/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-10-15-code-tab-run-state/` — phase nodes: 2 .phase, 2 .graph
+- `guardian/phases/2026-10-17-failure-mode-report/` — phase nodes: 1 .phase, 1 .graph
+- `guardian/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 2 .graph
 
 </details>
 
@@ -686,7 +719,7 @@ Guardian is 204 files in 11 modules, entry `guardian/server.js`, port 7820, spec
 
 </details>
 
-55 release notes name a file of guardian: 0.60.158., 0.60.149., 0.60.148., 0.60.146., 0.60.143., 0.60.133., 0.60.132., 0.60.131., 0.60.130., 0.60.124., 0.60.120., 0.60.113., 0.60.100., 0.60.70., 0.60.28., 0.60.15., 0.60.10., 0.60.2., 0.60.0., 0.59.15., 0.57.0., 0.54.0., 0.42.0., 0.41.0., 0.40.1., 0.39.335., 0.39.282., 0.39.281., 0.39.279., 0.39.278., 0.39.269., 0.39.268., 0.39.267., 0.39.266., 0.39.263., 0.39.256., 0.39.255., 0.39.254., 0.39.252., 0.39.249., and 15 older. Each is in the version history below, in his words.
+60 release notes name a file of guardian: 0.60.237., 0.60.230., 0.60.208., 0.60.205., 0.60.191., 0.60.158., 0.60.149., 0.60.148., 0.60.146., 0.60.143., 0.60.133., 0.60.132., 0.60.131., 0.60.130., 0.60.124., 0.60.120., 0.60.113., 0.60.100., 0.60.70., 0.60.28., 0.60.15., 0.60.10., 0.60.2., 0.60.0., 0.59.15., 0.57.0., 0.54.0., 0.42.0., 0.41.0., 0.40.1., 0.39.335., 0.39.282., 0.39.281., 0.39.279., 0.39.278., 0.39.269., 0.39.268., 0.39.267., 0.39.266., 0.39.263., and 20 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:guardian:end -->
 
@@ -699,7 +732,7 @@ The spec engine in `idearium/spec-engine/` turns an idea into a spec by chunking
 <!-- generated:readme:system:idearium:start -->
 #### idearium: every module and every file
 
-Idearium is 246 files in 26 modules, entry `idearium/api/index.js`, port 4800, spec `idearium/spec/idearium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/idearium-atlas.md`.
+Idearium is 832 files in 21 modules, entry `idearium/api/index.js`, port 4800, spec `idearium/spec/idearium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/idearium-atlas.md`.
 
 <details>
 <summary>`idearium/` · 12 files</summary>
@@ -758,10 +791,11 @@ Idearium is 246 files in 26 modules, entry `idearium/api/index.js`, port 4800, s
 </details>
 
 <details>
-<summary>`idearium/lib/` · 17 files</summary>
+<summary>`idearium/lib/` · 18 files</summary>
 
 - `idearium/lib/access.cjs`
 - `idearium/lib/architect.js`
+- `idearium/lib/autobuild.js`
 - `idearium/lib/chunk-nodes.js`
 - `idearium/lib/config-core.cjs`
 - `idearium/lib/config.js`
@@ -788,77 +822,85 @@ Idearium is 246 files in 26 modules, entry `idearium/api/index.js`, port 4800, s
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-19-pipeline-root-causes/` · 6 files</summary>
+<summary>`idearium/phases/` · 616 files</summary>
 
-- `idearium/phases/2026-10-19-pipeline-root-causes/DG3_the_whole_dag.phase`
-- `idearium/phases/2026-10-19-pipeline-root-causes/RC7_every_run_names_its_starter.phase`
-- `idearium/phases/2026-10-19-pipeline-root-causes/UI2_version_in_code.phase`
-- `idearium/phases/2026-10-19-pipeline-root-causes/graph/DG3_the_whole_dag-9cfb242403b7f8b3.graph`
-- `idearium/phases/2026-10-19-pipeline-root-causes/graph/RC7_every_run_names_its_starter-e71ac0a4e3f549ec.graph`
-- `idearium/phases/2026-10-19-pipeline-root-causes/graph/UI2_version_in_code-a31a39722f93b060.graph`
+- `idearium/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 3 .phase, 3 .graph
+- `idearium/phases/2026-09-27-components-store-and-atlases/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 7 .phase, 7 .graph
+- `idearium/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 3 .phase, 3 .graph
+- `idearium/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 9 .phase, 9 .graph
+- `idearium/phases/2026-09-29-build-surface/` — phase nodes: 10 .phase, 10 .graph
+- `idearium/phases/2026-09-29-nex-node-store/` — phase nodes: 3 .phase, 3 .graph
+- `idearium/phases/2026-09-29-provider-economy/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 4 .phase, 4 .graph
+- `idearium/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 29 .phase, 29 .graph
+- `idearium/phases/2026-10-01-routing-registry-genesis/` — phase nodes: 6 .phase, 6 .graph
+- `idearium/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 5 .phase, 5 .graph
+- `idearium/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 11 .phase, 11 .graph
+- `idearium/phases/2026-10-02-fractal-graph-any-size-agent/` — phase nodes: 7 .phase, 7 .graph
+- `idearium/phases/2026-10-02-spatial-void/` — phase nodes: 6 .phase, 6 .graph
+- `idearium/phases/2026-10-02-synthesis-zoom-versionium/` — phase nodes: 3 .phase, 3 .graph
+- `idearium/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 10 .phase, 10 .graph
+- `idearium/phases/2026-10-05-build-from-the-spec/` — phase nodes: 29 .phase, 29 .graph
+- `idearium/phases/2026-10-05-cli-data-code/` — phase nodes: 5 .phase, 5 .graph
+- `idearium/phases/2026-10-05-code-tab-and-one-router/` — phase nodes: 5 .phase, 5 .graph
+- `idearium/phases/2026-10-05-failure-reproduction/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-05-idea-to-spec-workshop/` — phase nodes: 6 .phase, 6 .graph
+- `idearium/phases/2026-10-05-spec-workshop-rebuild/` — phase nodes: 7 .phase, 7 .graph
+- `idearium/phases/2026-10-05-verified-primitives/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-07-compartment-control-and-activity/` — phase nodes: 4 .phase, 4 .graph
+- `idearium/phases/2026-10-07-versionium-releases/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-09-hardening-pass/` — phase nodes: 7 .phase, 7 .graph
+- `idearium/phases/2026-10-09-one-model-engine/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-09-one-roadmap/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-10-idearium-access/` — phase nodes: 5 .phase, 5 .graph
+- `idearium/phases/2026-10-10-idearium-solid/` — phase nodes: 11 .phase, 11 .graph
+- `idearium/phases/2026-10-10-self-awareness/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-10-shape-of-nexus/` — phase nodes: 4 .phase, 4 .graph
+- `idearium/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 3 .phase, 3 .graph
+- `idearium/phases/2026-10-12-request-spine/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-10-13-identities-tabs-and-automation/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-13-nexus-memory-gates-and-contract/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 5 .phase, 5 .graph
+- `idearium/phases/2026-10-15-automatic-tracking/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-15-code-tab-run-state/` — phase nodes: 8 .phase, 8 .graph
+- `idearium/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 3 .phase, 3 .graph
+- `idearium/phases/2026-10-15-warp-builds-and-spec-framework/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-10-16-agent-work-funnel/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-16-canvas-compartments/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-10-16-code-tab-rebuild/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-16-durable-work-timeline/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-16-intent-hat-agent-chain/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-16-plan-sidebar/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-10-16-reject-learn-retry/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-10-16-repo-carve/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-17-pieces-not-order/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-17-system-drawbridge/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-18-compartment-environment/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-10-18-debugging-product/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-18-gate-memory/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-10-19-gate-quality-checks/` — phase nodes: 4 .phase, 4 .graph
+- `idearium/phases/2026-10-19-gig-autofill-and-learn/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-19-idearium-control/` — phase nodes: 8 .phase, 8 .graph
+- `idearium/phases/2026-10-19-infrastructure-spine/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 3 .phase, 7 .graph
+- `idearium/phases/2026-10-19-solid-build-foundation/` — phase nodes: 4 .phase, 4 .graph
+- `idearium/phases/2026-10-19-upload-intent-and-page-map/` — phase nodes: 2 .phase, 2 .graph
+- `idearium/phases/2026-10-20-belief-loop/` — phase nodes: 1 .phase, 2 .graph
+- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` — phase nodes: 3 .phase, 6 .graph
+- `idearium/phases/2026-10-21-approval-chain/` — phase nodes: 2 .phase, 4 .graph
+- `idearium/phases/2026-10-21-brainos-into-idearium/` — phase nodes: 7 .phase, 10 .graph
+- `idearium/phases/2026-10-21-data-layout/` — phase nodes: 1 .phase, 1 .graph
+- `idearium/phases/2026-10-22-system-node-db/` — phase nodes: 2 .phase, 3 .graph
+- `idearium/phases/2026-10-23-self-building-loop/` — phase nodes: 3 .phase, 7 .graph
 
 </details>
 
 <details>
-<summary>`idearium/phases/2026-10-20-belief-loop/` · 2 files</summary>
-
-- `idearium/phases/2026-10-20-belief-loop/CY3_belief_panel.phase`
-- `idearium/phases/2026-10-20-belief-loop/graph/CY3_belief_panel-e6a09dc8b785fe0e.graph`
-
-</details>
-
-<details>
-<summary>`idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` · 6 files</summary>
-
-- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/CH3_chunk_inspector.phase`
-- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GR3_graph_query_surface.phase`
-- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GW3_gate_panel.phase`
-- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/CH3_chunk_inspector-99f25ae95f99935d.graph`
-- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR3_graph_query_surface-d0e57a5baa382165.graph`
-- `idearium/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW3_gate_panel-c9d8030a699919e0.graph`
-
-</details>
-
-<details>
-<summary>`idearium/phases/2026-10-21-approval-chain/` · 4 files</summary>
-
-- `idearium/phases/2026-10-21-approval-chain/APV3_changelog_read.phase`
-- `idearium/phases/2026-10-21-approval-chain/APV4_emit_on_the_ledger.phase`
-- `idearium/phases/2026-10-21-approval-chain/graph/APV3_changelog_read-4b56ad2bdd0f2cad.graph`
-- `idearium/phases/2026-10-21-approval-chain/graph/APV4_emit_on_the_ledger-cedb2fe875e7db6e.graph`
-
-</details>
-
-<details>
-<summary>`idearium/phases/2026-10-21-brainos-into-idearium/` · 14 files</summary>
-
-- `idearium/phases/2026-10-21-brainos-into-idearium/BX2_flow_sources.phase`
-- `idearium/phases/2026-10-21-brainos-into-idearium/BX3_flow_canvas.phase`
-- `idearium/phases/2026-10-21-brainos-into-idearium/BX4_agents_layer.phase`
-- `idearium/phases/2026-10-21-brainos-into-idearium/BX5_node_controls.phase`
-- `idearium/phases/2026-10-21-brainos-into-idearium/BX6_pipeline_edit.phase`
-- `idearium/phases/2026-10-21-brainos-into-idearium/BX7_automation.phase`
-- `idearium/phases/2026-10-21-brainos-into-idearium/BX8_dock_panels.phase`
-- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX2_flow_sources-37e364e91aef63f4.graph`
-- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX3_flow_canvas-0cfcc543816b7eee.graph`
-- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX4_agents_layer-a877f16582b136ef.graph`
-- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX5_node_controls-8af169be49d40dc5.graph`
-- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX6_pipeline_edit-a7874d45d8fbf5a0.graph`
-- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX7_automation-6615544c90e45a2a.graph`
-- `idearium/phases/2026-10-21-brainos-into-idearium/graph/BX8_dock_panels-13df1648e45b6aa2.graph`
-
-</details>
-
-<details>
-<summary>`idearium/phases/2026-10-21-data-layout/` · 2 files</summary>
-
-- `idearium/phases/2026-10-21-data-layout/DL4_one_repo_folder.phase`
-- `idearium/phases/2026-10-21-data-layout/graph/DL4_one_repo_folder-60343e03dda1be5f.graph`
-
-</details>
-
-<details>
-<summary>`idearium/repo/` · 31 files</summary>
+<summary>`idearium/repo/` · 33 files</summary>
 
 - `idearium/repo/architecture.js`
 - `idearium/repo/build-plan.js`
@@ -870,6 +912,7 @@ Idearium is 246 files in 26 modules, entry `idearium/api/index.js`, port 4800, s
 - `idearium/repo/import-pipeline-worker.js`
 - `idearium/repo/import-pipeline.js`
 - `idearium/repo/index.js`
+- `idearium/repo/lift-root.js`
 - `idearium/repo/living-spec.js`
 - `idearium/repo/nexus-self.js`
 - `idearium/repo/phase-mapping.js`
@@ -877,6 +920,7 @@ Idearium is 246 files in 26 modules, entry `idearium/api/index.js`, port 4800, s
 - `idearium/repo/pipeline-events.js`
 - `idearium/repo/proof-run.js`
 - `idearium/repo/repo-node.js`
+- `idearium/repo/roadmap-import.js`
 - `idearium/repo/roadmap.js`
 - `idearium/repo/run-reconcile.js`
 - `idearium/repo/runtime-proof.js`
@@ -939,7 +983,7 @@ Idearium is 246 files in 26 modules, entry `idearium/api/index.js`, port 4800, s
 </details>
 
 <details>
-<summary>`idearium/spec-engine/templates/` · 25 files</summary>
+<summary>`idearium/spec-engine/templates/` · 26 files</summary>
 
 - `idearium/spec-engine/templates/ai-agent-system.spec`
 - `idearium/spec-engine/templates/api-service.spec`
@@ -952,6 +996,7 @@ Idearium is 246 files in 26 modules, entry `idearium/api/index.js`, port 4800, s
 - `idearium/spec-engine/templates/eravos-canvas.spec`
 - `idearium/spec-engine/templates/eravos-tool.spec`
 - `idearium/spec-engine/templates/event-system.spec`
+- `idearium/spec-engine/templates/genesis-sandboxed.spec`
 - `idearium/spec-engine/templates/genesis.spec`
 - `idearium/spec-engine/templates/minimal-kernel.spec`
 - `idearium/spec-engine/templates/plugin-runtime.md`
@@ -1103,7 +1148,7 @@ Idearium is 246 files in 26 modules, entry `idearium/api/index.js`, port 4800, s
 
 </details>
 
-119 release notes name a file of idearium: 0.60.188., 0.60.177., 0.60.168., 0.60.167., 0.60.165., 0.60.164., 0.60.163., 0.60.162., 0.60.156., 0.60.153., 0.60.151., 0.60.150., 0.60.148., 0.60.145., 0.60.143., 0.60.141., 0.60.140., 0.60.134., 0.60.132., 0.60.131., 0.60.130., 0.60.128., 0.60.127., 0.60.124., 0.60.123., 0.60.122., 0.60.121., 0.60.118., 0.60.107., 0.60.105., 0.60.103., 0.60.102., 0.60.99., 0.60.94., 0.60.80., 0.60.79., 0.60.74., 0.60.73., 0.60.67., 0.60.65., and 79 older. Each is in the version history below, in his words.
+135 release notes name a file of idearium: 0.60.229., 0.60.228., 0.60.227., 0.60.226., 0.60.225., 0.60.223., 0.60.222., 0.60.221., 0.60.206., 0.60.205., 0.60.203., 0.60.199., 0.60.198., 0.60.197., 0.60.196., 0.60.193., 0.60.188., 0.60.177., 0.60.168., 0.60.167., 0.60.165., 0.60.164., 0.60.163., 0.60.162., 0.60.156., 0.60.153., 0.60.151., 0.60.150., 0.60.148., 0.60.145., 0.60.143., 0.60.141., 0.60.140., 0.60.134., 0.60.132., 0.60.131., 0.60.130., 0.60.128., 0.60.127., 0.60.124., and 95 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:idearium:end -->
 
@@ -1116,7 +1161,7 @@ Its node schemas live in `architect/schemas/`, and its spec `architect/spec/arch
 <!-- generated:readme:system:architect:start -->
 #### architect: every module and every file
 
-Architect is 24 files in 6 modules, entry `architect/service.js`, port 3747, spec `architect/spec/architect.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/architect-atlas.md`.
+Architect is 30 files in 7 modules, entry `architect/service.js`, port 3747, spec `architect/spec/architect.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/architect-atlas.md`.
 
 <details>
 <summary>`architect/` · 6 files</summary>
@@ -1141,6 +1186,15 @@ Architect is 24 files in 6 modules, entry `architect/service.js`, port 3747, spe
 <summary>`architect/output/` · 1 file</summary>
 
 - `architect/output/.gitkeep`
+
+</details>
+
+<details>
+<summary>`architect/phases/` · 6 files</summary>
+
+- `architect/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 1 .phase, 1 .graph
+- `architect/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 1 .phase, 1 .graph
+- `architect/phases/2026-10-19-infrastructure-spine/` — phase nodes: 1 .phase, 1 .graph
 
 </details>
 
@@ -1178,7 +1232,7 @@ Architect is 24 files in 6 modules, entry `architect/service.js`, port 3747, spe
 
 </details>
 
-3 release notes name a file of architect: 0.60.131., 0.60.0., 0.39.299.. Each is in the version history below, in his words.
+4 release notes name a file of architect: 0.60.212., 0.60.131., 0.60.0., 0.39.299.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:architect:end -->
 
@@ -1189,7 +1243,7 @@ The system that watches the others. `diagnostic/nexus-diagnostic.js` on :7825 re
 <!-- generated:readme:system:diagnostic:start -->
 #### diagnostic: every module and every file
 
-Diagnostic is 33 files in 7 modules, entry `diagnostic/nexus-diagnostic.js`, port 7825, spec `diagnostic/spec/diagnostic.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/diagnostic-atlas.md`.
+Diagnostic is 43 files in 8 modules, entry `diagnostic/nexus-diagnostic.js`, port 7825, spec `diagnostic/spec/diagnostic.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/diagnostic-atlas.md`.
 
 <details>
 <summary>`diagnostic/` · 9 files</summary>
@@ -1233,6 +1287,15 @@ Diagnostic is 33 files in 7 modules, entry `diagnostic/nexus-diagnostic.js`, por
 </details>
 
 <details>
+<summary>`diagnostic/phases/` · 10 files</summary>
+
+- `diagnostic/phases/2026-09-28-staging-self-heal/` — phase nodes: 2 .phase, 2 .graph
+- `diagnostic/phases/2026-10-05-announce-pulse-repair/` — phase nodes: 1 .phase, 1 .graph
+- `diagnostic/phases/2026-10-17-debugging-product/` — phase nodes: 2 .phase, 2 .graph
+
+</details>
+
+<details>
 <summary>`diagnostic/schemas/` · 9 files</summary>
 
 - `diagnostic/schemas/index.js`
@@ -1266,7 +1329,7 @@ Diagnostic is 33 files in 7 modules, entry `diagnostic/nexus-diagnostic.js`, por
 
 </details>
 
-8 release notes name a file of diagnostic: 0.60.150., 0.60.138., 0.60.136., 0.60.131., 0.39.342., 0.39.327., 0.39.260., 0.39.173.. Each is in the version history below, in his words.
+9 release notes name a file of diagnostic: 0.60.207., 0.60.150., 0.60.138., 0.60.136., 0.60.131., 0.39.342., 0.39.327., 0.39.260., 0.39.173.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:diagnostic:end -->
 
@@ -1277,7 +1340,7 @@ The cognition layer, consolidated from three places that had no single home. `in
 <!-- generated:readme:system:intelligence:start -->
 #### intelligence: every module and every file
 
-Intelligence is 128 files in 37 modules, entry `intelligence/server.js`, port 3753, spec `intelligence/spec/intelligence.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/intelligence-atlas.md`.
+Intelligence is 158 files in 38 modules, entry `intelligence/server.js`, port 3753, spec `intelligence/spec/intelligence.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/intelligence-atlas.md`.
 
 <details>
 <summary>`intelligence/` · 18 files</summary>
@@ -1423,6 +1486,23 @@ Intelligence is 128 files in 37 modules, entry `intelligence/server.js`, port 37
 <summary>`intelligence/output/` · 1 file</summary>
 
 - `intelligence/output/.gitkeep`
+
+</details>
+
+<details>
+<summary>`intelligence/phases/` · 30 files</summary>
+
+- `intelligence/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 1 .graph
+- `intelligence/phases/2026-09-28-staging-self-heal/` — phase nodes: 3 .phase, 3 .graph
+- `intelligence/phases/2026-09-29-nex-node-store/` — phase nodes: 1 .phase, 1 .graph
+- `intelligence/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 1 .graph
+- `intelligence/phases/2026-10-02-synthesis-zoom-versionium/` — phase nodes: 2 .phase, 2 .graph
+- `intelligence/phases/2026-10-05-failure-reproduction/` — phase nodes: 1 .phase, 1 .graph
+- `intelligence/phases/2026-10-10-self-awareness/` — phase nodes: 2 .phase, 2 .graph
+- `intelligence/phases/2026-10-10-snapshot-compartments/` — phase nodes: 1 .phase, 1 .graph
+- `intelligence/phases/2026-10-12-request-spine/` — phase nodes: 1 .phase, 1 .graph
+- `intelligence/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 1 .graph
+- `intelligence/phases/2026-10-18-gate-memory/` — phase nodes: 1 .phase, 1 .graph
 
 </details>
 
@@ -1629,7 +1709,7 @@ Intelligence is 128 files in 37 modules, entry `intelligence/server.js`, port 37
 
 </details>
 
-15 release notes name a file of intelligence: 0.60.157., 0.60.150., 0.60.148., 0.60.133., 0.60.131., 0.60.127., 0.39.330., 0.39.321., 0.39.300., 0.39.252., 0.39.236., 0.39.182., 0.39.181., 0.39.173., 0.39.172.. Each is in the version history below, in his words.
+17 release notes name a file of intelligence: 0.60.237., 0.60.236., 0.60.157., 0.60.150., 0.60.148., 0.60.133., 0.60.131., 0.60.127., 0.39.330., 0.39.321., 0.39.300., 0.39.252., 0.39.236., 0.39.182., 0.39.181., 0.39.173., 0.39.172.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:intelligence:end -->
 
@@ -1640,7 +1720,7 @@ Local model dispatch, deliberately isolated from guardian: if guardian goes down
 <!-- generated:readme:system:ollama-bridge:start -->
 #### ollama-bridge: every module and every file
 
-Ollama-bridge is 56 files in 7 modules, entry `ollama/server.js`, port 3749. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/ollama-atlas.md`.
+Ollama-bridge is 62 files in 8 modules, entry `ollama/server.js`, port 3749. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/ollama-atlas.md`.
 
 <details>
 <summary>`ollama/` · 7 files</summary>
@@ -1702,6 +1782,15 @@ Ollama-bridge is 56 files in 7 modules, entry `ollama/server.js`, port 3749. Eac
 </details>
 
 <details>
+<summary>`ollama/phases/` · 6 files</summary>
+
+- `ollama/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 1 .phase, 1 .graph
+- `ollama/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 1 .graph
+- `ollama/phases/2026-10-05-cli-data-code/` — phase nodes: 1 .phase, 1 .graph
+
+</details>
+
+<details>
 <summary>`ollama/routes/` · 7 files</summary>
 
 - `ollama/routes/jobs.js` — ollama/routes/jobs.js POST /api/jobs, POST /api/jobs/tools, GET /api/jobs, GET /api/jobs/:id,
@@ -1740,7 +1829,7 @@ Ollama-bridge is 56 files in 7 modules, entry `ollama/server.js`, port 3749. Eac
 
 </details>
 
-12 release notes name a file of ollama-bridge: 0.60.149., 0.60.131., 0.60.123., 0.60.10., 0.46.0., 0.39.350., 0.39.289., 0.39.274., 0.39.269., 0.39.267., 0.39.190., 0.39.181.. Each is in the version history below, in his words.
+13 release notes name a file of ollama-bridge: 0.60.209., 0.60.149., 0.60.131., 0.60.123., 0.60.10., 0.46.0., 0.39.350., 0.39.289., 0.39.274., 0.39.269., 0.39.267., 0.39.190., 0.39.181.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:ollama-bridge:end -->
 
@@ -1751,7 +1840,7 @@ Causal version control: temporal replay, calendar playback, sigma-gated commits.
 <!-- generated:readme:system:versionium:start -->
 #### versionium: every module and every file
 
-Versionium is 32 files in 5 modules, entry `versionium/server.js`, port 3754, spec `versionium/spec/versionium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/versionium-atlas.md`.
+Versionium is 40 files in 6 modules, entry `versionium/server.js`, port 3754, spec `versionium/spec/versionium.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/versionium-atlas.md`.
 
 <details>
 <summary>`versionium/` · 6 files</summary>
@@ -1761,7 +1850,7 @@ Versionium is 32 files in 5 modules, entry `versionium/server.js`, port 3754, sp
 - `versionium/event-taxonomy.js` — // versionium/event-taxonomy.js — real event vocabulary for the sovereign // Versionium system. Conforms to…
 - `versionium/interaction-contract.json`
 - `versionium/registry-components.js` — versionium/registry-components.js
-- `versionium/server.js`
+- `versionium/server.js` — // 0.60.207 DL2 — James: "make each system responsible for it's own data". Its files in the root data/ come…
 
 </details>
 
@@ -1780,6 +1869,16 @@ Versionium is 32 files in 5 modules, entry `versionium/server.js`, port 3754, sp
 - `versionium/lib/snapshot.js`
 - `versionium/lib/store.js`
 - `versionium/lib/text-diff.js`
+
+</details>
+
+<details>
+<summary>`versionium/phases/` · 8 files</summary>
+
+- `versionium/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 1 .graph
+- `versionium/phases/2026-10-07-versionium-releases/` — phase nodes: 1 .phase, 1 .graph
+- `versionium/phases/2026-10-10-snapshot-compartments/` — phase nodes: 1 .phase, 1 .graph
+- `versionium/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 1 .phase, 1 .graph
 
 </details>
 
@@ -1826,7 +1925,7 @@ Intelligence as opposed to dispatch: copilot receives intent, assembles context,
 <!-- generated:readme:system:copilot:start -->
 #### copilot: every module and every file
 
-Copilot is 66 files in 8 modules, entry `copilot/server.js`, port 3750, spec `copilot/spec/copilot.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/copilot-atlas.md`.
+Copilot is 94 files in 8 modules, entry `copilot/server.js`, port 3750, spec `copilot/spec/copilot.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/copilot-atlas.md`.
 
 <details>
 <summary>`copilot/` · 26 files</summary>
@@ -1892,10 +1991,20 @@ Copilot is 66 files in 8 modules, entry `copilot/server.js`, port 3750, spec `co
 </details>
 
 <details>
-<summary>`copilot/phases/` · 2 files</summary>
+<summary>`copilot/phases/` · 30 files</summary>
 
-- `copilot/phases/2026-10-19-pipeline-root-causes/SS2_every_system_home.phase`
-- `copilot/phases/2026-10-19-pipeline-root-causes/graph/SS2_every_system_home-8abdeb8d18ad7e5d.graph`
+- `copilot/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 4 .phase, 4 .graph
+- `copilot/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-10-05-build-from-the-spec/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-10-05-cli-data-code/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-10-05-verified-primitives/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-10-09-hardening-pass/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-10-10-idearium-solid/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 1 .graph
+- `copilot/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 1 .graph
 
 </details>
 
@@ -1942,7 +2051,7 @@ Copilot is 66 files in 8 modules, entry `copilot/server.js`, port 3750, spec `co
 
 </details>
 
-21 release notes name a file of copilot: 0.60.182., 0.60.131., 0.60.127., 0.60.77., 0.60.70., 0.60.62., 0.60.26., 0.59.11., 0.59.6., 0.55.0., 0.39.337., 0.39.336., 0.39.330., 0.39.271., 0.39.269., 0.39.267., 0.39.256., 0.39.253., 0.39.248., 0.39.244., 0.39.188.. Each is in the version history below, in his words.
+23 release notes name a file of copilot: 0.60.237., 0.60.205., 0.60.182., 0.60.131., 0.60.127., 0.60.77., 0.60.70., 0.60.62., 0.60.26., 0.59.11., 0.59.6., 0.55.0., 0.39.337., 0.39.336., 0.39.330., 0.39.271., 0.39.269., 0.39.267., 0.39.256., 0.39.253., 0.39.248., 0.39.244., 0.39.188.. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:copilot:end -->
 
@@ -1953,7 +2062,7 @@ The registry authority. `loom/server.js` on :3752 serves the registry of compone
 <!-- generated:readme:system:loom:start -->
 #### loom: every module and every file
 
-Loom is 84 files in 16 modules, entry `loom/server.js`, port 3752, spec `loom/spec/loom.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/loom-atlas.md`.
+Loom is 122 files in 15 modules, entry `loom/server.js`, port 3752, spec `loom/spec/loom.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/loom-atlas.md`.
 
 <details>
 <summary>`loom/` · 7 files</summary>
@@ -2026,18 +2135,23 @@ Loom is 84 files in 16 modules, entry `loom/server.js`, port 3752, spec `loom/sp
 </details>
 
 <details>
-<summary>`loom/phases/2026-10-19-pipeline-root-causes/` · 2 files</summary>
+<summary>`loom/phases/` · 42 files</summary>
 
-- `loom/phases/2026-10-19-pipeline-root-causes/SS4_seal_into_compartments.phase`
-- `loom/phases/2026-10-19-pipeline-root-causes/graph/SS4_seal_into_compartments-369aaef9557e2030.graph`
-
-</details>
-
-<details>
-<summary>`loom/phases/2026-10-21-approval-chain/` · 2 files</summary>
-
-- `loom/phases/2026-10-21-approval-chain/APV5_wired_in_loom.phase`
-- `loom/phases/2026-10-21-approval-chain/graph/APV5_wired_in_loom-73a4e2239e5435a3.graph`
+- `loom/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-10-05-build-from-the-spec/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-10-05-cli-data-code/` — phase nodes: 4 .phase, 4 .graph
+- `loom/phases/2026-10-09-one-roadmap/` — phase nodes: 2 .phase, 2 .graph
+- `loom/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 2 .phase, 2 .graph
+- `loom/phases/2026-10-12-request-spine/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-10-15-gate-held-work/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-10-15-warp-builds-and-spec-framework/` — phase nodes: 2 .phase, 2 .graph
+- `loom/phases/2026-10-19-infrastructure-spine/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 1 .graph
+- `loom/phases/2026-10-21-approval-chain/` — phase nodes: 1 .phase, 1 .graph
 
 </details>
 
@@ -2135,7 +2249,7 @@ Loom is 84 files in 16 modules, entry `loom/server.js`, port 3752, spec `loom/sp
 
 </details>
 
-57 release notes name a file of loom: 0.60.188., 0.60.176., 0.60.170., 0.60.168., 0.60.166., 0.60.164., 0.60.161., 0.60.160., 0.60.157., 0.60.156., 0.60.155., 0.60.153., 0.60.150., 0.60.143., 0.60.134., 0.60.131., 0.60.127., 0.60.126., 0.60.118., 0.60.80., 0.60.72., 0.60.63., 0.60.41., 0.60.7., 0.60.5., 0.60.4., 0.59.11., 0.53.0., 0.49.0., 0.44.0., 0.39.367., 0.39.359., 0.39.349., 0.39.334., 0.39.332., 0.39.330., 0.39.329., 0.39.313., 0.39.310., 0.39.305., and 17 older. Each is in the version history below, in his words.
+60 release notes name a file of loom: 0.60.229., 0.60.222., 0.60.199., 0.60.188., 0.60.176., 0.60.170., 0.60.168., 0.60.166., 0.60.164., 0.60.161., 0.60.160., 0.60.157., 0.60.156., 0.60.155., 0.60.153., 0.60.150., 0.60.143., 0.60.134., 0.60.131., 0.60.127., 0.60.126., 0.60.118., 0.60.80., 0.60.72., 0.60.63., 0.60.41., 0.60.7., 0.60.5., 0.60.4., 0.59.11., 0.53.0., 0.49.0., 0.44.0., 0.39.367., 0.39.359., 0.39.349., 0.39.334., 0.39.332., 0.39.330., 0.39.329., and 20 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:loom:end -->
 
@@ -2146,7 +2260,7 @@ The sovereign browser: Electron and Chromium, with its own fingerprint control, 
 <!-- generated:readme:system:clear-glass:start -->
 #### clear-glass: every module and every file
 
-Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-glass.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/clear-glass-atlas.md`.
+Clear-glass is 663 files in 77 modules, port 7704, spec `clear-glass/spec/clear-glass.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/clear-glass-atlas.md`.
 
 <details>
 <summary>`clear-glass/` · 6 files</summary>
@@ -2177,6 +2291,57 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
+<summary>`clear-glass/erosmancer-os/` · 6 files</summary>
+
+- `clear-glass/erosmancer-os/CHANGELOG.md` — ErosmancerOS — Changelog
+- `clear-glass/erosmancer-os/MANIFEST.json`
+- `clear-glass/erosmancer-os/README.md` — ErosmancerOS
+- `clear-glass/erosmancer-os/ROADMAP.md` — ErosmancerOS — Roadmap
+- `clear-glass/erosmancer-os/package.json`
+- `clear-glass/erosmancer-os/tsconfig.json`
+
+</details>
+
+<details>
+<summary>`clear-glass/erosmancer-os/spec/` · 1 file</summary>
+
+- `clear-glass/erosmancer-os/spec/erosmancer.spec` — ADDENDUM 2026-10-24 (0.60.233) — ErosmancerOS lives in Clear Glass
+
+</details>
+
+<details>
+<summary>`clear-glass/erosmancer-os/src/` · 14 files</summary>
+
+- `clear-glass/erosmancer-os/src/adaptive/index.ts`
+- `clear-glass/erosmancer-os/src/api/server.ts`
+- `clear-glass/erosmancer-os/src/behavior/index.ts`
+- `clear-glass/erosmancer-os/src/bridge/index.ts`
+- `clear-glass/erosmancer-os/src/dispatcher/index.ts`
+- `clear-glass/erosmancer-os/src/hostile/index.ts`
+- `clear-glass/erosmancer-os/src/index.ts`
+- `clear-glass/erosmancer-os/src/observer/index.ts`
+- `clear-glass/erosmancer-os/src/registry/index.ts`
+- `clear-glass/erosmancer-os/src/replay/index.ts`
+- `clear-glass/erosmancer-os/src/routing/index.ts`
+- `clear-glass/erosmancer-os/src/selector/index.ts`
+- `clear-glass/erosmancer-os/src/telemetry/index.ts`
+- `clear-glass/erosmancer-os/src/types/index.ts`
+
+</details>
+
+<details>
+<summary>`clear-glass/erosmancer-os/tests/` · 6 files</summary>
+
+- `clear-glass/erosmancer-os/tests/adaptive.test.ts` — // ============================================================ // ErosmancerOS — AdaptiveLayer Tests
+- `clear-glass/erosmancer-os/tests/google-signin.test.ts` — // 2026-10-16 — James: "for the google login, can you do everything you can to prevent that? like across…
+- `clear-glass/erosmancer-os/tests/hostile.test.ts` — // ============================================================ // ErosmancerOS — HostileDetection Tests
+- `clear-glass/erosmancer-os/tests/integration.test.ts` — // ============================================================ // ErosmancerOS — Integration Test
+- `clear-glass/erosmancer-os/tests/replay.test.ts` — // ============================================================ // ErosmancerOS — ScriptReplayQueue Tests
+- `clear-glass/erosmancer-os/tests/suite.ts` — // ============================================================ // ErosmancerOS — Full Test Suite
+
+</details>
+
+<details>
 <summary>`clear-glass/input/` · 1 file</summary>
 
 - `clear-glass/input/.gitkeep`
@@ -2184,146 +2349,40 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/phases/2026-10-19-pipeline-root-causes/` · 2 files</summary>
+<summary>`clear-glass/phases/` · 304 files</summary>
 
-- `clear-glass/phases/2026-10-19-pipeline-root-causes/PR1_page_reader.phase`
-- `clear-glass/phases/2026-10-19-pipeline-root-causes/graph/PR1_page_reader-1b941aeeae85b18a.graph`
-
-</details>
-
-<details>
-<summary>`clear-glass/phases/2026-10-21-adblock/` · 13 files</summary>
-
-- `clear-glass/phases/2026-10-21-adblock/AB1_engine.phase`
-- `clear-glass/phases/2026-10-21-adblock/AB2_lists.phase`
-- `clear-glass/phases/2026-10-21-adblock/AB3_wiring.phase`
-- `clear-glass/phases/2026-10-21-adblock/AB4_surface.phase`
-- `clear-glass/phases/2026-10-21-adblock/AB5_import.phase`
-- `clear-glass/phases/2026-10-21-adblock/graph/AB1_engine-20cef4608d9b1787.graph`
-- `clear-glass/phases/2026-10-21-adblock/graph/AB1_engine-ce7213dcdf797a4c.graph`
-- `clear-glass/phases/2026-10-21-adblock/graph/AB2_lists-403ef9771243dd1b.graph`
-- `clear-glass/phases/2026-10-21-adblock/graph/AB2_lists-48ec7173619ce759.graph`
-- `clear-glass/phases/2026-10-21-adblock/graph/AB3_wiring-f21a76a58142b5cf.graph`
-- `clear-glass/phases/2026-10-21-adblock/graph/AB4_surface-3faa436c3064d0f8.graph`
-- `clear-glass/phases/2026-10-21-adblock/graph/AB4_surface-c9c24c363b6af3aa.graph`
-- `clear-glass/phases/2026-10-21-adblock/graph/AB5_import-8bd5bbcc7bc580a9.graph`
-
-</details>
-
-<details>
-<summary>`clear-glass/phases/2026-10-21-brainos-into-idearium/` · 2 files</summary>
-
-- `clear-glass/phases/2026-10-21-brainos-into-idearium/BX10_float.phase`
-- `clear-glass/phases/2026-10-21-brainos-into-idearium/graph/BX10_float-718eb952045d7b89.graph`
-
-</details>
-
-<details>
-<summary>`clear-glass/phases/2026-10-21-browser-shell/` · 42 files</summary>
-
-- `clear-glass/phases/2026-10-21-browser-shell/BS10_new_tab.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS11_copilot_pane.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS12_context_automatic.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS13_plugin_settings.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS14_zoom_core.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS15_context_menu.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS16_import_fields.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS17_menu_consolidated.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS18_chrome_context_menus.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS19_ctx_point_from_page.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS1_firefox_import.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS20_bookmark_site_accounts.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS2_shell_rebuild.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS3_menus.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS4_extensions.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS5_downloads_panel.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS6_float_cli.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS7_surface.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS8_design_system.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/BS9_agents_hub.phase`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS10_new_tab-e31b41b3f7ee6b17.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS11_copilot_pane-caad6884da55762a.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS12_context_automatic-0ff3ebe721017029.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS12_context_automatic-953b56c3f6ba45cd.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS13_plugin_settings-1e5c8fe7ff5bb197.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS14_zoom_core-5aa982aa70280429.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS15_context_menu-afd2ae50d818a04b.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS15_context_menu-b603bd17ec87a808.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS16_import_fields-598249e869f9e7b4.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS17_menu_consolidated-f5d69e62d20f3d9c.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS18_chrome_context_menus-9123369f3fa7ce07.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS19_ctx_point_from_page-c852821cbea10b9d.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS1_firefox_import-d3c52db1223874d1.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS20_bookmark_site_accounts-17041ebd38f3c392.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS2_shell_rebuild-274f7a19aecede02.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS3_menus-d4a6503f3fdadee9.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS4_extensions-e040b9a57e2237a0.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS5_downloads_panel-f349b0efcf5ca190.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS6_float_cli-c0fd47f327b73e8c.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS7_surface-650e56a6af5ece66.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS8_design_system-45800c467fe1ee6c.graph`
-- `clear-glass/phases/2026-10-21-browser-shell/graph/BS9_agents_hub-e6c8cd1e2f573362.graph`
-
-</details>
-
-<details>
-<summary>`clear-glass/phases/2026-10-21-compartment-downloads/` · 10 files</summary>
-
-- `clear-glass/phases/2026-10-21-compartment-downloads/CD1_magnet_parse.phase`
-- `clear-glass/phases/2026-10-21-compartment-downloads/CD2_quarantine_downloads.phase`
-- `clear-glass/phases/2026-10-21-compartment-downloads/CD3_verified_handoff.phase`
-- `clear-glass/phases/2026-10-21-compartment-downloads/CD4_kill_on_disconnect.phase`
-- `clear-glass/phases/2026-10-21-compartment-downloads/CD5_surface.phase`
-- `clear-glass/phases/2026-10-21-compartment-downloads/graph/CD1_magnet_parse-e3defc132656fe7c.graph`
-- `clear-glass/phases/2026-10-21-compartment-downloads/graph/CD2_quarantine_downloads-3d4f0cd284c268ef.graph`
-- `clear-glass/phases/2026-10-21-compartment-downloads/graph/CD3_verified_handoff-b1f1f8ce8c648a8f.graph`
-- `clear-glass/phases/2026-10-21-compartment-downloads/graph/CD4_kill_on_disconnect-37c214a6e1300775.graph`
-- `clear-glass/phases/2026-10-21-compartment-downloads/graph/CD5_surface-182f083bae4413ca.graph`
-
-</details>
-
-<details>
-<summary>`clear-glass/phases/2026-10-21-passwords/` · 8 files</summary>
-
-- `clear-glass/phases/2026-10-21-passwords/PW1_service.phase`
-- `clear-glass/phases/2026-10-21-passwords/PW2_page.phase`
-- `clear-glass/phases/2026-10-21-passwords/PW3_wiring.phase`
-- `clear-glass/phases/2026-10-21-passwords/PW4_surface.phase`
-- `clear-glass/phases/2026-10-21-passwords/graph/PW1_service-0fb18010d2b4dadf.graph`
-- `clear-glass/phases/2026-10-21-passwords/graph/PW2_page-a3c8be28c7f429ea.graph`
-- `clear-glass/phases/2026-10-21-passwords/graph/PW3_wiring-7f2131c31f53703e.graph`
-- `clear-glass/phases/2026-10-21-passwords/graph/PW4_surface-3c20d9cd7701c3e2.graph`
-
-</details>
-
-<details>
-<summary>`clear-glass/phases/2026-10-21-snowflake-compartment/` · 25 files</summary>
-
-- `clear-glass/phases/2026-10-21-snowflake-compartment/SF1_honest_detection.phase`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/SF2_bridge_sources.phase`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/SF3_page_in_the_compartment.phase`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/SF4_https_only.phase`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/SF5_circuit_check.phase`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/SF6_surface.phase`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/SF7_bridge_automatic.phase`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/SF8_host_import.phase`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/SF9_install_in_use.phase`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF1_honest_detection-8e5bdcaa5c7f6e9f.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF1_honest_detection-bcc77d2324b63a88.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF1_honest_detection-e5aa6ec75cff3f9c.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF2_bridge_sources-ea5b5eea6b68382f.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF3_page_in_the_compartment-f34764dd0fbfd96e.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF4_https_only-502b5c00f2ac8030.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF5_circuit_check-1d7cfbc07fe905be.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF5_circuit_check-ac5c7c03123bac85.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF5_circuit_check-f8487134f916abcc.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF6_surface-6689d30ab14e6f63.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF6_surface-87e275793f76b7a7.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF6_surface-dfa1169546059591.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF7_bridge_automatic-130bca196028d7d7.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF7_bridge_automatic-1fb57e40a95cf705.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF8_host_import-b02e6f7310f9be5f.graph`
-- `clear-glass/phases/2026-10-21-snowflake-compartment/graph/SF9_install_in_use-0f35a722345fb09e.graph`
+- `clear-glass/phases/2026-09-29-build-surface/` — phase nodes: 2 .phase, 2 .graph
+- `clear-glass/phases/2026-09-29-provider-economy/` — phase nodes: 2 .phase, 2 .graph
+- `clear-glass/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 3 .phase, 3 .graph
+- `clear-glass/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-05-fiverr-guide/` — phase nodes: 2 .phase, 2 .graph
+- `clear-glass/phases/2026-10-05-idea-to-spec-workshop/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-07-compartment-control-and-activity/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-10-design-surface/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-10-idearium-access/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-10-idearium-solid/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-10-shape-of-nexus/` — phase nodes: 6 .phase, 6 .graph
+- `clear-glass/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 17 .phase, 17 .graph
+- `clear-glass/phases/2026-10-13-identities-tabs-and-automation/` — phase nodes: 10 .phase, 10 .graph
+- `clear-glass/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-15-capability-specs-and-semantic-page-tree/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-15-clear-glass-network-posture/` — phase nodes: 4 .phase, 4 .graph
+- `clear-glass/phases/2026-10-15-clear-glass-surfaces/` — phase nodes: 5 .phase, 5 .graph
+- `clear-glass/phases/2026-10-15-macro-node-recording/` — phase nodes: 4 .phase, 4 .graph
+- `clear-glass/phases/2026-10-15-personal-chat-import/` — phase nodes: 2 .phase, 2 .graph
+- `clear-glass/phases/2026-10-16-google-signin/` — phase nodes: 6 .phase, 6 .graph
+- `clear-glass/phases/2026-10-16-tls-layer/` — phase nodes: 3 .phase, 3 .graph
+- `clear-glass/phases/2026-10-19-gig-autofill-and-learn/` — phase nodes: 5 .phase, 5 .graph
+- `clear-glass/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-19-upload-intent-and-page-map/` — phase nodes: 7 .phase, 7 .graph
+- `clear-glass/phases/2026-10-21-adblock/` — phase nodes: 5 .phase, 9 .graph
+- `clear-glass/phases/2026-10-21-brainos-into-idearium/` — phase nodes: 1 .phase, 1 .graph
+- `clear-glass/phases/2026-10-21-browser-shell/` — phase nodes: 20 .phase, 25 .graph
+- `clear-glass/phases/2026-10-21-compartment-downloads/` — phase nodes: 5 .phase, 7 .graph
+- `clear-glass/phases/2026-10-21-passwords/` — phase nodes: 4 .phase, 6 .graph
+- `clear-glass/phases/2026-10-21-snowflake-compartment/` — phase nodes: 9 .phase, 17 .graph
+- `clear-glass/phases/2026-10-23-site-profile-processes/` — phase nodes: 6 .phase, 13 .graph
 
 </details>
 
@@ -2376,7 +2435,7 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/renderer/` · 15 files</summary>
+<summary>`clear-glass/renderer/` · 20 files</summary>
 
 - `clear-glass/renderer/browser.css`
 - `clear-glass/renderer/browser.html`
@@ -2391,8 +2450,13 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 - `clear-glass/renderer/library.html`
 - `clear-glass/renderer/mesh-picker.js`
 - `clear-glass/renderer/page-map-panel.js`
+- `clear-glass/renderer/processes.css`
+- `clear-glass/renderer/processes.html`
+- `clear-glass/renderer/processes.js`
 - `clear-glass/renderer/selector-check.js`
 - `clear-glass/renderer/settings.html`
+- `clear-glass/renderer/site-profile-groups.css`
+- `clear-glass/renderer/site-profile-groups.js`
 
 </details>
 
@@ -2429,7 +2493,7 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/renderer/settings/` · 45 files</summary>
+<summary>`clear-glass/renderer/settings/` · 49 files</summary>
 
 - `clear-glass/renderer/settings/boot.js`
 - `clear-glass/renderer/settings/core.js`
@@ -2449,12 +2513,16 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 - `clear-glass/renderer/settings/sections/diagnostics.js`
 - `clear-glass/renderer/settings/sections/downloads.css`
 - `clear-glass/renderer/settings/sections/downloads.js`
+- `clear-glass/renderer/settings/sections/driver.css`
+- `clear-glass/renderer/settings/sections/driver.js`
 - `clear-glass/renderer/settings/sections/eros.css`
 - `clear-glass/renderer/settings/sections/eros.js`
 - `clear-glass/renderer/settings/sections/fingerprint.css`
 - `clear-glass/renderer/settings/sections/fingerprint.js`
 - `clear-glass/renderer/settings/sections/general.css`
 - `clear-glass/renderer/settings/sections/general.js`
+- `clear-glass/renderer/settings/sections/guardian.css`
+- `clear-glass/renderer/settings/sections/guardian.js`
 - `clear-glass/renderer/settings/sections/import.css`
 - `clear-glass/renderer/settings/sections/import.js`
 - `clear-glass/renderer/settings/sections/macros.css`
@@ -2480,7 +2548,7 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/renderer/shell/` · 11 files</summary>
+<summary>`clear-glass/renderer/shell/` · 12 files</summary>
 
 - `clear-glass/renderer/shell/agents.js`
 - `clear-glass/renderer/shell/copilot.css`
@@ -2493,6 +2561,7 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 - `clear-glass/renderer/shell/passwords.js`
 - `clear-glass/renderer/shell/shell.css`
 - `clear-glass/renderer/shell/shell.js`
+- `clear-glass/renderer/shell/toolbar.css`
 
 </details>
 
@@ -2530,7 +2599,7 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/spec/` · 10 files</summary>
+<summary>`clear-glass/spec/` · 11 files</summary>
 
 - `clear-glass/spec/adblock.spec`
 - `clear-glass/spec/browser-shell.spec`
@@ -2541,6 +2610,7 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 - `clear-glass/spec/guided-browser.spec`
 - `clear-glass/spec/passwords.spec`
 - `clear-glass/spec/semantic-tree.spec`
+- `clear-glass/spec/site-profile.spec`
 - `clear-glass/spec/snowflake.spec`
 
 </details>
@@ -2862,6 +2932,13 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
+<summary>`clear-glass/src/processes/` · 1 file</summary>
+
+- `clear-glass/src/processes/index.js`
+
+</details>
+
+<details>
 <summary>`clear-glass/src/providers/` · 8 files</summary>
 
 - `clear-glass/src/providers/account-switch.js`
@@ -2884,9 +2961,10 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/rewind/` · 1 file</summary>
+<summary>`clear-glass/src/rewind/` · 2 files</summary>
 
 - `clear-glass/src/rewind/engine.js` — src/rewind/engine.js — Clear Glass Rewind Engine Rewind is the session time-machine. Every N seconds (or on…
+- `clear-glass/src/rewind/resume.js` — a site's "resume state": on a revisit, put back where he was (SP2, 0.60.216). Spec:…
 
 </details>
 
@@ -2919,8 +2997,11 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 </details>
 
 <details>
-<summary>`clear-glass/src/site-settings/` · 1 file</summary>
+<summary>`clear-glass/src/site-settings/` · 4 files</summary>
 
+- `clear-glass/src/site-settings/keys.js` — the per-site keys every feature reads (SP1, 0.60.215). Spec: clear-glass/spec/site-profile.spec MOD-SP-KEYS…
+- `clear-glass/src/site-settings/profile.js` — one site's settings for every feature, through one resolver (SP1, 0.60.215). Spec:…
+- `clear-glass/src/site-settings/readers.js` — each feature reads its site value at its decision point (SP2, 0.60.216). Spec:…
 - `clear-glass/src/site-settings/store.js` — src/site-settings/store.js — Real Per-Site Settings Store Real gap named directly in…
 
 </details>
@@ -3034,7 +3115,7 @@ Clear-glass is 418 files in 78 modules, port 7704, spec `clear-glass/spec/clear-
 
 </details>
 
-73 release notes name a file of clear-glass: 0.60.183., 0.60.179., 0.60.178., 0.60.175., 0.60.174., 0.60.149., 0.60.146., 0.60.145., 0.60.137., 0.60.131., 0.60.109., 0.60.108., 0.60.106., 0.60.93., 0.60.85., 0.60.84., 0.60.71., 0.60.70., 0.60.69., 0.60.60., 0.60.58., 0.60.55., 0.60.54., 0.60.51., 0.60.49., 0.60.29., 0.60.14., 0.60.13., 0.60.12., 0.60.11., 0.60.10., 0.60.7., 0.60.5., 0.60.4., 0.60.3., 0.60.2., 0.60.0., 0.59.12., 0.59.11., 0.59.10., and 33 older. Each is in the version history below, in his words.
+87 release notes name a file of clear-glass: 0.60.233., 0.60.232., 0.60.220., 0.60.219., 0.60.218., 0.60.217., 0.60.216., 0.60.215., 0.60.214., 0.60.213., 0.60.211., 0.60.210., 0.60.206., 0.60.204., 0.60.183., 0.60.179., 0.60.178., 0.60.175., 0.60.174., 0.60.149., 0.60.146., 0.60.145., 0.60.137., 0.60.131., 0.60.109., 0.60.108., 0.60.106., 0.60.93., 0.60.85., 0.60.84., 0.60.71., 0.60.70., 0.60.69., 0.60.60., 0.60.58., 0.60.55., 0.60.54., 0.60.51., 0.60.49., 0.60.29., and 47 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:clear-glass:end -->
 
@@ -3045,12 +3126,13 @@ The component store: every file WARP builds through Idearium, kept in `component
 <!-- generated:readme:system:components:start -->
 #### components: every module and every file
 
-Components is 1 files in 1 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/components-atlas.md`.
+Components is 2 files in 1 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/components-atlas.md`.
 
 <details>
-<summary>`components/` · 1 file</summary>
+<summary>`components/` · 2 files</summary>
 
 - `components/index.json`
+- `components/registry-components.draft.json`
 
 </details>
 
@@ -3063,16 +3145,17 @@ The Compartment OS: isolated sandboxes with their own process, network and runti
 <!-- generated:readme:system:cos:start -->
 #### cos: every module and every file
 
-Cos is 308 files in 31 modules, spec `cos/spec/cos.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cos-atlas.md`.
+Cos is 561 files in 33 modules, spec `cos/spec/cos.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/cos-atlas.md`.
 
 <details>
-<summary>`cos/` · 5 files</summary>
+<summary>`cos/` · 6 files</summary>
 
 - `cos/event-taxonomy.js` — // cos/event-taxonomy.js — every event COS emits, in the ET1 shape (lib/event-taxonomy-pattern.js). //…
 - `cos/interaction-contract.json`
 - `cos/kernel.js` — @param {object} opts @param {string} opts.id Unique compartment ID
 - `cos/manager.js` — // ───────────────────────────────────────────────────────────────────────────── // Compartment Manager
 - `cos/package.json`
+- `cos/registry-components.draft.json`
 
 </details>
 
@@ -3430,6 +3513,38 @@ Cos is 308 files in 31 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
+<summary>`cos/phases/` · 124 files</summary>
+
+- `cos/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` — phase nodes: 4 .phase, 4 .graph
+- `cos/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-09-28-staging-self-heal/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-09-29-build-surface/` — phase nodes: 2 .phase, 2 .graph
+- `cos/phases/2026-09-29-nex-node-store/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 2 .phase, 2 .graph
+- `cos/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-05-build-from-the-spec/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-05-cli-data-code/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-05-cos-machines/` — phase nodes: 8 .phase, 8 .graph
+- `cos/phases/2026-10-10-idearium-solid/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-10-shape-of-nexus/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-10-snapshot-compartments/` — phase nodes: 2 .phase, 2 .graph
+- `cos/phases/2026-10-12-request-spine/` — phase nodes: 2 .phase, 2 .graph
+- `cos/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-15-gate-held-work/` — phase nodes: 4 .phase, 4 .graph
+- `cos/phases/2026-10-16-canvas-compartments/` — phase nodes: 2 .phase, 2 .graph
+- `cos/phases/2026-10-17-failure-mode-report/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-17-system-drawbridge/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-18-compartment-environment/` — phase nodes: 5 .phase, 5 .graph
+- `cos/phases/2026-10-19-solid-build-foundation/` — phase nodes: 1 .phase, 1 .graph
+- `cos/phases/2026-10-23-cos-spine/` — phase nodes: 11 .phase, 11 .graph
+- `cos/phases/2026-10-24-cos-services/` — phase nodes: 5 .phase, 5 .graph
+
+</details>
+
+<details>
 <summary>`cos/playground/` · 5 files</summary>
 
 - `cos/playground/branch.js` — Compartment Branch Engine Status: pre-release
@@ -3474,6 +3589,138 @@ Cos is 308 files in 31 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
+<summary>`cos/services/anonymous/` · 126 files</summary>
+
+- `cos/services/anonymous/README-upstream.md`
+- `cos/services/anonymous/README.md`
+- `cos/services/anonymous/UPSTREAM.sha256`
+- `cos/services/anonymous/defaults/conf/vhosts/localhost.json`
+- `cos/services/anonymous/defaults/conf/vhosts/templates/node-app.json`
+- `cos/services/anonymous/defaults/conf/vhosts/templates/php-basic.json`
+- `cos/services/anonymous/defaults/conf/vhosts/templates/python-wsgi.json`
+- `cos/services/anonymous/defaults/conf/vhosts/templates/reverse-proxy.json`
+- `cos/services/anonymous/defaults/conf/vhosts/templates/static.json`
+- `cos/services/anonymous/defaults/conf/vhosts/templates/wordpress.json`
+- `cos/services/anonymous/defaults/sites/root/public/index.html`
+- `cos/services/anonymous/engines/_engine.js`
+- `cos/services/anonymous/engines/auth.js`
+- `cos/services/anonymous/engines/autodns.js`
+- `cos/services/anonymous/engines/billing.js`
+- `cos/services/anonymous/engines/builder.js`
+- `cos/services/anonymous/engines/cache.js`
+- `cos/services/anonymous/engines/catalog.js`
+- `cos/services/anonymous/engines/components/access-log.js`
+- `cos/services/anonymous/engines/components/detect-stack.js`
+- `cos/services/anonymous/engines/components/sysfw.js`
+- `cos/services/anonymous/engines/components/unzip.js`
+- `cos/services/anonymous/engines/components/upnp.js`
+- `cos/services/anonymous/engines/ddns.js`
+- `cos/services/anonymous/engines/dns.js`
+- `cos/services/anonymous/engines/firewall.js`
+- `cos/services/anonymous/engines/ftp.js`
+- `cos/services/anonymous/engines/glue.js`
+- `cos/services/anonymous/engines/monitor.js`
+- `cos/services/anonymous/engines/optimizer.js`
+- `cos/services/anonymous/engines/peer.js`
+- `cos/services/anonymous/engines/provisioner.js`
+- `cos/services/anonymous/engines/proxy.js`
+- `cos/services/anonymous/engines/queue.js`
+- `cos/services/anonymous/engines/registrar.js`
+- `cos/services/anonymous/engines/relay.js`
+- `cos/services/anonymous/engines/signal.js`
+- `cos/services/anonymous/engines/smtp.js`
+- `cos/services/anonymous/engines/ssh.js`
+- `cos/services/anonymous/engines/storage.js`
+- `cos/services/anonymous/engines/tls.js`
+- `cos/services/anonymous/engines/tunnel.js`
+- `cos/services/anonymous/engines/ui.js`
+- `cos/services/anonymous/engines/ui/lib/http.js`
+- `cos/services/anonymous/engines/ui/lib/ipc-request.js`
+- `cos/services/anonymous/engines/ui/lib/markdown.js`
+- `cos/services/anonymous/engines/ui/lib/reply-types.js`
+- `cos/services/anonymous/engines/ui/lib/static.js`
+- `cos/services/anonymous/engines/ui/public/css/panel.css`
+- `cos/services/anonymous/engines/ui/public/css/theme.css`
+- `cos/services/anonymous/engines/ui/public/index.html`
+- `cos/services/anonymous/engines/ui/public/js/app.js`
+- `cos/services/anonymous/engines/ui/public/js/core.js`
+- `cos/services/anonymous/engines/ui/public/js/engine-map.js`
+- `cos/services/anonymous/engines/ui/public/js/icons.js`
+- `cos/services/anonymous/engines/ui/public/js/nav.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/apikeys.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/apps.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/billing.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/builder.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/cron.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/dashboard.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/dns.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/docs.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/domains.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/engines.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/files.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/firewall.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/logs.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/mail.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/monitor.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/network.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/peer.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/settings.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/sftp.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/site-detail.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/sites.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/sshkeys.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/ssl.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/storage.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/tunnel.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/users.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/vpn.js`
+- `cos/services/anonymous/engines/ui/public/js/pages/wizard.js`
+- `cos/services/anonymous/engines/ui/public/js/router.js`
+- `cos/services/anonymous/engines/ui/public/pages/apikeys.html`
+- `cos/services/anonymous/engines/ui/public/pages/apps.html`
+- `cos/services/anonymous/engines/ui/public/pages/billing.html`
+- `cos/services/anonymous/engines/ui/public/pages/builder.html`
+- `cos/services/anonymous/engines/ui/public/pages/cron.html`
+- `cos/services/anonymous/engines/ui/public/pages/dashboard.html`
+- `cos/services/anonymous/engines/ui/public/pages/dns.html`
+- `cos/services/anonymous/engines/ui/public/pages/docs.html`
+- `cos/services/anonymous/engines/ui/public/pages/domains.html`
+- `cos/services/anonymous/engines/ui/public/pages/engines.html`
+- `cos/services/anonymous/engines/ui/public/pages/files.html`
+- `cos/services/anonymous/engines/ui/public/pages/firewall.html`
+- `cos/services/anonymous/engines/ui/public/pages/logs.html`
+- `cos/services/anonymous/engines/ui/public/pages/mail.html`
+- `cos/services/anonymous/engines/ui/public/pages/monitor.html`
+- `cos/services/anonymous/engines/ui/public/pages/network.html`
+- `cos/services/anonymous/engines/ui/public/pages/peer.html`
+- `cos/services/anonymous/engines/ui/public/pages/settings.html`
+- `cos/services/anonymous/engines/ui/public/pages/sftp.html`
+- `cos/services/anonymous/engines/ui/public/pages/site-detail.html`
+- `cos/services/anonymous/engines/ui/public/pages/sites.html`
+- `cos/services/anonymous/engines/ui/public/pages/sshkeys.html`
+- `cos/services/anonymous/engines/ui/public/pages/ssl.html`
+- `cos/services/anonymous/engines/ui/public/pages/storage.html`
+- `cos/services/anonymous/engines/ui/public/pages/tunnel.html`
+- `cos/services/anonymous/engines/ui/public/pages/users.html`
+- `cos/services/anonymous/engines/ui/public/pages/vpn.html`
+- `cos/services/anonymous/engines/ui/public/pages/wizard.html`
+- `cos/services/anonymous/engines/ui/routes/dns.js`
+- `cos/services/anonymous/engines/ui/routes/files.js`
+- `cos/services/anonymous/engines/ui/routes/index.js`
+- `cos/services/anonymous/engines/ui/routes/network.js`
+- `cos/services/anonymous/engines/ui/routes/phase2.js`
+- `cos/services/anonymous/engines/ui/routes/security.js`
+- `cos/services/anonymous/engines/ui/routes/services.js`
+- `cos/services/anonymous/engines/ui/routes/sites.js`
+- `cos/services/anonymous/engines/ui/routes/system.js`
+- `cos/services/anonymous/engines/webserver.js`
+- `cos/services/anonymous/install.js`
+- `cos/services/anonymous/nexus.js`
+- `cos/services/anonymous/package.json`
+
+</details>
+
+<details>
 <summary>`cos/siso/` · 5 files</summary>
 
 - `cos/siso/Event.js` — §SUPERSEDED 2026-07-11 — cos/siso/index.js now imports Event from warp/core/Event.js instead of this file.…
@@ -3485,10 +3732,12 @@ Cos is 308 files in 31 modules, spec `cos/spec/cos.spec`. Each module below open
 </details>
 
 <details>
-<summary>`cos/spec/` · 9 files</summary>
+<summary>`cos/spec/` · 11 files</summary>
 
 - `cos/spec/check-catalogue.spec`
 - `cos/spec/cos-design-v1.7.0.md`
+- `cos/spec/cos-services.spec`
+- `cos/spec/cos-spine.spec`
 - `cos/spec/cos.spec`
 - `cos/spec/deny-list.spec`
 - `cos/spec/lab.spec`
@@ -3559,9 +3808,244 @@ Cos is 308 files in 31 modules, spec `cos/spec/cos.spec`. Each module below open
 
 </details>
 
-54 release notes name a file of cos: 0.60.176., 0.60.168., 0.60.166., 0.60.159., 0.60.157., 0.60.151., 0.60.149., 0.60.148., 0.60.137., 0.60.136., 0.60.134., 0.60.132., 0.60.130., 0.60.126., 0.60.111., 0.60.105., 0.60.104., 0.60.103., 0.60.101., 0.60.96., 0.60.91., 0.60.89., 0.60.88., 0.60.87., 0.60.67., 0.60.33., 0.60.19., 0.60.12., 0.60.6., 0.60.5., 0.60.1., 0.59.6., 0.59.2., 0.39.375., 0.39.371., 0.39.370., 0.39.367., 0.39.363., 0.39.359., 0.39.344., and 14 older. Each is in the version history below, in his words.
+56 release notes name a file of cos: 0.60.235., 0.60.229., 0.60.176., 0.60.168., 0.60.166., 0.60.159., 0.60.157., 0.60.151., 0.60.149., 0.60.148., 0.60.137., 0.60.136., 0.60.134., 0.60.132., 0.60.130., 0.60.126., 0.60.111., 0.60.105., 0.60.104., 0.60.103., 0.60.101., 0.60.96., 0.60.91., 0.60.89., 0.60.88., 0.60.87., 0.60.67., 0.60.33., 0.60.19., 0.60.12., 0.60.6., 0.60.5., 0.60.1., 0.59.6., 0.59.2., 0.39.375., 0.39.371., 0.39.370., 0.39.367., 0.39.363., and 16 older. Each is in the version history below, in his words.
 
 <!-- generated:readme:system:cos:end -->
+
+### emerge
+
+The language and its runtime, one system since 0.60.237 (James, 2026-10-24: "okay warp and emerge."). Emergence is his language: `emerge/emerge.spec` is the grammar, `emerge/emerge-kernel.js` parses and boots a `.eg` program, `emerge/emerge-codegen-v2.js` compiles one into a module that is sovereign by construction, and `emerge/core/` is his Rheon primitives as code. `warp/` is the runtime (Event, Gate, Stream, StreamLog, Axiom, unifiedDispatch); nine systems use it, and a use of the runtime surface is the language, not a crossing. The spec compiler and the Emerge IDE are moving to Idearium (EW3, EW4). It has no port and no process of its own. The next zoom level is `emerge-atlas.md`.
+
+<!-- generated:readme:system:emerge:start -->
+#### emerge: every module and every file
+
+Emerge is 110 files in 20 modules, spec `emerge/spec/emerge.spec`. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/emerge-atlas.md`.
+
+<details>
+<summary>`emerge/` · 13 files</summary>
+
+- `emerge/SPEC_COMPILER.spec`
+- `emerge/config.js`
+- `emerge/emerge-codegen-v2.js`
+- `emerge/emerge-ide.js`
+- `emerge/emerge-kernel.js`
+- `emerge/emerge.spec`
+- `emerge/event-taxonomy.js`
+- `emerge/interaction-contract.json`
+- `emerge/package.json`
+- `emerge/registry-components.js`
+- `emerge/verify.js`
+- `emerge/version.js`
+- `emerge/writeback-failures.jsonl`
+
+</details>
+
+<details>
+<summary>`emerge/chunk/` · 1 file</summary>
+
+- `emerge/chunk/index.js` — chunk-format.js — CHUNK: the minimal token payload for small LLMs THE PROBLEM THIS SOLVES:
+
+</details>
+
+<details>
+<summary>`emerge/compiler/` · 12 files</summary>
+
+- `emerge/compiler/baseline-tracker.js`
+- `emerge/compiler/emit.js`
+- `emerge/compiler/gap-field-engine.js`
+- `emerge/compiler/index.js`
+- `emerge/compiler/invariants-engine.js`
+- `emerge/compiler/kg-builder.js`
+- `emerge/compiler/phase-specs.js`
+- `emerge/compiler/pipeline.js`
+- `emerge/compiler/reply-engine.js`
+- `emerge/compiler/ring-buffer.js`
+- `emerge/compiler/t2-gate.js`
+- `emerge/compiler/tier-contract.js`
+
+</details>
+
+<details>
+<summary>`emerge/core/` · 11 files</summary>
+
+- `emerge/core/budget.js`
+- `emerge/core/constraint.js`
+- `emerge/core/field.js`
+- `emerge/core/gap.js`
+- `emerge/core/history.js`
+- `emerge/core/index.js`
+- `emerge/core/lens.js`
+- `emerge/core/level.js`
+- `emerge/core/observation.js`
+- `emerge/core/seed.js`
+- `emerge/core/transition.js`
+
+</details>
+
+<details>
+<summary>`emerge/cortex-query/` · 2 files</summary>
+
+- `emerge/cortex-query/index.js` — cortex-query.js — CORTEX_QUERY_SEAM implementation (compiler side) Implements every command declared in…
+- `emerge/cortex-query/writeback.js` — cortex-writeback.js — GATE-COMPILER-005 implementation Writes compiler output back to Cortex after every…
+
+</details>
+
+<details>
+<summary>`emerge/idearium/` · 1 file</summary>
+
+- `emerge/idearium/client.js` — idearium/client.js — Idearium push/pull client Pushes spec-compiler compile results into Idearium as…
+
+</details>
+
+<details>
+<summary>`emerge/output/` · 1 file</summary>
+
+- `emerge/output/.gitkeep`
+
+</details>
+
+<details>
+<summary>`emerge/phases/` · 9 files</summary>
+
+- `emerge/phases/2026-10-24-emerge-warp-system/` — phase nodes: 3 .phase, 6 .graph
+
+</details>
+
+<details>
+<summary>`emerge/schemas/` · 8 files</summary>
+
+- `emerge/schemas/index.js` — // emerge/schemas/index.js — emerge's own, fully sovereign schema registry. //
+- `emerge/schemas/schema.capability`
+- `emerge/schemas/schema.command`
+- `emerge/schemas/schema.component`
+- `emerge/schemas/schema.hook`
+- `emerge/schemas/schema.node`
+- `emerge/schemas/schema.system`
+- `emerge/schemas/schema.wire`
+
+</details>
+
+<details>
+<summary>`emerge/seams/` · 1 file</summary>
+
+- `emerge/seams/CORTEX_QUERY_SEAM.js` — SEAM: CORTEX_QUERY_SEAM status: active
+
+</details>
+
+<details>
+<summary>`emerge/siso/` · 5 files</summary>
+
+- `emerge/siso/Event.js` — Event — a datum flowing through the stream. Immutable. type is its signature. data is arbitrary.
+- `emerge/siso/Gate.js` — Gate — recognises one event type, transforms it. Signature is unique per stream. O(1) lookup.
+- `emerge/siso/Stream.js` — Stream — the processing loop. Gates register by signature. Events arrive via emit().
+- `emerge/siso/StreamLog.js` — StreamLog — the audit trail. Shared across sub-streams. Levels: OFF | EVENTS | DEEP | DATA
+- `emerge/siso/index.js` — // ── Bus — named-stream factory with global listener support ────────────────── // bus.onAny(fn) —…
+
+</details>
+
+<details>
+<summary>`emerge/spec/` · 3 files</summary>
+
+- `emerge/spec/emerge-core.spec`
+- `emerge/spec/emerge.node-taxonomy.md` — Node type → system map — Emerge
+- `emerge/spec/emerge.spec` — # ADDENDUM 2026-10-24 (0.60.237) — emerge is a system, with warp as its runtime
+
+</details>
+
+<details>
+<summary>`emerge/test/` · 6 files</summary>
+
+- `emerge/test/gap-field.test.js` — gap-field.test.js Tests the semantic delta layer and baseline trajectory tracker.
+- `emerge/test/invariants.test.js` — STATE VALIDITY KERNEL tests Tests every invariant against deliberately crafted violations
+- `emerge/test/kg.test.js` — KnowledgeGraph builder tests Tests: SISO pipeline, scoring, blast radius, chain, gaps, chunk integration.
+- `emerge/test/propagation.test.js` — KG generationReadiness propagation stability tests Tests the topological relaxation algorithm against:
+- `emerge/test/reply-engine.test.js` — reply-engine.test.js Tests the execution scheduler.
+- `emerge/test/tier-contract.test.js` — tier-contract.test.js Tests the semantic boundary between analysis and execution.
+
+</details>
+
+<details>
+<summary>`warp/` · 8 files</summary>
+
+- `warp/CHANGELOG.md` — Changelog
+- `warp/LICENSE`
+- `warp/MANIFEST.json`
+- `warp/README.md` — warp
+- `warp/index.js` — warp — pure functional event-driven devkit, decoupled. Event -> Gate -> Stream -> StreamLog, Axiom as an…
+- `warp/interaction-contract.json`
+- `warp/package.json`
+- `warp/plugins.zip`
+
+</details>
+
+<details>
+<summary>`warp/adapters/` · 2 files</summary>
+
+- `warp/adapters/emerge-field.js` — // warp/adapters/emerge-field.js — Emerge's constraints as WARP 2's admit(). EM2: "Every link passes the…
+- `warp/adapters/siso-gates.js` — // warp/adapters/siso-gates.js — WARP 1.x runs unchanged; this records it in WARP 2's ledger. // EM2…
+
+</details>
+
+<details>
+<summary>`warp/core/` · 11 files</summary>
+
+- `warp/core/Axiom.js`
+- `warp/core/Engine.js`
+- `warp/core/Event.js`
+- `warp/core/Expectation.js`
+- `warp/core/Gate.js`
+- `warp/core/GateFusion.js`
+- `warp/core/Ledger.js`
+- `warp/core/Link.js`
+- `warp/core/Stream.js`
+- `warp/core/StreamLog.js`
+- `warp/core/index.js`
+
+</details>
+
+<details>
+<summary>`warp/dispatch/` · 8 files</summary>
+
+- `warp/dispatch/benchmark.js` — real measurements, not estimates. Three axes: build speed (construction + dispatch throughput), token cost…
+- `warp/dispatch/canonicalize.js` — v1.4 addition. Two separate things live here on purpose, because they answer two different questions:
+- `warp/dispatch/cascade.js` — model cascading (cheap-first cost pattern) + retry ladder. Generalizes seam-queue.js's…
+- `warp/dispatch/deltaCache.js` — v1.4 "structural delta cache." Correcting scope up front: this is a STORAGE optimization, not a
+- `warp/dispatch/digest.js` — content-addressable cache key. Bazel/Buck2's exact pattern: hash(gate signature + versioned axiom set +…
+- `warp/dispatch/index.js` — opts in (exactCacheOnFirstSuccess). See docs/warp-devkit-addendum-v1.4.1.spec. Default behaviour unchanged.
+- `warp/dispatch/population.js` — scored archive per gate-class. AlphaEvolve/FunSearch pattern, scaled down: keep variants, not just one…
+- `warp/dispatch/pregen.js` — v1.4 "pre-generation filter layer." Placement matters: this runs AFTER the exact-cache miss (step 1) and
+
+</details>
+
+<details>
+<summary>`warp/plugins/` · 2 files</summary>
+
+- `warp/plugins/crystallizer-flatfile.js` — default storage adapter for the exact-cache. Trivial in-memory + optional flat-file persistence. A consuming…
+- `warp/plugins/scorer-default.js` — five-axis fitness (coherence/friction/resonance/ entropy pattern + tokenEfficiency). Independently written —…
+
+</details>
+
+<details>
+<summary>`warp/spec/` · 1 file</summary>
+
+- `warp/spec/warp.spec` — ── v1.4 ADDENDUM — implemented, measured, opt-in ──────────────────────────
+
+</details>
+
+<details>
+<summary>`warp/test/` · 5 files</summary>
+
+- `warp/test/core.test.js` — frozen data
+- `warp/test/digest-regression.test.js`
+- `warp/test/dispatch.test.js` — SISO vs WARP — same workload, both real implementations, measured not asserted. SISO's actual reference code…
+- `warp/test/v1.1.0-additions.test.js`
+- `warp/test/v1.4-additions.test.js` — // ── canonicalize.js ─────────────────────────────────────────────────────────
+
+</details>
+
+13 release notes name a file of emerge: 0.60.237., 0.60.236., 0.60.230., 0.60.229., 0.60.227., 0.60.222., 0.60.176., 0.39.323., 0.39.321., 0.39.320., 0.39.319., 0.39.318., 0.39.282.. Each is in the version history below, in his words.
+
+<!-- generated:readme:system:emerge:end -->
 
 ### core
 
@@ -3570,7 +4054,7 @@ Everything no kernel owns. Core has no port and no entry: its code runs inside w
 <!-- generated:readme:system:core:start -->
 #### core: every module and every file
 
-Core is 2868 files in 49 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
+Core is 5411 files in 42 modules. Each module below opens to its files. In a module of up to 8 files each file is named with what its own header says it is; a larger module lists its files by name, and what each one is, with its exports and its tests, is in `docs/atlases/core-atlas.md`.
 
 <details>
 <summary>the files at the top of the tree · 19 files</summary>
@@ -3629,7 +4113,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`cli/` · 27 files</summary>
+<summary>`cli/` · 26 files</summary>
 
 - `cli/axiom.js`
 - `cli/boot-systems.js`
@@ -3655,7 +4139,6 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `cli/purge-pollution.js`
 - `cli/run-supervised.js`
 - `cli/semantic-dedup.js`
-- `cli/sentinel.js`
 - `cli/session.js`
 - `cli/spec/cli.spec`
 
@@ -3697,7 +4180,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`docs/` · 435 files</summary>
+<summary>`docs/` · 447 files</summary>
 
 - `docs/2026-08-22-session-full-phasemap.spec`
 - `docs/2026-08-23-backlog-phasemap.spec`
@@ -3851,6 +4334,15 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `docs/2026-10-21-data-layout-phasemap.spec`
 - `docs/2026-10-21-passwords-phasemap.spec`
 - `docs/2026-10-21-snowflake-compartment-phasemap.spec`
+- `docs/2026-10-22-looking-glass-v0_4-error-report.md`
+- `docs/2026-10-22-system-node-db-phasemap.spec`
+- `docs/2026-10-23-cos-spine-phasemap.spec`
+- `docs/2026-10-23-evidence-dry-run.md`
+- `docs/2026-10-23-self-building-loop-phasemap.spec`
+- `docs/2026-10-23-site-profile-processes-phasemap.spec`
+- `docs/2026-10-24-cos-services-phasemap.spec`
+- `docs/2026-10-24-emerge-warp-system-phasemap.spec`
+- `docs/2026-10-24-phase-nodes-spec-coverage.md`
 - `docs/AXIOMS-PHASE-MAP.md`
 - `docs/AXIOMS-v1.0.md`
 - `docs/AXIOMS-v2.0.md`
@@ -3918,6 +4410,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `docs/atlases/cos-atlas.md`
 - `docs/atlases/data-census.md`
 - `docs/atlases/diagnostic-atlas.md`
+- `docs/atlases/emerge-atlas.md`
 - `docs/atlases/guardian-atlas.md`
 - `docs/atlases/idearium-atlas.md`
 - `docs/atlases/intelligence-atlas.md`
@@ -4096,6 +4589,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `docs/seam-component-registry.spec`
 - `docs/seam-queue.spec`
 - `docs/seam.spec`
+- `docs/self-building-loop.spec`
 - `docs/self-heal.spec`
 - `docs/service.spec`
 - `docs/session-2026-08-18-axioms-governed-phasemap.spec`
@@ -4120,6 +4614,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `docs/specs/VERSIONIUM.spec.md`
 - `docs/substrate.spec`
 - `docs/system-architecture.spec`
+- `docs/system-node-db.spec`
 - `docs/system-nodes.spec`
 - `docs/telemetry-codec.spec`
 - `docs/tests.spec`
@@ -4134,199 +4629,6 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `docs/versionium.spec`
 - `docs/warp-devkit-addendum-v1.4.1.spec`
 - `docs/warp.spec`
-
-</details>
-
-<details>
-<summary>`emerge/` · 64 files</summary>
-
-- `emerge/SPEC_COMPILER.spec`
-- `emerge/chunk/index.js`
-- `emerge/compiler/baseline-tracker.js`
-- `emerge/compiler/emit.js`
-- `emerge/compiler/gap-field-engine.js`
-- `emerge/compiler/index.js`
-- `emerge/compiler/invariants-engine.js`
-- `emerge/compiler/kg-builder.js`
-- `emerge/compiler/phase-specs.js`
-- `emerge/compiler/pipeline.js`
-- `emerge/compiler/reply-engine.js`
-- `emerge/compiler/ring-buffer.js`
-- `emerge/compiler/t2-gate.js`
-- `emerge/compiler/tier-contract.js`
-- `emerge/config.js`
-- `emerge/core/budget.js`
-- `emerge/core/constraint.js`
-- `emerge/core/field.js`
-- `emerge/core/gap.js`
-- `emerge/core/history.js`
-- `emerge/core/index.js`
-- `emerge/core/lens.js`
-- `emerge/core/level.js`
-- `emerge/core/observation.js`
-- `emerge/core/seed.js`
-- `emerge/core/transition.js`
-- `emerge/cortex-query/index.js`
-- `emerge/cortex-query/writeback.js`
-- `emerge/emerge-codegen-v2.js`
-- `emerge/emerge-ide.js`
-- `emerge/emerge-kernel.js`
-- `emerge/emerge.spec`
-- `emerge/event-taxonomy.js`
-- `emerge/idearium/client.js`
-- `emerge/interaction-contract.json`
-- `emerge/output/.gitkeep`
-- `emerge/package.json`
-- `emerge/registry-components.js`
-- `emerge/schemas/index.js`
-- `emerge/schemas/schema.capability`
-- `emerge/schemas/schema.command`
-- `emerge/schemas/schema.component`
-- `emerge/schemas/schema.hook`
-- `emerge/schemas/schema.node`
-- `emerge/schemas/schema.system`
-- `emerge/schemas/schema.wire`
-- `emerge/seams/CORTEX_QUERY_SEAM.js`
-- `emerge/siso/Event.js`
-- `emerge/siso/Gate.js`
-- `emerge/siso/Stream.js`
-- `emerge/siso/StreamLog.js`
-- `emerge/siso/index.js`
-- `emerge/spec/emerge-core.spec`
-- `emerge/spec/emerge.node-taxonomy.md`
-- `emerge/spec/emerge.spec`
-- `emerge/test/gap-field.test.js`
-- `emerge/test/invariants.test.js`
-- `emerge/test/kg.test.js`
-- `emerge/test/propagation.test.js`
-- `emerge/test/reply-engine.test.js`
-- `emerge/test/tier-contract.test.js`
-- `emerge/verify.js`
-- `emerge/version.js`
-- `emerge/writeback-failures.jsonl`
-
-</details>
-
-<details>
-<summary>`emergence/` · 84 files</summary>
-
-- `emergence/ARCHITECTURE.md`
-- `emergence/MANIFEST.json`
-- `emergence/README.md`
-- `emergence/cli.js`
-- `emergence/components/associative-lattice/component.spec`
-- `emergence/components/associative-lattice/index.js`
-- `emergence/components/causal-graph/component.spec`
-- `emergence/components/causal-graph/index.js`
-- `emergence/components/cfr-creator/component.spec`
-- `emergence/components/cfr-creator/index.js`
-- `emergence/components/event-ledger/component.spec`
-- `emergence/components/event-ledger/index.js`
-- `emergence/components/feedback-loop-buffer/README.md`
-- `emergence/components/feedback-loop-buffer/api/server.js`
-- `emergence/components/feedback-loop-buffer/cli/ring-cli.js`
-- `emergence/components/feedback-loop-buffer/component.spec`
-- `emergence/components/feedback-loop-buffer/core/RingBufferCore.js`
-- `emergence/components/feedback-loop-buffer/core/wire.js`
-- `emergence/components/feedback-loop-buffer/diagnostics/health.js`
-- `emergence/components/feedback-loop-buffer/index.js`
-- `emergence/components/feedback-loop-buffer/package.json`
-- `emergence/components/feedback-loop-buffer/persist/EvictionLedger.js`
-- `emergence/components/feedback-loop-buffer/persist/FilePersistence.js`
-- `emergence/components/feedback-loop-buffer/test/ringbuffer.test.js`
-- `emergence/components/feedback-loop-buffer/test/runner.js`
-- `emergence/components/idea-store/component.spec`
-- `emergence/components/idea-store/index.js`
-- `emergence/components/idea-store/test/idea-store.test.js`
-- `emergence/components/pattern-engine/component.spec`
-- `emergence/components/pattern-engine/index.js`
-- `emergence/components/pattern-engine/test/pattern-engine.test.js`
-- `emergence/components/rfr2-observer/component.spec`
-- `emergence/components/rfr2-observer/index.js`
-- `emergence/components/rfr2-observer/kernel-adapter.mjs`
-- `emergence/components/rfr2-observer/sentiment-scorer.js`
-- `emergence/components/rfr2-observer/test/affective-field.test.js`
-- `emergence/components/rfr2-observer/test/oscillatory.test.js`
-- `emergence/components/rfr2-observer/test/relational-gaps.test.js`
-- `emergence/components/rfr2-observer/test/reversal-negspace.test.js`
-- `emergence/components/rfr2-observer/test/sentiment-scorer.test.js`
-- `emergence/components/rfr2-observer/test/shadow-etc.test.js`
-- `emergence/contracts/LLM_CONTRACT.js`
-- `emergence/contracts/test/llm-contract.test.js`
-- `emergence/emerge-language.spec`
-- `emergence/emergence.spec`
-- `emergence/loop.js`
-- `emergence/package.json`
-- `emergence/schemas/created.schema.json`
-- `emergence/schemas/idea-edge.schema.json`
-- `emergence/schemas/idea.schema.json`
-- `emergence/schemas/ledger-record.schema.json`
-- `emergence/schemas/observation.schema.json`
-- `emergence/schemas/target.schema.json`
-- `emergence/schemas/test/schemas.test.js`
-- `emergence/schemas/tick-result.schema.json`
-- `emergence/server.js`
-- `emergence/test/loop.test.js`
-- `emergence/test/server.test.js`
-- `emergence/vendor/jaa/FileRefs.js`
-- `emergence/vendor/jaa/FileStore.js`
-- `emergence/vendor/jaa/Recovery.js`
-- `emergence/vendor/jaa/canonicalize.js`
-- `emergence/vendor/jaa/test/jaa-port.test.js`
-- `emergence/vendor/resonance-v5.1/relational-physics.js`
-- `emergence/vendor/rfr2/causality/index.js`
-- `emergence/vendor/rfr2/cfr-kernel/index.js`
-- `emergence/vendor/rfr2/cfr-kernel/physics.js`
-- `emergence/vendor/rfr2/cfr-kernel/render.js`
-- `emergence/vendor/rfr2/cfr-kernel/rewind.js`
-- `emergence/vendor/rfr2/field/ALKModule.js`
-- `emergence/vendor/rfr2/field/relational.js`
-- `emergence/vendor/rfr2/lattice/lattice.js`
-- `emergence/vendor/rfr2/ledger/index.js`
-- `emergence/vendor/rfr2/liminal/assumption.js`
-- `emergence/vendor/rfr2/liminal/bus.js`
-- `emergence/vendor/rfr2/liminal/contrastive.js`
-- `emergence/vendor/rfr2/liminal/core.js`
-- `emergence/vendor/rfr2/liminal/existential.js`
-- `emergence/vendor/rfr2/liminal/negative-space.js`
-- `emergence/vendor/rfr2/liminal/oscillatory.js`
-- `emergence/vendor/rfr2/liminal/relational-gaps.js`
-- `emergence/vendor/rfr2/liminal/reversal.js`
-- `emergence/vendor/rfr2/liminal/shadow.js`
-- `emergence/vendor/rfr2/liminal/structural.js`
-
-</details>
-
-<details>
-<summary>`erosmancer/` · 27 files</summary>
-
-- `clear-glass/erosmancer-os/CHANGELOG.md`
-- `clear-glass/erosmancer-os/MANIFEST.json`
-- `clear-glass/erosmancer-os/README.md`
-- `clear-glass/erosmancer-os/ROADMAP.md`
-- `clear-glass/erosmancer-os/package.json`
-- `clear-glass/erosmancer-os/src/adaptive/index.ts`
-- `clear-glass/erosmancer-os/src/api/server.ts`
-- `clear-glass/erosmancer-os/src/behavior/index.ts`
-- `clear-glass/erosmancer-os/src/bridge/index.ts`
-- `clear-glass/erosmancer-os/src/dispatcher/index.ts`
-- `clear-glass/erosmancer-os/src/hostile/index.ts`
-- `clear-glass/erosmancer-os/src/index.ts`
-- `clear-glass/erosmancer-os/src/observer/index.ts`
-- `clear-glass/erosmancer-os/src/registry/index.ts`
-- `clear-glass/erosmancer-os/src/replay/index.ts`
-- `clear-glass/erosmancer-os/src/routing/index.ts`
-- `clear-glass/erosmancer-os/src/selector/index.ts`
-- `clear-glass/erosmancer-os/src/telemetry/index.ts`
-- `clear-glass/erosmancer-os/src/types/index.ts`
-- `clear-glass/erosmancer-os/tests/adaptive.test.ts`
-- `clear-glass/erosmancer-os/tests/google-signin.test.ts`
-- `clear-glass/erosmancer-os/tests/hostile.test.ts`
-- `clear-glass/erosmancer-os/tests/integration.test.ts`
-- `clear-glass/erosmancer-os/tests/replay.test.ts`
-- `clear-glass/erosmancer-os/tests/suite.ts`
-- `clear-glass/erosmancer-os/tsconfig.json`
-- `clear-glass/erosmancer-os/spec/erosmancer.spec`
 
 </details>
 
@@ -4356,7 +4658,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`lib/` · 286 files</summary>
+<summary>`lib/` · 293 files</summary>
 
 - `lib/account-identity-index.js`
 - `lib/account-registry.js`
@@ -4389,6 +4691,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/build-context.js`
 - `lib/build-paths.js`
 - `lib/build-pipeline.js`
+- `lib/build-queue.js`
 - `lib/build-verify.js`
 - `lib/bus-subscriptions.js`
 - `lib/canvas-compartments.js`
@@ -4403,6 +4706,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/chat-crawl-plan.js`
 - `lib/chat-crawl-settings.js`
 - `lib/chat-index.js`
+- `lib/chat-ledger-client.js`
 - `lib/chat-logger.js`
 - `lib/check-catalogue.js`
 - `lib/chunk-build-orchestrator.js`
@@ -4442,6 +4746,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/cos-remote.js`
 - `lib/cos-run.js`
 - `lib/data-clearup.js`
+- `lib/data-home.js`
 - `lib/diagnostic-causal.js`
 - `lib/diagnostic-engines.js`
 - `lib/diagnostic-report.js`
@@ -4533,6 +4838,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/path-guard.js`
 - `lib/pattern-leverage.js`
 - `lib/phase-census.js`
+- `lib/phase-close.js`
 - `lib/phase-cost.js`
 - `lib/phase-dag.js`
 - `lib/phase-deps-gate.js`
@@ -4553,10 +4859,12 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/project-registry.js`
 - `lib/proof-overlay.js`
 - `lib/proposal-evidence.js`
+- `lib/pulse.js`
 - `lib/queue.js`
 - `lib/readme-generate.js`
 - `lib/reasoning-route.js`
 - `lib/reflection.js`
+- `lib/registry-draft.js`
 - `lib/registry-harness.js`
 - `lib/registry-plan.js`
 - `lib/relational-context.js`
@@ -4632,6 +4940,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `lib/tool-forge.js`
 - `lib/tool-index.js`
 - `lib/triggers.js`
+- `lib/trust-rule.js`
 - `lib/upload-placement.js`
 - `lib/vector-memory.js`
 - `lib/verify-first.js`
@@ -4979,152 +5288,163 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`lib/phases/` · 144 files</summary>
+<summary>`lib/phases/` · 2868 files</summary>
 
-- `lib/phases/2026-10-19-pipeline-root-causes/CB1_coder_brief.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/CB2_gemini_first.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/DG4_nexus_maps_meet_the_standard.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/DG5_dag_in_the_brief_and_the_ui.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/ID1_ideas_wired_through.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/MEM1_cortex_keeps_the_books.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/PR2_autofill_and_copilot_read_first.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/RC1_watchers_never_kill_a_kernel.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/RC2_linear_node_scan.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/RC3_windows_safe_node_names.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/RC4_agent_file_names_guarded.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/RC6_unowned_ollama_load.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/SM1_agent_self_model.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/SS1_system_store_adoption.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/SS3_nodes_are_the_data.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/UI1_toolbox_and_store_explorer.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/UI3_ideas_and_notes_as_one.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/VF1_verify_first.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/VF2_one_response_bundle.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/VF3_mutation_check.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/VF4_second_opinion_on_need.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/VF5_verdict_cache.phase`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/CB1_coder_brief-1d43c7e9fcfca2cd.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/CB2_gemini_first-8a828fa8e92f645c.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/DG4_nexus_maps_meet_the_standard-8326c3166e4620ea.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/DG5_dag_in_the_brief_and_the_ui-7c64f9ae4e29eb6a.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/ID1_ideas_wired_through-b12b2d82d3da6242.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/MEM1_cortex_keeps_the_books-945fb1de062e2087.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/PR2_autofill_and_copilot_read_first-b4ddc2d39aad8dc7.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC1_watchers_never_kill_a_kernel-5dd01d2da36edeb7.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC2_linear_node_scan-77759fcaf402a194.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC3_windows_safe_node_names-26a266c4495e09d0.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC4_agent_file_names_guarded-771ccf0a4d65cb41.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/RC6_unowned_ollama_load-67b8e7d0ffd6cf9d.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/SM1_agent_self_model-33989c7ddb1cbad4.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/SS1_system_store_adoption-ad8ef05a560160bc.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/SS3_nodes_are_the_data-42d3b5c93b4e3d49.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/UI1_toolbox_and_store_explorer-18a4d19d0f927715.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/UI3_ideas_and_notes_as_one-a5b53b729416888e.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF1_verify_first-58454d1b9f24ee04.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF2_one_response_bundle-48017c6b7737540e.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF3_mutation_check-a28ce7f9bc7982e8.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF4_second_opinion_on_need-9c8416f249e1db5c.graph`
-- `lib/phases/2026-10-19-pipeline-root-causes/graph/VF5_verdict_cache-3f619ac10014ebb3.graph`
-- `lib/phases/2026-10-20-belief-loop/AV1_adversarial_review.phase`
-- `lib/phases/2026-10-20-belief-loop/BW1_borrowing.phase`
-- `lib/phases/2026-10-20-belief-loop/CF1_confidence_from_evidence.phase`
-- `lib/phases/2026-10-20-belief-loop/CY0_one_crystal_schema.phase`
-- `lib/phases/2026-10-20-belief-loop/CY2_invariants_are_crystals.phase`
-- `lib/phases/2026-10-20-belief-loop/EW1_evidence_record_and_weights.phase`
-- `lib/phases/2026-10-20-belief-loop/IV0_belief_census.phase`
-- `lib/phases/2026-10-20-belief-loop/IV1_invariant_kinds.phase`
-- `lib/phases/2026-10-20-belief-loop/IV2_invariant_miner.phase`
-- `lib/phases/2026-10-20-belief-loop/PV1_provenance_on_every_claim.phase`
-- `lib/phases/2026-10-20-belief-loop/RA1_root_cause_through_provenance.phase`
-- `lib/phases/2026-10-20-belief-loop/RA2_learned_source_trust.phase`
-- `lib/phases/2026-10-20-belief-loop/XD1_cross_domain_verification.phase`
-- `lib/phases/2026-10-20-belief-loop/graph/AV1_adversarial_review-4309464edd8b01e4.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/BW1_borrowing-d84c6b468dc3ade5.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/CF1_confidence_from_evidence-1d831af2c4ee481e.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/CY0_one_crystal_schema-6952ccb2f43c4c04.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/CY2_invariants_are_crystals-62464b4cfa1cd75a.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/EW1_evidence_record_and_weights-a4ae8dbe0712bb23.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/IV0_belief_census-fd2dad21f04787eb.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/IV1_invariant_kinds-99ee52c0b443d589.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/IV2_invariant_miner-e5b3488a69c7b78e.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/PV1_provenance_on_every_claim-67737d326ae34da8.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/RA1_root_cause_through_provenance-6ad2a67f26a85c69.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/RA2_learned_source_trust-96f3facc75253f80.graph`
-- `lib/phases/2026-10-20-belief-loop/graph/XD1_cross_domain_verification-b5b39aa978305a84.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/CH0_chunk_census_and_contract.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/CH1_strategies_behind_the_contract.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/CH2_chunk_laws.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/DK2_learned_granularity.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GR0_graph_census.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GR1_graph_primitive.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GR2_graph_views.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GW0_gate_census.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GW1_gate_primitive.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/GW2_gates_at_every_level.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/PS1_phase_specs.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/TV1_traversal_primitive.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/TV2_invariant_guided_traversal.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/TV3_traversal_as_context.phase`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/CH0_chunk_census_and_contract-181bf3005c9def9a.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/CH1_strategies_behind_the_contract-a5858d41e5ad4b6b.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/CH2_chunk_laws-e5eb2024e856cead.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/DK2_learned_granularity-38954b694b124080.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR0_graph_census-dae50028dcfb9bca.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR1_graph_primitive-8e94a4d6d6d8e5b6.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GR2_graph_views-371086c0f14c49a2.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW0_gate_census-0475656455782995.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW1_gate_primitive-0fa8b100c09c9d93.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/GW2_gates_at_every_level-b10b437f7e757cde.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/PS1_phase_specs-77e8fe5e41ea6ccc.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/TV1_traversal_primitive-addbf1f1b5a09bfa.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/TV2_invariant_guided_traversal-e197883cad031a55.graph`
-- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/graph/TV3_traversal_as_context-8a5009bb03465d08.graph`
-- `lib/phases/2026-10-21-adblock/AB0_engine_in_core.phase`
-- `lib/phases/2026-10-21-adblock/graph/AB0_engine_in_core-00894718c2cca324.graph`
-- `lib/phases/2026-10-21-approval-chain/APV0_one_record.phase`
-- `lib/phases/2026-10-21-approval-chain/APV1_change_entry.phase`
-- `lib/phases/2026-10-21-approval-chain/APV2_commit_carries_it.phase`
-- `lib/phases/2026-10-21-approval-chain/graph/APV0_one_record-c7db4af169df85e4.graph`
-- `lib/phases/2026-10-21-approval-chain/graph/APV1_change_entry-84ec3e73d291c157.graph`
-- `lib/phases/2026-10-21-approval-chain/graph/APV1_change_entry-ac405a9ed94958e7.graph`
-- `lib/phases/2026-10-21-approval-chain/graph/APV2_commit_carries_it-49cfd8f7769f1070.graph`
-- `lib/phases/2026-10-21-approval-chain/graph/APV2_commit_carries_it-ddcc8eb6b64febdc.graph`
-- `lib/phases/2026-10-21-brainos-into-idearium/BX0a_where_it_lands.phase`
-- `lib/phases/2026-10-21-brainos-into-idearium/BX0b_retire_brainos_page.phase`
-- `lib/phases/2026-10-21-brainos-into-idearium/BX0c_float.phase`
-- `lib/phases/2026-10-21-brainos-into-idearium/BX0d_order_against_the_pipeline.phase`
-- `lib/phases/2026-10-21-brainos-into-idearium/BX0e_true_map_first.phase`
-- `lib/phases/2026-10-21-brainos-into-idearium/BX10_float.phase`
-- `lib/phases/2026-10-21-brainos-into-idearium/BX1_census.phase`
-- `lib/phases/2026-10-21-brainos-into-idearium/BX9_retire.phase`
-- `lib/phases/2026-10-21-brainos-into-idearium/CNS1_phase_census.phase`
-- `lib/phases/2026-10-21-brainos-into-idearium/graph/BX0a_where_it_lands-887c778fe1bb2e80.graph`
-- `lib/phases/2026-10-21-brainos-into-idearium/graph/BX0b_retire_brainos_page-d48fbcc54cf4612c.graph`
-- `lib/phases/2026-10-21-brainos-into-idearium/graph/BX0c_float-46828bfaac71f296.graph`
-- `lib/phases/2026-10-21-brainos-into-idearium/graph/BX0d_order_against_the_pipeline-6e650928b8b2c45b.graph`
-- `lib/phases/2026-10-21-brainos-into-idearium/graph/BX0e_true_map_first-c6c11a0fa8ed74f3.graph`
-- `lib/phases/2026-10-21-brainos-into-idearium/graph/BX10_float-02d52a8059874ada.graph`
-- `lib/phases/2026-10-21-brainos-into-idearium/graph/BX1_census-94187d8db6335e81.graph`
-- `lib/phases/2026-10-21-brainos-into-idearium/graph/BX9_retire-2bc31a1a8b772044.graph`
-- `lib/phases/2026-10-21-brainos-into-idearium/graph/CNS1_phase_census-ee838c5e542aa524.graph`
-- `lib/phases/2026-10-21-browser-shell/BS0_cookie_target.phase`
-- `lib/phases/2026-10-21-browser-shell/graph/BS0_cookie_target-4849b9f58d06e1fb.graph`
-- `lib/phases/2026-10-21-compartment-downloads/CD0_kill_default.phase`
-- `lib/phases/2026-10-21-compartment-downloads/CD0_magnet_client.phase`
-- `lib/phases/2026-10-21-compartment-downloads/graph/CD0_kill_default-11d4f021a24dcb20.graph`
-- `lib/phases/2026-10-21-compartment-downloads/graph/CD0_magnet_client-f1be54eff1795969.graph`
-- `lib/phases/2026-10-21-data-layout/DL0_data_census.phase`
-- `lib/phases/2026-10-21-data-layout/DL1_clearup_tool.phase`
-- `lib/phases/2026-10-21-data-layout/DL2_one_resolver.phase`
-- `lib/phases/2026-10-21-data-layout/DL3_rewire_writers.phase`
-- `lib/phases/2026-10-21-data-layout/DL5_memory_in_cortex.phase`
-- `lib/phases/2026-10-21-data-layout/graph/DL0_data_census-64f85579f51044f8.graph`
-- `lib/phases/2026-10-21-data-layout/graph/DL1_clearup_tool-372de2334482d8f2.graph`
-- `lib/phases/2026-10-21-data-layout/graph/DL2_one_resolver-db5711605437e8fc.graph`
-- `lib/phases/2026-10-21-data-layout/graph/DL3_rewire_writers-370d1616ff8d75f4.graph`
-- `lib/phases/2026-10-21-data-layout/graph/DL5_memory_in_cortex-59082cf7b07d2717.graph`
-- `lib/phases/2026-10-21-passwords/PW0_where_passwords_live.phase`
-- `lib/phases/2026-10-21-passwords/graph/PW0_where_passwords_live-770ff409c2df185a.graph`
+- `lib/phases/2026-08-22-session-full/` — phase nodes: 19 .phase, 19 .graph
+- `lib/phases/2026-08-23-backlog/` — phase nodes: 32 .phase, 32 .graph
+- `lib/phases/2026-08-27-event-taxonomy-and-brainstorm/` — phase nodes: 16 .phase, 16 .graph
+- `lib/phases/2026-08-28-definition-of-complete/` — phase nodes: 8 .phase, 8 .graph
+- `lib/phases/2026-08-28-self-building-pipeline/` — phase nodes: 13 .phase, 13 .graph
+- `lib/phases/2026-08-30-interaction-contract-context/` — phase nodes: 13 .phase, 13 .graph
+- `lib/phases/2026-09-01-living-model-and-autonomous-pipeline/` — phase nodes: 26 .phase, 26 .graph
+- `lib/phases/2026-09-02-agent-mesh-full-map/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-09-02-nexus-vision-master/` — phase nodes: 58 .phase, 58 .graph
+- `lib/phases/2026-09-02-versionium-sovereign-and-cleanup/` — phase nodes: 10 .phase, 10 .graph
+- `lib/phases/2026-09-05-observability-sovereignty-and-agent-mesh/` — phase nodes: 32 .phase, 32 .graph
+- `lib/phases/2026-09-11-compartment-nodetype-and-reorg/` — phase nodes: 17 .phase, 17 .graph
+- `lib/phases/2026-09-11-sovereign-node-architecture/` — phase nodes: 35 .phase, 35 .graph
+- `lib/phases/2026-09-13-axiom-5-2-raid-routing/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-09-13-track-b-sovereignty/` — phase nodes: 3 .phase, 3 .graph
+- `lib/phases/2026-09-19-architect-blueprint-forge-idearium/` — phase nodes: 10 .phase, 10 .graph
+- `lib/phases/2026-09-19-cortex-to-intelligence-and-versionium-consolidation/` — phase nodes: 20 .phase, 21 .graph
+- `lib/phases/2026-09-19-guardian-mesh-first-dispatch/` — phase nodes: 15 .phase, 15 .graph
+- `lib/phases/2026-09-22-brainos-agent-suite/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-09-22-clear-glass-tab-per-repo-and-ui-expansion/` — phase nodes: 8 .phase, 8 .graph
+- `lib/phases/2026-09-26-cos-testenv-vm-and-nexus-atlas/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-09-26-guardian-retry-novelty-and-installs/` — phase nodes: 4 .phase, 4 .graph
+- `lib/phases/2026-09-27-agent-hat-memory-download-manager/` — phase nodes: 9 .phase, 9 .graph
+- `lib/phases/2026-09-27-components-store-and-atlases/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-09-27-idearium-atlas/` — phase nodes: 4 .phase, 4 .graph
+- `lib/phases/2026-09-27-one-idearium-phases-living-spec-nodes/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/2026-09-27-registry-harness-and-stability/` — phase nodes: 4 .phase, 4 .graph
+- `lib/phases/2026-09-28-graph-build-context-settings-memory/` — phase nodes: 10 .phase, 10 .graph
+- `lib/phases/2026-09-28-staging-self-heal/` — phase nodes: 4 .phase, 4 .graph
+- `lib/phases/2026-09-29-build-surface/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-09-29-nex-node-store/` — phase nodes: 26 .phase, 26 .graph
+- `lib/phases/2026-09-29-provider-economy/` — phase nodes: 8 .phase, 8 .graph
+- `lib/phases/2026-09-29-tool-layers-and-pane-memory/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-09-30-idearium-coding-flow/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-01-idearium-agent-ready-master/` — phase nodes: 23 .phase, 23 .graph
+- `lib/phases/2026-10-01-routing-registry-genesis/` — phase nodes: 4 .phase, 4 .graph
+- `lib/phases/2026-10-01-work-visibility-job-reuse/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-02-emerge-field-memory-build/` — phase nodes: 30 .phase, 30 .graph
+- `lib/phases/2026-10-02-fractal-graph-any-size-agent/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-02-spatial-void/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-02-synthesis-zoom-versionium/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-02-workshop-codex-rewind/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-05-announce-pulse-repair/` — phase nodes: 3 .phase, 3 .graph
+- `lib/phases/2026-10-05-build-from-the-spec/` — phase nodes: 26 .phase, 26 .graph
+- `lib/phases/2026-10-05-cli-data-code/` — phase nodes: 12 .phase, 12 .graph
+- `lib/phases/2026-10-05-code-tab-and-one-router/` — phase nodes: 4 .phase, 4 .graph
+- `lib/phases/2026-10-05-cos-machines/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-05-failure-reproduction/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-05-spec-workshop-rebuild/` — phase nodes: 4 .phase, 4 .graph
+- `lib/phases/2026-10-05-verified-primitives/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-10-07-compartment-control-and-activity/` — phase nodes: 10 .phase, 10 .graph
+- `lib/phases/2026-10-07-heal-nodes/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-10-07-idearium-one-surface/` — phase nodes: 12 .phase, 12 .graph
+- `lib/phases/2026-10-07-ollama-recorder/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-10-07-runtime-load/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-10-07-system-expectations/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-10-07-versionium-releases/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-10-09-hardening-pass/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-10-09-one-model-engine/` — phase nodes: 12 .phase, 12 .graph
+- `lib/phases/2026-10-09-one-roadmap/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-10-10-copilot-talk-to-nexus/` — phase nodes: 4 .phase, 4 .graph
+- `lib/phases/2026-10-10-design-surface/` — phase nodes: 8 .phase, 8 .graph
+- `lib/phases/2026-10-10-idearium-access/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-10-idearium-solid/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/2026-10-10-self-awareness/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-10-shape-of-nexus/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/2026-10-10-snapshot-compartments/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-12-browser-providers-and-work/` — phase nodes: 8 .phase, 8 .graph
+- `lib/phases/2026-10-12-request-spine/` — phase nodes: 20 .phase, 20 .graph
+- `lib/phases/2026-10-13-gates-that-learn-and-priorities/` — phase nodes: 4 .phase, 4 .graph
+- `lib/phases/2026-10-13-identities-tabs-and-automation/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/2026-10-13-nexus-memory-gates-and-contract/` — phase nodes: 11 .phase, 11 .graph
+- `lib/phases/2026-10-13-projects-raid-and-gates/` — phase nodes: 10 .phase, 10 .graph
+- `lib/phases/2026-10-15-automatic-tracking/` — phase nodes: 8 .phase, 8 .graph
+- `lib/phases/2026-10-15-capability-specs-and-semantic-page-tree/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-10-15-clear-glass-network-posture/` — phase nodes: 24 .phase, 29 .graph
+- `lib/phases/2026-10-15-clear-glass-surfaces/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-15-code-tab-run-state/` — phase nodes: 11 .phase, 11 .graph
+- `lib/phases/2026-10-15-cos-app/` — phase nodes: 17 .phase, 17 .graph
+- `lib/phases/2026-10-15-fiverr-ledger/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-10-15-gate-held-work/` — phase nodes: 21 .phase, 21 .graph
+- `lib/phases/2026-10-15-macro-node-recording/` — phase nodes: 15 .phase, 15 .graph
+- `lib/phases/2026-10-15-one-contract-raid-releases/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-10-15-personal-chat-import/` — phase nodes: 10 .phase, 10 .graph
+- `lib/phases/2026-10-15-spec-foundation-model/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/2026-10-15-warp-builds-and-spec-framework/` — phase nodes: 10 .phase, 10 .graph
+- `lib/phases/2026-10-16-agent-work-funnel/` — phase nodes: 4 .phase, 4 .graph
+- `lib/phases/2026-10-16-canvas-compartments/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-16-code-tab-rebuild/` — phase nodes: 18 .phase, 18 .graph
+- `lib/phases/2026-10-16-cos-console/` — phase nodes: 9 .phase, 12 .graph
+- `lib/phases/2026-10-16-durable-work-timeline/` — phase nodes: 8 .phase, 8 .graph
+- `lib/phases/2026-10-16-eravos-removal/` — phase nodes: 3 .phase, 3 .graph
+- `lib/phases/2026-10-16-google-signin/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-16-intent-hat-agent-chain/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-10-16-mobile-compartments/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-10-16-nexus-git-sync/` — phase nodes: 9 .phase, 9 .graph
+- `lib/phases/2026-10-16-plan-sidebar/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-16-proposal-evidence/` — phase nodes: 9 .phase, 9 .graph
+- `lib/phases/2026-10-16-reject-learn-retry/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-16-repo-carve/` — phase nodes: 13 .phase, 13 .graph
+- `lib/phases/2026-10-17-debugging-product/` — phase nodes: 14 .phase, 14 .graph
+- `lib/phases/2026-10-17-failure-mode-report/` — phase nodes: 12 .phase, 12 .graph
+- `lib/phases/2026-10-17-infrastructure-migration/` — phase nodes: 12 .phase, 12 .graph
+- `lib/phases/2026-10-17-pieces-not-order/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-10-17-system-drawbridge/` — phase nodes: 27 .phase, 27 .graph
+- `lib/phases/2026-10-18-compartment-environment/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/2026-10-18-debugging-product/` — phase nodes: 10 .phase, 10 .graph
+- `lib/phases/2026-10-18-gate-memory/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-10-18-gating-census/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/2026-10-19-gate-quality-checks/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-19-gig-autofill-and-learn/` — phase nodes: 3 .phase, 3 .graph
+- `lib/phases/2026-10-19-idearium-control/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/2026-10-19-infrastructure-spine/` — phase nodes: 20 .phase, 20 .graph
+- `lib/phases/2026-10-19-pipeline-root-causes/` — phase nodes: 22 .phase, 30 .graph
+- `lib/phases/2026-10-19-solid-build-foundation/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/2026-10-19-upload-intent-and-page-map/` — phase nodes: 9 .phase, 9 .graph
+- `lib/phases/2026-10-20-belief-loop/` — phase nodes: 13 .phase, 13 .graph
+- `lib/phases/2026-10-20-substrate-graph-traversal-chunking-gating/` — phase nodes: 14 .phase, 15 .graph
+- `lib/phases/2026-10-21-adblock/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-21-approval-chain/` — phase nodes: 3 .phase, 5 .graph
+- `lib/phases/2026-10-21-brainos-into-idearium/` — phase nodes: 9 .phase, 11 .graph
+- `lib/phases/2026-10-21-browser-shell/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-21-compartment-downloads/` — phase nodes: 2 .phase, 2 .graph
+- `lib/phases/2026-10-21-data-layout/` — phase nodes: 5 .phase, 9 .graph
+- `lib/phases/2026-10-21-passwords/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-22-system-node-db/` — phase nodes: 4 .phase, 6 .graph
+- `lib/phases/2026-10-23-cos-spine/` — phase nodes: 1 .phase, 1 .graph
+- `lib/phases/2026-10-23-self-building-loop/` — phase nodes: 5 .phase, 13 .graph
+- `lib/phases/2026-10-24-emerge-warp-system/` — phase nodes: 2 .phase, 4 .graph
+- `lib/phases/agent-intelligence-loop/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/agent-model-and-user-continuity/` — phase nodes: 10 .phase, 10 .graph
+- `lib/phases/clearglass-agent-suite-and-cfr-loom/` — phase nodes: 16 .phase, 16 .graph
+- `lib/phases/copilot-autonomous/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/copilot-awareness-routing/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/copilot-full-capability/` — phase nodes: 11 .phase, 11 .graph
+- `lib/phases/copilot-guardian-cos-expansion/` — phase nodes: 10 .phase, 10 .graph
+- `lib/phases/copilot-omniscience/` — phase nodes: 8 .phase, 8 .graph
+- `lib/phases/cortex-schema-registry/` — phase nodes: 9 .phase, 9 .graph
+- `lib/phases/gemini-multiagent-coding/` — phase nodes: 5 .phase, 5 .graph
+- `lib/phases/idearium-creative-repo-overhaul/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/idearium-repository-overhaul/` — phase nodes: 13 .phase, 13 .graph
+- `lib/phases/loom-phasemap-section/` — phase nodes: 3 .phase, 3 .graph
+- `lib/phases/nexus-architecture-rebuild/` — phase nodes: 22 .phase, 22 .graph
+- `lib/phases/nexus-live-mind/` — phase nodes: 6 .phase, 6 .graph
+- `lib/phases/nexus-observability-tablet/` — phase nodes: 11 .phase, 11 .graph
+- `lib/phases/nexus-repo-compartment-and-rich-dispatch/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/nexus-repository-system-build/` — phase nodes: 8 .phase, 8 .graph
+- `lib/phases/nexus-self-build-pipeline/` — phase nodes: 9 .phase, 9 .graph
+- `lib/phases/nexus-system-standardization/` — phase nodes: 8 .phase, 8 .graph
+- `lib/phases/raid-routing-fidelity/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/raid-verification-spine/` — phase nodes: 7 .phase, 7 .graph
+- `lib/phases/raid-warp-verification/` — phase nodes: 11 .phase, 11 .graph
+- `lib/phases/repair-contract-and-loom-hub/` — phase nodes: 11 .phase, 11 .graph
+- `lib/phases/rich-atlas/` — phase nodes: 3 .phase, 3 .graph
+- `lib/phases/snapshot-trigger/` — phase nodes: 2 .phase, 2 .graph
 
 </details>
 
@@ -5232,66 +5552,6 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`remote-desktop/` · 54 files</summary>
-
-- `remote-desktop/README.md`
-- `remote-desktop/bridge-electron/assets/icon.png`
-- `remote-desktop/bridge-electron/assets/tray-icon.png`
-- `remote-desktop/bridge-electron/main.js`
-- `remote-desktop/bridge-electron/package.json`
-- `remote-desktop/bridge-electron/preload.js`
-- `remote-desktop/bridge-os-core/README.md`
-- `remote-desktop/bridge-os-core/bridge-IME/index.js`
-- `remote-desktop/bridge-os-core/bridge-IME/tests/test-ime-deep.js`
-- `remote-desktop/bridge-os-core/bridge-IME/tests/test-ime.js`
-- `remote-desktop/bridge-os-core/bridge-contracts/index.js`
-- `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts-deep.js`
-- `remote-desktop/bridge-os-core/bridge-contracts/tests/test-contracts.js`
-- `remote-desktop/bridge-os-core/bridge-core/bus.js`
-- `remote-desktop/bridge-os-core/bridge-core/crypto-engine.js`
-- `remote-desktop/bridge-os-core/bridge-core/index.js`
-- `remote-desktop/bridge-os-core/bridge-core/registry/index.js`
-- `remote-desktop/bridge-os-core/bridge-core/siso/index.js`
-- `remote-desktop/bridge-os-core/bridge-core/tests/test-core-deep.js`
-- `remote-desktop/bridge-os-core/bridge-core/tests/test-core.js`
-- `remote-desktop/bridge-os-core/bridge-data/index.js`
-- `remote-desktop/bridge-os-core/bridge-data/tests/test-data-deep.js`
-- `remote-desktop/bridge-os-core/bridge-data/tests/test-data.js`
-- `remote-desktop/bridge-os-core/bridge-heartbeat/index.js`
-- `remote-desktop/bridge-os-core/bridge-heartbeat/tests/test-heartbeat-deep.js`
-- `remote-desktop/bridge-os-core/bridge-heartbeat/tests/test-heartbeat.js`
-- `remote-desktop/bridge-os-core/bridge-identity/identity.js`
-- `remote-desktop/bridge-os-core/bridge-identity/index.js`
-- `remote-desktop/bridge-os-core/bridge-identity/keystore/index.js`
-- `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity-deep.js`
-- `remote-desktop/bridge-os-core/bridge-identity/tests/test-identity.js`
-- `remote-desktop/bridge-os-core/bridge-node/boot.js`
-- `remote-desktop/bridge-os-core/bridge-sngate/index.js`
-- `remote-desktop/bridge-os-core/bridge-sngate/tests/test-sngate-deep.js`
-- `remote-desktop/bridge-os-core/bridge-sngate/tests/test-sngate.js`
-- `remote-desktop/bridge-os-core/index.js`
-- `remote-desktop/bridge-os-core/package.json`
-- `remote-desktop/contracts.js`
-- `remote-desktop/host.html`
-- `remote-desktop/input-auth.js`
-- `remote-desktop/input-injector.js`
-- `remote-desktop/package-lock.json`
-- `remote-desktop/package.json`
-- `remote-desktop/remote-desktop.spec`
-- `remote-desktop/scripts/start-signal-background.bat`
-- `remote-desktop/scripts/stop-signal-background.bat`
-- `remote-desktop/session-token.js`
-- `remote-desktop/signal.js`
-- `remote-desktop/tests/test-input-auth.js`
-- `remote-desktop/tests/test-input-injector.js`
-- `remote-desktop/tests/test-input-pipeline.js`
-- `remote-desktop/tests/test-session-token.js`
-- `remote-desktop/tests/test-signal-integration.js`
-- `remote-desktop/viewer.html`
-
-</details>
-
-<details>
 <summary>`scripts/` · 17 files</summary>
 
 - `scripts/analyze-methodless-routes.js`
@@ -5318,21 +5578,6 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 <summary>`seams/` · 1 file</summary>
 
 - `seams/seam-contracts.js` — NEXUS Seam Contract Registry §SEAM: Growth happens at the seam. Every seam is declared here.
-
-</details>
-
-<details>
-<summary>`security/` · 2 files</summary>
-
-- `security/e2e-channel.js`
-- `security/signaling-envelope.js` — signed envelope for the signaling channel (join/offer/answer/ice), closing remote-desktop.spec phase 6's
-
-</details>
-
-<details>
-<summary>`sentinel/` · 1 file</summary>
-
-- `sentinel/interaction-contract.json`
 
 </details>
 
@@ -5380,7 +5625,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`tests/` · 792 files</summary>
+<summary>`tests/` · 815 files</summary>
 
 - `tests/audit-results.json`
 - `tests/brutal.test.js`
@@ -5578,6 +5823,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-agnostic-lib-tools.js`
 - `tests/modules/test-alk-lattice-live.js`
 - `tests/modules/test-am1-intent-contract.js`
+- `tests/modules/test-any-project-tests.test.js`
 - `tests/modules/test-ap1-agent-pull.js`
 - `tests/modules/test-approval-chain.test.js`
 - `tests/modules/test-architect-pulse-migration.js`
@@ -5605,6 +5851,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-build-context.test.js`
 - `tests/modules/test-build-from-the-spec.test.js`
 - `tests/modules/test-build-paths.test.js`
+- `tests/modules/test-build-queue.test.js`
 - `tests/modules/test-build-surface-2.test.js`
 - `tests/modules/test-build-surface.api.js`
 - `tests/modules/test-build-surface.test.js`
@@ -5714,12 +5961,15 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-cos-remote-api.test.js`
 - `tests/modules/test-cos-remote.test.js`
 - `tests/modules/test-cos-run-target.test.js`
+- `tests/modules/test-cos-services.test.js`
 - `tests/modules/test-cos-testenv-any-repo.js`
 - `tests/modules/test-cos-testenv.js`
 - `tests/modules/test-cos-vm-shell.test.js`
 - `tests/modules/test-cos-workspace.test.js`
 - `tests/modules/test-dangling-hooks-and-idearium-load.test.js`
 - `tests/modules/test-data-clearup.test.js`
+- `tests/modules/test-data-home.test.js`
+- `tests/modules/test-data-rewired.test.js`
 - `tests/modules/test-decompose.js`
 - `tests/modules/test-desktop-activity.test.js`
 - `tests/modules/test-desktop-setup-popup.test.js`
@@ -5745,6 +5995,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-escalation-ladder.test.js`
 - `tests/modules/test-escalation.js`
 - `tests/modules/test-event-contracts.test.js`
+- `tests/modules/test-evidence-close.test.js`
 - `tests/modules/test-expectation-tests.test.js`
 - `tests/modules/test-extract-code.js`
 - `tests/modules/test-faculty-tools.js`
@@ -5765,7 +6016,9 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-gates-solid.test.js`
 - `tests/modules/test-gemini-toolbox.js`
 - `tests/modules/test-genesis-and-architecture-spec.test.js`
+- `tests/modules/test-genesis-sandboxed.test.js`
 - `tests/modules/test-gig-ledger.test.js`
+- `tests/modules/test-global-settings.test.js`
 - `tests/modules/test-gm-shim-sse-streaming.js`
 - `tests/modules/test-grammar-engine.js`
 - `tests/modules/test-grammar-fallback.js`
@@ -5778,6 +6031,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-guardian-job-persistence.js`
 - `tests/modules/test-guardian-json-routes.test.js`
 - `tests/modules/test-guardian-mesh-client.js`
+- `tests/modules/test-guardian-own-data.test.js`
 - `tests/modules/test-guardian-raid-feedback.js`
 - `tests/modules/test-guardian-replay-retired.test.js`
 - `tests/modules/test-guardian-retry-novelty-installs.js`
@@ -5831,17 +6085,20 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-lifeline-fault-logging.js`
 - `tests/modules/test-lifeline-guardian-timeout.test.js`
 - `tests/modules/test-lifeline-ollama-dispatch.test.js`
+- `tests/modules/test-lift-root.test.js`
 - `tests/modules/test-liminal-space.js`
 - `tests/modules/test-listener-commands.test.js`
 - `tests/modules/test-live-everywhere.test.js`
 - `tests/modules/test-live-recording.test.js`
 - `tests/modules/test-live-stream-and-gates.test.js`
+- `tests/modules/test-log-fixes.test.js`
 - `tests/modules/test-loom-map.js`
 - `tests/modules/test-loom-phasemap-status.js`
 - `tests/modules/test-loom-phasemap.js`
 - `tests/modules/test-macro.js`
 - `tests/modules/test-manifest-phase1.test.mjs`
 - `tests/modules/test-map3d.js`
+- `tests/modules/test-mastermind-ready.test.js`
 - `tests/modules/test-mco-a-file-delta-schema.js`
 - `tests/modules/test-mco2-verify-deepening.js`
 - `tests/modules/test-mco3-repo-snapshot.js`
@@ -5916,6 +6173,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-pf5-bounded-tables.test.js`
 - `tests/modules/test-phase-actually-builds.test.js`
 - `tests/modules/test-phase-census.test.js`
+- `tests/modules/test-phase-close.test.js`
 - `tests/modules/test-phase-cost.test.js`
 - `tests/modules/test-phase-dag.test.js`
 - `tests/modules/test-phase-deps-gate.test.js`
@@ -5937,6 +6195,8 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-plan-sidebar.test.js`
 - `tests/modules/test-pressure-window.js`
 - `tests/modules/test-prevention.test.js`
+- `tests/modules/test-processes-ui.test.js`
+- `tests/modules/test-processes.test.js`
 - `tests/modules/test-profile-tabs.test.js`
 - `tests/modules/test-project-decompose.test.js`
 - `tests/modules/test-project-registry.test.js`
@@ -5966,7 +6226,9 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-readme-generate.test.js`
 - `tests/modules/test-reasoning-route.test.js`
 - `tests/modules/test-recursive-split.test.js`
+- `tests/modules/test-refusal-sendback.test.js`
 - `tests/modules/test-registration-shape.js`
+- `tests/modules/test-registry-draft.test.js`
 - `tests/modules/test-registry-drives-build.test.js`
 - `tests/modules/test-registry-harness.test.js`
 - `tests/modules/test-reject-learn-retry.test.js`
@@ -6007,6 +6269,7 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-response-downloads.test.js`
 - `tests/modules/test-response-sink-passthrough.test.js`
 - `tests/modules/test-rfr2-cjs.js`
+- `tests/modules/test-roadmap-import.test.js`
 - `tests/modules/test-route-contracts.test.js`
 - `tests/modules/test-route-eligibility.test.js`
 - `tests/modules/test-run-all-process-group.test.js`
@@ -6021,18 +6284,21 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-scroll-until.test.js`
 - `tests/modules/test-selector-map.test.js`
 - `tests/modules/test-self-build-loop.js`
+- `tests/modules/test-self-building-loop.test.js`
 - `tests/modules/test-self-heal-context.js`
 - `tests/modules/test-self-heal.js`
 - `tests/modules/test-self-register.js`
 - `tests/modules/test-semantic-field-map.test.js`
 - `tests/modules/test-semantic-page-tree.test.js`
-- `tests/modules/test-sentinel-cli.js`
 - `tests/modules/test-settings-console.test.js`
 - `tests/modules/test-setup-job-settles.test.js`
 - `tests/modules/test-shadow-space.test.js`
 - `tests/modules/test-shadow.test.js`
 - `tests/modules/test-shared-stream.js`
 - `tests/modules/test-sigma-compaction.js`
+- `tests/modules/test-site-profile.test.js`
+- `tests/modules/test-site-readers.test.js`
+- `tests/modules/test-site-settings-ui.test.js`
 - `tests/modules/test-snapshot-half-life-prune.js`
 - `tests/modules/test-snowflake.test.js`
 - `tests/modules/test-snr-filter.js`
@@ -6047,7 +6313,9 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 - `tests/modules/test-spec-workshop.test.js`
 - `tests/modules/test-sr11-import-pipeline.js`
 - `tests/modules/test-staging-s0-s1.test.js`
+- `tests/modules/test-starved-machine.test.js`
 - `tests/modules/test-step-gate.test.js`
+- `tests/modules/test-stream-fallback.test.js`
 - `tests/modules/test-stub-finder.js`
 - `tests/modules/test-stub-scanner.js`
 - `tests/modules/test-substrate-spec.test.js`
@@ -6298,52 +6566,9 @@ Core is 2868 files in 49 modules. Each module below opens to its files. In a mod
 </details>
 
 <details>
-<summary>`warp/` · 37 files</summary>
+<summary>the release notes · 441 files (each is in the version history below, in his words)</summary>
 
-- `warp/CHANGELOG.md`
-- `warp/LICENSE`
-- `warp/MANIFEST.json`
-- `warp/README.md`
-- `warp/adapters/emerge-field.js`
-- `warp/adapters/siso-gates.js`
-- `warp/core/Axiom.js`
-- `warp/core/Engine.js`
-- `warp/core/Event.js`
-- `warp/core/Expectation.js`
-- `warp/core/Gate.js`
-- `warp/core/GateFusion.js`
-- `warp/core/Ledger.js`
-- `warp/core/Link.js`
-- `warp/core/Stream.js`
-- `warp/core/StreamLog.js`
-- `warp/core/index.js`
-- `warp/dispatch/benchmark.js`
-- `warp/dispatch/canonicalize.js`
-- `warp/dispatch/cascade.js`
-- `warp/dispatch/deltaCache.js`
-- `warp/dispatch/digest.js`
-- `warp/dispatch/index.js`
-- `warp/dispatch/population.js`
-- `warp/dispatch/pregen.js`
-- `warp/index.js`
-- `warp/interaction-contract.json`
-- `warp/package.json`
-- `warp/plugins.zip`
-- `warp/plugins/crystallizer-flatfile.js`
-- `warp/plugins/scorer-default.js`
-- `warp/spec/warp.spec`
-- `warp/test/core.test.js`
-- `warp/test/digest-regression.test.js`
-- `warp/test/dispatch.test.js`
-- `warp/test/v1.1.0-additions.test.js`
-- `warp/test/v1.4-additions.test.js`
-
-</details>
-
-<details>
-<summary>the release notes · 394 files (each is in the version history below, in his words)</summary>
-
-`CHANGELOG-0.60.190.md` · `CHANGELOG-0.60.189.md` · `CHANGELOG-0.60.188.md` · `CHANGELOG-0.60.187.md` · `CHANGELOG-0.60.186.md` · `CHANGELOG-0.60.185.md` · `CHANGELOG-0.60.184.md` · `CHANGELOG-0.60.183.md` · `CHANGELOG-0.60.182.md` · `CHANGELOG-0.60.181.md` · `CHANGELOG-0.60.180.md` · `CHANGELOG-0.60.179.md` · `CHANGELOG-0.60.178.md` · `CHANGELOG-0.60.177.md` · `CHANGELOG-0.60.176.md` · `CHANGELOG-0.60.175.md` · `CHANGELOG-0.60.174.md` · `CHANGELOG-0.60.173.md` · `CHANGELOG-0.60.172.md` · `CHANGELOG-0.60.171.md` · `CHANGELOG-0.60.170.md` · `CHANGELOG-0.60.168.md` · `CHANGELOG-0.60.167.md` · `CHANGELOG-0.60.166.md` · `CHANGELOG-0.60.165.md` · `CHANGELOG-0.60.164.md` · `CHANGELOG-0.60.163.md` · `CHANGELOG-0.60.162.md` · `CHANGELOG-0.60.161.md` · `CHANGELOG-0.60.160.md` · `CHANGELOG-0.60.159.md` · `CHANGELOG-0.60.158.md` · `CHANGELOG-0.60.157.md` · `CHANGELOG-0.60.156.md` · `CHANGELOG-0.60.155.md` · `CHANGELOG-0.60.154.md` · `CHANGELOG-0.60.153.md` · `CHANGELOG-0.60.152.md` · `CHANGELOG-0.60.151.md` · `CHANGELOG-0.60.150.md` · `CHANGELOG-0.60.149.md` · `CHANGELOG-0.60.148.md` · `CHANGELOG-0.60.147.md` · `CHANGELOG-0.60.146.md` · `CHANGELOG-0.60.145.md` · `CHANGELOG-0.60.144.md` · `CHANGELOG-0.60.143.md` · `CHANGELOG-0.60.142.md` · `CHANGELOG-0.60.141.md` · `CHANGELOG-0.60.140.md` · `CHANGELOG-0.60.139.md` · `CHANGELOG-0.60.138.md` · `CHANGELOG-0.60.137.md` · `CHANGELOG-0.60.136.md` · `CHANGELOG-0.60.135.md` · `CHANGELOG-0.60.134.md` · `CHANGELOG-0.60.133.md` · `CHANGELOG-0.60.132.md` · `CHANGELOG-0.60.131.md` · `CHANGELOG-0.60.130.md` · `CHANGELOG-0.60.129.md` · `CHANGELOG-0.60.128.md` · `CHANGELOG-0.60.127.md` · `CHANGELOG-0.60.126.md` · `CHANGELOG-0.60.125.md` · `CHANGELOG-0.60.124.md` · `CHANGELOG-0.60.123.md` · `CHANGELOG-0.60.122.md` · `CHANGELOG-0.60.121.md` · `CHANGELOG-0.60.120.md` · `CHANGELOG-0.60.119.md` · `CHANGELOG-0.60.118.md` · `CHANGELOG-0.60.117.md` · `CHANGELOG-0.60.116.md` · `CHANGELOG-0.60.115.md` · `CHANGELOG-0.60.114.md` · `CHANGELOG-0.60.113.md` · `CHANGELOG-0.60.112.md` · `CHANGELOG-0.60.111.md` · `CHANGELOG-0.60.110.md` · `CHANGELOG-0.60.109.md` · `CHANGELOG-0.60.108.md` · `CHANGELOG-0.60.107.md` · `CHANGELOG-0.60.106.md` · `CHANGELOG-0.60.105.md` · `CHANGELOG-0.60.104.md` · `CHANGELOG-0.60.103.md` · `CHANGELOG-0.60.102.md` · `CHANGELOG-0.60.101.md` · `CHANGELOG-0.60.100.md` · `CHANGELOG-0.60.99.md` · `CHANGELOG-0.60.98.md` · `CHANGELOG-0.60.97.md` · `CHANGELOG-0.60.96.md` · `CHANGELOG-0.60.95.md` · `CHANGELOG-0.60.94.md` · `CHANGELOG-0.60.93.md` · `CHANGELOG-0.60.92.md` · `CHANGELOG-0.60.91.md` · `CHANGELOG-0.60.90.md` · `CHANGELOG-0.60.89.md` · `CHANGELOG-0.60.88.md` · `CHANGELOG-0.60.87.md` · `CHANGELOG-0.60.86.md` · `CHANGELOG-0.60.85.md` · `CHANGELOG-0.60.84.md` · `CHANGELOG-0.60.83.md` · `CHANGELOG-0.60.82.md` · `CHANGELOG-0.60.81.md` · `CHANGELOG-0.60.80.md` · `CHANGELOG-0.60.79.md` · `CHANGELOG-0.60.78.md` · `CHANGELOG-0.60.77.md` · `CHANGELOG-0.60.76.md` · `CHANGELOG-0.60.75.md` · `CHANGELOG-0.60.74.md` · `CHANGELOG-0.60.73.md` · `CHANGELOG-0.60.72.md` · `CHANGELOG-0.60.71.md` · `CHANGELOG-0.60.70.md` · `CHANGELOG-0.60.69.md` · `CHANGELOG-0.60.68.md` · `CHANGELOG-0.60.67.md` · `CHANGELOG-0.60.66.md` · `CHANGELOG-0.60.65.md` · `CHANGELOG-0.60.64.md` · `CHANGELOG-0.60.63.md` · `CHANGELOG-0.60.62.md` · `CHANGELOG-0.60.61.md` · `CHANGELOG-0.60.60.md` · `CHANGELOG-0.60.59.md` · `CHANGELOG-0.60.58.md` · `CHANGELOG-0.60.57.md` · `CHANGELOG-0.60.56.md` · `CHANGELOG-0.60.55.md` · `CHANGELOG-0.60.54.md` · `CHANGELOG-0.60.53.md` · `CHANGELOG-0.60.52.md` · `CHANGELOG-0.60.51.md` · `CHANGELOG-0.60.50.md` · `CHANGELOG-0.60.49.md` · `CHANGELOG-0.60.48.md` · `CHANGELOG-0.60.47.md` · `CHANGELOG-0.60.46.md` · `CHANGELOG-0.60.45.md` · `CHANGELOG-0.60.44.md` · `CHANGELOG-0.60.43.md` · `CHANGELOG-0.60.42.md` · `CHANGELOG-0.60.41.md` · `CHANGELOG-0.60.40.md` · `CHANGELOG-0.60.39.md` · `CHANGELOG-0.60.38.md` · `CHANGELOG-0.60.37.md` · `CHANGELOG-0.60.36.md` · `CHANGELOG-0.60.35.md` · `CHANGELOG-0.60.34.md` · `CHANGELOG-0.60.33.md` · `CHANGELOG-0.60.32.md` · `CHANGELOG-0.60.31.md` · `CHANGELOG-0.60.30.md` · `CHANGELOG-0.60.29.md` · `CHANGELOG-0.60.28.md` · `CHANGELOG-0.60.27.md` · `CHANGELOG-0.60.26.md` · `CHANGELOG-0.60.21.md` · `CHANGELOG-0.60.20.md` · `CHANGELOG-0.60.19.md` · `CHANGELOG-0.60.18.md` · `CHANGELOG-0.60.17.md` · `CHANGELOG-0.60.16.md` · `CHANGELOG-0.60.15.md` · `CHANGELOG-0.60.14.md` · `CHANGELOG-0.60.13.md` · `CHANGELOG-0.60.12.md` · `CHANGELOG-0.60.11.md` · `CHANGELOG-0.60.10.md` · `CHANGELOG-0.60.9.md` · `CHANGELOG-0.60.8.md` · `CHANGELOG-0.60.7.md` · `CHANGELOG-0.60.6.md` · `CHANGELOG-0.60.5.md` · `CHANGELOG-0.60.4.md` · `CHANGELOG-0.60.3.md` · `CHANGELOG-0.60.2.md` · `CHANGELOG-0.60.1.md` · `CHANGELOG-0.60.0.md` · `CHANGELOG-0.59.15.md` · `CHANGELOG-0.59.14.md` · `CHANGELOG-0.59.13.md` · `CHANGELOG-0.59.12.md` · `CHANGELOG-0.59.11.md` · `CHANGELOG-0.59.10.md` · `CHANGELOG-0.59.9.md` · `CHANGELOG-0.59.8.md` · `CHANGELOG-0.59.7.md` · `CHANGELOG-0.59.6.md` · `CHANGELOG-0.59.5.md` · `CHANGELOG-0.59.4.md` · `CHANGELOG-0.59.3.md` · `CHANGELOG-0.59.2.md` · `CHANGELOG-0.59.1.md` · `CHANGELOG-0.59.0.md` · `CHANGELOG-0.58.0.md` · `CHANGELOG-0.57.1.md` · `CHANGELOG-0.57.0.md` · `CHANGELOG-0.56.0.md` · `CHANGELOG-0.55.2.md` · `CHANGELOG-0.55.1.md` · `CHANGELOG-0.55.0.md` · `CHANGELOG-0.54.2.md` · `CHANGELOG-0.54.1.md` · `CHANGELOG-0.54.0.md` · `CHANGELOG-0.53.0.md` · `CHANGELOG-0.52.0.md` · `CHANGELOG-0.51.0.md` · `CHANGELOG-0.50.0.md` · `CHANGELOG-0.49.0.md` · `CHANGELOG-0.48.0.md` · `CHANGELOG-0.47.0.md` · `CHANGELOG-0.46.0.md` · `CHANGELOG-0.45.0.md` · `CHANGELOG-0.44.0.md` · `CHANGELOG-0.43.0.md` · `CHANGELOG-0.42.0.md` · `CHANGELOG-0.41.0.md` · `CHANGELOG-0.40.1.md` · `CHANGELOG-0.40.0.md` · `CHANGELOG-0.39.376.md` · `CHANGELOG-0.39.375.md` · `CHANGELOG-0.39.374.md` · `CHANGELOG-0.39.373.md` · `CHANGELOG-0.39.372.md` · `CHANGELOG-0.39.371.md` · `CHANGELOG-0.39.370.md` · `CHANGELOG-0.39.369.md` · `CHANGELOG-0.39.368.md` · `CHANGELOG-0.39.367.md` · `CHANGELOG-0.39.366.md` · `CHANGELOG-0.39.365.md` · `CHANGELOG-0.39.364.md` · `CHANGELOG-0.39.363.md` · `CHANGELOG-0.39.362.md` · `CHANGELOG-0.39.361.md` · `CHANGELOG-0.39.360.md` · `CHANGELOG-0.39.359.md` · `CHANGELOG-0.39.358.md` · `CHANGELOG-0.39.357.md` · `CHANGELOG-0.39.356.md` · `CHANGELOG-0.39.355.md` · `CHANGELOG-0.39.354.md` · `CHANGELOG-0.39.353.md` · `CHANGELOG-0.39.352.md` · `CHANGELOG-0.39.351.md` · `CHANGELOG-0.39.350.md` · `CHANGELOG-0.39.349.md` · `CHANGELOG-0.39.348.md` · `CHANGELOG-0.39.347.md` · `CHANGELOG-0.39.346.md` · `CHANGELOG-0.39.345.md` · `CHANGELOG-0.39.344.md` · `CHANGELOG-0.39.343.md` · `CHANGELOG-0.39.342.md` · `CHANGELOG-0.39.341.md` · `CHANGELOG-0.39.340.md` · `CHANGELOG-0.39.339.md` · `CHANGELOG-0.39.338.md` · `CHANGELOG-0.39.337.md` · `CHANGELOG-0.39.336.md` · `CHANGELOG-0.39.335.md` · `CHANGELOG-0.39.334.md` · `CHANGELOG-0.39.333.md` · `CHANGELOG-0.39.332.md` · `CHANGELOG-0.39.331.md` · `CHANGELOG-0.39.330.md` · `CHANGELOG-0.39.329.md` · `CHANGELOG-0.39.328.md` · `CHANGELOG-0.39.327.md` · `CHANGELOG-0.39.326.md` · `CHANGELOG-0.39.325.md` · `CHANGELOG-0.39.324.md` · `CHANGELOG-0.39.323.md` · `CHANGELOG-0.39.322.md` · `CHANGELOG-0.39.321.md` · `CHANGELOG-0.39.320.md` · `CHANGELOG-0.39.319.md` · `CHANGELOG-0.39.318.md` · `CHANGELOG-0.39.317.md` · `CHANGELOG-0.39.316.md` · `CHANGELOG-0.39.315.md` · `CHANGELOG-0.39.314.md` · `CHANGELOG-0.39.313.md` · `CHANGELOG-0.39.312.md` · `CHANGELOG-0.39.311.md` · `CHANGELOG-0.39.310.md` · `CHANGELOG-0.39.309.md` · `CHANGELOG-0.39.308.md` · `CHANGELOG-0.39.307.md` · `CHANGELOG-0.39.306.md` · `CHANGELOG-0.39.305.md` · `CHANGELOG-0.39.304.md` · `CHANGELOG-0.39.303.md` · `CHANGELOG-0.39.302.md` · `CHANGELOG-0.39.301.md` · `CHANGELOG-0.39.300.md` · `CHANGELOG-0.39.299.md` · `CHANGELOG-0.39.298.md` · `CHANGELOG-0.39.297.md` · `CHANGELOG-0.39.296.md` · `CHANGELOG-0.39.295.md` · `CHANGELOG-0.39.294.md` · `CHANGELOG-0.39.293.md` · `CHANGELOG-0.39.292.md` · `CHANGELOG-0.39.291.md` · `CHANGELOG-0.39.290.md` · `CHANGELOG-0.39.289.md` · `CHANGELOG-0.39.288.md` · `CHANGELOG-0.39.287.md` · `CHANGELOG-0.39.286.md` · `CHANGELOG-0.39.285.md` · `CHANGELOG-0.39.284.md` · `CHANGELOG-0.39.283.md` · `CHANGELOG-0.39.282.md` · `CHANGELOG-0.39.281.md` · `CHANGELOG-0.39.280.md` · `CHANGELOG-0.39.279.md` · `CHANGELOG-0.39.278.md` · `CHANGELOG-0.39.277.md` · `CHANGELOG-0.39.276.md` · `CHANGELOG-0.39.275.md` · `CHANGELOG-0.39.274.md` · `CHANGELOG-0.39.273.md` · `CHANGELOG-0.39.272.md` · `CHANGELOG-0.39.271.md` · `CHANGELOG-0.39.270.md` · `CHANGELOG-0.39.269.md` · `CHANGELOG-0.39.268.md` · `CHANGELOG-0.39.267.md` · `CHANGELOG-0.39.266.md` · `CHANGELOG-0.39.264.md` · `CHANGELOG-0.39.263.md` · `CHANGELOG-0.39.262.md` · `CHANGELOG-0.39.261.md` · `CHANGELOG-0.39.260.md` · `CHANGELOG-0.39.259.md` · `CHANGELOG-0.39.258.md` · `CHANGELOG-0.39.257.md` · `CHANGELOG-0.39.256.md` · `CHANGELOG-0.39.255.md` · `CHANGELOG-0.39.254.md` · `CHANGELOG-0.39.253.md` · `CHANGELOG-0.39.252.md` · `CHANGELOG-0.39.251.md` · `CHANGELOG-0.39.250.md` · `CHANGELOG-0.39.249.md` · `CHANGELOG-0.39.248.md` · `CHANGELOG-0.39.247.md` · `CHANGELOG-0.39.246.md` · `CHANGELOG-0.39.245.md` · `CHANGELOG-0.39.244.md` · `CHANGELOG-0.39.243.md` · `CHANGELOG-0.39.242.md` · `CHANGELOG-0.39.241.md` · `CHANGELOG-0.39.240.md` · `CHANGELOG-0.39.239.md` · `CHANGELOG-0.39.238.md` · `CHANGELOG-0.39.237.md` · `CHANGELOG-0.39.236.md` · `CHANGELOG-0.39.228.md` · `CHANGELOG-0.39.227.md` · `CHANGELOG-0.39.223.md` · `CHANGELOG-0.39.194.md` · `CHANGELOG-0.39.193.md` · `CHANGELOG-0.39.192.md` · `CHANGELOG-0.39.191.md` · `CHANGELOG-0.39.190.md` · `CHANGELOG-0.39.188.md` · `CHANGELOG-0.39.182.md` · `CHANGELOG-0.39.181.md` · `CHANGELOG-0.39.179.md` · `CHANGELOG-0.39.178.md` · `CHANGELOG-0.39.177.md` · `CHANGELOG-0.39.176.md` · `CHANGELOG-0.39.175.md` · `CHANGELOG-0.39.174.md` · `CHANGELOG-0.39.173.md` · `CHANGELOG-0.39.172.md` · `CHANGELOG-0.39.170.md` · `CHANGELOG-0.39.169.md` · `CHANGELOG-0.39.168.md` · `CHANGELOG-0.39.167.md` · `CHANGELOG-0.39.166.md` · `CHANGELOG-0.39.165.md` · `CHANGELOG-0.39.144.md` · `CHANGELOG-0.39.144-part2.md`
+`CHANGELOG-0.60.237.md` · `CHANGELOG-0.60.236.md` · `CHANGELOG-0.60.235.md` · `CHANGELOG-0.60.234.md` · `CHANGELOG-0.60.233.md` · `CHANGELOG-0.60.232.md` · `CHANGELOG-0.60.231.md` · `CHANGELOG-0.60.230.md` · `CHANGELOG-0.60.229.md` · `CHANGELOG-0.60.228.md` · `CHANGELOG-0.60.227.md` · `CHANGELOG-0.60.226.md` · `CHANGELOG-0.60.225.md` · `CHANGELOG-0.60.224.md` · `CHANGELOG-0.60.223.md` · `CHANGELOG-0.60.222.md` · `CHANGELOG-0.60.221.md` · `CHANGELOG-0.60.220.md` · `CHANGELOG-0.60.219.md` · `CHANGELOG-0.60.218.md` · `CHANGELOG-0.60.217.md` · `CHANGELOG-0.60.216.md` · `CHANGELOG-0.60.215.md` · `CHANGELOG-0.60.214.md` · `CHANGELOG-0.60.213.md` · `CHANGELOG-0.60.212.md` · `CHANGELOG-0.60.211.md` · `CHANGELOG-0.60.210.md` · `CHANGELOG-0.60.209.md` · `CHANGELOG-0.60.208.md` · `CHANGELOG-0.60.207.md` · `CHANGELOG-0.60.206.md` · `CHANGELOG-0.60.205.md` · `CHANGELOG-0.60.204.md` · `CHANGELOG-0.60.203.md` · `CHANGELOG-0.60.202.md` · `CHANGELOG-0.60.201.md` · `CHANGELOG-0.60.200.md` · `CHANGELOG-0.60.199.md` · `CHANGELOG-0.60.198.md` · `CHANGELOG-0.60.197.md` · `CHANGELOG-0.60.196.md` · `CHANGELOG-0.60.195.md` · `CHANGELOG-0.60.194.md` · `CHANGELOG-0.60.193.md` · `CHANGELOG-0.60.192.md` · `CHANGELOG-0.60.191.md` · `CHANGELOG-0.60.190.md` · `CHANGELOG-0.60.189.md` · `CHANGELOG-0.60.188.md` · `CHANGELOG-0.60.187.md` · `CHANGELOG-0.60.186.md` · `CHANGELOG-0.60.185.md` · `CHANGELOG-0.60.184.md` · `CHANGELOG-0.60.183.md` · `CHANGELOG-0.60.182.md` · `CHANGELOG-0.60.181.md` · `CHANGELOG-0.60.180.md` · `CHANGELOG-0.60.179.md` · `CHANGELOG-0.60.178.md` · `CHANGELOG-0.60.177.md` · `CHANGELOG-0.60.176.md` · `CHANGELOG-0.60.175.md` · `CHANGELOG-0.60.174.md` · `CHANGELOG-0.60.173.md` · `CHANGELOG-0.60.172.md` · `CHANGELOG-0.60.171.md` · `CHANGELOG-0.60.170.md` · `CHANGELOG-0.60.168.md` · `CHANGELOG-0.60.167.md` · `CHANGELOG-0.60.166.md` · `CHANGELOG-0.60.165.md` · `CHANGELOG-0.60.164.md` · `CHANGELOG-0.60.163.md` · `CHANGELOG-0.60.162.md` · `CHANGELOG-0.60.161.md` · `CHANGELOG-0.60.160.md` · `CHANGELOG-0.60.159.md` · `CHANGELOG-0.60.158.md` · `CHANGELOG-0.60.157.md` · `CHANGELOG-0.60.156.md` · `CHANGELOG-0.60.155.md` · `CHANGELOG-0.60.154.md` · `CHANGELOG-0.60.153.md` · `CHANGELOG-0.60.152.md` · `CHANGELOG-0.60.151.md` · `CHANGELOG-0.60.150.md` · `CHANGELOG-0.60.149.md` · `CHANGELOG-0.60.148.md` · `CHANGELOG-0.60.147.md` · `CHANGELOG-0.60.146.md` · `CHANGELOG-0.60.145.md` · `CHANGELOG-0.60.144.md` · `CHANGELOG-0.60.143.md` · `CHANGELOG-0.60.142.md` · `CHANGELOG-0.60.141.md` · `CHANGELOG-0.60.140.md` · `CHANGELOG-0.60.139.md` · `CHANGELOG-0.60.138.md` · `CHANGELOG-0.60.137.md` · `CHANGELOG-0.60.136.md` · `CHANGELOG-0.60.135.md` · `CHANGELOG-0.60.134.md` · `CHANGELOG-0.60.133.md` · `CHANGELOG-0.60.132.md` · `CHANGELOG-0.60.131.md` · `CHANGELOG-0.60.130.md` · `CHANGELOG-0.60.129.md` · `CHANGELOG-0.60.128.md` · `CHANGELOG-0.60.127.md` · `CHANGELOG-0.60.126.md` · `CHANGELOG-0.60.125.md` · `CHANGELOG-0.60.124.md` · `CHANGELOG-0.60.123.md` · `CHANGELOG-0.60.122.md` · `CHANGELOG-0.60.121.md` · `CHANGELOG-0.60.120.md` · `CHANGELOG-0.60.119.md` · `CHANGELOG-0.60.118.md` · `CHANGELOG-0.60.117.md` · `CHANGELOG-0.60.116.md` · `CHANGELOG-0.60.115.md` · `CHANGELOG-0.60.114.md` · `CHANGELOG-0.60.113.md` · `CHANGELOG-0.60.112.md` · `CHANGELOG-0.60.111.md` · `CHANGELOG-0.60.110.md` · `CHANGELOG-0.60.109.md` · `CHANGELOG-0.60.108.md` · `CHANGELOG-0.60.107.md` · `CHANGELOG-0.60.106.md` · `CHANGELOG-0.60.105.md` · `CHANGELOG-0.60.104.md` · `CHANGELOG-0.60.103.md` · `CHANGELOG-0.60.102.md` · `CHANGELOG-0.60.101.md` · `CHANGELOG-0.60.100.md` · `CHANGELOG-0.60.99.md` · `CHANGELOG-0.60.98.md` · `CHANGELOG-0.60.97.md` · `CHANGELOG-0.60.96.md` · `CHANGELOG-0.60.95.md` · `CHANGELOG-0.60.94.md` · `CHANGELOG-0.60.93.md` · `CHANGELOG-0.60.92.md` · `CHANGELOG-0.60.91.md` · `CHANGELOG-0.60.90.md` · `CHANGELOG-0.60.89.md` · `CHANGELOG-0.60.88.md` · `CHANGELOG-0.60.87.md` · `CHANGELOG-0.60.86.md` · `CHANGELOG-0.60.85.md` · `CHANGELOG-0.60.84.md` · `CHANGELOG-0.60.83.md` · `CHANGELOG-0.60.82.md` · `CHANGELOG-0.60.81.md` · `CHANGELOG-0.60.80.md` · `CHANGELOG-0.60.79.md` · `CHANGELOG-0.60.78.md` · `CHANGELOG-0.60.77.md` · `CHANGELOG-0.60.76.md` · `CHANGELOG-0.60.75.md` · `CHANGELOG-0.60.74.md` · `CHANGELOG-0.60.73.md` · `CHANGELOG-0.60.72.md` · `CHANGELOG-0.60.71.md` · `CHANGELOG-0.60.70.md` · `CHANGELOG-0.60.69.md` · `CHANGELOG-0.60.68.md` · `CHANGELOG-0.60.67.md` · `CHANGELOG-0.60.66.md` · `CHANGELOG-0.60.65.md` · `CHANGELOG-0.60.64.md` · `CHANGELOG-0.60.63.md` · `CHANGELOG-0.60.62.md` · `CHANGELOG-0.60.61.md` · `CHANGELOG-0.60.60.md` · `CHANGELOG-0.60.59.md` · `CHANGELOG-0.60.58.md` · `CHANGELOG-0.60.57.md` · `CHANGELOG-0.60.56.md` · `CHANGELOG-0.60.55.md` · `CHANGELOG-0.60.54.md` · `CHANGELOG-0.60.53.md` · `CHANGELOG-0.60.52.md` · `CHANGELOG-0.60.51.md` · `CHANGELOG-0.60.50.md` · `CHANGELOG-0.60.49.md` · `CHANGELOG-0.60.48.md` · `CHANGELOG-0.60.47.md` · `CHANGELOG-0.60.46.md` · `CHANGELOG-0.60.45.md` · `CHANGELOG-0.60.44.md` · `CHANGELOG-0.60.43.md` · `CHANGELOG-0.60.42.md` · `CHANGELOG-0.60.41.md` · `CHANGELOG-0.60.40.md` · `CHANGELOG-0.60.39.md` · `CHANGELOG-0.60.38.md` · `CHANGELOG-0.60.37.md` · `CHANGELOG-0.60.36.md` · `CHANGELOG-0.60.35.md` · `CHANGELOG-0.60.34.md` · `CHANGELOG-0.60.33.md` · `CHANGELOG-0.60.32.md` · `CHANGELOG-0.60.31.md` · `CHANGELOG-0.60.30.md` · `CHANGELOG-0.60.29.md` · `CHANGELOG-0.60.28.md` · `CHANGELOG-0.60.27.md` · `CHANGELOG-0.60.26.md` · `CHANGELOG-0.60.21.md` · `CHANGELOG-0.60.20.md` · `CHANGELOG-0.60.19.md` · `CHANGELOG-0.60.18.md` · `CHANGELOG-0.60.17.md` · `CHANGELOG-0.60.16.md` · `CHANGELOG-0.60.15.md` · `CHANGELOG-0.60.14.md` · `CHANGELOG-0.60.13.md` · `CHANGELOG-0.60.12.md` · `CHANGELOG-0.60.11.md` · `CHANGELOG-0.60.10.md` · `CHANGELOG-0.60.9.md` · `CHANGELOG-0.60.8.md` · `CHANGELOG-0.60.7.md` · `CHANGELOG-0.60.6.md` · `CHANGELOG-0.60.5.md` · `CHANGELOG-0.60.4.md` · `CHANGELOG-0.60.3.md` · `CHANGELOG-0.60.2.md` · `CHANGELOG-0.60.1.md` · `CHANGELOG-0.60.0.md` · `CHANGELOG-0.59.15.md` · `CHANGELOG-0.59.14.md` · `CHANGELOG-0.59.13.md` · `CHANGELOG-0.59.12.md` · `CHANGELOG-0.59.11.md` · `CHANGELOG-0.59.10.md` · `CHANGELOG-0.59.9.md` · `CHANGELOG-0.59.8.md` · `CHANGELOG-0.59.7.md` · `CHANGELOG-0.59.6.md` · `CHANGELOG-0.59.5.md` · `CHANGELOG-0.59.4.md` · `CHANGELOG-0.59.3.md` · `CHANGELOG-0.59.2.md` · `CHANGELOG-0.59.1.md` · `CHANGELOG-0.59.0.md` · `CHANGELOG-0.58.0.md` · `CHANGELOG-0.57.1.md` · `CHANGELOG-0.57.0.md` · `CHANGELOG-0.56.0.md` · `CHANGELOG-0.55.2.md` · `CHANGELOG-0.55.1.md` · `CHANGELOG-0.55.0.md` · `CHANGELOG-0.54.2.md` · `CHANGELOG-0.54.1.md` · `CHANGELOG-0.54.0.md` · `CHANGELOG-0.53.0.md` · `CHANGELOG-0.52.0.md` · `CHANGELOG-0.51.0.md` · `CHANGELOG-0.50.0.md` · `CHANGELOG-0.49.0.md` · `CHANGELOG-0.48.0.md` · `CHANGELOG-0.47.0.md` · `CHANGELOG-0.46.0.md` · `CHANGELOG-0.45.0.md` · `CHANGELOG-0.44.0.md` · `CHANGELOG-0.43.0.md` · `CHANGELOG-0.42.0.md` · `CHANGELOG-0.41.0.md` · `CHANGELOG-0.40.1.md` · `CHANGELOG-0.40.0.md` · `CHANGELOG-0.39.376.md` · `CHANGELOG-0.39.375.md` · `CHANGELOG-0.39.374.md` · `CHANGELOG-0.39.373.md` · `CHANGELOG-0.39.372.md` · `CHANGELOG-0.39.371.md` · `CHANGELOG-0.39.370.md` · `CHANGELOG-0.39.369.md` · `CHANGELOG-0.39.368.md` · `CHANGELOG-0.39.367.md` · `CHANGELOG-0.39.366.md` · `CHANGELOG-0.39.365.md` · `CHANGELOG-0.39.364.md` · `CHANGELOG-0.39.363.md` · `CHANGELOG-0.39.362.md` · `CHANGELOG-0.39.361.md` · `CHANGELOG-0.39.360.md` · `CHANGELOG-0.39.359.md` · `CHANGELOG-0.39.358.md` · `CHANGELOG-0.39.357.md` · `CHANGELOG-0.39.356.md` · `CHANGELOG-0.39.355.md` · `CHANGELOG-0.39.354.md` · `CHANGELOG-0.39.353.md` · `CHANGELOG-0.39.352.md` · `CHANGELOG-0.39.351.md` · `CHANGELOG-0.39.350.md` · `CHANGELOG-0.39.349.md` · `CHANGELOG-0.39.348.md` · `CHANGELOG-0.39.347.md` · `CHANGELOG-0.39.346.md` · `CHANGELOG-0.39.345.md` · `CHANGELOG-0.39.344.md` · `CHANGELOG-0.39.343.md` · `CHANGELOG-0.39.342.md` · `CHANGELOG-0.39.341.md` · `CHANGELOG-0.39.340.md` · `CHANGELOG-0.39.339.md` · `CHANGELOG-0.39.338.md` · `CHANGELOG-0.39.337.md` · `CHANGELOG-0.39.336.md` · `CHANGELOG-0.39.335.md` · `CHANGELOG-0.39.334.md` · `CHANGELOG-0.39.333.md` · `CHANGELOG-0.39.332.md` · `CHANGELOG-0.39.331.md` · `CHANGELOG-0.39.330.md` · `CHANGELOG-0.39.329.md` · `CHANGELOG-0.39.328.md` · `CHANGELOG-0.39.327.md` · `CHANGELOG-0.39.326.md` · `CHANGELOG-0.39.325.md` · `CHANGELOG-0.39.324.md` · `CHANGELOG-0.39.323.md` · `CHANGELOG-0.39.322.md` · `CHANGELOG-0.39.321.md` · `CHANGELOG-0.39.320.md` · `CHANGELOG-0.39.319.md` · `CHANGELOG-0.39.318.md` · `CHANGELOG-0.39.317.md` · `CHANGELOG-0.39.316.md` · `CHANGELOG-0.39.315.md` · `CHANGELOG-0.39.314.md` · `CHANGELOG-0.39.313.md` · `CHANGELOG-0.39.312.md` · `CHANGELOG-0.39.311.md` · `CHANGELOG-0.39.310.md` · `CHANGELOG-0.39.309.md` · `CHANGELOG-0.39.308.md` · `CHANGELOG-0.39.307.md` · `CHANGELOG-0.39.306.md` · `CHANGELOG-0.39.305.md` · `CHANGELOG-0.39.304.md` · `CHANGELOG-0.39.303.md` · `CHANGELOG-0.39.302.md` · `CHANGELOG-0.39.301.md` · `CHANGELOG-0.39.300.md` · `CHANGELOG-0.39.299.md` · `CHANGELOG-0.39.298.md` · `CHANGELOG-0.39.297.md` · `CHANGELOG-0.39.296.md` · `CHANGELOG-0.39.295.md` · `CHANGELOG-0.39.294.md` · `CHANGELOG-0.39.293.md` · `CHANGELOG-0.39.292.md` · `CHANGELOG-0.39.291.md` · `CHANGELOG-0.39.290.md` · `CHANGELOG-0.39.289.md` · `CHANGELOG-0.39.288.md` · `CHANGELOG-0.39.287.md` · `CHANGELOG-0.39.286.md` · `CHANGELOG-0.39.285.md` · `CHANGELOG-0.39.284.md` · `CHANGELOG-0.39.283.md` · `CHANGELOG-0.39.282.md` · `CHANGELOG-0.39.281.md` · `CHANGELOG-0.39.280.md` · `CHANGELOG-0.39.279.md` · `CHANGELOG-0.39.278.md` · `CHANGELOG-0.39.277.md` · `CHANGELOG-0.39.276.md` · `CHANGELOG-0.39.275.md` · `CHANGELOG-0.39.274.md` · `CHANGELOG-0.39.273.md` · `CHANGELOG-0.39.272.md` · `CHANGELOG-0.39.271.md` · `CHANGELOG-0.39.270.md` · `CHANGELOG-0.39.269.md` · `CHANGELOG-0.39.268.md` · `CHANGELOG-0.39.267.md` · `CHANGELOG-0.39.266.md` · `CHANGELOG-0.39.264.md` · `CHANGELOG-0.39.263.md` · `CHANGELOG-0.39.262.md` · `CHANGELOG-0.39.261.md` · `CHANGELOG-0.39.260.md` · `CHANGELOG-0.39.259.md` · `CHANGELOG-0.39.258.md` · `CHANGELOG-0.39.257.md` · `CHANGELOG-0.39.256.md` · `CHANGELOG-0.39.255.md` · `CHANGELOG-0.39.254.md` · `CHANGELOG-0.39.253.md` · `CHANGELOG-0.39.252.md` · `CHANGELOG-0.39.251.md` · `CHANGELOG-0.39.250.md` · `CHANGELOG-0.39.249.md` · `CHANGELOG-0.39.248.md` · `CHANGELOG-0.39.247.md` · `CHANGELOG-0.39.246.md` · `CHANGELOG-0.39.245.md` · `CHANGELOG-0.39.244.md` · `CHANGELOG-0.39.243.md` · `CHANGELOG-0.39.242.md` · `CHANGELOG-0.39.241.md` · `CHANGELOG-0.39.240.md` · `CHANGELOG-0.39.239.md` · `CHANGELOG-0.39.238.md` · `CHANGELOG-0.39.237.md` · `CHANGELOG-0.39.236.md` · `CHANGELOG-0.39.228.md` · `CHANGELOG-0.39.227.md` · `CHANGELOG-0.39.223.md` · `CHANGELOG-0.39.194.md` · `CHANGELOG-0.39.193.md` · `CHANGELOG-0.39.192.md` · `CHANGELOG-0.39.191.md` · `CHANGELOG-0.39.190.md` · `CHANGELOG-0.39.188.md` · `CHANGELOG-0.39.182.md` · `CHANGELOG-0.39.181.md` · `CHANGELOG-0.39.179.md` · `CHANGELOG-0.39.178.md` · `CHANGELOG-0.39.177.md` · `CHANGELOG-0.39.176.md` · `CHANGELOG-0.39.175.md` · `CHANGELOG-0.39.174.md` · `CHANGELOG-0.39.173.md` · `CHANGELOG-0.39.172.md` · `CHANGELOG-0.39.170.md` · `CHANGELOG-0.39.169.md` · `CHANGELOG-0.39.168.md` · `CHANGELOG-0.39.167.md` · `CHANGELOG-0.39.166.md` · `CHANGELOG-0.39.165.md` · `CHANGELOG-0.39.144.md` · `CHANGELOG-0.39.144-part2.md`
 
 </details>
 
@@ -6475,7 +6700,7 @@ Everything below is written by `lib/readme-generate.js` from the tree as it is a
 
 ### Every phase
 
-Every phase of every phasemap, 2017 phases across 155 maps, read by the one phasemap parser loom uses (`loom/scanners/phasemap-map.js`). 812 are done, 12 in progress and 1193 pending. A decision (a question for James, or one his axioms decided) is marked as one. The maps are newest first; each opens to its phases, each phase with its status and what it does. The map itself, with the reasons and the proof, is the file named.
+Every phase of every phasemap, 2067 phases across 161 maps, read by the one phasemap parser loom uses (`loom/scanners/phasemap-map.js`). 836 are done, 13 in progress and 1218 pending. A decision (a question for James, or one his axioms decided) is marked as one. The maps are newest first; each opens to its phases, each phase with its status and what it does. The map itself, with the reasons and the proof, is the file named.
 
 <details>
 <summary>`docs/snapshot-trigger-phasemap.spec` · 2 · 0 done, 0 in progress, 2 pending</summary>
@@ -6857,6 +7082,83 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 </details>
 
 <details>
+<summary>`docs/2026-10-24-emerge-warp-system-phasemap.spec` · 5 · 1 done, 0 in progress, 4 pending</summary>
+
+- **EW1_emerge_and_warp_one_system** · done
+- **EW2_the_callers_outside_idearium** · pending
+- **EW3_the_spec_compiler_into_idearium** · pending
+- **EW4_the_ide_into_idearium** · pending
+- **EW5_the_registry_with_wires** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-24-cos-services-phasemap.spec` · 5 · 1 done, 0 in progress, 4 pending</summary>
+
+- **SV0_the_engines_in_cos** · done
+- **SV1_a_stack_per_root** · pending
+- **SV2_into_a_compartment** · pending
+- **SV3_on_the_cos_bus** · pending
+- **SV4_the_doors** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-23-site-profile-processes-phasemap.spec` · 6 · 6 done, 0 in progress, 0 pending</summary>
+
+- **SP1_one_resolver_for_every_feature** · done
+- **SP2_each_feature_reads_its_site_value** · done
+- **SP3_the_site_settings_screen** · done
+- **SP4_cleardriver_mesh_guardian_settings** · done
+- **SP5_processes_and_activity** · done
+- **SP6_the_processes_screen** · done
+
+</details>
+
+<details>
+<summary>`docs/2026-10-23-self-building-loop-phasemap.spec` · 7 · 5 done, 0 in progress, 2 pending</summary>
+
+- **SL0_what_can_be_built_now** · done
+- **SL1_a_proven_phase_closes_itself** · done
+- **SL2_done_by_evidence** · done
+- **SL3_the_backlog_groomed** · pending
+- **SL4_the_loop** · done
+- **SL5_when_a_proven_change_lands_alone** · done
+- **SL6_the_loop_counts_itself** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-23-cos-spine-phasemap.spec` · 12 · 0 done, 0 in progress, 12 pending</summary>
+
+- **CS1_a_version_is_a_system_state** · pending
+- **CS2_test_every_version** · pending
+- **CS3_the_registry_is_the_bridge** · pending
+- **CS4_every_system_a_compartment** · pending
+- **CS4a_cos_boots_alone** · pending
+- **CS5_caps_per_compartment** · pending
+- **CS6_rebuild_from_the_spec** · pending
+- **CS7_spawn_despawn_and_balance** · pending
+- **CS9_every_project_a_compartment** · pending
+- **CS10_hats_bound_to_the_compartment** · pending
+- **CS11_raid_in_the_exe** · pending
+- **CS8_the_cos_screen** · pending
+
+</details>
+
+<details>
+<summary>`docs/2026-10-22-system-node-db-phasemap.spec` · 6 · 0 done, 0 in progress, 6 pending</summary>
+
+- **ND1_every_system_has_its_database** · pending
+- **ND2_one_node_route_for_every_system** · pending
+- **ND3_each_server_serves_its_nodes** · pending
+- **ND4_commands_and_capabilities_from_the_schemas** · pending
+- **ND5_every_agent_reaches_every_system** · pending
+- **ND6_the_nodes_screen** · pending
+
+</details>
+
+<details>
 <summary>`docs/2026-10-21-snowflake-compartment-phasemap.spec` · 9 · 9 done, 0 in progress, 0 pending</summary>
 
 - **SF2_bridge_sources** · done
@@ -6883,12 +7185,12 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-21-data-layout-phasemap.spec` · 8 · 2 done, 0 in progress, 6 pending</summary>
+<summary>`docs/2026-10-21-data-layout-phasemap.spec` · 8 · 3 done, 1 in progress, 4 pending</summary>
 
 - **DL0_data_census** · done
 - **DL1_clearup_tool** · done
-- **DL2_one_resolver** · pending
-- **DL3_rewire_writers** · pending
+- **DL2_one_resolver** · done
+- **DL3_rewire_writers** · in-progress
 - **DL4_one_repo_folder** · pending
 - **DL5_memory_in_cortex** · pending
 - **DL6_cortex_server** · pending
@@ -6983,7 +7285,7 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec` · 18 · 0 done, 0 in progress, 18 pending</summary>
+<summary>`docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec` · 18 · 1 done, 0 in progress, 17 pending</summary>
 
 - **GR0_graph_census** · pending
 - **GR1_graph_primitive** · pending
@@ -7002,7 +7304,7 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 - **GW1_gate_primitive** · pending
 - **GW2_gates_at_every_level** · pending
 - **GW3_gate_panel** · pending
-- **PS1_phase_specs** · pending
+- **PS1_phase_specs** · done
 
 </details>
 
@@ -7071,7 +7373,7 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-19-pipeline-root-causes-phasemap.spec` · 29 · 12 done, 0 in progress, 17 pending</summary>
+<summary>`docs/2026-10-19-pipeline-root-causes-phasemap.spec` · 29 · 13 done, 0 in progress, 16 pending</summary>
 
 - **RC1_watchers_never_kill_a_kernel** · done
 - **RC2_linear_node_scan** · done
@@ -7083,7 +7385,7 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 - **VF3_mutation_check** · pending
 - **VF4_second_opinion_on_need** · pending
 - **VF5_verdict_cache** · pending
-- **SS1_system_store_adoption** · pending
+- **SS1_system_store_adoption** · done
 - **SS2_every_system_home** · pending
 - **SS3_nodes_are_the_data** · pending
 - **SS4_seal_into_compartments** · pending
@@ -7106,7 +7408,7 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-19-infrastructure-spine-phasemap.spec` · 24 · 0 done, 0 in progress, 24 pending</summary>
+<summary>`docs/2026-10-19-infrastructure-spine-phasemap.spec` · 25 · 1 done, 0 in progress, 24 pending</summary>
 
 - **IN0_baseline** · pending
 - **IN1_old_files_out** · pending
@@ -7132,6 +7434,7 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 - **PRC1_phase_reality_check** · pending
 - **VC1_a_change_entry_for_every_event** · pending
 - **VC2_changelogs_rendered** · pending
+- **IN3a_build_stands_on_the_registry** · done
 
 </details>
 
@@ -7250,7 +7553,7 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-17-system-drawbridge-phasemap.spec` · 27 · 8 done, 0 in progress, 19 pending</summary>
+<summary>`docs/2026-10-17-system-drawbridge-phasemap.spec` · 29 · 8 done, 0 in progress, 21 pending</summary>
 
 - **DB0a_is_lib_a_system** · done
 - **DB0b_in_process_or_http** · done
@@ -7279,6 +7582,8 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 - **P33_slices** · pending
 - **P33a_a_registry_for_any_system** · done
 - **P33b_each_system_runs_its_listener** · done
+- **DB19_genesis_sandboxed_fork** · pending
+- **DB20_sealed_archetype** · pending
 
 </details>
 
@@ -8042,7 +8347,7 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-10-10-idearium-solid-phasemap.spec` · 17 · 4 done, 0 in progress, 13 pending</summary>
+<summary>`docs/2026-10-10-idearium-solid-phasemap.spec` · 23 · 10 done, 0 in progress, 13 pending</summary>
 
 - **SD0_versionium_down_is_said_and_restarted** · done
 - **SD1_rewind_and_versions_on_the_repo_card** · done
@@ -8061,6 +8366,12 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 - **SD14_chunks_cut_at_primitives** · pending
 - **SD15_no_website_can_drive_nexus** · pending
 - **SD16_a_plan_step_never_proposes_code** · pending
+- **SD17_an_imported_project_continues** · done
+- **SD18_mastermind_ready** · done
+- **SD19_a_refusal_goes_back_to_its_agent** · done
+- **SD20_a_starved_machine_does_not_spin** · done
+- **SD21_what_his_run_log_showed** · done
+- **SD22_a_wrapped_repo_lifts_to_its_root** · done
 
 </details>
 
@@ -8798,12 +9109,12 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 </details>
 
 <details>
-<summary>`docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec` · 29 · 0 done, 0 in progress, 29 pending</summary>
+<summary>`docs/2026-09-28-graph-build-context-settings-memory-phasemap.spec` · 29 · 1 done, 0 in progress, 28 pending</summary>
 
 - **M0** · pending
 - **M1** · pending
 - **M4** · pending
-- **G0** · pending
+- **G0** · done
 - **G1** · pending
 - **G2** · pending
 - **G3** · pending
@@ -9430,40 +9741,32 @@ Every phase of every phasemap, 2017 phases across 155 maps, read by the one phas
 NEXUS keeps its state out of git: everything under a data folder is runtime state, never code (docs/CLAUDE.md: "NEVER commit data/**"). The stores below are read from the code itself: every store whose folder can be moved by an environment variable, with the default it falls back to and the files that open it. The test sandbox (`lib/test-sandbox.js`) points each of these into a throwaway folder, so a test never touches the real ones.
 
 <details>
-<summary>the stores · 34 folders, each placed by an environment variable</summary>
+<summary>the stores · 26 folders, each placed by an environment variable</summary>
 
 - **CG_JAA_DIR** — default cgDir(), 'jaa' — opened by `clear-glass/src/storage/jaa.js`
 - **CG_USERSCRIPTS_DIR** — default process.env.APPDATA || process.env.HOME || '.', '.clear-glass', 'userscripts' — opened by `clear-glass/src/userscripts/manager.js`
 - **COPILOT_INJECTION_DIR** — default copilot/, 'data', 'nodes', 'injection' — opened by `copilot/tool-runtime.js`
 - **COPILOT_WORKSET_DIR** — default copilot/lib/, '..', 'data', 'worksets' — opened by `copilot/lib/workset.js`
 - **COS_DATA_ROOT** — default '' — opened by `lib/cos-bridge.js`
-- **EMERGENCE_DATA_DIR** — default process.cwd(), 'data' — opened by `emergence/cli.js`
 - **GIG_LEDGER_DIR** — default , 'data', 'gig-ledger' — opened by `lib/gig-ledger.js`
-- **GUARDIAN_ACCOUNTS_DIR** — default guardian/lib/, '../../data/guardian/accounts' — opened by `guardian/lib/account-routing.js`
-- **GUARDIAN_AGENTS_DIR** — default guardian/lib/, '../../data/guardian/agents' — opened by `guardian/lib/agent-registry.js`
 - **GUARDIAN_DIR** — default clear-glass/src/main/, // '../../../guardian' — opened by `clear-glass/src/main/index.js`
-- **GUARDIAN_JOBS_DIR** — default , 'data', 'guardian', 'jobs' — opened by `cli/clear-idearium.js`, `guardian/lib/jobs.js`
 - **GUARDIAN_RESPONSE_NODES_DIR** — default guardian/lib/, '..', 'data', 'nodes', 'response' — opened by `guardian/lib/response-sink.js`
 - **IDEARIUM_ACCESS_DIR** — default ideariumDataDir(), 'access' — opened by `idearium/lib/access.cjs`
-- **INTELLIGENCE_DATA_DIR** — default intelligence/, '..', 'data', 'intelligence' — opened by `intelligence/config.js`
 - **INTELLIGENCE_NODES_DIR** — default intelligence/lib/, '..', 'data' — opened by `intelligence/lib/domain-nodes.js`
-- **INTELLIGENCE_SYNTHESIS_DIR** — default process.env.INTELLIGENCE_DATA_DIR || , 'data', 'intelligence'), 'synthesis' — opened by `intelligence/synthesis/index.js`
 - **JAA_DATA_DIR** — default , 'data', 'cortex', 'memory' — opened by `cli/clear-idearium.js`, `cortex/memory/jaa-db.js`, `cortex/memory/table-compactor.js`, `lib/context-atlas.js`
 - **MEMORY_STORE_DIR** — default guardian/, '..', 'data', 'cortex', 'memory' — opened by `guardian/server.js`
 - **NEXUS_CLIENT_DIR** — default os.homedir(), '.nexus-client' — opened by `auth/client.js`
 - **NEXUS_CODE_ARTIFACT_DIR** — default process.env.NEXUS_DATA_ || , 'data'), 'guardian', 'code-artifacts' — opened by `guardian/lib/code-artifact.js`
-- **NEXUS_DATA_DIR** — default process.cwd(), 'data' — opened by `remote-desktop/bridge-os-core/bridge-node/boot.js`, `remote-desktop/bridge-os-core/index.js`
-- **NEXUS_DATA_ROOT** — default clear-glass/src/ipc/, '..', '..', '..', 'data' — opened by `clear-glass/src/ipc/bridge.js`, `clear-glass/src/mesh/automation-engine.js`, `clear-glass/src/providers/registry.js`, `idearium/lib/data-dir.cjs`
+- **NEXUS_DATA_ROOT** — default clear-glass/src/mesh/, '..', '..', '..', 'data' — opened by `clear-glass/src/mesh/automation-engine.js`, `idearium/lib/data-dir.cjs`, `lib/chat-logger.js`, `lib/component-ledger.js`
 - **NEXUS_INTAKE_DIR** — default cortex/core/raid/, '../../../data/intake' — opened by `cortex/core/raid/officiator.js`, `lib/intake.js`
 - **NEXUS_PHASEMAP_DIR** — default , 'docs' — opened by `lib/spec-census.js`, `loom/scanners/phasemap-map.js`
+- **NEXUS_ROOT** — default cos/services/anonymous/engines/, '..' — opened by `cos/services/anonymous/engines/_engine.js`, `cos/services/anonymous/engines/builder.js`, `cos/services/anonymous/engines/catalog.js`, `cos/services/anonymous/engines/provisioner.js`
 - **NEXUS_SNAP_DIR** — default versionium/lib/, '..', 'data', 'snapshots' — opened by `versionium/lib/migrate-cortex-snapshots.js`, `versionium/lib/snapshot.js`
 - **NEXUS_VECTOR_INDEX_DIR** — default lib/, '..', 'data', 'vector-index' — opened by `lib/vector-memory.js`
 - **RAID_INPUT_DIR** — default cortex/core/raid/, '../../../data/raid/input' — opened by `cortex/core/raid/contract-intake.js`
 - **RAID_OUTPUT_DIR** — default cortex/core/raid/, '../../../data/raid/output' — opened by `cortex/core/raid/contract-intake.js`
 - **RAID_SYSTEMS_ROOT** — default cortex/core/raid/, '../../../' — opened by `cortex/core/raid/contract-intake.js`
 - **RUN_STATE_DIR** — default lib/, '..', 'data', 'run-state' — opened by `lib/run-state.js`
-- **VERSIONIUM_DATA_DIR** — default versionium/, '..', 'data', 'versionium' — opened by `versionium/config.js`
-- **VERSIONIUM_FILE_BLOB_DIR** — default process.env.VERSIONIUM_DATA_DIR || versionium/, '..', 'data', 'versionium'), 'file-blobs' — opened by `versionium/config.js`
 - **WORK_JOURNAL_DIR** — default lib/, '..', 'data', 'work' — opened by `lib/work-journal.js`
 - **XDG_DATA_HOME** — default os.homedir(), '.local', 'share' — opened by `cos/app/store.js`
 
@@ -9539,10 +9842,11 @@ The node types. Everything NEXUS keeps as a file is a node: one envelope (`lib/n
 The ledgers. What happened is append-only: each ledger keeps its rows in order and never rewrites one. The contract ledger (`lib/work-journal.js`, 0.60.146) is one per contract, every gate's attempts, jobs and replies; a browser agent's reply text lives once, in Clear Glass's chat ledger (`clear-glass/src/downloads/chat-ledger.js`).
 
 <details>
-<summary>the ledgers and records · 15 modules</summary>
+<summary>the ledgers and records · 16 modules</summary>
 
 - `lib/activity-log/compartment.js`
 - `lib/activity-log/index.js` — per-system activity + error logging into cortex James: "a log for each system, a full log for activity to save in cortex, like
+- `lib/chat-ledger-client.js` — read Clear Glass's live chat ledgers through its own routes (0.60.192). James, 2026-10-21: "look in clearglass download manager". His 0.39.278 idea already…
 - `lib/compartment-dom-ledger.js` — lib/compartment-dom-ledger.js §MCO10 2026-09-13 — James: "stream the DOM to the compartment ledger per
 - `lib/component-ledger.js` — // ── lib/component-ledger.js — Per-Component, Per-System Ledger ────────────── // UUID: nexus-component-ledger-v1-0000-4000-0000-000000000001
 - `lib/engine-ledger.js` — // ── lib/engine-ledger.js — DEPRECATED, kept as a compatibility shim ───────── // Superseded 2026-06-24 by lib/component-ledger.js — per-component,
@@ -9562,10 +9866,10 @@ The ledgers. What happened is append-only: each ledger keeps its rows in order a
 
 ### All the Idearium work
 
-Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and builds, and the Code tab where the agents work. Everything it can do is a route on :4800, served by `idearium/api/index.js`, and every route a person uses is also a command row in `idearium/cli/route-commands.js`, so every agent can do it through the one command tool. Read from the route table itself: 403 routes, and 138 command rows. Its files, module by module, are under its own section above; what each release did to it is in the version history below.
+Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and builds, and the Code tab where the agents work. Everything it can do is a route on :4800, served by `idearium/api/index.js`, and every route a person uses is also a command row in `idearium/cli/route-commands.js`, so every agent can do it through the one command tool. Read from the route table itself: 422 routes, and 154 command rows. Its files, module by module, are under its own section above; what each release did to it is in the version history below.
 
 <details>
-<summary>the routes · 403, grouped by path</summary>
+<summary>the routes · 422, grouped by path</summary>
 
 - **/** — GET /
 - **/api/access** — GET /me · POST /login · POST /logout · GET /keys · POST /keys · POST /keys/:id/revoke
@@ -9584,6 +9888,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/contract** — GET / · GET /live
 - **/api/copilot** — POST /suggest
 - **/api/cos** — GET /testenv · POST /testenv/setup · GET /install · POST /install · GET /compartments · GET /compartments/:cid/remotes · POST /compartments/:cid/remotes · DELETE /compartments/:cid/remotes/:name · GET /compartments/:cid/remotes/:name/status · POST /compartments/:cid/remotes/:name/push · POST /compartments/:cid/remotes/:name/pull · POST /remote/browse · POST /remote/clone
+- **/api/data** — GET /home · GET /home/:system · POST /home/:system · POST /rollback
 - **/api/economy** — GET / · POST / · GET /:what
 - **/api/events** — GET /
 - **/api/gaps** — GET / · POST / · GET /:uuid · POST /:uuid/resolve · POST /:uuid/ignore
@@ -9596,7 +9901,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/nexus** — GET /store · GET /tape · GET /tape/:run
 - **/api/notes** — GET / · POST / · PATCH /:id
 - **/api/ollama** — GET /check · POST /check/ask · GET /models
-- **/api/phases** — GET /census
+- **/api/phases** — GET /census · GET /next
 - **/api/projects** — GET / · POST / · GET /:uuid/download · DELETE /:uuid
 - **/api/providers** — GET /ready
 - **/api/queue** — POST /:queueId/progress · GET /:queueId
@@ -9643,10 +9948,11 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/repos/:uuid/lessons** — GET /
 - **/api/repos/:uuid/lineage** — GET /
 - **/api/repos/:uuid/lines** — GET / · POST /copy
+- **/api/repos/:uuid/loop** — GET / · POST /start · POST /stop · POST /step
 - **/api/repos/:uuid/manage** — POST /
 - **/api/repos/:uuid/map** — GET /
 - **/api/repos/:uuid/notes** — GET / · POST /
-- **/api/repos/:uuid/phases** — GET / · GET /runs · GET /graph · GET /dag · GET /contract · GET /cost · POST /map · GET /map · POST /status · POST /add · POST /build
+- **/api/repos/:uuid/phases** — GET /next · GET / · GET /runs · GET /graph · GET /dag · GET /contract · GET /cost · POST /map · GET /map · POST /status · GET /closes · POST /close · POST /evidence · POST /add · POST /build
 - **/api/repos/:uuid/plan** — GET /
 - **/api/repos/:uuid/procedures** — GET / · POST / · POST /from-run · POST /:id/replay · DELETE /:id
 - **/api/repos/:uuid/proof** — POST / · GET /
@@ -9654,6 +9960,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/repos/:uuid/reindex** — POST /
 - **/api/repos/:uuid/releases** — GET / · POST /
 - **/api/repos/:uuid/roadmap** — GET / · POST /phase
+- **/api/repos/:uuid/roadmaps** — GET / · POST /import
 - **/api/repos/:uuid/run** — GET / · POST /:op · POST / · GET /capabilities · GET /options
 - **/api/repos/:uuid/runs** — GET / · POST /:runId/rewind
 - **/api/repos/:uuid/scan** — GET /
@@ -9681,8 +9988,9 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **/api/spec-engine** — GET /warp-status · GET /templates · GET /specs · POST /specs · POST /import · POST /specs/:uuid/promote · POST /wizard · GET /context · GET /specs/:uuid · POST /specs/:uuid/build · POST /specs/:uuid/codegen · POST /specs/:uuid/chunk/:chunkUuid/complete · POST /specs/:uuid/chunk/:chunkUuid/fail · POST /specs/:uuid/chunk/:chunkUuid/agent · POST /specs/:uuid/warp-primitives · POST /specs/:uuid/archive · DELETE /specs/:uuid · POST /specs/:uuid/restore · POST /specs/:uuid/expand · GET /specs/:uuid/promote
 - **/api/specs** — GET / · POST / · GET /:uuid · PATCH /:uuid · POST /:uuid/check · POST /:uuid/build · GET /:uuid/export · DELETE /:uuid
 - **/api/stats** — GET /
-- **/api/system** — GET /lean · POST /prevention/clear · GET /drawbridge · GET /homes · GET /sovereign · GET /shape · GET /nodes · GET /nodes/:system · GET /tunnel · GET /tunnel/:name · GET /heartbeat · GET /registry · GET /registry/:system · POST /registry/:system/settle · POST /lean
+- **/api/system** — GET /lean · POST /prevention/clear · GET /drawbridge · GET /homes · GET /sovereign · GET /shape · GET /nodes · GET /nodes/:system · GET /tunnel · GET /tunnel/:name · GET /heartbeat · GET /registry · GET /registry/:system · GET /registry-drafts · GET /registry/:system/draft · POST /registry/:system/settle · POST /lean
 - **/api/systems** — GET /:system/options · POST /:system/options
+- **/api/trust-rule** — GET / · POST /
 - **/api/version** — GET /
 - **/api/void** — GET / · POST /idea · POST /ideas · GET /idea/:uuid · POST /idea/:uuid · POST /idea/:uuid/echo · POST /idea/:uuid/spec · POST /collide · POST /echo/:id · POST /spark/:uuid/idea
 - **/api/workbench** — GET / · PATCH /:uuid · DELETE /:uuid · POST /:uuid/spawn · POST /:uuid/assist
@@ -9693,7 +10001,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 </details>
 
 <details>
-<summary>the command rows · 138 (every agent has them through nexus.command)</summary>
+<summary>the command rows · 154 (every agent has them through nexus.command)</summary>
 
 - **repo ask "" [--provider claude-code|ollama|chatgpt|…] [--model m]** — talk to the agent wearing the repo's hat (its code lands as proposals)
 - **repo agent [--provider p] [--inject review|auto|off] [--scope s] [--model m]** — who wears the hat, and how its code lands
@@ -9743,6 +10051,13 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **repo dag [phase] [--map path] [--cross]** — 
 - **repo changelog [--limit n] [--all]** — 
 - **ledger out** — 
+- **phases next [--limit n] [--group decision|deps-open|cycle|dangling|no-files|done-by-evidence|held|conflict]** — 
+- **repo next [--limit n] [--group …]** — 
+- **repo closes** — the phases its proven, landed runs closed by themselves (SL1), each with the run and version; reopened ones say which change was undone
+- **repo close** — 
+- **repo evidence [--apply] [--limit n] [--map ]** — 
+- **repo loop [start|stop|step] [--phases n] [--minutes n]** — 
+- **trust [--repo ] | trust --set A|B|C --words "" [--repo ] [--kept a,b]** — 
 - **phases census [--system idearium] [--open]** — 
 - **repo upload --intent "what these files are for"** — upload a zip into a repo with an intent: every file is placed against the repo (its folders, its systems, who requires what, his earlier answers)…
 - **repo uploads [upload-id]** — the uploads waiting for his answer (and the answered ones), or one upload with every file's proposed place, why, its system and registry neighbours
@@ -9755,6 +10070,8 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **system compartment [] [--apply]** — each system's COS compartment from loom's template (nexus-self-): its intent (end state: sovereign; conditions; the genesis axioms), runtime, mounts…
 - **system shape []** — does each system match genesis (the skeleton cos/archetype/nexus-system): every role — entry, cli, config, compartment, registry, contract, events,…
 - **system sovereign []** — which systems are sovereign (nothing they require is in another system's folder; lib/ is the kernel) and, for each that is not, what is in the way:…
+- **data home [] [--apply]** — each system's own data: where it lives and what of it still waits in the root data/ (and why); with a system, each file's plan; --apply brings it…
+- **data rollback** — put a bring-home's files back where they were, from the manifest it printed
 - **system nodes [ []]** — a system's own node database (/data/node-index): each node type with its files, its index and its history; with a type, its nodes; with an id, that…
 - **failure list [--open] [--class ] [--limit n]** — every failure mode Nexus recorded (cortex): what failed, where, how often, whether it has a cause chain and a macro yet
 - **failure show** — one failure mode as its report: what failed, the conditions that led to it and the holes in that chain, ripple/wave/tidal, sigma, the CFR field, how…
@@ -9762,6 +10079,7 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **system homes []** — files in the shared folders (lib/, hooks/, service/, contracts/ …) that belong to one system: used only by it, or named for it in hooks/ and…
 - **system tunnel []** — the tunnel into each system (lib/system-registry.js): where it runs, the routes it declares, the commands that reach them, its toasts and…
 - **system heartbeat** — every system asked over its own health route, now: up, degraded (answered badly or slowly), down, with why
+- **system drafts []** — the registries drafted for the systems that have none (DB16), lowest friction first: routes from its contract, its event taxonomy, the files other…
 - **system registry [] [--settle]** — with no system: every system and what it depends on (the dependency graph). With one: its registry generated from the source — what it declares…
 - **system drawbridge [--new]** — every require() that crosses from one system into another, by pair and kind (system, upward from lib/, kernel), and the ratchet: crossings new since…
 - **system lean [on|off]** — lean mode: stop the services a build does not use (now and at every start), or start them again
@@ -9791,6 +10109,9 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **components bundle** — one component and everything it requires as one organized zip (component.json, package.json, README, files at their project paths)
 - **activity [--kind k] [--actor a] [--status failed] [--q words] [--limit n]** — every compartment's activity log at once (what BrainOS shows)
 - **repo phasemap [--ready] [--map name]** — every phase of the repo's phasemaps: done, ready to build, blocked — and its last run
+- **repo roadmaps** — the roadmaps a project brought with it (phases.json, roadmap.json, PHASEMAP.md, ROADMAP.md), and whether each is imported as a phasemap yet
+- **repo lift-root [--apply]** — a project imported inside its own folder (before 0.60.200) lifted to the repo's root, so a phase's paths (lib/title.js) are where the build looks;…
+- **repo roadmap-import [] [--replace]** — import a project's own roadmap as a Nexus phasemap beside it: its ids, states, percent, what blocks what (each edge says which file it came from),…
 - **repo phase-graph [--map name]** — a phase's dependency graph, the one a build is refused without: the files it changes, what they use, who uses them (what a change can break), the…
 - **repo phase [build [--map name] [--provider ollama|claude-code|claude|…] [--note "…"] [--replan] [--anyway]]** — one phase: its runs (and why one stopped), or build it now as a background task (a build started again keeps its saved plan and resumes; --replan…
 - **repo versions [--limit n] [--kind snapshot|backup|staging|history|revision]** — every version of the repo, newest first: snapshots (VR1: every change a commit), backups, staging, imported history, work-surface revisions
@@ -9818,6 +10139,9 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 - **page chunks [query…] [--on ] [--max-chars n]** — the page as chunks of text by section — or only the chunks a query hits (reading, analysing, reverse engineering)
 - **page scrape [--json] [--on ] [--out file]** — the whole page as markdown by section (or --json: blocks + chunks + map) — the web scraper; --out writes it to a file
 - **field windows** — what the field is doing in each Clear Glass window: its last map, spotlight and pointer, and how lately the page changed
+- **site [set | clear | keys]** — one site's settings for every Clear Glass feature (autofill, macros, workflows, passwords, network, resume, ClearDriver, Co-pilot, Guardian): each…
+- **glass processes** — what is running in Clear Glass: each process with its tabs and background tabs, memory and CPU (ending one is his, in the Processes window)
+- **glass activity [--kind nav|bgtab|driver|macro|workflow|download|error|process] [--origin https://site]…** — what just happened in Clear Glass, newest first: pages loaded, background tabs, the driver, macros, workflows, downloads, errors
 - **nerve** — Nexus Nerve: the field's regime, which systems are present, and where each window's attention is
 - **dump [--lines]** — drop an idea (or many, one per line with --lines) into the Void — verbatim, sorted later
 - **census [--verdict claimed|verified|contradicted|built?|open] [--specs…** — 
@@ -9839,11 +10163,58 @@ Idearium is where work starts in NEXUS: ideas, specs, repos, their phases and bu
 
 ### Every release, in his words
 
-Every release note in the tree, 394 of them, newest first. Each opens with James's own words: what he asked, as he wrote it, his spelling kept. Then what was built, from the note's own section headings. The note itself is the file named, at the top of the tree. Releases are grouped by series; each series opens to its releases.
+Every release note in the tree, 441 of them, newest first. Each opens with James's own words: what he asked, as he wrote it, his spelling kept. Then what was built, from the note's own section headings. The note itself is the file named, at the top of the tree. Releases are grouped by series; each series opens to its releases.
 
 <details>
-<summary>0.60.x · 186 releases · 0.60.0. to 0.60.190.</summary>
+<summary>0.60.x · 233 releases · 0.60.0. to 0.60.237.</summary>
 
+- **0.60.237.** — 2026-10-24 — James: "okay warp and emerge. / spec compiler, ide, and idearium" — built: EW1: emerge is a system, with warp folded into it · Found, not fixed · Next
+- **0.60.236.** — 2026-10-24 — James: "We need the systems sovereign." — built: Sovereign now: components, ollama, cos · Next
+- **0.60.235.** — 2026-10-24 — James: "im saying for web servers, dns, firewall, email smtp, like integrating into deployable. i want to use those engines for test env, web…" — built: Built (SV0; spec cos/spec/cos-services.spec, map… · Found: a code-execution hole, now closed · Not carried in
+- **0.60.234.** — 2026-10-24 — James: "I'm not sure what Sentinel is, dude. Is that, like, tell me, I don't think that got mixed in to this project." — built: What Sentinel was · Archived · Found and fixed
+- **0.60.233.** — 2026-10-24 — James: "move erosmancer to either clearglass or guardian" — built: Which: Clear Glass, by the evidence · Moved
+- **0.60.232.** — 2026-10-24 — James: "Archive." — built: How it was read (to confirm) · Archived · Not archived
+- **0.60.231.** — 2026-10-24 — James: "15 systems. only the ones with a .spec in the directory. all the systems in idearium" — built: His decision · Changed · His ".spec in the directory", checked
+- **0.60.230.** — 2026-10-24 — built: His decision, and what it cost · Fixed · Measured now
+- **0.60.229.** — 2026-10-24 — James: "then we need to resume the component registery for each system, get the mall sovereign, then cos phases to migrate." — built: Built (DB16, in the drawbridge map; no new map) · A draft is not in force until he accepts it · Measured: the way to sovereign
+- **0.60.228.** — 2026-10-24 — James: "need to either update existing or create new ones. then we could have each .spec bundled with each .phase with each .dag. all with a id or…" — built: Built: the bundle (no new map: this is PS1's work, recorded in its map) · "Update existing", measured
+- **0.60.227.** — 2026-10-24 — James: "spec per component/capability/etc its in the specs. deocmpose all of the phases into .phase nodes including dag per phase." — built: Done: every phase is a node, with its DAG · Spec per component: what it measured · Found writing them, and fixed
+- **0.60.226.** — 2026-10-24 — built: Does it help? Yes: it found a hole the new loop would have walked into · Built · Already fixed before this
+- **0.60.225.** — 2026-10-24 — James: "Say 'B' and 'the 2' (or your own picks) and I'll start SL4." — built: His calls, and how they were read · Built · Not done from here
+- **0.60.224.** — 2026-10-23 — James: "next" — built: Why · Built (SL2) · The first dry run over Nexus (nothing written)
+- **0.60.223.** — 2026-10-23 — James: "contiue getting idearium building phases" — built: Why · Built (SL1) · Drift from the spec, decided by the axioms
+- **0.60.222.** — 2026-10-23 — James: "whats the most important? can you help me build, invent, innovate, ways for idearium to build phases, all of them, we need this to work so…" — built: Why this first · Spec first (his 2026-10-20 rule) · Built (SL0)
+- **0.60.221.** — 2026-10-23 — built: What he brought · Found · Built (SD17b)
+- **0.60.220.** — the Processes window (SP6) — James: "Also need a processes screen for background tabs and activity." — built: What stands on what · Built
+- **0.60.219.** — what is running, and what just happened (SP5) — James: "Also need a processes screen for background tabs and activity." — built: What stands on what · Built · Found on the way, closed by his axioms
+- **0.60.218.** — ClearDriver, Agent Mesh and Guardian settings (SP4) — James: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state. Cleardriver, agentmesh and…" — built: What stands on what · Built · Not done, said
+- **0.60.217.** — the Site Settings screens, by feature (SP3) — James: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state. Cleardriver, agentmesh and…" — built: What stands on what · The toolbar's Site Settings popup · Settings › Sites
+- **0.60.216.** — each feature reads its site value (SP2) — James: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state. Cleardriver, agentmesh and…" — built: What stands on what · Each feature, at the point it decides · Readings to confirm
+- **0.60.215.** — one site's settings for every feature (SP1) — James: "I need site specific settings for the autofill, macros, workflows, passwords/accounts, snowflake, resume state. Cleardriver, agentmesh and…" — built: What stands on what · Built · Not yet
+- **0.60.214.** — the agents hub's tools leave the ☰ menu — built: Why they were back · Now · Also
+- **0.60.213.** — no second box inside the start page's search
+- **0.60.212.** — Loom, Copilot and Intelligence hold their own files (DL3) — James: "then resume data migratino" — built: What moved · Architect
+- **0.60.211.** — zoom controls on the toolbar; the start page's agents load reliably — James: "can you integrate that into clearglass, its a basic funcaiton of any browser." — built: Zoom · The start page's agents
+- **0.60.210.** — the ☰ menu's Tools and Customize toolbar, rebuilt — built: Why they looked cheap · What was rebuilt · Found on the way
+- **0.60.209.** — six more systems hold their own files (DL3) — James: "continue" — built: What moved · Found by running the tests one by one
+- **0.60.208.** — Guardian holds its own data (SS1, DL3 for Guardian) — James: "start the data migration. look at the phases, any migrating data to the respective systems, and make each system responsible for it's own…" — built: Guardian no longer writes into Cortex's store · Guardian's paths go through the data-home module · Not yet
+- **0.60.207.** — each system brings its own data home (DL2) — James: "start the data migration. look at the phases, any migrating data to the respective systems, and make each system responsible for it's own…" — built: The phases that migrate data · What was built · What it means today
+- **0.60.206.** — a wrapped repo lifts to its root (SD22) — James: "the agent button does nothing in the code tab.. aloso the ui for clearglass is cut off." — built: What was broken · The fix · The two screen faults from the same screenshots
+- **0.60.205.** — what his run log showed (SD21) — built: The six fixes · Not fixed yet
+- **0.60.204.** — a ChatGPT sign-in popup stays open — James: "also fix chatgpt. i can't login. i click login and it pops up for a second and dissapears" — built: What was happening (read from the code; his run confirms it) · What changed (clear-glass/src/providers/attention.js 1.4.0) · If it still closes
+- **0.60.203.** — a starved machine does not spin — built: What his run log showed · What changed · Not changed, said
+- **0.60.202.** — a refused proposal goes back to its agent with the failing test — James: "need a retry or automatically ask for the fix if possible, or a tool or something" — built: What his screenshots showed · What changed · Found, not changed
+- **0.60.201.** — for any project: a busy Idearium is said plainly, and any project's tests can run — built: What his log showed · What changed, for every project · Not yet for any project
+- **0.60.200.** — what Idearium needed to work on MASTERMIND — James: "i just want you to add what idearium needs to work on mastermind." — built: How the list was made · What the run found, and what changed · Where MASTERMIND stands now (the real run)
+- **0.60.199.** — an imported project continues from its own roadmap — built: Context · What was built (SD17, docs/2026-10-10-idearium-solid-phasemap.spec) · MASTERMIND's real roadmap, run through the importer
+- **0.60.198.** — a build stands on the registry: spine, event bus, interaction contract, component registry — James: "yes, the registry should be the spine, event bus, interaction contract, and component registry." — built: Context · What was found (read from the code) · What changed
+- **0.60.197.** — the snapshot names the component registry — James: "shouldn't that be the component registry. architecture tab" — built: Context · What was found · What changed
+- **0.60.196.** — an upload that outran its wait closes and indexes; a build indexes a repo instead of refusing it — James: "now its not working, i clicked the phases to build it and got: ... the import project ui needs to close when it's complete." — built: What happened · What changed · On his machine
+- **0.60.195.** — 2026-10-21 — Why SP5 never landed: the file that worked was called missing — James: "okay bvut did it not capture response from chatgtp." — built: Did it capture ChatGPT's response? No · The proposal "by chatgpt" was Gemini's · Why nothing fixed SP5 — the real cause
+- **0.60.194.** — 2026-10-21 — SP5's title.js: four reasons it kept failing, and what was fixed — James: "its having so much issue with the title.js. nothing has fixed it. sp_5." — built: 1. ChatGPT changed its chat URLs (the "all of a sudden") — fixed · 2. A junk test file from before the fix was blocking Apply — fixed · 3. The proposed title.js really is wrong — the gate was right
+- **0.60.193.** — 2026-10-21 — The Home tab shows the atlas again — built: Cause · Fix · Measured
+- **0.60.192.** — 2026-10-21 — Your download manager already kept the stream; now the fallback reads it — James: "look in clearglass download manager" — built: What I got wrong in 0.60.191 · What's built in its place · Found on the way
+- **0.60.191.** — 2026-10-21 — What you watched being written is kept: the stream as a fallback route — James: "each system will use its own component registry." — built: The stream as a fallback route · Each system uses its own component registry · Your Idearium tabs
 - **0.60.190.** — 2026-10-21 — An approved change, connected end to end — James: "make sure it's all interconnected, changes are logged and the diff snapshotted in versionium with a change log when approved. what about…" — built: What already held, and what didn't · What's built (decided by your axioms: one record, §7.6 and §0.3) · Measured
 - **0.60.189.** — 2026-10-21 — Every run says who started it — James: "It built 5 phases in a row. I think I see what you mean but there are way more idearium phases than that." — built: The trace · Built: RC7 · Measured
 - **0.60.188.** — 2026-10-21 — The census: every Idearium phase judged against its evidence — James: "Follow the axioms in docs. Use them as law, and for every decision. It built 5 phases in a row. I think I see what you mean but there are…" — built: The census (CNS1) · How the evidence rules got strict · Found and fixed at the cause (§1.2)

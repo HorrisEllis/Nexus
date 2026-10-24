@@ -109,15 +109,16 @@ const quiet = async (fn) => { const l = console.log, w = console.warn, e = conso
     const SB = require(path.join(ROOT, 'lib/system-boundary.js'));
     const S = require(path.join(ROOT, 'lib/nexus-self/systems.js'));
     const real = SB.realSystems();
-    assert.strictEqual(real.length, S.SYSTEMS.length); assert.strictEqual(real.length, 15);
+    assert.strictEqual(real.length, S.SYSTEMS.length); assert.strictEqual(real.length, 16);   // 0.60.237 EW1 — James, 2026-10-24: "okay warp and emerge." emerge (with warp, its runtime) is the 16th system (docs/2026-10-24-emerge-warp-system-phasemap.spec).
     assert.deepStrictEqual(real.find(x => x.id === 'core').folder, 'lib', 'core is the kernel');
     const sov = SB.sovereignty({ root: ROOT });
     const folders = new Set(real.map(x => x.folder));
     assert.ok(sov.systems.every(r => folders.has(r.system)), 'only Idearium\'s systems are listed');
-    assert.strictEqual(sov.systems.length, 14, 'the 14 with a folder (core is the kernel)');
+    // 0.60.237 EW1 — James, 2026-10-24: "okay warp and emerge.": emerge is a system (with warp folded into it), 15 with a folder
+    assert.strictEqual(sov.systems.length, 15, 'the 15 with a folder (core is the kernel)');
     const unhomed = sov.notSystems.unhomed.map(u => u.folder);
-    for (const f of ['nexus', 'meta', 'cli', 'cockpit', 'emerge']) assert.ok(unhomed.includes(f), `${f} is not a system: unhomed`);
-    assert.ok(!unhomed.includes('warp') && SB.FOLDED.warp === 'lib', '0.60.236: warp counts with the kernel');
+    for (const f of ['nexus', 'meta', 'cli', 'cockpit']) assert.ok(unhomed.includes(f), `${f} is not a system: unhomed`);
+    assert.ok(!unhomed.includes('warp') && !unhomed.includes('emerge') && SB.FOLDED.warp === 'emerge', '0.60.237 EW1: warp is emerge\'s (0.60.236 had it with the kernel)');
     assert.ok(Object.keys(sov.notSystems.unhomed.find(u => u.folder === 'nexus').usedBy).length > 3, 'with who uses it');
     for (const f of ['cli', 'cockpit', 'meta', 'nexus', 'warp']) assert.ok(!fs.existsSync(path.join(ROOT, f, 'registry-components.draft.json')), `${f}: its draft was withdrawn`);
     // 0.60.232 his "Archive.": kept in the archive, gone from the tree, never a system

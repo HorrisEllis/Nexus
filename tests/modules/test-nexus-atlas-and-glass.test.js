@@ -67,7 +67,8 @@ async function main() {
     assert.deepStrictEqual([r['guardian-atlas.md'].kind, r['guardian-atlas.md'].path], ['doc', 'docs/atlases/guardian-atlas.md']);
     assert.strictEqual(r['loom.spec'].path, 'loom/spec/loom.spec', 'the file inside the system it is named after wins');
     assert.deepStrictEqual(r['loom.spec'].alternatives, ['docs/loom.spec']);
-    assert.deepStrictEqual([r['warp/'].kind, r['warp/'].system], ['dir', 'core']);
+    // 0.60.237 EW1 — James, 2026-10-24: "okay warp and emerge." emerge (with warp, its runtime) is the 16th system (docs/2026-10-24-emerge-warp-system-phasemap.spec).
+    assert.deepStrictEqual([r['warp/'].kind, r['warp/'].system], ['system', 'emerge']);
     assert.strictEqual(r['NEXUS/'].kind, 'nexus');
     assert.strictEqual(r['no/such/file.js'], null);
     assert.strictEqual(r.sigma, null);

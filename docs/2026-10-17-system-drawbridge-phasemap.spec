@@ -548,3 +548,9 @@ Deeply Custom"
   tables it owns, its ledger and its routes; the codegen emits its store module; the table → owner map is compiled from those
   declarations (one truth), and a table another system writes is reached through the owner's declared route. Pilot: loom (its last three
   ways out are all data).
+
+## ADDENDUM 2026-10-24 (0.60.237) — emerge is a system, warp folded into it; the language is not a crossing
+James, 2026-10-24: "okay warp and emerge. / spec compiler, ide, and idearium". Supersedes 0.60.236's FOLDED warp → lib (kept above, §0.3).
+lib/nexus-self/systems.js gains emerge (dirs emerge, warp); lib/system-boundary.js FOLDED warp → emerge, and LANGUAGE (warp/core, dispatch,
+plugins, index.js; emerge/core) makes a use of the runtime kind 'language': not ratcheted, not a sovereignty blocker (EW_D2, by his axioms).
+Map: docs/2026-10-24-emerge-warp-system-phasemap.spec.
