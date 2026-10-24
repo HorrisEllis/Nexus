@@ -288,3 +288,26 @@ phases:
 # load balancer).
 # The order in this map is now: CS4a (COS boots alone, Cortex core; no code moves) → per system, lowest friction first: DB6 → DB16/DB4/DB5 →
 # DB11 → CS4 (open on demand) → IM6 → CS11 (RAID in the exe) → CS7 (balance through RAID).
+
+## ADDENDUM 2026-10-24 — what the anonymousservers NEXUS kernel offers COS (mapped, not built)
+James, 2026-10-24, uploading anonymousservers-nexus-4-12.zip: "look at this for cos"
+- **What it is (read, §0.1):** "NEXUS — Sovereign Self-Hosting Platform" (anonymousservers.info, 0.1.0): a kernel, nexus.js (641 lines),
+  supervising 27 engine definitions (dns, smtp, tls, proxy, firewall, …; 23 described in its README) as separate Node processes talking
+  newline-JSON over stdin/stdout, through an engine SDK (engines/_engine.js). The hosting engines are that product, not COS.
+- **What COS takes from it, each into the phase that owns it (the coder's reading of "for cos"; to confirm which first):**
+  - **Windows process discovery** (its killOrphans): PowerShell `Get-CimInstance Win32_Process` first, wmic as the fallback, because
+    Windows 11 removed wmic. Nexus's nexus/autopilot.js:769 uses wmic alone, which is why per-system memory snapshots come back empty on
+    his Windows PC (lib/pressure-window.js already reports that gap). Feeds CS5_caps_per_compartment (caps need the numbers). Smallest,
+    and fixes something live.
+  - **Restart with backoff** (its spawnEngine): 1 s doubling to 30 s, a restart count kept. cos/compartment/process-runner.js detects a
+    crash loop and emits WATCHDOG.PROCESS_CRASH_LOOP but never restarts. → MOD-CS-SUPERVISE (CS4_every_system_a_compartment).
+  - **Addressed delivery that says when it cannot deliver** (its handleIPC `to`): the sender gets `route:error` naming the target and the
+    intended message instead of a silent drop. → MOD-CS-BRIDGE's error path (CS3_the_registry_is_the_bridge).
+  - **Broadcast with the sender excluded and a hop limit (4)**, so a handler that rebroadcasts cannot ping-pong. → DB4_one_bus_per_system.
+  - **The handler guard** (engines/_engine.js dispatch): a throwing handler is logged, the process keeps serving (its comment: one bad line
+    in a status:ping handler caused an endless restart loop). → the compartment SDK side of CS4.
+  - **Port claims to the kernel** (port:claim → the proxy is told): what CS4's "a system already running is adopted by its port" needs.
+- **Not taken, by the axioms:** its db:query / db:update / db:delete build a function from a string carried in the IPC message
+  (`new Function('r', 'return (' + payload.gate + ')(r)')`): any process on the channel runs code in the kernel. COS's bridge sends only
+  what a contract declares (CS3), and never evaluates a string as code.
+- **The upload** stays his; it is read, not copied into the tree (each idea above cites the file and function it came from).
