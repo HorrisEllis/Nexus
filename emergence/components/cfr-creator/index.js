@@ -28,7 +28,7 @@
  * time. That's a genuine physical signal, just not a semantic one.
  */
 
-const { Event, Gate } = require('../../../warp');
+const { Event, Gate } = require('../../../lib/warp');
 const path = require('path');
 
 const PHYSICS_URL = 'file://' + path.resolve(__dirname, '../../vendor/rfr2/cfr-kernel/physics.js');

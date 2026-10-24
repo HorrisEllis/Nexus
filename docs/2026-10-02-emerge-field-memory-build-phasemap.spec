@@ -209,7 +209,7 @@ spec:
       systems: [loom, emerge, emergence, warp]
       value: { score: 4, cost: M, for: [foundation], why: "everything sits on it; brings in main and fixes the 38-versions-stale component registry" }
       status: "DONE (1.7.14, 0.39.319) — (1) and (2) at 1.7.3. (3) emergence/ in beside emerge/; warp/ forked to 1.5.0 at 0.39.318 (additive). Emergence's tests read StreamLog's gateClaimed/eventType, which Nexus's StreamLog had renamed to claimed/type; both names now kept. Emergence 155/155 (the upload itself runs 155, not the 157 written above), WARP 43/43, WARP consumers green; tests/modules/test-emergence-and-warp-suites.test.js. warp/test/dispatch.test.js needs siso_ref/, absent — failed before the fork too. (4) docs/emerge-copies-divergence.md. Not yet: emergence in loom (EV0 adds it to loom's systems)."
-      files: [loom/data/registry.json, loom/data/events.json, emergence/, warp/, docs/emerge-copies-divergence.md]
+      files: [loom/data/registry.json, loom/data/events.json, emergence/, lib/warp/, docs/emerge-copies-divergence.md]
       does: >-
         (1) This branch brought in line with main 0.39.300 (a merge, main's tree wins; this branch's 0.39.298
         Architect stays in history — main's 0.39.299 rebuild supersedes it). (2) loom/data/registry.json regenerated
@@ -225,7 +225,7 @@ spec:
       value: { score: 4, cost: M, for: [quality, foundation], why: "drift stops piling up: an undeclared event or route fails the suite" }
       status: "DONE (1.7.15, 0.39.320) — (1) warp has no taxonomy: it emits no event of its own (its Streams carry their callers' events) and ET1 refuses an empty one; said in warp/interaction-contract.json. (2) cos, emerge and warp interaction-contract.json, projected from their servers (cos: vaultd only; warp: none). (3) lib/route-contract-check.js — served and declared must match — in `nexus contracts check` and loom. Found, not fixed: emerge-ide's POST /api/codegen is unreachable (the POST block answers first; `method` undefined), marked reachable:false. Emergence now in loom (70 components, 0 edges lost) and the atlas."
       depends_on: [EM0_ground]
-      files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
+      files: [idearium/event-taxonomy.js, cortex/event-taxonomy.js, intelligence/event-taxonomy.js, loom/event-taxonomy.js, copilot/event-taxonomy.js, cos/event-taxonomy.js, emerge/event-taxonomy.js, warp/event-taxonomy.js, cos/interaction-contract.json, lib/warp/interaction-contract.json, emerge/interaction-contract.json, loom/scanners/phasemap-map.js, lib/event-taxonomy-pattern.js]
       does: >-
         E14–E16 made real before any phase uses them. (1) An event-taxonomy.js in the ET1 shape for each system that has
         none and that this map touches — written from the events each system ALREADY emits (read from its bus.emit /
@@ -286,7 +286,7 @@ spec:
       depends_on: [EM1_emerge_core, SH1_shadow_space]
       james: '"maybe fork it, for me." · "and had it back." · "okay but keep updating it. i dont need it until its been converted to cfr"'
       handback: the forked warp/ (1.5.0 at 0.39.318) is kept updated here and zipped back to James only once it has been converted to CFR — not before.
-      files: [warp/core/Link.js, warp/core/Expectation.js, warp/core/Engine.js, warp/core/Ledger.js, warp/core/Axiom.js, warp/adapters/siso-gates.js, warp/spec/warp.spec, warp/MANIFEST.json]
+      files: [lib/warp/core/Link.js, lib/warp/core/Expectation.js, lib/warp/core/Engine.js, lib/warp/core/Ledger.js, lib/warp/core/Axiom.js, lib/warp/adapters/siso-gates.js, lib/warp/spec/warp.spec, lib/warp/MANIFEST.json]
       does: >-
         "okay but siso is taken. by someone. its identicle. i need my own" · "still i want to make warp mine". WARP 2,
         written fresh on Emerge's primitives — not edited from the SISO-shaped files. The atom is the LINK (cause →
@@ -468,7 +468,7 @@ spec:
       status: 'LATER — off the path — field memory, CFR, labs, accounts and client jobs come after the loop works (declutter 2026-10-09)'
       status_before: OPEN
       depends_on: [MR7_recipes, EM2_warp_his_own]
-      files: [warp/dispatch/population.js, emerge/core/constraint.js]
+      files: [lib/warp/dispatch/population.js, emerge/core/constraint.js]
       does: >-
         The boundary moves up. WARP's promote-after-3 generalized: a synthesis, recipe or generated piece that converges
         N times independently (N stated, tunable, never a hidden constant) is promoted INTO the deterministic core — a

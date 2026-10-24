@@ -21,7 +21,7 @@ const yaml = require('js-yaml');
 const ROOT = path.join(__dirname, '../..');
 const T = require(path.join(ROOT, 'lib/nexstore/types.js'));
 const L = require(path.join(ROOT, 'lib/nexstore/log.js'));
-const { Axiom } = require(path.join(ROOT, 'warp/core/Axiom.js'));
+const { Axiom } = require(path.join(ROOT, 'lib', 'warp', 'core', 'Axiom.js'));
 let passed = 0, failed = 0;
 function test(id, name, fn) {
   try { fn(); console.log(`  ✓ ${id} ${name}`); passed++; }

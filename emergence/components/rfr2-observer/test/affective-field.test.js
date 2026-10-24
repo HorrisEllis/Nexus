@@ -1,7 +1,7 @@
 'use strict';
 const assert = require('assert');
 const { buildObserverGate } = require('../index.js');
-const { Event, Stream } = require('../../../../warp');
+const { Event, Stream } = require('../../../../lib/warp');
 
 let pass = 0, fail = 0;
 async function test(name, fn) {

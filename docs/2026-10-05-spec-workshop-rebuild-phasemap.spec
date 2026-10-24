@@ -92,7 +92,7 @@ spec:
       status_before: OPEN
       james: '"record the generation process from the agents and create a macro or replayable file"'
       depends_on: []
-      files: [lib/generation-recorder.js, warp/core/Engine.js, intelligence/rfr2/clip/index.js]
+      files: [lib/generation-recorder.js, lib/warp/core/Engine.js, intelligence/rfr2/clip/index.js]
       does: >-
         Every generation an agent makes for a spec or a build is a WARP 2 link: what caused it (the block id, the
         request), the prompt (hashed, and kept), the context it was given, the model, the output, and what happened to
@@ -131,7 +131,7 @@ spec:
       status_before: OPEN
       james: '"i wanted it to use deterministic primitives, and then anything on top is probabilistic. like a constraint field, or emergence."'
       depends_on: [RS1_the_generation_recorder, RS3_the_spec_document]
-      files: [idearium/lib/workshop.js, idearium/api/index.js, warp/adapters/emerge-field.js]
+      files: [idearium/lib/workshop.js, idearium/api/index.js, lib/warp/adapters/emerge-field.js]
       does: >-
         idea → promote → template → spec → architect → blueprint → repo → cos, each station a WARP 2 link that expects its
         output. Deterministic first (the template, the registry, what was built before); the model only where a block or
@@ -212,7 +212,7 @@ spec:
       james: '"i wanted it to use deterministic primitives, and then anything on top is probabilistic."'
       depends_on: [RS4_the_pipeline_on_warp2]
       reuses: [docs/2026-10-02-emerge-field-memory-build-phasemap.spec — the crystallize phase (promote-after-N)]
-      files: [warp/dispatch/population.js, lib/component-store.js]
+      files: [lib/warp/dispatch/population.js, lib/component-store.js]
       does: >-
         A generation that converges N times independently (N stated, tunable) is promoted into the deterministic core — a
         template part, a component — so the same thing is never asked of a model twice. The boundary moves up.

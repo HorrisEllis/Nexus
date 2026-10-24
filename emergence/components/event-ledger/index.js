@@ -19,7 +19,7 @@
  * history(n) can now walk the real chain back from head.
  */
 
-const { Event, Gate } = require('../../../warp');
+const { Event, Gate } = require('../../../lib/warp');
 const path = require('path');
 const { FileStore } = require('../../vendor/jaa/FileStore.js');
 const { FileRefs } = require('../../vendor/jaa/FileRefs.js');

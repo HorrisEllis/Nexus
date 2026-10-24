@@ -61,7 +61,7 @@ const { loadAll, verifyRoutes } = require('./capability-map');
 
 // Authored specs only. idearium/data/specs/ is user-generated runtime content
 // and idearium/spec-engine/templates/ are templates, not claims about NEXUS.
-const SPEC_DIRS = ['docs', 'warp/spec', 'cortex/spec', 'idearium/spec', 'copilot/spec', 'bridge/spec'];
+const SPEC_DIRS = ['docs', 'lib/warp/spec', 'cortex/spec', 'idearium/spec', 'copilot/spec', 'bridge/spec'];
 const ROUTE_RX = /\{\s*method:\s*([A-Z]+),\s*path:\s*["']?([^,\s}"']+)/g;
 
 function listSpecs() {

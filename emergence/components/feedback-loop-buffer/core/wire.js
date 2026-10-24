@@ -21,7 +21,7 @@
  */
 
 const { RingBufferCore } = require('./RingBufferCore');
-const { Event, Gate, Axiom, Stream, StreamLog } = require('../../../../warp');
+const { Event, Gate, Axiom, Stream, StreamLog } = require('../../../../lib/warp');
 
 const DEFAULT_SIZE_BUDGET_BYTES = 65536; // 64KB per item, soft warning only
 

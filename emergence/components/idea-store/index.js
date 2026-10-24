@@ -26,7 +26,7 @@
 
 const crypto = require('crypto');
 const path = require('path');
-const { Event, Gate, Axiom, Stream, StreamLog } = require('../../../warp');
+const { Event, Gate, Axiom, Stream, StreamLog } = require('../../../lib/warp');
 const { FileStore } = require('../../vendor/jaa/FileStore.js');
 const { FileRefs } = require('../../vendor/jaa/FileRefs.js');
 

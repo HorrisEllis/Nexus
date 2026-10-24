@@ -35,7 +35,7 @@ spec:
 
     agnostic_llm_layer:
       what: "cache + population + cascade + retry, provider-agnostic by construction"
-      files: [warp/dispatch/index.js, warp/dispatch/cascade.js, warp/plugins/crystallizer-flatfile.js]
+      files: [lib/warp/dispatch/index.js, lib/warp/dispatch/cascade.js, lib/warp/plugins/crystallizer-flatfile.js]
       proof: "ollama/server.js wired as WARP's first production caller this session — 3 identical dispatches build population evidence, 4th+ serve from cache with zero model calls, proven not assumed"
       gap: "WARP itself never picks WHICH provider — that's RAID's job, and RAID isn't wired as ollama's provider-selector yet (see open_gaps)"
 

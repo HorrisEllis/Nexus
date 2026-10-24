@@ -6,7 +6,7 @@ const { test, assert, summarize } = require('./runner');
 
 const { RingBufferCore } = require('../core/RingBufferCore');
 const { buildRingAxioms, buildRingGate, createRingStream } = require('../core/wire');
-const { Event } = require('../../../../warp');
+const { Event } = require('../../../../lib/warp');
 const { FilePersistence } = require('../persist/FilePersistence');
 const { EvictionLedger } = require('../persist/EvictionLedger');
 const { RingBuffer } = require('../index');

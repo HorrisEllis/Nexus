@@ -182,7 +182,7 @@ async function main() {
     // uses the real default of 25, too slow to exercise here)
     const { buildLatticeGate } = require('../components/associative-lattice/index.js');
     const { buildCausalGraphGate } = require('../components/causal-graph/index.js');
-    const { Event, Stream } = require('../../warp');
+    const { Event, Stream } = require('../../lib/warp');
 
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'emergence-sigma-'));
 
@@ -221,7 +221,7 @@ async function main() {
 
   await test('reverse causal condition mapping: traceToRoot stops at a real observational boundary, not just genesis', async () => {
     const { buildCausalGraphGate } = require('../components/causal-graph/index.js');
-    const { Event, Stream } = require('../../warp');
+    const { Event, Stream } = require('../../lib/warp');
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'emergence-trace-'));
     const gate = buildCausalGraphGate({ dataDir: dir, causalWindowTicks: 0.5 });
     const stream = new Stream({}); stream.register(gate);

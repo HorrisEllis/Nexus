@@ -78,7 +78,7 @@ const routes = createRoutes({
   refreshMs: config.DB_REFRESH_MS,
 });
 
-const { Stream, Event } = require('../warp/core');
+const { Stream, Event } = require('../lib/warp/core');
 
 // ── Real event ledger — reused directly, not rebuilt (§8.6). onGap is a
 // real, already-existing extension point (confirmed by reading ledger.js

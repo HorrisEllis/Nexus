@@ -35,9 +35,9 @@
 
 'use strict';
 
-const { Event }     = require('../../warp/core/Event.js');
+const { Event }     = require('../../lib/warp/core/Event.js');
 const { Gate }      = require('./Gate.js');
-const { Stream }    = require('../../warp/core/Stream.js');
-const { StreamLog } = require('../../warp/core/StreamLog.js');
+const { Stream }    = require('../../lib/warp/core/Stream.js');
+const { StreamLog } = require('../../lib/warp/core/StreamLog.js');
 
 module.exports = { Event, Gate, Stream, StreamLog };

@@ -905,9 +905,9 @@ function _logInstanceSnapshot() {
 // event from the stream with a loud log, per warp's own semantics), never
 // process-fatal: a supervisor that dies of its own telemetry is a worse
 // failure than the one it was recording.
-const { Stream }    = require('../warp/core/Stream.js');
-const { StreamLog } = require('../warp/core/StreamLog.js');
-const { Axiom }     = require('../warp/core/Axiom.js');
+const { Stream }    = require('../lib/warp/core/Stream.js');
+const { StreamLog } = require('../lib/warp/core/StreamLog.js');
+const { Axiom }     = require('../lib/warp/core/Axiom.js');
 
 const _warpLog = new StreamLog('DATA');
 const _warp = new Stream({
@@ -922,7 +922,7 @@ function _warpEmit(type, data) {
   // Event's constructor enforces its own contract loudly (throws on a bad
   // type) — that's correct at build time, but a telemetry emit must never
   // kill the supervisor at runtime, so contain here and report (§1.2).
-  try { _warp.emit(new (require('../warp/core/Event.js').Event)(type, data)); }
+  try { _warp.emit(new (require('../lib/warp/core/Event.js').Event)(type, data)); }
   catch (e) { console.error(`[warp:autopilot] emit failed for '${type}': ${e.message}`); }
 }
 

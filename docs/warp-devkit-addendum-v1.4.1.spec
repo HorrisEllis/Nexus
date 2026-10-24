@@ -72,7 +72,7 @@ spec:
       accumulates rather than resetting.
 
   implementation_W-1:
-    file:   warp/dispatch/index.js
+    file:   lib/warp/dispatch/index.js
     params:
       exactCacheOnFirstSuccess: false   # opt-in, off by default
       exactCacheFitnessMin:     0.7     # mirrors population's DEFAULT_FITNESS_MIN

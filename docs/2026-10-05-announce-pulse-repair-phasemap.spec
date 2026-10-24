@@ -91,7 +91,7 @@ spec:
       status: "DONE (0.39.342) — each beat a WARP 2 link expecting the next within interval × 1.5; a broken expectation is a gap naming the system and its last beat; a late beat recovers it; never-announced after a 60 s boot grace; the ledger rotated past 20000 entries. Found end to end and fixed: what broke during another system's beat was dropped."
       james: '"have the diagnostic system. use negative space reasoning for missed heartbeats."'
       depends_on: [PR2_the_diagnostic_listens_not_polls]
-      files: [lib/pulse-listener.js, warp/core/Engine.js]
+      files: [lib/pulse-listener.js, lib/warp/core/Engine.js]
       does: >-
         Each beat is a WARP 2 link; each beat declares the next as an expectation (within the system's own interval
         plus grace). A broken expectation is a gap naming the system, its last beat and its last known state — the

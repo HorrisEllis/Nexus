@@ -77,7 +77,7 @@
  * something computing an "emotional field."
  */
 
-const { Event, Gate } = require('../../../warp');
+const { Event, Gate } = require('../../../lib/warp');
 const path = require('path');
 const { createSentimentScorer } = require('./sentiment-scorer.js');
 

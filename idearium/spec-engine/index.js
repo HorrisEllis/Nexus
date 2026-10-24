@@ -192,7 +192,7 @@ _slimExistingMirrorOnce();
 // correct source for what a WARP primitive actually is, not RAID's
 // business to own.
 const WARP_PRIMITIVES = new Set(
-  Object.keys(_require('../../warp/core')).filter(k => ['Event', 'Gate', 'Axiom', 'Stream', 'StreamLog'].includes(k))
+  Object.keys(_require('../../lib/warp/core')).filter(k => ['Event', 'Gate', 'Axiom', 'Stream', 'StreamLog'].includes(k))
 );
 
 // ── Standard spec sections (the seam boundaries) ─────────────────────────────

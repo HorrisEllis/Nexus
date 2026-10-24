@@ -118,8 +118,8 @@ const FILES = [
   // 0.60.73 WB1/WB2 — James chose option 1: WARP around the agent the ladder and RAID already chose (cache, axiom gate, retain)
   ['lib/warp-rung.js', I('lib/warp-rung.js'), [
     I('lib/seam/adapters/warp-cascade.js'),                     // require — createWarpDispatch (unifiedDispatch, one provider, one attempt)
-    I('warp/plugins/crystallizer-flatfile.js'),                 // require — the exact cache (data/warp/rung-crystals.json)
-    I('warp/dispatch/population.js'),                           // require — retention and promotion after 3 passing results
+    I('lib/warp/plugins/crystallizer-flatfile.js'),                 // require — the exact cache (data/warp/rung-crystals.json)
+    I('lib/warp/dispatch/population.js'),                           // require — retention and promotion after 3 passing results
   ]],
   // 0.60.28 PF1 — ready before run: Guardian's facts per agent, and the build's pure check over its ladder
   ['guardian/lib/provider-ready.js', I('guardian/lib/provider-ready.js'), []],

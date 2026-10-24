@@ -1140,7 +1140,7 @@ function _realAxiomRefs() {
   return _axiomRefsCache;
 }
 
-const WARP_PRIMITIVES = new Set(Object.keys(require('../../../warp/core')).filter(k => ['Event', 'Gate', 'Axiom', 'Stream', 'StreamLog'].includes(k)));
+const WARP_PRIMITIVES = new Set(Object.keys(require('../../../lib/warp/core')).filter(k => ['Event', 'Gate', 'Axiom', 'Stream', 'StreamLog'].includes(k)));
 
 /**
  * synthesizeContract(req) -> submitContract()'s own real result, or

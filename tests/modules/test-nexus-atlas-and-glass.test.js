@@ -37,7 +37,7 @@ function fakeTree() {
   w('loom/spec/loom.spec', 'spec: loom\n');
   w('docs/loom.spec', 'spec: an older copy\n');
   w('ollama/server.js', 'module.exports = 3;\n');
-  w('warp/index.js', 'module.exports = 4;\n');
+  w('lib/warp/index.js', 'module.exports = 4;\n');
   w('docs/atlases/nexus-atlas.md', '# NEXUS\n\n### guardian\n\n**own atlas:** `guardian-atlas.md` · `guardian/lib/node-registry.js` · port `:7820`\n');
   w('docs/atlases/guardian-atlas.md', '# guardian — atlas\n');
   w('docs/atlases/ollama-atlas.md', '# ollama\n');
@@ -57,7 +57,7 @@ async function main() {
   // ── AT-0xx ─────────────────────────────────────────────────────────────
   await test('AT-001', 'every kind of atlas reference resolves to what it names; an unknown one to null', () => {
     const r = NS.resolveRefs(rl, ['guardian', 'nexus.guardian', ':7820', 'ollama', 'guardian/lib/node-registry.js', 'guardian/lib/',
-      'guardian-atlas.md', 'loom.spec', 'warp/', 'NEXUS/', 'no/such/file.js', 'sigma']);
+      'guardian-atlas.md', 'loom.spec', 'lib/warp/', 'NEXUS/', 'no/such/file.js', 'sigma']);
     assert.strictEqual(r.guardian.kind, 'system');
     assert.strictEqual(r['nexus.guardian'].system, 'guardian');
     assert.strictEqual(r[':7820'].system, 'guardian');
@@ -67,7 +67,7 @@ async function main() {
     assert.deepStrictEqual([r['guardian-atlas.md'].kind, r['guardian-atlas.md'].path], ['doc', 'docs/atlases/guardian-atlas.md']);
     assert.strictEqual(r['loom.spec'].path, 'loom/spec/loom.spec', 'the file inside the system it is named after wins');
     assert.deepStrictEqual(r['loom.spec'].alternatives, ['docs/loom.spec']);
-    assert.deepStrictEqual([r['warp/'].kind, r['warp/'].system], ['dir', 'core']);
+    assert.deepStrictEqual([r['lib/warp/'].kind, r['lib/warp/'].system], ['dir', 'core']);
     assert.strictEqual(r['NEXUS/'].kind, 'nexus');
     assert.strictEqual(r['no/such/file.js'], null);
     assert.strictEqual(r.sigma, null);

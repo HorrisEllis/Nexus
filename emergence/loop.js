@@ -43,7 +43,7 @@
  */
 
 const path = require('path');
-const { Event, Stream, StreamLog } = require('../warp');
+const { Event, Stream, StreamLog } = require('../lib/warp');
 const { buildObserverGate } = require('./components/rfr2-observer/index.js');
 const { buildCreatorGate } = require('./components/cfr-creator/index.js');
 const { buildLatticeGate } = require('./components/associative-lattice/index.js');

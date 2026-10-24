@@ -45,7 +45,7 @@
  * persistence primitives, not a new storage style invented from scratch.
  */
 
-const { Event, Gate, Stream, StreamLog } = require('../../../warp');
+const { Event, Gate, Stream, StreamLog } = require('../../../lib/warp');
 const path = require('path');
 const { FileStore } = require('../../vendor/jaa/FileStore.js');
 const { FileRefs } = require('../../vendor/jaa/FileRefs.js');

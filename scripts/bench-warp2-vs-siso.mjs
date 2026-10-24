@@ -10,7 +10,7 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const S = await import('../lib/siso/index.js');            // SISO (Jonathan Bailey), canonical shape
-const W = require('../warp');                           // WARP 1.x and WARP 2 (same package)
+const W = require('../lib/warp');                           // WARP 1.x and WARP 2 (same package)
 
 const N = Number(process.argv[2] || 20000);
 const RUNS = 7;
