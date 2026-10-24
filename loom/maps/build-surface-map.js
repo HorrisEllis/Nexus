@@ -142,6 +142,9 @@ const FILES = [
   // §0.60.156 GM5 — context as a SISO stream: every source in the table asked at once, the residue named
   ['lib/context-sources.js', I('lib/context-sources.js'), [I('lib/context-atlas.js'), I('lib/component-store.js'), I('lib/gate-context.js'), I('lib/vector-memory.js'), I('lib/nexus-client.js')]],   // the rows' asks; intelligence and cortex by route
   ['lib/context-stream.js', I('lib/context-stream.js'), [I('lib/context-sources.js'), I('lib/siso/index.js'), I('lib/context-atlas.js')]],   // rows · Event/Gate/Stream/StreamLog (import()) · qtokens
+  // §0.60.238 CG1 — James: "before an agent does anything. if confidence is lower than 75%, context must be obtained. build worksurface, compile list of dependancies, find the context, ask user last." The pre-dispatch gate; lazily composes repo-agent.contextFor (worksurface + find context) and context-atlas (the stores' graphs). Map: docs/2026-10-24-agent-orchestration-phasemap.spec.
+  ['lib/agent-confidence-gate.js', I('lib/agent-confidence-gate.js'), [I('lib/repo-agent.js'), I('lib/context-atlas.js')]],
+  [I('lib/repo-agent.js'), I('lib/agent-confidence-gate.js'), '§0.60.239 CG2 — _dispatch runs the gate after context is gathered, before the send; the decision on the record (ctxInfo.gate)'],
   [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
   [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
   // §0.60.157 GM4 — the node lattice: every data node of every system, edges typed; read by route, never the files

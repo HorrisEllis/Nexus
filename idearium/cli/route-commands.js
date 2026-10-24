@@ -40,6 +40,22 @@ export const SPEC = [
       : { method: 'GET', path: `/api/repos/${a.repo.uuid}/agent/settings` }; },
     print: (d, a, h) => { const s = d.settings || d; h.header(`${a.repo.name} — its agent`); for (const k of ['provider', 'backend', 'injectMode', 'toolScope', 'ollamaModel']) if (s[k] != null) console.log(`  ${k.padEnd(12)} ${h.c.bold(String(s[k]))}`); if (s.providers) console.log(h.c.dim(`  providers: ${s.providers.join(' · ')}`)); console.log(''); } },
 
+  // §CG3 0.60.240 — James: "before an agent does anything. if confidence is lower than 75%, context must be obtained. build
+  // worksurface, compile list of dependancies, find the context, ask user last." A dry read of the gate for a message: what an
+  // agent would gather before it answers, and whether it would clear the 75% floor or need to ask.
+  { key: 'repo.gate', repo: true, usage: 'repo gate <repo> "<message>"', about: 'the confidence gate for a message: the context an agent would gather before it acts (worksurface, deps, find context, ask James last)',
+    req: (a) => ({ method: 'POST', path: `/api/repos/${a.repo.uuid}/agent/gate`, body: { message: a.args.join(' ') } }),
+    need: (a) => a.args.length ? null : 'a message',
+    print: (d, a, h) => {
+      if (!d || d.ok === false) { console.log(h.c.red((d && d.error) || 'the gate could not run')); return; }
+      const pct = Math.round((d.confidence || 0) * 100), thr = Math.round((d.threshold || 0.75) * 100);
+      h.header(`${a.repo.name} — the confidence gate`);
+      console.log('  ' + (d.confident ? h.c.green(`confident (${pct}% ≥ ${thr}%) — the agent proceeds`) : h.c.yellow(`below the floor (${pct}% < ${thr}%) — gathers context, asks James last`)));
+      for (const s of (d.steps || [])) console.log(`  ${ICON[s.action] || '·'} ${String(s.rung).padEnd(13)} ${h.c.dim(`${Math.round((s.confidence || 0) * 100)}%`)}  ${h.c.dim(s.got || s.action || '')}`);
+      if (d.prereqs) console.log(h.c.dim(`\n  would ask James: ${String(d.prereqs).slice(0, 200)}`));
+      console.log('');
+    } },
+
   // ── what its agent proposed ───────────────────────────────────────────────────────────────────────────────────────
   // §0.60.118 DK1 — James: "maybe buttons for agent tools, for the repo, to execute. replayable proceedures?" The same as the
   // Code tab's tools panel: one tool through the agent's door (this repo's scope), and .procedure files replayed in order.

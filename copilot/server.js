@@ -2191,12 +2191,21 @@ const server = http.createServer(async (req, res) => {
       // baked into this route. A caller that sends neither 'copilot' nor
       // any real provider at all also falls through to the exact same
       // real config value — one real source, not two.
-      const resolvedProvider = (!payload.provider || payload.provider === 'copilot')
-        ? config.DEFAULT_PROVIDER
+      // §0.60.231 CL1/CL2/CL3 — James, 2026-10-24: "clearglass. can you get the cli working for guardian, use any agent as the copilot".
+      // The Clear Glass CLI sends backend + agent (+ model); only provider was read, so backend was lost, and lifeline treated his pick
+      // as a hint it could drop. A pick (any backend but 'copilot') is strict — it answers or says why — and a Guardian pick opens its tab.
+      const pickBackend = typeof payload.backend === 'string' ? payload.backend : null;
+      const picked = pickBackend && pickBackend !== 'copilot';
+      const resolvedProvider = pickBackend === 'guardian' && payload.agent ? payload.agent
+        : pickBackend === 'ollama' ? 'ollama'
+        : (!payload.provider || payload.provider === 'copilot') ? config.DEFAULT_PROVIDER
         : payload.provider;
       const life = await _lifeline.route(
         `${contextText}\n\nUSER: ${prompt}\nNEXUS CO-PILOT: `,
-        { requestId, sessionId, intent: 'ask', channel, provider: resolvedProvider }
+        { requestId, sessionId, intent: 'ask', channel, provider: resolvedProvider,
+          ...(picked ? { strict: true } : {}), ...(pickBackend === 'guardian' ? { openTab: true } : {}),
+          ...(pickBackend === 'ollama' && typeof payload.model === 'string' && payload.model.trim() ? { model: payload.model.trim() } : {}),
+          ...(Number(payload.timeoutMs) > 0 ? { timeoutMs: Number(payload.timeoutMs) } : {}) }
       );
       text      = life?.text || '';
       modelUsed = life?.provider_used || 'none';
