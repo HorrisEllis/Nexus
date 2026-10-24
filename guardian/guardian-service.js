@@ -102,7 +102,7 @@ function startService() {
   const ico = createICO({
     name:        'guardian',
     root:        _DH.dir('guardian'),
-    compartment: path.join(__dirname, '../guardian/compartment.js'),
+    compartment: path.join(__dirname, 'compartment.js'),
   });
 
   // Register custom axioms from spec
@@ -152,7 +152,7 @@ function startService() {
   process.env.GUARDIAN_SERVICE    = '1';
 
   // Boot guardian server (it handles its own http.createServer)
-  require('../guardian/server.js');
+  require('./server.js');
 
   // Feed server events into ICO pipe for SNR/baseline
   process.on('uncaughtException', (err) => {
