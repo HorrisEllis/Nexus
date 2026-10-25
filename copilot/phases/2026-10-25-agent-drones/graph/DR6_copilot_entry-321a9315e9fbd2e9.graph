@@ -1,0 +1,166 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DR6_copilot_entry:321a9315e9fbd2e9
+type: graph
+id: phase:DR6_copilot_entry:321a9315e9fbd2e9
+context: dependency graph of phase DR6_copilot_entry
+intent: null
+summary: 15 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792963020120
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792963020120
+lastSeenAt: 1792963020120
+fingerprint: null
+payload:
+  for: DR6_copilot_entry
+  kind: phase
+  repo: null
+  hash: 321a9315e9fbd2e9
+  nodes:
+    - path: copilot/tool-runtime.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-nexus-self-and-cos-run.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/workset.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/run-state.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/step-gate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/tool-runtime.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: copilot/lib/workset.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/run-state.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/step-gate.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: copilot/tool-runtime.js
+      kind: requires
+    - from: tests/modules/test-nexus-self-and-cos-run.test.js
+      to: copilot/tool-runtime.js
+      kind: requires
+  crossings:
+    - from: copilot/tool-runtime.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: guardian/routes/autonomous-loop.js
+      to: copilot/tool-runtime.js
+      fromSystem: guardian
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: copilot/tool-runtime.js
+      fromSystem: idearium
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+    dependents: []
+    upstream:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR1_the_drone_contract_and_router
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR2_route
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+    downstream: []
+    blockedBy:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by DR3_command
+      - 'depends on (1): DR3_command · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+        kind: declared
