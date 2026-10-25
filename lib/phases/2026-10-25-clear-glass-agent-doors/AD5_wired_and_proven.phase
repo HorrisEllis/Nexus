@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-clear-glass-agent-doors-phasemap.spec::AD5_wired_and_proven
+type: phase
+id: docs_2026-10-25-clear-glass-agent-doors-phasemap.spec::AD5_wired_and_proven
+context: pipeline phase AD5_wired_and_proven of docs/2026-10-25-clear-glass-agent-doors-phasemap.spec
+intent: null
+summary: AD5_wired_and_proven (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1792965241165
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792965241165
+lastSeenAt: 1792965241165
+fingerprint: null
+payload:
+  id: AD5_wired_and_proven
+  map: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - loom/maps/copilot-capability-map.js
+    - tests/modules/test-cg-agent-doors.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - AD1_the_agents_autofill_door_works
+    - AD3_copilot_has_them_by_name
+    - AD4_command_rows
+  blocks: []
+  spec: null
+  graph: 2a90540215ec61cd

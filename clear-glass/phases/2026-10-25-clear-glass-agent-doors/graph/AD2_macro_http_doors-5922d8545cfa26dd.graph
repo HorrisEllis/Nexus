@@ -1,0 +1,168 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AD2_macro_http_doors:5922d8545cfa26dd
+type: graph
+id: phase:AD2_macro_http_doors:5922d8545cfa26dd
+context: dependency graph of phase AD2_macro_http_doors
+intent: null
+summary: 17 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792965241161
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792965241161
+lastSeenAt: 1792965241161
+fingerprint: null
+payload:
+  for: AD2_macro_http_doors
+  kind: phase
+  repo: null
+  hash: 5922d8545cfa26dd
+  nodes:
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/adblock/lists.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/handler-registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/bridge-sources.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/host-import.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/kill-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/ipc/handler-registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/bridge-sources.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/kill-switch.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/host-import.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD_D2_macro_doors_share_the_recorder
+    dependents:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD3_copilot_has_them_by_name
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD4_command_rows
+    upstream:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD_D2_macro_doors_share_the_recorder
+    downstream:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD3_copilot_has_them_by_name
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD4_command_rows
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD5_wired_and_proven
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD3_copilot_has_them_by_name
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD4_command_rows
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): AD_D2_macro_doors_share_the_recorder'
+      - >-
+        needed by (2): AD3_copilot_has_them_by_name, AD4_command_rows · all downstream 3 · finishing
+        it unlocks AD3_copilot_has_them_by_name, AD4_command_rows
+    edges:
+      - from: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD_D2_macro_doors_share_the_recorder
+        kind: declared

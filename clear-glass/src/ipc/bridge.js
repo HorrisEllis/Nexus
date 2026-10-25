@@ -606,6 +606,7 @@ class IpcBridge {
         const agentId = req.body?.agentId || 'default';
         res.json(await _autofillFill(this.dom, this.autofillStore, {
           agentId, profileId: req.body?.profileId, minConfidence: req.body?.minConfidence || 'medium', learned: this._learnedFields(agentId),
+          vars: req.body?.vars,   // §AD2 0.60.251 — the IPC autofill:fill passes {{var}} values; this door dropped them
         }));
       } catch (e) { res.status(500).json({ error: e.message }); }
     });
@@ -745,6 +746,14 @@ class IpcBridge {
         }));
       } catch (e) { res.status(500).json({ error: e.message }); }
     });
+    // §AD2 0.60.251 — create/delete and recording, the same methods the IPC macros:* handlers call (one implementation, a
+    // second door). A run stays on the route above (agents keep Guardian + RAID, 0.60.69).
+    const macroStatus = (r) => (r && (r.error || r.ok === false) ? (/not available|not wired/.test(r.error || '') ? 503 : 400) : 200);
+    this.app.post('/cli/macros', async (req, res) => { const r = await this._macroWrite('create', req.body || {}); res.status(macroStatus(r)).json(r); });
+    this.app.delete('/cli/macros/:name', async (req, res) => { const r = await this._macroWrite('delete', { name: req.params.name }); res.status(macroStatus(r)).json(r); });
+    this.app.post('/cli/macros/record/start', async (req, res) => { const r = await this._macroRecord('start', { agentId: req.body?.agentId || 'default', name: req.body?.name }); res.status(macroStatus(r)).json(r); });
+    this.app.post('/cli/macros/record/stop', async (req, res) => { const r = await this._macroRecord('stop', { agentId: req.body?.agentId || 'default' }); res.status(macroStatus(r)).json(r); });
+    this.app.get('/cli/macros/record/status', async (req, res) => { const r = await this._macroRecord('status', { agentId: req.query?.agentId || 'default' }); res.status(macroStatus(r)).json(r); });
 
     this.app.post('/cli/downloads/listeners', (req, res) => res.json(this.options?.registerDownloadListener(req.body) || { error: 'options unavailable' }));
     this.app.patch('/cli/downloads/listeners/:id', (req, res) => res.json(this.options?.updateDownloadListener(req.params.id, req.body) || { error: 'options unavailable' }));
@@ -1305,32 +1314,17 @@ class IpcBridge {
     // "a separate, larger piece" rather than a bare JSON textarea. create/
     // delete go through macro.js's OWN validation (real browser_action enum,
     // erosmancer targetUuid rule, profile set) — the UI never re-implements it.
-    ipcMain.handle('macros:create', async (e, d = {}) => {
-      if (!this.macroTool) return { error: 'macro tool not available' };
-      return this.macroTool.execute({ action: 'create', name: d.name, urlPattern: d.urlPattern, steps: d.steps, params: d.params, profile: d.profile || undefined, description: d.description });
-    });
-    ipcMain.handle('macros:delete', async (e, d = {}) => {
-      if (!this.macroTool) return { error: 'macro tool not available' };
-      return this.macroTool.execute({ action: 'delete', name: d.name });
-    });
+    ipcMain.handle('macros:create', async (e, d = {}) => this._macroWrite('create', d));
+    ipcMain.handle('macros:delete', async (e, d = {}) => this._macroWrite('delete', d));
     // §BUILT 2026-09-26 — record a macro from a real tab: the driver's
     // recorder captures, src/macros/recording.js turns it into steps the
     // builder opens pre-filled (passwords become a {{password}} parameter).
     // §0.60.57 MR1 — James, 2026-10-15: "needs to start recording a macro node file." The recording IS a .macro file from the first
     // second (src/macros/live-recording.js); recordStop returns the same steps the file holds, so the step editor opens on what was saved.
-    let _live = null;
-    const live = () => _live || (_live = new (require('../macros/live-recording').LiveRecorder)({
-      getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
-      dir: require('../mesh/automation-engine.js').NODES_DIR }));
-    ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => {
-      if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
-      try { return await live().start({ agentId, name }); } catch (err) { return { ok: false, error: err.message }; }
-    });
-    ipcMain.handle('macros:recordStatus', async (e, { agentId } = {}) => { try { return live().status(agentId); } catch (err) { return { ok: false, error: err.message }; } });
-    ipcMain.handle('macros:recordStop', async (e, { agentId } = {}) => {
-      if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
-      try { return await live().stop(agentId); } catch (err) { return { ok: false, error: err.message }; }
-    });
+    // §AD2 0.60.251 — the recorder is one bridge method (_macroRecord), shared with the /cli/macros/record/* doors (AD_D2)
+    ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => this._macroRecord('start', { agentId, name }));
+    ipcMain.handle('macros:recordStatus', async (e, { agentId } = {}) => this._macroRecord('status', { agentId }));
+    ipcMain.handle('macros:recordStop', async (e, { agentId } = {}) => this._macroRecord('stop', { agentId }));
     ipcMain.handle('macros:schema', async () => {
       try {
         const ba = require('../../../lib/agent-tools/tools/browser/browser-action.js');
@@ -2087,6 +2081,29 @@ class IpcBridge {
     return r;
   }
   // §JA5 0.60.232 — the pick's macro home: macro.js (the same tool every macro door uses) and the automation nodes folder its .macro goes in
+  // §AD2 0.60.251 — James, 2026-10-25: "need clearglass' fiverr, job application automation, autofill and macros working fully,
+  // including with the agents and copilot." Macro create/delete and recording had IPC handlers only; these two methods are what
+  // both the IPC macros:* handlers and the /cli/macros doors call, so a person, the co-pilot and an agent reach one implementation.
+  async _macroWrite(op, d = {}) {
+    if (!this.macroTool) return { error: 'macro tool not available' };
+    if (op === 'delete') return this.macroTool.execute({ action: 'delete', name: d.name });
+    return this.macroTool.execute({ action: 'create', name: d.name, urlPattern: d.urlPattern, steps: d.steps, params: d.params, profile: d.profile || undefined, description: d.description });
+  }
+
+  // One LiveRecorder (AD_D2): a recording the co-pilot starts can be stopped from the panel, and the reverse.
+  async _macroRecord(op, { agentId, name } = {}) {
+    if (op !== 'status' && !this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
+    try {
+      if (!this._liveRecorder) this._liveRecorder = new (require('../macros/live-recording').LiveRecorder)({
+        getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
+        dir: require('../mesh/automation-engine.js').NODES_DIR });
+      if (op === 'start') return await this._liveRecorder.start({ agentId, name });
+      if (op === 'stop') return await this._liveRecorder.stop(agentId);
+      if (op === 'status') return this._liveRecorder.status(agentId);
+      return { ok: false, error: `unknown record op "${op}" — start, status or stop` };
+    } catch (err) { return { ok: false, error: err.message }; }
+  }
+
   _autofillMacroDoor() {
     let nodesDir = null; try { nodesDir = require('../mesh/automation-engine.js').NODES_DIR; } catch (_) {}
     return { macroTool: this.macroTool || null, nodesDir };

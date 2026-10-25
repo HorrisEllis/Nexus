@@ -132,3 +132,12 @@ phases:
   MR14_tasks_and_mesh_spec:
     status: OPEN
     does: "Tasks as nodes; addendum to docs/nexus-uri-clearglass-mesh-integration.spec and docs/clear-glass.spec; loom wiring for every item."
+
+## ADDENDUM 2026-10-25 (0.60.251, AD2) — recording and create/delete reachable outside the window
+James, 2026-10-25: "… autofill and macros working fully, including with the agents and copilot."
+- `POST /cli/macros`, `DELETE /cli/macros/:name`, `POST /cli/macros/record/start|stop` and `GET /cli/macros/record/status` call the same
+  bridge methods as the IPC `macros:*` handlers (`_macroWrite`, `_macroRecord`). One LiveRecorder is shared, so the MR1 `.macro` node is
+  written the same way whoever starts the recording.
+- New co-pilot tools: `macro.*`. Its words "record a macro called …" and "stop recording" drive the recorder before any model.
+- New rows: `macro list|show|run|record|stop`.
+- Runs by agents still go through Guardian + RAID (0.60.69, unchanged).

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-clear-glass-agent-doors-phasemap.spec::AD1_the_agents_autofill_door_works
+type: phase
+id: docs_2026-10-25-clear-glass-agent-doors-phasemap.spec::AD1_the_agents_autofill_door_works
+context: >-
+  pipeline phase AD1_the_agents_autofill_door_works of
+  docs/2026-10-25-clear-glass-agent-doors-phasemap.spec
+intent: null
+summary: AD1_the_agents_autofill_door_works (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792965241159
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792965241159
+lastSeenAt: 1792965241159
+fingerprint: null
+payload:
+  id: AD1_the_agents_autofill_door_works
+  map: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/autofill/autofill-manage.js
+  depends_on:
+    - AD_D1_one_autofill_implementation
+  blocks: []
+  spec: null
+  graph: d8932e4bb68b3297
