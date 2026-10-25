@@ -1,0 +1,217 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AD3_copilot_has_them_by_name:63e035c5dfbf0ee4
+type: graph
+id: phase:AD3_copilot_has_them_by_name:63e035c5dfbf0ee4
+context: dependency graph of phase AD3_copilot_has_them_by_name
+intent: null
+summary: 23 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792965241163
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792965241163
+lastSeenAt: 1792965241163
+fingerprint: null
+payload:
+  for: AD3_copilot_has_them_by_name
+  kind: phase
+  repo: null
+  hash: 63e035c5dfbf0ee4
+  nodes:
+    - path: clear-glass/src/copilot/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/hat.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/tools.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/copilot-cli.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/copilot-bridge-direct-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-agent-surface.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/copilot/chat-store.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/context-need.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/verbs.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/field.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/nexus-ask.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/claude-code-backend.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/listener-commands.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/ollama-runtime.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/chat-store.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/context-need.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/verbs.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/listener-commands.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: copilot/lib/nexus-ask.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/claude-code-backend.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: ollama/ollama-runtime.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: clear-glass/src/copilot/tools.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/copilot/tools.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: tests/copilot-bridge-direct-dispatch.test.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: tests/modules/clear-glass-agent-surface.test.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/copilot/hat.js
+      kind: requires
+    - from: clear-glass/test/copilot-cli.test.js
+      to: clear-glass/src/copilot/hat.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/copilot/bridge.js
+      to: copilot/lib/nexus-ask.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: clear-glass/src/copilot/bridge.js
+      to: ollama/ollama-runtime.js
+      fromSystem: clear-glass
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: clear-glass/src/copilot/tools.js
+      fromSystem: orchestrator
+      toSystem: clear-glass
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD2_macro_http_doors
+    dependents:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD5_wired_and_proven
+    upstream:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD2_macro_http_doors
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD_D2_macro_doors_share_the_recorder
+    downstream:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD5_wired_and_proven
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD5_wired_and_proven
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2
+      - 'depends on (1): AD2_macro_http_doors · all upstream 2'
+      - 'needed by (1): AD5_wired_and_proven · finishing it unlocks AD5_wired_and_proven'
+    edges:
+      - from: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD2_macro_http_doors
+        kind: declared

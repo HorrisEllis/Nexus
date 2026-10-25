@@ -51,6 +51,13 @@ function _logWarn(...args)  { console.warn(`[${new Date().toISOString()}] [${_SR
 // guardianDir is now required, either explicitly passed in or via
 // GUARDIAN_DIR env var. No assumed sibling-folder structure.
 const SCRIPT_RELOAD_INTERVAL_MS = 60_000; // reload script from disk every 60s
+// §0.60.251 SI1 — James, 2026-10-25: "not letting me sign in." His log: the ChatGPT tab loaded /auth/login?next=%2F every 3–4 s
+// (21:45:19, :22, :25, :29), each load followed by "injecting userscript", NCP connected, a sign-in "wall" reported, and the page
+// gone again. A sign-in page has no chat for the userscript to drive; injecting it there is what started each cycle, and a page
+// that keeps reloading cannot be signed in to. The userscript waits until the tab leaves the sign-in page (did-finish-load on
+// the next page injects it); Guardian still sees the sign-in from the tab's URL (provider-attention.js pageOf).
+const SIGNIN_PAGE_RE = /\/(login|log-in|signin|sign-in|sign_in|auth|authenticate|oauth|sso|u\/login)(\/|$|\?|#)/i;
+function isSigninPage(url) { try { const u = new URL(String(url || '')); return SIGNIN_PAGE_RE.test(u.pathname); } catch (_) { return false; } }
 
 class ProviderHost {
   constructor({ guardianDir, sse, postEvent, history } = {}) {
@@ -235,6 +242,12 @@ class ProviderHost {
   }
 
   async _inject(providerId, win, agentId = null) {
+    // §SI1 — not on a sign-in page (see SIGNIN_PAGE_RE above): the person signs in on a page left alone
+    let here = ''; try { here = win.webContents.getURL(); } catch (_) {}
+    if (isSigninPage(here)) {
+      if (this._signinSkipLogged !== here) { this._signinSkipLogged = here; _log(`[ProviderHost] ${providerId} — on its sign-in page (${here.split('?')[0]}): the userscript waits until it is left`); }
+      return false;
+    }
     await this._stampAgent(win, agentId);
     const gmShim  = buildGmShim();
     const wake    = this._loadSharedPrelude();
@@ -988,3 +1001,4 @@ class ProviderHost {
 }
 
 module.exports = ProviderHost;
+module.exports.isSigninPage = isSigninPage;   // §SI1, for the test

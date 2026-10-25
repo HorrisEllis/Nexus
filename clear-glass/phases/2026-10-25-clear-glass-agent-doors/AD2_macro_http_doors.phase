@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-clear-glass-agent-doors-phasemap.spec::AD2_macro_http_doors
+type: phase
+id: docs_2026-10-25-clear-glass-agent-doors-phasemap.spec::AD2_macro_http_doors
+context: pipeline phase AD2_macro_http_doors of docs/2026-10-25-clear-glass-agent-doors-phasemap.spec
+intent: null
+summary: AD2_macro_http_doors (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792965241161
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792965241161
+lastSeenAt: 1792965241161
+fingerprint: null
+payload:
+  id: AD2_macro_http_doors
+  map: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - AD_D2_macro_doors_share_the_recorder
+  blocks: []
+  spec: null
+  graph: 5922d8545cfa26dd

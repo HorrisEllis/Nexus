@@ -456,6 +456,7 @@ const SUITES = [
   'test-autofill-learned.test.js',     // 0.60.225 JA1 — the autofill matcher consults a per-site learned map (a picked field fills every time); works for micro1/Mercor/Turing/etc
   'test-architecture-migrate.test.js',  // 0.60.234 RF0/RF1 — the refactor tool: every folder outside the 15 systems gets a home from its edges, as a DAG-clean phasemap
   'test-autofill-learn-macro.test.js',  // 0.60.232 JA5 — the pick is also a macro + .macro node; a real page: label → box → selector-check's selector
+  'test-cg-agent-doors.test.js',  // 0.60.251 AD1–AD5 + SI1 — autofill/gig/macros reachable by agents, co-pilot and rows; no userscript on a sign-in page
   'test-autofill-learn-ui.test.js',     // 0.60.231 JA4 — the learn-loop on screen (Clear Glass): Pick what a fill could not place; Fields it learned, with Forget
   'test-autofill-learn-pick.test.js',   // 0.60.230 JA3 — the element picker on a missed field: needsPick, a stable unique key, saved per-site, filled again
   'test-autofill-learn-save.test.js',   // 0.60.226 JA2 — a picked field saves per-origin to site-settings (autofill.field.<key>) and the fill path reads it back

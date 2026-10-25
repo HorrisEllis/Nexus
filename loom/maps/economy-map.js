@@ -78,6 +78,13 @@ const CONSUMERS = [
   [I('clear-glass/renderer/settings/sections/autofill.js'), I('clear-glass/src/preload/index.js'), '0.60.231 cg.autofill.pick / learned / forget (Pick buttons; Fields it learned, Forget)'],
   [I('clear-glass/src/preload/index.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.231 IPC autofill:pick | autofill:learned | autofill:forget'],
   [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.231 autofill.learned -> GET /cli/autofill/learned; autofill.forget -> POST /cli/autofill/forget'],
+  // §AD 0.60.251 — James, 2026-10-25: "need clearglass' fiverr, job application automation, autofill and macros working fully, including with the agents and copilot."
+  [I('lib/agent-tools/tools/clear-glass/browser.js'), I('clear-glass/src/ipc/bridge.js'), 'HTTP :7702 /cli/* (_call) — the agents\' direct door'],
+  [I('lib/agent-tools/tools/autofill/autofill-manage.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.251 AD1 autofill_manage -> /cli/autofill/* (profiles, detect, fill, gig, pick, learn, learned, forget)'],
+  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.251 AD3 autofill.profiles|detect|fill, macro.list|get|run|create|delete|record.* -> /cli/autofill/*, /cli/macros*'],
+  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/copilot/verbs.js'), '0.60.251 AD3 send(): fillIntent / pickIntent / recordIntent, isGigEditor, describeJob — before the model'],
+  [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.251 AD4 autofill profiles|detect|fill, gig fill|detect, macro list|show|run|record|stop rows -> HTTP :7702'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/macros/live-recording.js'), '0.60.251 AD2 _macroRecord: one LiveRecorder for IPC macros:record* and /cli/macros/record/*'],
 ];
 
 function mapEconomy(driver) {

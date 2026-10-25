@@ -88,8 +88,11 @@ const FILES = [
     ['nexus.guardian.clear-glass-bridge']],
   ['lib/agent-tools/tools/site-settings/site-settings-manage.js', 'nexus.lib.agent-tools.tools.site-settings-manage',
     ['nexus.guardian.clear-glass-bridge']],
+  // §AD1 0.60.251 — autofill_manage left the Guardian job path (it never reached Clear Glass: provider 'autofill' is not routed);
+  // its one require is clearglass.browser.tool's _call, the direct :7702 door to /cli/autofill/*.
+  ['lib/agent-tools/tools/clear-glass/browser.js', 'nexus.lib.agent-tools.tools.clearglass-browser-tool', []],
   ['lib/agent-tools/tools/autofill/autofill-manage.js', 'nexus.lib.agent-tools.tools.autofill-manage',
-    ['nexus.guardian.clear-glass-bridge', 'nexus.clear-glass.src.autofill.matcher']],
+    ['nexus.lib.agent-tools.tools.clearglass-browser-tool']],
   ['lib/agent-tools/tools/clear-glass/stream-bridge.js', 'nexus.lib.agent-tools.tools.clear-glass-stream-bridge',
     ['nexus.lib.clear-glass-stream-bridge']],
   ['lib/agent-tools/tools/clear-glass/search-engine.js', 'nexus.lib.agent-tools.tools.clearglass-search-engine', []],

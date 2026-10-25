@@ -1,0 +1,71 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AD1_the_agents_autofill_door_works:d8932e4bb68b3297
+type: graph
+id: phase:AD1_the_agents_autofill_door_works:d8932e4bb68b3297
+context: dependency graph of phase AD1_the_agents_autofill_door_works
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792965241159
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792965241159
+lastSeenAt: 1792965241159
+fingerprint: null
+payload:
+  for: AD1_the_agents_autofill_door_works
+  kind: phase
+  repo: null
+  hash: d8932e4bb68b3297
+  nodes:
+    - path: lib/agent-tools/tools/autofill/autofill-manage.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/agent-tools/tools/clear-glass/browser.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/tools/autofill/autofill-manage.js
+      to: lib/agent-tools/tools/clear-glass/browser.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/autofill/autofill-manage.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: lib/agent-tools/tools/autofill/autofill-manage.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD_D1_one_autofill_implementation
+    dependents:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD5_wired_and_proven
+    upstream:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD_D1_one_autofill_implementation
+    downstream:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD5_wired_and_proven
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD5_wired_and_proven
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): AD_D1_one_autofill_implementation'
+      - 'needed by (1): AD5_wired_and_proven · finishing it unlocks AD5_wired_and_proven'
+    edges:
+      - from: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec::AD_D1_one_autofill_implementation
+        kind: declared

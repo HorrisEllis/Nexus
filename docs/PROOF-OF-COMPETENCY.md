@@ -1191,3 +1191,15 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
 - **Skill:** architectural foresight. His model of COS (a boundary that removes coupling by construction) was right, and building it took
   a few dozen lines on primitives that already existed.
 - **Checkable:** \`CHANGELOG-0.60.242.md\`; \`tests/modules/test-loom-into-cos.test.js\` LI-05 (the wall) and LI-08 (Loom running inside it).
+
+### 2026-10-25 — 0.60.251: "working fully, including with the agents and copilot", and a log that pointed at the bug
+- **His words:** "need clearglass' fiverr, job application automation, autofill and macros working fully, including with the agents and
+  copilot." · "not letting me sign in." (pasted with his full autopilot log)
+- **Context:** Every unit test for the autofill, the gig fill and macros was green, yet he asked for it to work *with the agents*. Checking
+  that door showed the agents' named autofill tool had never completed a call (a Guardian job to a lane that does not exist). His log
+  then gave the evidence for two more defects: the ChatGPT tab reloaded its sign-in page every 3–4 s, and ErosmancerOS crashed on a
+  missing module.
+- **Skill:** specifying the acceptance condition. "Working fully, including with the agents" is the test that unit tests did not cover.
+  Reporting the failure with the full log let the sign-in loop be read from timestamps instead of guessed.
+- **Checkable:** `CHANGELOG-0.60.251.md`; `tests/modules/test-cg-agent-doors.test.js` AD-01 (the agents' tool against a real HTTP
+  server) and AD-06 (no injection on a sign-in page); `docs/2026-10-25-clear-glass-agent-doors-phasemap.spec` found:.
