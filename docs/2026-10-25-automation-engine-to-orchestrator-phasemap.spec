@@ -62,6 +62,18 @@ phases:
       - clear-glass/src/automation/nodes.js
       - clear-glass/src/automation/from-macro.js
       - clear-glass/src/automation/templates.js
+    # §0.60.250 — this phase RELOCATES code across a system boundary, so it declares each file's destination. DG2
+    # (lib/phase-graph.js) reads `moves` and foresees the crossings the move CREATES (clear-glass consumers that will
+    # point into the orchestrator), instead of the boundary ratchet catching them after the files are already moved.
+    moves:
+      clear-glass/src/mesh/automation-engine.js: orchestrator/automation/engine.js
+      clear-glass/src/automation/cron.js: orchestrator/automation/cron.js
+      clear-glass/src/automation/template.js: orchestrator/automation/template.js
+      clear-glass/src/automation/steps.js: orchestrator/automation/steps.js
+      clear-glass/src/automation/dom.js: orchestrator/automation/dom.js
+      clear-glass/src/automation/nodes.js: orchestrator/automation/nodes.js
+      clear-glass/src/automation/from-macro.js: orchestrator/automation/from-macro.js
+      clear-glass/src/automation/templates.js: orchestrator/automation/templates.js
     spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
     does: >-
       Move the neutral engine core and its neutral helpers into the orchestrator (orchestrator/automation/) with the refactor
@@ -165,3 +177,14 @@ order: >-
   .phase + .graph (node lib/emerge/compiler/phase-specs.js) before its code, per his 2026-10-20 order. This is a relocation of
   already-specced, already-proven code, so the governing spec is this map plus the sovereignty graph, not a new emerge module
   spec (a technical call by his axioms-decide-technical-choices rule, to confirm).
+
+# ── ADDENDUM 2026-10-25 (0.60.250) — building AE1 through the pipeline hardened the pipeline ──────────────────
+# James: "i wanted you to simulate idearium, the entire process so you can find gaps, and debugg while building."
+# Running AE1 through Idearium's real DG2 gate (lib/phase-graph.js) surfaced a gap: it computed crossings from each file's
+# CURRENT system, so for this MOVE phase it reported 0–1 crossings and was blind to the ones the move CREATES. Fixed in
+# 0.60.250: the phase now declares `moves:` (above), and graphFor foresees the created crossings. AE1's graph now carries 4
+# `created: true` crossings (clear-glass → orchestrator: agent-mesh, routes, bridge, live-recording) + the lib macro.js edge.
+# This is the pipeline PROVING, before any code moves, what the earlier hand dry-run argued: AE1 is one atomic move-plus-port
+# cutover — the engine must RUN in the orchestrator and every clear-glass consumer must reach it by a route/port, designed out
+# BEFORE the move. The build/verify split stands: the deterministic move + ports are built and gate-proven here; the live
+# two-process run (Clear Glass ↔ orchestrator, the sync→async surface) is verified on his machine.
