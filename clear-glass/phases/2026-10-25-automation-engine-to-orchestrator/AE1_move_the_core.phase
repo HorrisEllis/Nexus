@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+type: phase
+id: docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+context: >-
+  pipeline phase AE1_move_the_core of
+  docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+intent: null
+summary: AE1_move_the_core (library) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1792948743420
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792948743420
+lastSeenAt: 1792948743420
+fingerprint: null
+payload:
+  id: AE1_move_the_core
+  map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - clear-glass/src/mesh/automation-engine.js
+    - clear-glass/src/automation/cron.js
+    - clear-glass/src/automation/template.js
+    - clear-glass/src/automation/steps.js
+    - clear-glass/src/automation/dom.js
+    - clear-glass/src/automation/nodes.js
+    - clear-glass/src/automation/from-macro.js
+    - clear-glass/src/automation/templates.js
+  depends_on:
+    - AE_D1_engine_home
+    - AE_D2_state_stays
+  blocks: []
+  spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
+  graph: 667d1ab3a15e53b5

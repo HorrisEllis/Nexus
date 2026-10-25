@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+type: phase
+id: docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+context: >-
+  pipeline phase AE2_browser_driver_port of
+  docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+intent: null
+summary: AE2_browser_driver_port (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792948743422
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792948743422
+lastSeenAt: 1792948743422
+fingerprint: null
+payload:
+  id: AE2_browser_driver_port
+  map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - clear-glass/src/automation/driver-port.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - AE1_move_the_core
+  blocks: []
+  spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
+  graph: 3468e7c564c440e7
