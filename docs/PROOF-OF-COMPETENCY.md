@@ -1203,3 +1203,14 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
   Reporting the failure with the full log let the sign-in loop be read from timestamps instead of guessed.
 - **Checkable:** `CHANGELOG-0.60.251.md`; `tests/modules/test-cg-agent-doors.test.js` AD-01 (the agents' tool against a real HTTP
   server) and AD-06 (no injection on a sign-in page); `docs/2026-10-25-clear-glass-agent-doors-phasemap.spec` found:.
+
+### 2026-10-25 — 0.60.252: "first one but the second one needs to be the end state"
+- **His words:** "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?" · asked
+  how an update should land (a git clone, through COS, or a zip side by side): "first one but the second one needs to be the end state".
+- **Context:** He took the option that could ship that day (git) and named the robust one (COS) as the destination. That made the
+  coder build one update interface over drivers, so the COS driver drops in without changing the tool, its commands or its page. His
+  reminder that "copilot is meant to be a hat" put the tool on the hat, where any agent wearing it gets it, rather than on one window.
+- **Skill:** sequencing toward an end state. He chose the fastest path that does not foreclose the best one. It also kept the
+  architecture consistent with his own rule: a role is a hat, and capabilities follow the hat.
+- **Checkable:** `CHANGELOG-0.60.252.md`; `tests/modules/test-nexus-update.test.js` (9/9 on real git repos; UP-08 drives the page in
+  Clear Glass); `docs/2026-10-25-nexus-update-phasemap.spec` (UP_D1 quotes the choice; UP5 is the COS end state).

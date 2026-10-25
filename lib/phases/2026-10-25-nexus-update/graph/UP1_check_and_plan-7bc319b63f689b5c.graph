@@ -1,0 +1,82 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UP1_check_and_plan:7bc319b63f689b5c
+type: graph
+id: phase:UP1_check_and_plan:7bc319b63f689b5c
+context: dependency graph of phase UP1_check_and_plan
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792967429646
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792967429646
+lastSeenAt: 1792967429646
+fingerprint: null
+payload:
+  for: UP1_check_and_plan
+  kind: phase
+  repo: null
+  hash: 7bc319b63f689b5c
+  nodes:
+    - path: lib/nexus-update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/update.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/nexus-releases.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus-update.js
+      to: lib/nexus-releases.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/update.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: lib/nexus-update.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+    dependents:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+    upstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+    downstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2a_adopt_the_old_folder
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP3_routes_and_rows
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP4_the_tool_on_the_hats_and_the_page
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP5_the_cos_driver
+    blockedBy:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by UP_D1_how_an_update_lands
+      - 'depends on (1): UP_D1_how_an_update_lands'
+      - 'needed by (1): UP2_apply_and_rollback · all downstream 5'
+    edges:
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+        kind: declared

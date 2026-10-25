@@ -175,6 +175,11 @@ const TOOLS = [
   { name: 'opportunity.prepare_reply', cat: 'nexus', desc: 'A Fiverr/Upwork lead: open its message and type the approved reply into the box — stops at READY, never sends', params: { id: 'string', kind: 'string?' } },
   { name: 'opportunity.submit', cat: 'nexus',  desc: 'Submit a READY application (refused for agents unless his policy allows it; ToS platforms need his acknowledgement)', params: { id: 'string' } },
   { name: 'opportunity.followups', cat: 'nexus', desc: 'Submitted applications past their follow-up day, each with a drafted follow-up', params: {} },
+  // §UP4 0.60.252 — James: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
+  { name: 'update.check',     cat: 'nexus',    desc: 'Is there a newer Nexus on GitHub: this version vs GitHub\'s, each release in between with James\'s words, what it changes. Show it to him.', params: {} },
+  { name: 'update.apply',     cat: 'nexus',    desc: 'Bring in the newer Nexus (fast-forward, his data files set aside first). Only with confirm:true after he said yes. Never restart — say what to restart.', params: { confirm: 'boolean' } },
+  { name: 'update.rollback',  cat: 'nexus',    desc: 'Undo the last update. Only with confirm:true after he said yes.', params: { confirm: 'boolean' } },
+  { name: 'update.history',   cat: 'nexus',    desc: 'Every update and rollback this install made', params: {} },
   { name: 'opportunity.prepare', cat: 'nexus', desc: 'Open the application page and fill it (autofill + answer bank + drafts) — stopsbefore submit', params: { id: 'string' } },
 ];
 

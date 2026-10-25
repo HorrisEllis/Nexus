@@ -159,6 +159,31 @@ export const SPEC = [
   // 0.60.7 — Versionium managed per repo (lib/repo-history.js) and the import checks (lib/import-checks.js)
   // 0.60.8 — intent routing for reasoning (lib/reasoning-route.js)
   // 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match."
+  // §0.60.252 UP3 — James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
+  // · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
+  { key: 'update', repo: false, usage: 'update [--no-fetch]', about: 'is there a newer Nexus on GitHub: this version and origin\'s, each release in between with James\'s words, the systems it changes, what an update would set aside or refuse',
+    req: (a) => ({ method: 'GET', path: `/api/update${a.flags['no-fetch'] ? '?fetch=0' : ''}`, timeoutMs: 150000 }),
+    print: (d, a, h) => {
+      if (d.ok === false) return console.log(h.c.amber(`  ${d.driver ? `[${d.driver}] ` : ''}${d.error}`));
+      console.log(`  ${h.c.bold(d.current)} → ${d.upToDate ? h.c.mint('up to date') : h.c.bold(d.latest)}${d.behind ? h.c.dim(`  (${d.behind} commit(s) behind${d.ahead ? `, ${d.ahead} ahead` : ''})`) : ''}`);
+      for (const r of (d.releases || []).slice(0, 12)) console.log(`  ${h.c.gray(r.version.padEnd(9))} ${r.quote ? `"${String(r.quote).slice(0, 150)}"` : h.c.dim('(no quote in its line)')}`);
+      if (d.systems && d.systems.length) console.log(h.c.dim(`  changes: ${d.systems.join(', ')}${d.lockChanged ? ' · package-lock.json (npm install runs)' : ''}`));
+      const p = d.plan || {}; if ((p.archive || []).length) console.log(h.c.dim(`  sets aside first (copied to _archive/update/): ${p.archive.length} data file(s)`)); if ((p.blocks || []).length) console.log(h.c.amber(`  refuses: your edits to ${p.blocks.map(b => b.file).slice(0, 6).join(', ')}`));
+      if (d.can && !d.upToDate) console.log(h.c.amber(`  ${d.can}`)); else if (!d.upToDate) console.log(h.c.dim('  idearium update apply --yes'));
+    } },
+  { key: 'update.apply', repo: false, usage: 'update apply --yes', about: 'bring in the newer Nexus from GitHub: fast-forward only, his changed data files copied aside first, npm install if the lockfile changed; says what to restart',
+    personOnly: () => 'updating Nexus\'s code is the person\'s — an agent uses nexus.update.tool apply with confirm:true after asking them',
+    need: (a) => (a.flags.yes ? null : '--yes (it changes Nexus\'s code; `idearium update` shows what it brings)'),
+    req: () => ({ method: 'POST', path: '/api/update/apply', timeoutMs: 20 * 60000, body: { confirm: true } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (d.action === 'none') return console.log(h.c.mint(`  ${d.why}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version}`) + h.c.dim(`  ${(d.archived || []).length} data file(s) set aside${d.npm && d.npm.ran ? ` · npm install ${d.npm.ok ? 'ok' : `FAILED: ${d.npm.error}`}` : ''}`)); console.log(h.c.amber(`  restart: ${(d.restart.systems || []).join(', ') || '—'} — ${d.restart.note}`)); } },
+  { key: 'update.rollback', repo: false, usage: 'update rollback --yes', about: 'undo the last update: back to the commit it came from (refuses if your edits are in the way)',
+    personOnly: () => 'rolling Nexus back is the person\'s — an agent uses nexus.update.tool rollback with confirm:true after asking them',
+    need: (a) => (a.flags.yes ? null : '--yes'),
+    req: () => ({ method: 'POST', path: '/api/update/rollback', timeoutMs: 20 * 60000, body: { confirm: true } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version}`)); if (d.note) console.log(h.c.dim(`  ${d.note}`)); console.log(h.c.amber(`  restart: ${(d.restart.systems || []).join(', ') || '—'}`)); } },
+  { key: 'update.history', repo: false, usage: 'update history', about: 'every update and rollback this install made: when, from and to which version, who, what was set aside',
+    req: () => ({ method: 'GET', path: '/api/update/history' }),
+    print: (d, a, h) => { const l = d.history || []; if (!l.length) return console.log(h.c.dim('  no updates yet')); for (const r of l) console.log(`  ${h.c.gray(r.at.slice(0, 16))} ${r.kind.padEnd(8)} ${r.from.version} → ${r.to.version}  ${h.c.dim(`by ${r.by}${(r.archived || []).length ? ` · ${r.archived.length} set aside` : ''}`)}`); } },
   // 0.60.41 RN1 — Nexus's own releases, recorded in Versionium (lib/nexus-releases.js): James's words, the proof, the commit
   { key: 'system.releases', repo: false, usage: 'system releases [--sync [--all]] [--limit n] [--version x.y.z]', about: 'every Nexus release, newest first, from Versionium: James\'s words, the git commit, the changelog, its commits; --sync records any missing (with the newest 30 releases\' commits; --all: every release\'s)',
     req: (a) => a.flags.sync ? { method: 'POST', path: '/api/releases/sync', timeoutMs: 120000, body: a.flags.all ? { all: true } : {} } : { method: 'GET', path: '/api/releases' },
