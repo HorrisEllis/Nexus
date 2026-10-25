@@ -39,7 +39,7 @@ decisions:
       keeps the agent-step decision (§5.2/§9.1, already routed that way); Clear Glass keeps the browser steps as a driver port.
       RAID was ruled out for the CORE by its own role (a per-job decider, not a cron/trigger/long-run loop), said in the graph.
   AE_D2_state_stays:
-    status: DECIDED by his axioms (§0.3 REVERSIBILITY, nothing lost) — to confirm
+    status: DECIDED 2026-10-25 by James — "yes, state stays"
     asked: "the engine's saved workflows/runs/macros (NEXUS_DATA_ROOT/brainos/*) — move the data, or leave it where it is?"
     chosen: >-
       Leave the data where it is. Workflows, runs and macro nodes live under the shared data root (NEXUS_DATA_ROOT/brainos/
