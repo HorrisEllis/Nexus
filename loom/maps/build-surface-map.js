@@ -154,6 +154,11 @@ const FILES = [
   // phases view + Clear Glass's mesh (:7704), each best-effort. Consumed by idearium/api (GET …/flow, /api/flow/mesh).
   ['idearium/lib/flow-sources.js', I('idearium/lib/flow-sources.js'), [I('lib/phase-dag.js'), I('lib/run-state.js'), I('idearium/repo/phases.js')]],
   [I('idearium/api/index.js'), I('idearium/lib/flow-sources.js'), '§BX2 — repo.flow / flow.mesh handlers call flowFor()/mesh() (dynamic import, ESM)'],
+  // §0.60.249 AU1 — lib/automation-registry.js: one neutral door over the six automation sources (copilot, ollama, lib, clear-glass,
+  // idearium, brainos). Pure + DI (no static cross-system require); the transport to Clear Glass's engine (:7704) is a runtime port,
+  // the declared convention, not a static crossing. Consumed by idearium/api (GET /api/automation, POST /api/automation/run).
+  ['lib/automation-registry.js', I('lib/automation-registry.js'), [I('lib/node-schemas/schema.macro')]],   // lib's own contribution: the automation node TYPES it reads in-process
+  [I('idearium/api/index.js'), I('lib/automation-registry.js'), '§AU1 — automation.list / automation.run handlers call list()/run(); clear-glass engine reached by runtime port :7704'],
   [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
   [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
   // §0.60.157 GM4 — the node lattice: every data node of every system, edges typed; read by route, never the files

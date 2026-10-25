@@ -58,12 +58,18 @@ decisions:
       The ladder runs in his exact order, re-reading confidence after each rung and stopping as soon as it reaches 0.75:
       1) build worksurface, 2) compile dependencies, 3) find the context, 4) ask the user — LAST, only if still below after 1–3.
   AU_D1_automation_union:
-    status: OPEN — the coder's reading, to confirm
+    status: DECIDED 2026-10-25 by James — "Copilot programmable and automation and the Lib folder automation. Clearglass automation, and macros, continue."
     asked: "copilot, ollama, lib, clear-glass, idearium and brainos each have automation — one registry over all six, or adapters per source?"
     chosen: >-
-      To confirm. The coder's reading by §8.6/NC0: one neutral automation registry (lib/automation-registry.js) with a thin adapter
-      per source (each source keeps its own engine; the registry lists, runs and records across all six through the adapter contract),
-      so Guardian deploys a workflow to any of them through one door. Built after the gate (AU phases below).
+      One neutral automation registry (lib/automation-registry.js) with an adapter per source — his reading, confirmed when he named
+      the sources and said "continue". What the coder FOUND building it (TRUTH OVER COHERENCE §0.0, evidence §0.1), to confirm the
+      framing with him but not blocking: the six do NOT each keep their own engine. There is exactly one real workflow+macro engine —
+      clear-glass/src/mesh/automation-engine.js (:7704) — and the rest are views/drivers of it: brainos is that engine's own store
+      (data/brainos/workflows); copilot and idearium are drivers that run on it (copilot via its agent-tools, idearium via the BrainOS
+      fold BX7); lib does not run automations, it DEFINES the node types every source builds from (lib/node-schemas: schema.macro,
+      schema.workflow, schema.debug_macro); ollama has no automation surface at all. So the registry has an adapter per source, but each
+      adapter tells the truth about that source (engine / engine-store / driver / in-process / absent) rather than pretending six
+      engines exist. An absent source is named, never faked (§1.2). Guardian still deploys through the one door.
 
 phases:
   CG1_the_confidence_gate_backend:
@@ -135,17 +141,23 @@ phases:
     proof: "flowFor(repo) returns the graph; a node deployed from the canvas spawns an agent through guardian, gated by CG"
 
   AU1_automation_union:
-    status: OPEN
+    status: DONE 0.60.249 — backend + route + command (his delivery order); UI is a BrainOS canvas panel, deferred to BX
     layer: library
     depends_on: [BX_orchestration, AU_D1_automation_union]
     files: [lib/automation-registry.js]
     spec: docs/brainos-in-idearium.spec
     does: >-
-      one registry over the six automation sources (copilot, ollama, lib, clear-glass, idearium, brainos) via an adapter per source; list,
-      run, record across all; Guardian deploys a workflow to any of them through one door. Reuse (cobalt_reuse): adapt Cobalt's
-      automation/engine.js (6 triggers, step-executor, variable-resolver, condition-evaluator) to this tree's jaa + nexus-bus as the engine
-      under the registry, and its BaseAgent contract for the deploy adapters; not drop-in (its kernel/ports differ).
-    proof: "the registry lists workflows from each present source; running one records under the source; an absent source is named, not thrown"
+      one neutral registry over the six automation sources (copilot, ollama, lib, clear-glass, idearium, brainos) via an adapter per
+      source: sources() (each source's presence, named), list({source}) (workflows + macros across all present sources, each failure
+      named in sources[]), run(source, id) (runs through the source and records under it), describe() (the honest self-model). Reuse
+      before build (§8.6): NOT a new engine — the one real engine is clear-glass/src/mesh/automation-engine.js (:7704), already complete
+      (triggers, steps, cron, webhooks, runs); the registry reaches it over the wire door lib/agent-tools and ui/brainos already use, and
+      the other sources are its drivers/views (see AU_D1's finding). Cobalt's automation/engine.js was NOT ported — this tree already has
+      the richer engine, so porting a second would duplicate it (§8.6). The transport is dependency-injected (pure, testable neutral core,
+      no static cross-system require; the edge to :7704 is a runtime port). Delivery order (his): backend (lib/automation-registry.js) →
+      route (GET /api/automation, POST /api/automation/run) → command (`automation list [--source]`, `automation run <source> <id>`) → UI
+      (a panel on the BrainOS Flow canvas, deferred to BX, said).
+    proof: "tests/modules/test-automation-registry.test.js 11/11 (in run-all): lists workflows AND macros from clear-glass; brainos surfaces the same store via clear-glass; a run records under its source with via; lib refuses honestly saying where it runs; ollama is named absent; the engine down is named in sources[], never thrown (§1.2)"
 
   AU2_trial_automatic:
     status: DONE (harness) 0.60.247 — the deploy step built and proven; the live multi-provider run is his (needs Clear Glass agents up)
