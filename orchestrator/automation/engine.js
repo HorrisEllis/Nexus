@@ -39,17 +39,17 @@
 const fs = require('fs');
 const path = require('path');
 const { randomUUID, randomBytes, timingSafeEqual } = require('crypto');
-const T = require('../automation/template.js');
-const CRON = require('../automation/cron.js');
-const DOM = require('../automation/dom.js');
-const STEPS = require('../automation/steps.js');
+const T = require('./template.js');
+const CRON = require('./cron.js');
+const DOM = require('./dom.js');
+const STEPS = require('./steps.js');
 
 // §0.39.265 — under the shared data root (NEXUS_DATA_ROOT, like every other
 // store), so a test process — lib/test-sandbox.js points that root at a temp
 // folder — never reads or deletes the real saved workflows. Was hard-coded to
 // <repo>/data, and tests/modules/automation-engine.test.js rm -rf's this dir.
-require('../../../lib/test-sandbox.js').ensure();
-const DATA_ROOT = process.env.NEXUS_DATA_ROOT || path.join(__dirname, '..', '..', '..', 'data');
+require('../../lib/test-sandbox.js').ensure();
+const DATA_ROOT = process.env.NEXUS_DATA_ROOT || path.join(__dirname, '..', '..', 'data');
 const WORKFLOWS_DIR = path.join(DATA_ROOT, 'brainos', 'workflows');
 const RUNS_DIR = path.join(DATA_ROOT, 'brainos', 'automation-runs');
 const OUTPUT_DIR = path.join(DATA_ROOT, 'brainos', 'automation-output');

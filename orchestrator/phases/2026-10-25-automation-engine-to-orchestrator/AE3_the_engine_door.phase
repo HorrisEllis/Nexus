@@ -9,11 +9,11 @@ intent: null
 summary: AE3_the_engine_door (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792948743425
+exported_at: 1792961047687
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792948743425
-lastSeenAt: 1792948743425
+firstSeenAt: 1792961047687
+lastSeenAt: 1792961047687
 fingerprint: null
 payload:
   id: AE3_the_engine_door
@@ -28,4 +28,4 @@ payload:
     - AE1_move_the_core
   blocks: []
   spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
-  graph: 9bf639bab4f8b3d0
+  graph: 846d692909cf74aa

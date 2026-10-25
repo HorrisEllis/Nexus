@@ -1,0 +1,89 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AE1_move_the_core:58fe5f72aacfb599
+type: graph
+id: phase:AE1_move_the_core:58fe5f72aacfb599
+context: dependency graph of phase AE1_move_the_core
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792961047679
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792961047679
+lastSeenAt: 1792961047679
+fingerprint: null
+payload:
+  for: AE1_move_the_core
+  kind: phase
+  repo: null
+  hash: 58fe5f72aacfb599
+  nodes:
+    - path: clear-glass/src/automation/cron.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/automation/dom.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/automation/from-macro.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/automation/nodes.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/automation/steps.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/automation/template.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/automation/templates.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: clear-glass/src/mesh/automation-engine.js
+      role: changes
+      exists: false
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
+    dependents:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+    upstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
+    downstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (2): AE_D1_engine_home, AE_D2_state_stays'
+      - >-
+        needed by (2): AE2_browser_driver_port, AE3_the_engine_door · all downstream 4 · finishing
+        it unlocks AE2_browser_driver_port, AE3_the_engine_door
+    edges:
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
+        kind: declared
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
+        kind: declared

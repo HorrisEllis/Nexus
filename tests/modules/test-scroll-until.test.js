@@ -5,9 +5,9 @@ require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), path = require('path');
 const { JSDOM } = require(path.join(__dirname, '..', '..', 'node_modules', 'jsdom'));
 const ROOT = path.resolve(__dirname, '..', '..');
-const STEPS = require(path.join(ROOT, 'clear-glass/src/automation/steps.js'));
-const TPL = require(path.join(ROOT, 'clear-glass/src/automation/templates.js'));
-const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, OUTPUT_DIR } = require(path.join(ROOT, 'clear-glass/src/mesh/automation-engine.js'));
+const STEPS = require(path.join(ROOT, 'orchestrator/automation/steps.js'));
+const TPL = require(path.join(ROOT, 'orchestrator/automation/templates.js'));
+const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, OUTPUT_DIR } = require(path.join(ROOT, 'orchestrator/automation/engine.js'));
 let passed = 0, failed = 0;
 async function test(name, fn) { try { await fn(); console.log('  ✓ ' + name); passed++; } catch (e) { console.error('  ✗ ' + name + '\n    ' + (e.stack || e).toString().split('\n').slice(0, 4).join('\n    ')); failed++; } }
 

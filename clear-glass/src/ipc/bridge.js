@@ -1321,7 +1321,7 @@ class IpcBridge {
     let _live = null;
     const live = () => _live || (_live = new (require('../macros/live-recording').LiveRecorder)({
       getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
-      dir: require('../mesh/automation-engine.js').NODES_DIR }));
+      dir: require('../../../lib/automation-nodes.js').NODES_DIR }));
     ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => {
       if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
       try { return await live().start({ agentId, name }); } catch (err) { return { ok: false, error: err.message }; }
@@ -2088,7 +2088,7 @@ class IpcBridge {
   }
   // §JA5 0.60.232 — the pick's macro home: macro.js (the same tool every macro door uses) and the automation nodes folder its .macro goes in
   _autofillMacroDoor() {
-    let nodesDir = null; try { nodesDir = require('../mesh/automation-engine.js').NODES_DIR; } catch (_) {}
+    let nodesDir = null; try { nodesDir = require('../../../lib/automation-nodes.js').NODES_DIR; } catch (_) {}
     return { macroTool: this.macroTool || null, nodesDir };
   }
   // §JA5 — forget, then rebuild the site's macro without that field (removed when nothing is left)

@@ -9,11 +9,11 @@ intent: null
 summary: AE4_repoint_the_registry (library) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792948743436
+exported_at: 1792961047709
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792948743436
-lastSeenAt: 1792948743436
+firstSeenAt: 1792961047709
+lastSeenAt: 1792961047709
 fingerprint: null
 payload:
   id: AE4_repoint_the_registry
@@ -29,4 +29,4 @@ payload:
     - AE3_the_engine_door
   blocks: []
   spec: docs/brainos-in-idearium.spec
-  graph: 139a7c4e2a7971c9
+  graph: 12b92196a075064e

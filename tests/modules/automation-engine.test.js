@@ -1,5 +1,5 @@
 'use strict';
-// Real test for clear-glass/src/mesh/automation-engine.js. James: "don't
+// Real test for orchestrator/automation/engine.js. James: "don't
 // lose any... automation, pipeline, scheduling" from the uploaded
 // external reference — this is the real, scoped, actually-running
 // engine that replaces it.
@@ -8,8 +8,8 @@ const assert = require('assert');
 const fs = require('fs');
 
 function fresh() {
-  delete require.cache[require.resolve('../../clear-glass/src/mesh/automation-engine.js')];
-  const { AutomationEngine, WORKFLOWS_DIR } = require('../../clear-glass/src/mesh/automation-engine.js');
+  delete require.cache[require.resolve('../../orchestrator/automation/engine.js')];
+  const { AutomationEngine, WORKFLOWS_DIR } = require('../../orchestrator/automation/engine.js');
   return { AutomationEngine, WORKFLOWS_DIR };
 }
 function cleanup(dir) { try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {} }
@@ -170,7 +170,7 @@ await test('AE-011', 'the workflow store is under the test sandbox, never the re
 });
 
 await test('AE-012', 'nextScheduled: every-N and daily-at-a-time on chosen weekdays; manual is null', () => {
-  const { nextScheduled } = require('../../clear-glass/src/mesh/automation-engine.js');
+  const { nextScheduled } = require('../../orchestrator/automation/engine.js');
   const from = new Date(2026, 8, 25, 10, 0, 0).getTime(); // Fri 25 Sep 2026 10:00 local
   assert.strictEqual(nextScheduled({ intervalMs: 60000 }, from), from + 60000);
   assert.strictEqual(nextScheduled({}, from), null);
@@ -199,7 +199,7 @@ await test('AE-013', 'a switched-off step is skipped; a condition can stop the w
 
 await test('AE-014', 'agent steps carry the account; macro and notify steps call their hooks; clear-glass is a known system', async () => {
   const { AutomationEngine, WORKFLOWS_DIR } = fresh();
-  const { SYSTEM_PORTS } = require('../../clear-glass/src/mesh/automation-engine.js');
+  const { SYSTEM_PORTS } = require('../../orchestrator/automation/engine.js');
   cleanup(WORKFLOWS_DIR);
   assert.strictEqual(SYSTEM_PORTS['clear-glass'], SYSTEM_PORTS.clearglass);
   const enq = [], macros = [], notes = [];

@@ -50,7 +50,7 @@ decisions:
 
 phases:
   AE1_move_the_core:
-    status: OPEN
+    status: DONE (headless) 0.60.251 — engine moved to orchestrator/automation/, runs there, decoupled (DG2: 0 created crossings, boundary 10/10); nodes.js → lib/ (core); clear-glass reaches it by port. AE3-core done too (the door is served on :9000). Live two-process verify is his.
     layer: library
     depends_on: [AE_D1_engine_home, AE_D2_state_stays]
     files:

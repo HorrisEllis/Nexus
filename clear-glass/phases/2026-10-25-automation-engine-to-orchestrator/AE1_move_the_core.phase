@@ -9,18 +9,21 @@ intent: null
 summary: AE1_move_the_core (library) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1792958636328
+exported_at: 1792961047679
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792958636328
-lastSeenAt: 1792958636328
+firstSeenAt: 1792961047679
+lastSeenAt: 1792961047679
 fingerprint: null
 payload:
   id: AE1_move_the_core
   map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: >-
+    DONE (headless) 0.60.251 — engine moved to orchestrator/automation/, runs there, decoupled (DG2:
+    0 created crossings, boundary 10/10); nodes.js → lib/ (core); clear-glass reaches it by port.
+    AE3-core done too (the door is served on :9000). Live two-process verify is his.
   files:
     - clear-glass/src/mesh/automation-engine.js
     - clear-glass/src/automation/cron.js
@@ -35,4 +38,4 @@ payload:
     - AE_D2_state_stays
   blocks: []
   spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
-  graph: ea65d4d10882ad15
+  graph: 58fe5f72aacfb599

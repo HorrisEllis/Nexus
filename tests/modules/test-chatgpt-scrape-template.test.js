@@ -1,8 +1,8 @@
 'use strict';
 // CGS-01..04 (0.60.69): the ChatGPT chat reader template is wired so the engine can run it: the loop body is exactly the per-chat steps, fields use the DOM extractor's real syntax.
 const assert = require('assert');
-const { TEMPLATES } = require('../../clear-glass/src/automation/templates.js');
-const DOM = require('../../clear-glass/src/automation/dom.js');
+const { TEMPLATES } = require('../../orchestrator/automation/templates.js');
+const DOM = require('../../orchestrator/automation/dom.js');
 let pass = 0, fail = 0; const t = (n, f) => { try { f(); pass++; console.log('  PASS ' + n); } catch (e) { fail++; console.log('  FAIL ' + n + ' ' + e.message); } };
 const tpl = TEMPLATES.find(x => x.id === 'chatgpt-scrape'); const loopAt = tpl.steps.findIndex(s => s.type === 'loop');
 t('CGS-01 the template is listed with a loop over the chat list', () => { assert.ok(tpl && loopAt > 0); assert.strictEqual(tpl.steps[loopAt].config.onlyNew, '{{item.link}}'); });

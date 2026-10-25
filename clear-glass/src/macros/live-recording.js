@@ -11,7 +11,7 @@
 const fs = require('fs');
 const { INSTALL, DRAIN } = require('./recorder-script');
 const { recordingToSteps } = require('./recording');
-const nodes = require('../automation/nodes');
+const nodes = require('../../../lib/automation-nodes.js');
 
 class LiveRecorder {
   constructor({ getWebContents, evalJs, dir, now = Date.now, setTimer = setInterval, clearTimer = clearInterval, pollMs = 400 } = {}) {

@@ -74,7 +74,7 @@ async function gh(over = {}) {
   await test('RD-13 the bridge serves both routes, the job template exists and posts to the fetch route, and a release now publishes SHA256SUMS', () => {
     const R = (p) => fs.readFileSync(path.join(__dirname, '..', '..', p), 'utf8');
     assert.match(R('clear-glass/src/ipc/bridge.js'), /get\('\/cli\/releases\/status'/); assert.match(R('clear-glass/src/ipc/bridge.js'), /post\('\/cli\/releases\/fetch'/);
-    const T = require('../../clear-glass/src/automation/templates.js'); const list = T.TEMPLATES || T.templates || T.list || (typeof T.all === 'function' ? T.all() : T); const t = (Array.isArray(list) ? list : Object.values(list)).find(x => x && x.id === 'nexus-release-deliver'); assert.ok(t, 'template found');
+    const T = require('../../orchestrator/automation/templates.js'); const list = T.TEMPLATES || T.templates || T.list || (typeof T.all === 'function' ? T.all() : T); const t = (Array.isArray(list) ? list : Object.values(list)).find(x => x && x.id === 'nexus-release-deliver'); assert.ok(t, 'template found');
     assert.ok(t.steps.some(st => st.type === 'http' && /\/cli\/releases\/fetch/.test(st.config.url))); assert.match(R('.github/workflows/release.yml'), /SHA256SUMS/);
   });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);

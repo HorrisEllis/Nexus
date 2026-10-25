@@ -9,11 +9,11 @@ intent: null
 summary: AE5_ui_and_cleanup (ui) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792948743437
+exported_at: 1792961047711
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792948743437
-lastSeenAt: 1792948743437
+firstSeenAt: 1792961047711
+lastSeenAt: 1792961047711
 fingerprint: null
 payload:
   id: AE5_ui_and_cleanup
@@ -29,4 +29,4 @@ payload:
     - AE4_repoint_the_registry
   blocks: []
   spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
-  graph: 64632511853f3cef
+  graph: 4fffeac7c14189ab

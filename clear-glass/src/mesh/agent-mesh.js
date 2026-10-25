@@ -210,14 +210,11 @@ class AgentMesh {
     // brainos-external-concept-mapping.spec named: a real trigger/
     // schedule-driven workflow engine. Same enqueueFn/busEmit wiring as
     // route-graph above — one real dispatch path, not two.
-    const { AutomationEngine } = require('./automation-engine.js');
-    this._automation = new AutomationEngine({
-      enqueueFn: (task) => this.enqueue(task),
-      busEmit: (t, d) => this.sse.emit(t, d),
-      meshViewFn: () => this.listMeshView(),
-      // §0.39.265 — mesh.* values a condition step can compare
-      statsFn: () => ({ queueDepth: this.queue.length, agentCount: this.agents.size }),
-    });
+    // §0.60.251 AE1 — the engine moved to the orchestrator (it is the platform's; each system is sovereign). Clear Glass
+    // reaches it by PORT, not by require — nothing coupled. The hooks (enqueue, mesh-view, browser, macros) live with the
+    // engine in the orchestrator now; the orchestrator calls back here for browser steps (orchestrator/automation/index.js).
+    const { createAutomationClient } = require('./automation-client.js');
+    this._automation = createAutomationClient();
     this._automation.start();
   }
 

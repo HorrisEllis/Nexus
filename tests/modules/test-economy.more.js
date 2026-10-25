@@ -68,7 +68,7 @@ module.exports = async function ({ t, ROOT, assert }) {
   });
 
   await t('EC9-01', 'browser steps with input "erosmancer": click/hover/type go to the driver as pointer via eros at the element centre; "page" is unchanged; a refusal fails the step, never sent in the page instead', async () => {
-    const { AutomationEngine } = require(path.join(ROOT, 'clear-glass/src/mesh/automation-engine.js'));
+    const { AutomationEngine } = require(path.join(ROOT, 'orchestrator/automation/engine.js'));
     const calls = [];
     let refuse = false;
     const fn = async ({ action, args }) => {
@@ -95,7 +95,7 @@ module.exports = async function ({ t, ROOT, assert }) {
     r = await e.runStep({ type: 'browser', config: { action: 'click', selector: '#go', input: 'erosmancer' } });
     assert.ok(!r.ok && /ErosmancerOS input failed: eros not attached/.test(r.error));
     assert.ok(!calls.slice(n).some(c => c.action === 'click'), 'no silent fall back to page input');
-    const STEPS = require(path.join(ROOT, 'clear-glass/src/automation/steps.js'));
+    const STEPS = require(path.join(ROOT, 'orchestrator/automation/steps.js'));
     const f = JSON.stringify(STEPS).includes('erosmancer');
     assert.ok(f, 'the Input field is offered in the step editor');
   });

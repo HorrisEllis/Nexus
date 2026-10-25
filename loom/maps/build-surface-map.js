@@ -159,6 +159,16 @@ const FILES = [
   // the declared convention, not a static crossing. Consumed by idearium/api (GET /api/automation, POST /api/automation/run).
   ['lib/automation-registry.js', I('lib/automation-registry.js'), [I('lib/node-schemas/schema.macro')]],   // lib's own contribution: the automation node TYPES it reads in-process
   [I('idearium/api/index.js'), I('lib/automation-registry.js'), '§AU1 — automation.list / automation.run handlers call list()/run(); clear-glass engine reached by runtime port :7704'],
+  // §0.60.251 AE1 — the automation engine moved from clear-glass to the orchestrator (it is the platform's; each system sovereign).
+  // The engine is DI (receives hooks, reaches no system); the orchestrator hosts it and serves /automation/* on :9000. nodes.js is
+  // core now (a node-file utility used by ≥2 systems). Clear Glass reaches the engine by PORT, never a require — nothing coupled.
+  ['orchestrator/automation/index.js', I('orchestrator/automation/index.js'), [I('orchestrator/automation/engine.js'), I('orchestrator/automation/routes.js')]],
+  [I('orchestrator/orchestrator.js'), I('orchestrator/automation/index.js'), '§AE1/AE3 — the :9000 server mounts the engine door (/automation/*)'],
+  ['orchestrator/automation/engine.js', I('orchestrator/automation/engine.js'), [I('orchestrator/automation/cron.js'), I('orchestrator/automation/template.js'), I('orchestrator/automation/steps.js'), I('orchestrator/automation/dom.js')]],
+  ['lib/automation-nodes.js', I('lib/automation-nodes.js'), [I('lib/node-export.js')]],   // core node-file utility + the one source of NODES_DIR
+  [I('orchestrator/automation/routes.js'), I('lib/automation-nodes.js'), '§AE1 — the door lists/imports .macro/.workflow node files through the core utility'],
+  ['clear-glass/src/mesh/automation-client.js', I('clear-glass/src/mesh/automation-client.js'), []],   // port client to :9000 — a runtime edge, no static require into the orchestrator
+  [I('clear-glass/src/mesh/agent-mesh.js'), I('clear-glass/src/mesh/automation-client.js'), '§AE1 — agent-mesh reaches the engine by port (was: new AutomationEngine); the orchestrator owns it now'],
   [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
   [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
   // §0.60.157 GM4 — the node lattice: every data node of every system, edges typed; read by route, never the files
