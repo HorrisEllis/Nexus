@@ -3,8 +3,8 @@
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), path = require('path'), fs = require('fs');
 const ROOT = path.resolve(__dirname, '..', '..');
-const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, OUTPUT_DIR } = require(path.join(ROOT, 'orchestrator/automation/engine.js'));
-const { TEMPLATES } = require(path.join(ROOT, 'orchestrator/automation/templates.js'));
+const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, OUTPUT_DIR } = require(path.join(ROOT, 'lib/automation/engine.js'));
+const { TEMPLATES } = require(path.join(ROOT, 'lib/automation/templates.js'));
 let passed = 0, failed = 0;
 async function test(name, fn) { try { await fn(); console.log('  ✓ ' + name); passed++; } catch (e) { console.error('  ✗ ' + name + '\n    ' + (e.stack || e).toString().split('\n').slice(0, 4).join('\n    ')); failed++; } }
 const IDS = ['nexus-release', 'ollama-models', 'guardian-errors', 'chat-crawl-start', 'chat-crawl-report'];

@@ -50,7 +50,7 @@ decisions:
 
 phases:
   AE1_move_the_core:
-    status: DONE (headless) 0.60.251 — engine moved to orchestrator/automation/, runs there, decoupled (DG2: 0 created crossings, boundary 10/10); nodes.js → lib/ (core); clear-glass reaches it by port. AE3-core done too (the door is served on :9000). Live two-process verify is his.
+    status: DONE (headless) 0.60.256 — engine is CORE (lib/automation/); each system runs its own instance (Clear Glass local for browser automation, orchestrator for platform); decoupled via the kernel (boundary 10/10, no crossing); namespaced stores. Live two-process + AE4/AE5 are his.
     layer: library
     depends_on: [AE_D1_engine_home, AE_D2_state_stays]
     files:
@@ -66,14 +66,14 @@ phases:
     # (lib/phase-graph.js) reads `moves` and foresees the crossings the move CREATES (clear-glass consumers that will
     # point into the orchestrator), instead of the boundary ratchet catching them after the files are already moved.
     moves:
-      clear-glass/src/mesh/automation-engine.js: orchestrator/automation/engine.js
-      clear-glass/src/automation/cron.js: orchestrator/automation/cron.js
-      clear-glass/src/automation/template.js: orchestrator/automation/template.js
-      clear-glass/src/automation/steps.js: orchestrator/automation/steps.js
-      clear-glass/src/automation/dom.js: orchestrator/automation/dom.js
-      clear-glass/src/automation/nodes.js: orchestrator/automation/nodes.js
-      clear-glass/src/automation/from-macro.js: orchestrator/automation/from-macro.js
-      clear-glass/src/automation/templates.js: orchestrator/automation/templates.js
+      clear-glass/src/mesh/automation-engine.js: lib/automation/engine.js
+      clear-glass/src/automation/cron.js: lib/automation/cron.js
+      clear-glass/src/automation/template.js: lib/automation/template.js
+      clear-glass/src/automation/steps.js: lib/automation/steps.js
+      clear-glass/src/automation/dom.js: lib/automation/dom.js
+      clear-glass/src/automation/nodes.js: lib/automation/nodes.js
+      clear-glass/src/automation/from-macro.js: lib/automation/from-macro.js
+      clear-glass/src/automation/templates.js: lib/automation/templates.js
     spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
     does: >-
       Move the neutral engine core and its neutral helpers into the orchestrator (orchestrator/automation/) with the refactor
@@ -188,3 +188,13 @@ order: >-
 # cutover — the engine must RUN in the orchestrator and every clear-glass consumer must reach it by a route/port, designed out
 # BEFORE the move. The build/verify split stands: the deterministic move + ports are built and gate-proven here; the live
 # two-process run (Clear Glass ↔ orchestrator, the sync→async surface) is verified on his machine.
+
+# ── ADDENDUM 2026-10-25 (0.60.256) — AE_D1 superseded: the engine is CORE, each system runs its own (his sovereignty) ──
+# James: "clearglass still needs the automation for browser automation." · "sovereignty. like each system needs to be able to run on its own."
+# AE_D1 set the home to the orchestrator (0.60.255). That broke Clear Glass's OWN browser automation: it would round-trip to the
+# orchestrator and could not run with the orchestrator down. Superseded (the orchestrator decision is kept, §0.3): by his placement
+# axiom (used by ≥2 systems → the kernel) the engine CODE is CORE (lib/automation/), and EACH system runs its own instance — Clear
+# Glass local for browser automation (sovereign, standalone), the orchestrator its own for platform orchestration. Both require the
+# kernel: no crossing. Per-process store namespace (NEXUS_AUTOMATION_NS) so neither ticks the other's workflows. The orchestrator
+# still orchestrates (its instance); the engine is simply the kernel's because more than one system needs it. The move destinations
+# above are lib/automation/ (not orchestrator/automation/, which keeps only the orchestrator's host index.js).

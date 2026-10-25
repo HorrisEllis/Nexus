@@ -22,10 +22,10 @@ const path = require('path');
 const { JSDOM } = require(path.join(__dirname, '..', '..', 'node_modules', 'jsdom'));
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const T = require(path.join(ROOT, 'orchestrator/automation/template.js'));
-const CRON = require(path.join(ROOT, 'orchestrator/automation/cron.js'));
-const STEPS = require(path.join(ROOT, 'orchestrator/automation/steps.js'));
-const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, OUTPUT_DIR, nextScheduled } = require(path.join(ROOT, 'orchestrator/automation/engine.js'));
+const T = require(path.join(ROOT, 'lib/automation/template.js'));
+const CRON = require(path.join(ROOT, 'lib/automation/cron.js'));
+const STEPS = require(path.join(ROOT, 'lib/automation/steps.js'));
+const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, OUTPUT_DIR, nextScheduled } = require(path.join(ROOT, 'lib/automation/engine.js'));
 
 let passed = 0, failed = 0;
 async function test(id, desc, fn) {
@@ -120,7 +120,7 @@ await test('AV-003', 'catalogue: every type has fields and help; validation name
 
 await test('AV-004', 'every template validates clean and becomes a workflow', () => {
   clean();
-  const { TEMPLATES } = require(path.join(ROOT, 'orchestrator/automation/templates.js'));
+  const { TEMPLATES } = require(path.join(ROOT, 'lib/automation/templates.js'));
   const e = new AutomationEngine({});
   for (const t of TEMPLATES) {
     const wf = e.create({ name: t.name, steps: t.steps, vars: t.vars }).workflow;
@@ -470,7 +470,7 @@ await test('AV-034', 'runStep: one step on its own (the agent tool’s path); em
 // ── over the wire: the router, and the co-pilot's two tools ────────────────
 await test('AV-040', 'the wire router + clear_glass_automation + clear_glass_browser end to end over HTTP; origins and webhooks', async () => {
   clean();
-  const ROUTES = require(path.join(ROOT, 'orchestrator/automation/routes.js'));
+  const ROUTES = require(path.join(ROOT, 'lib/automation/routes.js'));
   const B = fakeBrowser({ 'https://work.test/find': jobsHtml([{ id: 1, title: 'Node API', budget: 500, desc: 'x' }]) });
   const e = new AutomationEngine({}); e.setHooks({ browserFn: B.fn, askAgentFn: async () => ({ text: '8' }) });
   const macros = { apply: { name: 'apply', params: ['email'], steps: [{ action: 'navigate', data: { url: 'https://work.test/find' } }, { action: 'type', data: { selector: '#q', text: '{{email}}' } }, { action: 'toast', data: { text: 'hi' } }] } };

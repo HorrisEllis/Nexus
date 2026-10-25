@@ -9,11 +9,11 @@ intent: null
 summary: AE2_browser_driver_port (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1792961047684
+exported_at: 1792962436815
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792961047684
-lastSeenAt: 1792961047684
+firstSeenAt: 1792962436815
+lastSeenAt: 1792962436815
 fingerprint: null
 payload:
   id: AE2_browser_driver_port
@@ -28,4 +28,4 @@ payload:
     - AE1_move_the_core
   blocks: []
   spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
-  graph: d3351a90235007a9
+  graph: 3468e7c564c440e7

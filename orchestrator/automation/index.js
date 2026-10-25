@@ -17,7 +17,10 @@
  * No static require crosses a system boundary: the only cross-system reach is the runtime :7704 / RAID port.
  */
 const http = require('http');
-const { AutomationEngine } = require('./engine.js');
+// §0.60.256 AE1 — the orchestrator runs its OWN engine instance (sovereign); its automation store is its own namespace, so it
+// never ticks Clear Glass's browser workflows. Set before the engine module loads (it reads the namespace at load).
+process.env.NEXUS_AUTOMATION_NS = process.env.NEXUS_AUTOMATION_NS || 'orchestrator-automation';
+const { AutomationEngine } = require('../../lib/automation/engine.js');
 
 const CG_PORT = parseInt(process.env.WIRE_PORT || '7704', 10);   // Clear Glass's wire server — the browser driver + mesh live there
 
@@ -61,7 +64,7 @@ function engine() {
 
 /** handle(req) — the /automation/* door, served from the orchestrator's :9000 server. Delegates to the moved routes.js. */
 async function handle({ method, url, body = {}, headers = {}, rawBody = '' } = {}) {
-  const routes = require('./routes.js');
+  const routes = require('../../lib/automation/routes.js');
   return routes.handle(engine(), { method, url, body, headers, rawBody }, {});
 }
 
