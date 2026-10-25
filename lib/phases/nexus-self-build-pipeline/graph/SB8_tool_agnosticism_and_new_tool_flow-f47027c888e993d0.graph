@@ -1,0 +1,269 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SB8_tool_agnosticism_and_new_tool_flow:f47027c888e993d0
+type: graph
+id: phase:SB8_tool_agnosticism_and_new_tool_flow:f47027c888e993d0
+context: dependency graph of phase SB8_tool_agnosticism_and_new_tool_flow
+intent: null
+summary: 34 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878424047
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878424047
+lastSeenAt: 1792878424047
+fingerprint: null
+payload:
+  for: SB8_tool_agnosticism_and_new_tool_flow
+  kind: phase
+  repo: null
+  hash: f47027c888e993d0
+  nodes:
+    - path: copilot/axiom-manager.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: lib/agent-system/contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/governance/schedule-task.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/schedule-task.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/constant-autonomy.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/contract-queue.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/gemini-toolbox/agent-contracts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-control.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: intelligence/consumer.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-pull.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-system/submit.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/faculty/faculty-tools.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/nexus-map.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/command-builder.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gemini-toolbox/injection.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/contract-poller.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-adversarial-sim.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-contract-queue-hardening.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lib/descriptor-projector.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-router.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-ledger.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-types.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gemini-toolbox/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/loom-map.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-system/contracts.js
+      to: lib/agent-router.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/loom-map.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: copilot/lib/descriptor-projector.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/emerge/compiler/pipeline.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/event-types.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/contract-queue.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/contract-queue.js
+      to: lib/component-ledger.js
+      kind: requires
+    - from: lib/gemini-toolbox/agent-contracts.js
+      to: lib/gemini-toolbox/index.js
+      kind: requires
+    - from: lib/system-control.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/agent-system/submit.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: lib/agent-tools/tools/query/nexus-map.js
+      to: lib/agent-system/contracts.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/module-builder.js
+      kind: requires
+    - from: intelligence/consumer.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: orchestrator/lib/contract-poller.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: tests/modules/test-adversarial-sim.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: tests/modules/test-contract-queue-hardening.js
+      to: lib/contract-queue.js
+      kind: requires
+    - from: lib/agent-pull.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/command-builder.js
+      to: lib/tool-index.js
+      kind: requires
+    - from: lib/gemini-toolbox/injection.js
+      to: lib/gemini-toolbox/agent-contracts.js
+      kind: requires
+  crossings:
+    - from: copilot/module-builder.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/module-builder.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB6_contract_type_schemas_and_toolbox_directory
+    dependents: []
+    upstream:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB1_schema_extension
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB6_contract_type_schemas_and_toolbox_directory
+    downstream: []
+    blockedBy:
+      - docs/nexus-self-build-pipeline-phasemap.spec::SB6_contract_type_schemas_and_toolbox_directory
+    unlocks: []
+    conflicts:
+      - with: docs/nexus-self-build-pipeline-phasemap.spec::SB2_universal_file_parse
+        files:
+          - lib/tool-index.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by SB6_contract_type_schemas_and_toolbox_directory
+      - 'depends on (1): SB6_contract_type_schemas_and_toolbox_directory · all upstream 2'
+      - 'needed by (0): —'
+      - 'same files as SB2_universal_file_parse with no order between them: lib/tool-index.js'
+    edges:
+      - from: docs/nexus-self-build-pipeline-phasemap.spec::SB6_contract_type_schemas_and_toolbox_directory
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682466
+exported_at: 1792880100866
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682466
-lastSeenAt: 1792877682466
+firstSeenAt: 1792880100866
+lastSeenAt: 1792880100866
 fingerprint: null
 payload:
   for: SV1_a_stack_per_root
@@ -48,6 +48,8 @@ payload:
     upstream:
       - docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
     downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG8_the_factory
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-24-cos-services-phasemap.spec::SV2_into_a_compartment
       - docs/2026-10-24-cos-services-phasemap.spec::SV3_on_the_cos_bus
       - docs/2026-10-24-cos-services-phasemap.spec::SV4_the_doors
@@ -60,8 +62,8 @@ payload:
       - layer 1 · ready
       - 'depends on (1): SV0_the_engines_in_cos'
       - >-
-        needed by (3): SV2_into_a_compartment, SV3_on_the_cos_bus, SV4_the_doors · finishing it
-        unlocks SV2_into_a_compartment
+        needed by (3): SV2_into_a_compartment, SV3_on_the_cos_bus, SV4_the_doors · all downstream 5
+        · finishing it unlocks SV2_into_a_compartment
     edges:
       - from: docs/2026-10-24-cos-services-phasemap.spec::SV0_the_engines_in_cos
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: HG6_scanner_status_vocabulary (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792877162213
+exported_at: 1792879044183
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877162213
-lastSeenAt: 1792877162213
+firstSeenAt: 1792879044183
+lastSeenAt: 1792879044183
 fingerprint: null
 payload:
   id: HG6_scanner_status_vocabulary
@@ -24,4 +24,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: a7a98ffae0d76398
+  graph: d6bdb1a604712909

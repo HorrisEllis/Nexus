@@ -7,11 +7,11 @@ intent: null
 summary: 37 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877163790
+exported_at: 1792880100786
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163790
-lastSeenAt: 1792877163790
+firstSeenAt: 1792880100786
+lastSeenAt: 1792880100786
 fingerprint: null
 payload:
   for: ND3_each_server_serves_its_nodes
@@ -291,9 +291,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - >-
-        layer 11 · ON THE CRITICAL PATH · blocked by ND2_one_node_route_for_every_system,
-        ND_D2_the_owner_writes
+      - layer 11 · blocked by ND2_one_node_route_for_every_system, ND_D2_the_owner_writes
       - >-
         depends on (2): ND2_one_node_route_for_every_system, ND_D2_the_owner_writes · all upstream
         18

@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677524
+exported_at: 1792880099944
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677524
-lastSeenAt: 1792787677524
+firstSeenAt: 1792880099944
+lastSeenAt: 1792880099944
 fingerprint: null
 payload:
   for: COSA2_runtime_and_dependencies
@@ -102,6 +102,9 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy: []
     unlocks:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA3_run_and_supervise
@@ -111,7 +114,7 @@ payload:
       - layer 1
       - 'depends on (1): COSA1_version_store_and_import'
       - >-
-        needed by (1): COSA3_run_and_supervise · all downstream 18 · finishing it unlocks
+        needed by (1): COSA3_run_and_supervise · all downstream 21 · finishing it unlocks
         COSA3_run_and_supervise
     edges:
       - from: docs/2026-10-15-cos-app-phasemap.spec::COSA1_version_store_and_import

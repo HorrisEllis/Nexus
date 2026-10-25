@@ -1,45 +1,39 @@
-# 0.60.250 — DG2 can see a relocation (a gap found by building AE1 through the pipeline)
+# 0.60.250 — SV1, the census half: who writes which table of the shared store
 
-James, 2026-10-25: "i wanted you to simulate idearium, the entire process so you can find gaps, and debugg while building."
+James, 2026-10-24: "i want to get each system soveriegn and inside a cos compartment" · "continue"
 
-Building the automation-engine → orchestrator move (phase AE1) through Idearium's real pipeline — not hand-editing — is what
-found this. The pipeline's own gate caught it before a line of the move was written.
+Every "data" blocker in the sovereignty census is the same file: the one shared store, `cortex/memory/jaa-db.js`. Before any table can
+be given an owner, the census has to say who uses which table, from the code. That is all this release does: it decides nothing.
 
-## The gap
-`lib/phase-graph.js` is DG2: "a phase has a dependency graph before it executes." It computed every boundary **crossing**
-from each file's **current** system. So for a phase that **moves** files across a system boundary, it reported the crossings
-that exist **today** (for AE1: 0–1), and was blind to the crossings the move will **create** — the Clear Glass consumers
-(`agent-mesh`, `routes`, `bridge`, `live-recording`) that would point *into* the orchestrator the moment the engine moved
-there. The boundary **ratchet** (`test-system-boundary`) would catch those, but only *after* the files were already moved and
-the suite ran — the "caught an hour later" failure `docs/CLAUDE.md` names from FR6.
+## What it reads, and how (§0.1)
+`lib/system-boundary.js` `tables()`:
+- A **store user** is a file whose require resolves to the store.
+- Its **table calls** are `<anything>.<op>('<table>'`, read in its code with comments blanked. A table named by the file's own string
+  constant (`const TABLE = 'loom_changelog'`) is read too.
+- Writes are insert, upsert, update and delete. The rest are reads.
+- **Said:** 21 of 106 store users name no table this can read (a table chosen at run time). They are counted, not hidden.
 
-## The fix
-A relocation phase now declares what it moves:
+## What it found (Nexus, 2026-10-24)
+127 tables:
+- **43** have one writer system. That is the owner the evidence names.
+- **3** are written by one system, and by core too.
+- **31** are written only by core. They go home with core's files (SV2).
+- **3** are contested, written by several systems: `event_log`, `failures`, `gaps`.
+- **47** are only read.
 
-```
-moves:
-  clear-glass/src/mesh/automation-engine.js: orchestrator/automation/engine.js
-  …
-```
+## Where to see it
+`GET /api/system/tables[?system=]`, the command `system tables [<system>]`, and the tables a system touches in Settings › its repo ›
+System › Sovereignty.
 
-`graphFor()` reads `moves` and evaluates **every edge both before and after** the move:
-- a crossing that exists only **after** → `created: true` ("MOVE CREATES A CROSSING … design it out — a route/port —
-  BEFORE the move, not after the ratchet fails");
-- a crossing that existed before and not after → `removed: true` (the move cleans it up);
-- the moved node shows `[source → destination]`, and the phase's `systems` includes both.
+## His call (SV1_D1 in docs/2026-10-24-sovereign-systems-phasemap.spec)
+On brave-cori, his answer to this same proposal (a table → owner map) was: "Look at emerge. Deeply Custom". That line's coder read it as:
+declare each system's tables in his Emergence language, and compile the owner map from those declarations. To confirm. So how a system
+declares what it owns is his to choose:
+- (a) Emergence: `<system>.eg`, compiled to its store module. No `.eg` program exists yet.
+- (b) The table lists in `lib/system-store.js` `openStore`, which guardian and loom already use.
 
-Backward-compatible: a phase with no `moves:` produces a byte-identical graph (proven by a regression guard). Every real
-caller — the Idearium build path (`idearium/api/index.js`), the `…/phases/dag` route, and `phase-specs` — already passes the
-map text, so the fix fires in the real build with **no caller change**.
+Either way, the three contested tables are his to assign.
 
 ## Proof
-- `tests/modules/test-phase-graph.test.js` **6/6** (in `run-all`). New **PG-06**: a move's created crossing is foreseen and
-  flagged `created`; a destination-side consumer's prior crossing is flagged `removed`, never `created`; a no-`moves` phase is
-  unchanged.
-- AE1's regenerated `.graph` now carries **4 `created: true`** crossings (`clear-glass → orchestrator`). The pipeline itself
-  now proves what the earlier dry run argued by hand: AE1 is one atomic move-plus-port cutover — surfaced *before* any code
-  moves, which is the whole point of DG2.
-
-## Why it matters beyond AE1
-Every sovereignty migration (RF2, the COS compartment moves, every "make system X sovereign") is a relocation. Until now DG2
-could not warn that a move would breach the boundary; now it does, at map time.
+SV-10 (on a fixture: a constant is read, a comment is not, a two-writer table is contested with no owner guessed, and the route and
+command work). SV 10/10, SB 10/10, route contracts 4/4, registration shape 8/8.

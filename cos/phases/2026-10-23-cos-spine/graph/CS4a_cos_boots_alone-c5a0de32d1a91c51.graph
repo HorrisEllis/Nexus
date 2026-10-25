@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877682405
+exported_at: 1792880100798
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682405
-lastSeenAt: 1792877682405
+firstSeenAt: 1792880100798
+lastSeenAt: 1792880100798
 fingerprint: null
 payload:
   for: CS4a_cos_boots_alone
@@ -233,6 +233,9 @@ payload:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-23-cos-spine-phasemap.spec::CS9_every_project_a_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
     unlocks: []
@@ -241,7 +244,7 @@ payload:
     lines:
       - layer 3 · blocked by CS_D7_sovereign_first
       - 'depends on (2): CS_D7_sovereign_first, COSA3_run_and_supervise · all upstream 4'
-      - 'needed by (1): CS4_every_system_a_compartment · all downstream 8'
+      - 'needed by (1): CS4_every_system_a_compartment · all downstream 11'
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D7_sovereign_first
         kind: declared

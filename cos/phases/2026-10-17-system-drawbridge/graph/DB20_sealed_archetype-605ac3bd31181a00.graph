@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677844
+exported_at: 1792880100389
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677844
-lastSeenAt: 1792787677844
+firstSeenAt: 1792880100389
+lastSeenAt: 1792880100389
 fingerprint: null
 payload:
   for: DB20_sealed_archetype
@@ -48,7 +48,8 @@ payload:
     layer: 7
     deps:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
-    dependents: []
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
     upstream:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB0c_reading
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB10_shadow_and_negative_space_at_the_drawbridge
@@ -60,7 +61,8 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
-    downstream: []
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG2_genesis_compartments_through_the_registry
     blockedBy:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
     unlocks: []
@@ -69,7 +71,7 @@ payload:
     lines:
       - layer 7 · blocked by DB19_genesis_sandboxed_fork
       - 'depends on (1): DB19_genesis_sandboxed_fork · all upstream 10'
-      - 'needed by (0): —'
+      - 'needed by (1): MG2_genesis_compartments_through_the_registry'
     edges:
       - from: docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
         kind: declared

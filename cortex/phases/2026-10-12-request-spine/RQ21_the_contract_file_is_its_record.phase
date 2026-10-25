@@ -7,11 +7,11 @@ intent: null
 summary: RQ21_the_contract_file_is_its_record (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792841755306
+exported_at: 1792878422549
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755306
-lastSeenAt: 1792841755306
+firstSeenAt: 1792878422549
+lastSeenAt: 1792878422549
 fingerprint: null
 payload:
   id: RQ21_the_contract_file_is_its_record
@@ -27,4 +27,4 @@ payload:
     - RQ0_the_inventory_proved
   blocks: []
   spec: null
-  graph: 57f32a0c63fcd423
+  graph: 9080e1e865405f1f

@@ -1,47 +1,34 @@
-# 0.60.249 — AU1: the automation union, one neutral door over all six sources
+# 0.60.249 — BCR2 LM4: the wall around a compartment (from brave-cori); one question for him
 
-James, 2026-10-24: "copilot system, ollama, lib folder, clearglass, idearium, and brainos have automation"
-James, 2026-10-25: "Copilot programmable and automation and the Lib folder automation. Clearglass automation, and macros, continue."
+James, 2026-10-24: "can you resolve this?" (claude/brave-cori-eczug1)
 
-He named the six places that run automation and said unify them. AU1 does, through one neutral registry —
-`lib/automation-registry.js` — with an adapter per source, not six engines merged into one.
+This ports brave-cori's 0.60.242 LM4, which carried his words: "Do it." · "once it's merged with COS, those fucking boundaries, they're
+not, it's not coupling after that. There's no coupling after that."
 
-## What changed
-- **`lib/automation-registry.js`** (new): the one door.
-  - `sources()` — each of his six sources (copilot, ollama, lib, clear-glass, idearium, brainos) with its presence, named.
-  - `list({source})` — the workflows **and** macros across every present source, merged; a source that fails is named in
-    `sources[]`, never thrown (§1.2).
-  - `run(source, id)` — runs one automation through its source and **records it under that source** (and says `via` when the
-    shared engine actually executed it — no silent redirect).
-  - `describe()` — the honest self-model: which source is the engine, which are drivers, which is in-process, which is absent.
-- **Route** (his delivery order): `GET /api/automation` (and `?source=`), `POST /api/automation/run`.
-- **Command**: `automation list [--source <id>]`, `automation run <source> <id>` — so every agent has it through `nexus.command`.
-- Wired into loom with its real consumer edge (idearium/api → the registry).
+## Ported (cherry-picked, resolved against RF2)
+- **The wall:** `cos/compartment/boundary.js`. COS's process runner preloads it for a compartment whose env carries `COS_BOUNDARY`.
+  Any `require()` outside the compartment's allowed paths (its folder, core, node_modules) is refused.
+- **`loom/templates/cos-compartment.js`:** `boundaryFor` and `moveIn`. The seal moves a system in, never before.
+- **`lib/cos-bridge.js`:** `start`, `stop`, `processOf`.
+- **`lib/gap-field.js`:** no longer loads Cortex's store just by being required. It is lazy, and outside Cortex it uses an async API
+  over Cortex's new `/api/gap-field/report` and `/api/gap-field/open`. The wall found this on brave-cori; the census cannot see it.
 
-## Reuse before build (§8.6), and what that surfaced (§0.0 truth over coherence, §0.1 evidence)
-Read before built: there is exactly **one** real workflow+macro engine in this tree —
-`clear-glass/src/mesh/automation-engine.js` (:7704), already complete (triggers, steps, cron, webhooks, runs). So the registry
-does **not** invent six engines; it reaches that one over the wire door `lib/agent-tools` and `ui/brainos` already use, and
-tells the truth about each source:
-- **clear-glass** — the engine itself (workflows + the `.macro` nodes).
-- **brainos** — that engine's own store (`data/brainos/workflows`); the same data, surfaced under brainos, not a second engine.
-- **copilot** / **idearium** — **drivers** that run on the shared engine (copilot via its agent-tools; idearium via the BrainOS
-  fold BX7); no separate store, so a run delegates and says so.
-- **lib** — does not run automations; it **defines the node types** every source builds from (`lib/node-schemas`:
-  `schema.macro`, `schema.workflow`, `schema.debug_macro`).
-- **ollama** — has **no** automation surface at all (checked 2026-10-25); named absent, never faked.
+## Changed for main
+- `processOf` asks COS's host (`cos/host` gains `processOf`), instead of core loading `cos/compartment/process-runner.js`. That would
+  have been a new crossing up into COS, and the ratchet refused it.
+- `FOLDED` and `LANGUAGE_PATHS` are exported empty. Brave-cori kept those folders at the top level; RF2 put them inside `lib/`, which is
+  mounted. When warp becomes a system (CS19), `LANGUAGE_PATHS` names it.
+- The atlases, phase nodes and loom registry were regenerated, not merged.
 
-Cobalt's `automation/engine.js` was deliberately **not** ported: this tree already has the richer engine, and a second would
-duplicate it. The transport is dependency-injected, so the registry is a pure, testable neutral core with no static
-cross-system require; the edge to :7704 is a runtime port (the declared convention), not a boundary crossing.
+## A question for him (it is his call)
+On brave-cori, "sovereign" meant "loads no other system's code", and his "Do it." moved Loom into its compartment. On main, sovereign
+means both ways, by his CS_D7: "Dont they need to be sovereign first?" … "no other system loading its code". Loom loads no other system's
+code now, but 34 places still load Loom's. So the seal refuses, and **Loom is not moved in yet**. The refusal now names both halves.
 
-His decision **AU_D1** is recorded DECIDED 2026-10-25 in `docs/2026-10-24-agent-orchestration-phasemap.spec`, with the finding
-above attached as the coder's, to confirm the framing with him.
+The coder's reading by the axioms: the wall constrains only Loom's own requires. What loads Loom's code does so from its own process, so
+moving Loom in would break nothing, and it can be undone (stop). But his two statements disagree, so the seal stays strict until he says
+which holds.
 
 ## Proof
-- `tests/modules/test-automation-registry.test.js` **11/11** (in `run-all`): lists workflows and macros from clear-glass;
-  brainos surfaces the same store via clear-glass; a run records under its source with `via`; lib refuses honestly saying where
-  it runs; ollama is named absent; the engine down is named in `sources[]`, never thrown.
-
-## What is next (his delivery order)
-The UI — a panel on the BrainOS Flow canvas that lists the union and runs one — is deferred to the BrainOS build (BX), said.
+test-loom-into-cos 8/8. LI-07: the seal refuses guardian and names both halves. LI-08: the refusal and its reason now, and the full move-in
+once the seal is ready. Also: CT 8/8, gap-field 18/18, SB 10/10, SV 9/9. The ratchet is green.

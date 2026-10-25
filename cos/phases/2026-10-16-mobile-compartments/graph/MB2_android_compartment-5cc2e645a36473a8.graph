@@ -1,0 +1,121 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MB2_android_compartment:5cc2e645a36473a8
+type: graph
+id: phase:MB2_android_compartment:5cc2e645a36473a8
+context: dependency graph of phase MB2_android_compartment
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792879718479
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879718479
+lastSeenAt: 1792879718479
+fingerprint: null
+payload:
+  for: MB2_android_compartment
+  kind: phase
+  repo: null
+  hash: 5cc2e645a36473a8
+  nodes:
+    - path: cos/compartment/process-runner.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/cli/commands/run.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/status.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vm.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/foundation/snapshot.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/gates/process.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/test/test.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/watchdog/monitor.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/compartment/qemu-runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/siso/Event.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/compartment/process-runner.js
+      to: cos/siso/Event.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/compartment/process-runner.js
+      to: cos/compartment/qemu-runtime.js
+      kind: requires
+    - from: cos/cli/commands/run.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/cli/commands/status.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/cli/commands/vm.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/host/gates/process.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/test/test.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: cos/watchdog/monitor.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges: []

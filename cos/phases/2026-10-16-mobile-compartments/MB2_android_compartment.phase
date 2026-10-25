@@ -7,11 +7,11 @@ intent: null
 summary: MB2_android_compartment (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677718
+exported_at: 1792879718479
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677718
-lastSeenAt: 1792787677718
+firstSeenAt: 1792879718479
+lastSeenAt: 1792879718479
 fingerprint: null
 payload:
   id: MB2_android_compartment
@@ -24,4 +24,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 9674795718df2e8a
+  graph: 5cc2e645a36473a8

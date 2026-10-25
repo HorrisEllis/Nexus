@@ -9,11 +9,11 @@ intent: null
 summary: IM7_the_ui_on_the_registry (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792841755814
+exported_at: 1792879045366
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755814
-lastSeenAt: 1792841755814
+firstSeenAt: 1792879045366
+lastSeenAt: 1792879045366
 fingerprint: null
 payload:
   id: IM7_the_ui_on_the_registry
@@ -28,4 +28,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 32a1f209930e23a0
+  graph: d1f8471077eaf6a0

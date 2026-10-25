@@ -1,0 +1,255 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DOD8_contract_conditions_comparison_and_drift_engines:086c4a3b206e2965
+type: graph
+id: phase:DOD8_contract_conditions_comparison_and_drift_engines:086c4a3b206e2965
+context: dependency graph of phase DOD8_contract_conditions_comparison_and_drift_engines
+intent: null
+summary: 27 node(s), 6 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878419857
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878419857
+lastSeenAt: 1792878419857
+fingerprint: null
+payload:
+  for: DOD8_contract_conditions_comparison_and_drift_engines
+  kind: phase
+  repo: null
+  hash: 086c4a3b206e2965
+  nodes:
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: lib/file-integrity.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: changes
+      exists: true
+      system: lib
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/worker.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: scripts/mco5-one-real-job.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/mco6-ic9-kill-and-restart.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-dependency-graph.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-tangible-file.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mco19-clearglass-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-boundary.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/event-taxonomy.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-intent-contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contract-repo-provision.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/meta/adversary-suite.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/contract-repo-provision.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/event-taxonomy.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-boundary.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/agent-intent-contract.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/worker.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco5-one-real-job.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco6-ic9-kill-and-restart.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-dependency-graph.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-tangible-file.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/mco19-clearglass-dispatch.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: architect/service.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: architect
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: copilot/server.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: copilot
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

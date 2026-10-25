@@ -7,18 +7,21 @@ intent: null
 summary: SV1_every_table_has_one_owner (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792877682573
+exported_at: 1792881043792
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877682573
-lastSeenAt: 1792877682573
+firstSeenAt: 1792881043792
+lastSeenAt: 1792881043792
 fingerprint: null
 payload:
   id: SV1_every_table_has_one_owner
   map: docs/2026-10-24-sovereign-systems-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    "PARTLY — the census DONE 0.60.250 (lib/system-boundary.js tables(): 127 tables, 43 one writer,
+    3 one system + core, 31 only core, 3 contested: event_log, failures, gaps; 47 read only; 21 of
+    106 store users name no table it can read); the declaration OPEN, his call (SV1_D1)"
   files:
     - lib/system-store.js
     - lib/table-owners.js
@@ -30,4 +33,4 @@ payload:
     - SV0_the_census_tells_the_truth
   blocks: []
   spec: null
-  graph: 52b79032594a9871
+  graph: 5d5d302b43b93e43

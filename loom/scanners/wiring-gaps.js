@@ -47,7 +47,7 @@ const VERSION = '1.0.0';
  * is either the number of gaps actually created or actually deduped by
  * gap-field's own existing rule (never re-created if still open).
  */
-function scanAndReport() {
+async function scanAndReport() {   // 0.60.242 LM4: async — gaps reported through Cortex's route (gap-field reportAsync)
   const results = { danglingReported: 0, unwiredReported: 0, errors: [] };
 
   // ── dangling requires ────────────────────────────────────────────────
@@ -59,7 +59,7 @@ function scanAndReport() {
   try {
     const { wrong } = dangling.report();
     for (const item of wrong) {
-      const r = gapField.report({
+      const r = await gapField.reportAsync({
         type: 'dangling-require',
         // §FIXED live, same run: gapField's dedup_key is domain::type::source
         // only — a constant source here collapsed all 78 real, distinct
@@ -82,7 +82,7 @@ function scanAndReport() {
   try {
     const unwired = ledger.unwiredComponents();
     for (const component of unwired) {
-      const r = gapField.report({
+      const r = await gapField.reportAsync({
         type: 'unwired-write',
         source: `${MODULE_ID}:${component}`,
         body: `'${component}' writes to the ledger without a declared hook/wire — the movement is recorded but not locatable in the architecture.`,

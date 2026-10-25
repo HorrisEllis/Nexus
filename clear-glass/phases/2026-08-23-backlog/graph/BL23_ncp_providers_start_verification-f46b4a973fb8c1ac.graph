@@ -1,0 +1,132 @@
+envelope: 1
+uuid: nexus-export-graph-phase:BL23_ncp_providers_start_verification:f46b4a973fb8c1ac
+type: graph
+id: phase:BL23_ncp_providers_start_verification:f46b4a973fb8c1ac
+context: dependency graph of phase BL23_ncp_providers_start_verification
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878419806
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878419806
+lastSeenAt: 1792878419806
+fingerprint: null
+payload:
+  for: BL23_ncp_providers_start_verification
+  kind: phase
+  repo: null
+  hash: f46b4a973fb8c1ac
+  nodes:
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/lists.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/bookmarks/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/nexus-chat.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/wire/nexus-wire.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/plugins/adblocker/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/adblock/import.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/wire/eros-registry-components.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/listener-commands.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/adblock/lists.js
+      to: clear-glass/src/adblock/engine.js
+      kind: requires
+    - from: clear-glass/src/adblock/lists.js
+      to: clear-glass/src/adblock/import.js
+      kind: requires
+    - from: clear-glass/src/page/nexus-chat.js
+      to: lib/listener-commands.js
+      kind: requires
+    - from: clear-glass/wire/nexus-wire.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/wire/nexus-wire.js
+      to: clear-glass/wire/eros-registry-components.js
+      kind: requires
+    - from: clear-glass/wire/nexus-wire.js
+      to: lib/pulse.js
+      kind: requires
+    - from: clear-glass/plugins/adblocker/index.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-08-23-backlog-phasemap.spec::BL1_macro_erosmancer_integration
+    dependents:
+      - docs/2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
+    upstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL0_macro_system
+      - docs/2026-08-23-backlog-phasemap.spec::BL1_macro_erosmancer_integration
+    downstream:
+      - docs/2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
+    blockedBy: []
+    unlocks:
+      - docs/2026-08-23-backlog-phasemap.spec::BL29_tab_context_menu_move_to_background
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (1): BL1_macro_erosmancer_integration · all upstream 2'
+      - >-
+        needed by (1): BL29_tab_context_menu_move_to_background · finishing it unlocks
+        BL29_tab_context_menu_move_to_background
+    edges:
+      - from: docs/2026-08-23-backlog-phasemap.spec::BL1_macro_erosmancer_integration
+        kind: inferred

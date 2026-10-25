@@ -698,6 +698,9 @@ async function sovCard(sys) {
     <div class="kv">loads other systems' code: <b>${r.out}</b> · its code loaded by other systems: <b>${r.inFrom ? r.inFrom.systems : r.in}</b> · by core: <b>${r.inFrom ? r.inFrom.core : '?'}</b>
       · registry ${r.registry ? '<span class="tag ok">yes</span>' : '<span class="tag warn">no</span>'} · compartment.json ${r.compartment ? '<span class="tag ok">yes</span>' : '<span class="tag warn">no</span>'}</div>
     ${rows.length ? `<details><summary>what it loads from other systems (${rows.length})</summary>${rows.join('')}</details>` : ''}`;
+  // 0.60.250 SV1 — its tables in the shared store: what it writes, and who else does (evidence; a contested one is his call)
+  let t; try { t = await api(`/api/system/tables?system=${encodeURIComponent(sys)}`); t = t.data || t; } catch (_) { t = null; }
+  if (t && (t.tables || []).length) el.insertAdjacentHTML('beforeend', `<details><summary>its tables in the shared store (${t.tables.length})</summary>${t.tables.map(x => `<div class="d"><span class="tag ${x.status === 'contested' ? 'warn' : x.owner === sys ? 'ok' : ''}">${esc(x.status)}</span> ${esc(x.table)} — writes: ${esc(x.writers.join(', ') || '—')}${x.readers.length ? ` · reads: ${esc(x.readers.join(', '))}` : ''}</div>`).join('')}</details>`);
 }
 function viewSystem(d) {
   const sys = _sysOf(d.repo);

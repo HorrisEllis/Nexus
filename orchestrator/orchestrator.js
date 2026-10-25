@@ -158,7 +158,7 @@ const PORT    = parseInt(process.env.ORCHESTRATOR_PORT || '9000');
 // lib/pulse.js is optional — if it doesn't exist yet, pulse is a no-op.
 let _orchPulse = null;
 try {
-  const { createPulse } = require('./lib/pulse');
+  const { createPulse } = require('../lib/pulse.js');   // 0.60.236 moved to the kernel (orchestrator/lib/pulse.js re-exports it)
   // Pulse is started after server binds (in server.listen callback)
   module._createPulse = createPulse;
 } catch(_) {

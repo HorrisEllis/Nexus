@@ -1,0 +1,150 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CG3_relay_into_cortex_sse:d3c6b95b8cefba50
+type: graph
+id: phase:CG3_relay_into_cortex_sse:d3c6b95b8cefba50
+context: dependency graph of phase CG3_relay_into_cortex_sse
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792878420186
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792878420186
+lastSeenAt: 1792878420186
+fingerprint: null
+payload:
+  for: CG3_relay_into_cortex_sse
+  kind: phase
+  repo: null
+  hash: d3c6b95b8cefba50
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/component-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/component-registry.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+    dependents:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR1_brainos_cross_system_relay
+    upstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+    downstream:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR1_brainos_cross_system_relay
+    blockedBy: []
+    unlocks:
+      - docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::BR1_brainos_cross_system_relay
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): RF1_ncp_liveness_is_console_only'
+      - >-
+        needed by (1): BR1_brainos_cross_system_relay · finishing it unlocks
+        BR1_brainos_cross_system_relay
+    edges:
+      - from: docs/2026-09-05-observability-sovereignty-and-agent-mesh-phasemap.spec::RF1_ncp_liveness_is_console_only
+        kind: inferred

@@ -7,11 +7,11 @@ intent: null
 summary: DB24_cos_reads_only_the_registry (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792875541764
+exported_at: 1792879718673
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792875541764
-lastSeenAt: 1792875541764
+firstSeenAt: 1792879718673
+lastSeenAt: 1792879718673
 fingerprint: null
 payload:
   id: DB24_cos_reads_only_the_registry
@@ -28,4 +28,4 @@ payload:
     - DB11_cos_compartment_per_system
   blocks: []
   spec: null
-  graph: 988f78644703e222
+  graph: eed209f2f43ef905

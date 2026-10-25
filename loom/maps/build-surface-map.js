@@ -429,6 +429,8 @@ const CONSUMERS = [
   [I('loom/scanners/phasemap-map.js'), I('lib/phasemap-parse.js'), '0.60.244 SV0 loom re-exports parsePhasemapText, isPhasemapFile, NS, SYSTEMS from core'],
   [I('idearium/api/index.js'), I('cos/testenv/index.js'), '0.60.244 SV0 runTarget handed to verify-first (VF.check runTarget:) through the door idearium already crosses'],
   [I('cos/testenv/index.js'), I('cos/testenv/run-target.js'), '0.60.244 SV0 the runTarget getter (lazy: run-target.js requires index.js)'],
+  [I('idearium/api/index.js'), I('lib/system-boundary.js'), '0.60.250 SV1 GET /api/system/tables → tables(): the shared store\'s writers and readers per table'],
+  [I('idearium/ui/settings.html'), I('idearium/api/index.js'), '0.60.250 SV1 the Sovereignty card: GET /api/system/tables?system=<it>'],
 ];
 
 function mapBuildSurface(driver) {

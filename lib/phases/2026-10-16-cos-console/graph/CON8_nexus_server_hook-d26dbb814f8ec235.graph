@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841755693
+exported_at: 1792880100158
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755693
-lastSeenAt: 1792841755693
+firstSeenAt: 1792880100158
+lastSeenAt: 1792880100158
 fingerprint: null
 payload:
   for: CON8_nexus_server_hook
@@ -48,10 +48,13 @@ payload:
     layer: 1
     deps:
       - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
-    dependents: []
+    dependents:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
     upstream:
       - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
-    downstream: []
+    downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
     blockedBy:
       - docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
     unlocks: []
@@ -60,7 +63,7 @@ payload:
     lines:
       - layer 1 · blocked by CON1_one_door_client
       - 'depends on (1): CON1_one_door_client'
-      - 'needed by (0): —'
+      - 'needed by (1): MG7_automation_macros_and_hats · all downstream 2'
     edges:
       - from: docs/2026-10-16-cos-console-phasemap.spec::CON1_one_door_client
         kind: declared

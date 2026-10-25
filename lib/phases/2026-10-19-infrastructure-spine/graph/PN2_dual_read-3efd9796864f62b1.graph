@@ -1,0 +1,233 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PN2_dual_read:3efd9796864f62b1
+type: graph
+id: phase:PN2_dual_read:3efd9796864f62b1
+context: dependency graph of phase PN2_dual_read
+intent: null
+summary: 23 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792879045553
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792879045553
+lastSeenAt: 1792879045553
+fingerprint: null
+payload:
+  for: PN2_dual_read
+  kind: phase
+  repo: null
+  hash: 3efd9796864f62b1
+  nodes:
+    - path: idearium/repo/phases.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/phase-dag.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/scanners/phasemap-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phase-mapping.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/roadmap.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/build-queue.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/emerge/compiler/phase-specs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-census.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-deps-gate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-groom.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-architecture-migrate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/repo/roadmap.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/store.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phasemap-parse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/lib/store.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/phase-dag.js
+      to: lib/phasemap-parse.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: idearium/repo/roadmap.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/store.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-map-auto.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: loom/lib/store.js
+      kind: requires
+    - from: loom/scanners/phasemap-map.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/repo/phase-mapping.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/build-queue.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/emerge/compiler/phase-specs.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-census.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-deps-gate.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: lib/phase-groom.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: tests/modules/test-architecture-migrate.test.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/phases.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      kind: requires
+  crossings:
+    - from: idearium/repo/nexus-self.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+    - from: idearium/repo/roadmap.js
+      to: loom/scanners/phasemap-map.js
+      fromSystem: idearium
+      toSystem: loom
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+    dependents:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN3_maps_rendered_from_nodes
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+    upstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::ST1_schema_for_everything_reusable
+    downstream:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN3_maps_rendered_from_nodes
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PRC1_phase_reality_check
+      - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
+      - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
+    blockedBy:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+    unlocks:
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::PN3_maps_rendered_from_nodes
+    conflicts:
+      - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+        files:
+          - lib/phase-dag.js
+      - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
+        files:
+          - lib/phase-dag.js
+      - with: docs/2026-10-19-infrastructure-spine-phasemap.spec::SC1_scaling_limits_named
+        files:
+          - lib/phase-dag.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by PN1_phases_to_nodes
+      - 'depends on (1): PN1_phases_to_nodes · all upstream 3'
+      - >-
+        needed by (2): PN3_maps_rendered_from_nodes, PRC1_phase_reality_check · all downstream 4 ·
+        finishing it unlocks PN3_maps_rendered_from_nodes
+      - >-
+        same files as IN7_every_phase_and_spec_on_the_spine with no order between them:
+        lib/phase-dag.js
+      - 'same files as NC1_neutral_core_boundary with no order between them: lib/phase-dag.js'
+      - 'same files as SC1_scaling_limits_named with no order between them: lib/phase-dag.js'
+    edges:
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::PN1_phases_to_nodes
+        kind: declared

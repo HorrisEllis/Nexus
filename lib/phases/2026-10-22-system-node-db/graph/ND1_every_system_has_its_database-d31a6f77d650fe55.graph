@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877163788
+exported_at: 1792880100784
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163788
-lastSeenAt: 1792877163788
+firstSeenAt: 1792880100784
+lastSeenAt: 1792880100784
 fingerprint: null
 payload:
   for: ND1_every_system_has_its_database
@@ -233,7 +233,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 9 · ON THE CRITICAL PATH · ready
+      - layer 9 · ready
       - 'depends on (1): P33b_each_system_runs_its_listener · all upstream 13'
       - 'needed by (1): ND2_one_node_route_for_every_system · all downstream 5'
     edges:

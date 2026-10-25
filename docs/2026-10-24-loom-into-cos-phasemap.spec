@@ -163,3 +163,21 @@ phases:
   The kernel's 241 upward crossings into systems are what every compartment will meet next: the census lets them pass as kernel uses.
   The wall shows which a system actually hits.
 - **Not walled yet:** fs, child processes and the network (said in boundary.js and in cos-bridge's note).
+
+# ## ADDENDUM 2026-10-24 (on main) — LM0–LM3 done on main at 0.60.248
+# This map came over from brave-cori verbatim (BCR3). Its LM0–LM3 ("Loom reaches into no other system", brave-cori's 0.60.241) were
+# cherry-picked onto main at 0.60.248: the pulse from core, model calls through lib/ollama-port.js, Loom's own store, readers through
+# its routes. test-loom-into-cos 4/4. On main, LI-04 asserts outClean, because main's census counts sovereignty both ways since 0.60.244.
+# Loom's inbound side (9 systems and 25 core files still load its code) is SV6 of docs/2026-10-24-sovereign-systems-phasemap.spec. LM4
+# (Loom in its compartment) comes next.
+
+# ## ADDENDUM 2026-10-24 (on main, b) — LM4's code on main at 0.60.249; Loom not moved in yet. A question for him
+# LM4 (brave-cori's 0.60.242) is ported: cos/compartment/boundary.js (the wall), loom/templates/cos-compartment.js boundaryFor and moveIn,
+# lib/cos-bridge.js start, stop and processOf, and lib/gap-field.js made lazy. On main, processOf goes through COS's host, not COS's process
+# runner loaded from core.
+# The question, his. On brave-cori, sovereign meant "loads no other system's code", and his "Do it." moved Loom in. Main counts sovereign
+# both ways, by his CS_D7 ("Dont they need to be sovereign first?", "no other system loading its code"), so the seal refuses Loom: 34
+# places still load its code. The coder's reading by the axioms: the wall constrains only Loom's own requires, and what loads Loom's code
+# does so from its own process, so moving Loom in would break nothing; it is also undoable (stop). But his two statements disagree, so the
+# seal stays strict until he says which holds. If moving in when Loom loads nothing outside itself is his call, the seal's readiness
+# becomes outClean, and `sovereign` stays as it is.
