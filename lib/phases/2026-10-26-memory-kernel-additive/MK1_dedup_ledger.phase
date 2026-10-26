@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-memory-kernel-additive-phasemap.spec::MK1_dedup_ledger
+type: phase
+id: docs_2026-10-26-memory-kernel-additive-phasemap.spec::MK1_dedup_ledger
+context: pipeline phase MK1_dedup_ledger of docs/2026-10-26-memory-kernel-additive-phasemap.spec
+intent: null
+summary: MK1_dedup_ledger (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792992204318
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992204318
+lastSeenAt: 1792992204318
+fingerprint: null
+payload:
+  id: MK1_dedup_ledger
+  map: docs/2026-10-26-memory-kernel-additive-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/ledger-writer.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: a35e4550f2ccdcaa

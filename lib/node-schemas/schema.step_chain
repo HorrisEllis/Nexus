@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-schema-step_chain
+type: schema
+id: step_chain
+context: lib/node-schemas — shared canonical registry. Added 0.60.258 (GWK1, docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec).
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1793577600000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    lib/gate-walker.js walks a step_chain: an ordered set of steps, each a gate. The chain is the stepwise surface a drone,
+    a person or copilot advances — James, 2026-10-26: "each gate can be a step, like a question, then holds the data … use
+    the gates as the surface." It reuses the gate-memory record (schema.gate, references not copies) to hold each step's
+    result, phase-plan (GW24) + context-builder to hand each step only its budgeted packet, and raid-port + route-eligibility
+    to route each step to its own agent. The chain GROWS as it runs: a step may decompose into sub-steps appended to it
+    (dynamic decomposition). A step whose run reads outside its packet is a gap (§1.2), never hidden.
+  fields:
+    id:
+      type: string
+      required: true
+      description: the chain's scope id — one chain per scope (a repo, a run, a session, a task)
+    steps:
+      type: array
+      required: true
+      description: >-
+        ordered steps; each a gate. A step has: id (unique in the chain); kind (ask | act | check);
+        depends_on (step ids that must be recorded PASSED/ANSWERED before this one is ready — the order);
+        needs (the inputs this step reads, by reference: prior step ids and/or external ref ids — what bounds its packet);
+        params (step-kind params: an ask's question; an act's task + the needs route-eligibility reads; a check's step-gate step name)
+    created_by:
+      type: string
+      required: false
+      description: who authored the chain (a person, copilot, a decomposer) — provenance, not authority

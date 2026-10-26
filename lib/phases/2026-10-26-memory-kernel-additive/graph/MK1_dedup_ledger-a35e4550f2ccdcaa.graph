@@ -1,0 +1,95 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MK1_dedup_ledger:a35e4550f2ccdcaa
+type: graph
+id: phase:MK1_dedup_ledger:a35e4550f2ccdcaa
+context: dependency graph of phase MK1_dedup_ledger
+intent: null
+summary: 8 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792992204318
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992204318
+lastSeenAt: 1792992204318
+fingerprint: null
+payload:
+  for: MK1_dedup_ledger
+  kind: phase
+  repo: null
+  hash: a35e4550f2ccdcaa
+  nodes:
+    - path: lib/ledger-writer.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/repo/nexus-self.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/nexus-self/apply.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/ledger-writer.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/ledger-writer.js
+      to: lib/data-home.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: idearium/repo/nexus-self.js
+      to: lib/ledger-writer.js
+      kind: requires
+    - from: lib/nexus-self/apply.js
+      to: lib/ledger-writer.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-26-memory-kernel-additive-phasemap.spec::MK2_truth_and_idea_ledgers
+    upstream: []
+    downstream:
+      - docs/2026-10-26-memory-kernel-additive-phasemap.spec::MK2_truth_and_idea_ledgers
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-26-memory-kernel-additive-phasemap.spec::MK2_truth_and_idea_ledgers
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (1): MK2_truth_and_idea_ledgers · finishing it unlocks MK2_truth_and_idea_ledgers'
+    edges: []

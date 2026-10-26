@@ -41,6 +41,65 @@ decisions:
       keeps the route decision; a drone runs in a COS compartment when one is real, else against an existing target with the
       reversibility that exists (autonomous_run rewind + a Versionium snapshot).
 
+  DR_D3_the_gates_are_the_step_surface:
+    status: DECIDED 2026-10-26 by James (his realization) — "maybe a step by step guide using the gates. holy shit this is
+      why the gates. each gate can be a step, like a question, then holds the data, so that way agents can follow a order
+      like stepwise, use the gates as the surface."
+    context: >-
+      Said while the drone contract (DR_D1) and the human/copilot doors (DR5/DR6) were open. He saw what the gates are FOR: a
+      drone (or a person, or copilot) does not need a separate task format — it walks the GATES, in order, each gate a step.
+      This is not a new idea bolted on; it names a line that already runs from his own earlier words to shipped code (REUSE,
+      rule 2): (a) lib/step-gate.js + schema.step_gate — HIS 2026-09-29 "Why not gate each step with events": every build step
+      passes a gate that emits step.passed / step.blocked WITH the causal id of the step before, so the steps already link in
+      order and a block is a traceable event, not a silent empty; (b) schema.gate + the gate-memory record (GM1, 0.60.162) —
+      a durable record per gate transition {status, context (references, never copies), response, hashes}, so a gate already
+      HOLDS its data as persistent memory; (c) the contract gates — an ordered DAG with depends_on, evidence and resume. The
+      gates are therefore already a stepwise, linked, data-holding surface; today's decision is to USE them as the one surface
+      every actor advances, rather than inventing a second task/wizard format beside them.
+    chosen: >-
+      One surface: the ordered gate chain IS the step-by-step guide. A gate is a step; it may carry a QUESTION (a step that
+      needs input — the gate-memory record holds the answer when given) or a CHECK (step.passed/step.blocked); its held data
+      is the record (references, not copies); depends_on / the prior step's causal id is the order. A drone walks it stepwise
+      (one gate at a time, with the full prior context the chain already carries), the human UI (DR5) shows the same gates as
+      plain cards, and copilot (DR6) reads/advances the same chain — so person, drone and copilot share one memory and one
+      order. Built on what exists (step-gate, gate-memory GM1, the contract DAG); nothing new invented beside them.
+      The surface has its own map now (he widened it 2026-10-26: dynamic decomposition, each gate its own agent,
+      programmable): docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec (GWK1 the walker, building). A drone
+      (DR1) is a consumer that walks a chain; it depends on the walker, not the reverse.
+    reading_to_confirm: >-
+      The coder reads "like a question, then holds the data" as: a gate step can be INPUT-gathering (it poses one question and
+      the gate-memory record holds the answer), alongside today's check-gates — i.e. the gate surface spans both asking and
+      checking, and a drone/person/copilot advances the same chain. If he means instead a distinct guided WIZARD that merely
+      reuses gate styling, or that EVERY step must become a question, that is a different build — marked to confirm, not
+      assumed. What is his and acted on now: the gates are the surface (not a second format). The exact UI is DR5's to confirm
+      when built.
+    rationale_2026_10_26:
+      james: >-
+        "Yeah but it cuts down tokens drastically. Makes it more agnostic. Can handle more complex tasks by offloading into
+        the gates."
+      context: >-
+        The load-bearing WHY, and the coder had underweighted it (he had called the gate surface "a brick with nothing on it"
+        until a walker consumed it; corrected here, §0.0 truth over coherence — the economics are the capability, not a later
+        bonus). The gate chain is EXTERNAL memory: because each step's state is held in the gate record by reference, not copy
+        (schema.gate — packetHash + context "references, not copies", GM1 0.60.162), an agent running step N is handed ONLY
+        that step's packet (its spec + the specific prior outputs its depends_on names), never the whole transcript. Three
+        consequences, in his order:
+          1. "cuts down tokens drastically" — multi-step work stops growing the model's context O(N); each step carries one
+             bounded, budgeted packet. The cut already exists: lib/phase-plan.js (GW24) ranks the dependencies' code and cuts
+             it to the agent's budget, and names the cut; lib/context-builder.js assembles the packet. The gate chain is what
+             makes the prior-step outputs addressable BY REFERENCE so there is something bounded to hand over.
+          2. "makes it more agnostic" — the surface is DATA (step_gate nodes, gate records), not a model's context or a
+             language. Any walker — a cheap local Ollama step, a deterministic checker, Claude for the hard step — reads and
+             advances the same chain (ties to NC0 neutral core, 2026-10-19). The task does not belong to whoever started it.
+          3. "offloading into the gates" — a task too big for one context window becomes a sequence of bounded steps whose
+             complexity lives in the CHAIN (the structure), not in any one agent's head. This is why cheap models can do work
+             they otherwise could not: the gates carry the state between small, bounded, resumable steps.
+        The soundness condition (coder's, by the axioms, §0.1): the token offload is only as real as the steps are separable —
+        a step must need only its declared inputs. That is exactly what his depends_on DAG discipline (DG1/DG2/DG3) already
+        enforces, so the dependency-graph rules and the gate token-offload are the SAME mechanism seen twice. Where a step's
+        true inputs exceed its declared ones, the packet is wrong and the saving is false; the walker must surface that (a
+        step that reaches outside its packet is a gap, §1.2), never hide it.
+
 phases:
   DR1_the_drone_contract_and_router:
     status: OPEN
