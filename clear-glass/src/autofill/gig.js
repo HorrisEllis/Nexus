@@ -299,8 +299,79 @@ async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium'
       if (r && r.error) failed.push({ key: m.key, error: r.error }); else filled.push({ key: m.key, confidence: m.confidence, source: m.source });
     } catch (err) { failed.push({ key: m.key, error: err.message }); }
   }
+  // §FD1 0.60.266 — the category and subcategory dropdowns (Fiverr's own widgets, not <select>s): opened and chosen in the page
+  let selects = null;
+  if (gig.category) {
+    try { selects = await fillGigSelects(dom, gig, { agentId }); } catch (err) { selects = { error: err.message }; }
+    for (const x of (selects && selects.results) || []) {
+      if (x.chose) filled.push({ key: x.key, confidence: x.exact ? 'high' : 'medium', source: 'dropdown', chose: x.chose });
+      else failed.push({ key: x.key, error: x.why || 'not chosen', ...(x.options ? { options: x.options } : {}) });
+    }
+  }
   const done = new Set(filled.map(f => f.key));
-  return { totalFields: domFields.length, filled, skipped, failed, leftToCopy: gigParts(gig).filter(p => !done.has(p.key)).map(p => p.key) };
+  // the category part is one key (category › subcategory): done when the category was chosen
+  if (done.has('category.main')) done.add('category');
+  return { totalFields: domFields.length, filled, skipped, failed, leftToCopy: gigParts(gig).filter(p => !done.has(p.key)).map(p => p.key), ...(selects && selects.error ? { selectsError: selects.error } : {}) };
+}
+
+// §FD1 0.60.266 — James, 2026-10-26: "can you fix the drop down mewnu?" (Fiverr's Category / Subcategory, left "to copy by hand").
+// They are custom widgets: a box reading "SELECT A CATEGORY" that opens a list on mouse down. This runs in the page: find the box by
+// its words (category, then subcategory, which only enables after), open it as a mouse would (pointer/mouse down, up, click), wait
+// for the list, choose the option whose words match the gig's (exact first, then the closest by shared words), and say the options
+// when none fits. A native <select> is set by its option text with input/change. Never saves or publishes.
+const SELECT_SCRIPT = `async (want) => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const vis = (e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+  const norm = (s) => String(s || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+  const press = (el) => { for (const t of ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click']) el.dispatchEvent(new MouseEvent(t, { bubbles: true, cancelable: true, view: window })); };
+  const words = (s) => new Set(norm(s).split(' ').filter(w => w.length > 2 && w !== 'and'));
+  const best = (opts, v) => {
+    const nv = norm(v); let top = null, score = 0;
+    for (const o of opts) { const no = norm(o.innerText);
+      if (no === nv) return { el: o, exact: true };
+      const a = words(v), b = words(o.innerText); let k = 0; for (const w of a) if (b.has(w)) k++;
+      const sc = k / Math.max(a.size, 1) + (no.includes(nv) || nv.includes(no) ? 0.5 : 0);
+      if (sc > score) { score = sc; top = o; } }
+    return score >= 0.5 ? { el: top, exact: false } : null;
+  };
+  const findBox = (what) => {
+    const native = [...document.querySelectorAll('select')].filter(vis).find(s => new RegExp(what, 'i').test((s.name || '') + ' ' + (s.id || '') + ' ' + (s.options[0] ? s.options[0].text : '')));
+    if (native) return native;
+    const cands = [...document.querySelectorAll('[role="combobox"],[aria-haspopup],[class*="select" i],[class*="dropdown" i],button,div')]
+      .filter(vis).filter(e => { const t = (e.innerText || '').trim(); if (!t.length || t.length > 50) return false; const nt = norm(t); return ['select a ', 'select ', 'choose a ', 'choose '].some(p => nt === p + what); });   // no regex escapes: this lives in a template literal
+    return cands.sort((a, b) => a.innerText.length - b.innerText.length || b.querySelectorAll('*').length - a.querySelectorAll('*').length).pop() || null;
+  };
+  const results = [];
+  for (const w of want) {
+    if (!w.value) continue;
+    const box = findBox(w.what);
+    if (!box) { results.push({ key: w.key, why: 'no ' + w.what + ' dropdown found on this page' }); continue; }
+    if (box.tagName === 'SELECT') {
+      const o = best([...box.options].map(x => ({ innerText: x.text, opt: x })), w.value);
+      if (!o) { results.push({ key: w.key, why: 'no option matches "' + w.value + '"', options: [...box.options].map(x => x.text).slice(0, 40) }); continue; }
+      const d = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value'); d.set.call(box, o.el.opt.value);
+      box.dispatchEvent(new Event('input', { bubbles: true })); box.dispatchEvent(new Event('change', { bubbles: true }));
+      results.push({ key: w.key, chose: o.el.innerText, exact: o.exact }); await sleep(400); continue;
+    }
+    const before = new Set([...document.querySelectorAll('[role="option"],li,[class*="option" i]')]);
+    press(box); await sleep(500);
+    let opts = [...document.querySelectorAll('[role="option"],li,[class*="option" i]')].filter(vis).filter(o => { const t = (o.innerText || '').trim(); return t && t.length < 80 && !o.querySelector('[role="option"],li'); });
+    const fresh = opts.filter(o => !before.has(o)); if (fresh.length) opts = fresh;
+    if (!opts.length) { results.push({ key: w.key, why: 'the ' + w.what + ' list did not open' }); continue; }
+    const o = best(opts, w.value);
+    if (!o) { results.push({ key: w.key, why: 'no option matches "' + w.value + '"', options: opts.map(x => x.innerText.trim()).slice(0, 40) }); press(box); await sleep(200); continue; }
+    o.el.scrollIntoView({ block: 'nearest' }); press(o.el); await sleep(700);
+    results.push({ key: w.key, chose: o.el.innerText.trim(), exact: o.exact });
+  }
+  return { results };
+}`;
+
+/** fillGigSelects(dom, gig, { agentId }) → { results: [{ key, chose?, exact?, why?, options? }] } */
+async function fillGigSelects(dom, gig, { agentId = 'default' } = {}) {
+  const wc = dom && dom._getWebContents ? dom._getWebContents(agentId) : null;
+  if (!wc) return { error: 'no tab for the dropdowns' };
+  const want = [{ key: 'category.main', what: 'category', value: gig.category }, { key: 'category.sub', what: 'subcategory', value: gig.subcategory }];
+  return wc.executeJavaScript(`(${SELECT_SCRIPT})(${JSON.stringify(want)})`, true);
 }
 
 // ── .gig files (YAML) ─────────────────────────────────────────────────────────
@@ -361,4 +432,4 @@ function gigTemplate() {
   return { text, filename: 'gig-template.gig' };
 }
 
-module.exports = { GIG_FORMAT, gigFile, gigFilename, gigTemplate, END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };
+module.exports = { fillGigSelects, SELECT_SCRIPT, GIG_FORMAT, gigFile, gigFilename, gigTemplate, END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };
