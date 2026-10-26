@@ -21,5 +21,8 @@ const G = require('../src/autofill/gig.js');
   assert.deepStrictEqual([o.before, o.isArray, o.count, o.after], ['undefined', true, 3, 'object'], 'no mesh at first; injected once; the fields answered');
   assert.strictEqual(o.detect, '3 fields, 3 matched');
   assert.match(o.noTab, /no tab for "nope"/);
+  // §FQ4 0.60.265 — his Fiverr gig editor: the names are headings in the row's other column
+  assert.deepStrictEqual(o.contexts, ['Gig title', 'Positive keywords'], 'each box takes the nearest heading before it in its row');
+  assert.strictEqual(o.fiverr, 'title=build an AI agent workflow | tags=ai agent, automation');
   console.log('field-query.test.js: ok — ' + JSON.stringify(o));
 })().catch(e => { console.error(e); process.exit(1); });

@@ -246,7 +246,8 @@ function matchGigFields(domFields, gig) {
     if (['submit', 'button', 'hidden', 'checkbox', 'radio', 'file', 'image', 'reset', 'search'].includes(type)) continue;
     let part = null, confidence = null, source = null;
     for (const [src, text, conf] of [['name', field.name, 'medium'], ['id', field.attrs && (field.attrs.id || field.id_attr), 'medium'],
-      ['label', field.label, 'medium'], ['label', field.attrs && field.attrs['aria-label'], 'medium'], ['placeholder', field.attrs && field.attrs.placeholder, 'low']]) {
+      ['label', field.label, 'medium'], ['label', field.attrs && field.attrs['aria-label'], 'medium'], ['context', field.context, 'medium'],   // §FQ4 the row's heading
+      ['placeholder', field.attrs && field.attrs.placeholder, 'low']]) {
       const p = _gigPart(text);
       if (p) { part = p; source = src; confidence = conf; break; }
     }

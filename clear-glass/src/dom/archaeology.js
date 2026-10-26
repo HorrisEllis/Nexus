@@ -129,6 +129,23 @@ const DOM_OBSERVER_SCRIPT = `
     return null;
   }
 
+  // §FQ4 0.60.265 — James's Fiverr gig editor: "fill this in for me" matched nothing. Its fields have no <label>; "Gig title" and
+  // "Search tags" are headings in the row's other column. The field's context: the nearest heading-like element BEFORE it inside
+  // the closest ancestor that has one (up to 6 levels), short text only. A guess from layout, so matchers use it at medium.
+  // (No template literal and no regex here: this source lives inside DOM_OBSERVER_SCRIPT, one big template literal.)
+  function _contextFor(el) {
+    const HEAD = 'h1,h2,h3,h4,h5,h6,label,legend,[role="heading"],b,strong,[class*="title"],[class*="label"],[class*="heading"]';
+    let a = el.parentElement;
+    for (let depth = 0; a && depth < 6; depth++, a = a.parentElement) {
+      const heads = [...a.querySelectorAll(HEAD)].filter(h => h !== el && !h.contains(el) && (h.compareDocumentPosition(el) & 4));
+      for (let i = heads.length - 1; i >= 0; i--) {
+        const t = (heads[i].innerText || '').trim();
+        if (t && t.length <= 60 && t.split(String.fromCharCode(10)).length <= 2) return t;
+      }
+    }
+    return null;
+  }
+
   function buildMeta(el) {
     const r = el.getBoundingClientRect ? el.getBoundingClientRect() : {};
     const isField = ['input', 'textarea', 'select'].includes(el.tagName?.toLowerCase());
@@ -148,6 +165,7 @@ const DOM_OBSERVER_SCRIPT = `
       name:     el.name || null,
       type:     el.type || null,
       label:    isField ? _labelFor(el) : null,
+      context:  isField ? _contextFor(el) : null,   // §FQ4
     };
   }
 
