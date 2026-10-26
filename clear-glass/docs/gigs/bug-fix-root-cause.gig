@@ -1,0 +1,79 @@
+# Clear Glass gig file (clearglass.gig/1) — load it in Settings → Autofill → Gig, or in the gig panel.
+format: clearglass.gig/1
+platform: fiverr
+title: I will find the root cause of your JavaScript or Node.js bug and fix it
+category: Programming & Tech
+subcategory: Debugging
+tags:
+  - bug fix
+  - node.js
+  - javascript
+  - debugging
+  - error fix
+description: >-
+  Stuck on a bug, a crash or an error log that makes no sense? I find the real cause, not just the
+  line that failed, and fix it so it stays fixed.
+
+
+  My daily work is reading production logs from a large multi-system project and tracing each
+  failure to its source. Every fix comes with a test, so the same bug cannot come back silently.
+
+
+  What I fix:
+
+  - Crashes, errors and unhandled promises in Node.js and JavaScript
+
+  - Electron app problems (windows, IPC, packaging)
+
+  - Scripts that worked yesterday and fail today
+
+  - Slow or stuck processes and memory leaks
+
+
+  What you get:
+
+  - A short explanation of what was wrong and why
+
+  - The fix, as a clear change you can review
+
+  - A test that fails before the fix and passes after
+
+
+  How it works: send the error, the log and how to reproduce it. I reply with what I find before I
+  change anything.
+packages:
+  basic:
+    name: One Bug
+    description: Root cause and fix for one bug, with a short explanation.
+    deliveryDays: 1
+    revisions: 1
+    price: 35
+  standard:
+    name: Bug and Test
+    description: Root cause, fix and a test that keeps it fixed.
+    deliveryDays: 3
+    revisions: 2
+    price: 90
+  premium:
+    name: Stability Pass
+    description: Up to 5 related bugs, fixes, tests and a short report.
+    deliveryDays: 6
+    revisions: 3
+    price: 220
+faq:
+  - question: What do you need?
+    answer: >-
+      The error message, the log, and the steps that make it happen. Access to the code, as a zip or
+      a repository.
+  - question: What if you cannot find it?
+    answer: >-
+      I tell you what I found and what I ruled out, and we agree the next step. You are not charged
+      for a guess.
+  - question: Will you change other code?
+    answer: Only what the fix needs. Anything else I notice is listed for you to decide.
+requirements:
+  - Paste the error message and describe what you were doing when it happened.
+  - Who will use it, and on what? (Windows, Mac, a server; one person or a team)
+  - What must it always do, and what must it never do?
+  - How will you check that it is done? (the test you will run, or what you will look at)
+  - Please share any files, examples, access or data I need to start.

@@ -49,4 +49,11 @@ assert.strictEqual(G.parseGig(JSON.stringify({ format: 'clearglass.gig/1', ...r.
 assert.ok(!fs.existsSync(path.join(root, 'docs/gigs/nodejs-automation-scraping.gig.json')), 'no .gig.json is shipped');
 has('src/ipc/bridge.js', 'filename: G.gigFilename(r.filename)');
 for (const f of ['renderer/settings/sections/autofill.js', 'renderer/gig-panel.js']) assert.ok(!/text\/yaml/.test(fs.readFileSync(path.join(root, f), 'utf8')), `${f} types a gig download as text/yaml`);
+// §GG1 0.60.259 — James, 2026-10-26: "can you, using the proof of competency doc. make me a bunch of high leverage gig files." Every
+// shipped gig loads with no warning (inside Fiverr's limits) and saves back to itself
+for (const f of fs.readdirSync(path.join(root, 'docs/gigs')).filter(x => x.endsWith('.gig') && x !== 'gig-template.gig')) {
+  const g = G.parseGig(fs.readFileSync(path.join(root, 'docs/gigs', f), 'utf8'));
+  assert.ok(g.ok && !g.warnings.length, `${f}: ${g.error || g.warnings.join(' | ')}`);
+  assert.deepStrictEqual(G.parseGig(G.gigFile(g.gig).text).gig, g.gig, `${f} round-trips`);
+}
 console.log('gig-file.test.js: .gig YAML ok');

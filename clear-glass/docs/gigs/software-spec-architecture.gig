@@ -1,0 +1,73 @@
+# Clear Glass gig file (clearglass.gig/1) — load it in Settings → Autofill → Gig, or in the gig panel.
+format: clearglass.gig/1
+platform: fiverr
+title: I will write a clear technical spec and build plan for your app idea
+category: Programming & Tech
+subcategory: Software Development
+tags:
+  - technical spec
+  - architecture
+  - mvp plan
+  - requirements
+  - roadmap
+description: >-
+  Have an app idea but no plan a developer (or an AI) can build from? I turn it into a clear spec:
+  what it does, how it fits together, and the order to build it in.
+
+
+  I work spec-first on my own large system: over a hundred build maps, each phase naming its files,
+  what it depends on, and the test that proves it is done. That is how a big project stays
+  buildable, and it is what you get.
+
+
+  What you get:
+
+  - The idea in plain words: who it is for and what "done" looks like
+
+  - The parts of the system and how they talk to each other
+
+  - A build plan in phases, smallest useful version first
+
+  - For each phase: what to build, what it depends on, how to test it
+
+  - Risks and failure points named up front
+
+
+  Hand it to any developer or AI coding tool and they can start straight away.
+
+
+  How it works: a short call or written brief, then a draft, then your feedback.
+packages:
+  basic:
+    name: One-Page Brief
+    description: 'Your idea as a one-page brief: goal, users, features, done-when.'
+    deliveryDays: 2
+    revisions: 1
+    price: 50
+  standard:
+    name: Spec and Build Plan
+    description: 'Full spec: parts, data, flows, and a phased build plan with tests.'
+    deliveryDays: 5
+    revisions: 2
+    price: 160
+  premium:
+    name: Architecture Package
+    description: Spec, phased plan, dependency map and risk review, ready to build.
+    deliveryDays: 9
+    revisions: 3
+    price: 380
+faq:
+  - question: Do I need technical knowledge?
+    answer: >-
+      No. You explain the idea in your words; I turn it into the technical plan and explain it back
+      plainly.
+  - question: Can an AI coding tool build from it?
+    answer: Yes. It is written so that a developer or a tool like Claude Code can build it phase by phase.
+  - question: Will you build it too?
+    answer: I can, as a separate order, once the plan is agreed.
+requirements:
+  - 'Describe your idea: what problem does it solve, and for whom?'
+  - Who will use it, and on what? (Windows, Mac, a server; one person or a team)
+  - What must it always do, and what must it never do?
+  - How will you check that it is done? (the test you will run, or what you will look at)
+  - Please share any files, examples, access or data I need to start.
