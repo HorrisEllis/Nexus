@@ -616,6 +616,7 @@ class IpcBridge {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
       try {
         const agentId = req.body?.agentId || 'default';
+        const hc = await this._humanCheckGate(agentId); if (!hc.pass) return res.status(409).json({ error: hc.why, ...hc });   // §HC3
         res.json(await _autofillFill(this.dom, this.autofillStore, {
           agentId, profileId: req.body?.profileId, minConfidence: req.body?.minConfidence || 'medium', learned: this._learnedFields(agentId),
           vars: req.body?.vars,   // §AD2 0.60.251 — the IPC autofill:fill passes {{var}} values; this door dropped them
@@ -1684,6 +1685,7 @@ class IpcBridge {
     ipcMain.handle('autofill:forget', async (e, { url, fieldKey } = {}) => this._autofillForget(url, fieldKey));
     ipcMain.handle('autofill:fill', async (e, { agentId = 'default', profileId, minConfidence = 'medium', vars } = {}) => {
       if (!this.dom || !this.autofillStore) return { error: 'autofill unavailable' };
+      const hc = await this._humanCheckGate(agentId); if (!hc.pass) return { error: hc.why, ...hc };   // §HC3 the gate before a fill
       return _autofillFill(this.dom, this.autofillStore, { agentId, profileId, minConfidence, vars, learned: this._learnedFields(agentId) });
     });
 
@@ -2212,10 +2214,23 @@ class IpcBridge {
     return (fiverr || (list.length === 1 ? list[0] : null) || null)?.id || null;
   }
   // Fill: types the matched parts into the gig editor open in a tab. Never saves, never publishes.
+  // §HC3 0.60.260 — James, 2026-10-26: "each step of the autofill can be gates." The first gate of every fill: a page asking for a human
+  // (Fiverr's Press & Hold, Cloudflare, a captcha) stops the fill and is handed to him (contexts/human-check.js); nothing presses or solves it.
+  async _humanCheckGate(agentId = 'default') {
+    const HC = require('../contexts/human-check');
+    let wc = null; try { wc = this.driver && this.driver._getWebContents(agentId); } catch (_) {}
+    if (!wc || (wc.isDestroyed && wc.isDestroyed())) return { pass: true, unchecked: 'no page found for the gate to read' };
+    let page = null; try { page = await wc.executeJavaScript(HC.detectScript, false); } catch (_) { return { pass: true, unchecked: 'the page could not be read' }; }
+    const g = HC.humanCheckGate(page);
+    if (!g.pass) this.postEvent('autofill.gate.human-check', { agentId, provider: g.provider, url: page && page.url, ts: Date.now() });
+    return g;
+  }
+
   async _gigFill({ gig, agentId = 'default', minConfidence = 'medium' } = {}) {
     if (!this.dom) return { error: 'dom bridge unavailable' };
     if (!gig || !gig.title) return { error: 'write the gig first' };
     try { if (this.autofillStore) this.autofillStore.setLastGig(gig); } catch (_) {}   // §GA1a
+    const hc = await this._humanCheckGate(agentId); if (!hc.pass) return { error: hc.why, ...hc };   // §HC3 the gate before the gig is typed
     let r;
     try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence }); }
     catch (err) { return { error: err.message }; }

@@ -162,6 +162,9 @@ module.exports = Object.freeze({
     payloadShape: ['title', 'warnings', 'ts'],
     severity: 'info',
   },
+  // §HC 0.60.260 — James, 2026-10-26: "i can't get passed this." A human check met: the tab tells the truth, and fills stop at it
+  PAGE_HUMAN_CHECK: { description: "A person's tab met a human check (Press & Hold, Turnstile, a captcha): its session switched to the engine's own identity, the site remembered, the page reloaded once. Nothing presses or solves it.", payloadShape: ['provider', 'origin', 'switched', 'agentId', 'ts'], severity: 'notable' },
+  AUTOFILL_GATE_HUMAN_CHECK: { description: 'An autofill or gig fill stopped at its first gate: the page asks for a human. It is his to pass; nothing was typed.', payloadShape: ['agentId', 'provider', 'url', 'ts'], severity: 'notable' },
   // §AT2 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." (src/autofill/transfer.js)
   AUTOFILL_EXPORTED: {
     description: 'The autofill data (profiles, learned fields, the last gig) was written out as one .autofill file for him to save.',

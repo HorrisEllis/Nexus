@@ -147,7 +147,7 @@ function fakeSession() {
     ok(!FFV.stale(p.ua) && /Windows NT 10\.0/.test(p.ua) && p.timezone === 'X' && saved === 1, 'a stored outdated persona is refreshed for the same OS, the rest kept');
   }
   const mgr = fs.readFileSync(path.join(__dirname, '../src/contexts/manager.js'), 'utf8');
-  ok(/requestHook\(ses, 'fingerprint-profile'/.test(mgr) && /if \(\/\\bFirefox\\\/\/\.test\(profile\.ua\)\) for \(const k of Object\.keys\(headers\)\) if \(\/\^sec-ch-ua\/i/.test(mgr), 'a Firefox persona sends no client hints, on any site');
+  ok(/requestHook\(ses, 'fingerprint-profile'/.test(mgr) && /if \(\/\\bFirefox\\\/\/\.test\((?:profile|live)\.ua\)\) for \(const k of Object\.keys\(headers\)\) if \(\/\^sec-ch-ua\/i/.test(mgr), 'a Firefox persona sends no client hints, on any site');
   const eng = fs.readFileSync(path.join(__dirname, '../src/fingerprint/engine.js'), 'utf8');
   ok(/delete Navigator\.prototype\.userAgentData/.test(eng) && /delete window\.chrome/.test(eng), 'the persona\'s page script removes userAgentData and window.chrome');
 

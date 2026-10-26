@@ -35,6 +35,7 @@ const FILES = [
   ]],
   ['idearium/ui/settings.html', I('idearium/ui/settings.html'), [I('idearium/api/index.js')]],   // HTTP /api/economy*
   // §AT1 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." The autofill data as one .autofill file
+  ['clear-glass/src/contexts/human-check.js', I('clear-glass/src/contexts/human-check.js'), [I('clear-glass/src/net/compartment.js')]],   // §HC1 0.60.260
   ['clear-glass/src/main/glass-frame.js', I('clear-glass/src/main/glass-frame.js'), []],   // §GF1 0.60.258 the Clear Glass title bar over a foreign page
   ['clear-glass/src/autofill/transfer.js', I('clear-glass/src/autofill/transfer.js'), [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/src/autofill/matcher.js')]],
   ['clear-glass/erosmancer/erosmancer-os/src/replay/index.ts', I('clear-glass/erosmancer/erosmancer-os/src/replay/index.ts'), []],
@@ -104,6 +105,11 @@ const CONSUMERS = [
   [I('clear-glass/src/dom/archaeology.js'), I('clear-glass/src/driver/index.js'), '0.60.253 ER3 dom.erosInput = driver.erosInput: handleMutate via eros types the value through ErosmancerOS'],
   [I('clear-glass/renderer/settings/sections/accounts.js'), I('clear-glass/src/preload/index.js'), '0.60.253 ER4 cg.accounts.update {erosProfile} (each account\'s Eros pace)'],
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.253 ER4 eros open|tabs|pace rows → /cli/eros/open, /cli/eros/tabs, PUT /cli/accounts/:id'],
+  // §HC 0.60.260 — James, 2026-10-26: "i can't get passed this. can you help?"
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/contexts/human-check.js'), '0.60.260 HC2 _humanCheck after a tab loads; _identityBeforeLoad for a remembered site'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/contexts/manager.js'), '0.60.260 HC2 useEngineIdentity / contextForSession; the hostile hook asks mode engine on a challenge'],
+  [I('clear-glass/src/contexts/manager.js'), I('clear-glass/src/contexts/human-check.js'), '0.60.260 HC2 engineUserAgent'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/contexts/human-check.js'), '0.60.260 HC3 _humanCheckGate before every fill (IPC, /cli, the gig)'],
   // §GF 0.60.258 — James, 2026-10-26: "also the popup windows need to match the rest of the ui."
   [I('clear-glass/src/providers/host.js'), I('clear-glass/src/main/glass-frame.js'), '0.60.258 GF1 the provider window is a Glass frame (frame(o), the BrowserWindow calls it makes)'],
   [I('clear-glass/src/main/compartment-window.js'), I('clear-glass/src/main/glass-frame.js'), '0.60.258 GF1 a site popup: setWindowOpenHandler createWindow → fromOpen (opener kept)'],
