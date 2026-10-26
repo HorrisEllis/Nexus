@@ -277,8 +277,8 @@ async function detectFields(dom, autofillStore, { agentId = 'default', profileId
   const sc = _siteChoice(dom, agentId, profileId, autofillStore); if (sc.error) return { error: sc.error, noProfile: sc.noProfile }; profileId = sc.profileId;
   const profile = autofillStore.getProfile(profileId);
   if (!profile) return { error: `no autofill profile "${profileId}"` };
-  const domFields = await dom.handleQuery({ agentId, selector: 'input, select, textarea' });
-  if (domFields?.error) return { error: domFields.error };
+  const domFields = await (dom.queryFields ? dom.queryFields({ agentId, selector: 'input, select, textarea' }) : dom.handleQuery({ agentId, selector: 'input, select, textarea' }));   // §FQ1 0.60.262
+  if (!Array.isArray(domFields)) return { error: (domFields && domFields.error) || 'the page did not list its fields' };
   const matches = matchFields(domFields, profile, { vars, learned });
   // §JA4 — the preview says what it cannot place too, so the panel offers a Pick before anything is typed
   return { profileId, totalFields: domFields.length, matches, needsPick: require('./learn-pick.js').needsPick(domFields, profile, matches) };
@@ -291,8 +291,8 @@ async function fillFields(dom, autofillStore, { agentId = 'default', profileId, 
   const sc = _siteChoice(dom, agentId, profileId, autofillStore); if (sc.error) return { error: sc.error, noProfile: sc.noProfile }; profileId = sc.profileId;
   const profile = autofillStore.getProfile(profileId);
   if (!profile) return { error: `no autofill profile "${profileId}"` };
-  const domFields = await dom.handleQuery({ agentId, selector: 'input, select, textarea' });
-  if (domFields?.error) return { error: domFields.error };
+  const domFields = await (dom.queryFields ? dom.queryFields({ agentId, selector: 'input, select, textarea' }) : dom.handleQuery({ agentId, selector: 'input, select, textarea' }));   // §FQ1 0.60.262
+  if (!Array.isArray(domFields)) return { error: (domFields && domFields.error) || 'the page did not list its fields' };
   const floor = CONFIDENCE_RANK[minConfidence] || CONFIDENCE_RANK.medium;
   const allMatches = matchFields(domFields, profile, { vars, learned });
   const toFill = allMatches.filter(m => CONFIDENCE_RANK[m.confidence] >= floor);

@@ -410,6 +410,21 @@ class DomArchaeology {
   }
 
   // ── Query ─────────────────────────────────────────────────────────────
+  // §FQ1 0.60.262 — James, 2026-10-26, the co-pilot on a Fiverr gig editor: "fill this in for me" → "Did not fill: matchGigFields: domFields
+  // must be the dom_query array". The page had no dom mesh (window.__cgDomMesh), so the query answered undefined and every fill threw a
+  // type error. The fields of a page, for every fill: the mesh is injected once if it is missing, and a page that still cannot answer says why.
+  async queryFields({ agentId = 'default', selector = 'input, select, textarea' } = {}) {
+    const wc = this._getWebContents(agentId);
+    if (!wc) return { error: `no tab for "${agentId}": open the page in a Clear Glass tab first` };
+    const ask = () => wc.executeJavaScript(`window.__cgDomMesh ? window.__cgDomMesh.query(${JSON.stringify(selector)}) : null`, true);
+    let r = null; try { r = await ask(); } catch (e) { return { error: `the page could not be read: ${e.message}` }; }
+    if (!Array.isArray(r)) {
+      try { await this.inject(wc, agentId); r = await ask(); } catch (e) { return { error: `the page's field reader could not be loaded: ${e.message}` }; }
+    }
+    if (!Array.isArray(r)) return { error: `the page did not list its fields (${wc.getURL ? wc.getURL() : 'this tab'}): reload the tab and try again` };
+    return r;
+  }
+
   async handleQuery({ agentId = 'default', selector, cgId, tree = false, x, y }) {
     const wc = this._getWebContents(agentId);
     if (!wc) return { error: 'No webcontents' };

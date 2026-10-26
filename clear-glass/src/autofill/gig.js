@@ -274,7 +274,8 @@ const RANK = { high: 3, medium: 2, low: 1 };
 
 /** detectGig(dom, gig, { agentId }) — what would be filled where; nothing is typed. */
 async function detectGig(dom, gig, { agentId = 'default' } = {}) {
-  const domFields = await dom.handleQuery({ agentId, selector: 'input, textarea' });
+  const domFields = await (dom.queryFields ? dom.queryFields({ agentId, selector: 'input, textarea' }) : dom.handleQuery({ agentId, selector: 'input, textarea' }));   // §FQ1 0.60.262
+  if (!Array.isArray(domFields)) return { error: (domFields && domFields.error) || 'the page did not list its fields' };
   if (domFields && domFields.error) return { error: domFields.error };
   const matches = matchGigFields(domFields, gig);
   const filledKeys = new Set(matches.map(m => m.key));
@@ -283,7 +284,8 @@ async function detectGig(dom, gig, { agentId = 'default' } = {}) {
 
 /** fillGig(dom, gig, { agentId, minConfidence }) — types the matched parts in. Never saves, never publishes. */
 async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium' } = {}) {
-  const domFields = await dom.handleQuery({ agentId, selector: 'input, textarea' });
+  const domFields = await (dom.queryFields ? dom.queryFields({ agentId, selector: 'input, textarea' }) : dom.handleQuery({ agentId, selector: 'input, textarea' }));   // §FQ1 0.60.262
+  if (!Array.isArray(domFields)) return { error: (domFields && domFields.error) || 'the page did not list its fields' };
   if (domFields && domFields.error) return { error: domFields.error };
   const floor = RANK[minConfidence] || RANK.medium;
   const all = matchGigFields(domFields, gig);
