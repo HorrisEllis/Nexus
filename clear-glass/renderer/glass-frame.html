@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- clear-glass/renderer/glass-frame.html — the title bar over a window that shows someone else's page (CW1/GF1, 0.60.258).
+     James, 2026-10-26: "also the popup windows need to match the rest of the ui." The Settings title bar's look (settings.css #titlebar). -->
+<html><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'self'">
+<style>
+:root { --void:#08080d; --edge:rgba(255,255,255,.07); --ink:#d5d8e4; --ink-dim:#7d8199; --ink-hi:#f2f4fb; --cyan:#00f5ff; --bad:#ff5577;
+  --sans:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif; --mono:"Cascadia Mono",Consolas,"SF Mono",monospace; }
+html,body { margin:0; height:100%; background:var(--void); color:var(--ink); font:12px var(--sans); overflow:hidden; user-select:none; }
+#bar { height:100%; display:flex; align-items:center; gap:8px; padding:0 4px 0 12px; border-bottom:1px solid var(--edge); -webkit-app-region:drag; box-sizing:border-box; }
+.mark { width:14px; height:14px; border-radius:4px; border:1.5px solid var(--cyan); box-shadow:inset 0 0 0 3px rgba(0,245,255,.12); flex:none; }
+.title { flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink-dim); }
+.title b { color:var(--ink-hi); font-weight:600; }
+.host { font:11px var(--mono); color:var(--ink-dim); opacity:.8; margin-left:6px; }
+button { -webkit-app-region:no-drag; width:30px; height:26px; border:0; background:transparent; border-radius:6px; color:var(--ink-dim); cursor:pointer; font:13px var(--sans); }
+button:hover { background:rgba(255,255,255,.07); color:var(--ink-hi); }
+button:disabled { opacity:.3; cursor:default; background:transparent; }
+button.on { color:var(--cyan); }
+#close:hover { background:rgba(255,85,119,.15); color:var(--bad); }
+.sep { width:1px; height:16px; background:var(--edge); margin:0 2px; }
+</style></head>
+<body><div id="bar">
+  <span class="mark" aria-hidden="true"></span>
+  <button id="back" title="Back (Alt+Left)" aria-label="Back">&#x2190;</button>
+  <button id="reload" title="Reload (F5)" aria-label="Reload">&#x21bb;</button>
+  <span class="title"><b id="t">Clear Glass</b><span class="host" id="h"></span></span>
+  <button id="devtools" title="Developer tools (F12 / Ctrl+Shift+I)" aria-label="Developer tools">&lt;/&gt;</button>
+  <span class="sep"></span>
+  <button id="minimize" title="Minimize" aria-label="Minimize">&#x2013;</button>
+  <button id="maximize" title="Maximize" aria-label="Maximize">&#x25a1;</button>
+  <button id="close" title="Close" aria-label="Close">&#x2715;</button>
+</div>
+<script src="glass-frame.js"></script>
+</body></html>

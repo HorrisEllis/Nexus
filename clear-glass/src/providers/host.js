@@ -411,7 +411,9 @@ class ProviderHost {
       if (clean !== ua) ses.setUserAgent(clean);
     } catch (_) {}
 
-    const win = new BrowserWindow({
+    // §GF1 0.60.258 — James, 2026-10-26: "also the popup windows need to match the rest of the ui." The provider window is a Glass frame
+    // (src/main/glass-frame.js: the Clear Glass title bar over the provider's page, the same API). CG_NATIVE_POPUPS=1 brings back the OS frame.
+    const win = (process.env.CG_NATIVE_POPUPS === '1' || !require('electron').BaseWindow ? (o) => new BrowserWindow(o) : (o) => require('../main/glass-frame.js').frame(o))({
       backgroundColor: '#08080d', autoHideMenuBar: true,   // 0.60.54 CS1 — the same dark base as window-frame.js, for the moments this window is shown
       width:  1280,
       height: 800,

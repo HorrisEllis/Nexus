@@ -80,7 +80,8 @@ class LoginPortal {
    * @param {object} d.session        electron session (fromPartition)
    * @param {Function} [d.emit]       (type, data) => void
    */
-  constructor({ options, vault, passwordVault = null, registry, BrowserWindow, session, emit = () => {}, accountSwitch = null, hub = null, log = () => {} } = {}) {
+  constructor({ options, vault, passwordVault = null, registry, BrowserWindow, frame = null, session, emit = () => {}, accountSwitch = null, hub = null, log = () => {} } = {}) {
+    this.frame = frame;   // §GF1 0.60.258 — the Glass frame (src/main/glass-frame.js) when main hands it in; else a plain BrowserWindow
     if (!options || !vault || !registry || !BrowserWindow || !session) throw new Error('LoginPortal needs options, vault, registry, BrowserWindow and session');
     Object.assign(this, { options, vault, passwordVault, registry, BrowserWindow, session, emit, hub, log });
     this._as = typeof accountSwitch === 'function' ? accountSwitch : () => accountSwitch;   // the account switch (lazy: it is made after the portal)
@@ -173,7 +174,7 @@ class LoginPortal {
     let releaseQuiet = null; try { releaseQuiet = this.hub && this.hub.quiet ? this.hub.quiet(provider) : null; } catch (_) {}
     try { if (this.hub && this.hub.sessionFor) this.hub.sessionFor(provider); } catch (_) {}
     if (as) { const b = await as.beginSignIn(provider, id, { park: true }); if (!b.ok) { try { releaseQuiet && releaseQuiet(); } catch (_) {} return { ok: false, error: b.error, code: 'session_not_ready' }; } }
-    const win = new this.BrowserWindow({
+    const win = (this.frame ? (o) => this.frame(o) : (o) => new this.BrowserWindow(o))({
       width: 1100, height: 820, minWidth: 720, minHeight: 560,
       backgroundColor: '#08080d', autoHideMenuBar: true,   // the same dark base as window-frame.js (CS1)
       title: `Sign in — ${def.name} · ${acc.label}`,

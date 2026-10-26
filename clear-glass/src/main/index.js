@@ -1527,6 +1527,7 @@ async function bootstrap() {
     options: nexusOptions, vault, passwordVault, registry: () => mesh.getRegistry(),
     BrowserWindow, session, emit: (t, d) => emit(t, d),
     accountSwitch: () => acctSwitch(), hub: sessionHub(), log: (m) => console.log(m),   // §0.60.13 — the portal signs in in the provider's ONE session
+    frame: process.env.CG_NATIVE_POPUPS === '1' ? null : (o) => require('./glass-frame.js').frame(o),   // §GF1 0.60.258
   });
   // §0.60.13 — every provider's session is attached (normal tabs mirror it live) and consolidated at boot, in the background;
   // a provider tab's first load waits for its own (hubReady, above)
@@ -1730,6 +1731,7 @@ async function bootstrap() {
 
   // 14.9. §0.39.280 — window controls for idearium's compartment windows (main/compartment-window.js)
   try { CompartmentWindow.registerIpc(ipcMain, BrowserWindow); } catch (e) { console.warn(`[ClearGlass] compartment-window ipc: ${e.message}`); }
+  try { require('./glass-frame.js').registerIpc(ipcMain); } catch (e) { console.warn(`[ClearGlass] glass-frame ipc: ${e.message}`); }   // §GF1 0.60.258
 
   // 15. IPC bridge — HTTP command endpoint :IPC_PORT + ipcMain handlers
   ipcBridge = new IpcBridge({
@@ -2447,18 +2449,8 @@ async function openAgentWindow({ agentId = randomUUID(), url = 'about:blank', vi
   });
   win.on('show', () => _touchAutopilotIfOpen());
 
-  // F12 / Ctrl+Shift+I toggles renderer DevTools
-  win.webContents.on('before-input-event', (event, input) => {
-    const devToolsKey =
-      input.key === 'F12' ||
-      (input.control && input.shift && ['i','j'].includes(input.key.toLowerCase()));
-    if (devToolsKey) {
-      win.webContents.isDevToolsOpened()
-        ? win.webContents.closeDevTools()
-        : win.webContents.openDevTools({ mode: 'detach' });
-      event.preventDefault();
-    }
-  });
+  // F12 / Ctrl+Shift+I toggles renderer DevTools (§GF2 0.60.258: the one handler, glass-frame.js devToolsKeys, set for every window at creation)
+  require('./glass-frame.js').devToolsKeys(win.webContents);
   win.on('close', e => {
     // §axiom: tray-first — but now genuinely controllable via Nexus options
     // instead of hardcoded. If the option is off, this is a real close.
@@ -2894,6 +2886,9 @@ function _automationEvents(contents) {
   }
 }
 app.on('web-contents-created', (_e, contents) => {
+  // §GF2 0.60.258 — James, 2026-10-26: "alsO I CANT OPEN dev console in a popup window." Removing a popup's menu (CS1) took Electron's
+  // F12 / Ctrl+Shift+I with it. Every window's page gets the keys (a <webview> keeps its host window's own handling)
+  try { if (contents.getType && contents.getType() === 'window') require('./glass-frame.js').devToolsKeys(contents); } catch (_) {}
   try { _automationEvents(contents); } catch (_) {}
   // SP5 (0.60.219) — a page that loaded is a line in the activity (sites only; the app's own pages are not)
   contents.on('did-finish-load', () => { try { const u = contents.getURL(); if (/^https?:/i.test(u) && (contents.hostWebContents || contents.getType() === 'webview')) require('../processes').activity().push({ kind: 'nav', what: contents.getTitle() || u, url: u, wcId: contents.id, by: 'page' }); } catch (_) {} });
