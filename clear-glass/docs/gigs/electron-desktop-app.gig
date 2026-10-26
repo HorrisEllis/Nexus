@@ -4,6 +4,7 @@ platform: fiverr
 title: I will build a custom Electron desktop app for Windows or Mac
 category: Programming & Tech
 subcategory: Desktop Applications
+serviceType: ''
 tags:
   - electron
   - desktop app
@@ -73,3 +74,6 @@ requirements:
   - What must it always do, and what must it never do?
   - How will you check that it is done? (the test you will run, or what you will look at)
   - Please share any files, examples, access or data I need to start.
+metadata:
+  Programming language:
+    - JavaScript

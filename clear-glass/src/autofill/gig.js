@@ -180,7 +180,17 @@ function parseGig(text) {
   const requirements = (Array.isArray(raw.requirements) ? raw.requirements : []).map(r => _clip(typeof r === 'string' ? r : r && (r.question || r.text), LIMITS.requirement, 'a buyer question', warnings)).filter(Boolean);
   if (requirements.length > LIMITS.requirements) { warnings.push(`${requirements.length} buyer questions; kept ${LIMITS.requirements}`); requirements.length = LIMITS.requirements; }
 
-  const gig = { title, category: String(raw.category || '').trim(), subcategory: String(raw.subcategory || '').trim(), tags, description, packages, faq, requirements };
+  // §FD2 0.60.267 — James, 2026-10-26, Fiverr's next rows: "Service type" (a dropdown) and "Gig metadata" (groups of options:
+  // PROGRAMMING LANGUAGE, FRONTEND FRAMEWORK, …): "also these bulllet points." metadata: { 'Programming language': ['JavaScript'], … }
+  const metadata = {};
+  if (raw.metadata && typeof raw.metadata === 'object' && !Array.isArray(raw.metadata)) {
+    for (const [k, v] of Object.entries(raw.metadata)) {
+      const vals = (Array.isArray(v) ? v : [v]).map(x => String(x == null ? '' : x).trim()).filter(Boolean).slice(0, 10);
+      if (String(k).trim() && vals.length) metadata[String(k).trim().slice(0, 60)] = vals;
+    }
+  }
+  const gig = { title, category: String(raw.category || '').trim(), subcategory: String(raw.subcategory || '').trim(), serviceType: String(raw.serviceType || raw.service_type || '').trim(),
+    tags, description, packages, faq, requirements, ...(Object.keys(metadata).length ? { metadata } : {}) };
   return { ok: true, gig, warnings };
 }
 
@@ -189,6 +199,8 @@ function gigParts(gig) {
   if (!gig) return [];
   const out = [{ key: 'title', label: 'Gig title', text: gig.title }];
   if (gig.category) out.push({ key: 'category', label: 'Category', text: gig.subcategory ? `${gig.category} › ${gig.subcategory}` : gig.category });
+  if (gig.serviceType) out.push({ key: 'serviceType', label: 'Service type', text: gig.serviceType });   // §FD2
+  for (const [g, v] of Object.entries(gig.metadata || {})) out.push({ key: `metadata.${g}`, label: g, text: v.join(', ') });
   if (gig.tags && gig.tags.length) out.push({ key: 'tags', label: 'Search tags', text: gig.tags.join(', ') });
   for (const t of TIERS) {
     const p = gig.packages && gig.packages[t];
@@ -301,7 +313,7 @@ async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium'
   }
   // §FD1 0.60.266 — the category and subcategory dropdowns (Fiverr's own widgets, not <select>s): opened and chosen in the page
   let selects = null;
-  if (gig.category) {
+  if (gig.category || gig.serviceType || gig.metadata) {
     try { selects = await fillGigSelects(dom, gig, { agentId }); } catch (err) { selects = { error: err.message }; }
     for (const x of (selects && selects.results) || []) {
       if (x.chose) filled.push({ key: x.key, confidence: x.exact ? 'high' : 'medium', source: 'dropdown', chose: x.chose });
@@ -319,7 +331,7 @@ async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium'
 // its words (category, then subcategory, which only enables after), open it as a mouse would (pointer/mouse down, up, click), wait
 // for the list, choose the option whose words match the gig's (exact first, then the closest by shared words), and say the options
 // when none fits. A native <select> is set by its option text with input/change. Never saves or publishes.
-const SELECT_SCRIPT = `async (want) => {
+const SELECT_SCRIPT = `async (want, meta) => {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   const vis = (e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
   const norm = (s) => String(s || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
@@ -363,6 +375,26 @@ const SELECT_SCRIPT = `async (want) => {
     o.el.scrollIntoView({ block: 'nearest' }); press(o.el); await sleep(700);
     results.push({ key: w.key, chose: o.el.innerText.trim(), exact: o.exact });
   }
+  // §FD2 0.60.267 — the gig's metadata: each group (a tab or heading reading its name, e.g. "PROGRAMMING LANGUAGE") is opened, then
+  // each wanted option is ticked by its own words (its <label>, or the text beside a radio / checkbox / option). One already ticked is
+  // left as it is. A group or option the page does not have is said, with what it does have.
+  for (const [group, vals] of Object.entries(meta || {})) {
+    const ng = norm(group);
+    const tab = [...document.querySelectorAll('li,a,button,div,span,h3,h4,label,[role="tab"]')].filter(vis)
+      .filter(e => norm(e.innerText).replace(/ *$/, '') === ng || norm(e.innerText) === ng + ' ')
+      .sort((a, b) => a.querySelectorAll('*').length - b.querySelectorAll('*').length)[0];
+    if (tab) { press(tab); await sleep(400); }
+    const boxes = [...document.querySelectorAll('input[type="radio"],input[type="checkbox"],[role="radio"],[role="checkbox"],[role="option"]')];
+    const textOf = (b) => { const l = b.labels && b.labels[0]; if (l) return l.innerText; const p = b.closest('label') || b.parentElement; return p ? p.innerText : (b.innerText || ''); };
+    for (const v of vals) {
+      const nv = norm(v);
+      const hit = boxes.find(b => vis(b.closest('label') || b.parentElement || b) && norm(textOf(b)) === nv);
+      if (!hit) { results.push({ key: 'metadata.' + group, why: (tab ? '' : 'no "' + group + '" group found; ') + 'no option "' + v + '"', options: [...new Set(boxes.filter(b => vis(b.closest('label') || b.parentElement || b)).map(b => textOf(b).trim()).filter(t => t && t.length < 40))].slice(0, 40) }); continue; }
+      const on = hit.checked === true || hit.getAttribute('aria-checked') === 'true' || hit.getAttribute('aria-selected') === 'true';
+      if (!on) { const target = hit.labels && hit.labels[0] ? hit.labels[0] : (hit.tagName === 'INPUT' ? hit : hit); target.click(); await sleep(200); }
+      results.push({ key: 'metadata.' + group, chose: v, exact: true, already: on });
+    }
+  }
   return { results };
 }`;
 
@@ -370,8 +402,9 @@ const SELECT_SCRIPT = `async (want) => {
 async function fillGigSelects(dom, gig, { agentId = 'default' } = {}) {
   const wc = dom && dom._getWebContents ? dom._getWebContents(agentId) : null;
   if (!wc) return { error: 'no tab for the dropdowns' };
-  const want = [{ key: 'category.main', what: 'category', value: gig.category }, { key: 'category.sub', what: 'subcategory', value: gig.subcategory }];
-  return wc.executeJavaScript(`(${SELECT_SCRIPT})(${JSON.stringify(want)})`, true);
+  const want = [{ key: 'category.main', what: 'category', value: gig.category }, { key: 'category.sub', what: 'subcategory', value: gig.subcategory },
+    { key: 'serviceType', what: 'service type', value: gig.serviceType }];   // §FD2
+  return wc.executeJavaScript(`(${SELECT_SCRIPT})(${JSON.stringify(want)}, ${JSON.stringify(gig.metadata || {})})`, true);
 }
 
 // ── .gig files (YAML) ─────────────────────────────────────────────────────────
@@ -417,6 +450,11 @@ function gigTemplate() {
     `title: "I will "        # starts with "I will", at most ${L.title} characters, the words a buyer would search for`,
     'category: ""',
     'subcategory: ""',
+    '# Service type: the dropdown under Category (Fiverr\'s exact words), e.g. "AI Agents"',
+    'serviceType: ""',
+    '# Gig metadata: each group as Fiverr names it, with the options to tick (its exact words)',
+    'metadata:',
+    '  Programming language: [""]',
     `tags: []                # at most ${L.tags} tags, each at most ${L.tag} characters, lowercase, no #`,
     `description: |          # at most ${L.description} characters: what the buyer gets, how it works, why it is reliable`,
     '  Write the description here. Keep the two-space indent on every line.',

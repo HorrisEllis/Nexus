@@ -4,6 +4,7 @@ platform: fiverr
 title: I will build a custom Node.js automation or web scraping tool
 category: Programming & Tech
 subcategory: ''
+serviceType: ''
 tags:
   - node.js
   - automation
@@ -69,3 +70,6 @@ requirements:
   - What must it always do, and what must it never do?
   - How will you check that it is done? (the test you will run, or what you will look at)
   - Please share any example pages, files, logins or data I need to build it.
+metadata:
+  Programming language:
+    - JavaScript

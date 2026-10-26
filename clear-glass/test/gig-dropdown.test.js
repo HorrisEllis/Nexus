@@ -16,5 +16,10 @@ assert.ok(!o.error, o.error);
 assert.deepStrictEqual(o.ok.results.map(x => x.chose), ['Programming & Tech', 'AI Development'], 'the category, then the subcategory its choice enabled');
 assert.strictEqual(o.picked, '{"cat":"Programming & Tech","sub":"AI Development"}', 'the page itself registered both choices');
 assert.ok(/no option matches/.test(o.miss.results[1].why) && o.miss.results[1].options.includes('AI Development'), 'no match: said, with the real options');
+// §FD2 0.60.267 — Service type and the metadata groups ("also these bulllet points")
+assert.deepStrictEqual(o.meta.results.filter(x => x.chose).map(x => `${x.key}=${x.chose}`), ['category.main=Programming & Tech', 'category.sub=AI Development', 'serviceType=AI Agents',
+  'metadata.Programming language=JavaScript', 'metadata.Expertise=Automation', 'metadata.Expertise=Scraping']);
+assert.ok(/\|JavaScript,Automation,Scraping$/.test(o.metaPicked) && /"svc":"AI Agents"/.test(o.metaPicked), o.metaPicked);
+assert.ok(/no "Backend framework" group found/.test(o.meta.results.find(x => x.key === 'metadata.Backend framework').why), 'a group the page lacks is said');
 assert.strictEqual(o.nativeValue, 'Programming & Tech|1', 'a native <select> is set by its option text, with a change event');
 console.log('gig-dropdown.test.js: ok — ' + JSON.stringify(o.ok.results));

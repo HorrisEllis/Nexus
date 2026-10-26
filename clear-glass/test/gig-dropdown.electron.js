@@ -34,6 +34,15 @@ app.whenReady().then(async () => {
     out.picked = await win.webContents.executeJavaScript('JSON.stringify(window.picked)');
     await win.loadURL('data:text/html,' + encodeURIComponent(PAGE));
     out.miss = await G.fillGigSelects(dom, { category: 'Programming & Tech', subcategory: 'Quantum Basket Weaving' });
+    // §FD2 — Service type, and Gig metadata: a tab column and radio buttons with their words beside them
+    await win.loadURL('data:text/html,' + encodeURIComponent(PAGE + `<div class="dd" id="svc"><div class="ctl">SELECT A SERVICE TYPE</div></div>
+      <div class="meta"><ul><li class="tab">PROGRAMMING LANGUAGE *</li><li class="tab">EXPERTISE</li></ul>
+      <div class="pane" id="p0"><label><input type="radio" name="lang"> Python</label><label><input type="radio" name="lang"> JavaScript</label></div>
+      <div class="pane" id="p1" style="display:none"><label><input type="checkbox"> Automation</label><label><input type="checkbox"> Scraping</label></div></div>
+      <script>wire('svc', ['AI Agents', 'Web Scraping']);
+      document.querySelectorAll('.tab').forEach((t, i) => t.addEventListener('click', () => { document.querySelectorAll('.pane').forEach((p, j) => p.style.display = j === i ? '' : 'none'); }));</script>`));
+    out.meta = await G.fillGigSelects(dom, { category: 'Programming & Tech', subcategory: 'AI Development', serviceType: 'AI Agents', metadata: { 'Programming language': ['JavaScript'], 'Expertise': ['Automation', 'Scraping'], 'Backend framework': ['Express'] } });
+    out.metaPicked = await win.webContents.executeJavaScript('JSON.stringify(window.picked) + "|" + [...document.querySelectorAll("input")].filter(i => i.checked).map(i => i.parentElement.innerText.trim()).join(",")');
     await win.loadURL('data:text/html,' + encodeURIComponent('<select name="category"><option>Select a category</option><option>Programming & Tech</option><option>Writing</option></select><script>window.ch=0;document.querySelector("select").addEventListener("change",()=>window.ch++)</script>'));
     out.native = await G.fillGigSelects(dom, { category: 'Programming and tech', subcategory: '' });
     out.nativeValue = await win.webContents.executeJavaScript('document.querySelector("select").value + "|" + window.ch');
