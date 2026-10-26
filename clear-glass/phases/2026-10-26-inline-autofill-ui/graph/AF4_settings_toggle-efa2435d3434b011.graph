@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AF4_settings_toggle:efa2435d3434b011
+type: graph
+id: phase:AF4_settings_toggle:efa2435d3434b011
+context: dependency graph of phase AF4_settings_toggle
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792992982702
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992982702
+lastSeenAt: 1792992982702
+fingerprint: null
+payload:
+  for: AF4_settings_toggle
+  kind: phase
+  repo: null
+  hash: efa2435d3434b011
+  nodes:
+    - path: clear-glass/renderer/settings/sections/autofill.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF2_route_and_command
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF3_the_inline_chip
+    dependents: []
+    upstream:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF2_route_and_command
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF3_the_inline_chip
+    downstream: []
+    blockedBy:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF2_route_and_command
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF3_the_inline_chip
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by AF2_route_and_command, AF3_the_inline_chip
+      - 'depends on (2): AF2_route_and_command, AF3_the_inline_chip · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF2_route_and_command
+        kind: declared
+      - from: docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF3_the_inline_chip
+        kind: declared
