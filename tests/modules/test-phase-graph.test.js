@@ -177,6 +177,45 @@ phases:
     }
   }
 
+  await test('PG-06', 'a relocation phase foresees the crossings its MOVE creates (0.60.250) — before the ratchet, not after', async () => {
+    // a phase that MOVES an engine from clear-glass to the orchestrator, with the consumers that stay behind in clear-glass
+    const MOVE_MAP = `name: relocate
+phases:
+  M1_move:
+    status: OPEN
+    files: [clear-glass/eng.js]
+    moves:
+      clear-glass/eng.js: orchestrator/eng.js
+`;
+    const systemOf = (p) => (/\.test\./.test(p) ? null : p.split('/')[0]);
+    const mapped = { source: 'declared', files: [{ path: 'clear-glass/eng.js', exists: true }],
+      consumers: [
+        { path: 'clear-glass/mesh.js', of: 'clear-glass/eng.js' },   // stays in clear-glass → will cross into the orchestrator after the move
+        { path: 'orchestrator/host.js', of: 'clear-glass/eng.js' },  // already in the orchestrator → no crossing after the move
+      ] };
+    const g = PG.graphFor({ phase: 'M1_move', map: 'relocate.spec', mapped, mapText: MOVE_MAP, systemOf });
+    const cx = Object.fromEntries(g.crossings.map(c => [`${c.from}>${c.to}`, c]));
+    // the move CREATES a clear-glass → orchestrator crossing for the consumer that stays behind
+    assert.ok(cx['clear-glass/mesh.js>clear-glass/eng.js'], 'the move-created crossing is foreseen');
+    assert.strictEqual(cx['clear-glass/mesh.js>clear-glass/eng.js'].created, true, 'it is marked created-by-the-move');
+    assert.deepStrictEqual([cx['clear-glass/mesh.js>clear-glass/eng.js'].fromSystem, cx['clear-glass/mesh.js>clear-glass/eng.js'].toSystem], ['clear-glass', 'orchestrator']);
+    // a consumer ALREADY in the destination system does not become a NEW crossing; here it CROSSED before (orchestrator → clear-glass)
+    // and does not after, so the move REMOVES that crossing — flagged removed, never created
+    const host = cx['orchestrator/host.js>clear-glass/eng.js'];
+    assert.ok(host && !host.created, 'a same-destination consumer is never a move-created crossing');
+    assert.strictEqual(host.removed, true, 'the move removes the pre-existing orchestrator → clear-glass crossing');
+    // the moved file's node shows the relocation, and the phase touches both systems
+    const moved = g.nodes.find(n => n.path === 'clear-glass/eng.js' && n.role === 'changes');
+    assert.strictEqual(moved.movesTo, 'orchestrator');
+    assert.deepStrictEqual(g.systems.sort(), ['clear-glass', 'orchestrator']);
+    const L = PG.lines(g).join('\n');
+    assert.ok(/MOVE CREATES A CROSSING clear-glass → orchestrator: clear-glass\/mesh\.js/.test(L), L);
+    assert.ok(/design it out .*BEFORE the move/.test(L), L);
+    // REGRESSION GUARD: a phase with NO moves behaves exactly as before (same crossings, no created/removed flags)
+    const g0 = PG.graphFor({ phase: 'M1_move', map: 'relocate.spec', mapped, mapText: `name: x\nphases:\n  M1_move:\n    status: OPEN\n    files: [clear-glass/eng.js]\n`, systemOf });
+    assert.strictEqual(g0.crossings.filter(c => c.created).length, 0, 'no moves → nothing is created');
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed${skipped ? `, ${skipped} skipped` : ''}`);
   process.exit(failed ? 1 : 0);
 })();

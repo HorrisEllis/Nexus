@@ -1333,10 +1333,19 @@ class IpcBridge {
     // builder opens pre-filled (passwords become a {{password}} parameter).
     // §0.60.57 MR1 — James, 2026-10-15: "needs to start recording a macro node file." The recording IS a .macro file from the first
     // second (src/macros/live-recording.js); recordStop returns the same steps the file holds, so the step editor opens on what was saved.
-    // §AD2 0.60.251 — the recorder is one bridge method (_macroRecord), shared with the /cli/macros/record/* doors (AD_D2)
-    ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => this._macroRecord('start', { agentId, name }));
-    ipcMain.handle('macros:recordStatus', async (e, { agentId } = {}) => this._macroRecord('status', { agentId }));
-    ipcMain.handle('macros:recordStop', async (e, { agentId } = {}) => this._macroRecord('stop', { agentId }));
+    let _live = null;
+    const live = () => _live || (_live = new (require('../macros/live-recording').LiveRecorder)({
+      getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
+      dir: require('../../../lib/automation-nodes.js').NODES_DIR }));
+    ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => {
+      if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
+      try { return await live().start({ agentId, name }); } catch (err) { return { ok: false, error: err.message }; }
+    });
+    ipcMain.handle('macros:recordStatus', async (e, { agentId } = {}) => { try { return live().status(agentId); } catch (err) { return { ok: false, error: err.message }; } });
+    ipcMain.handle('macros:recordStop', async (e, { agentId } = {}) => {
+      if (!this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
+      try { return await live().stop(agentId); } catch (err) { return { ok: false, error: err.message }; }
+    });
     ipcMain.handle('macros:schema', async () => {
       try {
         const ba = require('../../../lib/agent-tools/tools/browser/browser-action.js');
@@ -2117,7 +2126,7 @@ class IpcBridge {
   }
 
   _autofillMacroDoor() {
-    let nodesDir = null; try { nodesDir = require('../mesh/automation-engine.js').NODES_DIR; } catch (_) {}
+    let nodesDir = null; try { nodesDir = require('../../../lib/automation-nodes.js').NODES_DIR; } catch (_) {}
     return { macroTool: this.macroTool || null, nodesDir };
   }
   // §JA5 — forget, then rebuild the site's macro without that field (removed when nothing is left)

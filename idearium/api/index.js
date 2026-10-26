@@ -3270,6 +3270,10 @@ const ROUTE_CAP = {
   'ollama.check':     CAPS.READ_IDEAS, 'ollama.check.ask': CAPS.WRITE_IDEAS,   // §CT4
   'repo.agent.route': CAPS.READ_IDEAS,   // §CT3
   'repo.agent.gate': CAPS.READ_IDEAS,    // §CG3 — a dry read (gathers context, records nothing)
+  'repo.flow': CAPS.READ_IDEAS,          // §BX2 — the repo's FlowGraph (phases+DAG, runs, mesh), read-only
+  'flow.mesh': CAPS.READ_IDEAS,          // §BX2 — the live agent mesh from Clear Glass, read-only
+  'automation.list': CAPS.READ_IDEAS,    // §AU1 — the union of automations across the six sources, read-only
+  'automation.run': CAPS.WRITE_IDEAS,    // §AU1 — run one automation through its source (an action)
   'repo.thread': CAPS.READ_IDEAS,   // §RS9
   'repo.agent.tool.event': CAPS.WRITE_IDEAS, 'repo.agent.tool.events': CAPS.READ_IDEAS,   // §CT8
   'repo.agent.stream': CAPS.WRITE_IDEAS,   // §0.39.356 LS3
@@ -3740,6 +3744,10 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','agent','prompt'],  'repo.agent.prompt'],
     ['GET',    ['api','repos',    ':uuid','agent','route'],   'repo.agent.route'],   // §CT3 — which model copilot's door would choose
     ['POST',   ['api','repos',    ':uuid','agent','gate'],    'repo.agent.gate'],    // §CG3 — the confidence gate's decision for a message, without dispatching
+    ['GET',    ['api','repos',    ':uuid','flow'],            'repo.flow'],          // §BX2 — BrainOS FlowGraph for this repo (phases+DAG, runs, mesh)
+    ['GET',    ['api','flow','mesh'],                         'flow.mesh'],          // §BX2 — the live agent mesh (Clear Glass :7704), repo-independent
+    ['GET',    ['api','automation'],                          'automation.list'],    // §AU1 — the union of automations across the six sources
+    ['POST',   ['api','automation','run'],                    'automation.run'],     // §AU1 — run one automation through its source
     ['POST',   ['api','repos',    ':uuid','agent','tool-event'], 'repo.agent.tool.event'],   // §CT8 — copilot reports each tool call live
     ['GET',    ['api','repos',    ':uuid','agent','tool-events'], 'repo.agent.tool.events'], // §CT8 — the last calls, for a page that opens mid-run
     ['GET',    ['api','repos',    ':uuid','tasks'],  'repo.tasks'],      // §0.39.366 — everything the agent wearing this repo's hat is doing, and did
@@ -7850,6 +7858,35 @@ async function handle(req, res, route, query, body) {
       // error — 200 with ok:false so the CLI can print it in the transcript
       // instead of api() throwing and losing the text.
       return ok(res, r);
+    }
+
+    // §BX2 0.60.248 — James, 2026-09-11: "brainos needs to be the entire ui for agent orchestration" · 2026-10-24: "What about
+    // BrainOS?" The FlowGraph for this repo: its phases and their DAG, the runs moving through them, and Clear Glass's live agent
+    // mesh — one screen (flow-canvas.js) to watch and steer a build next to its code. Each source best-effort; a source that is
+    // down leaves its part empty and is named in sources[] (§1.2), the rest still draws.
+    case 'repo.flow': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const FS = await import('../lib/flow-sources.js');   // ESM sibling (idearium is type:module)
+      return ok(res, await FS.flowFor({ repo, repoDir: _repoDiskDir(params.uuid) }));
+    }
+    case 'flow.mesh': {
+      const FS = await import('../lib/flow-sources.js');
+      return ok(res, await FS.mesh());
+    }
+
+    // §AU1 0.60.249 — James: "copilot system, ollama, lib folder, clearglass, idearium, and brainos have automation" ·
+    // "Clearglass automation, and macros, continue." The neutral union over all six (lib/automation-registry.js): one door
+    // to list what each present source holds and to run one, recording it under its source. An absent source is named, not
+    // faked (§1.2); the one real engine is Clear Glass, the rest are drivers/views of it, and the registry says so.
+    case 'automation.list': {
+      const AR = _require('../../lib/automation-registry.js');
+      return ok(res, await AR.list({ source: query.source || null }));
+    }
+    case 'automation.run': {
+      const AR = _require('../../lib/automation-registry.js');
+      if (!body.source || !body.id) return err(res, 400, 'source and id are required');
+      return ok(res, await AR.run(String(body.source), String(body.id), { vars: body.vars || {} }));
     }
 
     // §CG3 0.60.240 — James: "before an agent does anything. if confidence is lower than 75%, context must be obtained …

@@ -20,9 +20,9 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const NX = require(path.join(ROOT, 'lib/node-export.js'));
 const SCHEMAS = require(path.join(ROOT, 'lib/node-schemas.js'));
-const N = require(path.join(ROOT, 'clear-glass/src/automation/nodes.js'));
-const ROUTES = require(path.join(ROOT, 'clear-glass/src/automation/routes.js'));
-const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, NODES_DIR } = require(path.join(ROOT, 'clear-glass/src/mesh/automation-engine.js'));
+const N = require(path.join(ROOT, 'lib/automation-nodes.js'));
+const ROUTES = require(path.join(ROOT, 'lib/automation/routes.js'));
+const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR, NODES_DIR } = require(path.join(ROOT, 'lib/automation/engine.js'));
 
 let passed = 0, failed = 0;
 async function test(id, desc, fn) {

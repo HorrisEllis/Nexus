@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-agent-drones-phasemap.spec::DR3_command
+type: phase
+id: docs_2026-10-25-agent-drones-phasemap.spec::DR3_command
+context: pipeline phase DR3_command of docs/2026-10-25-agent-drones-phasemap.spec
+intent: null
+summary: DR3_command (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792963020115
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792963020115
+lastSeenAt: 1792963020115
+fingerprint: null
+payload:
+  id: DR3_command
+  map: docs/2026-10-25-agent-drones-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+  depends_on:
+    - DR2_route
+  blocks: []
+  spec: null
+  graph: dd22e2bbe627c13c

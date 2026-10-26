@@ -1,0 +1,167 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AE3_the_engine_door:a78170df28a831aa
+type: graph
+id: phase:AE3_the_engine_door:a78170df28a831aa
+context: dependency graph of phase AE3_the_engine_door
+intent: null
+summary: 16 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792960951955
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792960951955
+lastSeenAt: 1792960951955
+fingerprint: null
+payload:
+  for: AE3_the_engine_door
+  kind: phase
+  repo: null
+  hash: a78170df28a831aa
+  nodes:
+    - path: orchestrator/automation/routes.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: lib/cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/automation/index.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/automation-nodes.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cli/boot-systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/automation/cron.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/automation/from-macro.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/automation/steps.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/automation/templates.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/automation/routes.js
+      to: orchestrator/automation/steps.js
+      kind: requires
+    - from: orchestrator/automation/routes.js
+      to: orchestrator/automation/templates.js
+      kind: requires
+    - from: orchestrator/automation/routes.js
+      to: lib/automation-nodes.js
+      kind: requires
+    - from: orchestrator/automation/routes.js
+      to: orchestrator/automation/cron.js
+      kind: requires
+    - from: orchestrator/automation/routes.js
+      to: orchestrator/automation/from-macro.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/cli/boot-systems.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: orchestrator/automation/index.js
+      to: orchestrator/automation/routes.js
+      kind: requires
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+    dependents:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+    upstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
+    downstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
+    blockedBy:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by AE1_move_the_core
+      - 'depends on (1): AE1_move_the_core · all upstream 3'
+      - 'needed by (1): AE4_repoint_the_registry · all downstream 2'
+    edges:
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+        kind: declared

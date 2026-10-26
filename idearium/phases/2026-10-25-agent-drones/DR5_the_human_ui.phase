@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-agent-drones-phasemap.spec::DR5_the_human_ui
+type: phase
+id: docs_2026-10-25-agent-drones-phasemap.spec::DR5_the_human_ui
+context: pipeline phase DR5_the_human_ui of docs/2026-10-25-agent-drones-phasemap.spec
+intent: null
+summary: DR5_the_human_ui (ui) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792963020119
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792963020119
+lastSeenAt: 1792963020119
+fingerprint: null
+payload:
+  id: DR5_the_human_ui
+  map: docs/2026-10-25-agent-drones-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - idearium/ui/js/drones-panel.js
+  depends_on:
+    - DR3_command
+    - DR4_plain_task_to_contract
+  blocks: []
+  spec: null
+  graph: a95bd7d74f859767

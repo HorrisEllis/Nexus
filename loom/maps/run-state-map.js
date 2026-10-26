@@ -35,7 +35,7 @@ const FILES = [
   ['scripts/build-cos-app.js', I('scripts/build-cos-app.js'), [I('cos/app/controller.js'), I('lib/zip.js')]],
   ['cos/app/cli.js', I('cos/app/cli.js'), [I('cos/app/store.js'), I('cos/app/runtime.js'), I('cos/app/switch.js')]],
   ['clear-glass/src/macros/recorder-script.js', I('clear-glass/src/macros/recorder-script.js'), []],   // §0.60.57 MR1
-  ['clear-glass/src/macros/live-recording.js', I('clear-glass/src/macros/live-recording.js'), [I('clear-glass/src/macros/recorder-script.js'), I('clear-glass/src/macros/recording.js'), I('clear-glass/src/automation/nodes.js')]],
+  ['clear-glass/src/macros/live-recording.js', I('clear-glass/src/macros/live-recording.js'), [I('clear-glass/src/macros/recorder-script.js'), I('clear-glass/src/macros/recording.js'), I('lib/automation-nodes.js')]],
   ['clear-glass/src/net/policy.js', I('clear-glass/src/net/policy.js'), []],   // §0.60.60 NP2
   ['clear-glass/src/net/transport-host.js', I('clear-glass/src/net/transport-host.js'), []],   // §0.60.60 NP1
   ['clear-glass/src/net/service.js', I('clear-glass/src/net/service.js'), [I('clear-glass/src/net/policy.js'), I('clear-glass/src/net/transport-host.js')]],

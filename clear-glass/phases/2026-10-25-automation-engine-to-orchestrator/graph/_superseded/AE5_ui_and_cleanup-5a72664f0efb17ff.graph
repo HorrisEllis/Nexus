@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AE5_ui_and_cleanup:5a72664f0efb17ff
+type: graph
+id: phase:AE5_ui_and_cleanup:5a72664f0efb17ff
+context: dependency graph of phase AE5_ui_and_cleanup
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792960951968
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792960951968
+lastSeenAt: 1792960951968
+fingerprint: null
+payload:
+  for: AE5_ui_and_cleanup
+  kind: phase
+  repo: null
+  hash: 5a72664f0efb17ff
+  nodes:
+    - path: clear-glass/renderer/settings/sections/automation.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/automation/routes.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: lib/ui/brainos/brainos-automation.js
+      role: changes
+      exists: true
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+    dependents: []
+    upstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE1_move_the_core
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE2_browser_driver_port
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D1_engine_home
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D2_state_stays
+    downstream: []
+    blockedBy:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by AE4_repoint_the_registry
+      - 'depends on (1): AE4_repoint_the_registry · all upstream 6'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+        kind: declared

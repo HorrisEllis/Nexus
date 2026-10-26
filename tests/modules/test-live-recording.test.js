@@ -6,7 +6,7 @@ const assert = require('assert'), path = require('path'), fs = require('fs'), os
 const { JSDOM } = require(path.join(__dirname, '..', '..', 'node_modules', 'jsdom'));
 const ROOT = path.resolve(__dirname, '..', '..');
 const { LiveRecorder } = require(path.join(ROOT, 'clear-glass/src/macros/live-recording.js'));
-const nodes = require(path.join(ROOT, 'clear-glass/src/automation/nodes.js'));
+const nodes = require(path.join(ROOT, 'lib/automation-nodes.js'));
 const { recordingToSteps } = require(path.join(ROOT, 'clear-glass/src/macros/recording.js'));
 let passed = 0, failed = 0;
 async function test(name, fn) { try { await fn(); console.log('  ✓ ' + name); passed++; } catch (e) { console.error('  ✗ ' + name + '\n    ' + (e.stack || e).toString().split('\n').slice(0, 4).join('\n    ')); failed++; } }

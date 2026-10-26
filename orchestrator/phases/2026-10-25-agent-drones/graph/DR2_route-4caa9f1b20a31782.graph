@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DR2_route:4caa9f1b20a31782
+type: graph
+id: phase:DR2_route:4caa9f1b20a31782
+context: dependency graph of phase DR2_route
+intent: null
+summary: 15 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792963020112
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792963020112
+lastSeenAt: 1792963020112
+fingerprint: null
+payload:
+  for: DR2_route
+  kind: phase
+  repo: null
+  hash: 4caa9f1b20a31782
+  nodes:
+    - path: orchestrator/drones/index.js
+      role: changes
+      exists: false
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: lib/cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cli/boot-systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-cfr-influence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-knowledge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-query.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/cli/boot-systems.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-query.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-knowledge.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-cfr-influence.js
+      kind: requires
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR1_the_drone_contract_and_router
+    dependents:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+    upstream:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR1_the_drone_contract_and_router
+    downstream:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR5_the_human_ui
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR6_copilot_entry
+    blockedBy:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR1_the_drone_contract_and_router
+    unlocks:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by DR1_the_drone_contract_and_router
+      - 'depends on (1): DR1_the_drone_contract_and_router'
+      - 'needed by (1): DR3_command · all downstream 3 · finishing it unlocks DR3_command'
+    edges:
+      - from: docs/2026-10-25-agent-drones-phasemap.spec::DR1_the_drone_contract_and_router
+        kind: declared
