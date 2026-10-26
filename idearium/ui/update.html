@@ -46,6 +46,7 @@
   <div class="card" id="state"><div class="d">checking GitHub…</div></div>
   <div class="card" id="msg"></div>
   <div class="card" id="releases" hidden></div>
+  <div class="card" id="auto"></div>
   <div class="card" id="history"></div>
 </main>
 <script>
@@ -84,6 +85,20 @@ async function check(fetchIt = true) {
   $('releases').innerHTML = `<div class="kicker" style="margin-bottom:6px">what it brings · ${rel.length} release(s)</div>` + rel.map(r => `<div class="rel"><div class="v">${esc(r.version)}</div><div class="q ${r.quote ? '' : 'none'}">${r.quote ? `“${esc(r.quote)}”` : 'no quote in its version line'}</div></div>`).join('');
 }
 
+// §UP8 0.60.254 — James: "should be automatic". The policy, and what the last automatic check did
+async function auto() {
+  const d = await api('/api/update/auto'); const p = (d && d.policy) || { policy: 'auto', everyHours: 6 }; const l = d && d.last;
+  $('auto').innerHTML = `<div class="row"><div class="kicker" style="flex:1">automatic updates</div>
+      <select id="pol">${['auto', 'notify', 'off'].map(v => `<option value="${v}" ${v === p.policy ? 'selected' : ''}>${v === 'auto' ? 'auto — when idle' : v === 'notify' ? 'notify — tell me only' : 'off'}</option>`).join('')}</select></div>
+    <div class="d">checks GitHub every ${esc(p.everyHours)} h; auto updates only when Nexus is idle, then restarts what changed — never Clear Glass while you use it</div>
+    ${l ? `<div class="d">last check ${esc(String(l.at).slice(0, 16).replace('T', ' '))}: <b>${esc(l.action)}</b>${l.to ? ` → ${esc(l.to)}` : l.latest ? ` (${esc(l.latest)} on GitHub)` : ''}${l.error || l.why ? ` — ${esc(l.error || [].concat(l.why).join('; '))}` : ''}${(l.waitForHim || []).length ? ' · restart Clear Glass when you are not using it' : ''}</div>` : '<div class="d">no automatic check yet (the first runs 2 minutes after Nexus starts)</div>'}`;
+}
+document.addEventListener('change', async (e) => {
+  if (e.target.id !== 'pol') return;
+  const r = await post('/api/update/policy', { policy: e.target.value });
+  say(r.ok === false ? `<div class="badline">${esc(r.error)}</div>` : `<div class="okline">automatic updates: ${esc(r.policy)}</div>`); auto();
+});
+
 async function history() {
   const d = await api('/api/update/history'); const l = (d && d.history) || [];
   const last = l[0];
@@ -115,7 +130,7 @@ document.addEventListener('click', async (e) => {
     if (!r.ok) say($('msg').innerHTML + `<div class="badline">${esc(r.error)}</div>`);
   }
 });
-check(true); history();
+check(true); history(); auto();
 </script>
 </body>
 </html>

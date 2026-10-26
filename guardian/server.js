@@ -1802,10 +1802,9 @@ function handleExtendedRoutes(req, res, url, method) {
 
   // ── Forge health ──────────────────────────────────────────────────────────
   if (url.pathname === '/forge/health' && method === 'GET') {
-    const forge = require('../cockpit/forge');
-    forge.healthCheck()
-      .then(h => pRes(res, 200, { ok: true, forge: h }))
-      .catch(e => pRes(res, 200, { ok: false, error: e.message }));
+    // 0.60.240 GD0 (docs/2026-10-24-guardian-into-cos-phasemap.spec) — cockpit/forge is not in the tree, so this route only ever threw;
+    // said plainly instead (§1.2), and Guardian no longer reaches into cockpit/
+    pRes(res, 200, { ok: false, error: 'forge is not part of Nexus any more: cockpit/forge is not in the tree' });
     return;
   }
 

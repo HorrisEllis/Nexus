@@ -371,6 +371,8 @@ class CoPilotBridge {
     if (action === 'autofill.pick') return this._ipcPost('/cli/autofill/pick', { agentId: aid, fieldType: cmd.fieldType || '', profileId: cmd.profileId || null, label: cmd.label || null }, 5 * 60000);
     if (action === 'autofill.learned') return this._ipcGet(`/cli/autofill/learned${cmd.url ? `?url=${encodeURIComponent(cmd.url)}` : ''}`);
     if (action === 'autofill.forget') return this._ipcPost('/cli/autofill/forget', { url: cmd.url || '', fieldKey: cmd.fieldKey || '' });
+    if (action === 'autofill.export') return this._ipcGet('/cli/autofill/export');   // §AT2 0.60.256
+    if (action === 'autofill.import') return cmd.undo === true || cmd.undo === 'true' ? this._ipcPost('/cli/autofill/import/undo', {}) : this._ipcPost('/cli/autofill/import', { text: String(cmd.text || ''), by: 'copilot' });
     if (action === 'autofill.learn') return this._ipcPost('/cli/autofill/learn', { agentId: aid, fieldKey: cmd.fieldKey || '', fieldType: cmd.fieldType || '', url: cmd.url || null });
     // §AD3 0.60.251 — the general application fill and macros, each to the route the panel's IPC handler shares
     if (action === 'autofill.profiles') return this._ipcGet('/cli/autofill/profiles');

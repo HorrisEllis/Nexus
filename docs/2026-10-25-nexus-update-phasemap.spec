@@ -39,6 +39,13 @@ spec:
         Decided by his axioms (USER_AUTONOMY, REVERSIBILITY): check and history are free to any agent; apply and rollback take
         confirm:true and the hat is told to ask the person first; restart is his (the page's Restart buttons, through the
         supervisor), never the tool's — an agent restarting the system it runs in would cut its own answer off.
+    UP_D4_automatic:
+      james: "should be automatic" (2026-10-26)
+      chosen: >-
+        DECIDED by his words: updates are automatic — no clone, no adopt step, no manual check. The coder's reading, to confirm: the
+        install keeps itself current by default (policy auto), when idle; notify and off remain choices on the Updates page. By his axioms
+        (USER_AUTONOMY, REVERSIBILITY): an automatic update is fast-forward only, data collisions archived, recorded, rolled back in one
+        step; and it never restarts Clear Glass on its own, because idle cannot see a person browsing.
     UP_D3_runtime_data:
       chosen: >-
         Decided by his axioms (§0.3, REVERSIBILITY): a tracked file under a data/ folder that he changed locally AND the update also
@@ -77,5 +84,30 @@ spec:
       depends_on: [UP4_the_tool_on_the_hats_and_the_page]
       files: [lib/nexus-update.js, lib/cos-bridge.js]
       does: "The end state (his UP_D1): when this install runs under COS (its folder is a COS store version), apply = COSA7 fetch into COS's inbox, COS installs it beside, switch with snapshot and rollback (COSA4/13); rollback = COS's. Waits on COS's Windows build being verified, and on him running Nexus from the COS app."
+
+    UP6_attach_in_place:
+      status: DONE (0.60.254)
+      depends_on: [UP2a_adopt_the_old_folder, UP_D4_automatic]
+      files: [lib/nexus-update.js]
+      james: "should be automatic" (2026-10-26, with a screenshot of http://127.0.0.1:4800/update.html answering 404 on his 0.60.251)
+      does: >-
+        An unzipped release folder becomes updatable where it is, with no clone and no copy: git init, origin = GitHub, fetch the commit
+        of its own VERSION (tag v<version>, blobs on demand) and main, git reset --mixed to that tag (no file is touched; his runtime data
+        shows as his local changes, which UP_D3 already handles), core.autocrlf off (the zip's bytes are the repo's). Recorded; undone by
+        deleting .git. No git on the machine, or no tag for the version, is said with the fix.
+    UP7_autopilot_keeps_it_current:
+      status: DONE (0.60.254)
+      depends_on: [UP6_attach_in_place]
+      files: [lib/nexus-update.js, lib/nexus/autopilot.js]
+      does: >-
+        After boot (2 min) and every 6 h, autopilot checks. policy auto (the default, his "should be automatic"): when idle (its /idle),
+        apply; npm install in the background when the lockfile changed; then restart the systems whose files changed (all of them when
+        lib/ or the lockfile changed), one by one through its own controlKernel. Never Clear Glass (idle cannot see him browsing): its
+        changes are said and wait for him. notify: say it, apply nothing. off: nothing. Every tick is recorded (data/update/auto.json).
+    UP8_policy_on_the_page:
+      status: DONE (0.60.254)
+      depends_on: [UP7_autopilot_keeps_it_current]
+      files: [idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/update.html, tests/modules/test-nexus-update.test.js]
+      does: "GET|POST /api/update/policy and GET /api/update/auto; the row `update policy [auto|notify|off]`; the Updates page shows the policy, the last automatic check and what it did."
 
   verification_here: "Proven against real git repos built in a temp folder (an origin with a newer release, a clone behind it): check, a refused code collision, an archived data collision, apply, rollback. Not run on his machine; GitHub itself is reached by git, not by this test."

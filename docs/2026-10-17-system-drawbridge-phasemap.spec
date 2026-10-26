@@ -249,7 +249,7 @@ spec:
         A system declares in its registry which of its events a person should see (toasts: [{ event, level, text }]). The UI
         toasts what the registry says instead of a list in app.js, so the UI holds no knowledge of its own (disposable).
     DB16_a_registry_for_each_system:
-      status: OPEN
+      status: "PARTLY BUILT 0.60.229 — drafted for the systems with none (0.60.231, Idearium's 15 only: orchestrator, cos, components; lib/registry-draft.js; <system>/registry-components.draft.json); OPEN: his acceptance, system by system"
       does: >-
         A registry drafted for every system that has none (cos, nexus, warp, orchestrator, meta, siso, cli, cockpit,
         diagnostic, auth, mesh; then remote-desktop, emergence, jaa, erosmancer, sentinel, security) from its source: the

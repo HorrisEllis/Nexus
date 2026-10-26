@@ -73,7 +73,7 @@ function _rtDur(t) {
   const s = Math.max(0, Math.round(ms / 1000));
   return s < 60 ? `${s}s` : s < 3600 ? `${Math.floor(s / 60)}m ${s % 60}s` : `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`;
 }
-const _RT_ICON = { running: '<span class="rt-spin"></span>', done: '<span class="rt-ok">✓</span>', failed: '<span class="rt-bad">✗</span>', stale: '<span class="rt-stale" title="said running, but nothing for 15 min">◌</span>' };
+const _RT_ICON = { running: '<span class="rt-spin"></span>', done: '<span class="rt-ok">✓</span>', failed: '<span class="rt-bad">✗</span>', stale: '<span class="rt-stale" title="said running, but nothing for 15 min">◌</span>', awaiting: '<span class="rt-await" title="RAID holds this for your verdict">?</span>' };
 const _RT_KIND = { phase: 'phase', build: 'build', review: 'review', repair: 'repair', chat: 'chat', run: 'run', setup: 'setup' };
 function _rtEsc(s) { return typeof escapeHtml === 'function' ? escapeHtml(String(s == null ? '' : s)) : String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 
@@ -98,9 +98,10 @@ function _rtRow(t, depth = 0) {
       <span class="rt-grow"></span>
       ${t.provider && t.kind !== 'phase' ? `<span class="rt-prov">${_rtEsc(t.provider)}</span>` : ''}
       <span class="rt-dur" data-rt-dur="${_rtEsc(t.id)}">${_rtDur(t)}</span>
+      ${t.kind === 'phase' && !depth && t.status === 'awaiting' ? `<button class="rt-rewind rt-accept" title="accept it: it lands and the phase closes" onclick="event.stopPropagation();rtVerdict('${_rtEsc(t.repoUuid)}','${_rtEsc(t.runId || t.id)}',true,this)">✓ accept</button><button class="rt-rewind rt-reject" title="reject it: its changes are reverted" onclick="event.stopPropagation();rtVerdict('${_rtEsc(t.repoUuid)}','${_rtEsc(t.runId || t.id)}',false,this)">✗ reject</button>` : ''}
       ${t.kind === 'phase' && !depth && t.map && t.phase && ['failed', 'stale'].includes(t.status) ? `<button class="rt-rewind" title="build this phase again" onclick="event.stopPropagation();rtRetry('${_rtEsc(t.repoUuid)}','${_rtEsc(t.map)}','${_rtEsc(t.phase)}',this)">↻ retry</button>` : ''}
     </div>
-    ${sub && !open ? `<div class="rt-sub${t.status === 'failed' ? ' rt-sub-bad' : ''}">${_rtEsc(sub)}</div>` : ''}`;   // red only for a task that failed: a skipped rung on the way is not
+    ${t.status === 'awaiting' && !open ? `<div class="rt-sub rt-sub-await">waits for your verdict — ${_rtEsc(t.why || 'nothing in Nexus can check it')}</div>` : sub && !open ? `<div class="rt-sub${t.status === 'failed' ? ' rt-sub-bad' : ''}">${_rtEsc(sub)}</div>` : ''}`;   // red only for a task that failed: a skipped rung on the way is not
   if (open) {
     const steps = (t.steps || []).map(s => `<div class="rt-step${s.bad ? ' rt-sub-bad' : ''}"><span class="rt-dim">${new Date(s.ts).toLocaleTimeString('en-GB', { hour12: false })}</span> ${_rtEsc(s.text)}</div>`).join('');
     const r = t.result;
@@ -380,6 +381,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // 0.60.22 — James: "maybe add a retry button." A failed or stalled phase build, built again by the same route Build uses.
+// §GV3 0.60.257 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails." RAID holds a phase nothing
+// can check; his verdict settles it (POST /api/repos/:uuid/phases/verdict): accept lands and closes it, reject reverts its changes.
+async function rtVerdict(uuid, runId, accept, btn) {
+  const words = prompt(accept ? 'Accept — in your words, why (optional):' : 'Reject — its changes are reverted. In your words, why:', '');
+  if (words === null) return;
+  if (btn) btn.disabled = true;
+  try {
+    const r = await api(`/api/repos/${uuid}/phases/verdict`, { method: 'POST', body: JSON.stringify({ runId, accept, words, startedBy: 'person:ui:verdict' }) });
+    if (typeof toast === 'function') toast(accept ? `accepted — ${r.landed || 0} change(s) landed${r.close && r.close.closed ? ', phase closed' : ''}` : `rejected — ${r.reverted || 0} change(s) reverted`, 'ok');
+    if (typeof rtLoad === 'function') rtLoad(uuid);
+  } catch (e) { if (typeof toast === 'function') toast(`verdict not taken: ${e.message}`, 'err'); if (btn) btn.disabled = false; }
+}
 async function rtRetry(uuid, map, phase, btn) {
   if (btn) btn.disabled = true;
   // §0.60.226 SL7 — the one door: NOT_A_PHASE, NO_GRAPH, DEPS_OPEN and a complete phase are answered the same way as ▶ build

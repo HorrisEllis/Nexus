@@ -15,7 +15,7 @@
  * as the domain-agnostic home for this class of detector, and already
  * had more consumers. This shim exists for backward compatibility only —
  * same pattern lib/meta/index.js already uses for the broader meta
- * layer. Update any require('./lib/gap-hunter') to require('../../meta/gap/hunter')
- * directly when touching a file that uses this.
+ * layer. (It said to update callers to meta/gap/hunter; that file is gone, and the hunter is
+ * intelligence/gap/hunter.js. 0.60.240 GD0: the old advice is reworded so the census no longer reads it as a require.)
  */
 module.exports = require('../../intelligence/gap/hunter.js');

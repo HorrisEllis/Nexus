@@ -71,6 +71,9 @@ function attach(contents) {
   if (contents.getType && !['webview', 'window'].includes(contents.getType())) return false;   // 0.60.54: a provider or sign-in window's popups too
   contents.setWindowOpenHandler(({ url, features }) => {
     const kind = isCompartmentPage(url);
+    // §GF1 0.60.258 — James: "also the popup windows need to match the rest of the ui." A site's popup opens in a Glass frame (the Clear Glass
+    // title bar over it; its opener kept, so "Continue with Google" still closes itself). CG_NATIVE_POPUPS=1: the dark OS frame of CS1.
+    if (!kind && process.env.CG_NATIVE_POPUPS !== '1' && require('electron').BaseWindow) return { action: 'allow', createWindow: (options) => require('./glass-frame.js').fromOpen({ ...Frame.popupOptions(features), ...options }) };
     if (!kind) return { action: 'allow', overrideBrowserWindowOptions: Frame.popupOptions(features) };   // 0.60.54 CS1: dark frame, no menu bar
     return { action: 'allow', overrideBrowserWindowOptions: windowOptions(kind, features, PRELOAD) };
   });

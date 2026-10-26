@@ -79,6 +79,10 @@ const SUITES = [
   'test-pipeline-routing.test.js', // 0.39.286 RG — routing and fallback: modes, chains, failure classes, breaker, the route walked and kept on the chunk, /api/routing, the settings page
   'test-genesis-and-architecture-spec.test.js', // 0.39.286 GN1/AR1 — genesis 1.1.0 (registry doorway, routing) the default system template; the architecture spec cut to what exists
   'test-genesis-sandboxed.test.js', // DB19 (parked) — a fork of genesis: sealed sandbox, the registry the drawbridge, three tunnels (compartment, bridge, contract)
+  'test-gate-waits-for-verdict.test.js', // 0.60.257 GV1–GV4 — RAID holds a phase nothing can check for his verdict (never FAILED, no self-heal); accept lands, reject reverts
+  'test-autofill-transfer.test.js', // 0.60.256 AT1–AT5 — the autofill data out and in (one .autofill file, a merge, undo); gig files are .gig
+  'test-registry-draft.test.js', // 0.60.255 (from brave-cori 0.60.229) DB16 — a registry drafted for every system with none, from its tree; not in force until he accepts it
+  'test-self-building-loop.test.js', // 0.60.255 (from brave-cori 0.60.225) SL4 the loop (build, land by his rule, close, next; budget, three misses, decisions skipped) and SL5 his rule B; LP-05 in Clear Glass
   'test-evidence-close.test.js', // 0.60.224 SL2 — an open phase closes by evidence, its own (or file-specific) tests passing; dry run first; EC-05 in Clear Glass
   'test-phase-close.test.js', // 0.60.223 SL1 — a proven, landed phase closes itself; undoing its change reopens it (lib/phase-close.js); PC-06 in Clear Glass
   'test-build-queue.test.js', // 0.60.222 SL0 — what can be built now, and why every other open phase cannot (lib/build-queue.js); BQ-05 in Clear Glass

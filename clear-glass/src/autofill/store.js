@@ -204,6 +204,29 @@ class AutofillStore {
     return { ...updated };
   }
 
+  // §AT1 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." An imported profile keeps its id (so a second
+  // import of the same file replaces, not doubles), and its fields are checked as createProfile checks them (src/autofill/transfer.js).
+  putProfile(p = {}) {
+    const fields = p.fields || {}, documents = p.documents || {};
+    const fieldCheck = _validateFields(fields); if (fieldCheck.error) return fieldCheck;
+    const docCheck = _validateDocuments(documents); if (docCheck.error) return docCheck;
+    const id = typeof p.id === 'string' && p.id.trim() ? p.id.trim() : randomUUID();
+    const now = Date.now();
+    const profile = { id, label: p.label || `Profile ${Object.keys(this.data.profiles || {}).length + 1}`, fields: { ...fields }, documents: { ...documents },
+      createdAt: p.createdAt || now, updatedAt: p.updatedAt || now };
+    this.data = { ...this.data, profiles: { ...this.data.profiles, [id]: profile } };
+    this._persist();
+    return { ...profile };
+  }
+
+  /** replaceProfiles(list) — the whole set at once: an import's undo puts back exactly what was there */
+  replaceProfiles(list = []) {
+    const profiles = {}; for (const p of list) if (p && p.id) profiles[p.id] = p;
+    this.data = { ...this.data, profiles };
+    this._persist();
+    return { ok: true, profiles: Object.keys(profiles).length };
+  }
+
   deleteProfile(id) {
     if (!this.data.profiles?.[id]) return { error: `no autofill profile "${id}"` };
     const { [id]: _removed, ...rest } = this.data.profiles;

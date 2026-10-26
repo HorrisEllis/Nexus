@@ -100,6 +100,67 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 
 New entries go at the top: date, his words, context, what it shows, evidence.
 
+- **2026-10-24: "i want to use those engines for test env, web servers, etc all of them" · "this is all the networking backend for
+  anything needed netwroking wise"** (0.60.235)
+  - **Context:** he brought his own self-hosting platform (27 engines: web, DNS, firewall, SMTP, TLS …) to become Nexus's networking
+    layer.
+  - **What it shows:** reusing his own earlier work as infrastructure. Bringing it in found a code-execution hole: a login's handle could
+    run code in the kernel. It was closed without changing a byte of his engines. His shipped config held live keys; none of it came in.
+  - **Evidence:** `CHANGELOG-0.60.235.md`; `tests/modules/test-cos-services.test.js` 4/4; `cos/services/anonymous/UPSTREAM.sha256`.
+
+- **2026-10-24: "Archive."** (0.60.232)
+  - **Context:** the folders that turned out not to be systems.
+  - **What it shows:** decluttering by evidence. Three folders that nothing needed were archived with their history kept. Every
+    candidate was checked first for anything that still runs it. Two that are still wired in (ErosmancerOS starts with Clear Glass, and
+    sentinel's CLI) came back to him rather than being broken.
+  - **Evidence:** `CHANGELOG-0.60.232.md`; `_archive/2026-10-24-not-systems/README.md`.
+
+- **2026-10-24: "Aren't systems. They should have been dealt with already" · "15 systems. only the ones with a .spec in the directory. all
+  the systems in idearium"** (0.60.230, 0.60.231)
+  - **Context:** the coder's census counted 20, then 28, "systems", including folders that are libraries, schemas and parked code. Its
+    list of the "closest to sovereign" was folders that aren't systems at all.
+  - **What it shows:** he holds the architecture's definitions. In two lines he caught a wrong self-model and gave the exact rule (his
+    own list, with a spec for each), a rule his axiom §5.9 already implied. The census now matches the system's own registry of itself.
+  - **Evidence:** `CHANGELOG-0.60.230.md`, `CHANGELOG-0.60.231.md`; `tests/modules/test-registry-draft.test.js` RD-05, RD-06.
+
+- **2026-10-24: "then we need to resume the component registery for each system, get the mall sovereign, then cos phases to migrate."**
+  (0.60.229)
+  - **Context:** three steps in his order, registries, then sovereignty, then COS. He picked registries first over writing specs with
+    local models.
+  - **What it shows:** sequencing a migration by its preconditions. A system can't move into COS until it owns its data and declares
+    what it offers. He chose the step that unblocks the rest, and it costs no model calls. The drafts are proposals he accepts,
+    generated only from the tree.
+  - **Evidence:** `CHANGELOG-0.60.229.md`; `lib/registry-draft.js`; 16 `<system>/registry-components.draft.json`;
+    `tests/modules/test-registry-draft.test.js` 4/4.
+
+- **2026-10-24: "spec per component/capability/etc its in the specs. deocmpose all of the phases into .phase nodes including dag per
+  phase."** (0.60.227)
+  - **Context:** 2,046 phases across 166 maps, of which only 175 had been written as nodes.
+  - **What it shows:** making a large backlog machine-readable, and holding the work to his own rule. Every phase is now a node with its
+    place in the dependency graph. The measurement says plainly how far "spec first" reaches: 133 phases have a spec, and 1,107 open ones
+    do not. Writing every node also surfaced a parser fault that had silently replaced 11 real phases with notes about them.
+  - **Evidence:** `CHANGELOG-0.60.227.md`; `docs/2026-10-24-phase-nodes-spec-coverage.md`; `tests/modules/test-phase-specs.test.js` PS-05,
+    PS-06.
+
+- **2026-10-24: "This is a few days old. But does this help. A project that had auto built 5 phases"** (0.60.226)
+  - **Context:** the day the self-building loop was finished, he brought back a run of his own. Five phases were built automatically,
+    with an independent error report on what they actually were.
+  - **What it shows:** testing a system against its own past failures. His instinct to bring real evidence back to the builder found
+    a hole the new loop would have walked into: a phase marked READY on a file check that promised a test. Bringing a failure case
+    forward instead of only new features is a QA and verification skill.
+  - **Evidence:** `CHANGELOG-0.60.226.md`; `docs/2026-10-22-looking-glass-v0_4-error-report.md`; `tests/modules/test-phase-close.test.js`
+    PC-07 uses his SP5 proof as the fixture.
+
+- **2026-10-24: "yes do it."** (0.60.225)
+  - **Context:** three calls put to him with their options and the coder's recommendations: what may land without him (A, B or C),
+    which of the dry run's phases to close (the 2, all 107, or his picks), and whether to start the loop. He took the recommendations.
+  - **What it shows:** delegating with limits. He gave the system room to land its own proven work in his projects, while Nexus's
+    own code still waits for him. Undo stays one click, and a regressed test, a kept file or three misses in a row stop it. He chose
+    the 2 strongly evidenced closes over 107 weaker ones. Calibrated trust is a judgment skill: in a stranger's terms, he let
+    automation act where the evidence is strongest and kept a person on the core.
+  - **Evidence:** `CHANGELOG-0.60.225.md`; `lib/trust-rule.js` (DECIDED, his words and the options); `tests/modules/test-self-building-loop.test.js`
+    5/5. In LP-02, three chained phases build and close in order, and the one waiting on his decision is never built.
+
 - **2026-10-23: "next"** (0.60.224)
   - **Context:** the self-building loop's third phase. The out-of-date backlog gets closed by evidence: a phase is done when its own
     tests pass, with a dry run first.
@@ -1164,6 +1225,39 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
   Not yet shown: a fill on a live listing (his login).
 
 <!-- The entries below were written on brave-cori (claude/brave-cori-eczug1) and ported to main at 0.60.248 (his "Port it phase-by-phase"), unchanged. Their version numbers are that line's; on main the same work landed as GD1 0.60.246 and LM0–LM3 0.60.248. -->
+
+> **From brave-cori, merged 2026-10-26 (0.60.255).** The entries below were written on claude/brave-cori-eczug1, whose releases
+> reused the numbers 0.60.225–0.60.242. Their CHANGELOGs are kept in `_archive/2026-10-26-brave-cori-records/`, and their checks run on that
+> branch's tree (main moved emerge into lib/emerge and kept the .graph files). docs/2026-10-24-brave-cori-reconciliation.spec has the map.
+
+### 2026-10-24 — 0.60.237: "emerge, warp, and idearium merge?" → "okay warp and emerge."
+- **His words:** "Look at emerge. Deeply Custom" · "Either way it comes off the archive list." · "okay warp and emerge. / spec compiler, ide,
+  and idearium"
+- **Context:** Earlier the same day emerge was on his own archive list. He went back, read it, and took it off. He then asked about a
+  three-way merge. The coder's count showed nine systems using warp, which would all sit under Idearium. He chose the split the evidence
+  supported: the language and its runtime in one system, and the tools that build from specs with Idearium.
+- **Skill:** systems design. Revisiting his own archive call on reading the code, and then choosing the layering where the
+  dependencies point one way.
+- **Checkable:** `CHANGELOG-0.60.237.md`; `node -e "console.log(require('./lib/system-boundary.js').sovereignty({root:'.'}).sovereign)"` →
+  components, ollama, cos; `docs/2026-10-24-emerge-warp-system-phasemap.spec`.
+
+### 2026-10-24 — 0.60.238: ".phase/.graph should be one file i feel like?"
+- **His words:** ".phase/.graph should be one file i feel like?" · "need to keep at the sovereignty of each system"
+- **Context:** The coder had just reported the README overflowing from 4,195 phase nodes. He questioned the two-file layout itself rather
+  than the README. The count bore him out: the graphs were derived, duplicated on every edit, and kept nowhere else that mattered. Following
+  his sovereignty point, the coder also found that every node claimed to be Idearium's.
+- **Skill:** spotting a structural cause behind a symptom, and keeping the principle in view (a phase lives with its system).
+- **Checkable:** `CHANGELOG-0.60.238.md`; `git ls-files | grep -c '\.graph$'` gives 0 phase graphs; `tests/modules/test-phase-specs.test.js` PS-02, PS-07.
+
+### 2026-10-24 — 0.60.239: "we don't need to do anything that's not … redefining those boundaries"
+- **His words:** "spec compiler, ide, and idearium" · "I just want to get this, just get to the point where COS becomes, like where we could
+  get to the point where we could integrate COS, and then the Nexus would become immensely fucking easier to manage and more powerful."
+- **Context:** Shown everything left (sovereignty, the COS migration, agent fixes, a self-heal system and an OS still to design), he cut
+  scope to one thing, the boundaries, because they are what make COS possible. The compiler move followed: from another process, through
+  a route, it compiled its own spec.
+- **Skill:** prioritising. He sequenced by dependency (boundaries, then COS, then everything COS makes easier) instead of by appeal.
+- **Checkable:** `CHANGELOG-0.60.239.md`; `tests/modules/test-spec-compiler-port.test.js`; the closed list in `contracts/drawbridge-baseline.json`.
+
 ### 2026-10-24 — 0.60.240: "maybe start with one at a time? like guardian?"
 - **His words:** "focus on just decoupling so we can get every system in a cos compartment. maybe start with one at a time? like guardian?"
 - **Context:** Facing twelve systems still coupled, he chose to go one at a time, and to start with Guardian, the system everything sends its
@@ -1225,3 +1319,35 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
 - **Skill:** debugging by comparison. Pointing at a working path beside the broken one is the fastest route to a root cause, and it kept
   the fix to reusing an existing mechanism rather than adding a new one.
 - **Checkable:** `CHANGELOG-0.60.253.md` (LG1); `tests/modules/lifeline-fluid-routing.test.js` T-006 / T-006b.
+
+### 2026-10-26 — 0.60.255: "merge that repo please. make sure we dont regenerate the files we moved, and archived."
+- **His words:** "Claude/brave cori eczug1. merge that repo please. make sure we dont regenerate the files we moved, and archived."
+- **Context:** Two lines of work had split two days earlier. Both numbered their releases 0.60.225 onward, and each moved folders its own
+  way. A plain merge of them conflicted on more than 4,000 paths, nearly all of them moved or generated files.
+- **The call:** he named the one constraint that made the merge safe: main's moves and archives win, and nothing generated is rewritten.
+  The 2,946 conflicts in those folders went to main's side mechanically. Hand resolution was left for the ~60 files with real work in them.
+  The loop, the trust rule, the proof-strength fix and the registry drafts all came in that way.
+- **Skill:** directing an integration. He set the invariant first, and the work followed from it.
+- **Checkable:** the merge commit (two parents, brave-cori's tip `c8739f48` among them); `CHANGELOG-0.60.255.md`;
+  `tests/modules/test-self-building-loop.test.js` 5/5; `tests/modules/test-registry-draft.test.js` 6/6;
+  `git ls-files '*.graph' | wc -l` unchanged from 0.60.254.
+
+### 2026-10-26 — 0.60.256: "i want to be able to import and export the data."
+- **His words:** "continue. look at autofill. i want to be able to import and export the data. have a download template button just the
+  fiverr gigs, also fix it so its .gig not .gig.json."
+- **Context:** Autofill held his profiles, the fields it learned per site and his gig, with no way to move them between installs, and the
+  one sample gig Clear Glass shipped was a `.gig.json`. He asked for a file in and out, a template for gigs only, and one file type.
+- **What it shows:** a product owner's scoping. He asked for a template for the one artefact a person writes by hand (a gig), not for
+  data an export already shows. He also held a format to one name, which made a duplicate visible, and it was archived.
+- **Checkable:** `CHANGELOG-0.60.256.md`; `tests/modules/test-autofill-transfer.test.js` 5/5 (undo restores what an import replaced);
+  `clear-glass/test/autofill-transfer-render.test.js`; `_archive/2026-10-26-gig-json/README.md`.
+
+### 2026-10-26 — 0.60.257: "the gate doesn't wait for me to accept it or not before it fails."
+- **His words:** "the gate doesn't wait for me to accept it or not before it fails. i want to be able to build nexus inside of nexus. need
+  nexus to use those gates. like raid or orchastrator."
+- **Context:** He was watching Nexus build one of its own phases. He saw the run fail in seconds, with no point at which he could weigh in.
+- **What it shows:** reading a failure from the outside. His one-line symptom matched what the trace found. The gate turned "nothing
+  here can check this" into "failed" and retried it three times in one second. He also named where the fix belonged, in RAID's gates.
+  The fix went there: a gate RAID holds for a person, not a side door in Idearium.
+- **Checkable:** `tests/modules/test-gate-waits-for-verdict.test.js` 5/5 (GV-01: one call, never FAILED, no self-heal);
+  `CHANGELOG-0.60.257.md`.

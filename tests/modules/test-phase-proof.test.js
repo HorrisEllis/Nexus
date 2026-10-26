@@ -91,7 +91,7 @@ const MAP = `spec:
     assert.ok(!/The spec is still there/.test(seen[0].message.split('NOT met yet')[1]), 'the met promise is not re-sent as a task');
     assert.strictEqual(seen[0].session, 'phrun-pp3-a2', 'a fresh chat per attempt');
     const report = api.getRepoLayer().readFile(repoUuid, 'proof/PROOF-REPORT.md');
-    assert.ok(report && /\*\*READY\.\*\*/.test(report.content), 'the report says READY');
+    assert.ok(report && /\*\*READY ON FILES ONLY\.\*\*/.test(report.content), 'the report says READY, on files only: both conditions are file checks (0.60.226)');
   });
 
   await test('PP-04', 'an agent that never fixes it → unproven, naming what is still missing', async () => {

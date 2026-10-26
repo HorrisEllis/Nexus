@@ -92,3 +92,9 @@
 #plan-panel .pp-log .rt-proc:has(.rt-cl){flex-wrap:wrap}
 #plan-panel .pp-log .rt-cl{flex-basis:100%;padding:2px 0 0 14px;font-size:10px;color:var(--mint,var(--text));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #plan-panel .pp-log .rt-cl.rv{color:var(--coral,var(--text2))}
+
+/* §GV3 0.60.257 — a phase RAID holds for his verdict */
+.rt-await{color:var(--amber);font-weight:700}
+.rt-sub-await{color:var(--amber)}
+.rt-accept{margin-right:4px;border-color:rgba(52,211,153,.5);color:var(--mint, #34d399)}
+.rt-reject{border-color:rgba(248,113,113,.5);color:#f87171}

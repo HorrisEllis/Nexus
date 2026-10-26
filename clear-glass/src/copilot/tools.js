@@ -157,6 +157,9 @@ const TOOLS = [
   { name: 'autofill.pick',    cat: 'nexus',    desc: 'When a fill left a field type unplaced (the fill result\'s needsPick.unplaced), pop the element picker in this tab so the person clicks the box for it. The pick is checked, saved per-site, and the page is filled again. Waits for the person (up to 5 min). `fieldType` is what goes there (e.g. github, linkedin).', params: { fieldType: 'string', profileId: 'string?', label: 'string?', agentId: 'string?' } },
   { name: 'autofill.learned', cat: 'nexus',    desc: 'The fields the autofill has been taught, per site: [{ origin, fieldKey, fieldType }]. Give `url` for one site.', params: { url: 'string?' } },
   { name: 'autofill.forget',  cat: 'nexus',    desc: 'Forget one taught field on one site (the next fill asks again). `fieldKey` as autofill.learned lists it.', params: { url: 'string', fieldKey: 'string' } },
+  // §AT2 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data."
+  { name: 'autofill.export',  cat: 'nexus',    desc: 'The autofill data as one .autofill file (YAML text): his profiles, the fields learned per site, the last gig. Returns { text, filename, counts }; nothing is saved by itself.', params: {} },
+  { name: 'autofill.import',  cat: 'nexus',    desc: 'Merge an .autofill file\'s text in: a profile is replaced only by a newer copy, learned fields set, the gig taken; what it replaces is kept, and autofill.import with undo:true puts it back. Ask him first.', params: { text: 'the .autofill file\'s contents', undo: 'true to undo the last import instead' } },
   // §AD3 0.60.251 — James, 2026-10-25: "need clearglass' fiverr, job application automation, autofill and macros working fully,
   // including with the agents and copilot." The general application fill, macros and the rest of the pipeline, by name.
   { name: 'autofill.profiles', cat: 'nexus',   desc: 'The autofill profiles (id, label) — the identity a fill types in', params: {} },

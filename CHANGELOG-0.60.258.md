@@ -1,23 +1,46 @@
-# 0.60.258 — AF2: autofill fills from the active profile everywhere (the "no profile 'null'" bug, dead)
+# 0.60.258 — Popups in the Clear Glass frame, and DevTools in every window
 
-James, 2026-10-26, drowning: **"the autofill needs to be working. job applications. i need clearglass to do the repititve work. I have adhd and im drownign."**
+James, 2026-10-26, with a screenshot of the ChatGPT "Log in or sign up" window in its Windows frame: "alsO I CANT OPEN dev console in a
+popup window. also the popup windows need to match the rest of the ui."
 
-AF1 gave us the active profile. AF2 wires it into the **one resolution point every fill passes through** — `clear-glass/src/autofill/matcher.js` `_siteChoice(...)`. That's the single change that makes filling actually work for copilot, agents, the context menu, the gig filler and every `/cli/autofill/*` route at once.
+Map: `docs/2026-10-26-glass-frame-phasemap.spec`. This builds CW1, which was mapped and left open when Electron could not run in the
+coder's container. It runs there now, under xvfb.
 
-## The bug, and the fix
-- **Before:** a fill with no `profileId` (copilot, an agent, the context menu) and no site-profile set returned `{ profileId: null }`, and the caller did `getProfile(null)` → **"Did not fill: no autofill profile 'null'"**. The thing just didn't fire.
-- **After:** resolution ends at the active profile — explicit `profileId` wins → the site's chosen profile → `store.activeProfile()` (default, else sole, else first). If **zero** profiles exist it's a clean, actionable error (`{ noProfile: true }`, "add one in Library → Autofill") — never a null lookup (§1.2).
+## Traced
+- **The dev console.** CS1 (0.60.54) removed every popup's File/Edit/View menu. Electron's F12 / Ctrl+Shift+I shortcut lived in that menu,
+  so it went too. Only the main window had a key handler of its own.
+- **The look.** A BrowserWindow's own page always fills the window. This was tried: the page stayed full height. So no title bar can sit
+  above a site's page in one. A frameless BaseWindow holding two views can. This was tried too: a `window.open` popup keeps its opener and
+  closes its frame with `window.close()`.
 
-One change, every door: `fillFields`, `detectFields`, and therefore copilot's fill, the Fiverr gig fill, the routes and the context menu.
+## What changed
+- **GF1, the Glass frame** (`clear-glass/src/main/glass-frame.js`, `renderer/glass-frame.html`).
+  - **The bar:** the Clear Glass title bar, in Settings' look. It carries the mark, back, reload, the page title and host, `</>`
+    (DevTools), minimize, maximize and close. It is 34 px tall, the page sits below it, and you drag the window by it.
+  - **Where it applies:**
+    - provider windows, like the ChatGPT one in the screenshot (`host.js`);
+    - sign-in windows (`login-portal.js`);
+    - every site's popup (`compartment-window.js`). "Continue with Google" works as before.
+  - **How:** a `GlassWindow` answers the same calls a BrowserWindow did, so each caller changed one line. Attention counts frames as
+    windows, so its focus-theft guard still sees sign-in popups.
+  - **Fallback:** `CG_NATIVE_POPUPS=1` brings back the dark OS frame, and so does an Electron with no BaseWindow.
+- **GF2, DevTools everywhere.** F12, Ctrl+Shift+I and Ctrl+Shift+J open the page's DevTools, detached, in every window. One handler is
+  set as each window is created, and the main window uses it too.
 
-## Backward compatible
-A caller that passes a minimal store without `activeProfile` keeps the old pass-through, so nothing that worked before changed (regression guard: `test-autofill-learn-pick`'s fixture store stays green).
+## Proof
+`clear-glass/test/glass-frame.test.js` drives real Electron under xvfb and checks:
+- The page is 566 of 600 px, below the 34 px bar.
+- The bar shows "Log in or sign up", the page's title.
+- The bar's buttons reach their window.
+- F12 opens DevTools.
+- A site's popup is a frame. Its page is 386 px with its opener kept, and its `window.close()` closes the frame.
 
-## Proof (headless, no Electron)
-`tests/modules/test-autofill-fill-active.test.js` 4/4 — no-profileId fills from the active profile; zero profiles → clean error, not `'null'`; detect previews from active; an explicit profile still wins. All 10 autofill suites green (active 6, fill-active 4, learned 4, learn-pick 5, clear-glass-autofill 16, autofill-jobs 9, gig 4, learn-save 3, learn-macro 5, learn-ui 3).
+Other suites:
+- provider-host-load 5/5, provider-host-one-tab 7/7, attention-focus 7/7, signin-window-quiet, login-portal-elsewhere and google-signin
+  56/56 all pass.
+- window-frame WF-05 is updated (a popup is now a frame). WF-06 still fails as before, because `float-cli.js` is unlisted.
+- compartment-window and accounts-portal-settings fail as on 0.60.257.
 
-## What this means for you, James
-Once you pull this: open a job application, and **copilot "fill this in" (or any fill) will use your profile** instead of erroring — as long as you have one profile saved (Library → Autofill). Next up, landing on your branch: the right-click **"Autofill"** menu item you asked for (`renderer.html`) and the Firefox-style inline chip, so you can fire a fill without typing a command.
-
-## Remaining (Clear Glass UI, your machine)
-The context-menu Autofill item, the inline chip (AF3), the settings toggle (AF4).
+## Not checked
+- Maximize: xvfb has no window manager.
+- His Windows machine: how the frame drags and snaps there is to be seen.

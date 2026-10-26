@@ -317,6 +317,12 @@ function gigFile(gig = {}) {
   return { text: `# Clear Glass gig file (${GIG_FORMAT}) — load it in Settings → Autofill → Gig, or in the gig panel.\n${body}`, filename: `${_slug(gig.title)}.gig` };
 }
 
+/** gigFilename(name) → the name ending in .gig, never .gig.json or .yaml (§AT4 0.60.256, James: "fix it so its .gig not .gig.json") */
+function gigFilename(name) {
+  const base = String(name || 'gig').replace(/[\\/:*?"<>|]+/g, '-').replace(/(\.(json|ya?ml|txt|gig))+$/i, '') || 'gig';
+  return `${base}.gig`;
+}
+
 /** gigTemplate() → { text, filename } — an empty .gig with every field, its limit and what it is for */
 function gigTemplate() {
   const L = LIMITS;
@@ -352,4 +358,4 @@ function gigTemplate() {
   return { text, filename: 'gig-template.gig' };
 }
 
-module.exports = { GIG_FORMAT, gigFile, gigTemplate, END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };
+module.exports = { GIG_FORMAT, gigFile, gigFilename, gigTemplate, END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };

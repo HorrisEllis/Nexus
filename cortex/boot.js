@@ -298,6 +298,28 @@ const _raidHealth = {
 const _raidTransport = {};   // 'agent@transport' -> {calls, ok, failed, needsUser, lastFallbackReason}
 const _raidDecisions = [];
 
+// 0.60.240 GD1 — the feedback route's body, as a function, so RAID's outcome is the same whether it comes in over the route or in-process
+function _raidFeedback(body) {
+  // 2026-09-19: accept guardian's real shape ({provider, ok, outcome?, transport, ...}) as well as the original
+  // {agent, outcome}. Before, guardian's body never matched, so this updated nothing while answering ok:true.
+  const agent   = body.agent || body.provider;
+  const outcome = body.outcome || (body.ok === true ? 'success' : body.ok === false ? 'failure' : null);
+  if (agent && outcome === 'success') _raidHealth[agent] = Math.min(100, (_raidHealth[agent] || 50) + 5);
+  if (agent && outcome === 'failure') _raidHealth[agent] = Math.max(0,   (_raidHealth[agent] || 50) - 20);
+  // 'needs_user' (login wall, captcha) is not the agent's fault: recorded for visibility, never lowers health.
+  if (agent && (outcome === 'success' || outcome === 'failure')) {
+    try { require('./core/raid').recordOutcome(agent, body.cluster || 'seam', outcome === 'success'); } catch (_) {}
+  }
+  if (agent && outcome) {                                    // per-transport learning: which way of reaching an agent works
+    const k = `${agent}@${body.transport || 'ncp'}`;
+    const t = _raidTransport[k] = _raidTransport[k] || { calls: 0, ok: 0, failed: 0, needsUser: 0, lastFallbackReason: null };
+    t.calls++;
+    if (outcome === 'success') t.ok++; else if (outcome === 'failure') t.failed++; else if (outcome === 'needs_user') t.needsUser++;
+    if (body.fallbackReason) t.lastFallbackReason = body.fallbackReason;
+  }
+  return { health: _raidHealth, recorded: !!(agent && outcome) };
+}
+
 function _raidDecide(intent, cfrCtx = {}) {
   const sigma = cfrCtx.sigmaFloor || 0;
   const regime = cfrCtx.regime || _field.regime;
@@ -1034,26 +1056,19 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // 0.60.240 GD1 — RAID's approval gate for every system that is not Cortex (lib/raid-port.js). It used to be loaded into Guardian's
+  // process, a second RAID beside this one (docs/2026-10-24-guardian-into-cos-phasemap.spec GD_D0); now there is one
+  if (p === '/api/raid/approve-tool' && method === 'POST') {
+    const body = await readBody(req);
+    let r; try { r = require('./core/raid')._approveTool(body && body.source, body && body.command, (body && body.opts) || {}); }
+    catch (e) { r = { approved: false, reason: `RAID's approval gate threw: ${e.message}` }; }
+    json(res, 200, { ok: true, ...r });
+    return;
+  }
+
   if (p === '/api/raid/feedback' && method === 'POST') {
     const body   = await readBody(req);
-    // 2026-09-19: accept guardian's real shape ({provider, ok, outcome?, transport, ...}) as well as the original
-    // {agent, outcome}. Before, guardian's body never matched, so this updated nothing while answering ok:true.
-    const agent   = body.agent || body.provider;
-    const outcome = body.outcome || (body.ok === true ? 'success' : body.ok === false ? 'failure' : null);
-    if (agent && outcome === 'success') _raidHealth[agent] = Math.min(100, (_raidHealth[agent] || 50) + 5);
-    if (agent && outcome === 'failure') _raidHealth[agent] = Math.max(0,   (_raidHealth[agent] || 50) - 20);
-    // 'needs_user' (login wall, captcha) is not the agent's fault: recorded for visibility, never lowers health.
-    if (agent && (outcome === 'success' || outcome === 'failure')) {
-      try { require('./core/raid').recordOutcome(agent, body.cluster || 'seam', outcome === 'success'); } catch (_) {}
-    }
-    if (agent && outcome) {                                    // per-transport learning: which way of reaching an agent works
-      const k = `${agent}@${body.transport || 'ncp'}`;
-      const t = _raidTransport[k] = _raidTransport[k] || { calls: 0, ok: 0, failed: 0, needsUser: 0, lastFallbackReason: null };
-      t.calls++;
-      if (outcome === 'success') t.ok++; else if (outcome === 'failure') t.failed++; else if (outcome === 'needs_user') t.needsUser++;
-      if (body.fallbackReason) t.lastFallbackReason = body.fallbackReason;
-    }
-    json(res, 200, { ok: true, health: _raidHealth, recorded: !!(agent && outcome) });
+    json(res, 200, { ok: true, ..._raidFeedback(body || {}) });
     return;
   }
 
@@ -1411,6 +1426,14 @@ function _pollOrchestrator() {
 
 // 0.60.249 LM4 (from brave-cori) — the gap field is Cortex's: here its async API is its sync one (lib/gap-field.js provideLocal)
 require('../lib/gap-field.js').provideLocal(true);
+// 0.60.240 GD1 — RAID is Cortex's: in this process the port calls it directly; every other system reaches it over the routes above
+require('../lib/raid-port.js').provide({
+  approveTool: (source, command, opts) => require('./core/raid')._approveTool(source, command, opts || {}),
+  decide:      (intent) => ({ ok: true, ..._raidDecide(intent, { sigmaFloor: _field.entropy, regime: _field.regime }) }),
+  outcome:     (o) => ({ ok: true, ..._raidFeedback({ ...o, provider: o.agent }) }),
+  listQueue:   ({ n = 50 } = {}) => jaaDB.tail('raid_contract_queue', n),
+});
+
 server.listen(PORT, '127.0.0.1', () => {
   // §0.60.131 P33b — James: "each system, reads, writes, and manages its nodes." This system's node registry: its listener over its own
   // data/nodes, indexed into its own data/node-index with every change (lib/node-registry.js). Off the boot path, never fatal.
