@@ -66,3 +66,12 @@ phases:
     blocks: [MOD-CA-REPLY]
     does: Each reply replaces its own thinking line; the route line names who answered.
     proof: "jsdom: two sends answered out of order read in order; a reply from another model than the pick is labelled with it"
+
+## ADDENDUM 2026-10-26 (0.60.253, LG1) — the co-pilot's own fallback opens Guardian's tab too
+James, 2026-10-25: "its not hooked into guardian. look at idearium". He sent it with his co-pilot pane: "try again" was answered "Both Ollama
+and Guardian are unavailable. Check system health." while Guardian was up and passing 12/12.
+- **What was wrong:** CL1 (0.60.231) let a person's pick of an agent open its tab (openTab). The lifeline's automatic fallback from Ollama
+  to Guardian still refused whenever no tab was connected. With lazy provider tabs, no tab is connected at the first ask.
+- **What changed:** the fallback now dispatches with openTab, and the job waits up to two minutes. A final failure names Ollama's reason
+  and Guardian's.
+- **Kept (§0.3):** noOpenTab keeps the 2026-07-09 refusal. Map: docs/2026-10-25-erosmancer-hooks-phasemap.spec (LG1).

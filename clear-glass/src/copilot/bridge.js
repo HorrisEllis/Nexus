@@ -376,6 +376,8 @@ class CoPilotBridge {
     if (action === 'autofill.profiles') return this._ipcGet('/cli/autofill/profiles');
     if (action === 'autofill.detect') return this._ipcPost('/cli/autofill/detect', { agentId: aid, profileId: cmd.profileId || null });
     if (action === 'autofill.fill') return this._ipcPost('/cli/autofill/fill', { agentId: aid, profileId: cmd.profileId || null, minConfidence: cmd.minConfidence || 'medium', vars: cmd.vars || undefined });
+    if (action === 'eros.open') return this._ipcPost('/cli/eros/open', { url: cmd.url, via: cmd.via || (cmd.accountId ? 'account' : 'plain'), accountId: cmd.accountId || null }, 120000);   // §ER2
+    if (action === 'eros.tabs') return this._ipcGet('/cli/eros/tabs');
     if (action === 'macro.list') return this._ipcGet('/cli/macros');
     if (action === 'macro.get') return this._ipcGet(`/cli/macros/${encodeURIComponent(cmd.name || '')}`);
     if (action === 'macro.run') return this._ipcPost(`/cli/macros/${encodeURIComponent(cmd.name || '')}/run`, { agentId: aid, params: cmd.params || {}, skipSnapshot: !!cmd.skipSnapshot }, 5 * 60000);

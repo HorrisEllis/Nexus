@@ -14,7 +14,7 @@ let _commandCalls = [];
 
 function _fakeReq(path, method) {
   const req = new EventEmitter();
-  req.write = () => {};
+  req.write = (b) => { req._body = (req._body || '') + b; };
   req.end = () => {
     process.nextTick(() => {
       const res = new EventEmitter();
@@ -35,10 +35,10 @@ function _fakeReq(path, method) {
 
 const fakeHttp = {
   request: (opts, cb) => {
-    if (opts.path === '/api/copilot/prompt' && opts.method === 'POST') {
-      _commandCalls.push(opts);
-    }
     const req = _fakeReq(opts.path, opts.method);
+    if (opts.path === '/api/copilot/prompt' && opts.method === 'POST') {
+      _commandCalls.push({ ...opts, req });   // 0.60.253 LG1 — the body is read after the call (req._body)
+    }
     req.on('response', cb); // http.request's real signature calls cb(res) directly, not via 'response' event on req in most usages, but lifeline.js's real code passes cb as the request callback:
     return req;
   },
@@ -113,15 +113,24 @@ async function test(id, desc, fn) {
     assert.strictEqual(_commandCalls[0].path, '/api/copilot/prompt');
   });
 
-  await test('T-006', '_tryGuardian returns null (not a fabricated success) when NCP reports not connected', async () => {
+  // §0.60.253 LG1 — the contract T-006 held (2026-07-09: "fail closed on evidence": never dispatch to a tab that is not connected) is
+  // kept for a caller that asks for it (noOpenTab). Its premise changed: Clear Glass now starts provider tabs on first real use, so
+  // "not connected" at the first ask is the normal state, not evidence nothing can answer. James, 2026-10-25: "its not hooked into
+  // guardian. look at idearium". Without noOpenTab the dispatch goes out with openTab (CL1's door): the tab is asked for, the job waits.
+  await test('T-006', 'noOpenTab: _tryGuardian does not dispatch when NCP reports not connected (the 2026-07-09 contract, on request)', async () => {
     _providersResponse = { providers: { chatgpt: 'null' } };
     _commandCalls = [];
-    // route() falls through to the normal cascade when the explicit
-    // dispatch fails — Ollama isn't mocked to succeed here, so this
-    // proves the explicit path was actually attempted and failed
-    // honestly, not that it silently claimed success.
-    const r = await lifeline.route('talk to chatgpt', { requestId: 'test-not-connected' });
-    assert.strictEqual(_commandCalls.length, 0, 'should never dispatch to /command when not connected');
+    const r = await lifeline.route('talk to chatgpt', { requestId: 'test-not-connected', noOpenTab: true });
+    assert.strictEqual(_commandCalls.length, 0, 'should never dispatch when not connected and noOpenTab is set');
+    assert.ok(!r.ok || r.provider_used !== 'chatgpt', 'and never claims chatgpt answered');
+  });
+  await test('T-006b', 'not connected yet (lazy tabs): the dispatch asks guardian to open the tab, and no success is fabricated', async () => {
+    _providersResponse = { providers: { chatgpt: 'null' } };
+    _commandCalls = [];
+    const r = await lifeline.route('talk to chatgpt', { requestId: 'test-open-tab' });
+    assert.strictEqual(_commandCalls.length, 1, 'one dispatch, with openTab');
+    assert.strictEqual(JSON.parse(_commandCalls[0].req._body || '{}').openTab, true);
+    if (!(_commandResponse && _commandResponse.text)) assert.ok(!r.ok || r.provider_used !== 'chatgpt', 'no text from guardian is not an answer');
   });
 
   console.log(`\n  lifeline-fluid-routing: ${passed} passed, ${failed} failed\n`);

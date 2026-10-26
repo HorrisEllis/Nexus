@@ -352,6 +352,18 @@ class IpcBridge {
       return { ok: true, agentId, url: u.href };
     };
     this.app.post('/cli/net/open', _netRoute((b) => this._netOpenVia(b.url)));
+    // §ER2 0.60.253 — James, 2026-10-25: "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator." A page for
+    // ErosmancerOS, opened through the door that owns its session (via snowflake | account | plain), and which agent each Eros tab is.
+    this.app.post('/cli/eros/open', async (req, res) => {
+      if (typeof this.erosOpen !== 'function') return res.status(503).json({ ok: false, error: 'the ErosmancerOS wire is not wired into this Clear Glass' });
+      const b = req.body || {};
+      try { const r = await this.erosOpen({ url: b.url, via: b.via || (b.accountId ? 'account' : 'plain'), accountId: b.accountId || null }); res.status(r.ok ? 200 : 400).json(r); }
+      catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    this.app.get('/cli/eros/tabs', async (req, res) => {
+      if (typeof this.erosTabs !== 'function') return res.status(503).json({ ok: false, error: 'the ErosmancerOS wire is not wired into this Clear Glass' });
+      try { const r = await this.erosTabs(); res.status(r.ok ? 200 : 503).json(r); } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
     // §0.60.169 NP11 — the Snowflake plugin's menu row asks for this on the bus ('net.open'); the answer is a toast in the window that asked
     try {
       const { getBus, Event } = require('../core/bus.js');

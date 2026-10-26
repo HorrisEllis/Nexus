@@ -188,7 +188,7 @@ Module._load = function (req, ...rest) { return req === 'electron' ? { BrowserWi
     assert.match(beh, /export function curvedPath\(/);
     const main = fs.readFileSync(path.join(ROOT, 'clear-glass/src/main/index.js'), 'utf8');
     assert.match(main, /driver\.erosInput = \(\.\.\.a\) => \(_erosInputFn \?/);
-    assert.match(main, /_proxyEros\('POST', '\/api\/input', \{ tabId: tab\.tabId, x, y, action, text, deltaY \}/);
+    assert.match(main, /_proxyEros\('POST', '\/api\/input', \{ tabId: tab\.tabId, x, y, action, text, deltaY(?:, \.\.\.\(tab\.profile \? \{ profile: tab\.profile \} : \{\}\))? \}/);
   });
 
   await t('FD-10', 'the field in a real page (Clear Glass\'s engine): tests/probe/field-chromium.js', () => {

@@ -93,6 +93,15 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/nexus-update.js'), '0.60.252 UP3 /api/update, /api/update/apply|rollback|history; /api/update/restart → autopilot /control/:name/restart'],
   [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '0.60.252 UP3 update | update apply|rollback|history rows → /api/update*'],
   [I('idearium/ui/update.html'), I('idearium/api/index.js'), '0.60.252 UP4 the Updates page: fetch /api/update*'],
+  // §ER 0.60.253 — James, 2026-10-25: "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator."
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/eros/tab-match.js'), '0.60.253 ER1 resolveTab: the agent\'s own page (url+title, a marker on a tie) — no first-tab guess'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/erosmancer/erosmancer-os/src/api/server.ts'), '0.60.253 ER2 /api/input {profile} (the account\'s pace), /api/behavior/profile, /api/evaluate (the tie-break)'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.253 ER2 erosOpen via snowflake → _netOpenVia (Snowflake\'s forced session); erosOpen/erosTabs handed to the bridge'],
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/options/store.js'), '0.60.253 ER2 getAccount(id).erosProfile — an acct-<id> window moves at its account\'s pace'],
+  [I('clear-glass/src/dom/archaeology.js'), I('clear-glass/src/driver/index.js'), '0.60.253 ER3 dom.erosInput = driver.erosInput: handleMutate via eros types the value through ErosmancerOS'],
+  [I('clear-glass/renderer/settings/sections/accounts.js'), I('clear-glass/src/preload/index.js'), '0.60.253 ER4 cg.accounts.update {erosProfile} (each account\'s Eros pace)'],
+  [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.253 ER4 eros open|tabs|pace rows → /cli/eros/open, /cli/eros/tabs, PUT /cli/accounts/:id'],
+  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.253 ER4 eros.open | eros.tabs → /cli/eros/*'],
   [I('clear-glass/src/copilot/bridge.js'), I('lib/agent-tools/tools/nexus/update.js'), '0.60.252 UP4 update.check|apply|rollback|history and "is there an update?" → nexus.update.tool (copilot /api/tools/run)'],
 ];
 

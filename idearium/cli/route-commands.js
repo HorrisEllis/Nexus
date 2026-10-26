@@ -1168,6 +1168,18 @@ export const SPEC = [
   // ── 0.59.12 — James: "the nexus> is for you. not me. give yourself the tools using nexus>. dude...." What the agent in a
   //    chat Clear Glass watches needs to work on his machine: show him a page, and read (never write) logs, files and the
   //    tree. `local` rows run in the process that hears the line (lib/nexus-read.js); secrets refused, keys redacted. ──
+  // §ER2/ER4 0.60.253 — James, 2026-10-25: "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator."
+  { key: 'eros.open', repo: false, usage: 'eros open <url> [--snowflake | --account <accountId>]', about: 'a page for ErosmancerOS to drive like a person: through Snowflake, signed in as one of his accounts (at its pace), or plain — opened by Clear Glass, then Eros attaches to exactly that page',
+    need: (a) => (!a.args[0] ? '<url>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/eros/open', timeoutMs: 150000, body: { url: /^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}`, via: a.flags.snowflake ? 'snowflake' : a.flags.account ? 'account' : 'plain', ...(a.flags.account ? { accountId: String(a.flags.account) } : {}) } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.agentId}`) + h.c.dim(`  ${d.via}${d.accountId ? ` ${d.accountId}` : ''} · Eros tab ${String(d.tabId).slice(0, 8)} · pace ${d.profile} · ${d.url}`) : h.c.amber(`  ${d.error}`)) },
+  { key: 'eros.tabs', repo: false, usage: 'eros tabs', about: 'ErosmancerOS\'s tabs: each with the Clear Glass agent it is (or none) and the pace it moves at',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/eros/tabs' }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); for (const t of d.tabs || []) console.log(`  ${h.c.gray(String(t.targetId).slice(0, 8))} ${(t.agentId || h.c.dim('(no agent)')).toString().padEnd(22)} ${h.c.dim(`${t.profile || ''} ${t.url}`)}`); } },
+  { key: 'eros.pace', repo: false, usage: 'eros pace <accountId> <precise|cautious|exploratory|turbo|default>', about: 'the pace ErosmancerOS moves at in that account\'s pages (its pointer and its keys); default clears it',
+    need: (a) => (a.args.length < 2 ? '<accountId> <pace>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'PUT', path: `/cli/accounts/${encodeURIComponent(a.args[0])}`, body: { updates: { erosProfile: a.args[1] === 'default' ? null : a.args[1] } } }),
+    print: (d, a, h) => console.log(d.error ? h.c.amber(`  ${d.error}`) : h.c.mint(`  ${d.label || d.id}: ${d.erosProfile || 'default'}`)) },
   { key: 'glass.open', repo: false, usage: 'glass open <url>', about: 'show James a page in Clear Glass: the window already on that site comes to the front, else the main window goes there, else a new one',
     need: (a) => (a.args[0] ? null : '<url>'),
     req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/open', body: { url: /^[a-z][\w+.-]*:\/\//i.test(a.args[0]) ? a.args[0] : `${/^(?:localhost|127\.|\d+\.\d+\.\d+\.\d+)/.test(a.args[0]) ? 'http' : 'https'}://${a.args[0]}` } }),   // a local system is plain http

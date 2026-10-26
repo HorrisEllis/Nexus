@@ -458,6 +458,7 @@ const SUITES = [
   'test-autofill-learn-macro.test.js',  // 0.60.232 JA5 — the pick is also a macro + .macro node; a real page: label → box → selector-check's selector
   'test-cg-agent-doors.test.js',  // 0.60.251 AD1–AD5 + SI1 — autofill/gig/macros reachable by agents, co-pilot and rows; no userscript on a sign-in page
   'test-nexus-update.test.js',  // 0.60.252 UP1–UP4 — update Nexus from GitHub (git now, COS the end state): check, apply, rollback, the hat's tool, the page in Clear Glass
+  'test-eros-hooks.test.js',  // 0.60.253 ER1–ER4 — ErosmancerOS into Snowflake, the accounts and the DOM mutator; the right tab or none
   'test-autofill-learn-ui.test.js',     // 0.60.231 JA4 — the learn-loop on screen (Clear Glass): Pick what a fill could not place; Fields it learned, with Forget
   'test-autofill-learn-pick.test.js',   // 0.60.230 JA3 — the element picker on a missed field: needsPick, a stable unique key, saved per-site, filled again
   'test-autofill-learn-save.test.js',   // 0.60.226 JA2 — a picked field saves per-origin to site-settings (autofill.field.<key>) and the fill path reads it back
