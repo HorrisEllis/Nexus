@@ -56,6 +56,39 @@ export const SPEC = [
       console.log('');
     } },
 
+  // §BX2 0.60.248 — James: "What about BrainOS?" The repo's FlowGraph (phases+DAG, runs, the live mesh) — the data the BrainOS
+  // Flow canvas draws. A source that is down is named, the rest still shows (§1.2).
+  { key: 'repo.flow', repo: true, usage: 'repo flow <repo>', about: 'the BrainOS FlowGraph: the repo\'s phases by DAG layer, its runs, and the live agent mesh',
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/flow` }),
+    print: (d, a, h) => {
+      if (!d || d.ok === false) { console.log(h.c.red((d && d.error) || 'no flow')); return; }
+      h.header(`${a.repo.name} — flow`);
+      console.log(`  phases ${h.c.bold(String((d.phases || []).length))}  ·  edges ${(d.edges || []).length}  ·  runs ${(d.runs || []).length}  ·  agents ${h.c.bold(String((d.agents || []).length))}`);
+      for (const s of (d.sources || [])) console.log(`  ${s.ok ? h.c.green('✓') : h.c.yellow('✗')} ${String(s.source).padEnd(11)} ${s.ok ? h.c.dim(`${s.n} item(s)`) : h.c.dim(s.error || '')}`);
+      console.log('');
+    } },
+
+  // §AU1 0.60.249 — James: "copilot system, ollama, lib folder, clearglass, idearium, and brainos have automation" · "Clearglass
+  // automation, and macros, continue." One neutral door over all six (lib/automation-registry.js): list what each present source
+  // holds, run one and record it under that source, and NAME an absent source — never fake one (§1.2).
+  { key: 'automation.list', repo: false, usage: 'automation list [--source <id>]', about: 'every automation (workflows + macros) across the six sources (copilot, ollama, lib, clear-glass, idearium, brainos); a source that is down is named',
+    req: (a) => ({ method: 'GET', path: `/api/automation${a.flags.source ? `?source=${encodeURIComponent(String(a.flags.source))}` : ''}` }),
+    print: (d, a, h) => {
+      if (!d || d.ok === false) { console.log(h.c.red((d && d.error) || 'the registry could not list')); return; }
+      h.header('automation — the union');
+      for (const s of (d.sources || [])) console.log(`  ${s.present ? h.c.green('✓') : h.c.yellow('✗')} ${String(s.id).padEnd(12)} ${h.c.dim(`${s.kind}`)}  ${s.present ? h.c.dim(`${s.count} item(s)`) : h.c.dim(s.why || 'absent')}`);
+      if ((d.items || []).length) { console.log(''); for (const it of d.items) console.log(`  ${h.c.dim(String(it.source).padEnd(12))} ${String(it.kind).padEnd(9)} ${it.name || it.id}`); }
+      console.log('');
+    } },
+  { key: 'automation.run', repo: false, usage: 'automation run <source> <id>', about: 'run one automation through its source and record the run under that source (an absent/driver source says where it actually runs)',
+    need: (a) => (a.args[0] && a.args[1] ? null : '<source> <id>'),
+    req: (a) => ({ method: 'POST', path: '/api/automation/run', body: { source: a.args[0], id: a.args[1] }, timeoutMs: 600000 }),
+    print: (d, a, h) => {
+      if (!d) { console.log(h.c.red('no answer')); return; }
+      if (d.ok === false) { console.log(`${h.c.coral('✗')} ${h.c.dim(d.source || '')} ${d.error}`); return; }
+      console.log(`${h.c.mint('✓')} ran via ${h.c.bold(d.via || d.source)} ${h.c.dim(`run ${d.runId || '—'} · ${d.status || 'ok'}`)}`);
+    } },
+
   // ── what its agent proposed ───────────────────────────────────────────────────────────────────────────────────────
   // §0.60.118 DK1 — James: "maybe buttons for agent tools, for the repo, to execute. replayable proceedures?" The same as the
   // Code tab's tools panel: one tool through the agent's door (this repo's scope), and .procedure files replayed in order.
@@ -1221,6 +1254,12 @@ export const SPEC = [
     need: (a) => (a.args[0] ? null : '<url>'),
     req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/open', body: { url: /^[a-z][\w+.-]*:\/\//i.test(a.args[0]) ? a.args[0] : `${/^(?:localhost|127\.|\d+\.\d+\.\d+\.\d+)/.test(a.args[0]) ? 'http' : 'https'}://${a.args[0]}` } }),   // a local system is plain http
     print: (d) => console.log(`  ${d.reused ? 'brought to the front' : d.navigated ? 'the main window went to' : 'opened'} ${d.url}${d.agentId ? `  (window ${d.agentId})` : ''}`) },
+  // §RC1 0.60.261 — James, 2026-10-26: "what if we have a tool for the agents to capture the recent event ledger or orchastrator? using the
+  // .response nodes, chat ledgers for the repo, and log for context. for persistent memory?" The same read as nexus.recall.tool
+  { key: 'recall', repo: false, usage: 'recall [--sources activity,runs,ledger,responses,chats,log] [--repo <uuid>] [--agent a] [--grep w] [--log errors|autopilot] [--limit n] [--budget chars]', about: 'what just happened, in one compact read: the event ledger, a repo\'s runs, the orchestrator ledger, the newest agent replies, the chat ledgers, a log; each source says ok or why not',
+    maxChars: 30000,
+    local: async (a) => require('../../lib/agent-tools/tools/nexus/recall.js').recall({ sources: a.flags.sources ? String(a.flags.sources).split(',') : null, repo: a.flags.repo, agent: a.flags.agent, grep: a.flags.grep, log: a.flags.log, limit: a.flags.limit, budget: a.flags.budget, failedOnly: !!a.flags.failed }),
+    print: (d) => console.log(d.text) },
   { key: 'log', repo: false, usage: 'log [autopilot|errors|<path>.log] [--lines n] [--grep pattern]', about: 'the end of a Nexus log (autopilot by default; errors = data/error.log), keys redacted',
     maxChars: 8000,
     local: (a) => require('../../lib/nexus-read.js').tailLog(a.args[0] || 'autopilot', { lines: a.flags.lines, grep: a.flags.grep }),

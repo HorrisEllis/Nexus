@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:MK3_air_gapped_bus:c775e1c054783de4
+type: graph
+id: phase:MK3_air_gapped_bus:c775e1c054783de4
+context: dependency graph of phase MK3_air_gapped_bus
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792992204323
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992204323
+lastSeenAt: 1792992204323
+fingerprint: null
+payload:
+  for: MK3_air_gapped_bus
+  kind: phase
+  repo: null
+  hash: c775e1c054783de4
+  nodes:
+    - path: lib/nexus-bus.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

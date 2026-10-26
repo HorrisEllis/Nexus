@@ -1,0 +1,154 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AF1_active_profile_and_fill_one:fb88baabfed1fce8
+type: graph
+id: phase:AF1_active_profile_and_fill_one:fb88baabfed1fce8
+context: dependency graph of phase AF1_active_profile_and_fill_one
+intent: null
+summary: 16 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792992982692
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992982692
+lastSeenAt: 1792992982692
+fingerprint: null
+payload:
+  for: AF1_active_profile_and_fill_one
+  kind: phase
+  repo: null
+  hash: fb88baabfed1fce8
+  nodes:
+    - path: clear-glass/src/autofill/matcher.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/learn-pick.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/gates/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: tests/modules/clear-glass-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-screen-qa.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learn-pick.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learn-save.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learned.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/autofill/learn-pick.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/proposal.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/autofill/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/proposal.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/autofill/matcher.js
+      to: clear-glass/src/autofill/learn-pick.js
+      kind: requires
+    - from: clear-glass/src/autofill/learn-pick.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-autofill.test.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-screen-qa.test.js
+      to: clear-glass/src/autofill/store.js
+      kind: requires
+    - from: clear-glass/src/gates/index.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/screen-qa/detector.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learn-pick.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learn-save.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: tests/modules/test-autofill-learned.test.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF2_route_and_command
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF3_the_inline_chip
+    upstream: []
+    downstream:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF2_route_and_command
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF3_the_inline_chip
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF4_settings_toggle
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF2_route_and_command
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF3_the_inline_chip
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): AF2_route_and_command, AF3_the_inline_chip · all downstream 3 · finishing it
+        unlocks AF2_route_and_command, AF3_the_inline_chip
+    edges: []

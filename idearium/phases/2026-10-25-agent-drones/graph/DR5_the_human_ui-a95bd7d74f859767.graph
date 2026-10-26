@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DR5_the_human_ui:a95bd7d74f859767
+type: graph
+id: phase:DR5_the_human_ui:a95bd7d74f859767
+context: dependency graph of phase DR5_the_human_ui
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792963020119
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792963020119
+lastSeenAt: 1792963020119
+fingerprint: null
+payload:
+  for: DR5_the_human_ui
+  kind: phase
+  repo: null
+  hash: a95bd7d74f859767
+  nodes:
+    - path: idearium/ui/js/drones-panel.js
+      role: changes
+      exists: false
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR4_plain_task_to_contract
+    dependents: []
+    upstream:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR1_the_drone_contract_and_router
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR2_route
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR4_plain_task_to_contract
+    downstream: []
+    blockedBy:
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+      - docs/2026-10-25-agent-drones-phasemap.spec::DR4_plain_task_to_contract
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by DR3_command, DR4_plain_task_to_contract
+      - 'depends on (2): DR3_command, DR4_plain_task_to_contract · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-25-agent-drones-phasemap.spec::DR3_command
+        kind: declared
+      - from: docs/2026-10-25-agent-drones-phasemap.spec::DR4_plain_task_to_contract
+        kind: declared

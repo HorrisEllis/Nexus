@@ -1348,7 +1348,6 @@ class IpcBridge {
     // builder opens pre-filled (passwords become a {{password}} parameter).
     // §0.60.57 MR1 — James, 2026-10-15: "needs to start recording a macro node file." The recording IS a .macro file from the first
     // second (src/macros/live-recording.js); recordStop returns the same steps the file holds, so the step editor opens on what was saved.
-    // §AD2 0.60.251 — the recorder is one bridge method (_macroRecord), shared with the /cli/macros/record/* doors (AD_D2)
     ipcMain.handle('macros:recordStart', async (e, { agentId, name } = {}) => this._macroRecord('start', { agentId, name }));
     ipcMain.handle('macros:recordStatus', async (e, { agentId } = {}) => this._macroRecord('status', { agentId }));
     ipcMain.handle('macros:recordStop', async (e, { agentId } = {}) => this._macroRecord('stop', { agentId }));
@@ -2128,7 +2127,7 @@ class IpcBridge {
     try {
       if (!this._liveRecorder) this._liveRecorder = new (require('../macros/live-recording').LiveRecorder)({
         getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
-        dir: require('../mesh/automation-engine.js').NODES_DIR });
+        dir: require('../../../lib/automation-nodes.js').NODES_DIR });   // 0.60.261: the engine moved to core (AE1, main); the node folder is lib/automation-nodes.js's
       if (op === 'start') return await this._liveRecorder.start({ agentId, name });
       if (op === 'stop') return await this._liveRecorder.stop(agentId);
       if (op === 'status') return this._liveRecorder.status(agentId);
@@ -2137,7 +2136,7 @@ class IpcBridge {
   }
 
   _autofillMacroDoor() {
-    let nodesDir = null; try { nodesDir = require('../mesh/automation-engine.js').NODES_DIR; } catch (_) {}
+    let nodesDir = null; try { nodesDir = require('../../../lib/automation-nodes.js').NODES_DIR; } catch (_) {}
     return { macroTool: this.macroTool || null, nodesDir };
   }
   // §JA5 — forget, then rebuild the site's macro without that field (removed when nothing is left)

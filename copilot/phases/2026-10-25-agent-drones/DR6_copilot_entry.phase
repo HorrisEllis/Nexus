@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-agent-drones-phasemap.spec::DR6_copilot_entry
+type: phase
+id: docs_2026-10-25-agent-drones-phasemap.spec::DR6_copilot_entry
+context: pipeline phase DR6_copilot_entry of docs/2026-10-25-agent-drones-phasemap.spec
+intent: null
+summary: DR6_copilot_entry (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792963020120
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792963020120
+lastSeenAt: 1792963020120
+fingerprint: null
+payload:
+  id: DR6_copilot_entry
+  map: docs/2026-10-25-agent-drones-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - copilot/tool-runtime.js
+  depends_on:
+    - DR3_command
+  blocks: []
+  spec: null
+  graph: 321a9315e9fbd2e9

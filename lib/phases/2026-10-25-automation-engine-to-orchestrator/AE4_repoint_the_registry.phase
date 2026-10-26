@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+type: phase
+id: docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE4_repoint_the_registry
+context: >-
+  pipeline phase AE4_repoint_the_registry of
+  docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+intent: null
+summary: AE4_repoint_the_registry (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792962436834
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792962436834
+lastSeenAt: 1792962436834
+fingerprint: null
+payload:
+  id: AE4_repoint_the_registry
+  map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/automation-registry.js
+    - tests/modules/test-automation-registry.test.js
+  depends_on:
+    - AE2_browser_driver_port
+    - AE3_the_engine_door
+  blocks: []
+  spec: docs/brainos-in-idearium.spec
+  graph: 139a7c4e2a7971c9

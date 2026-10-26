@@ -10,7 +10,7 @@
  *   lib/repo-inject.js → lib/repo-agent.js                              the stage option (repo-agent._economyStage) it is handed
  *   idearium/ui/settings.html → idearium/api/index.js                   HTTP GET|POST /api/economy, GET /api/economy/:what
  *   idearium/api/index.js → guardian/server.js                          HTTP :7820/api/economy* (nexus-client)
- *   clear-glass/src/mesh/automation-engine.js → clear-glass/src/driver/index.js   browserFn → driver.exec pointer (via 'eros')
+ *   lib/automation/engine.js → clear-glass/src/driver/index.js   browserFn → driver.exec pointer (via 'eros')
  *   clear-glass/renderer/settings/sections/eros.js → clear-glass/src/main/index.js   HTTP /eros/* (the wire proxy)
  *   clear-glass/src/main/index.js → erosmancer-os/src/api/server.ts     _proxyEros → ErosmancerOS REST
  * The .ts and .html files are not scanned (.js only), so they are declared here; lib/economy/* and
@@ -35,6 +35,7 @@ const FILES = [
   ]],
   ['idearium/ui/settings.html', I('idearium/ui/settings.html'), [I('idearium/api/index.js')]],   // HTTP /api/economy*
   // §AT1 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." The autofill data as one .autofill file
+  ['lib/agent-tools/tools/nexus/recall.js', I('lib/agent-tools/tools/nexus/recall.js'), [I('lib/chat-ledger-client.js'), I('lib/nexus-read.js')]],   // §RC1 0.60.261
   ['clear-glass/src/contexts/human-check.js', I('clear-glass/src/contexts/human-check.js'), [I('clear-glass/src/net/compartment.js')]],   // §HC1 0.60.260
   ['clear-glass/src/main/glass-frame.js', I('clear-glass/src/main/glass-frame.js'), []],   // §GF1 0.60.258 the Clear Glass title bar over a foreign page
   ['clear-glass/src/autofill/transfer.js', I('clear-glass/src/autofill/transfer.js'), [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/src/autofill/matcher.js')]],
@@ -61,7 +62,7 @@ const CONSUMERS = [
   [I('lib/seam/adapters/warp-cascade.js'), I('lib/economy/gate.js'), '_learnedOrder: only providers the gate allows'],
   [I('lib/seam/adapters/warp-cascade.js'), I('lib/economy/router.js'), '_learnedOrder: choose("build", …)'],
   [I('idearium/api/index.js'), I('guardian/server.js'), 'economy.get / economy.set / economy.view → HTTP :7820/api/economy*'],
-  [I('clear-glass/src/mesh/automation-engine.js'), I('clear-glass/src/driver/index.js'), "_erosInput → browserFn → driver.exec pointer via 'eros'"],
+  [I('lib/automation/engine.js'), I('clear-glass/src/driver/index.js'), "_erosInput → browserFn → driver.exec pointer via 'eros'"],
   [I('clear-glass/renderer/settings/sections/eros.js'), I('clear-glass/src/main/index.js'), 'HTTP /eros/tabs|nodes|execute|replay (workbench)'],
   // §GA1 0.60.161 — the co-pilot fills the Fiverr gig editor through the engine (James: "need help with the autofill for fiverr")
   [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.161 autofill.gig -> /cli/autofill/gig/autofill (_gigAutofill)'],
@@ -77,7 +78,7 @@ const CONSUMERS = [
   // §JA5 0.60.232 — the pick is also a macro (James: "saves to per site settings, and as a macro or automation")
   [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/renderer/selector-check.js'), 'selectorScript: selector-check.js source run in the tab, key input (the box\'s selector)'],
   [I('clear-glass/src/ipc/bridge.js'), I('lib/agent-tools/tools/clear-glass/macro.js'), '0.60.232 _autofillMacroDoor: learn-pick saveMacro -> macroTool get/delete/create/export'],
-  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/mesh/automation-engine.js'), '0.60.232 _autofillMacroDoor: NODES_DIR, where the site macro\'s .macro node goes'],
+  [I('clear-glass/src/ipc/bridge.js'), I('lib/automation/engine.js'), '0.60.232 _autofillMacroDoor: NODES_DIR, where the site macro\'s .macro node goes'],
   // §JA4 0.60.231 — the learn-loop on screen: the panel → preload → IPC → learn-pick
   [I('clear-glass/renderer/settings/sections/autofill.js'), I('clear-glass/src/preload/index.js'), '0.60.231 cg.autofill.pick / learned / forget (Pick buttons; Fields it learned, Forget)'],
   [I('clear-glass/src/preload/index.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.231 IPC autofill:pick | autofill:learned | autofill:forget'],
@@ -105,6 +106,14 @@ const CONSUMERS = [
   [I('clear-glass/src/dom/archaeology.js'), I('clear-glass/src/driver/index.js'), '0.60.253 ER3 dom.erosInput = driver.erosInput: handleMutate via eros types the value through ErosmancerOS'],
   [I('clear-glass/renderer/settings/sections/accounts.js'), I('clear-glass/src/preload/index.js'), '0.60.253 ER4 cg.accounts.update {erosProfile} (each account\'s Eros pace)'],
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.253 ER4 eros open|tabs|pace rows → /cli/eros/open, /cli/eros/tabs, PUT /cli/accounts/:id'],
+  // §RC 0.60.261 — the agents' recall tool: each source through its owner's route
+  [I('lib/agent-tools/tools/nexus/recall.js'), I('idearium/api/index.js'), '0.60.261 RC1 GET /api/activity, /api/repos/:uuid/activity|runs, /api/ledger/out (HTTP via idearium/code.js _call)'],
+  [I('lib/agent-tools/tools/nexus/recall.js'), I('guardian/server.js'), '0.60.261 RC1 GET /api/responses/recent (HTTP :7820)'],
+  [I('guardian/server.js'), I('guardian/lib/response-sink.js'), '0.60.261 RC1 recent(): the newest .response nodes'],
+  [I('lib/agent-tools/tools/nexus/recall.js'), I('lib/chat-ledger-client.js'), '0.60.261 RC1 list(): the chat ledgers (Clear Glass :7702)'],
+  [I('lib/agent-tools/tools/nexus/recall.js'), I('lib/nexus-read.js'), '0.60.261 RC1 tailLog'],
+  [I('lib/agent-tools/index.js'), I('lib/agent-tools/tools/nexus/recall.js'), '0.60.261 RC1 registerTool(nexus.recall.tool)'],
+  [I('idearium/cli/route-commands.js'), I('lib/agent-tools/tools/nexus/recall.js'), '0.60.261 RC1 `recall` row (local)'],
   // §HC 0.60.260 — James, 2026-10-26: "i can't get passed this. can you help?"
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/contexts/human-check.js'), '0.60.260 HC2 _humanCheck after a tab loads; _identityBeforeLoad for a remembered site'],
   [I('clear-glass/src/main/index.js'), I('clear-glass/src/contexts/manager.js'), '0.60.260 HC2 useEngineIdentity / contextForSession; the hostile hook asks mode engine on a challenge'],

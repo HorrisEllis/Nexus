@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-inline-autofill-ui-phasemap.spec::AF4_settings_toggle
+type: phase
+id: docs_2026-10-26-inline-autofill-ui-phasemap.spec::AF4_settings_toggle
+context: pipeline phase AF4_settings_toggle of docs/2026-10-26-inline-autofill-ui-phasemap.spec
+intent: null
+summary: AF4_settings_toggle (ui) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792992982702
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992982702
+lastSeenAt: 1792992982702
+fingerprint: null
+payload:
+  id: AF4_settings_toggle
+  map: docs/2026-10-26-inline-autofill-ui-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - clear-glass/renderer/settings/sections/autofill.js
+  depends_on:
+    - AF2_route_and_command
+    - AF3_the_inline_chip
+  blocks: []
+  spec: null
+  graph: efa2435d3434b011

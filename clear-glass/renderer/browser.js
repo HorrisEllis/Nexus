@@ -2074,6 +2074,18 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
     const r = await cg.autofill.fill(pid, agentId).catch(e => ({ error: e.message }));
     addMsg('assistant', r && r.error ? `Autofill: ${r.error}` : `Autofill: ${(r && (r.filled ?? (r.results || []).length)) || 0} field(s) filled.`);
   }
+  // §AF2 2026-10-26 — James, drowning in job applications: "the autofill needs to be working … no autofill? renderer.html".
+  // The right-click "Autofill this page" item. It passes NO profileId, so the backend fills from the ACTIVE profile (AF2):
+  // never the old "no autofill profile 'null'". No profile at all → the clean, actionable message, not an error dump.
+  async function _ctxAutofill() {
+    hideCtxMenu();
+    const r = await cg.autofill.fill(null, agentId).catch(e => ({ error: e.message }));
+    if (r && r.noProfile) { addMsg('assistant', 'Autofill: no profile yet — add one in Library › Autofill, then right-click → Autofill this page.'); return; }
+    if (r && r.error) { addMsg('assistant', `Autofill: ${r.error}`); return; }
+    const n = (r && (Array.isArray(r.filled) ? r.filled.length : r.filled)) || 0;
+    const unplaced = r && r.needsPick && Array.isArray(r.needsPick.unplaced) ? r.needsPick.unplaced.length : 0;
+    addMsg('assistant', `Autofill: ${n} field(s) filled${unplaced ? ` — ${unplaced} still need a Pick (Co-pilot: autofill.pick, or the Autofill panel)` : ''}.`);
+  }
   const SHORTCUT_ACTIONS = {
     'tab.new':        () => _tabs.newTab(),
     'cg.processes':   () => cg.window.openProcesses(),   // SP6 (0.60.220) — main opens it first; this is the window's own path
@@ -3426,6 +3438,7 @@ ${alt ? `<p>Did you mean <a style="color:#00f5ff" href="${esc(alt)}">${esc(alt)}
       case 'edit-copy':    wv.copy(); break;
       case 'edit-paste':   wv.paste(); break;
       case 'edit-selectall': case 'select-all': wv.selectAll(); break;
+      case 'autofill-page': _ctxAutofill(); break;   // §AF2 2026-10-26 — his "no autofill? renderer.html": fill the page from the active profile
       case 'view-source':  { const u = wv.getURL(); if (/^https?:/i.test(u)) window.CGShell.newTab('view-source:' + u); break; }
       case 'plugin-item': {
         // §0.60.169 NP11 — a plugin's row: fire its signature with the link (or page) it was opened on; the plugin's own Gate does the rest and tells the person by toast

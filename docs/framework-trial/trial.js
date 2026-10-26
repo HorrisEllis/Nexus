@@ -89,5 +89,81 @@ function score() {
   console.log(out.join('\n'));
 }
 
-const cmd = process.argv[2];
-({ prompts, blind, sheet, score }[cmd] || (() => { console.log('usage: trial.js prompts | blind | sheet | score'); process.exit(1); }))();
+// ── deploy (AU2) ──────────────────────────────────────────────────────────────
+// James, 2026-10-24: "have that test done automatically." · (of the manual run) "that was done by hand in clearglass."
+// Deploy each prompt to its agent and save the reply as answers/<P>/<model>-<arm>-<run>.md (exactly what `blind` reads),
+// so the trial collects itself instead of being pasted tab by tab. Judging stays human/blind (the trial's integrity):
+// deploy only COLLECTS; blind → sheet → a judge fills scores → score. One door per provider through Nexus's own agent
+// list; a provider whose service is not up is reported, never hidden (§1.2). The transport is injectable (setSend) so the
+// pipeline is proven offline with a deterministic mock; the real run (ChatGPT/Gemini via Guardian's tabs) is his, live.
+
+function _flags(argv) {
+  const f = {};
+  for (let i = 0; i < argv.length; i++) if (argv[i].startsWith('--')) { const k = argv[i].slice(2); const v = (argv[i + 1] && !argv[i + 1].startsWith('--')) ? argv[++i] : true; f[k] = v; }
+  return f;
+}
+
+function _http(url, body, timeoutMs = 120000) {
+  const http = require('http'); const u = new URL(url); const data = JSON.stringify(body);
+  return new Promise((resolve, reject) => {
+    const req = http.request({ hostname: u.hostname, port: u.port, path: u.pathname + u.search, method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) }, timeout: timeoutMs }, r => {
+      let buf = ''; r.on('data', c => buf += c); r.on('end', () => { try { resolve(JSON.parse(buf)); } catch (e) { reject(new Error(`bad JSON from ${u.pathname}`)); } });
+    });
+    req.on('error', e => reject(new Error(e.code === 'ECONNREFUSED' ? `${u.hostname}:${u.port} not up` : e.message)));
+    req.on('timeout', () => { req.destroy(); reject(new Error('timed out')); });
+    req.write(data); req.end();
+  });
+}
+
+// the real transport: ollama direct; everything else through Nexus's deploy door (Guardian/copilot), best-effort.
+async function _realSend(model, prompt) {
+  const m = String(model).toLowerCase();
+  if (m === 'ollama' || m.startsWith('ollama:')) {
+    const name = m.includes(':') ? m.split(':').slice(1).join(':') : (process.env.OLLAMA_MODEL || 'qwen2.5-coder:7b');
+    const r = await _http(process.env.OLLAMA_URL || 'http://127.0.0.1:11434/api/generate', { model: name, prompt, stream: false }, 180000);
+    return r.response || '';
+  }
+  const url = process.env.TRIAL_DEPLOY_URL || `${process.env.GUARDIAN_URL || 'http://127.0.0.1:7820'}/api/complete`;
+  const r = await _http(url, { provider: m, prompt }, 180000);
+  return r.text || r.reply || r.response || '';
+}
+let _send = _realSend;
+function setSend(fn) { _send = fn || _realSend; }
+
+// deterministic offline replies, so the deploy→blind→sheet→score pipeline is provable without a live agent. Neutral by
+// design — it must NOT fake arm B looking better (that is the judge's blind call); it only exercises the plumbing.
+function _mockReply(p, arm, model) {
+  return `# ${model} ${arm} (mock)\n\nProblem ${p.id}. A placeholder answer for pipeline testing only — no real reasoning.\n\nEnd state: resolved.\n`;
+}
+
+async function deploy(argv = []) {
+  const f = _flags(argv);
+  const models = (!f.model || f.model === 'all') ? ['claude', 'chatgpt', 'gemini'] : String(f.model).split(',').map(s => s.trim());
+  const arms = (!f.arm || f.arm === 'both') ? Object.keys(ARMS.arms) : [String(f.arm)];
+  const run = Number(f.run || 1);
+  let ok = 0, fail = 0; const results = [];
+  for (const p of P) for (const arm of arms) for (const model of models) {
+    const dir = path.join(DIR, 'answers', p.id); fs.mkdirSync(dir, { recursive: true });
+    const rel = `answers/${p.id}/${model}-${arm}-${run}.md`;
+    try {
+      const reply = f.mock ? _mockReply(p, arm, model) : await _send(model, promptFor(p, arm));
+      if (!reply || !String(reply).trim()) throw new Error('empty reply');
+      fs.writeFileSync(path.join(DIR, 'answers', p.id, `${model}-${arm}-${run}.md`), String(reply));
+      ok++; results.push({ p: p.id, arm, model, ok: true }); console.log(`  ✓ ${p.id} ${arm} ${model} → ${rel}`);
+    } catch (e) {
+      fail++; results.push({ p: p.id, arm, model, ok: false, error: e.message }); console.log(`  ✗ ${p.id} ${arm} ${model} — ${e.message} (not saved)`);
+    }
+  }
+  console.log(`\ndeployed ${ok} answer(s), ${fail} failed. Next: trial.js blind → sheet → (a judge fills scores.csv, blind) → score`);
+  return { ok, fail, results };
+}
+
+module.exports = { prompts, blind, sheet, score, deploy, promptFor, setSend, P };
+
+if (require.main === module) {
+  const cmd = process.argv[2];
+  const fn = { prompts, blind, sheet, score, deploy }[cmd];
+  if (!fn) { console.log('usage: trial.js prompts | deploy [--model m|all] [--arm A|B|both] [--run n] [--mock] | blind | sheet | score'); process.exit(1); }
+  Promise.resolve(fn(process.argv.slice(3))).catch(e => { console.error(e.message); process.exit(1); });
+}

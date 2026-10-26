@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AF3_the_inline_chip:ace78840eac819a4
+type: graph
+id: phase:AF3_the_inline_chip:ace78840eac819a4
+context: dependency graph of phase AF3_the_inline_chip
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792992982699
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992982699
+lastSeenAt: 1792992982699
+fingerprint: null
+payload:
+  for: AF3_the_inline_chip
+  kind: phase
+  repo: null
+  hash: ace78840eac819a4
+  nodes:
+    - path: clear-glass/renderer/autofill-inline.js
+      role: changes
+      exists: false
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+    dependents:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF4_settings_toggle
+    upstream:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+    downstream:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF4_settings_toggle
+    blockedBy:
+      - docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by AF1_active_profile_and_fill_one
+      - 'depends on (1): AF1_active_profile_and_fill_one'
+      - 'needed by (1): AF4_settings_toggle'
+    edges:
+      - from: docs/2026-10-26-inline-autofill-ui-phasemap.spec::AF1_active_profile_and_fill_one
+        kind: declared

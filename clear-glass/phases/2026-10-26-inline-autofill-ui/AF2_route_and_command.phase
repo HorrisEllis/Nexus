@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-inline-autofill-ui-phasemap.spec::AF2_route_and_command
+type: phase
+id: docs_2026-10-26-inline-autofill-ui-phasemap.spec::AF2_route_and_command
+context: pipeline phase AF2_route_and_command of docs/2026-10-26-inline-autofill-ui-phasemap.spec
+intent: null
+summary: AF2_route_and_command (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792992982696
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992982696
+lastSeenAt: 1792992982696
+fingerprint: null
+payload:
+  id: AF2_route_and_command
+  map: docs/2026-10-26-inline-autofill-ui-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - clear-glass/src/automation/routes.js
+    - lib/agent-tools/tools/clear-glass/autofill.js
+  depends_on:
+    - AF1_active_profile_and_fill_one
+  blocks: []
+  spec: null
+  graph: b22df6c54920ad92

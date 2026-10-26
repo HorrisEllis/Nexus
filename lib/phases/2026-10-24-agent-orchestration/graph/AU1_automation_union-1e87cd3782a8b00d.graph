@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AU1_automation_union:1e87cd3782a8b00d
+type: graph
+id: phase:AU1_automation_union:1e87cd3782a8b00d
+context: dependency graph of phase AU1_automation_union
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792940185295
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792940185295
+lastSeenAt: 1792940185295
+fingerprint: null
+payload:
+  for: AU1_automation_union
+  kind: phase
+  repo: null
+  hash: 1e87cd3782a8b00d
+  nodes:
+    - path: lib/automation-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-automation-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: idearium/api/index.js
+      to: lib/automation-registry.js
+      kind: requires
+    - from: tests/modules/test-automation-registry.test.js
+      to: lib/automation-registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::AU_D1_automation_union
+    dependents: []
+    upstream:
+      - docs/2026-10-24-agent-orchestration-phasemap.spec::AU_D1_automation_union
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling:
+      - BX_orchestration
+    lines:
+      - layer 1
+      - 'depends on (1): AU_D1_automation_union'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: BX_orchestration'
+    edges:
+      - from: docs/2026-10-24-agent-orchestration-phasemap.spec::AU_D1_automation_union
+        kind: declared
