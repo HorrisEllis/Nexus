@@ -1,0 +1,228 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UP7_autopilot_keeps_it_current:1953e005843f391f
+type: graph
+id: phase:UP7_autopilot_keeps_it_current:1953e005843f391f
+context: dependency graph of phase UP7_autopilot_keeps_it_current
+intent: null
+summary: 25 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792973890115
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792973890115
+lastSeenAt: 1792973890115
+fingerprint: null
+payload:
+  for: UP7_autopilot_keeps_it_current
+  kind: phase
+  repo: null
+  hash: 1953e005843f391f
+  nodes:
+    - path: lib/nexus-update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/update.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-alk-lattice-live.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autopilot-boot-gates.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autopilot-idle.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-boot-phases.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-spawn-guard.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-container-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-graph-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tablet-ledger-api.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/autopilot-intelligence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/error-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-sse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-releases.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Event.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Stream.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/StreamLog.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus-update.js
+      to: lib/nexus-releases.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/ledger-fanin/boot.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/ledger-sse.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/error-log.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/autopilot-intelligence.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/warp/core/Stream.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/warp/core/StreamLog.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/warp/core/Axiom.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/warp/core/Event.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/update.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: tests/modules/test-alk-lattice-live.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-autopilot-boot-gates.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-autopilot-idle.test.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-boot-phases.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-spawn-guard.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-container-api.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-graph-api.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+    - from: tests/modules/test-tablet-ledger-api.js
+      to: lib/nexus/autopilot.js
+      kind: requires
+  crossings:
+    - from: lib/nexus/autopilot.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+    dependents:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP8_policy_on_the_page
+    upstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2a_adopt_the_old_folder
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D4_automatic
+    downstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP8_policy_on_the_page
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP8_policy_on_the_page
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5
+      - 'depends on (1): UP6_attach_in_place · all upstream 8'
+      - 'needed by (1): UP8_policy_on_the_page · finishing it unlocks UP8_policy_on_the_page'
+    edges:
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+        kind: declared

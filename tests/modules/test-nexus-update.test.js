@@ -14,6 +14,8 @@ require('../../lib/test-sandbox.js').ensure();
  *   UP-06  local commits (diverged) are refused: merging is his
  *   UP-07  wired: the tool, the co-pilot hat, the rows (apply/rollback the person's), the routes, the page, the co-pilot's names, loom
  *   UP-09  adopt: from an unzipped folder into the clone, his state comes across (ignored files, tracked data), code never does
+ *   UP-10  attach in place: an unzipped release folder becomes its release's working tree (no file touched), then updates like a clone
+ *   UP-11  automatic: auto applies when idle and restarts what changed (never Clear Glass); not idle waits; notify only says; off nothing
  *   UP-08  the Updates page, driven in Clear Glass (glass.js) over the real lib/nexus-update.js: his words, Update, Roll back, history
  */
 const assert = require('assert');
@@ -40,11 +42,11 @@ function setup() {
   fs.mkdirSync(seed); G(seed, 'init', '-q'); G(seed, 'remote', 'add', 'origin', origin);
   W(seed, 'VERSION', '0.1.0\n'); W(seed, 'lib/version.js', versionJs('0.1.0', 'first')); W(seed, 'a.js', 'one\n');
   W(seed, 'data/x/state.json', '{"n":1}\n'); W(seed, 'package-lock.json', '{"v":1}\n');
-  G(seed, 'add', '-A'); G(seed, 'commit', '-q', '-m', '0.1.0'); G(seed, 'push', '-q', 'origin', 'HEAD:main');
+  G(seed, 'add', '-A'); G(seed, 'commit', '-q', '-m', '0.1.0'); G(seed, 'tag', 'v0.1.0'); G(seed, 'push', '-q', 'origin', 'HEAD:main', 'v0.1.0');
   G(tmp, 'clone', '-q', '--branch', 'main', origin, install);
   W(seed, 'VERSION', '0.1.1\n'); W(seed, 'lib/version.js', versionJs('0.1.1', 'make it update itself', { v: '0.1.0', q: 'first' }));
   W(seed, 'a.js', 'two\n'); W(seed, 'data/x/state.json', '{"n":2}\n'); W(seed, 'package-lock.json', '{"v":2}\n');
-  G(seed, 'add', '-A'); G(seed, 'commit', '-q', '-m', '0.1.1'); G(seed, 'push', '-q', 'origin', 'HEAD:main');
+  G(seed, 'add', '-A'); G(seed, 'commit', '-q', '-m', '0.1.1'); G(seed, 'tag', 'v0.1.1'); G(seed, 'push', '-q', 'origin', 'HEAD:main', 'v0.1.1');
 }
 
 (async () => {
@@ -54,9 +56,9 @@ function setup() {
   await test('UP-01', 'detect: a clone is git; an unzipped folder is told the clone; a COS store version is the COS driver', async () => {
     assert.strictEqual(U.detect({ root: install }).driver, 'git');
     const folder = path.join(tmp, 'nexus-0.1.0'); fs.mkdirSync(folder);
-    const f = U.detect({ root: folder }); assert.strictEqual(f.driver, 'folder'); assert.match(f.why, /git clone https:\/\/github\.com\/HorrisEllis\/Nexus\.git/);
+    const f = U.detect({ root: folder }); assert.strictEqual(f.driver, 'folder'); assert.match(f.why, /the first check attaches it to GitHub in place/);   // 0.60.254 UP6 (was: told the one-time clone)
     assert.strictEqual(U.detect({ root: path.join(tmp, 'COS', 'projects', 'nexus', 'versions', '0.60.251') }).driver, 'cos');
-    const c = U.check({ root: folder }); assert.strictEqual(c.ok, false); assert.strictEqual(c.driver, 'folder');
+    const c = U.check({ root: folder }); assert.strictEqual(c.ok, false); assert.strictEqual(c.driver, 'folder'); assert.match(c.error, /no VERSION file/, 'a folder that is no release is said, not attached');
   });
 
   await test('UP-02', 'check: 0.1.0 → 0.1.1 from origin, his words for the release, the systems, the lockfile', async () => {
@@ -187,6 +189,55 @@ function setup() {
     assert.ok(!fs.existsSync(path.join(clone, 'node_modules')), 'node_modules is not copied');
     assert.strictEqual(fs.readFileSync(path.join(old, 'data/x/state.json'), 'utf8'), '{"n":"his runtime"}\n', 'the old folder is only read');
     assert.match(U.adopt({ root: clone, from: path.join(tmp, 'nope'), confirm: true }).error, /not a Nexus folder/);
+  });
+
+  await test('UP-10', 'attach in place: an unzipped release folder becomes its release\'s working tree, then updates', async () => {
+    const folder = path.join(tmp, 'Nexus-main-unzipped'); fs.mkdirSync(folder);
+    execFileSync('sh', ['-c', `git --git-dir="${origin}" archive v0.1.0 | tar -x -C "${folder}"`]);
+    W(folder, 'data/x/state.json', '{"n":"his runtime"}\n'); W(folder, 'data/mem/store.jaa', 'his memory\n');
+    const before = fs.readFileSync(path.join(folder, 'a.js'), 'utf8');
+    const at = U.attachInPlace({ root: folder, url: origin });
+    assert.ok(at.ok && at.action === 'attached', JSON.stringify(at));
+    assert.strictEqual(G(folder, 'rev-parse', 'HEAD'), G(seed, 'rev-parse', 'v0.1.0'));
+    assert.strictEqual(fs.readFileSync(path.join(folder, 'a.js'), 'utf8'), before, 'no file touched');
+    assert.strictEqual(fs.readFileSync(path.join(folder, 'data/x/state.json'), 'utf8'), '{"n":"his runtime"}\n', 'his data stays');
+    assert.strictEqual(U.attachInPlace({ root: folder, url: origin }).action, 'none', 'once');
+    const c = U.check({ root: folder, fetch: true });
+    assert.ok(c.ok && c.behind === 1 && c.latest === '0.1.1', JSON.stringify(c));
+    assert.deepStrictEqual(c.plan.archive.map(a => a.file), ['data/x/state.json'], 'his runtime data is set aside, not lost');
+    const r = U.apply({ root: folder, confirm: true, runNpm: false, fetch: false });
+    assert.ok(r.ok && r.to.version === '0.1.1', r.error);
+    assert.strictEqual(fs.readFileSync(path.join(folder, 'data/mem/store.jaa'), 'utf8'), 'his memory\n');
+    const no = path.join(tmp, 'not-nexus'); fs.mkdirSync(no);
+    assert.match(U.attachInPlace({ root: no, url: origin }).error, /no VERSION file/);
+    const none = path.join(tmp, 'Nexus-9.9.9'); fs.mkdirSync(none); W(none, 'VERSION', '9.9.9\n');
+    const bad = U.attachInPlace({ root: none, url: origin });
+    assert.match(bad.error, /could not fetch v9\.9\.9/); assert.ok(!fs.existsSync(path.join(none, '.git')), 'a failed attach leaves the folder as it was');
+  });
+
+  await test('UP-11', 'automatic: auto applies when idle and restarts what changed (never Clear Glass); not idle waits; notify only says; off nothing', async () => {
+    const mk = (name) => { const d = path.join(tmp, name); G(tmp, 'clone', '-q', '--branch', 'main', origin, d); G(d, 'reset', '-q', '--hard', 'HEAD~1'); return d; };
+    const kernels = ['cortex', 'idearium', 'clear-glass'];
+    const logs = [];
+    const a = mk('auto1'); const restarted = [];
+    const r = await U.autoTick({ root: a, idle: async () => ({ idle: true }), restart: async (k) => { restarted.push(k); return { ok: true }; }, npmAsync: async () => ({ ok: true }), kernels, log: (m) => logs.push(m) });
+    assert.strictEqual(r.action, 'updated', JSON.stringify(r)); assert.strictEqual(r.to, '0.1.1');
+    assert.deepStrictEqual(restarted, ['cortex', 'idearium'], 'lib/ changed: every supervised system but Clear Glass');
+    assert.deepStrictEqual(r.waitForHim, ['clear-glass']); assert.ok(r.npm.ran && r.npm.ok, 'the lockfile changed: npm install ran');
+    assert.ok(logs.some(l => /Clear Glass changed too/.test(l)));
+    assert.strictEqual(U.autoState({ root: a }).action, 'updated', 'recorded');
+    const w = mk('auto2');
+    const wr = await U.autoTick({ root: w, idle: async () => ({ idle: false, reasons: ['1 Guardian job in progress'] }), restart: async () => { throw new Error('must not restart'); }, kernels });
+    assert.strictEqual(wr.action, 'waiting'); assert.strictEqual(G(w, 'rev-parse', 'HEAD'), G(seed, 'rev-parse', 'v0.1.0'), 'nothing applied while busy');
+    const n = mk('auto3'); U.setPolicy({ root: n, policy: 'notify' });
+    assert.strictEqual((await U.autoTick({ root: n, kernels })).action, 'available'); assert.strictEqual(G(n, 'rev-parse', 'HEAD'), G(seed, 'rev-parse', 'v0.1.0'));
+    U.setPolicy({ root: n, policy: 'off' }); assert.strictEqual((await U.autoTick({ root: n, kernels })).action, 'off');
+    assert.match(U.setPolicy({ root: n, policy: 'always' }).error, /auto, notify, off/);
+    assert.strictEqual(U.getPolicy({ root: path.join(tmp, 'fresh') }).policy, 'auto', 'his "should be automatic" is the default');
+    assert.deepStrictEqual(U.restartPlan(['guardian', 'docs'], false, ['guardian', 'cortex', 'clear-glass']).restart, ['guardian'], 'only what changed');
+    assert.deepStrictEqual(U.restartPlan(['ollama'], false, ['ollama-bridge', 'cortex']).restart, ['ollama-bridge']);
+    const ap = fs.readFileSync(path.join(ROOT, 'lib/nexus/autopilot.js'), 'utf8');
+    assert.match(ap, /if \(!r\.halted\) _startAutoUpdate\(\);/); assert.match(ap, /NEXUS_TEST_SANDBOX \|\| process\.env\.NEXUS_TEST_RUN_DEPTH \|\| _autoUpdate\) return;/, 'never inside a test run');
   });
 
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}

@@ -1,0 +1,90 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UP2a_adopt_the_old_folder:04c786756ed4bad5
+type: graph
+id: phase:UP2a_adopt_the_old_folder:04c786756ed4bad5
+context: dependency graph of phase UP2a_adopt_the_old_folder
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792973890106
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792973890106
+lastSeenAt: 1792973890106
+fingerprint: null
+payload:
+  for: UP2a_adopt_the_old_folder
+  kind: phase
+  repo: null
+  hash: 04c786756ed4bad5
+  nodes:
+    - path: lib/nexus-update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/update.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/nexus-releases.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus-update.js
+      to: lib/nexus-releases.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/update.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: lib/nexus-update.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+    dependents:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+    upstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+    downstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP6_attach_in_place
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP7_autopilot_keeps_it_current
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP8_policy_on_the_page
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): UP2_apply_and_rollback · all upstream 5'
+      - 'needed by (1): UP6_attach_in_place · all downstream 3'
+    edges:
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+        kind: declared

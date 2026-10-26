@@ -3295,7 +3295,7 @@ const ROUTE_CAP = {
   'system.homes': CAPS.READ_IDEAS,   // 0.60.129 DB17
   'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
   'system.tables': CAPS.READ_IDEAS,   // 0.60.250 SV1 — which system writes and reads which table of the shared store
-  'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN,   // 0.60.252 UP3 — changing Nexus's own code is an admin act
+  'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN, 'update.policy.get': CAPS.READ_IDEAS, 'update.policy.set': CAPS.ADMIN, 'update.auto': CAPS.READ_IDEAS,   // 0.60.252 UP3 — changing Nexus's own code is an admin act
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
   'system.nodes.list': CAPS.READ_IDEAS,   // 0.60.157 GM4
@@ -3598,7 +3598,10 @@ function matchRoute(method, url) {
     ['GET',    ['api','update','history'], 'update.history'],
     ['POST',   ['api','update','apply'], 'update.apply'],           // {confirm:true} — fast-forward, data collisions archived, npm install if the lockfile changed
     ['POST',   ['api','update','rollback'], 'update.rollback'],     // {confirm:true} — back to the commit the last update came from
-    ['POST',   ['api','update','restart'], 'update.restart'],       // {system} — the person's Restart on the Updates page, through the supervisor (NC2's call)
+    ['POST',   ['api','update','restart'], 'update.restart'],
+    ['GET',    ['api','update','policy'], 'update.policy.get'],       // 0.60.254 UP8 — auto | notify | off, and how often
+    ['POST',   ['api','update','policy'], 'update.policy.set'],
+    ['GET',    ['api','update','auto'], 'update.auto'],               // what the last automatic check did       // {system} — the person's Restart on the Updates page, through the supervisor (NC2's call)
     ['GET',    ['api','system','shape'], 'system.shape'],   // 0.60.138 — does each system match genesis: every role, its own file, the kernel, or missing (?system=)   // 0.60.133 IM1 — which systems are sovereign, and what stands in each one's way (?system=)
     ['GET',    ['api','data','home'], 'data.home.list'],                 // 0.60.207 DL2 — every system: where its data lives, what still waits in the root data/
     ['GET',    ['api','data','home',':system'], 'data.home.get'],        // 0.60.207 DL2 — one system: its record and each file's plan
@@ -5991,6 +5994,9 @@ async function handle(req, res, route, query, body) {
     // 0.60.252 UP3 — James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using
     // github?" · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
     case 'update.check': { const U = _require('../../lib/nexus-update.js'); const r = U.check({ fetch: !(query && query.fetch === '0') }); res.writeHead(200, { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r)); }
+    case 'update.policy.get': { const U = _require('../../lib/nexus-update.js'); return ok(res, U.getPolicy({})); }
+    case 'update.policy.set': { const U = _require('../../lib/nexus-update.js'); const r = U.setPolicy({ policy: body && body.policy, everyHours: body && body.everyHours }); if (!r.ok) return err(res, 400, r.error); return ok(res, r); }
+    case 'update.auto': { const U = _require('../../lib/nexus-update.js'); return ok(res, { policy: U.getPolicy({}), last: U.autoState({}) }); }
     case 'update.restart': {   // the person's button (UP_D2): each supervised process of that system, restarted by autopilot
       const sys = String((body && body.system) || '').trim();
       if (!/^[a-z][a-z0-9-]*$/.test(sys)) return err(res, 400, 'system required, e.g. "clear-glass"');

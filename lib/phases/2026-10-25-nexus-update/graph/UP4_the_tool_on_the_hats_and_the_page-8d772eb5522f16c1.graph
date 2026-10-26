@@ -1,0 +1,266 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UP4_the_tool_on_the_hats_and_the_page:8d772eb5522f16c1
+type: graph
+id: phase:UP4_the_tool_on_the_hats_and_the_page:8d772eb5522f16c1
+context: dependency graph of phase UP4_the_tool_on_the_hats_and_the_page
+intent: null
+summary: 32 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792973890111
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792973890111
+lastSeenAt: 1792973890111
+fingerprint: null
+payload:
+  for: UP4_the_tool_on_the_hats_and_the_page
+  kind: phase
+  repo: null
+  hash: 8d772eb5522f16c1
+  nodes:
+    - path: clear-glass/src/copilot/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/tools.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: idearium/ui/js/app.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/ui/update.html
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hat-seed.js
+      role: changes
+      exists: true
+      system: lib
+    - path: loom/maps/economy-map.js
+      role: changes
+      exists: true
+      system: loom
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/bootstrap.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/copilot-bridge-direct-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-agent-surface.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/copilot/chat-store.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/context-need.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/hat.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/verbs.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/nexus-ask.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/naming.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/listener-commands.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-update.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/tools/nexus/update.js
+      to: lib/agent-tools/naming.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/update.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/hat-seed.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/hat-seed.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/hat-seed.js
+      to: lib/agent-tools/index.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/chat-store.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/context-need.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/hat.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/verbs.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/listener-commands.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: copilot/lib/nexus-ask.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/nexus/update.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/hat-seed.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: lib/hat-seed.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: clear-glass/src/copilot/tools.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/copilot/tools.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: clear-glass/src/copilot/tools.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: tests/copilot-bridge-direct-dispatch.test.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: tests/modules/clear-glass-agent-surface.test.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: loom/bootstrap.js
+      to: loom/maps/economy-map.js
+      kind: requires
+  crossings:
+    - from: lib/hat-seed.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: clear-glass/src/copilot/bridge.js
+      to: copilot/lib/nexus-ask.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: clear-glass/src/copilot/tools.js
+      fromSystem: orchestrator
+      toSystem: clear-glass
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP3_routes_and_rows
+    dependents:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP5_the_cos_driver
+    upstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP3_routes_and_rows
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+    downstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP5_the_cos_driver
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP5_the_cos_driver
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4
+      - 'depends on (1): UP3_routes_and_rows · all upstream 6'
+      - 'needed by (1): UP5_the_cos_driver · finishing it unlocks UP5_the_cos_driver'
+    edges:
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP3_routes_and_rows
+        kind: declared
