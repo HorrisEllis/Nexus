@@ -34,7 +34,7 @@ decisions:
 
 phases:
   AF1_active_profile_and_fill_one:
-    status: OPEN
+    status: BUILT 0.60.257 — store.activeProfile()/setDefault() + matcher.matchOne(); test-autofill-active.test.js 6/6 (no-profile named not null, default/sole/first, setDefault survives reopen, matchOne one-match-or-null). Headless, no Electron.
     layer: library
     depends_on: []
     files: [clear-glass/src/autofill/store.js, clear-glass/src/autofill/matcher.js]

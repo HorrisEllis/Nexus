@@ -227,7 +227,19 @@ function matchFields(domFields, profile, opts = {}) {
   return matches;
 }
 
-module.exports = { matchFields, fieldKeysOf, valueFor: _valueFor, learnKey, learnedFromSettings, LEARNED_PREFIX, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
+// §AF1 2026-10-26 — one input, one match. The inline chip (renderer/autofill-inline.js) and a single-field fill need the type
+// + value for ONE focused field, not a whole page. No second matcher: this runs matchFields over a one-element array so the
+// learned-map, autocomplete, name/id/label/placeholder precedence and the template/length rules are byte-for-byte the same as a
+// full-page fill. Returns the one match ({ cgId, fieldType, value, confidence, source }) or null when the field is not fillable
+// (not an input, no identity, or the active profile has nothing for it) — a clean "no", never a throw for an ordinary field.
+function matchOne(domField, profile, opts = {}) {
+  if (!domField || typeof domField !== 'object') return null;
+  if (!profile || typeof profile.fields !== 'object') return null; // caller passes the active profile; no profile → no chip
+  const m = matchFields([domField], profile, opts);
+  return m[0] || null;
+}
+
+module.exports = { matchFields, matchOne, fieldKeysOf, valueFor: _valueFor, learnKey, learnedFromSettings, LEARNED_PREFIX, NAME_PATTERNS, LABEL_PATTERNS, EXTRA_PATTERNS, detectFields, fillFields };
 
 // §BUILT 2026-09-19 — James: "library ui." Extracted here after finding
 // the exact same detect/fill orchestration (query -> match -> filter ->
