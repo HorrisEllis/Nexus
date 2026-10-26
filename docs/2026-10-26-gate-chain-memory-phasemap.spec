@@ -41,6 +41,12 @@ decisions:
       lib/gate-chain.js (core) + lib/node-schemas/schema.gate_node. The pipeline, copilot, the CLI, drones and the UI all
       write/read it, so it is the kernel's — reached by every system without a crossing.
 
+  GC_D3_the_contract_carries_the_chain:
+    status: DECIDED 2026-10-26 by James — "there'd be a contract moving through the system … each gate adds a record"
+    chosen: "A gate-node's scope is the contract (its queue id); the chain of a contract is its gates in order, each linked to the prior; the .contract file keeps its gate evidence as today and points at the chain's head."
+  GC_D4_fulfilled_goes_to_cortex:
+    status: DECIDED 2026-10-26 by James — "when it's actually confirmed and fulfilled, maybe move it to Cortex … to archive it" (his "maybe"; the handoff reading is the coder's, to confirm)
+    chosen: "Fulfilled = RAID's row passed AND its integration gate passed (a person's accept counts, GV2). The contract file and its chain are handed off to Cortex (lib/handoff.js); Cortex archives them in its own store and answers the receipt; the sender keeps a pointer, not a copy. A failed or rejected contract is not archived as fulfilled; it stays with its run, said."
 phases:
   GC1_the_chain:
     status: OPEN
@@ -113,3 +119,36 @@ order: >-
 # ── ADDENDUM 2026-10-26 — superseded by the memory-kernel-additive map (§0.3, this is kept) ──
 # James: "take whats additive of both." The "chain" this proposed already exists (Versionium parentId + the contract gates' at/hashes/depends_on).
 # The real work is folding Cobalt's genuinely-additive parts into Nexus — see docs/2026-10-26-memory-kernel-additive-phasemap.spec.
+
+# ── ADDENDUM 2026-10-26 (b) — the contract carries the gates; a ledger; Cortex archives the fulfilled ones ──
+# Context: after AF3 he was told the gate walker (GWK1) exists and the gate chain is mapped, not built. He wrote:
+# James, 2026-10-26: "Okay, well, each gate is, it's supposed to be a persistent node, right? Each gate adds a record to, let me just
+#   have, because there'd be a contract moving through the system, so that, and we'd maybe a ledger. Oh. And then when it's actually
+#   confirmed and fulfilled, maybe move it to Cortex, since the bookkeeper, for to archive it. Then we have a record of it."
+# What stands (unchanged, GC_D1): each gate is a timestamped node linked to the one before.
+# What this adds, his:
+#   1. The CONTRACT is the thing moving through the system, and each gate adds its record to it. (Found in code, §0.1: RAID's .contract
+#      already records evidence per gate — cortex/core/raid/contract-gates.js record() — so the contract is already the carrier; the gate
+#      node is that record made a linked, timestamped node.)
+#   2. A LEDGER: every gate record is also a ledger row (lib/ledger-writer.js), so the movement is readable as it happens.
+#   3. When the contract is CONFIRMED AND FULFILLED, it moves to Cortex, the bookkeeper, to be archived: a permanent record.
+# Read against his earlier decision, kept (§0.3): CORTEX_BOOKKEEPER_2026-09-06 (docs/2026-09-05-observability-sovereignty-and-agent-mesh-
+#   phasemap.spec), his "do it, the axioms": Cortex is the bookkeeper as a READ-side aggregator, "never a write target", because a
+#   system writing into Cortex's store was the RF2 crash. The coder's reading that keeps both (to confirm): the fulfilled contract is
+#   HANDED OFF to Cortex through the drawbridge (lib/handoff.js, his 0.60.1: input/ → processing/ → done/ or failed/, with a receipt at the
+#   sender), and Cortex files it into ITS OWN archive. Nobody writes into Cortex's store; Cortex takes delivery. If he meant Cortex should
+#   instead only read the contracts where they lie, that is the other reading, and the 09-06 rule already covers it.
+phases_added_b:
+  GC6_contract_scope_and_ledger:
+    status: OPEN
+    depends_on: [GC1_the_chain, GC_D3_the_contract_carries_the_chain]
+    files: [cortex/core/raid/contract-gates.js, cortex/core/raid/contract-intake.js, lib/gate-chain.js]
+    does: "contract-gates record() also appends a gate-node (scope = the contract's queue id) and a ledger row; the .contract file holds the chain head; runContract's result names it."
+    proof: "a contract's gates come back as a linked chain in order; a ledger row per gate; a tampered node fails verify"
+  GC7_cortex_archives_the_fulfilled:
+    status: OPEN
+    depends_on: [GC6_contract_scope_and_ledger, GC_D4_fulfilled_goes_to_cortex, GV2_the_phase_gate_asks]
+    files: [cortex/boot.js, cortex/archive/contracts.js, lib/handoff.js, cortex/core/raid/contract-intake.js, idearium/api/index.js]
+    does: "On fulfilled (RAID pass + the integration gate, or his accept) the contract and its chain go to Cortex as a handoff; Cortex files them in its own archive (cortex/archive/contracts.js), answers the receipt, and serves them back (GET /api/archive/contracts, the `archive` row) so a person, copilot or an agent can read any finished contract's whole gate history."
+    proof: "a fulfilled contract arrives in Cortex's input, ends in done/ with a receipt, and reads back with its chain; a failed one is not archived; nothing writes into Cortex's store directly (the 09-06 rule holds)"
+build_order_b: [GC1, GC6, GC2, GC7, GC3, GC4, GC5]
