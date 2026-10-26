@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-gate-chain-memory-phasemap.spec::GC3_copilot_and_cli_emit
+type: phase
+id: docs_2026-10-26-gate-chain-memory-phasemap.spec::GC3_copilot_and_cli_emit
+context: pipeline phase GC3_copilot_and_cli_emit of docs/2026-10-26-gate-chain-memory-phasemap.spec
+intent: null
+summary: GC3_copilot_and_cli_emit (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792991449197
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792991449197
+lastSeenAt: 1792991449197
+fingerprint: null
+payload:
+  id: GC3_copilot_and_cli_emit
+  map: docs/2026-10-26-gate-chain-memory-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - copilot/tool-runtime.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - GC1_the_chain
+  blocks: []
+  spec: null
+  graph: e914581d844e64c2
