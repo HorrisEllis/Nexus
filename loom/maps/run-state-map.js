@@ -179,6 +179,13 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('lib/phase-dag.js'), '0.60.224 SL2 repo.phases.evidence: the open phases of the repo\'s maps'],
   [I('idearium/ui/js/phases.js'), I('idearium/api/index.js'), '0.60.224 SL2 the rail\'s "done by evidence?" → POST …/phases/evidence (dry run; close asks first)'],
   [I('idearium/api/index.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 _loopDeps (queue, _phaseBuild, _loopRunState, _landByRule, _closeRun), _loopTick on the watchdog minute, repo.loop routes'],
+  // §GV 0.60.257 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails."
+  [I('idearium/api/index.js'), I('cortex/core/raid/contract-intake.js'), '0.60.257 GV2 integrate answers awaitsPerson on no-proof; runContract status awaiting → the awaiting-verdict row; _phaseVerdict → reportExternalOutcome'],
+  [I('cortex/core/raid/contract-intake.js'), I('cortex/core/raid/contract-gates.js'), '0.60.257 GV1 schedule returns awaiting (a gate held for a person, never FAILED)'],
+  [I('idearium/api/index.js'), I('lib/repo-inject.js'), '0.60.257 GV2 _phaseVerdict: accept applies the run\'s proposals (approvedBy him); reject rejects / reverts them'],
+  [I('idearium/ui/js/repo-tasks.js'), I('idearium/api/index.js'), '0.60.257 GV3 rtVerdict → POST /api/repos/:uuid/phases/verdict'],
+  [I('idearium/cli/route-commands.js'), I('idearium/api/index.js'), '0.60.257 GV3 `repo verdict <repo> <runId> accept|reject` → /phases/verdict'],
+  [I('lib/repo-activity.js'), I('lib/run-watch.js'), '0.60.257 GV2 awaiting-verdict: a task waiting on him; run-watch WAITING, never stalled'],
   [I('idearium/api/index.js'), I('lib/trust-rule.js'), '0.60.225 SL5 _landByRule: a proven run\'s proposals applied when his rule allows; trust.get / trust.set'],
   [I('idearium/api/index.js'), I('lib/build-queue.js'), '0.60.225 _queueFor: shared by …/phases/next and the loop'],
   [I('idearium/cli/route-commands.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 `repo loop <repo> [start|stop|step]`'],

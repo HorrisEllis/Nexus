@@ -804,6 +804,53 @@ async function _queueFor(repo) {
 // A proven run's proposals are applied when his rule allows each one (lib/trust-rule.js allows); every one says why, landed or not.
 // apply() keeps its own guards (an agent's change that regresses a test is refused). Undo is the change's revert.
 function _trust() { const T = _require('../../lib/trust-rule.js'); T.setStore({ load: () => loadTable('idearium_trust_rules'), append: (r) => appendRow('idearium_trust_rules', r) }); return T; }
+// §GV2 0.60.257 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails." His verdict on a run RAID held
+// for him (awaiting-verdict). accept: a proven row in his words, the run's proposals land (approved by him), the phase closes, RAID's
+// queue row passes. reject: the run's changes are reverted (proposed ones rejected, applied ones reverted), unproven in his words,
+// RAID's queue row fails. Map: docs/2026-10-26-gate-waits-for-verdict-phasemap.spec (GV_D2).
+async function _phaseVerdict(repo, { runId, accept, words = '' } = {}, who = 'person') {
+  const PC = _require('../../lib/phase-close.js'), RI = _require('../../lib/repo-inject.js');
+  const b = runId ? PC.baseRun(String(runId)) : null;
+  if (!b) return { ok: false, error: 'runId required' };
+  const rows = loadTable('idearium_phase_runs').filter(r => r && PC.baseRun(r.runId || '') === b && (r.repoUuid || r.targetRepo) === repo.uuid);
+  const held = rows.filter(r => r.state === 'awaiting-verdict').pop();
+  if (!held) return { ok: false, status: 404, error: `run ${b} is not waiting for a verdict` };
+  if (rows.some(r => (r.ts || 0) > (held.ts || 0) && ['proven', 'unproven', 'verdict-rejected'].includes(r.state))) return { ok: false, status: 409, error: `run ${b} already has a verdict` };
+  if (typeof accept !== 'boolean') return { ok: false, error: 'accept: true or false' };
+  const base = { runId: b, repoUuid: repo.uuid, map: held.map || null, phase: held.phase || null };
+  const said = String(words || '').slice(0, 2000);
+  const mine = PC.injectsOf(b, RI.list(null, { limit: 100000 }));
+  const CI = _require('../../cortex/core/raid/contract-intake.js');
+  let raid = null;
+  if (accept) {
+    let landed = 0; const refused = [];
+    for (const n of mine.filter(n => n.status === 'proposed' || n.status === 'staged')) {
+      const r = await Promise.resolve(RI.apply(n.uuid, { layer: getRepoLayer(), approvedBy: `${who} (verdict)` }));
+      if (r && r.ok) landed++; else refused.push(`${n.path}: ${((r && r.errors) || ['refused']).join('; ')}`);
+    }
+    appendRow('idearium_phase_runs', { uuid: `${b}-proof-proven`, ...base, runId: `${b}-proof`, buildRunId: b, state: 'proven', snapshot: held.snapshot || null,
+      proof: { met: 0, total: 0, byPerson: { who, words: said }, strength: { ran: 0, filesOnly: false, byPerson: true } }, note: `accepted by ${who}${said ? `: "${said}"` : ''}`, ts: Date.now() });
+    getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'proven', byPerson: who });
+    if (held.raidQueueId) raid = CI.reportExternalOutcome(held.raidQueueId, { status: 'pass', verdict: `accepted by ${who}${said ? `: ${said}` : ''}` });
+    _closeLog(repo.uuid, 'phase.verdict.accepted', `${held.phase || b} accepted by ${who}`, said || null);
+    let close = null; try { close = await _closeRun(b, { trigger: 'verdict' }); } catch (e) { close = { error: e.message }; }
+    return { ok: true, accepted: true, runId: b, landed, refused, close, raid };
+  }
+  let reverted = 0; const kept = [];
+  for (const n of mine) {
+    try {
+      if (n.status === 'proposed' || n.status === 'staged') { RI.reject(n.uuid, { reason: `rejected by ${who}${said ? `: ${said}` : ''}` }); reverted++; }
+      else if (n.status === 'applied') { const r = await Promise.resolve(RI.revert(n.uuid, { layer: getRepoLayer() })); if (r && r.ok !== false && !r.error) reverted++; else kept.push(`${n.path}: ${(r && (r.error || (r.errors || []).join('; '))) || 'not reverted'}`); }
+    } catch (e) { kept.push(`${n.path}: ${e.message}`); }
+  }
+  appendRow('idearium_phase_runs', { uuid: `${b}-verdict-rejected`, ...base, state: 'verdict-rejected', snapshot: held.snapshot || null, error: `rejected by ${who}${said ? `: "${said}"` : ''}`, ts: Date.now() });
+  appendRow('idearium_phase_runs', { uuid: `${b}-proof-unproven`, ...base, runId: `${b}-proof`, buildRunId: b, state: 'unproven', snapshot: held.snapshot || null, error: `rejected by ${who}${said ? `: "${said}"` : ''}`, ts: Date.now() });
+  getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'unproven', byPerson: who });
+  if (held.raidQueueId) raid = CI.reportExternalOutcome(held.raidQueueId, { status: 'fail', verdict: `rejected by ${who}${said ? `: ${said}` : ''}` });
+  _closeLog(repo.uuid, 'phase.verdict.rejected', `${held.phase || b} rejected by ${who}`, said || null);
+  return { ok: true, accepted: false, runId: b, reverted, kept, raid };
+}
+
 async function _landByRule(runId) {
   const PC = _require('../../lib/phase-close.js'), RI = _require('../../lib/repo-inject.js'), T = _trust();
   const run = _runOf(runId);
@@ -830,6 +877,7 @@ function _loopRunState(runId) {
   const run = _runOf(b);
   if (!build) return { final: false, state: 'not found yet', proven: false };
   if (proof && RW.isFinal(proof)) return { final: true, state: proof.last.state, proven: !!(run && run.proven) };
+  if (build.last.state === 'awaiting-verdict') return { final: true, state: 'awaiting-verdict', proven: false };   // §GV2 0.60.257 held for his verdict: the loop moves on, the phase waits for him
   const failed = ['failed', 'refused', 'stalled', 'cancelled', 'contract-incomplete', 'unproven'];
   if (RW.isFinal(build) && (failed.includes(build.last.state) || Date.now() - (build.last.ts || 0) > 30 * 60000)) return { final: true, state: build.last.state, proven: !!(run && run.proven) };
   return { final: false, state: (proof && proof.last.state) || build.last.state, proven: false };
@@ -1892,6 +1940,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const integrate = async () => {
       const pr = await _provePhase({ target, base, commitId, mapText, phase, message, generated, dispatch: { backend: lastDp.backend || null, agent: lastDp.agent || null, provider: lastDp.provider || null, ...(lastDp.model ? { model: lastDp.model } : {}) }, since: runStartTs });
       const st = pr && pr.state, run = pr && pr.run;
+      // §GV2 0.60.257 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails." Nothing here can check
+      // this phase (no conditions, no files, none generated): RAID holds the gate for his verdict instead of failing it three times
+      if (st === 'no-proof') return { awaitsPerson: true, agent: 'proof-run', why: `nothing in Nexus can check this phase (${(pr && pr.source) || 'no conditions'}) — accept it or reject it`,
+        evidence: { 'phase.integrated': 'awaiting his verdict' } };
       return { ok: st === 'proven', agent: 'proof-run', evidence: { 'phase.integrated': st === 'proven' ? `met ${run.met}/${run.total}` : `${st || 'unproven'}${run ? ` ${run.met}/${run.total}` : ''}` } };
     };
     const save = () => { try { CG.save(file, L); } catch (e) { console.warn(`[idearium] contract save ${file}: ${e.message}`); } };
@@ -1947,6 +1999,13 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     }
     const res = viaRaid.result;
     const au = CA.audit(p, { root });
+    if (viaRaid.status === 'awaiting') {   // §GV2 — held for his verdict (POST /api/repos/:uuid/phases/verdict), never failed
+      const why = (viaRaid.awaiting || []).map(g => g.why).join('; ');
+      appendRow('idearium_phase_runs', { uuid: `${runId}-awaiting-verdict`, ...cbase, state: 'awaiting-verdict', snapshot: commitId, raidQueueId: viaRaid.queueId, error: why,
+        audit: { bricks: au.bricks, gates: au.gates, rounds: res.rounds }, ts: Date.now() });
+      getIdeaOS().emit('idearium.repo.phase.run', { ...cbase, state: 'awaiting-verdict', snapshot: commitId });
+      return { r: null, state: 'awaiting', absent: null, dp: lastDp, contracted: true };
+    }
     const state = res.complete ? 'contract-complete' : 'contract-incomplete';
     // §CR1 0.60.164 — James: "the component registry is vital for each project becuase its the spine that makes components
     // dumb." The contract build path never joined the component store, so a contract-built project had no registry/spine.
@@ -2180,7 +2239,7 @@ async function _provePhase({ target, base, commitId, mapText, phase, message, di
   if (!conditions.length) {
     appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-no-proof`, ...pbase, state: 'no-proof', snapshot: commitId, error: `not proven: ${source} — add conditions: [{ says, check }] to the phase`, ts: Date.now() });
     getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'no-proof' });
-    return { state: 'no-proof' };
+    return { state: 'no-proof', source };
   }
   let max = 2; try { const v = Number(getIdeariumValue('repos.proof_attempts')); if (v >= 1 && v <= 10) max = Math.floor(v); } catch (_) {}
   const RA = _require('../../lib/repo-agent.js');
@@ -3366,7 +3425,8 @@ const ROUTE_CAP = {
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
   'phases.next': CAPS.READ_IDEAS, 'repo.phases.next': CAPS.READ_IDEAS,   // §SL0 — reads only
   'repo.phases.closes': CAPS.READ_IDEAS,   // §SL1 — reads only
-  'repo.loop': CAPS.READ_IDEAS, 'trust.get': CAPS.READ_IDEAS,   // §SL4/SL5 — reads only
+  'repo.loop': CAPS.READ_IDEAS, 'trust.get': CAPS.READ_IDEAS,
+  'repo.phases.verdict': CAPS.WRITE_IDEAS,   // §GV2 0.60.257 his verdict   // §SL4/SL5 — reads only
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
   'repo.changes': CAPS.READ_IDEAS, 'repo.change.get': CAPS.READ_IDEAS,   // §FR1 0.60.114 — reads only: one record per change
   'repo.flight': CAPS.READ_IDEAS, 'repo.flight.get': CAPS.READ_IDEAS, 'repo.failures': CAPS.READ_IDEAS, 'repo.failure.get': CAPS.READ_IDEAS,   // §FMR3 0.60.146 reads only
@@ -3793,6 +3853,7 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','phases','evidence'],     'repo.phases.evidence'], // §SL2 0.60.224 done by evidence: its own tests run; dry run unless apply
     ['POST',   ['api','repos',    ':uuid','phases','groom'],        'repo.phases.groom'],    // §SL3 0.60.227 the DAG groomed: proposals from MP1 + DG3; dry run unless apply
     ['GET',    ['api','repos',    ':uuid','phases','nodes'],        'repo.phases.nodes'],    // §SL9 0.60.229 every phase's .phase node, per owner system: written, missing, stale
+    ['POST',   ['api','repos',    ':uuid','phases','verdict'],      'repo.phases.verdict'],  // §GV2 0.60.257 his accept / reject of a phase nothing could check
     ['GET',    ['api','repos',    ':uuid','loop'],                  'repo.loop'],            // §SL4 0.60.225 the loop's state
     ['POST',   ['api','repos',    ':uuid','loop','start'],          'repo.loop.start'],      // §SL4 0.60.225 { budget: { phases, minutes } }
     ['POST',   ['api','repos',    ':uuid','loop','stop'],           'repo.loop.stop'],
@@ -9337,6 +9398,12 @@ async function handle(req, res, route, query, body) {
       }
       return ok(res, { dryRun: !written, stats: r.stats, lines: G.lines(r), proposals: r.proposals.slice(0, parseInt(b.limit, 10) || 200),
         forAPerson: r.forAPerson.filter(x => b.all || x.kind !== 'unplaced').slice(0, 300), pending: { maps: a.changes.length }, refused: a.refused, written });
+    }
+    case 'repo.phases.verdict': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const r = await _phaseVerdict(repo, body || {}, _starter(req, body).who);
+      return r.ok ? ok(res, r) : err(res, r.status || 400, r.error);
     }
     case 'repo.loop': case 'repo.loop.start': case 'repo.loop.stop': case 'repo.loop.step': {
       const repo = getRepoLayer().get(params.uuid);

@@ -258,6 +258,7 @@ const _raidLedger = createCFRLedger({
 
 const STATUS = Object.freeze({
   QUEUED: 'queued', RUNNING: 'running', PASS: 'pass', FAIL: 'fail', BLOCKED: 'blocked',
+  AWAITING: 'awaiting',   // §GV1 0.60.257 — a gate waits for a person's verdict (reportExternalOutcome settles it)
 });
 
 // §RR4 2026-08-30 — real, physical lifecycle-position tracker, separate
@@ -1479,8 +1480,10 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
     .filter(id => ((p.state.gates || {})[id] || {}).status !== 'PASSED')
     .map(id => ({ id, class: ev[`${id}.class`] || null, why: (((p.state.gates || {})[id] || {}).reasons || []).slice(0, 2).join('; ') || null }));
   const blockedBricks = (res.blocked || []).map(b => ({ id: b.id, why: b.why }));
-  const status = res.complete ? STATUS.PASS : STATUS.FAIL;
-  const verdict = res.complete ? 'complete' : (res.why || []).slice(0, 4).join('; ');
+  // §GV1 0.60.257 — not complete only because a gate waits for a person: 'awaiting', no self-heal (nothing failed)
+  const awaitingGates = res.complete ? [] : (res.awaiting || []);
+  const status = res.complete ? STATUS.PASS : (awaitingGates.length && !failedBricks.length ? STATUS.AWAITING : STATUS.FAIL);
+  const verdict = res.complete ? 'complete' : status === STATUS.AWAITING ? `awaiting a person: ${awaitingGates.map(g => `${g.id} — ${g.why}`).join('; ')}` : (res.why || []).slice(0, 4).join('; ');
   try { jaaDB.update(TABLE, queueId, { status, stage: STAGE.OUTPUT_FOLDER, verdict, failedBricks, blockedBricks, rounds: res.rounds || 0, updatedAt: Date.now() }); } catch (_) {}
   _raidLedger.record(`raid.contract.v2.${status}`, { queueId, title: row.title, failedBricks, blockedBricks, rounds: res.rounds || 0 }, { source: 'raid', causedBy: queueId });
   if (status === STATUS.FAIL && source !== 'self-heal') {
@@ -1492,7 +1495,7 @@ async function runContract(input, { source = 'raid', intention = 'build', forAge
       }, { source: 'raid-contract-intake' });
     } catch (e) { console.warn(`[${MODULE_ID}] HEAL_REQUESTED not emitted for ${queueId}: ${e.message}`); }
   }
-  return { ok: status === STATUS.PASS, queueId, status, progress: tr.progress(null), result: res, audit, failedBricks, blockedBricks, approval: approval ? { approved: approval.approved !== false, reason: approval.reason || null } : null };
+  return { ok: status === STATUS.PASS, queueId, status, awaiting: awaitingGates, progress: tr.progress(null), result: res, audit, failedBricks, blockedBricks, approval: approval ? { approved: approval.approved !== false, reason: approval.reason || null } : null };
 }
 
 /**

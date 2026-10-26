@@ -1341,3 +1341,13 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
   data an export already shows. He also held a format to one name, which made a duplicate visible, and it was archived.
 - **Checkable:** `CHANGELOG-0.60.256.md`; `tests/modules/test-autofill-transfer.test.js` 5/5 (undo restores what an import replaced);
   `clear-glass/test/autofill-transfer-render.test.js`; `_archive/2026-10-26-gig-json/README.md`.
+
+### 2026-10-26 — 0.60.257: "the gate doesn't wait for me to accept it or not before it fails."
+- **His words:** "the gate doesn't wait for me to accept it or not before it fails. i want to be able to build nexus inside of nexus. need
+  nexus to use those gates. like raid or orchastrator."
+- **Context:** He was watching Nexus build one of its own phases. He saw the run fail in seconds, with no point at which he could weigh in.
+- **What it shows:** reading a failure from the outside. His one-line symptom matched what the trace found. The gate turned "nothing
+  here can check this" into "failed" and retried it three times in one second. He also named where the fix belonged, in RAID's gates.
+  The fix went there: a gate RAID holds for a person, not a side door in Idearium.
+- **Checkable:** `tests/modules/test-gate-waits-for-verdict.test.js` 5/5 (GV-01: one call, never FAILED, no self-heal);
+  `CHANGELOG-0.60.257.md`.
