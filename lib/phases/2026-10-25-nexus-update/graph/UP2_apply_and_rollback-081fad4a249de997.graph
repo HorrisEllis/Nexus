@@ -1,0 +1,96 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UP2_apply_and_rollback:081fad4a249de997
+type: graph
+id: phase:UP2_apply_and_rollback:081fad4a249de997
+context: dependency graph of phase UP2_apply_and_rollback
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792967429647
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792967429647
+lastSeenAt: 1792967429647
+fingerprint: null
+payload:
+  for: UP2_apply_and_rollback
+  kind: phase
+  repo: null
+  hash: 081fad4a249de997
+  nodes:
+    - path: lib/nexus-update.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/nexus/update.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/nexus-releases.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus-update.js
+      to: lib/nexus-releases.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/agent-tools/tools/nexus/update.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: lib/nexus-update.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+    dependents:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2a_adopt_the_old_folder
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP3_routes_and_rows
+    upstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D1_how_an_update_lands
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+    downstream:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2a_adopt_the_old_folder
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP3_routes_and_rows
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP4_the_tool_on_the_hats_and_the_page
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP5_the_cos_driver
+    blockedBy:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+    unlocks:
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP2a_adopt_the_old_folder
+      - docs/2026-10-25-nexus-update-phasemap.spec::UP3_routes_and_rows
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by UP_D2_who_applies, UP_D3_runtime_data
+      - 'depends on (3): UP1_check_and_plan, UP_D2_who_applies, UP_D3_runtime_data · all upstream 4'
+      - >-
+        needed by (2): UP2a_adopt_the_old_folder, UP3_routes_and_rows · all downstream 4 · finishing
+        it unlocks UP2a_adopt_the_old_folder, UP3_routes_and_rows
+    edges:
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP1_check_and_plan
+        kind: declared
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP_D2_who_applies
+        kind: declared
+      - from: docs/2026-10-25-nexus-update-phasemap.spec::UP_D3_runtime_data
+        kind: declared

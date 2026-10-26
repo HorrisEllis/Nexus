@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-clear-glass-agent-doors-phasemap.spec::AD4_command_rows
+type: phase
+id: docs_2026-10-25-clear-glass-agent-doors-phasemap.spec::AD4_command_rows
+context: pipeline phase AD4_command_rows of docs/2026-10-25-clear-glass-agent-doors-phasemap.spec
+intent: null
+summary: AD4_command_rows (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792965241164
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792965241164
+lastSeenAt: 1792965241164
+fingerprint: null
+payload:
+  id: AD4_command_rows
+  map: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+  depends_on:
+    - AD2_macro_http_doors
+  blocks: []
+  spec: null
+  graph: ca6bbc5d645fb0a4

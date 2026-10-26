@@ -283,7 +283,13 @@ async function _tryGuardian(prompt, opts = {}) {
       if (provCheck?.providers && provCheck.providers[ragProvider] !== 'connected') {
         // real evidence of not-connected — fall through to the cascade, SAYING why (0.39.244: was a bare null,
         // which surfaced as "guardian unavailable or returned no real response" with no reason)
-        return { ok: false, text: null, provider: ragProvider, error: `guardian reports no ${ragProvider} tab connected (GET /providers: ${provCheck.providers[ragProvider] || 'absent'})` };
+        // §0.60.253 LG1 — James, 2026-10-25: "its not hooked into guardian. look at idearium". Clear Glass starts provider tabs on
+        // first real use (NCP auto-boot is lazy), so "not connected yet" is the normal state at the first ask, and refusing it here
+        // meant the co-pilot's fallback could never reach Guardian. Idearium's repo agents never hit this: their agentId makes the
+        // dispatcher open the tab. The same door CL1 built for a person's pick (openTab: the job waits, the tab is asked for, the
+        // job flushes when it connects) now opens it here too; opts.noOpenTab keeps the old refusal for a caller that wants it.
+        if (opts.noOpenTab) return { ok: false, text: null, provider: ragProvider, error: `guardian reports no ${ragProvider} tab connected (GET /providers: ${provCheck.providers[ragProvider] || 'absent'})` };
+        opts = { ...opts, openTab: true, _openedTab: ragProvider };
       }
     } else if (ragProvider === 'auto') {
       // §REGRESSION FIXED 2026-07-09 — introduced by the sovereignty refactor
@@ -300,7 +306,9 @@ async function _tryGuardian(prompt, opts = {}) {
       // undefined, so .some() always returned false and this branch
       // always concluded "nothing is connected" regardless of real state.
       if (provCheck?.providers && !Object.values(provCheck.providers).some(p => p === 'connected')) {
-        return { ok: false, text: null, provider: 'auto', error: 'guardian reports no provider tab connected at all (GET /providers)' };
+        // §0.60.253 LG1 — none connected yet is the lazy-start normal (above): the dispatcher opens the tab it resolves to
+        if (opts.noOpenTab) return { ok: false, text: null, provider: 'auto', error: 'guardian reports no provider tab connected at all (GET /providers)' };
+        opts = { ...opts, openTab: true, _openedTab: 'auto' };
       }
     }
 
@@ -329,6 +337,8 @@ async function _tryGuardian(prompt, opts = {}) {
     // caller sends one (idearium's own dispatch() now does, see that
     // file's own note); GUARDIAN_TIMEOUT_MS stays the real default for
     // every other existing caller that doesn't set it.
+    // §0.60.253 LG1 — a tab it had to open first gets the time a cold tab needs (load, inject, connect): two minutes, unless the caller said more
+    if (opts._openedTab && !(opts.timeoutMs > 120000)) opts = { ...opts, timeoutMs: 120000 };
     const result = await _post(`${GD_URL}/api/copilot/prompt`, {
       prompt,
       provider:   ragProvider,
@@ -691,10 +701,13 @@ async function _routeInner(prompt, opts = {}) {
   }
 
   // ── 4. Both unavailable ───────────────────────────────────────────────────
+  // §0.60.253 LG1 — each one's own reason (§1.2): "Both … unavailable" hid that Guardian was up and only had no tab open yet
   return {
     ok: false,
     text: null,
-    error: 'Both Ollama and Guardian are unavailable. Check system health.',
+    error: `Neither answered — Ollama: ${(ollamaResult && ollamaResult.error) || 'unreachable'} · Guardian: ${(guardianResult && guardianResult.error) || 'no answer'}`,
+    ollama_error: (ollamaResult && ollamaResult.error) || null,
+    guardian_error: (guardianResult && guardianResult.error) || null,
     provider_used: 'none',
     escalated: false,
     requestId,

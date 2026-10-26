@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-erosmancer-hooks-phasemap.spec::ER4_commands_tools_screen
+type: phase
+id: docs_2026-10-25-erosmancer-hooks-phasemap.spec::ER4_commands_tools_screen
+context: pipeline phase ER4_commands_tools_screen of docs/2026-10-25-erosmancer-hooks-phasemap.spec
+intent: null
+summary: ER4_commands_tools_screen (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1792973193747
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792973193747
+lastSeenAt: 1792973193747
+fingerprint: null
+payload:
+  id: ER4_commands_tools_screen
+  map: docs/2026-10-25-erosmancer-hooks-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/cli/route-commands.js
+    - clear-glass/src/copilot/tools.js
+    - clear-glass/src/copilot/bridge.js
+    - clear-glass/renderer/settings/sections/accounts.js
+    - loom/maps/economy-map.js
+    - tests/modules/test-eros-hooks.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - ER2_snowflake_and_accounts
+    - ER3_the_dom_mutator_types_through_eros
+  blocks: []
+  spec: null
+  graph: f9393621ddb1c78e

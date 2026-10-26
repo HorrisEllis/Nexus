@@ -352,6 +352,18 @@ class IpcBridge {
       return { ok: true, agentId, url: u.href };
     };
     this.app.post('/cli/net/open', _netRoute((b) => this._netOpenVia(b.url)));
+    // §ER2 0.60.253 — James, 2026-10-25: "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator." A page for
+    // ErosmancerOS, opened through the door that owns its session (via snowflake | account | plain), and which agent each Eros tab is.
+    this.app.post('/cli/eros/open', async (req, res) => {
+      if (typeof this.erosOpen !== 'function') return res.status(503).json({ ok: false, error: 'the ErosmancerOS wire is not wired into this Clear Glass' });
+      const b = req.body || {};
+      try { const r = await this.erosOpen({ url: b.url, via: b.via || (b.accountId ? 'account' : 'plain'), accountId: b.accountId || null }); res.status(r.ok ? 200 : 400).json(r); }
+      catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
+    this.app.get('/cli/eros/tabs', async (req, res) => {
+      if (typeof this.erosTabs !== 'function') return res.status(503).json({ ok: false, error: 'the ErosmancerOS wire is not wired into this Clear Glass' });
+      try { const r = await this.erosTabs(); res.status(r.ok ? 200 : 503).json(r); } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
     // §0.60.169 NP11 — the Snowflake plugin's menu row asks for this on the bus ('net.open'); the answer is a toast in the window that asked
     try {
       const { getBus, Event } = require('../core/bus.js');
@@ -606,6 +618,7 @@ class IpcBridge {
         const agentId = req.body?.agentId || 'default';
         res.json(await _autofillFill(this.dom, this.autofillStore, {
           agentId, profileId: req.body?.profileId, minConfidence: req.body?.minConfidence || 'medium', learned: this._learnedFields(agentId),
+          vars: req.body?.vars,   // §AD2 0.60.251 — the IPC autofill:fill passes {{var}} values; this door dropped them
         }));
       } catch (e) { res.status(500).json({ error: e.message }); }
     });
@@ -745,6 +758,14 @@ class IpcBridge {
         }));
       } catch (e) { res.status(500).json({ error: e.message }); }
     });
+    // §AD2 0.60.251 — create/delete and recording, the same methods the IPC macros:* handlers call (one implementation, a
+    // second door). A run stays on the route above (agents keep Guardian + RAID, 0.60.69).
+    const macroStatus = (r) => (r && (r.error || r.ok === false) ? (/not available|not wired/.test(r.error || '') ? 503 : 400) : 200);
+    this.app.post('/cli/macros', async (req, res) => { const r = await this._macroWrite('create', req.body || {}); res.status(macroStatus(r)).json(r); });
+    this.app.delete('/cli/macros/:name', async (req, res) => { const r = await this._macroWrite('delete', { name: req.params.name }); res.status(macroStatus(r)).json(r); });
+    this.app.post('/cli/macros/record/start', async (req, res) => { const r = await this._macroRecord('start', { agentId: req.body?.agentId || 'default', name: req.body?.name }); res.status(macroStatus(r)).json(r); });
+    this.app.post('/cli/macros/record/stop', async (req, res) => { const r = await this._macroRecord('stop', { agentId: req.body?.agentId || 'default' }); res.status(macroStatus(r)).json(r); });
+    this.app.get('/cli/macros/record/status', async (req, res) => { const r = await this._macroRecord('status', { agentId: req.query?.agentId || 'default' }); res.status(macroStatus(r)).json(r); });
 
     this.app.post('/cli/downloads/listeners', (req, res) => res.json(this.options?.registerDownloadListener(req.body) || { error: 'options unavailable' }));
     this.app.patch('/cli/downloads/listeners/:id', (req, res) => res.json(this.options?.updateDownloadListener(req.params.id, req.body) || { error: 'options unavailable' }));
@@ -1305,14 +1326,8 @@ class IpcBridge {
     // "a separate, larger piece" rather than a bare JSON textarea. create/
     // delete go through macro.js's OWN validation (real browser_action enum,
     // erosmancer targetUuid rule, profile set) — the UI never re-implements it.
-    ipcMain.handle('macros:create', async (e, d = {}) => {
-      if (!this.macroTool) return { error: 'macro tool not available' };
-      return this.macroTool.execute({ action: 'create', name: d.name, urlPattern: d.urlPattern, steps: d.steps, params: d.params, profile: d.profile || undefined, description: d.description });
-    });
-    ipcMain.handle('macros:delete', async (e, d = {}) => {
-      if (!this.macroTool) return { error: 'macro tool not available' };
-      return this.macroTool.execute({ action: 'delete', name: d.name });
-    });
+    ipcMain.handle('macros:create', async (e, d = {}) => this._macroWrite('create', d));
+    ipcMain.handle('macros:delete', async (e, d = {}) => this._macroWrite('delete', d));
     // §BUILT 2026-09-26 — record a macro from a real tab: the driver's
     // recorder captures, src/macros/recording.js turns it into steps the
     // builder opens pre-filled (passwords become a {{password}} parameter).
@@ -2087,6 +2102,29 @@ class IpcBridge {
     return r;
   }
   // §JA5 0.60.232 — the pick's macro home: macro.js (the same tool every macro door uses) and the automation nodes folder its .macro goes in
+  // §AD2 0.60.251 — James, 2026-10-25: "need clearglass' fiverr, job application automation, autofill and macros working fully,
+  // including with the agents and copilot." Macro create/delete and recording had IPC handlers only; these two methods are what
+  // both the IPC macros:* handlers and the /cli/macros doors call, so a person, the co-pilot and an agent reach one implementation.
+  async _macroWrite(op, d = {}) {
+    if (!this.macroTool) return { error: 'macro tool not available' };
+    if (op === 'delete') return this.macroTool.execute({ action: 'delete', name: d.name });
+    return this.macroTool.execute({ action: 'create', name: d.name, urlPattern: d.urlPattern, steps: d.steps, params: d.params, profile: d.profile || undefined, description: d.description });
+  }
+
+  // One LiveRecorder (AD_D2): a recording the co-pilot starts can be stopped from the panel, and the reverse.
+  async _macroRecord(op, { agentId, name } = {}) {
+    if (op !== 'status' && !this.driver) return { ok: false, error: 'driver not wired — recording unavailable' };
+    try {
+      if (!this._liveRecorder) this._liveRecorder = new (require('../macros/live-recording').LiveRecorder)({
+        getWebContents: (id) => this.driver._getWebContents(id), evalJs: (wc, code) => this.driver._evalJs(wc, code),
+        dir: require('../mesh/automation-engine.js').NODES_DIR });
+      if (op === 'start') return await this._liveRecorder.start({ agentId, name });
+      if (op === 'stop') return await this._liveRecorder.stop(agentId);
+      if (op === 'status') return this._liveRecorder.status(agentId);
+      return { ok: false, error: `unknown record op "${op}" — start, status or stop` };
+    } catch (err) { return { ok: false, error: err.message }; }
+  }
+
   _autofillMacroDoor() {
     let nodesDir = null; try { nodesDir = require('../../../lib/automation-nodes.js').NODES_DIR; } catch (_) {}
     return { macroTool: this.macroTool || null, nodesDir };

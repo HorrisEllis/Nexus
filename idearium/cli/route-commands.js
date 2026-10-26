@@ -192,6 +192,31 @@ export const SPEC = [
   // 0.60.7 — Versionium managed per repo (lib/repo-history.js) and the import checks (lib/import-checks.js)
   // 0.60.8 — intent routing for reasoning (lib/reasoning-route.js)
   // 0.60.34 VR1 — James: "i also want versions in idearium, github, and each zip, needs to match."
+  // §0.60.252 UP3 — James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
+  // · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
+  { key: 'update', repo: false, usage: 'update [--no-fetch]', about: 'is there a newer Nexus on GitHub: this version and origin\'s, each release in between with James\'s words, the systems it changes, what an update would set aside or refuse',
+    req: (a) => ({ method: 'GET', path: `/api/update${a.flags['no-fetch'] ? '?fetch=0' : ''}`, timeoutMs: 150000 }),
+    print: (d, a, h) => {
+      if (d.ok === false) return console.log(h.c.amber(`  ${d.driver ? `[${d.driver}] ` : ''}${d.error}`));
+      console.log(`  ${h.c.bold(d.current)} → ${d.upToDate ? h.c.mint('up to date') : h.c.bold(d.latest)}${d.behind ? h.c.dim(`  (${d.behind} commit(s) behind${d.ahead ? `, ${d.ahead} ahead` : ''})`) : ''}`);
+      for (const r of (d.releases || []).slice(0, 12)) console.log(`  ${h.c.gray(r.version.padEnd(9))} ${r.quote ? `"${String(r.quote).slice(0, 150)}"` : h.c.dim('(no quote in its line)')}`);
+      if (d.systems && d.systems.length) console.log(h.c.dim(`  changes: ${d.systems.join(', ')}${d.lockChanged ? ' · package-lock.json (npm install runs)' : ''}`));
+      const p = d.plan || {}; if ((p.archive || []).length) console.log(h.c.dim(`  sets aside first (copied to _archive/update/): ${p.archive.length} data file(s)`)); if ((p.blocks || []).length) console.log(h.c.amber(`  refuses: your edits to ${p.blocks.map(b => b.file).slice(0, 6).join(', ')}`));
+      if (d.can && !d.upToDate) console.log(h.c.amber(`  ${d.can}`)); else if (!d.upToDate) console.log(h.c.dim('  idearium update apply --yes'));
+    } },
+  { key: 'update.apply', repo: false, usage: 'update apply --yes', about: 'bring in the newer Nexus from GitHub: fast-forward only, his changed data files copied aside first, npm install if the lockfile changed; says what to restart',
+    personOnly: () => 'updating Nexus\'s code is the person\'s — an agent uses nexus.update.tool apply with confirm:true after asking them',
+    need: (a) => (a.flags.yes ? null : '--yes (it changes Nexus\'s code; `idearium update` shows what it brings)'),
+    req: () => ({ method: 'POST', path: '/api/update/apply', timeoutMs: 20 * 60000, body: { confirm: true } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); if (d.action === 'none') return console.log(h.c.mint(`  ${d.why}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version}`) + h.c.dim(`  ${(d.archived || []).length} data file(s) set aside${d.npm && d.npm.ran ? ` · npm install ${d.npm.ok ? 'ok' : `FAILED: ${d.npm.error}`}` : ''}`)); console.log(h.c.amber(`  restart: ${(d.restart.systems || []).join(', ') || '—'} — ${d.restart.note}`)); } },
+  { key: 'update.rollback', repo: false, usage: 'update rollback --yes', about: 'undo the last update: back to the commit it came from (refuses if your edits are in the way)',
+    personOnly: () => 'rolling Nexus back is the person\'s — an agent uses nexus.update.tool rollback with confirm:true after asking them',
+    need: (a) => (a.flags.yes ? null : '--yes'),
+    req: () => ({ method: 'POST', path: '/api/update/rollback', timeoutMs: 20 * 60000, body: { confirm: true } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); console.log(h.c.mint(`  ${d.from.version} → ${d.to.version}`)); if (d.note) console.log(h.c.dim(`  ${d.note}`)); console.log(h.c.amber(`  restart: ${(d.restart.systems || []).join(', ') || '—'}`)); } },
+  { key: 'update.history', repo: false, usage: 'update history', about: 'every update and rollback this install made: when, from and to which version, who, what was set aside',
+    req: () => ({ method: 'GET', path: '/api/update/history' }),
+    print: (d, a, h) => { const l = d.history || []; if (!l.length) return console.log(h.c.dim('  no updates yet')); for (const r of l) console.log(`  ${h.c.gray(r.at.slice(0, 16))} ${r.kind.padEnd(8)} ${r.from.version} → ${r.to.version}  ${h.c.dim(`by ${r.by}${(r.archived || []).length ? ` · ${r.archived.length} set aside` : ''}`)}`); } },
   // 0.60.41 RN1 — Nexus's own releases, recorded in Versionium (lib/nexus-releases.js): James's words, the proof, the commit
   { key: 'system.releases', repo: false, usage: 'system releases [--sync [--all]] [--limit n] [--version x.y.z]', about: 'every Nexus release, newest first, from Versionium: James\'s words, the git commit, the changelog, its commits; --sync records any missing (with the newest 30 releases\' commits; --all: every release\'s)',
     req: (a) => a.flags.sync ? { method: 'POST', path: '/api/releases/sync', timeoutMs: 120000, body: a.flags.all ? { all: true } : {} } : { method: 'GET', path: '/api/releases' },
@@ -1058,6 +1083,40 @@ export const SPEC = [
     need: (a) => (a.args.length < 2 ? '<url> <fieldKey>' : null),
     req: (a) => { const url = /^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}/`; return { system: 'clear-glass', method: 'POST', path: '/cli/autofill/forget', body: { url, fieldKey: a.args.slice(1).join(' ') } }; },
     print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.origin}: forgot "${d.fieldKey}"`) : h.c.amber(`  ${d.error}`)) },
+  // §AD4 0.60.251 — James, 2026-10-25: "need clearglass' fiverr, job application automation, autofill and macros working fully,
+  // including with the agents and copilot." The fill, the gig and macros as rows, so nexus.command (every agent) has them.
+  { key: 'autofill.profiles', repo: false, usage: 'autofill profiles', about: 'the autofill profiles in Clear Glass: id and label (the identity a fill types in)',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/autofill/profiles' }),
+    print: (d, a, h) => { const l = d.profiles || []; if (!l.length) return console.log(h.c.dim('  no autofill profiles — add one in Settings › Autofill')); for (const p of l) console.log(`  ${h.c.gray(String(p.id).slice(0, 12))} ${p.label || p.name || ''}  ${h.c.dim(`${Object.keys(p.fields || {}).length} fields`)}`); } },
+  { key: 'autofill.detect', repo: false, usage: 'autofill detect [--agent <tab>] [--profile <id>]', about: 'preview the fill of the application/form in a tab: which field gets what and how confident; touches nothing',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/detect', body: { agentId: a.flags.agent || 'default', ...(a.flags.profile ? { profileId: a.flags.profile } : {}) } }),
+    print: (d, a, h) => { if (d.error) return console.log(h.c.amber(`  ${d.error}`)); for (const m of d.matches || []) console.log(`  ${String(m.fieldType).padEnd(14)} ${h.c.dim(m.confidence)}  ${m.label || m.name || m.cgId || ''}`); const u = (d.needsPick && d.needsPick.unplaced) || []; if (u.length) console.log(h.c.amber(`  no field takes: ${u.join(', ')} — autofill pick <type>`)); } },
+  { key: 'autofill.fill', repo: false, usage: 'autofill fill [--agent <tab>] [--profile <id>] [--min high|medium|low]', about: 'fill the application/form in a tab from an autofill profile and what was taught for that site; sets values only, never submits',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/fill', body: { agentId: a.flags.agent || 'default', minConfidence: a.flags.min || 'medium', ...(a.flags.profile ? { profileId: a.flags.profile } : {}) } }),
+    print: (d, a, h) => { if (d.error) return console.log(h.c.amber(`  ${d.error}`)); console.log(h.c.mint(`  filled ${(d.filled || []).length} of ${d.totalFields || 0}`) + `  ${(d.filled || []).map(f => f.fieldType).join(', ')}`); if ((d.failed || []).length) console.log(h.c.amber(`  failed: ${d.failed.map(f => `${f.fieldType} (${f.error})`).join(', ')}`)); const u = (d.needsPick && d.needsPick.unplaced) || []; if (u.length) console.log(h.c.amber(`  no field took: ${u.join(', ')} — autofill pick <type>`)); } },
+  { key: 'gig.fill', repo: false, usage: 'gig fill [--agent <tab>] [--offer "<one line>"] [--profile <id>]', about: 'fill the Fiverr gig editor in a tab: the gig already written, else one written from the Fiverr profile and the offer; never saves or publishes',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/gig/autofill', timeoutMs: 180000, body: { agentId: a.flags.agent || 'default', offer: a.flags.offer || a.args.join(' ') || '', ...(a.flags.profile ? { profileId: a.flags.profile } : {}) } }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); console.log(h.c.mint(`  "${d.title}": filled ${(d.filled || []).map(f => f.key).join(', ') || 'nothing'}`) + (d.drafted ? h.c.dim('  (written just now)') : '')); if ((d.leftToCopy || []).length) console.log(h.c.dim(`  left to copy: ${d.leftToCopy.join(', ')}`)); } },
+  { key: 'gig.detect', repo: false, usage: 'gig detect [--agent <tab>]', about: 'preview which parts of the written gig the Fiverr editor in a tab would take; touches nothing',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/autofill/gig/detect', body: { agentId: a.flags.agent || 'default' } }),
+    print: (d, a, h) => { if (d.error) return console.log(h.c.amber(`  ${d.error}`)); for (const m of d.matches || []) console.log(`  ${String(m.key).padEnd(14)} ${h.c.dim(m.confidence || '')}`); if ((d.leftToCopy || []).length) console.log(h.c.dim(`  left to copy: ${d.leftToCopy.join(', ')}`)); } },
+  { key: 'macro.list', repo: false, usage: 'macro list', about: 'the Clear Glass macros: name, url pattern, steps, params',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/macros' }),
+    print: (d, a, h) => { const l = d.macros || []; if (!l.length) return console.log(h.c.dim(d.error ? `  ${d.error}` : '  no macros yet')); for (const m of l) console.log(`  ${String(m.name).padEnd(28)} ${h.c.dim(`${m.urlPattern || '*'} · ${typeof m.steps === 'number' ? m.steps : (m.steps || []).length} steps${(m.params || []).length ? ` · {{${m.params.join('}} {{')}}}` : ''}`)}`); } },
+  { key: 'macro.show', repo: false, usage: 'macro show <name>', about: 'one macro: its steps and params',
+    need: (a) => (!a.args.length ? '<name>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: `/cli/macros/${encodeURIComponent(a.args.join(' '))}` }),
+    print: (d, a, h) => { const m = d.macro || d; if (d.error) return console.log(h.c.amber(`  ${d.error}`)); console.log(h.c.bold(`  ${m.name}`) + h.c.dim(`  ${m.urlPattern || '*'}`)); (m.steps || []).forEach((s, i) => console.log(`  ${String(i + 1).padStart(3)}. ${s.action} ${h.c.dim(JSON.stringify(s.data || {}).slice(0, 100))}`)); } },
+  { key: 'macro.run', repo: false, usage: 'macro run <name> [key=value ...] [--agent <tab>]', about: 'replay a macro in a tab with its {{params}}: checks its url pattern, snapshots first, stops at the first failed step',
+    need: (a) => (!a.args.filter(x => !/^[\w.-]+=/.test(x)).length ? '<name>' : null),
+    req: (a) => { const params = {}, name = []; for (const x of a.args) { const m = /^([\w.-]+)=(.*)$/.exec(x); if (m) params[m[1]] = m[2]; else name.push(x); } return { system: 'clear-glass', method: 'POST', path: `/cli/macros/${encodeURIComponent(name.join(' '))}/run`, timeoutMs: 5 * 60000, body: { agentId: a.flags.agent || 'default', params } }; },
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.macro}: ${d.stepsCompleted} steps done`) : h.c.amber(`  ${d.error}${d.failedAtStep != null ? ` (step ${d.failedAtStep + 1})` : ''}`)) },
+  { key: 'macro.record', repo: false, usage: 'macro record [<name>] [--agent <tab>]', about: 'start recording what is done in a tab as a macro (a .macro node from the first second); `macro stop` ends it',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/macros/record/start', body: { agentId: a.flags.agent || 'default', name: a.args.join(' ') || undefined } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  recording "${d.name}" → ${d.file}`) : h.c.amber(`  ${d.error}`)) },
+  { key: 'macro.stop', repo: false, usage: 'macro stop [--agent <tab>]', about: 'stop recording a tab: the steps it made (passwords become a {{password}} param) and the .macro file',
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/macros/record/stop', body: { agentId: a.flags.agent || 'default' } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${(d.steps || []).length} steps → ${d.file}`) + ((d.params || []).length ? h.c.dim(`  params: ${d.params.join(', ')}`) : '') : h.c.amber(`  ${d.error}`)) },
   { key: 'glass.processes', repo: false, usage: 'glass processes', about: 'what is running in Clear Glass: each process with its tabs and background tabs, memory and CPU (ending one is his, in the Processes window)',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/processes' }),
     print: (d, a, h) => {
@@ -1142,6 +1201,18 @@ export const SPEC = [
   // ── 0.59.12 — James: "the nexus> is for you. not me. give yourself the tools using nexus>. dude...." What the agent in a
   //    chat Clear Glass watches needs to work on his machine: show him a page, and read (never write) logs, files and the
   //    tree. `local` rows run in the process that hears the line (lib/nexus-read.js); secrets refused, keys redacted. ──
+  // §ER2/ER4 0.60.253 — James, 2026-10-25: "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator."
+  { key: 'eros.open', repo: false, usage: 'eros open <url> [--snowflake | --account <accountId>]', about: 'a page for ErosmancerOS to drive like a person: through Snowflake, signed in as one of his accounts (at its pace), or plain — opened by Clear Glass, then Eros attaches to exactly that page',
+    need: (a) => (!a.args[0] ? '<url>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/eros/open', timeoutMs: 150000, body: { url: /^[a-z]+:\/\//i.test(a.args[0]) ? a.args[0] : `https://${a.args[0]}`, via: a.flags.snowflake ? 'snowflake' : a.flags.account ? 'account' : 'plain', ...(a.flags.account ? { accountId: String(a.flags.account) } : {}) } }),
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.agentId}`) + h.c.dim(`  ${d.via}${d.accountId ? ` ${d.accountId}` : ''} · Eros tab ${String(d.tabId).slice(0, 8)} · pace ${d.profile} · ${d.url}`) : h.c.amber(`  ${d.error}`)) },
+  { key: 'eros.tabs', repo: false, usage: 'eros tabs', about: 'ErosmancerOS\'s tabs: each with the Clear Glass agent it is (or none) and the pace it moves at',
+    req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/eros/tabs' }),
+    print: (d, a, h) => { if (!d.ok) return console.log(h.c.amber(`  ${d.error}`)); for (const t of d.tabs || []) console.log(`  ${h.c.gray(String(t.targetId).slice(0, 8))} ${(t.agentId || h.c.dim('(no agent)')).toString().padEnd(22)} ${h.c.dim(`${t.profile || ''} ${t.url}`)}`); } },
+  { key: 'eros.pace', repo: false, usage: 'eros pace <accountId> <precise|cautious|exploratory|turbo|default>', about: 'the pace ErosmancerOS moves at in that account\'s pages (its pointer and its keys); default clears it',
+    need: (a) => (a.args.length < 2 ? '<accountId> <pace>' : null),
+    req: (a) => ({ system: 'clear-glass', method: 'PUT', path: `/cli/accounts/${encodeURIComponent(a.args[0])}`, body: { updates: { erosProfile: a.args[1] === 'default' ? null : a.args[1] } } }),
+    print: (d, a, h) => console.log(d.error ? h.c.amber(`  ${d.error}`) : h.c.mint(`  ${d.label || d.id}: ${d.erosProfile || 'default'}`)) },
   { key: 'glass.open', repo: false, usage: 'glass open <url>', about: 'show James a page in Clear Glass: the window already on that site comes to the front, else the main window goes there, else a new one',
     need: (a) => (a.args[0] ? null : '<url>'),
     req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/open', body: { url: /^[a-z][\w+.-]*:\/\//i.test(a.args[0]) ? a.args[0] : `${/^(?:localhost|127\.|\d+\.\d+\.\d+\.\d+)/.test(a.args[0]) ? 'http' : 'https'}://${a.args[0]}` } }),   // a local system is plain http

@@ -223,3 +223,17 @@ to main at e05a5ed8; the branch was restarted from main for this phase.
   mesh and selector-check.js, and the real macro.js create validation; test-autofill-learn-ui.test.js JA4 3/3 now checks the macro on
   screen.
 - **Open:** a real fill on a live listing (his login, his machine).
+
+## ADDENDUM 2026-10-25 (0.60.251, AD1–AD5) — the gig fill and the application fill, for the agents and the co-pilot by name
+James, 2026-10-25: "need clearglass' fiverr, job application automation, autofill and macros working fully, including with the agents and
+copilot." Map: docs/2026-10-25-clear-glass-agent-doors-phasemap.spec.
+- **Drift found:** GA1/GA1a are built (0.60.161: `autofill.gig`, `/cli/autofill/gig/autofill`, `getLastGig/setLastGig`). Their status
+  above still reads OPEN, kept as written (§0.3). This addendum is the record that they are done.
+- **Drift found:** GA2–GA5 were built in their general form, JA3–JA5, which cover every application page. The gig-specific
+  `gig.field.<part>` learned map was not built: matchGigFields does not read it.
+- **Built here:**
+  - the agents' `autofill_manage` reaches the same routes (`gig`, `pick`, `learn`, `learned`, `forget`, `fill`);
+  - the co-pilot's "fill this in for me" runs before any model: the gig fill on `/manage_gigs`, the application fill anywhere else;
+  - rows `gig fill|detect` and `autofill fill|detect|profiles`.
+- **Open:** a gig PART the editor's fields do not take is still left to copy by hand (`leftToCopy`). The picker loop for gig parts (GA2–GA4
+  as written) is unbuilt.

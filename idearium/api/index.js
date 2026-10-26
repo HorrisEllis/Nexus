@@ -3299,6 +3299,7 @@ const ROUTE_CAP = {
   'system.homes': CAPS.READ_IDEAS,   // 0.60.129 DB17
   'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
   'system.tables': CAPS.READ_IDEAS,   // 0.60.250 SV1 — which system writes and reads which table of the shared store
+  'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN,   // 0.60.252 UP3 — changing Nexus's own code is an admin act
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
   'system.nodes': CAPS.READ_IDEAS,   // 0.60.130 P33a
   'system.nodes.list': CAPS.READ_IDEAS,   // 0.60.157 GM4
@@ -3597,6 +3598,11 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','homes'], 'system.homes'],
     ['GET',    ['api','system','sovereign'], 'system.sovereign'],
     ['GET',    ['api','system','tables'], 'system.tables'],
+    ['GET',    ['api','update'], 'update.check'],                   // 0.60.252 UP3 — what is newer on GitHub, his words per release (?fetch=0 reads what was last fetched)
+    ['GET',    ['api','update','history'], 'update.history'],
+    ['POST',   ['api','update','apply'], 'update.apply'],           // {confirm:true} — fast-forward, data collisions archived, npm install if the lockfile changed
+    ['POST',   ['api','update','rollback'], 'update.rollback'],     // {confirm:true} — back to the commit the last update came from
+    ['POST',   ['api','update','restart'], 'update.restart'],       // {system} — the person's Restart on the Updates page, through the supervisor (NC2's call)
     ['GET',    ['api','system','shape'], 'system.shape'],   // 0.60.138 — does each system match genesis: every role, its own file, the kernel, or missing (?system=)   // 0.60.133 IM1 — which systems are sovereign, and what stands in each one's way (?system=)
     ['GET',    ['api','data','home'], 'data.home.list'],                 // 0.60.207 DL2 — every system: where its data lives, what still waits in the root data/
     ['GET',    ['api','data','home',':system'], 'data.home.get'],        // 0.60.207 DL2 — one system: its record and each file's plan
@@ -5989,6 +5995,25 @@ async function handle(req, res, route, query, body) {
     case 'system.sovereign': {   // 0.60.133 IM1 — James: "need to get the systems soveriegn again like we were talking about."
       const SB = _require('../../lib/system-boundary.js');
       return ok(res, SB.sovereignty({ root: path.dirname(_require.resolve('../../package.json')), system: (query && query.system) || null }));
+    }
+    // 0.60.252 UP3 — James, 2026-10-25: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using
+    // github?" · "first one but the second one needs to be the end state" (git now, COS later). lib/nexus-update.js; restarting stays his.
+    case 'update.check': { const U = _require('../../lib/nexus-update.js'); const r = U.check({ fetch: !(query && query.fetch === '0') }); res.writeHead(200, { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r)); }
+    case 'update.restart': {   // the person's button (UP_D2): each supervised process of that system, restarted by autopilot
+      const sys = String((body && body.system) || '').trim();
+      if (!/^[a-z][a-z0-9-]*$/.test(sys)) return err(res, 400, 'system required, e.g. "clear-glass"');
+      let st = null; try { st = await _nexusClient.get('autopilot', '/status', { timeout: 4000 }); } catch (e) { return err(res, 502, `the supervisor (autopilot) is not answering: ${e.message}`); }
+      const names = st && st.kernels ? Object.keys(st.kernels).filter(k => k === sys || k.startsWith(`${sys}-`)) : [];
+      if (!names.length) return ok(res, { system: sys, restarted: [], note: `${sys} has no process of its own — it is code the other systems load: restart Nexus (npm run start:all) to load it` });
+      const out = [];
+      for (const k of names) { let r; try { r = await _nexusClient.post('autopilot', `/control/${encodeURIComponent(k)}/restart`, {}, { timeout: 8000 }); } catch (e) { r = { ok: false, error: e.message }; } out.push({ process: k, ok: !!(r && r.ok), status: r && r.status, error: r && r.ok ? null : (r && r.error) || 'no answer' }); }
+      return ok(res, { system: sys, restarted: out });
+    }
+    case 'update.history': { const U = _require('../../lib/nexus-update.js'); return ok(res, { history: U.history({}) }); }
+    case 'update.apply': case 'update.rollback': {
+      const U = _require('../../lib/nexus-update.js');
+      const r = (action === 'update.apply' ? U.apply : U.rollback)({ confirm: !!(body && body.confirm === true), by: (body && body.by === 'agent') ? 'agent' : 'person' });
+      res.writeHead(r.ok ? 200 : (r.needsConfirm ? 428 : 409), { 'Content-Type': 'application/json', ...CORS }); return res.end(JSON.stringify(r));
     }
     case 'system.tables': {   // 0.60.250 SV1 — James: "i want to get each system soveriegn and inside a cos compartment". Evidence only.
       const SB = _require('../../lib/system-boundary.js');
@@ -10925,7 +10950,7 @@ export function startAPI() {
 
     // §0.39.279 — the standalone pages beside the app: the repo desktop viewer and the settings console. A fixed list,
     // not a directory listing — nothing else under ui/ is served as a page.
-    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html' || cleanUrl === '/login.html' || cleanUrl === '/ui-editor.html')) {   // §0.60.122 UE1 the UI editor   // §0.58.0 IA3 the sign-in page   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void · §0.39.298 AR2 the architect
+    if (req.method === 'GET' && (cleanUrl === '/desktop.html' || cleanUrl === '/settings.html' || cleanUrl === '/archive-import.html' || cleanUrl === '/spec-library.html' || cleanUrl === '/workshop.html' || cleanUrl === '/void.html' || cleanUrl === '/architect.html' || cleanUrl === '/login.html' || cleanUrl === '/ui-editor.html' || cleanUrl === '/update.html')) {   // §0.60.252 UP4 the Updates page ·   // §0.60.122 UE1 the UI editor   // §0.58.0 IA3 the sign-in page   // §0.39.290 IL1 the spec library · §0.39.294 SW1 the spec workshop · §0.39.295 the spatial void · §0.39.298 AR2 the architect
       try {
         const { readFileSync, existsSync } = await import('fs');
         const { join, dirname } = await import('path');

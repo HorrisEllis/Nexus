@@ -197,6 +197,14 @@ class CoPilotBridge {
         return { text: said.text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'nexus' } };
       }
     }
+    // §AD3 0.60.251 — "fill this in for me", "pick github", "record a macro": the engine runs, no model (his "Deterministic first")
+    const job = this._driver && this.settings.get().copilotJobVerbs !== false ? (V.fillIntent(message) || V.pickIntent(message) || V.recordIntent(message) || V.updateIntent(message)) : null;
+    if (job) {
+      const text = await this._runJobVerb(job, agentId, pageUrl);
+      if (remember) this._remember(agentId, 'assistant', text, { via: 'autofill' });
+      this.sse.emit('copilot.response', { msgId, agentId, text, commands: [], modelUsed: 'autofill', ts: Date.now() });
+      return { text, commands: [], results: [], executed: true, msgId, route: { ...route, modelUsed: 'autofill' } };
+    }
     const intent = this._driver ? (V.archiveImportIntent(message) || V.browseIntent(message)) : null;   // §0.39.283 N30 — the archive drop box first
     // §0.59.6 — "what do you see" / "it's on the screen" (alone, or after "visit x.com"): the tab is read, not guessed at
     if (this._driver && !intent && V.screenIntent(message)) {
@@ -301,6 +309,21 @@ class CoPilotBridge {
     return { ok: true, command, result, ...seen };
   }
 
+  // §AD3 0.60.251 — one of the job verbs (verbs.js fillIntent/pickIntent/recordIntent), run through the same tools the model
+  // would call. On a Fiverr gig editor a fill is the gig fill (GA1); anywhere else it is the application/form fill (JA1–JA5).
+  async _runJobVerb(job, agentId, pageUrl = '') {
+    const V = require('./verbs.js');
+    let url = pageUrl;
+    if (!url) { try { const u = await this._driver.exec({ action: 'getUrl', agentId }); url = (u && (u.url || u.result)) || ''; } catch (_) {} }
+    const action = job.kind === 'fill' ? (V.isGigEditor(url) ? 'autofill.gig' : 'autofill.fill') : job.kind === 'pick' ? 'autofill.pick' : job.kind === 'update' ? 'update.check' : `macro.${job.kind}`;
+    const j = { ...job, gig: action === 'autofill.gig' };
+    let r;
+    try { r = await this._executeCommand({ action, agentId, ...(job.fieldType ? { fieldType: job.fieldType } : {}), ...(job.name ? { name: job.name } : {}) }, agentId); }
+    catch (e) { r = { ok: false, error: e.message }; }
+    this.postEvent('copilot.job.verb', { kind: job.kind, action, ok: !!r && !r.error && r.ok !== false, url: url || null });
+    return V.describeJob(j, r);
+  }
+
   // §0.59.6 — what the tab shows now: title, url, the interaction field's targets as text (shared with _browse)
   async _read(agentId, url = '', verb = 'On screen:') {
     let title = '', here = url, map = '';
@@ -349,10 +372,24 @@ class CoPilotBridge {
     if (action === 'autofill.learned') return this._ipcGet(`/cli/autofill/learned${cmd.url ? `?url=${encodeURIComponent(cmd.url)}` : ''}`);
     if (action === 'autofill.forget') return this._ipcPost('/cli/autofill/forget', { url: cmd.url || '', fieldKey: cmd.fieldKey || '' });
     if (action === 'autofill.learn') return this._ipcPost('/cli/autofill/learn', { agentId: aid, fieldKey: cmd.fieldKey || '', fieldType: cmd.fieldType || '', url: cmd.url || null });
+    // §AD3 0.60.251 — the general application fill and macros, each to the route the panel's IPC handler shares
+    if (action === 'autofill.profiles') return this._ipcGet('/cli/autofill/profiles');
+    if (action === 'autofill.detect') return this._ipcPost('/cli/autofill/detect', { agentId: aid, profileId: cmd.profileId || null });
+    if (action === 'autofill.fill') return this._ipcPost('/cli/autofill/fill', { agentId: aid, profileId: cmd.profileId || null, minConfidence: cmd.minConfidence || 'medium', vars: cmd.vars || undefined });
+    if (action === 'eros.open') return this._ipcPost('/cli/eros/open', { url: cmd.url, via: cmd.via || (cmd.accountId ? 'account' : 'plain'), accountId: cmd.accountId || null }, 120000);   // §ER2
+    if (action === 'eros.tabs') return this._ipcGet('/cli/eros/tabs');
+    if (action === 'macro.list') return this._ipcGet('/cli/macros');
+    if (action === 'macro.get') return this._ipcGet(`/cli/macros/${encodeURIComponent(cmd.name || '')}`);
+    if (action === 'macro.run') return this._ipcPost(`/cli/macros/${encodeURIComponent(cmd.name || '')}/run`, { agentId: aid, params: cmd.params || {}, skipSnapshot: !!cmd.skipSnapshot }, 5 * 60000);
+    if (action === 'macro.create') return this._ipcPost('/cli/macros', { name: cmd.name, steps: cmd.steps, urlPattern: cmd.urlPattern, params: cmd.params, description: cmd.description, profile: cmd.profile });
+    if (action === 'macro.delete') return this._ipcDelete(`/cli/macros/${encodeURIComponent(cmd.name || '')}`);
+    if (action === 'macro.record.start') return this._ipcPost('/cli/macros/record/start', { agentId: aid, name: cmd.name || null });
+    if (action === 'macro.record.stop') return this._ipcPost('/cli/macros/record/stop', { agentId: aid });
+    if (action === 'macro.record.status') return this._ipcGet(`/cli/macros/record/status?agentId=${encodeURIComponent(aid)}`);
     if (action === 'invoke' || action === 'ipc') return this._ipcPost('/cli/invoke', { channel: cmd.channel, args: cmd.args, agentId: aid });
     if (action === 'channels') return this._ipcGet(`/cli/invoke${cmd.query ? `?q=${encodeURIComponent(cmd.query)}` : ''}`);
-    if (/^(opportunity|context|learned)\./.test(action) || /\.tool$/.test(action)) {
-      const map = { opportunity: 'nexus.opportunity.tool', context: 'nexus.context.tool', learned: 'clearglass.learned.tool' };
+    if (/^(opportunity|context|learned|update)\./.test(action) || /\.tool$/.test(action)) {
+      const map = { opportunity: 'nexus.opportunity.tool', context: 'nexus.context.tool', learned: 'clearglass.learned.tool', update: 'nexus.update.tool' };   // §UP4 0.60.252 update
       const [ns, sub] = action.split('.');
       const { action: _a, agentId: _id, ...args } = cmd;
       return this._runAgentTool(map[ns] || action, map[ns] ? { action: sub, ...args } : args, aid);
@@ -511,6 +548,18 @@ class CoPilotBridge {
   async _ipcPost(p, body, timeoutMs = 60000) {   // §JA3 — a pick waits on the person, so its caller passes a longer wait
     const r = await this._httpPostBridge(`http://127.0.0.1:${this._ipcPort()}${p}`, body, timeoutMs);
     try { return JSON.parse(r.body); } catch (_) { return { ok: false, error: `bad reply from ${p}` }; }
+  }
+  // §AD3 0.60.251 — macro.delete is DELETE /cli/macros/:name
+  _ipcDelete(p, timeoutMs = 15000) {
+    return new Promise((resolve) => {
+      const req = require('http').request({ hostname: '127.0.0.1', port: this._ipcPort(), path: p, method: 'DELETE', timeout: timeoutMs }, (r) => {
+        let buf = ''; r.on('data', c => buf += c);
+        r.on('end', () => { try { resolve(JSON.parse(buf)); } catch (_) { resolve({ ok: false, error: `bad reply from ${p}` }); } });
+      });
+      req.on('error', (e) => resolve({ ok: false, error: `Clear Glass :${this._ipcPort()} unreachable: ${e.message}` }));
+      req.on('timeout', () => { req.destroy(); resolve({ ok: false, error: `${p} timed out` }); });
+      req.end();
+    });
   }
 
   // ── Map action name to SISO bus event ────────────────────────────────

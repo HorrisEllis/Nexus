@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-erosmancer-hooks-phasemap.spec::ER3_the_dom_mutator_types_through_eros
+type: phase
+id: docs_2026-10-25-erosmancer-hooks-phasemap.spec::ER3_the_dom_mutator_types_through_eros
+context: >-
+  pipeline phase ER3_the_dom_mutator_types_through_eros of
+  docs/2026-10-25-erosmancer-hooks-phasemap.spec
+intent: null
+summary: ER3_the_dom_mutator_types_through_eros (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792973193746
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792973193746
+lastSeenAt: 1792973193746
+fingerprint: null
+payload:
+  id: ER3_the_dom_mutator_types_through_eros
+  map: docs/2026-10-25-erosmancer-hooks-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/dom/archaeology.js
+    - clear-glass/src/main/index.js
+  depends_on:
+    - ER1_the_right_tab
+  blocks: []
+  spec: null
+  graph: 8a05eb6bdcc47c6f
