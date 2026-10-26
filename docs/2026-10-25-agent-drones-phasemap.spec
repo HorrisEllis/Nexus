@@ -70,6 +70,32 @@ decisions:
       reuses gate styling, or that EVERY step must become a question, that is a different build — marked to confirm, not
       assumed. What is his and acted on now: the gates are the surface (not a second format). The exact UI is DR5's to confirm
       when built.
+    rationale_2026_10_26:
+      james: >-
+        "Yeah but it cuts down tokens drastically. Makes it more agnostic. Can handle more complex tasks by offloading into
+        the gates."
+      context: >-
+        The load-bearing WHY, and the coder had underweighted it (he had called the gate surface "a brick with nothing on it"
+        until a walker consumed it; corrected here, §0.0 truth over coherence — the economics are the capability, not a later
+        bonus). The gate chain is EXTERNAL memory: because each step's state is held in the gate record by reference, not copy
+        (schema.gate — packetHash + context "references, not copies", GM1 0.60.162), an agent running step N is handed ONLY
+        that step's packet (its spec + the specific prior outputs its depends_on names), never the whole transcript. Three
+        consequences, in his order:
+          1. "cuts down tokens drastically" — multi-step work stops growing the model's context O(N); each step carries one
+             bounded, budgeted packet. The cut already exists: lib/phase-plan.js (GW24) ranks the dependencies' code and cuts
+             it to the agent's budget, and names the cut; lib/context-builder.js assembles the packet. The gate chain is what
+             makes the prior-step outputs addressable BY REFERENCE so there is something bounded to hand over.
+          2. "makes it more agnostic" — the surface is DATA (step_gate nodes, gate records), not a model's context or a
+             language. Any walker — a cheap local Ollama step, a deterministic checker, Claude for the hard step — reads and
+             advances the same chain (ties to NC0 neutral core, 2026-10-19). The task does not belong to whoever started it.
+          3. "offloading into the gates" — a task too big for one context window becomes a sequence of bounded steps whose
+             complexity lives in the CHAIN (the structure), not in any one agent's head. This is why cheap models can do work
+             they otherwise could not: the gates carry the state between small, bounded, resumable steps.
+        The soundness condition (coder's, by the axioms, §0.1): the token offload is only as real as the steps are separable —
+        a step must need only its declared inputs. That is exactly what his depends_on DAG discipline (DG1/DG2/DG3) already
+        enforces, so the dependency-graph rules and the gate token-offload are the SAME mechanism seen twice. Where a step's
+        true inputs exceed its declared ones, the packet is wrong and the saving is false; the walker must surface that (a
+        step that reaches outside its packet is a gap, §1.2), never hide it.
 
 phases:
   DR1_the_drone_contract_and_router:
