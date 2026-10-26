@@ -44,7 +44,7 @@ export function start({ repo, budget = {}, by = 'unknown', deps } = {}) {
   const now = deps.now ? deps.now() : Date.now();
   const b = { phases: Math.max(1, Math.min(100, parseInt(budget.phases, 10) || DEFAULT_BUDGET.phases)), minutes: Math.max(5, Math.min(24 * 60, parseInt(budget.minutes, 10) || DEFAULT_BUDGET.minutes)) };
   const loop = _save(deps, { loopId: `loop-${now.toString(36)}`, repoUuid: repo.uuid, state: 'running', budget: b, startedAt: now, current: null, built: [], closed: [], skipped: [], misses: 0, by });
-  if (deps.emit) deps.emit('loop.started', { repo: repo.uuid, loopId: loop.loopId, budget: b, by });
+  if (deps.emit) deps.emit('idearium.loop.started', { repo: repo.uuid, loopId: loop.loopId, budget: b, by });
   return loop;
 }
 
@@ -52,7 +52,7 @@ export function stop(repo, { why = 'stopped by a person', deps } = {}) {
   const cur = status(repo.uuid, { deps });
   if (!cur || cur.state !== 'running') return cur;
   const loop = _save(deps, { ...cur, state: 'stopped', stoppedAt: deps.now ? deps.now() : Date.now(), stopWhy: why });
-  if (deps.emit) deps.emit('loop.stopped', { repo: repo.uuid, loopId: loop.loopId, why });
+  if (deps.emit) deps.emit('idearium.loop.stopped', { repo: repo.uuid, loopId: loop.loopId, why });
   return loop;
 }
 
@@ -62,7 +62,7 @@ export async function step(loop, deps) {
   const now = deps.now ? deps.now() : Date.now();
   const repo = { uuid: loop.repoUuid };
   const halt = (why) => { const l = stop(repo, { why, deps }); return { loop: l, outcome: 'stopped', why }; };
-  const said = (outcome, key, why, l) => { if (deps.emit) deps.emit('loop.step', { repo: loop.repoUuid, loopId: loop.loopId, key, outcome, why }); return { loop: l, outcome, key, why }; };
+  const said = (outcome, key, why, l) => { if (deps.emit) deps.emit('idearium.loop.step', { repo: loop.repoUuid, loopId: loop.loopId, key, outcome, why }); return { loop: l, outcome, key, why }; };
 
   // GATE-SL4-003 — the current phase's run: still going → wait; ended → land (his rule), close, then the next step picks
   if (loop.current) {

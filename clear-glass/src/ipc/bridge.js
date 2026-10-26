@@ -650,6 +650,20 @@ class IpcBridge {
     };
     this.app.delete('/cli/autofill/learned', forget);
     this.app.post('/cli/autofill/forget', forget);
+    // §AT2 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." The whole autofill data as one .autofill file
+    // (src/autofill/transfer.js): profiles, learned fields, the last gig. An import merges and keeps what it replaced; undo puts it back.
+    this.app.get('/cli/autofill/export', (req, res) => {
+      const r = this._autofillExport();
+      res.status(r.ok ? 200 : 503).json(r);
+    });
+    this.app.post('/cli/autofill/import', (req, res) => {
+      const r = this._autofillImport(req.body?.text, { by: req.body?.by || 'cli' });
+      res.status(r.ok ? 200 : (this.autofillStore ? 400 : 503)).json(r);
+    });
+    this.app.post('/cli/autofill/import/undo', (req, res) => {
+      const r = this._autofillImportUndo();
+      res.status(r.ok ? 200 : (this.autofillStore ? 404 : 503)).json(r);
+    });
     this.app.post('/cli/autofill/pick', async (req, res) => {
       if (!this.dom || !this.autofillStore) return res.status(503).json({ error: 'autofill unavailable' });
       const r = await this._autofillPick(req.body || {});
@@ -1702,14 +1716,18 @@ class IpcBridge {
     });
     ipcMain.handle('autofill:gig:fill', async (e, { gig, agentId = 'default', minConfidence = 'medium' } = {}) => this._gigFill({ gig, agentId, minConfidence }));
     ipcMain.handle('autofill:gig:autofill', async (e, p = {}) => this._gigAutofill(p));   // §GA1 — the co-pilot's one door
-    // 2026-10-12 — a gig FILE (.gig.json, the shape parseGig reads) → the same gig, held to Fiverr's limits like a written one.
+    // 2026-10-12 — a gig FILE (.gig, or an old .gig.json: the shapes parseGig reads) → the same gig, held to Fiverr's limits like a written one.
     // Reads and checks only: nothing is saved, typed or published.
     // 2026-10-12 — a gig as a .gig file (YAML, its limits written beside each field), or an empty template to fill in
     ipcMain.handle('autofill:gig:file', async (e, { gig = null, template = false } = {}) => {
       const G = require('../autofill/gig.js');
-      if (template || !gig) return { ok: true, ...G.gigTemplate() };
-      return { ok: true, ...G.gigFile(gig) };
+      // §AT4 0.60.256 — James, 2026-10-26: "fix it so its .gig not .gig.json." Whatever the name, it ends in .gig
+      const r = template || !gig ? G.gigTemplate() : G.gigFile(gig);
+      return { ok: true, ...r, filename: G.gigFilename(r.filename) };
     });
+    ipcMain.handle('autofill:export', async () => this._autofillExport());                                    // §AT2 the .autofill file
+    ipcMain.handle('autofill:import', async (e, { text } = {}) => this._autofillImport(text, { by: 'settings' }));
+    ipcMain.handle('autofill:import:undo', async () => this._autofillImportUndo());
     ipcMain.handle('autofill:gig:import', async (e, { text } = {}) => {
       const G = require('../autofill/gig.js');
       const r = G.parseGig(String(text == null ? '' : text).slice(0, 200000));
@@ -2121,6 +2139,27 @@ class IpcBridge {
     return { macroTool: this.macroTool || null, nodesDir };
   }
   // §JA5 — forget, then rebuild the site's macro without that field (removed when nothing is left)
+  // §AT1/AT2 0.60.256 — the autofill data out and in (src/autofill/transfer.js); the import's undo is one JAA row
+  _autofillUndoRows() { const { JaaRows } = require('../storage/jaa'); return this._afUndo || (this._afUndo = new JaaRows('cg_autofill_import_undo', {})); }
+  _autofillExport() {
+    if (!this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+    const r = require('../autofill/transfer.js').exportAll({ store: this.autofillStore, siteSettings: this.siteSettings || null });
+    if (r.ok) this.postEvent('autofill.exported', { ...r.counts, ts: Date.now() });
+    return r;
+  }
+  _autofillImport(text, { by = 'settings' } = {}) {
+    if (!this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+    const r = require('../autofill/transfer.js').importAll({ store: this.autofillStore, siteSettings: this.siteSettings || null, text: String(text == null ? '' : text).slice(0, 5000000), undoRows: this._autofillUndoRows() });
+    if (r.ok) this.postEvent('autofill.imported', { ...r.counts, refused: r.refused.length, by, ts: Date.now() });
+    return r;
+  }
+  _autofillImportUndo() {
+    if (!this.autofillStore) return { ok: false, error: 'autofill unavailable' };
+    const r = require('../autofill/transfer.js').undoLast({ store: this.autofillStore, siteSettings: this.siteSettings || null, undoRows: this._autofillUndoRows() });
+    if (r.ok) this.postEvent('autofill.import.undone', { ...r.restored, ts: Date.now() });
+    return r;
+  }
+
   async _autofillForget(url, fieldKey) {
     const LP = require('../autofill/learn-pick.js');
     const r = LP.forgetLearned(this.siteSettings, url, fieldKey);

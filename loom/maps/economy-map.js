@@ -34,6 +34,8 @@ const FILES = [
     I('lib/economy/gate.js'), I('lib/economy/ledger.js'), I('lib/economy/store.js'), I('lib/economy/tokens.js'),
   ]],
   ['idearium/ui/settings.html', I('idearium/ui/settings.html'), [I('idearium/api/index.js')]],   // HTTP /api/economy*
+  // §AT1 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." The autofill data as one .autofill file
+  ['clear-glass/src/autofill/transfer.js', I('clear-glass/src/autofill/transfer.js'), [I('clear-glass/src/autofill/learn-pick.js'), I('clear-glass/src/autofill/matcher.js')]],
   ['clear-glass/erosmancer/erosmancer-os/src/replay/index.ts', I('clear-glass/erosmancer/erosmancer-os/src/replay/index.ts'), []],
   ['clear-glass/erosmancer/erosmancer-os/src/api/server.ts', I('clear-glass/erosmancer/erosmancer-os/src/api/server.ts'), [
     I('clear-glass/erosmancer/erosmancer-os/src/replay/index.ts'),         // import { ScriptReplayQueue } — snapshot(), list() (EC10)
@@ -101,6 +103,16 @@ const CONSUMERS = [
   [I('clear-glass/src/dom/archaeology.js'), I('clear-glass/src/driver/index.js'), '0.60.253 ER3 dom.erosInput = driver.erosInput: handleMutate via eros types the value through ErosmancerOS'],
   [I('clear-glass/renderer/settings/sections/accounts.js'), I('clear-glass/src/preload/index.js'), '0.60.253 ER4 cg.accounts.update {erosProfile} (each account\'s Eros pace)'],
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.253 ER4 eros open|tabs|pace rows → /cli/eros/open, /cli/eros/tabs, PUT /cli/accounts/:id'],
+  // §AT 0.60.256 — the autofill data out and in; .gig only
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/transfer.js'), '0.60.256 AT2 _autofillExport/_autofillImport/_autofillImportUndo: IPC autofill:export|import|import:undo, /cli/autofill/export|import|import/undo'],
+  [I('clear-glass/src/autofill/transfer.js'), I('clear-glass/src/autofill/store.js'), '0.60.256 AT1 listProfiles/putProfile/replaceProfiles, getLastGig/setLastGig (the store is passed in)'],
+  [I('clear-glass/src/autofill/transfer.js'), I('clear-glass/src/site-settings/store.js'), '0.60.256 AT1 the learned fields: getAllForOrigin/set/deleteKey (passed in)'],
+  [I('clear-glass/renderer/settings/sections/autofill.js'), I('clear-glass/src/preload/index.js'), '0.60.256 AT3 cg.autofill.exportAll / importAll / importUndo / gigTemplate (Your autofill data)'],
+  [I('clear-glass/src/preload/index.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.256 AT2 IPC autofill:export | autofill:import | autofill:import:undo'],
+  [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.256 AT2 autofill export [--out] | autofill import <file>|undo rows -> HTTP :7702'],
+  [I('lib/agent-tools/tools/autofill/autofill-manage.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.256 AT2 autofill_manage export | import | importUndo -> /cli/autofill/export|import|import/undo'],
+  [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.256 AT2 autofill.export | autofill.import (undo) -> /cli/autofill/*'],
+  [I('clear-glass/src/ipc/bridge.js'), I('clear-glass/src/autofill/gig.js'), '0.60.256 AT4 gigFilename: every gig file written ends in .gig'],
   [I('clear-glass/src/copilot/bridge.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.253 ER4 eros.open | eros.tabs → /cli/eros/*'],
   [I('clear-glass/src/copilot/bridge.js'), I('lib/agent-tools/tools/nexus/update.js'), '0.60.252 UP4 update.check|apply|rollback|history and "is there an update?" → nexus.update.tool (copilot /api/tools/run)'],
 ];

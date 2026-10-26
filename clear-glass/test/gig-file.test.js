@@ -1,9 +1,10 @@
 'use strict';
-// A gig FILE (.gig.json) loads through parseGig like a written gig, and the import door is wired end to end.
+// A gig FILE (.gig) loads through parseGig like a written gig, and the import door is wired end to end. An old .gig.json loads too.
 const assert = require('assert'), fs = require('fs'), path = require('path');
 const G = require('../src/autofill/gig.js');
 const root = path.join(__dirname, '..');
-const text = fs.readFileSync(path.join(root, 'docs/gigs/nodejs-automation-scraping.gig.json'), 'utf8');
+// §AT4 0.60.256 — James, 2026-10-26: "fix it so its .gig not .gig.json." The shipped sample is the .gig (its .gig.json twin archived)
+const text = fs.readFileSync(path.join(root, 'docs/gigs/nodejs-automation-scraping.gig'), 'utf8');
 
 const r = G.parseGig(text);
 assert.strictEqual(r.ok, true); assert.deepStrictEqual(r.warnings, []);
@@ -16,7 +17,7 @@ const again = G.parseGig(JSON.stringify({ format: 'clearglass.gig/1', platform: 
 assert.deepStrictEqual(again.gig, r.gig);
 
 // over-limit and non-gig files are reported, never silently accepted
-const long = JSON.parse(text); long.title = 'I will ' + 'x'.repeat(120);
+const long = JSON.parse(JSON.stringify(r.gig)); long.title = 'I will ' + 'x'.repeat(120);
 assert.ok(G.parseGig(JSON.stringify(long)).warnings.some(w => /title/.test(w)));
 assert.strictEqual(G.parseGig('not a gig').ok, false);
 
@@ -42,4 +43,10 @@ has('src/ipc/bridge.js', "ipcMain.handle('autofill:gig:file'");
 has('src/preload/index.js', 'gigTemplate:');
 has('renderer/settings/sections/autofill.js', "btn('Download template'");
 has('renderer/browser.html', 'id="gig-template"');
+// §AT4 — every gig file is named .gig: the name is forced, and the downloads add no extension
+for (const [n, want] of [['a.gig.json', 'a.gig'], ['a.json', 'a.gig'], ['b.yaml', 'b.gig'], ['gig-template.gig', 'gig-template.gig']]) assert.strictEqual(G.gigFilename(n), want);
+assert.strictEqual(G.parseGig(JSON.stringify({ format: 'clearglass.gig/1', ...r.gig })).ok, true, 'an old .gig.json still loads');
+assert.ok(!fs.existsSync(path.join(root, 'docs/gigs/nodejs-automation-scraping.gig.json')), 'no .gig.json is shipped');
+has('src/ipc/bridge.js', 'filename: G.gigFilename(r.filename)');
+for (const f of ['renderer/settings/sections/autofill.js', 'renderer/gig-panel.js']) assert.ok(!/text\/yaml/.test(fs.readFileSync(path.join(root, f), 'utf8')), `${f} types a gig download as text/yaml`);
 console.log('gig-file.test.js: .gig YAML ok');

@@ -843,7 +843,7 @@ async function _loopDeps() {
       const b = await _phaseBuild(repo, _repoDiskDir(repo.uuid), { map: e.map, phase: e.id, startedBy: { who: `loop:${st ? st.loopId : '?'}`, whence: 'system' } });
       return b.ok ? { ok: true, runId: b.data && b.data.runId } : { ok: false, error: b.error || `refused (${b.status || '?'})` }; },
     runState: _loopRunState, land: _landByRule, close: (runId) => _closeRun(runId, { trigger: 'loop' }),
-    emit: (type, payload) => { getIdeaOS().emit(`idearium.${type}`, payload); _emitLedger(`idearium.${type}`, payload); },
+    emit: (type, payload) => { getIdeaOS().emit(type, payload); _emitLedger(type, payload); },   // 0.60.256: the loop names its events in full (idearium.loop.*), so the contract check reads them
   } };
 }
 let _loopTicking = false;

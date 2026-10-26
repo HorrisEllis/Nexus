@@ -1331,3 +1331,13 @@ upstream to the gate: a pattern is now **held as a hypothesis** until an event-l
 - **Checkable:** the merge commit (two parents, brave-cori's tip `c8739f48` among them); `CHANGELOG-0.60.255.md`;
   `tests/modules/test-self-building-loop.test.js` 5/5; `tests/modules/test-registry-draft.test.js` 6/6;
   `git ls-files '*.graph' | wc -l` unchanged from 0.60.254.
+
+### 2026-10-26 — 0.60.256: "i want to be able to import and export the data."
+- **His words:** "continue. look at autofill. i want to be able to import and export the data. have a download template button just the
+  fiverr gigs, also fix it so its .gig not .gig.json."
+- **Context:** Autofill held his profiles, the fields it learned per site and his gig, with no way to move them between installs, and the
+  one sample gig Clear Glass shipped was a `.gig.json`. He asked for a file in and out, a template for gigs only, and one file type.
+- **What it shows:** a product owner's scoping. He asked for a template for the one artefact a person writes by hand (a gig), not for
+  data an export already shows. He also held a format to one name, which made a duplicate visible, and it was archived.
+- **Checkable:** `CHANGELOG-0.60.256.md`; `tests/modules/test-autofill-transfer.test.js` 5/5 (undo restores what an import replaced);
+  `clear-glass/test/autofill-transfer-render.test.js`; `_archive/2026-10-26-gig-json/README.md`.
