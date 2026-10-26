@@ -252,18 +252,29 @@ module.exports = { matchFields, matchOne, fieldKeysOf, valueFor: _valueFor, lear
 const CONFIDENCE_RANK = { high: 3, medium: 2, low: 1 };
 
 // §0.60.216 SP2 — the page's site decides first: autofill off there → refused with the site; no profile asked → the site's profile.
-// Unset sites, or no page URL to read, behave as before.
-function _siteChoice(dom, agentId, profileId) {
+// §AF2 2026-10-26 — James, drowning in job applications: "the autofill needs to be working." The live "no autofill profile
+// 'null'" bug lived HERE: copilot/agents fill with no profileId, no site profile was set, so this returned { profileId: null }
+// and the caller did getProfile(null) → the error. Now the resolution ends at the ACTIVE profile (store.activeProfile, AF1):
+// explicit profileId wins, then the site's chosen profile, then the default/sole/first profile. Only when NO profile exists at
+// all is it an error — and a clean, actionable one ("add one in Library → Autofill"), never a null lookup (§1.2).
+function _siteChoice(dom, agentId, profileId, autofillStore) {
   let url = null; try { const wc = dom && typeof dom._getWebContents === 'function' ? dom._getWebContents(agentId) : null; url = wc && wc.getURL(); } catch (_) {}
   const site = url ? require('../site-settings/readers').autofillFor(url) : null;
-  if (!site) return { profileId };
-  if (!site.enabled) return { error: `autofill is off for ${new URL(url).origin} (its site settings, autofill.enabled)` };
-  return { profileId: profileId || site.profileId || profileId, site: true };
+  if (site && !site.enabled) return { error: `autofill is off for ${new URL(url).origin} (its site settings, autofill.enabled)` };
+  let chosen = profileId || (site && site.profileId) || null;
+  if (!chosen && autofillStore && typeof autofillStore.activeProfile === 'function') {
+    const a = autofillStore.activeProfile();
+    if (a && a.ok) chosen = a.profileId;             // the default, else the sole one, else the first (AF1)
+    else return { error: 'no autofill profile yet — add one in Library → Autofill', noProfile: true };
+  }
+  // if the store has no activeProfile (a minimal/legacy store), leave chosen as-is and let the caller's getProfile decide —
+  // the old behaviour; only a real AF1 store with ZERO profiles errors above (never a getProfile(null) lookup).
+  return { profileId: chosen, site: !!(site && site.profileId && !profileId) };
 }
 
 /** detectFields(dom, autofillStore, {agentId, profileId}) — real preview, no fill. */
 async function detectFields(dom, autofillStore, { agentId = 'default', profileId, vars, learned } = {}) {
-  const sc = _siteChoice(dom, agentId, profileId); if (sc.error) return { error: sc.error }; profileId = sc.profileId;
+  const sc = _siteChoice(dom, agentId, profileId, autofillStore); if (sc.error) return { error: sc.error, noProfile: sc.noProfile }; profileId = sc.profileId;
   const profile = autofillStore.getProfile(profileId);
   if (!profile) return { error: `no autofill profile "${profileId}"` };
   const domFields = await dom.handleQuery({ agentId, selector: 'input, select, textarea' });
@@ -277,7 +288,7 @@ async function detectFields(dom, autofillStore, { agentId = 'default', profileId
  *  §JA1 — learned is the per-site taught map ({ fieldKey → fieldType }) the caller loads from site-settings for the page's
  *  origin; it overrides the patterns so a field a platform (micro1, Mercor…) labels oddly, once picked, fills every time. */
 async function fillFields(dom, autofillStore, { agentId = 'default', profileId, minConfidence = 'medium', vars, learned } = {}) {
-  const sc = _siteChoice(dom, agentId, profileId); if (sc.error) return { error: sc.error }; profileId = sc.profileId;
+  const sc = _siteChoice(dom, agentId, profileId, autofillStore); if (sc.error) return { error: sc.error, noProfile: sc.noProfile }; profileId = sc.profileId;
   const profile = autofillStore.getProfile(profileId);
   if (!profile) return { error: `no autofill profile "${profileId}"` };
   const domFields = await dom.handleQuery({ agentId, selector: 'input, select, textarea' });
