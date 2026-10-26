@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-memory-kernel-additive-phasemap.spec::MK2_truth_and_idea_ledgers
+type: phase
+id: docs_2026-10-26-memory-kernel-additive-phasemap.spec::MK2_truth_and_idea_ledgers
+context: pipeline phase MK2_truth_and_idea_ledgers of docs/2026-10-26-memory-kernel-additive-phasemap.spec
+intent: null
+summary: MK2_truth_and_idea_ledgers (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792992204321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992204321
+lastSeenAt: 1792992204321
+fingerprint: null
+payload:
+  id: MK2_truth_and_idea_ledgers
+  map: docs/2026-10-26-memory-kernel-additive-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/ledger-store.js
+  depends_on:
+    - MK1_dedup_ledger
+  blocks: []
+  spec: null
+  graph: e9e363c77361bbb4

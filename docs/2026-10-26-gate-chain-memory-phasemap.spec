@@ -109,3 +109,7 @@ order: >-
   system writes and reads one memory with no crossing. Drones (the agent-drones map) emit gate-nodes too — a drone's steps are
   gates on the chain — but that is a consumer, not a dependency. Each phase specced again as .phase + .graph (his 2026-10-20);
   DG2 (0.60.250) foresees any crossing. Nothing built before this map.
+
+# ── ADDENDUM 2026-10-26 — superseded by the memory-kernel-additive map (§0.3, this is kept) ──
+# James: "take whats additive of both." The "chain" this proposed already exists (Versionium parentId + the contract gates' at/hashes/depends_on).
+# The real work is folding Cobalt's genuinely-additive parts into Nexus — see docs/2026-10-26-memory-kernel-additive-phasemap.spec.
