@@ -8,6 +8,15 @@ const bin = [path.join(root, '..', 'node_modules/electron/dist/electron'), path.
 const xvfb = process.platform === 'linux' ? ['/usr/bin/xvfb-run', '/usr/local/bin/xvfb-run'].find(f => fs.existsSync(f)) : null;
 assert.ok(/autofillInline === false/.test(fs.readFileSync(path.join(root, 'src/autofill/inline.js'), 'utf8')), 'Settings can switch it off');
 assert.ok(/_autofillInline\(contents\)/.test(fs.readFileSync(path.join(root, 'src/main/index.js'), 'utf8')), 'main shows it after a page loads');
+// §FQ2/FQ3 0.60.264 — his screenshots: "fill in this page" printed a driver block; the gig editor showed no chip
+const I = require('../src/autofill/inline.js'), V = require('../src/copilot/verbs.js');
+for (const m of ['fill in this page', 'fill out this form', 'fill this page', 'fill this in for me', 'fill my gig']) assert.ok(V.fillIntent(m), m);
+assert.ok(!V.fillIntent('fill the gap in my resume?'), 'a question about filling is not a fill');
+assert.deepStrictEqual(V.parseCommands('```driver {"action":"readPage"}'), [{ action: 'readPage' }], 'an unclosed block at the end is a command');
+assert.ok(I.gigEditor('https://www.fiverr.com/users/x/manage_gigs/new?wizard=0') && !I.gigEditor('https://www.fiverr.com/'));
+const gp = I.planGig([{ id: 'a', tag: 'textarea', name: 'gig[title]', label: 'Gig title' }, { id: 'b', tag: 'input', type: 'text', name: 'tags', label: 'Search tags' }, { id: 'p', tag: 'input', type: 'password', name: 'pw' }],
+  { title: 'I will build a node.js scraper', tags: ['node.js', 'scraping'], description: 'x', packages: {}, faq: [], requirements: [] });
+assert.deepStrictEqual(gp.map(g => [g.cgId, g.label, g.value]), [['a', 'Gig title', 'build a node.js scraper'], ['b', 'Search tags', 'node.js, scraping']], 'the gig editor offers the gig: "I will" is the editor\'s own');
 if (!bin || (process.platform === 'linux' && !xvfb)) { console.log('autofill-inline.test.js: Electron part SKIPPED (no Electron or xvfb)'); process.exit(0); }
 const args = [bin, '--no-sandbox', path.join(__dirname, 'autofill-inline.electron.js')];
 const r = xvfb ? spawnSync(xvfb, ['-a', ...args], { encoding: 'utf8', timeout: 90000 }) : spawnSync(args[0], args.slice(1), { encoding: 'utf8', timeout: 90000 });

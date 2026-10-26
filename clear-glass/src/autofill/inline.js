@@ -36,26 +36,40 @@ function plan(fields, profile, learned = null) {
   return out;
 }
 
+function gigEditor(url) { try { const u = new URL(url); return /(^|\.)fiverr\.com$/i.test(u.hostname) && /\/manage_gigs\b/i.test(u.pathname); } catch (_) { return false; } }
+const GIG_LABEL = { title: 'Gig title', tags: 'Search tags', description: 'Description' };
+/** planGig(fields, gig) → chip fields for the gig's parts (gig.js matchGigFields; low confidence too: he sees the value before he clicks) */
+function planGig(fields, gig) {
+  if (!Array.isArray(fields) || !gig || !gig.title) return [];
+  let m = []; try { m = require('./gig.js').matchGigFields(fields, gig); } catch (_) { return []; }
+  return m.map((x, i) => ({ n: i + 1, cgId: x.cgId, fieldType: x.key, label: GIG_LABEL[x.part] || x.key.replace(/\./g, ' '), value: String(x.value).slice(0, 1200), gig: true }));
+}
+
 async function attach(wc, { dom, store, siteSettings = null, options = null, log = () => {} } = {}) {
   if (!wc || wc.isDestroyed() || !dom || !store) return { ok: false, why: 'not wired' };
   const url = wc.getURL(); if (!/^https?:/i.test(url)) return { ok: false, why: 'not a web page' };
   try { if (options && options.get && options.get().autofillInline === false) return { ok: false, why: 'off in Settings' }; } catch (_) {}
   try { if (siteSettings && siteSettings.get(url, 'autofill.inline') === 'off') return { ok: false, why: 'off for this site' }; } catch (_) {}
   const act = store.activeProfile ? store.activeProfile() : { ok: false };
-  if (!act || !act.ok) return { ok: false, why: 'no autofill profile' };
+  // §FQ3 0.60.264 — on a Fiverr gig editor the chip offers the last gig written (title, tags, description, packages, FAQ …), James's
+  // screenshot of manage_gigs with no chip: a gig's fields are not profile fields, so the profile alone offered nothing there
+  const gig = gigEditor(url) && store.getLastGig ? store.getLastGig() : null;
+  if ((!act || !act.ok) && !gig) return { ok: false, why: 'no autofill profile' };
   const fields = await dom.queryFieldsOf(wc, { selector: 'input, select, textarea' });
   if (!Array.isArray(fields)) return { ok: false, why: (fields && fields.error) || 'no fields' };
   let learned = null; try { if (siteSettings) { const m = require('./matcher.js').learnedFromSettings(siteSettings.getAllForOrigin(url)); learned = Object.keys(m).length ? m : null; } } catch (_) {}
-  const chip = plan(fields, act.profile, learned);
+  const chip = [...(gig ? planGig(fields, gig) : []), ...(act && act.ok ? plan(fields, act.profile, learned) : [])];
+  const seen = new Set(); for (let i = chip.length - 1; i >= 0; i--) { if (seen.has(chip[i].cgId)) chip.splice(i, 1); else seen.add(chip[i].cgId); }   // a field takes one suggestion: the gig's first
+  chip.forEach((c, i) => { c.n = i + 1; });
   if (!chip.length) return { ok: false, why: 'no field here takes the profile' };
   // tag the matched fields in the page's world (where the mesh's ids live): a bare number each, no data
   const tags = chip.map(c => [c.cgId, c.n]);
   await wc.executeJavaScript(`(t => { document.querySelectorAll('[data-cg-af]').forEach(e => e.removeAttribute('data-cg-af')); const all = [...document.querySelectorAll('input, select, textarea')]; for (const [cg, n] of t) { const el = all.find(e => e.__cgId === cg); if (el) el.setAttribute('data-cg-af', String(n)); } })(${JSON.stringify(tags)})`, false);
   const src = fs.readFileSync(SRC, 'utf8');
-  const data = { fields: chip.map(({ cgId, ...rest }) => rest), profile: act.profile.label || '' };
+  const data = { fields: chip.map(({ cgId, ...rest }) => rest), profile: gig && chip.some(c => c.gig) ? `gig: ${String(gig.title).slice(0, 40)}` : ((act && act.profile && act.profile.label) || '') };
   const r = await wc.executeJavaScriptInIsolatedWorld(WORLD, [{ code: `${src}(${JSON.stringify(data)})` }], false);
   log(`[autofill-inline] ${chip.length} field(s) on ${new URL(url).host}`);
   return { ok: true, fields: chip.length, chip: r };
 }
 
-module.exports = { WORLD, plan, attach };
+module.exports = { WORLD, plan, planGig, gigEditor, attach };
