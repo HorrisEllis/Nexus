@@ -62,7 +62,7 @@ const TOOLS = [
 
   // ── DOM ────────────────────────────────────────────────────────────────
   { name: 'dom.query',        cat: 'dom',      desc: 'Query live DOM tree by selector or get full tree', params: { selector: 'string?', tree: 'boolean?' } },
-  { name: 'dom.mutate',       cat: 'dom',      desc: 'Mutate DOM node — text, html, style, attrs, remove', params: { selector: 'string', mutation: 'object' } },
+  { name: 'dom.mutate',       cat: 'dom',      desc: 'Mutate DOM node — value, text, html, style, attrs, remove. via:"eros" TYPES the value through ErosmancerOS like a person (at the account\'s pace) instead of setting it', params: { selector: 'string', mutation: 'object', via: 'string?' } },
   { name: 'dom.pick',         cat: 'dom',      desc: 'Register picked element as named hook', params: { selector: 'string', name: 'string?' } },
   { name: 'dom.tokens',       cat: 'dom',      desc: 'Scan page for LLM API patterns and token usage', params: {} },
   { name: 'dom.highlight',    cat: 'dom',      desc: 'Highlight elements matching selector', params: { selector: 'string', color: 'string?' } },
@@ -175,6 +175,14 @@ const TOOLS = [
   { name: 'opportunity.prepare_reply', cat: 'nexus', desc: 'A Fiverr/Upwork lead: open its message and type the approved reply into the box — stops at READY, never sends', params: { id: 'string', kind: 'string?' } },
   { name: 'opportunity.submit', cat: 'nexus',  desc: 'Submit a READY application (refused for agents unless his policy allows it; ToS platforms need his acknowledgement)', params: { id: 'string' } },
   { name: 'opportunity.followups', cat: 'nexus', desc: 'Submitted applications past their follow-up day, each with a drafted follow-up', params: {} },
+  // §UP4 0.60.252 — James: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
+  { name: 'update.check',     cat: 'nexus',    desc: 'Is there a newer Nexus on GitHub: this version vs GitHub\'s, each release in between with James\'s words, what it changes. Show it to him.', params: {} },
+  { name: 'update.apply',     cat: 'nexus',    desc: 'Bring in the newer Nexus (fast-forward, his data files set aside first). Only with confirm:true after he said yes. Never restart — say what to restart.', params: { confirm: 'boolean' } },
+  { name: 'update.rollback',  cat: 'nexus',    desc: 'Undo the last update. Only with confirm:true after he said yes.', params: { confirm: 'boolean' } },
+  { name: 'update.history',   cat: 'nexus',    desc: 'Every update and rollback this install made', params: {} },
+  // §ER2 0.60.253 — James: "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator."
+  { name: 'eros.open',        cat: 'browser',  desc: 'Open a page for ErosmancerOS to drive (human-paced input): via snowflake (through the Snowflake transport), account (signed in as accountId, at its pace) or plain. Returns the agentId to act on.', params: { url: 'string', via: 'string?', accountId: 'string?' } },
+  { name: 'eros.tabs',        cat: 'browser',  desc: 'ErosmancerOS\'s tabs, each with the Clear Glass agent it is and its pace', params: {} },
   { name: 'opportunity.prepare', cat: 'nexus', desc: 'Open the application page and fill it (autofill + answer bank + drafts) — stopsbefore submit', params: { id: 'string' } },
 ];
 

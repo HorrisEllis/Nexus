@@ -3642,6 +3642,14 @@ function openArchiveImport() {
   if (!w) toast('the archive import window was blocked — allow pop-ups for idearium', 'err');
   return w;
 }
+// §0.60.252 UP4 — James: "can we make a tool for the copilot (remmber copilot is meant to be a hat.) like a update tool using github?"
+// The Updates page (ui/update.html): /update in the CLI.
+function openUpdate() {
+  if (!API_BASE) { toast('idearium is offline — the Updates page is served by it', 'err'); return null; }
+  const w = window.open(`${API_BASE}/update.html`, 'idearium-update', 'width=980,height=860');
+  if (!w) toast('the Updates window was blocked — allow pop-ups for idearium', 'err');
+  return w;
+}
 // §0.39.290 IL1 — James: "my goal is to build these, eventually. im, the idea guy" · "need a way to import these and
 // convert them." The spec library (ui/spec-library.html): a zip of specs → ideas with their specs.
 let _specLibraryWin = null;
@@ -4874,6 +4882,7 @@ const AGENT_CLI_HELP = [
   '  /history [n]   /export   /import <path>   /clear',
   '',
   'NEXUS ITSELF',
+  '  /update                        is there a newer Nexus on GitHub — your words per release, Update / Roll back / Restart (also /updates)',
   '  /import-archives               drop your NEXUS release zips (or a folder) — each becomes a dated commit of NEXUS history (also /archives, /archive)',
   '',
   'CODE IT WRITES',
@@ -4885,7 +4894,7 @@ const AGENT_CLI_HELP = [
 ].join('\n');
 const AGENT_CLI_ALIASES = { '?': 'help', h: 'help', st: 'status', t: 'tools', tool: 'tools', dbg: 'debug', hist: 'history', ctx: 'context', diag: 'diagnose', find: 'recall', search: 'recall', mem: 'recall' };
 const AGENT_CLI_COMMANDS = ['help', 'debug', 'tools', 'scope', 'graph', 'context', 'run', 'test', 'diagnose', 'status', 'provider', 'model', 'hat', 'forge',
-  'memory', 'learn', 'forget', 'history', 'export', 'import', 'clear', 'mode', 'injects', 'inject', 'open', 'apply', 'reject', 'revert', 'recall', 'atlas', 'import-archives'];
+  'memory', 'learn', 'forget', 'history', 'export', 'import', 'clear', 'mode', 'injects', 'inject', 'open', 'apply', 'reject', 'revert', 'recall', 'atlas', 'import-archives', 'update'];
 /** The closest known command to a typo (edit distance ≤ 2), or null. */
 function _agentClosest(cmd) {
   const d = (a, b) => { const m = [...Array(b.length + 1).keys()]; for (let i = 1; i <= a.length; i++) { let prev = m[0]; m[0] = i;
@@ -4931,6 +4940,9 @@ async function agentCommand(line) {
     switch ((cmd || '').toLowerCase()) {
       case 'help': case '?': _cli(uuid, AGENT_CLI_HELP); break;
       // §0.39.283 N30 — the archive import drop box
+      case 'update': case 'updates': {   // §0.60.252 UP4
+        _cli(uuid, openUpdate() ? 'opened Updates — what is newer on GitHub, in your words per release; Update and Roll back each ask first' : 'could not open the Updates window'); break;
+      }
       case 'import-archives': case 'archives': case 'archive': {
         _cli(uuid, openArchiveImport() ? 'opened the archive import — drop your NEXUS zips (or a folder); "Check the order" first, then Import' : 'could not open the archive import window'); break;
       }

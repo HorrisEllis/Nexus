@@ -198,7 +198,7 @@ class CoPilotBridge {
       }
     }
     // §AD3 0.60.251 — "fill this in for me", "pick github", "record a macro": the engine runs, no model (his "Deterministic first")
-    const job = this._driver && this.settings.get().copilotJobVerbs !== false ? (V.fillIntent(message) || V.pickIntent(message) || V.recordIntent(message)) : null;
+    const job = this._driver && this.settings.get().copilotJobVerbs !== false ? (V.fillIntent(message) || V.pickIntent(message) || V.recordIntent(message) || V.updateIntent(message)) : null;
     if (job) {
       const text = await this._runJobVerb(job, agentId, pageUrl);
       if (remember) this._remember(agentId, 'assistant', text, { via: 'autofill' });
@@ -315,7 +315,7 @@ class CoPilotBridge {
     const V = require('./verbs.js');
     let url = pageUrl;
     if (!url) { try { const u = await this._driver.exec({ action: 'getUrl', agentId }); url = (u && (u.url || u.result)) || ''; } catch (_) {} }
-    const action = job.kind === 'fill' ? (V.isGigEditor(url) ? 'autofill.gig' : 'autofill.fill') : job.kind === 'pick' ? 'autofill.pick' : `macro.${job.kind}`;
+    const action = job.kind === 'fill' ? (V.isGigEditor(url) ? 'autofill.gig' : 'autofill.fill') : job.kind === 'pick' ? 'autofill.pick' : job.kind === 'update' ? 'update.check' : `macro.${job.kind}`;
     const j = { ...job, gig: action === 'autofill.gig' };
     let r;
     try { r = await this._executeCommand({ action, agentId, ...(job.fieldType ? { fieldType: job.fieldType } : {}), ...(job.name ? { name: job.name } : {}) }, agentId); }
@@ -376,6 +376,8 @@ class CoPilotBridge {
     if (action === 'autofill.profiles') return this._ipcGet('/cli/autofill/profiles');
     if (action === 'autofill.detect') return this._ipcPost('/cli/autofill/detect', { agentId: aid, profileId: cmd.profileId || null });
     if (action === 'autofill.fill') return this._ipcPost('/cli/autofill/fill', { agentId: aid, profileId: cmd.profileId || null, minConfidence: cmd.minConfidence || 'medium', vars: cmd.vars || undefined });
+    if (action === 'eros.open') return this._ipcPost('/cli/eros/open', { url: cmd.url, via: cmd.via || (cmd.accountId ? 'account' : 'plain'), accountId: cmd.accountId || null }, 120000);   // §ER2
+    if (action === 'eros.tabs') return this._ipcGet('/cli/eros/tabs');
     if (action === 'macro.list') return this._ipcGet('/cli/macros');
     if (action === 'macro.get') return this._ipcGet(`/cli/macros/${encodeURIComponent(cmd.name || '')}`);
     if (action === 'macro.run') return this._ipcPost(`/cli/macros/${encodeURIComponent(cmd.name || '')}/run`, { agentId: aid, params: cmd.params || {}, skipSnapshot: !!cmd.skipSnapshot }, 5 * 60000);
@@ -386,8 +388,8 @@ class CoPilotBridge {
     if (action === 'macro.record.status') return this._ipcGet(`/cli/macros/record/status?agentId=${encodeURIComponent(aid)}`);
     if (action === 'invoke' || action === 'ipc') return this._ipcPost('/cli/invoke', { channel: cmd.channel, args: cmd.args, agentId: aid });
     if (action === 'channels') return this._ipcGet(`/cli/invoke${cmd.query ? `?q=${encodeURIComponent(cmd.query)}` : ''}`);
-    if (/^(opportunity|context|learned)\./.test(action) || /\.tool$/.test(action)) {
-      const map = { opportunity: 'nexus.opportunity.tool', context: 'nexus.context.tool', learned: 'clearglass.learned.tool' };
+    if (/^(opportunity|context|learned|update)\./.test(action) || /\.tool$/.test(action)) {
+      const map = { opportunity: 'nexus.opportunity.tool', context: 'nexus.context.tool', learned: 'clearglass.learned.tool', update: 'nexus.update.tool' };   // §UP4 0.60.252 update
       const [ns, sub] = action.split('.');
       const { action: _a, agentId: _id, ...args } = cmd;
       return this._runAgentTool(map[ns] || action, map[ns] ? { action: sub, ...args } : args, aid);

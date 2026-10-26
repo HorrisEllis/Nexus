@@ -1,4 +1,6 @@
 'use strict';
+// §ER2 0.60.253 — ErosmancerOS's behaviour profiles (erosmancer-os src/behavior), the paces an account can be given
+const EROS_PROFILES = Object.freeze(['precise', 'cautious', 'exploratory', 'turbo']);
 /**
  * src/options/store.js — Nexus Options Store
  * UUID: cg-options-store-v1-0000-0000-000000000011
@@ -341,10 +343,13 @@ class NexusOptions {
   updateAccount(id, updates = {}) {
     const existing = this.data.accounts?.[id];
     if (!existing) return { error: `no account "${id}"` };
+    // §ER2 0.60.253 — the pace ErosmancerOS moves at in this account's pages; null clears it (Eros's own default)
+    if (updates.erosProfile !== undefined && updates.erosProfile !== null && !EROS_PROFILES.includes(updates.erosProfile)) return { error: `erosProfile must be one of ${EROS_PROFILES.join(', ')} (or null)` };
     const updated = {
       ...existing,
       ...(updates.label !== undefined ? { label: updates.label } : {}),
       ...(updates.agentKeys !== undefined ? { agentKeys: [...new Set(updates.agentKeys)] } : {}),
+      ...(updates.erosProfile !== undefined ? { erosProfile: updates.erosProfile } : {}),
       updatedAt: Date.now(),
     };
     this.data = { ...this.data, accounts: { ...this.data.accounts, [id]: updated } };

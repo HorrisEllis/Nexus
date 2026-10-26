@@ -283,6 +283,26 @@ const DOM_OBSERVER_SCRIPT = `
       return { ok: true, nodeId: cgId };
     },
 
+    // §ER3 0.60.253 — before ErosmancerOS types a value like a person: the field in view, focused and empty; its centre in viewport pixels
+    prepareType(cgId) {
+      const el = [...document.querySelectorAll('*')].find(e => e.__cgId === cgId);
+      if (!el) return { error: 'Element not found' };
+      const tag = el.tagName.toLowerCase(), editable = el.isContentEditable;
+      if (!['input', 'textarea'].includes(tag) && !editable) return { error: 'a ' + tag + ' cannot be typed into (an input, a textarea or an editable element can)' };
+      if (el.disabled || el.readOnly) return { error: 'the field is disabled or read-only' };
+      el.scrollIntoView({ block: 'center', inline: 'center' });
+      el.focus();
+      if (editable) el.innerText = '';
+      else {
+        const proto = tag === 'textarea' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+        const set = Object.getOwnPropertyDescriptor(proto, 'value')?.set; if (set) set.call(el, ''); else el.value = '';
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      const r = el.getBoundingClientRect();
+      if (!(r.width > 0 && r.height > 0)) return { error: 'the field is not visible' };
+      return { ok: true, x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2), tag };
+    },
+
     highlight(selector, color = '#00f5ff') {
       document.querySelectorAll('[data-cg-highlight]').forEach(e => {
         e.style.outline = '';
@@ -413,15 +433,38 @@ class DomArchaeology {
   }
 
   // ── Mutate ────────────────────────────────────────────────────────────
-  async handleMutate({ agentId = 'default', cgId, selector, mutation }) {
+  async handleMutate({ agentId = 'default', cgId, selector, mutation, via = 'native', value, text }) {
     const wc = this._getWebContents(agentId);
     if (!wc) return { error: 'No webcontents' };
+    // §ER3 0.60.253 — found while hooking Eros in: browser_action documents dom_mutate as {selector, value} and sends exactly that, but
+    // this read only `mutation`, so the page got mutate(cgId, undefined), threw, and the agent's call timed out (macro dom_mutate
+    // steps too). The documented shorthand is a mutation; a call with neither is refused with why.
+    if (!mutation && (value !== undefined || text !== undefined)) mutation = { ...(value !== undefined ? { value: String(value) } : {}), ...(text !== undefined ? { text: String(text) } : {}) };
+    if (!mutation || typeof mutation !== 'object') return { error: 'nothing to change: give mutation {value|text|html|style|attrs|remove} (or value / text)' };
 
     if (!cgId && selector) {
       // Resolve selector → cgId
       const el = await wc.executeJavaScript(`window.__cgDomMesh?.queryOne(${JSON.stringify(selector)})`, true);
       if (!el) return { error: `Element not found: ${selector}` };
       cgId = el.id;
+    }
+
+    // §ER3 0.60.253 — James, 2026-10-25: "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator." via 'eros':
+    // a value is TYPED by ErosmancerOS (a curved pointer path, a click, one character at a time, at the page's account pace) instead
+    // of set. Only the value is typed; the rest of the mutation (text, html, style, attrs, remove) is applied natively after it.
+    // Eros unavailable → the error says so: nothing is set instead, silently (§1.2).
+    if (via === 'eros' && mutation && typeof mutation.value === 'string') {
+      if (typeof this.erosInput !== 'function') return { error: 'ErosmancerOS is not wired into this Clear Glass (via "native" sets the value instead)' };
+      const at = await wc.executeJavaScript(`window.__cgDomMesh?.prepareType(${JSON.stringify(cgId)})`, true);
+      if (!at || at.error) return { error: (at && at.error) || 'the page has no DOM mesh to place the field' };
+      let typed;
+      try { typed = await this.erosInput(agentId, wc.getURL(), { x: at.x, y: at.y, action: 'type', text: mutation.value }); }
+      catch (e) { return { error: `ErosmancerOS could not type it: ${e.message}`, via: 'eros' }; }
+      const { value: _v, ...rest } = mutation;
+      const after = Object.keys(rest).length ? await wc.executeJavaScript(`window.__cgDomMesh?.mutate(${JSON.stringify(cgId)}, ${JSON.stringify(rest)})`, true) : null;
+      const result = { ok: true, nodeId: cgId, via: 'eros', typed: mutation.value.length, profile: typed && typed.profile, at: { x: at.x, y: at.y }, ...(after && after.error ? { rest: after } : {}) };
+      this.sse.emit('dom.mutated', { agentId, cgId, mutation: { ...mutation, value: `(${mutation.value.length} chars typed)` }, result, ts: Date.now() });
+      return result;
     }
 
     const result = await wc.executeJavaScript(

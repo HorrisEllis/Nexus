@@ -633,6 +633,7 @@ let _wireServer = null;
 // §0.39.279 — the driver's "pointer via eros" (src/driver/index.js _pointer) reaches ErosmancerOS through the wire's
 // own tab resolver; set by _startWire, read by the driver. Null until the wire is up.
 let _erosInputFn = null;
+let _erosOpenFn = null, _erosTabsFn = null;   // §ER2 0.60.253 — set by _startWire, exposed on the IPC bridge (/cli/eros/open, /cli/eros/tabs)
 
 async function _startWire() {
   // ── ErosmancerOS proxy helper — defined first, needed for /api/connect ──
@@ -711,33 +712,59 @@ async function _startWire() {
   // erosmancer-os/src/api/server.ts. Real contract is /api/execute with a
   // registered node uuid, gated behind an attached CDP session. This inline
   // copy now does the same tab-resolution + node-registration flow.
-  const _agentTabCache = new Map(); // agentId → { tabId, attached }
+  // §ER1 0.60.253 — James, 2026-10-25: "can you hook erosmanceros into snowflake, accounts manager, and the dom mutator." The tab
+  // used to be the one whose url matched, else THE FIRST TAB, cached per agent forever (a wrong page after any navigation). Now
+  // the agent's own webContents says which target it is (src/eros/tab-match.js): url + title, a tie broken by a marker stamped
+  // into the page; the cache is re-checked against the page's url on every call; no match is an error naming the agent.
+  const TM = require('../eros/tab-match');
+  const _agentTabCache = new Map();   // agentId → { tabId, url, profile }
+  const _profileOf = (agentId) => {   // §ER2 — an account's window (acct-<id>) moves at that account's pace
+    const m = /^acct-(.+)$/.exec(String(agentId || '')); if (!m || !nexusOptions) return null;
+    try { const a = nexusOptions.getAccount(m[1]); return (a && a.erosProfile) || null; } catch (_) { return null; }
+  };
+  const _resolveErosTab = (agentId) => TM.resolveTab({ agentId, wc: driver && driver._getWebContents(agentId), eros: _proxyEros, cache: _agentTabCache, profileOf: _profileOf });
 
-  async function _resolveErosTab(agentId, currentUrl) {
-    const cached = _agentTabCache.get(agentId);
-    if (cached) return cached;
-
-    const tabsResp = await _proxyEros('GET', '/api/tabs', null, 5000);
-    const tabs = (tabsResp.body && tabsResp.body.tabs) || [];
-    let match = currentUrl ? tabs.find(t => t.url === currentUrl) : null;
-    if (!match && tabs.length) match = tabs[0];
-    if (!match) return null;
-
-    const attachResp = await _proxyEros('POST', `/api/tabs/${match.targetId}/attach`, { role: 'primary' }, 8000);
-    if (attachResp.status >= 400) return null;
-
-    const entry = { tabId: match.targetId, attached: true };
-    _agentTabCache.set(agentId, entry);
-    return entry;
-  }
-
-  _erosInputFn = async (agentId, currentUrl, { x, y, action = 'click', text, deltaY } = {}) => {
+  _erosInputFn = async (agentId, _currentUrl, { x, y, action = 'click', text, deltaY } = {}) => {
     if (erosSupervisor && !erosSupervisor.connected) { try { await erosSupervisor.connect({ tries: 2 }); } catch (_) {} }
-    const tab = await _resolveErosTab(agentId, currentUrl);
-    if (!tab || !tab.tabId) throw new Error('No ErosmancerOS tab for this agent — is ErosmancerOS connected to Clear Glass (Settings → ErosmancerOS)?');
-    const up = await _proxyEros('POST', '/api/input', { tabId: tab.tabId, x, y, action, text, deltaY }, 60000);
+    const tab = await _resolveErosTab(agentId);
+    if (!tab || !tab.tabId) throw new Error((tab && tab.error) || 'No ErosmancerOS tab for this agent — is ErosmancerOS connected to Clear Glass (Settings → ErosmancerOS)?');
+    const up = await _proxyEros('POST', '/api/input', { tabId: tab.tabId, x, y, action, text, deltaY, ...(tab.profile ? { profile: tab.profile } : {}) }, 60000);
     if (up.status >= 400) throw new Error((up.body && up.body.error) || `ErosmancerOS /api/input ${up.status}`);
-    return up.body;
+    return { ...up.body, tabId: tab.tabId, profile: tab.profile || 'default' };
+  };
+
+  // §ER2 0.60.253 — Eros gets its pages from Clear Glass's own doors (ER_D1), never its own anonymous Target.createTarget: Snowflake's
+  // forced session (_netOpenVia), an account's own session (acct-<id>), or a plain agent window. Then it attaches to exactly that page.
+  _erosOpenFn = async ({ url, via = 'plain', accountId = null } = {}) => {
+    let u; try { u = new URL(String(url || '')); } catch (_) { return { ok: false, error: `not a url: ${url}` }; }
+    if (!/^https?:$/.test(u.protocol)) return { ok: false, error: 'ErosmancerOS opens http and https pages only' };
+    let agentId;
+    if (via === 'snowflake') {
+      if (!ipcBridge || typeof ipcBridge._netOpenVia !== 'function') return { ok: false, error: 'the Snowflake door is not up yet' };
+      const r = await ipcBridge._netOpenVia(u.href); if (!r || !r.ok) return { ok: false, error: `Snowflake: ${(r && r.error) || 'did not open'}` };
+      agentId = r.agentId;
+    } else if (via === 'account') {
+      const acc = accountId && nexusOptions && nexusOptions.getAccount(accountId);
+      if (!acc) return { ok: false, error: `no account "${accountId}" (Settings → Accounts lists them)` };
+      agentId = `acct-${accountId}`; await openAgentWindow({ agentId, url: u.href });
+    } else if (via === 'plain') { agentId = `eros-${randomUUID().slice(0, 8)}`; await openAgentWindow({ agentId, url: u.href }); }
+    else return { ok: false, error: 'via must be snowflake, account or plain' };
+    if (erosSupervisor && !erosSupervisor.connected) { try { await erosSupervisor.connect({ tries: 2 }); } catch (_) {} }
+    let tab = null, last = 'the page did not load';
+    for (let i = 0; i < 30 && !(tab && tab.tabId); i++) {   // the page and its Eros target both have to exist: up to ~30 s
+      await new Promise(r => setTimeout(r, 1000));
+      const wc = driver && driver._getWebContents(agentId);
+      if (!wc || (wc.isLoading && wc.isLoading()) || !/^https?:/.test(wc.getURL() || '')) continue;
+      tab = await _resolveErosTab(agentId); if (tab && tab.error) { last = tab.error; tab = null; }
+    }
+    if (!tab) return { ok: false, agentId, via, error: `opened, but ErosmancerOS has no tab for it: ${last}` };
+    return { ok: true, agentId, via, accountId: via === 'account' ? accountId : null, tabId: tab.tabId, url: tab.url, profile: tab.profile || 'default' };
+  };
+  _erosTabsFn = async () => {
+    const r = await _proxyEros('GET', '/api/tabs', null, 5000);
+    if (!r.ok) return { ok: false, error: `ErosmancerOS is not answering: ${r.error || r.status}` };
+    const byTab = new Map([..._agentTabCache.values()].map(e => [e.tabId, e]));
+    return { ok: true, tabs: ((r.body && r.body.tabs) || []).map(t => ({ ...t, agentId: byTab.has(t.targetId) ? byTab.get(t.targetId).agentId : null, profile: byTab.has(t.targetId) ? (byTab.get(t.targetId).profile || 'default') : null })) };
   };
 
   // ── HTTP server ──────────────────────────────────────────────────────────
@@ -1060,15 +1087,15 @@ async function _startWire() {
         const { action, agentId, selector, tag = 'div', text, url, code, currentUrl, ...args } = parsed;
 
         if (action === 'navigate') {
-          const tab = await _resolveErosTab(agentId, currentUrl);
-          if (!tab?.tabId) { res.writeHead(502); return res.end(JSON.stringify({ ok: false, error: 'No matching Eros CDP target — is remote-debugging-port open and is Eros connected to it?' })); }
+          const tab = await _resolveErosTab(agentId);   // §ER1 — the agent's own page, or the reason there is none
+          if (!tab?.tabId) { res.writeHead(502); return res.end(JSON.stringify({ ok: false, error: (tab && tab.error) || 'No matching Eros CDP target — is remote-debugging-port open and is Eros connected to it?' })); }
           const up = await _proxyEros('POST', '/api/execute', { action: 'navigate', tabId: tab.tabId, payload: url }, 30000);
           res.writeHead(up.status);
           return res.end(JSON.stringify(up.body));
         }
 
-        const tab = await _resolveErosTab(agentId, currentUrl);
-        if (!tab) { res.writeHead(502); return res.end(JSON.stringify({ ok: false, error: 'No matching Eros CDP target for this agent' })); }
+        const tab = await _resolveErosTab(agentId);
+        if (!tab || !tab.tabId) { res.writeHead(502); return res.end(JSON.stringify({ ok: false, error: (tab && tab.error) || 'No matching Eros CDP target for this agent' })); }
 
         if (action === 'register') {
           const reg = await _proxyEros('POST', '/api/nodes', { tag, tabId: tab.tabId, selector }, 8000);
@@ -1247,6 +1274,7 @@ async function bootstrap() {
   // 6. ClearDriver — sovereign automation, no Playwright
   driver = new ClearDriver({ ctxMgr, dom, vault, sse: { emit: (t, d) => emit(t, d) } });
   driver.erosInput = (...a) => (_erosInputFn ? _erosInputFn(...a) : Promise.reject(new Error('the ErosmancerOS wire is not started yet')));
+  dom.erosInput = driver.erosInput;   // §ER3 0.60.253 — the DOM mutator types through ErosmancerOS when asked (via: 'eros')
 
   // 7. URL listener — glob/regex per-agent request hooks
   urlListener = new UrlListener({ sse: { emit: (t, d) => emit(t, d) }, ctxMgr });
@@ -1744,6 +1772,9 @@ async function bootstrap() {
     copilot,
     loginPortal,
   });
+  // §ER2 0.60.253 — the wire's Eros doors, reached by agents at /cli/eros/* (set late: the wire starts before the bridge)
+  ipcBridge.erosOpen = (b) => (_erosOpenFn ? _erosOpenFn(b || {}) : Promise.resolve({ ok: false, error: 'the ErosmancerOS wire is not started yet' }));
+  ipcBridge.erosTabs = () => (_erosTabsFn ? _erosTabsFn() : Promise.resolve({ ok: false, error: 'the ErosmancerOS wire is not started yet' }));
   await ipcBridge.start();
   try { ipcBridge.installSiteReaders(); } catch (e) { console.warn(`[site-settings] the features read no site values (${e.message}); they behave as before`); }   // SP2 (0.60.216)
   // §5.2 Contract IS the bridge — serve /contract so orchestrator can verify us

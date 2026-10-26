@@ -113,6 +113,9 @@ function recordIntent(message) {
   const m = REC_START_RE.exec(t); if (m) return { kind: 'record.start', name: m[1] ? m[1].trim() : null };
   return REC_STOP_RE.test(t) ? { kind: 'record.stop' } : null;
 }
+// §UP4 0.60.252 — "is there an update?", "check for updates", "update nexus": the check runs (never the apply — that is his yes, UP_D2)
+const UPDATE_RE = new RegExp(`${OPENER}(?:(?:check\\s+for|any|are\\s+there(?:\\s+any)?|is\\s+there\\s+an?)\\s+)?(?:new\\s+)?updates?(?:\\s+(?:for\\s+)?nexus)?[\\s?.!]*$|${OPENER}update\\s+nexus[\\s?.!]*$`, 'i');
+function updateIntent(message) { return UPDATE_RE.test(String(message || '')) ? { kind: 'update' } : null; }
 // a Fiverr gig editor (create or edit): fiverr.com/users/<you>/manage_gigs/…
 function isGigEditor(url) { try { const u = new URL(url); return /(^|\.)fiverr\.com$/i.test(u.hostname) && /\/manage_gigs\b/i.test(u.pathname); } catch (_) { return false; } }
 
@@ -137,6 +140,12 @@ function describeJob(job, r = {}) {
     const f = r.fill || {};
     return `${r.origin}: "${r.fieldKey}" is ${r.fieldType} from now on${r.macro ? `; macro "${r.macro.name || r.macro}" updated` : ''}.${f.filled ? ` Filled again: ${f.filled.length}.` : ''}`;
   }
+  if (job.kind === 'update') {
+    if (r.ok === false) return `Could not check for an update: ${r.error}`;
+    if (r.upToDate) return `Nexus ${r.current} is up to date with GitHub.`;
+    const rel = (r.releases || []).slice(0, 6).map(x => `${x.version}${x.quote ? ` — "${String(x.quote).slice(0, 120)}"` : ''}`).join('\n');
+    return `Nexus ${r.current} → ${r.latest} on GitHub (${r.behind} commit(s)).\n${rel}${(r.plan && r.plan.blocks || []).length ? `\nIt would refuse: your edits to ${r.plan.blocks.map(b => b.file).slice(0, 4).join(', ')}.` : ''}${r.can ? `\n${r.can}` : '\nSay "yes, update" and I will apply it, or open the Updates page.'}`;
+  }
   if (job.kind === 'record.start') return r.ok === false ? `Not recording: ${r.error}` : `Recording "${r.name || 'macro'}" — do the steps, then say "stop recording".`;
   if (job.kind === 'record.stop') return r.ok === false ? `Not stopped: ${r.error}` : `Recorded ${(r.steps || []).length} steps${(r.params || []).length ? ` (params: ${r.params.join(', ')})` : ''}${r.file ? ` → ${r.file}` : ''}. Say "save it as a macro called …" or open it in Settings › Macros.`;
   return JSON.stringify(r).slice(0, 400);
@@ -151,4 +160,4 @@ function label(raw) {
   return `[driver: ${what}${arg ? ` ${String(arg).slice(0, 60)}` : ''}]`;
 }
 
-module.exports = { parseBlock, normalize, parseCommands, browseIntent, archiveImportIntent, screenIntent, nexusIntent, fillIntent, pickIntent, recordIntent, isGigEditor, describeJob, label, ALIASES };
+module.exports = { parseBlock, normalize, parseCommands, browseIntent, archiveImportIntent, screenIntent, nexusIntent, fillIntent, pickIntent, recordIntent, updateIntent, isGigEditor, describeJob, label, ALIASES };

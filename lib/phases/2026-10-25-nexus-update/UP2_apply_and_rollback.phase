@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP2_apply_and_rollback
+context: pipeline phase UP2_apply_and_rollback of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP2_apply_and_rollback (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792967338918
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792967338918
+lastSeenAt: 1792967338918
+fingerprint: null
+payload:
+  id: UP2_apply_and_rollback
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/nexus-update.js
+  depends_on:
+    - UP1_check_and_plan
+    - UP_D2_who_applies
+    - UP_D3_runtime_data
+  blocks: []
+  spec: null
+  graph: 081fad4a249de997

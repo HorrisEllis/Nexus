@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-nexus-update-phasemap.spec::UP4_the_tool_on_the_hats_and_the_page
+type: phase
+id: docs_2026-10-25-nexus-update-phasemap.spec::UP4_the_tool_on_the_hats_and_the_page
+context: pipeline phase UP4_the_tool_on_the_hats_and_the_page of docs/2026-10-25-nexus-update-phasemap.spec
+intent: null
+summary: UP4_the_tool_on_the_hats_and_the_page (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1792967338921
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792967338921
+lastSeenAt: 1792967338921
+fingerprint: null
+payload:
+  id: UP4_the_tool_on_the_hats_and_the_page
+  map: docs/2026-10-25-nexus-update-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/agent-tools/tools/nexus/update.js
+    - lib/hat-seed.js
+    - clear-glass/src/copilot/tools.js
+    - clear-glass/src/copilot/bridge.js
+    - idearium/ui/update.html
+    - idearium/ui/js/app.js
+    - loom/maps/economy-map.js
+    - tests/modules/test-nexus-update.test.js
+    - tests/modules/run-all.js
+  depends_on:
+    - UP3_routes_and_rows
+  blocks: []
+  spec: null
+  graph: eaca3c89567febf4

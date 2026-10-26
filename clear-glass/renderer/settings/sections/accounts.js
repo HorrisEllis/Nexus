@@ -157,8 +157,17 @@
       toast(r.prefill ? 'Sign-in page opened with your saved details filled in.' : 'Sign-in page opened in this account\u2019s own session.');
       ctx.startPolling();
     }), 'sm primary');
+    // §ER2 0.60.253 — James: "can you hook erosmanceros into … accounts manager". The pace ErosmancerOS moves at in this account's pages
+    const pace = h('select', { class: 'eros-pace', 'aria-label': 'ErosmancerOS pace', title: 'How ErosmancerOS moves in this account\u2019s pages: its pointer and its keys' },
+      ...['', 'precise', 'cautious', 'exploratory', 'turbo'].map(v => h('option', { value: v, text: v ? `Eros: ${v}` : 'Eros: default' })));
+    pace.value = acc.erosProfile || '';
+    pace.addEventListener('change', async () => {
+      const v = pace.value || null;
+      try { await call(() => cg.accounts.update(acc.id, { erosProfile: v }), 'eros pace'); acc.erosProfile = v; toast(`ErosmancerOS moves at ${v || 'its default'} pace in \u201C${acc.label}\u201D\u2019s pages`); }
+      catch (e) { fail(e); pace.value = acc.erosProfile || ''; }
+    });
     return h('div', { class: 'acct' },
-      h('div', { class: 'name' }, star, nameIn, statusSlot, ...takeBtns),
+      h('div', { class: 'name' }, star, nameIn, statusSlot, pace, ...takeBtns),
       h('div', { class: 'acts' },
         signIn,
         // §0.39.265 — straight into the agent mesh as this account (its own

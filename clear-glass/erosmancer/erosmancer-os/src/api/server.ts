@@ -366,7 +366,11 @@ const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 const _lastPointer = new Map<string, { x: number; y: number }>();
 app.post("/api/input", async (req, res) => {
   if (!requireOS(res)) return;
-  const { tabId, x, y, action = "click", text, deltaY = 300 } = req.body ?? {};
+  const { tabId, x, y, action = "click", text, deltaY = 300, profile } = req.body ?? {};
+  // §ER2 Nexus 0.60.253 — the account's pace (Clear Glass sends the account's erosProfile): every wait below scales by it
+  const PACE: Record<string, number> = { precise: 1, cautious: 1.6, exploratory: 1.25, turbo: 0.4 };
+  if (profile !== undefined && !(profile in PACE)) { res.status(400).json({ ok: false, error: `profile must be one of ${Object.keys(PACE).join(", ")}` }); return; }
+  const k = PACE[profile as string] ?? 1;
   if (!tabId) { res.status(400).json({ ok: false, error: "tabId required" }); return; }
   if (![x, y].every(v => typeof v === "number" && Number.isFinite(v))) { res.status(400).json({ ok: false, error: "x and y (numbers, viewport pixels) required" }); return; }
   if (!["move", "click", "double", "right", "scroll", "type"].includes(action)) { res.status(400).json({ ok: false, error: `action must be move|click|double|right|scroll|type` }); return; }
@@ -375,7 +379,7 @@ app.post("/api/input", async (req, res) => {
     let sid = getSession(tabId);
     if (!sid) sid = await os!.attachTab(tabId);
     const cdp = <T = any>(method: string, params?: Record<string, unknown>) => os!.bridge.send<T>(method, params, sid);
-    const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
+    const wait = (ms: number) => new Promise(r => setTimeout(r, ms * k));
     const path = curvedPath(_lastPointer.get(tabId) ?? null, { x, y }, action === "move" ? 18 : 12);
     for (const p of path) { await cdp("Input.dispatchMouseEvent", { type: "mouseMoved", x: p.x, y: p.y, button: "none" }); await wait(8 + Math.random() * 10); }
     _lastPointer.set(tabId, { x, y });
@@ -389,8 +393,8 @@ app.post("/api/input", async (req, res) => {
     else if (action === "right") await press("right", 1);
     else if (action === "scroll") await cdp("Input.dispatchMouseEvent", { type: "mouseWheel", x, y, deltaX: 0, deltaY: Number(deltaY) || 300 });
     if (action === "type") { await wait(80); for (const ch of String(text)) { await cdp("Input.insertText", { text: ch }); await wait(25 + Math.random() * 40); } }
-    push({ type: "input", tabId, x, y, action });
-    res.json({ ok: true, x, y, action, steps: path.length });
+    push({ type: "input", tabId, x, y, action, profile: profile ?? "default" });
+    res.json({ ok: true, x, y, action, steps: path.length, profile: profile ?? "default" });
   } catch (e) {
     res.status(502).json({ ok: false, error: (e as Error).message });
   }
