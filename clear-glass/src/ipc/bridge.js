@@ -2225,13 +2225,17 @@ class IpcBridge {
     return g;
   }
 
-  async _gigFill({ gig, agentId = 'default', minConfidence = 'medium' } = {}) {
+  async _gigFill({ gig, agentId = 'default', minConfidence = 'medium', wizard: wizardOpt } = {}) {
     if (!this.dom) return { error: 'dom bridge unavailable' };
     if (!gig || !gig.title) return { error: 'write the gig first' };
     try { if (this.autofillStore) this.autofillStore.setLastGig(gig); } catch (_) {}   // §GA1a
     const hc = await this._humanCheckGate(agentId); if (!hc.pass) return { error: hc.why, ...hc };   // §HC3 the gate before the gig is typed
     let r;
-    try { r = await require('../autofill/gig.js').fillGig(this.dom, gig, { agentId, minConfidence }); }
+    // §FW1 0.60.268 — on Fiverr's gig editor, page after page (fill, Save & Continue, wait, fill), stopping before Gallery/Publish
+    let url = ''; try { url = (this.driver && this.driver._getWebContents(agentId) || { getURL: () => '' }).getURL(); } catch (_) {}
+    const G = require('../autofill/gig.js');
+    const wizard = wizardOpt !== false && require('../copilot/verbs.js').isGigEditor(url);
+    try { r = wizard ? await G.fillGigWizard(this.dom, gig, { agentId, minConfidence }) : await G.fillGig(this.dom, gig, { agentId, minConfidence }); }
     catch (err) { return { error: err.message }; }
     if (!r.error) this.postEvent('autofill.gig.filled', { agentId, filled: r.filled.length, skipped: r.skipped.length, failed: r.failed.length, leftToCopy: r.leftToCopy.length, ts: Date.now() });
     return r;

@@ -129,6 +129,7 @@ function describeJob(job, r = {}) {
     if (r.needsGig) return r.error;
     const left = r.leftToCopy || [];
     return `Filled the gig "${r.title || ''}": ${names(r.filled, 'key').join(', ') || 'nothing matched'}${r.drafted ? ' (written from your Fiverr profile just now)' : ''}.` +
+      (r.wizard ? ` Pages: ${(r.pages || []).map(p => p.tab + (p.stayed ? ' (stayed)' : '')).join(' → ')}${r.stop ? `; ${r.stop}` : ''}.` : '') +   // §FW1
       `${left.length ? ` Left to copy by hand: ${left.join(', ')}.` : ''}${(r.failed || []).length ? ` Failed: ${names(r.failed, 'key').join(', ')}.` : ''} Nothing was saved or published.`;
   }
   if (job.kind === 'fill') {

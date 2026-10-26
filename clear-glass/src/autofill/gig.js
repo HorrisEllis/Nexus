@@ -398,6 +398,60 @@ const SELECT_SCRIPT = `async (want, meta) => {
   return { results };
 }`;
 
+// §FW1 0.60.268 — James, 2026-10-26: "needs to autofill then next page, wait for it to load, then autofill the next page."
+// Fiverr's gig editor is a wizard (Overview → Pricing → Description & FAQ → Requirements → Gallery → Publish). Each page is a step:
+// fill it, press Save & Continue, wait until the next step has loaded (its tab in the URL or its fields changed), fill that. It
+// stops on its own before Gallery and Publish (uploading and publishing are his), when a page does not move on (Fiverr's own
+// messages are read back), or after maxPages. Never presses Publish. Each step's result is kept, so a stop says where and why.
+const STOP_TABS = /gallery|publish/i;
+const PRESS_CONTINUE = `(() => {
+  const vis = (e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+  const norm = (s) => String(s || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+  const b = [...document.querySelectorAll('button,a,[role="button"],input[type="submit"]')].filter(vis)
+    .find(e => { const t = norm(e.innerText || e.value); return t === 'save and continue' || t === 'continue' || t === 'save continue'; });
+  if (!b) return { ok: false };
+  if (/publish/i.test(b.innerText || b.value || '')) return { ok: false, why: 'the next button publishes: that is his' };
+  b.scrollIntoView({ block: 'center' }); b.click();
+  return { ok: true, text: (b.innerText || b.value || '').trim() };
+})()`;
+const PAGE_SIG = `(() => { const vis = (e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+  const f = [...document.querySelectorAll('input,textarea,select')].filter(vis).map(e => (e.name || e.id || e.placeholder || e.type || '')).join('|');
+  const msgs = [...document.querySelectorAll('[role="alert"],[class*="error" i],[class*="warning" i]')].filter(vis).map(e => (e.innerText || '').trim()).filter(t => t && t.length < 200);
+  return { sig: location.href.split('#')[0] + '#' + f, ready: document.readyState, msgs: [...new Set(msgs)].slice(0, 6) }; })()`;
+function _tabOf(url) { try { const u = new URL(url); return u.searchParams.get('tab') || u.pathname.split('/').filter(Boolean).pop() || ''; } catch (_) { return ''; } }
+
+async function fillGigWizard(dom, gig, { agentId = 'default', minConfidence = 'medium', maxPages = 5, waitMs = 20000, settleMs = 1500, pollMs = 500 } = {}) {
+  const wc = dom && dom._getWebContents ? dom._getWebContents(agentId) : null;
+  if (!wc) return fillGig(dom, gig, { agentId, minConfidence });
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const pages = [], filled = [], failed = []; let totalFields = 0, stop = null;
+  for (let i = 0; i < maxPages; i++) {
+    const tab = _tabOf(wc.getURL());
+    if (STOP_TABS.test(tab)) { stop = `stopped at ${tab}: uploading and publishing are yours`; break; }
+    const r = await fillGig(dom, gig, { agentId, minConfidence });
+    if (r.error) { pages.push({ tab, error: r.error }); stop = `stopped on ${tab}: ${r.error}`; break; }
+    totalFields += r.totalFields || 0;
+    for (const x of r.filled) if (!filled.some(y => y.key === x.key)) filled.push({ ...x, page: tab });
+    for (const x of r.failed) failed.push({ ...x, page: tab });
+    const page = { tab, filled: r.filled.map(x => x.key), failed: r.failed.map(x => x.key) };
+    pages.push(page);
+    const before = await wc.executeJavaScript(PAGE_SIG, true);
+    const pressed = await wc.executeJavaScript(PRESS_CONTINUE, true);
+    if (!pressed || !pressed.ok) { stop = `stopped on ${tab}: ${(pressed && pressed.why) || 'no Save & Continue button'}`; break; }
+    let moved = false, now = before;
+    for (let t = 0; t < waitMs; t += pollMs) {
+      await sleep(pollMs);
+      try { now = await wc.executeJavaScript(PAGE_SIG, true); } catch (_) { continue; }   // mid-navigation
+      if (now.sig !== before.sig && now.ready === 'complete') { moved = true; break; }
+    }
+    if (!moved) { stop = `stayed on ${tab} after "${pressed.text}"${now.msgs && now.msgs.length ? `: ${now.msgs.join(' · ')}` : ''}`; page.stayed = true; break; }
+    await sleep(settleMs);   // the next step's form renders after its URL
+    page.next = _tabOf(wc.getURL());
+  }
+  const done = new Set(filled.map(x => x.key)); if (done.has('category.main')) done.add('category');
+  return { wizard: true, pages, stop, totalFields, filled, failed, skipped: [], leftToCopy: gigParts(gig).filter(p => !done.has(p.key)).map(p => p.key) };
+}
+
 /** fillGigSelects(dom, gig, { agentId }) → { results: [{ key, chose?, exact?, why?, options? }] } */
 async function fillGigSelects(dom, gig, { agentId = 'default' } = {}) {
   const wc = dom && dom._getWebContents ? dom._getWebContents(agentId) : null;
@@ -470,4 +524,4 @@ function gigTemplate() {
   return { text, filename: 'gig-template.gig' };
 }
 
-module.exports = { fillGigSelects, SELECT_SCRIPT, GIG_FORMAT, gigFile, gigFilename, gigTemplate, END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };
+module.exports = { fillGigWizard, fillGigSelects, SELECT_SCRIPT, GIG_FORMAT, gigFile, gigFilename, gigTemplate, END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };
