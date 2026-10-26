@@ -320,9 +320,15 @@ async function fillGig(dom, gig, { agentId = 'default', minConfidence = 'medium'
       else failed.push({ key: x.key, error: x.why || 'not chosen', ...(x.options ? { options: x.options } : {}) });
     }
   }
-  const done = new Set(filled.map(f => f.key));
-  // the category part is one key (category › subcategory): done when the category was chosen
-  if (done.has('category.main')) done.add('category');
+  // §FW2 0.60.269 — FAQ, buyer questions, pricing dropdowns: only where the page shows them
+  try {
+    const ex = await fillGigExtras(dom, gig, { agentId });
+    for (const x of (ex && ex.results) || []) {
+      if (x.chose) filled.push({ key: x.key, confidence: 'high', source: 'page', chose: x.chose, ...(x.already ? { already: true } : {}) });
+      else failed.push({ key: x.key, error: x.why || 'not done', ...(x.options ? { options: x.options } : {}) });
+    }
+  } catch (err) { failed.push({ key: 'extras', error: err.message }); }
+  const done = _doneKeys(filled);
   return { totalFields: domFields.length, filled, skipped, failed, leftToCopy: gigParts(gig).filter(p => !done.has(p.key)).map(p => p.key), ...(selects && selects.error ? { selectsError: selects.error } : {}) };
 }
 
@@ -418,6 +424,13 @@ const PAGE_SIG = `(() => { const vis = (e) => { const r = e.getBoundingClientRec
   const f = [...document.querySelectorAll('input,textarea,select')].filter(vis).map(e => (e.name || e.id || e.placeholder || e.type || '')).join('|');
   const msgs = [...document.querySelectorAll('[role="alert"],[class*="error" i],[class*="warning" i]')].filter(vis).map(e => (e.innerText || '').trim()).filter(t => t && t.length < 200);
   return { sig: location.href.split('#')[0] + '#' + f, ready: document.readyState, msgs: [...new Set(msgs)].slice(0, 6) }; })()`;
+/** the gig parts a fill's results cover: an added FAQ covers its question and answer; the chosen category covers "category" */
+function _doneKeys(filled) {
+  const done = new Set(filled.map(x => x.key));
+  for (const k of [...done]) { const m = /^faq\.(\d+)$/.exec(k); if (m) { done.add(`faq.${m[1]}.question`); done.add(`faq.${m[1]}.answer`); } }
+  if (done.has('category.main')) done.add('category');
+  return done;
+}
 function _tabOf(url) { try { const u = new URL(url); return u.searchParams.get('tab') || u.pathname.split('/').filter(Boolean).pop() || ''; } catch (_) { return ''; } }
 
 async function fillGigWizard(dom, gig, { agentId = 'default', minConfidence = 'medium', maxPages = 5, waitMs = 20000, settleMs = 1500, pollMs = 500 } = {}) {
@@ -448,8 +461,83 @@ async function fillGigWizard(dom, gig, { agentId = 'default', minConfidence = 'm
     await sleep(settleMs);   // the next step's form renders after its URL
     page.next = _tabOf(wc.getURL());
   }
-  const done = new Set(filled.map(x => x.key)); if (done.has('category.main')) done.add('category');
+  const done = _doneKeys(filled);
   return { wizard: true, pages, stop, totalFields, filled, failed, skipped: [], leftToCopy: gigParts(gig).filter(p => !done.has(p.key)).map(p => p.key) };
+}
+
+// §FW2 0.60.269 — James: "continue." The wizard's remaining parts, each as his page shows it:
+//   FAQ ("Description & FAQ"): press "+ Add FAQ", type the question and the answer into the boxes that appear, press "Add";
+//   Requirements: press "Add New Question", type it, press "Add";
+//   Pricing: per package column, the Delivery Time and Revisions dropdowns (native <select> or Fiverr's own), chosen by the number.
+// An item the page already shows (same words) is not added twice. A part the page does not have is skipped, not failed.
+const EXTRAS_SCRIPT = `async (gig) => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const vis = (e) => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+  const norm = (s) => String(s || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+  const press = (el) => { for (const t of ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click']) el.dispatchEvent(new MouseEvent(t, { bubbles: true, cancelable: true, view: window })); };
+  const setv = (el, v) => { const p = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype; el.focus(); Object.getOwnPropertyDescriptor(p, 'value').set.call(el, v); el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); };
+  const btn = (words) => [...document.querySelectorAll('button,a,[role="button"],span,div')].filter(vis).filter(e => { const t = norm(e.innerText); return t && words.some(w => t === w); })
+    .sort((a, b) => a.querySelectorAll('*').length - b.querySelectorAll('*').length)[0] || null;
+  const empties = () => [...document.querySelectorAll('input[type="text"],input:not([type]),textarea')].filter(vis).filter(e => !e.value);
+  const pageText = () => norm(document.body.innerText);
+  const results = [];
+  // FAQ and buyer questions: the same add-an-item flow
+  const addItems = async (key, openWords, items, two) => {
+    if (!items || !items.length || !btn(openWords)) return;
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i]; const first = two ? it.question : it;
+      if (pageText().includes(norm(first))) { results.push({ key: key + '.' + i, chose: first, already: true }); continue; }
+      const before = new Set(empties()); const open = btn(openWords);
+      if (!open) { results.push({ key: key + '.' + i, why: 'the add button went away' }); break; }
+      press(open); await sleep(500);
+      const fresh = empties().filter(e => !before.has(e)); const boxes = fresh.length ? fresh : empties();
+      if (!boxes.length) { results.push({ key: key + '.' + i, why: 'no box appeared after "' + open.innerText.trim() + '"' }); break; }
+      setv(boxes[0], first); if (two && boxes[1]) setv(boxes[1], it.answer);
+      await sleep(250);
+      const add = btn(['add', 'save', 'add faq', 'add question']); if (add && add !== open) { press(add); await sleep(500); }
+      results.push({ key: key + '.' + i, chose: first });
+    }
+  };
+  await addItems('faq', ['add faq', 'add a faq', 'add new faq'], (gig.faq || []).filter(x => x && x.question && x.answer), true);
+  await addItems('requirement', ['add new question', 'add a question', 'add question'], gig.requirements || [], false);
+  // Pricing: a row named Delivery Time / Revisions, one control per package column (basic, standard, premium)
+  const tiers = ['basic', 'standard', 'premium'];
+  const pickIn = async (ctl, n, label) => {
+    const want = String(n); const match = (t) => { const x = norm(t); return x === want || new RegExp('(^| )' + want + '( |$)').test(x) || (n === 'unlimited' && /unlimited/.test(x)); };
+    if (ctl.tagName === 'SELECT') {
+      const o = [...ctl.options].find(o => match(o.text)); if (!o) return { why: 'no ' + label + ' option for ' + want, options: [...ctl.options].map(o => o.text).slice(0, 20) };
+      Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(ctl, o.value); ctl.dispatchEvent(new Event('input', { bubbles: true })); ctl.dispatchEvent(new Event('change', { bubbles: true }));
+      return { chose: o.text.trim() };
+    }
+    const before = new Set(document.querySelectorAll('[role="option"],li,[class*="option" i]'));
+    press(ctl); await sleep(450);
+    let opts = [...document.querySelectorAll('[role="option"],li,[class*="option" i]')].filter(vis).filter(o => (o.innerText || '').trim().length < 40 && !o.querySelector('li,[role="option"]'));
+    const nw = opts.filter(o => !before.has(o)); if (nw.length) opts = nw;
+    const o = opts.find(o => match(o.innerText)); if (!o) { press(ctl); await sleep(150); return { why: 'no ' + label + ' option for ' + want, options: opts.map(o => o.innerText.trim()).slice(0, 20) }; }
+    press(o); await sleep(350); return { chose: o.innerText.trim() };
+  };
+  for (const [label, field] of [['delivery time', 'deliveryDays'], ['revisions', 'revisions']]) {
+    const head = [...document.querySelectorAll('td,th,div,span,h3,h4,label')].filter(vis).find(e => norm(e.innerText) === label && e.children.length <= 1);
+    if (!head) continue;
+    const rowEl = head.closest('tr') || head.parentElement;
+    // one control per package column: each cell after the heading's, its select / combobox, else its first clickable child
+    const cells = [...rowEl.children].filter(c => !c.contains(head) && vis(c));
+    const ctls = cells.map(c => c.querySelector('select,[role="combobox"],[aria-haspopup],[class*="select" i]') || (c.firstElementChild && c.firstElementChild.firstElementChild) || c.firstElementChild).filter(Boolean);
+    if (!ctls.length) { results.push({ key: field, why: 'a "' + label + '" row but no control in it' }); continue; }
+    for (let i = 0; i < Math.min(ctls.length, 3); i++) {
+      const p = gig.packages && gig.packages[tiers[i]]; if (!p || p[field] == null) continue;
+      const r = await pickIn(ctls[i], p[field] === -1 ? 'unlimited' : p[field], label);
+      results.push({ key: tiers[i] + '.' + field, ...r });
+    }
+  }
+  return { results };
+}`;
+
+/** fillGigExtras(dom, gig, { agentId }) → { results } — FAQ, buyer questions and the pricing dropdowns, where the page has them */
+async function fillGigExtras(dom, gig, { agentId = 'default' } = {}) {
+  const wc = dom && dom._getWebContents ? dom._getWebContents(agentId) : null;
+  if (!wc) return { results: [] };
+  return wc.executeJavaScript(`(${EXTRAS_SCRIPT})(${JSON.stringify({ faq: gig.faq, requirements: gig.requirements, packages: gig.packages })})`, true);
 }
 
 /** fillGigSelects(dom, gig, { agentId }) → { results: [{ key, chose?, exact?, why?, options? }] } */
@@ -524,4 +612,4 @@ function gigTemplate() {
   return { text, filename: 'gig-template.gig' };
 }
 
-module.exports = { fillGigWizard, fillGigSelects, SELECT_SCRIPT, GIG_FORMAT, gigFile, gigFilename, gigTemplate, END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };
+module.exports = { fillGigExtras, EXTRAS_SCRIPT, fillGigWizard, fillGigSelects, SELECT_SCRIPT, GIG_FORMAT, gigFile, gigFilename, gigTemplate, END_STATE_QUESTIONS, briefToSpec, LIMITS, TIERS, GIG_PATTERNS, buildGigPrompt, parseGig, gigParts, gigText, matchGigFields, detectGig, fillGig };
