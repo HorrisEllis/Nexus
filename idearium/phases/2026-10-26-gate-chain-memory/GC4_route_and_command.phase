@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-gate-chain-memory-phasemap.spec::GC4_route_and_command
+type: phase
+id: docs_2026-10-26-gate-chain-memory-phasemap.spec::GC4_route_and_command
+context: pipeline phase GC4_route_and_command of docs/2026-10-26-gate-chain-memory-phasemap.spec
+intent: null
+summary: GC4_route_and_command (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792991449200
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792991449200
+lastSeenAt: 1792991449200
+fingerprint: null
+payload:
+  id: GC4_route_and_command
+  map: docs/2026-10-26-gate-chain-memory-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - GC2_gates_persist
+    - GC3_copilot_and_cli_emit
+  blocks: []
+  spec: null
+  graph: 9ae2ee096d4ddc70
