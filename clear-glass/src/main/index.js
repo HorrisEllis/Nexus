@@ -1274,6 +1274,7 @@ async function bootstrap() {
 
   // 5. DOM archaeology — live DOM mesh via MutationObserver IPC
   const dom = new DomArchaeology({ sse: { emit: (t, d) => emit(t, d) } });
+  _domRef = dom;   // §AF3 0.60.263 — the inline autofill chip reads fields through it, per tab
 
   // 6. ClearDriver — sovereign automation, no Playwright
   driver = new ClearDriver({ ctxMgr, dom, vault, sse: { emit: (t, d) => emit(t, d) } });
@@ -2866,6 +2867,15 @@ const _automationSessions = new WeakSet();
 // §HC1/HC2 0.60.260 — James, 2026-10-26: "i can't get passed this. can you help? do everything you can, find out why and help." A person's
 // tab that lands on a human check (Fiverr's Press & Hold) switches its session to the engine's own identity, remembers the site, and
 // reloads once, so the check meets the browser it really is. It never touches the check: he passes it (contexts/human-check.js).
+let _domRef = null;   // §AF3 0.60.263 — set in bootstrap (the DomArchaeology the bridge uses)
+// §AF3 0.60.263 — James, 2026-10-26: "When you click on name it will show autofill?" · "1". After a person's page loads (and again after an
+// in-page navigation), the chip under each field the active profile fills (src/autofill/inline.js, renderer/autofill-inline.js).
+function _autofillInline(contents, again = true) {
+  if (!_domRef || !contents || contents.isDestroyed()) return;
+  require('../autofill/inline.js').attach(contents, { dom: _domRef, store: autofillStore, siteSettings, options: nexusOptions })
+    .then(r => { if (again && r && !r.ok && /no field/.test(r.why || '')) setTimeout(() => _autofillInline(contents, false), 4000); })   // a page that builds its form late (Fiverr)
+    .catch(e => console.warn(`[autofill-inline] not shown: ${e.message}`));
+}
 const _hcReloaded = new Set();   // `${partition}|${origin}` — one reload per window and site, never a loop
 async function _humanCheck(contents) {
   if (!ctxMgr || !contents || contents.isDestroyed()) return null;
@@ -2894,7 +2904,8 @@ function _identityBeforeLoad(contents) {
   });
 }
 function _automationEvents(contents) {
-  try { if (contents.getType() === 'webview') { _identityBeforeLoad(contents); contents.on('did-finish-load', () => { setTimeout(() => { _humanCheck(contents).catch(() => {}); }, 1200); }); } } catch (_) {}
+  try { if (contents.getType() === 'webview') { _identityBeforeLoad(contents); contents.on('did-finish-load', () => { setTimeout(() => { _humanCheck(contents).then(h => { if (!h) _autofillInline(contents); }).catch(() => {}); }, 1200); });
+    contents.on('did-navigate-in-page', () => { setTimeout(() => _autofillInline(contents), 1500); }); } } catch (_) {}   // §AF3 the chip (never on a human-check page)
   contents.on('did-finish-load', () => {
     try {
       if (!mesh || !mesh._automation) return;

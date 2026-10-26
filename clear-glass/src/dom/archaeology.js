@@ -416,6 +416,11 @@ class DomArchaeology {
   async queryFields({ agentId = 'default', selector = 'input, select, textarea' } = {}) {
     const wc = this._getWebContents(agentId);
     if (!wc) return { error: `no tab for "${agentId}": open the page in a Clear Glass tab first` };
+    return this.queryFieldsOf(wc, { agentId, selector });
+  }
+
+  /** queryFieldsOf(wc) — the same, for a webContents the caller already holds (§AF3 0.60.263: the inline chip, per tab) */
+  async queryFieldsOf(wc, { agentId = 'default', selector = 'input, select, textarea' } = {}) {
     const ask = () => wc.executeJavaScript(`window.__cgDomMesh ? window.__cgDomMesh.query(${JSON.stringify(selector)}) : null`, true);
     let r = null; try { r = await ask(); } catch (e) { return { error: `the page could not be read: ${e.message}` }; }
     if (!Array.isArray(r)) {

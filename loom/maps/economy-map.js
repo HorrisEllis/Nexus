@@ -35,6 +35,7 @@ const FILES = [
   ]],
   ['idearium/ui/settings.html', I('idearium/ui/settings.html'), [I('idearium/api/index.js')]],   // HTTP /api/economy*
   // §AT1 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." The autofill data as one .autofill file
+  ['clear-glass/src/autofill/inline.js', I('clear-glass/src/autofill/inline.js'), [I('clear-glass/src/autofill/matcher.js')]],   // §AF3 0.60.263
   ['lib/agent-tools/tools/nexus/recall.js', I('lib/agent-tools/tools/nexus/recall.js'), [I('lib/chat-ledger-client.js'), I('lib/nexus-read.js')]],   // §RC1 0.60.261
   ['clear-glass/src/contexts/human-check.js', I('clear-glass/src/contexts/human-check.js'), [I('clear-glass/src/net/compartment.js')]],   // §HC1 0.60.260
   ['clear-glass/src/main/glass-frame.js', I('clear-glass/src/main/glass-frame.js'), []],   // §GF1 0.60.258 the Clear Glass title bar over a foreign page
@@ -106,6 +107,11 @@ const CONSUMERS = [
   [I('clear-glass/src/dom/archaeology.js'), I('clear-glass/src/driver/index.js'), '0.60.253 ER3 dom.erosInput = driver.erosInput: handleMutate via eros types the value through ErosmancerOS'],
   [I('clear-glass/renderer/settings/sections/accounts.js'), I('clear-glass/src/preload/index.js'), '0.60.253 ER4 cg.accounts.update {erosProfile} (each account\'s Eros pace)'],
   [I('idearium/cli/route-commands.js'), I('clear-glass/src/ipc/bridge.js'), '0.60.253 ER4 eros open|tabs|pace rows → /cli/eros/open, /cli/eros/tabs, PUT /cli/accounts/:id'],
+  // §AF3 0.60.263 — the inline autofill chip
+  [I('clear-glass/src/main/index.js'), I('clear-glass/src/autofill/inline.js'), '0.60.263 AF3 _autofillInline after a person page loads'],
+  [I('clear-glass/src/autofill/inline.js'), I('clear-glass/src/dom/archaeology.js'), '0.60.263 AF3 queryFieldsOf(wc)'],
+  [I('clear-glass/src/autofill/inline.js'), I('clear-glass/src/autofill/matcher.js'), '0.60.263 AF3 matchFields + learnedFromSettings'],
+  [I('clear-glass/src/autofill/inline.js'), I('clear-glass/renderer/autofill-inline.js'), '0.60.263 AF3 the chip, run in an isolated world'],
   // §RC 0.60.261 — the agents' recall tool: each source through its owner's route
   [I('lib/agent-tools/tools/nexus/recall.js'), I('idearium/api/index.js'), '0.60.261 RC1 GET /api/activity, /api/repos/:uuid/activity|runs, /api/ledger/out (HTTP via idearium/code.js _call)'],
   [I('lib/agent-tools/tools/nexus/recall.js'), I('guardian/server.js'), '0.60.261 RC1 GET /api/responses/recent (HTTP :7820)'],

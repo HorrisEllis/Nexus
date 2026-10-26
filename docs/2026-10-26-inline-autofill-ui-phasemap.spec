@@ -59,7 +59,7 @@ phases:
     proof: "a fill with no profileId fills from the active profile (not null); a fill with a selector fills one field; in the autofill route + co-pilot tool tests"
 
   AF3_the_inline_chip:
-    status: OPEN
+    status: "DONE 0.60.263 — renderer/autofill-inline.js (isolated world, closed shadow root) + src/autofill/inline.js; test/autofill-inline.test.js in real Electron"
     layer: ui
     depends_on: [AF1_active_profile_and_fill_one]
     files: [clear-glass/renderer/autofill-inline.js]
@@ -91,3 +91,12 @@ order: >-
   for), anchored under the input by the same rect positioning guardian-picker already uses. AF4 the settings toggle + default
   picker. All but AF1 are Clear Glass UI, verified live on his machine (this container has no Electron). Each phase specced
   again as .phase + .graph (his 2026-10-20); DG2 foresees any crossing.
+
+## ADDENDUM 2026-10-26 (0.60.263) — AF3 built
+# James, 2026-10-26, asked whether the chip was in: "And that's in the ui? When you click on name it will show autofill? Copilot will fill it
+# in?" Told it was mapped, not built, he chose it first: "1".
+# Built as mapped, with one addition decided by his axioms (§0.0, privacy by separation as in 0.60.179): the chip and the profile values run
+# in an ISOLATED world and a closed shadow root, so the site's own scripts never read his data before he clicks (proven: the page sees
+# neither). Fields are tagged data-cg-af="<n>" only. It shows after each page load and in-page navigation (a late-built form gets one
+# retry), never on a human-check page (HC), never on a password field; Settings options.autofillInline === false or the site's
+# autofill.inline = off turn it off. AF4 (the Settings toggle and default-profile picker on screen) stays open.
