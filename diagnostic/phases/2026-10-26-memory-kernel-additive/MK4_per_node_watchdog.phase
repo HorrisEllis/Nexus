@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-memory-kernel-additive-phasemap.spec::MK4_per_node_watchdog
+type: phase
+id: docs_2026-10-26-memory-kernel-additive-phasemap.spec::MK4_per_node_watchdog
+context: pipeline phase MK4_per_node_watchdog of docs/2026-10-26-memory-kernel-additive-phasemap.spec
+intent: null
+summary: MK4_per_node_watchdog (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792992204325
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792992204325
+lastSeenAt: 1792992204325
+fingerprint: null
+payload:
+  id: MK4_per_node_watchdog
+  map: docs/2026-10-26-memory-kernel-additive-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - diagnostic/watchdog.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 46b398d19337394e

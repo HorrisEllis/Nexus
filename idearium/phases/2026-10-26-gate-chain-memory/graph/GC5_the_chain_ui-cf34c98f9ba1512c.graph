@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GC5_the_chain_ui:cf34c98f9ba1512c
+type: graph
+id: phase:GC5_the_chain_ui:cf34c98f9ba1512c
+context: dependency graph of phase GC5_the_chain_ui
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792991449202
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792991449202
+lastSeenAt: 1792991449202
+fingerprint: null
+payload:
+  for: GC5_the_chain_ui
+  kind: phase
+  repo: null
+  hash: cf34c98f9ba1512c
+  nodes:
+    - path: idearium/ui/js/gate-chain-panel.js
+      role: changes
+      exists: false
+      system: idearium
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC4_route_and_command
+    dependents: []
+    upstream:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC1_the_chain
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC2_gates_persist
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC3_copilot_and_cli_emit
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC4_route_and_command
+    downstream: []
+    blockedBy:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC4_route_and_command
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by GC4_route_and_command
+      - 'depends on (1): GC4_route_and_command · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-26-gate-chain-memory-phasemap.spec::GC4_route_and_command
+        kind: declared

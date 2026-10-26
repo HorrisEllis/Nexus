@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+type: phase
+id: docs_2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE3_the_engine_door
+context: >-
+  pipeline phase AE3_the_engine_door of
+  docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+intent: null
+summary: AE3_the_engine_door (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1792962436819
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792962436819
+lastSeenAt: 1792962436819
+fingerprint: null
+payload:
+  id: AE3_the_engine_door
+  map: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - orchestrator/automation/routes.js
+    - orchestrator/orchestrator.js
+  depends_on:
+    - AE1_move_the_core
+  blocks: []
+  spec: docs/2026-10-25-automation-engine-sovereignty-graph.md
+  graph: 9bf639bab4f8b3d0

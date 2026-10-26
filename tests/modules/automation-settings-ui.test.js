@@ -16,10 +16,10 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const { JSDOM } = require(path.join(ROOT, 'node_modules', 'jsdom'));
-const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR } = require(path.join(ROOT, 'clear-glass/src/mesh/automation-engine.js'));
-const ROUTES = require(path.join(ROOT, 'clear-glass/src/automation/routes.js'));
-const { TEMPLATES } = require(path.join(ROOT, 'clear-glass/src/automation/templates.js'));
-const { CATALOGUE } = require(path.join(ROOT, 'clear-glass/src/automation/steps.js'));
+const { AutomationEngine, WORKFLOWS_DIR, RUNS_DIR } = require(path.join(ROOT, 'lib/automation/engine.js'));
+const ROUTES = require(path.join(ROOT, 'lib/automation/routes.js'));
+const { TEMPLATES } = require(path.join(ROOT, 'lib/automation/templates.js'));
+const { CATALOGUE } = require(path.join(ROOT, 'lib/automation/steps.js'));
 
 let passed = 0, failed = 0;
 async function test(id, desc, fn) {
@@ -233,7 +233,7 @@ await test('UI-A7', 'Run now starts it (without waiting); New workflow from a te
 });
 
 await test('UI-A8', '⋯ → Save to library puts a .workflow in the Library pane; Import there brings it back (switched off); Import accepts pasted node text', async () => {
-  const { NODES_DIR } = require(path.join(ROOT, 'clear-glass/src/mesh/automation-engine.js'));
+  const { NODES_DIR } = require(path.join(ROOT, 'lib/automation/engine.js'));
   try { fs.rmSync(NODES_DIR, { recursive: true, force: true }); } catch (_) {}
   const wf = engine.create({ name: 'AAC nodes', status: 'paused', steps: [{ type: 'log', config: { message: 'node' } }] }).workflow;
   await render();
@@ -250,7 +250,7 @@ await test('UI-A8', '⋯ → Save to library puts a .workflow in the Library pan
   for (let i = 0; i < 60 && !engine.list().some(w => w.name === 'AAC nodes'); i++) await tick();
   const back = engine.list().find(w => w.name === 'AAC nodes');
   assert.ok(back && back.status === 'paused' && back.steps[0].config.message === 'node');
-  const text = (await require(path.join(ROOT, 'clear-glass/src/automation/nodes.js')).workflowNode(engine, back.id)).text.replace(/AAC nodes/g, 'AAD pasted');
+  const text = (await require(path.join(ROOT, 'lib/automation-nodes.js')).workflowNode(engine, back.id)).text.replace(/AAC nodes/g, 'AAD pasted');
   await render();
   byText('Import').click();
   m = await waitModal();

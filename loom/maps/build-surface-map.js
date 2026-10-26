@@ -150,6 +150,24 @@ const FILES = [
   [I('guardian/server.js'), I('lib/raid-port.js'), '§GD1 — /build and SEAM-forge gates ask RAID through the port (fixes the undefined-raid ReferenceError in /build)'],
   [I('guardian/api-dispatch.js'), I('lib/raid-port.js'), '§GD1 — outcome() feedback to RAID through the port, with the agent'],
   [I('guardian/lib/dispatcher.js'), I('lib/raid-port.js'), '§GD1 — browser-job approval through the port, fails closed'],
+  // §0.60.248 BX2 — idearium/lib/flow-sources.js: BrainOS's FlowGraph gathered server-side. Composes phase-dag + run-state + the repo's
+  // phases view + Clear Glass's mesh (:7704), each best-effort. Consumed by idearium/api (GET …/flow, /api/flow/mesh).
+  ['idearium/lib/flow-sources.js', I('idearium/lib/flow-sources.js'), [I('lib/phase-dag.js'), I('lib/run-state.js'), I('idearium/repo/phases.js')]],
+  [I('idearium/api/index.js'), I('idearium/lib/flow-sources.js'), '§BX2 — repo.flow / flow.mesh handlers call flowFor()/mesh() (dynamic import, ESM)'],
+  // §0.60.249 AU1 — lib/automation-registry.js: one neutral door over the six automation sources (copilot, ollama, lib, clear-glass,
+  // idearium, brainos). Pure + DI (no static cross-system require); the transport to Clear Glass's engine (:7704) is a runtime port,
+  // the declared convention, not a static crossing. Consumed by idearium/api (GET /api/automation, POST /api/automation/run).
+  ['lib/automation-registry.js', I('lib/automation-registry.js'), [I('lib/node-schemas/schema.macro')]],   // lib's own contribution: the automation node TYPES it reads in-process
+  [I('idearium/api/index.js'), I('lib/automation-registry.js'), '§AU1 — automation.list / automation.run handlers call list()/run(); clear-glass engine reached by runtime port :7704'],
+  // §0.60.256 AE1 — the automation engine is CORE (lib/automation/): used by ≥2 systems (Clear Glass's browser automation AND the
+  // orchestrator's platform orchestration), so it is the kernel's. Each system runs its OWN instance from core — sovereign, each
+  // on its own, no system→system crossing. The engine is DI (receives hooks, reaches no system). nodes.js is core too.
+  ['lib/automation/engine.js', I('lib/automation/engine.js'), [I('lib/automation/cron.js'), I('lib/automation/template.js'), I('lib/automation/steps.js'), I('lib/automation/dom.js')]],
+  ['lib/automation-nodes.js', I('lib/automation-nodes.js'), [I('lib/node-export.js')]],   // core node-file utility + the one source of NODES_DIR
+  [I('lib/automation/routes.js'), I('lib/automation-nodes.js'), '§AE1 — the door lists/imports .macro/.workflow node files through the core utility'],
+  [I('clear-glass/src/mesh/agent-mesh.js'), I('lib/automation/engine.js'), '§AE1 — Clear Glass runs its OWN engine instance from core for browser automation (local, standalone); its namespace is brainos'],
+  ['orchestrator/automation/index.js', I('orchestrator/automation/index.js'), [I('lib/automation/engine.js'), I('lib/automation/routes.js')]],   // the orchestrator's OWN instance for platform orchestration; its own namespace
+  [I('orchestrator/orchestrator.js'), I('orchestrator/automation/index.js'), '§AE1/AE3 — the :9000 server mounts the orchestrator engine door (/automation/*)'],
   [I('idearium/api/index.js'), I('lib/context-stream.js'), '0.60.156 makeAttempt: the stream note per gate; POST /api/context/find, /api/repos/:uuid/context/find'],
   [I('idearium/api/index.js'), I('lib/context-sources.js'), '0.60.156 GET /api/context/sources'],
   // §0.60.157 GM4 — the node lattice: every data node of every system, edges typed; read by route, never the files

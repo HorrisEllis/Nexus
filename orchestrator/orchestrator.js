@@ -908,6 +908,17 @@ const server = http.createServer(async (req, res) => {
   const M     = req.method;
   const QS    = u.searchParams;
 
+  // §0.60.251 AE1 — the automation engine lives here now (it is the platform's; each system is sovereign). Its /automation/*
+  // door is served from the orchestrator; Clear Glass and every other system reach it by this port, never by a require.
+  if (top === 'automation') {
+    let raw = ''; try { for await (const c of req) raw += c; } catch (_) {}
+    let body = {}; try { body = raw ? JSON.parse(raw) : {}; } catch (_) {}
+    let out; try { out = await require('./automation/index.js').handle({ method: M, url: req.url, body, headers: req.headers, rawBody: raw }); }
+    catch (e) { out = { status: 500, body: { ok: false, error: e.message } }; }
+    res.writeHead((out && out.status) || 200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify((out && out.body) || {}));
+  }
+
   // ── Root UI — TV-shell is the homepage (explicit, repeated request —
   // diagnostics and the ALK-GL/spotlight/channel-switching home were both
   // tried here before and both were wrong per that same repeated ask).

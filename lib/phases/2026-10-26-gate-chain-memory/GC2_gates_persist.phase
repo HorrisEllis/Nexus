@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-26-gate-chain-memory-phasemap.spec::GC2_gates_persist
+type: phase
+id: docs_2026-10-26-gate-chain-memory-phasemap.spec::GC2_gates_persist
+context: pipeline phase GC2_gates_persist of docs/2026-10-26-gate-chain-memory-phasemap.spec
+intent: null
+summary: GC2_gates_persist (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792991449194
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792991449194
+lastSeenAt: 1792991449194
+fingerprint: null
+payload:
+  id: GC2_gates_persist
+  map: docs/2026-10-26-gate-chain-memory-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/gate-context.js
+  depends_on:
+    - GC1_the_chain
+  blocks: []
+  spec: null
+  graph: 69299215cb4df8ef

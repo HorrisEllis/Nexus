@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GC1_the_chain:138995b2a6fd3690
+type: graph
+id: phase:GC1_the_chain:138995b2a6fd3690
+context: dependency graph of phase GC1_the_chain
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1792991448758
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792991448758
+lastSeenAt: 1792991448758
+fingerprint: null
+payload:
+  for: GC1_the_chain
+  kind: phase
+  repo: null
+  hash: 138995b2a6fd3690
+  nodes:
+    - path: lib/gate-chain.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC2_gates_persist
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC3_copilot_and_cli_emit
+    upstream: []
+    downstream:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC2_gates_persist
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC3_copilot_and_cli_emit
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC4_route_and_command
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC5_the_chain_ui
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC2_gates_persist
+      - docs/2026-10-26-gate-chain-memory-phasemap.spec::GC3_copilot_and_cli_emit
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): GC2_gates_persist, GC3_copilot_and_cli_emit · all downstream 4 · finishing it
+        unlocks GC2_gates_persist, GC3_copilot_and_cli_emit
+    edges: []

@@ -234,6 +234,25 @@ class AutofillStore {
     this._persist();
     return { ok: true, id };
   }
+
+  // §AF1 2026-10-26 — James, running Nexus: copilot autofill failed "no autofill profile 'null'" because there is no active-
+  // profile concept — a fill with no explicit profile passed null. activeProfile() resolves THE profile every fill (copilot,
+  // the context menu, the inline chip) uses when none is named: the one set default, else the sole one, else the first; and it
+  // NEVER returns null — no profile is a clean { ok:false, reason:'no-profile' } the UI can act on (offer "create a profile").
+  _defaultRow() { return this._defJaa || (this._defJaa = new JaaRows('cg_autofill_default', {})); }
+  activeProfile() {
+    const list = this.listProfiles();
+    if (!list.length) return { ok: false, reason: 'no-profile' };
+    let defId = null; try { const r = this._defaultRow().load(); defId = r && r[0] && r[0].profileId; } catch (_) {}
+    const chosen = (defId && this.getProfile(defId)) || list[0];   // default → sole/first (list is sorted by createdAt)
+    return { ok: true, profile: chosen, profileId: chosen.id, isDefault: chosen.id === defId };
+  }
+  setDefault(id) {
+    if (!this.getProfile(id)) return { ok: false, error: `no autofill profile "${id}"` };
+    try { this._defaultRow().replaceAll([{ id: 'default', profileId: id, at: Date.now() }]); }
+    catch (e) { return { ok: false, error: e.message }; }
+    return { ok: true, id };
+  }
 }
 
 function _validateFields(fields) {

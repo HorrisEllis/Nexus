@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-25-agent-drones-phasemap.spec::DR4_plain_task_to_contract
+type: phase
+id: docs_2026-10-25-agent-drones-phasemap.spec::DR4_plain_task_to_contract
+context: pipeline phase DR4_plain_task_to_contract of docs/2026-10-25-agent-drones-phasemap.spec
+intent: null
+summary: DR4_plain_task_to_contract (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1792963020117
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1792963020117
+lastSeenAt: 1792963020117
+fingerprint: null
+payload:
+  id: DR4_plain_task_to_contract
+  map: docs/2026-10-25-agent-drones-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/drone-intent.js
+  depends_on:
+    - DR1_the_drone_contract_and_router
+  blocks: []
+  spec: null
+  graph: 9820d51645a1db20

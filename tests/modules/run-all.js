@@ -18,6 +18,8 @@ const fs   = require('fs');
 const MODULES_DIR = __dirname;
 
 const SUITES = [
+  'test-autofill-active.test.js',         // 0.60.257 AF1 — activeProfile (default/sole/first, never null) + setDefault + matchOne; the "no profile 'null'" fix
+  'test-autofill-fill-active.test.js',    // 0.60.258 AF2 — fillFields/detectFields default to the active profile (copilot/agents stop passing null); zero profiles → clean error
   'test-build-paths.test.js',             // 0.60.67 WB0 — every build path and whether WARP is on it, measured; CK-255
   'test-warp-rung.test.js',               // 0.60.73 WB1/WB2 — WARP around the chosen agent: cache, axiom gate, retain; gate mode never serves
   'test-projects-overview.test.js',       // 0.60.74 COSA10 — every project on one list; no two API routes share a method and path
@@ -546,6 +548,9 @@ const SUITES = [
   'test-raid-router.js',
   'test-snr-filter.js',
   'test-agent-confidence-gate.test.js', // 0.60.238 CG1 — before an agent acts, <75% confidence obtains context (worksurface, deps, find, ask-user LAST)
+  'test-framework-trial-deploy.test.js', // 0.60.247 AU2 — the framework trial deploys itself (collect answers; judging stays blind/human)
+  'test-flow-sources.test.js',           // 0.60.248 BX2 — the BrainOS FlowGraph backend (phases+DAG, runs, mesh; each source best-effort, named on failure)
+  'test-automation-registry.test.js',    // 0.60.249 AU1 — the automation union: one neutral door over the six sources; absent named, not thrown; run records under the source
   'test-ui-registry.js',
   // Added 2026-07-06 — built alongside cortex/core/raid/snr-filter.js and
   // the real roleConfidence/topologicalProximity fitness terms this pass.
