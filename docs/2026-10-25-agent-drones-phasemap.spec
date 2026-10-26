@@ -41,6 +41,36 @@ decisions:
       keeps the route decision; a drone runs in a COS compartment when one is real, else against an existing target with the
       reversibility that exists (autonomous_run rewind + a Versionium snapshot).
 
+  DR_D3_the_gates_are_the_step_surface:
+    status: DECIDED 2026-10-26 by James (his realization) — "maybe a step by step guide using the gates. holy shit this is
+      why the gates. each gate can be a step, like a question, then holds the data, so that way agents can follow a order
+      like stepwise, use the gates as the surface."
+    context: >-
+      Said while the drone contract (DR_D1) and the human/copilot doors (DR5/DR6) were open. He saw what the gates are FOR: a
+      drone (or a person, or copilot) does not need a separate task format — it walks the GATES, in order, each gate a step.
+      This is not a new idea bolted on; it names a line that already runs from his own earlier words to shipped code (REUSE,
+      rule 2): (a) lib/step-gate.js + schema.step_gate — HIS 2026-09-29 "Why not gate each step with events": every build step
+      passes a gate that emits step.passed / step.blocked WITH the causal id of the step before, so the steps already link in
+      order and a block is a traceable event, not a silent empty; (b) schema.gate + the gate-memory record (GM1, 0.60.162) —
+      a durable record per gate transition {status, context (references, never copies), response, hashes}, so a gate already
+      HOLDS its data as persistent memory; (c) the contract gates — an ordered DAG with depends_on, evidence and resume. The
+      gates are therefore already a stepwise, linked, data-holding surface; today's decision is to USE them as the one surface
+      every actor advances, rather than inventing a second task/wizard format beside them.
+    chosen: >-
+      One surface: the ordered gate chain IS the step-by-step guide. A gate is a step; it may carry a QUESTION (a step that
+      needs input — the gate-memory record holds the answer when given) or a CHECK (step.passed/step.blocked); its held data
+      is the record (references, not copies); depends_on / the prior step's causal id is the order. A drone walks it stepwise
+      (one gate at a time, with the full prior context the chain already carries), the human UI (DR5) shows the same gates as
+      plain cards, and copilot (DR6) reads/advances the same chain — so person, drone and copilot share one memory and one
+      order. Built on what exists (step-gate, gate-memory GM1, the contract DAG); nothing new invented beside them.
+    reading_to_confirm: >-
+      The coder reads "like a question, then holds the data" as: a gate step can be INPUT-gathering (it poses one question and
+      the gate-memory record holds the answer), alongside today's check-gates — i.e. the gate surface spans both asking and
+      checking, and a drone/person/copilot advances the same chain. If he means instead a distinct guided WIZARD that merely
+      reuses gate styling, or that EVERY step must become a question, that is a different build — marked to confirm, not
+      assumed. What is his and acted on now: the gates are the surface (not a second format). The exact UI is DR5's to confirm
+      when built.
+
 phases:
   DR1_the_drone_contract_and_router:
     status: OPEN
