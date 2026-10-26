@@ -63,6 +63,9 @@ decisions:
       (one gate at a time, with the full prior context the chain already carries), the human UI (DR5) shows the same gates as
       plain cards, and copilot (DR6) reads/advances the same chain — so person, drone and copilot share one memory and one
       order. Built on what exists (step-gate, gate-memory GM1, the contract DAG); nothing new invented beside them.
+      The surface has its own map now (he widened it 2026-10-26: dynamic decomposition, each gate its own agent,
+      programmable): docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec (GWK1 the walker, building). A drone
+      (DR1) is a consumer that walks a chain; it depends on the walker, not the reverse.
     reading_to_confirm: >-
       The coder reads "like a question, then holds the data" as: a gate step can be INPUT-gathering (it poses one question and
       the gate-memory record holds the answer), alongside today's check-gates — i.e. the gate surface spans both asking and
