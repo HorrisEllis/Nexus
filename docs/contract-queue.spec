@@ -73,3 +73,13 @@ spec:
     - id: 8
       name: TV shell wiring
       status: pending
+
+## ADDENDUM 2026-10-24 — the job ledger replaces the Library's .response view (his, for CB3)
+James, 2026-10-24, on the CB1–CB7 report from another session (CB3): "In the library can we get a queue, for contracts (.job nodes). that wait
+for the respective .response node and events for completion. it would have a list of jobs, id and expands to show the details and what its
+waiting on. physical files, saved in the library." Asked whether "the library" meant Clear Glass's Library window: "yes maybe replace the ui
+for the .response and replace it with the job ledger including the queue".
+Read as (to confirm, his "maybe"): the Library's view of .response files is replaced by one job ledger. Each .job contract is a row with its
+id; open it to see its details and what it waits on; a .response node and its events close it; queued and done jobs are shown together;
+they are files kept in the Library. Built on this queue and Guardian's guardian/lib/jobs.js and guardian/lib/response-sink.js, with no third
+queue. Not yet mapped: the pasted CB map is not in the tree, so CB3 gets its phasemap here before any code.

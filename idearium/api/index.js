@@ -774,6 +774,93 @@ async function _phaseMapStart(repo, opts = {}) {
   return { ok: true, job: { running: true, startedAt: job.startedAt, maps: maps.length } };
 }
 
+// 0.60.222 SL0 — what can be built now over Nexus's maps (repo null) or one repo's (lib/build-queue.js, with the census and flights);
+// shared by GET …/phases/next and the loop (SL4)
+async function _queueFor(repo) {
+  const BQ = _require('../../lib/build-queue.js'), C = _require('../../lib/phase-census.js'), FD = _require('../../lib/flight-data.js');
+  let maps, root, repos;
+  if (!repo) {
+    root = _require('../../lib/nexus-self/systems.js').ROOT;
+    maps = fs.readdirSync(path.join(root, 'docs')).filter(f => f.endsWith('-phasemap.spec')).map(f => ({ path: `docs/${f}`, text: fs.readFileSync(path.join(root, 'docs', f), 'utf8') }));
+    repos = getRepoLayer().list({}).filter(r => r.nexusSelf);
+  } else {
+    const PH = await import('../repo/phases.js');
+    const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(repo.uuid) });
+    root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(repo.uuid);   // a Nexus system's phases are judged in Nexus's tree
+    maps = (m.maps || []).map(x => ({ path: x.path, text: x.text || '' }));
+    repos = [repo];
+  }
+  let census = null, censusWhy = null;
+  try { census = C.census({ root, system: null, maps }); } catch (e) { censusWhy = e.message; }
+  const flights = [];
+  for (const r of repos) { try { for (const f of FD.summary(_phaseRows(r.uuid)).flights || []) if (f.map && f.phase) flights.push({ key: `${f.map}::${f.phase}`, verdict: f.verdict, landed: !!f.landed, ended: f.ended || 0 }); } catch (_) {} }
+  flights.sort((a, b) => (a.ended || 0) - (b.ended || 0));
+  const r = BQ.queue({ maps, census, flights });
+  if (censusWhy) (r.said = r.said || []).push(`census failed: ${censusWhy}`);
+  return r;
+}
+
+// 0.60.225 SL5 — James, 2026-10-24: "yes do it." (to B: a proven change lands by itself in his project repos, Nexus stays review).
+// A proven run's proposals are applied when his rule allows each one (lib/trust-rule.js allows); every one says why, landed or not.
+// apply() keeps its own guards (an agent's change that regresses a test is refused). Undo is the change's revert.
+function _trust() { const T = _require('../../lib/trust-rule.js'); T.setStore({ load: () => loadTable('idearium_trust_rules'), append: (r) => appendRow('idearium_trust_rules', r) }); return T; }
+async function _landByRule(runId) {
+  const PC = _require('../../lib/phase-close.js'), RI = _require('../../lib/repo-inject.js'), T = _trust();
+  const run = _runOf(runId);
+  if (!run || !run.proven) return { landed: 0, asked: 0, why: 'not proven' };
+  const mine = PC.injectsOf(run.runId, RI.list(null, { limit: 100000 })).filter(n => n.status === 'proposed');
+  let landed = 0, asked = 0; const whys = [];
+  for (const n of mine) {
+    const repo = getRepoLayer().get(n.repoUuid);
+    const a = T.allows({ repo, change: n, run });
+    if (!a.lands) { asked++; whys.push(`${n.path}: ${a.why}`); continue; }
+    const r = await Promise.resolve(RI.apply(n.uuid, { layer: getRepoLayer(), approvedBy: `trust-rule:${T.get(n.repoUuid).rule}` }));
+    if (r && r.ok) { landed++; _closeLog(n.repoUuid, 'inject.landed-by-rule', `${n.path} landed by his rule`, a.why); }
+    else { asked++; whys.push(`${n.path}: apply refused: ${((r && r.errors) || []).join('; ')}`); }
+  }
+  return { landed, asked, why: whys.slice(0, 3).join(' · ') || (mine.length ? 'all landed' : 'no proposal left') };
+}
+
+// 0.60.225 SL4 — the loop (idearium/lib/autobuild.js): its effects, given to it as deps
+function _loopRunState(runId) {
+  const RW = _require('../../lib/run-watch.js'), PC = _require('../../lib/phase-close.js');
+  const b = PC.baseRun(runId);
+  const runs = RW.runsOf(loadTable('idearium_phase_runs').filter(r => r && PC.baseRun(r.runId) === b));
+  const build = runs.get(b), proof = runs.get(`${b}-proof`);
+  const run = _runOf(b);
+  if (!build) return { final: false, state: 'not found yet', proven: false };
+  if (proof && RW.isFinal(proof)) return { final: true, state: proof.last.state, proven: !!(run && run.proven) };
+  const failed = ['failed', 'refused', 'stalled', 'cancelled', 'contract-incomplete', 'unproven'];
+  if (RW.isFinal(build) && (failed.includes(build.last.state) || Date.now() - (build.last.ts || 0) > 30 * 60000)) return { final: true, state: build.last.state, proven: !!(run && run.proven) };
+  return { final: false, state: (proof && proof.last.state) || build.last.state, proven: false };
+}
+async function _loopDeps() {
+  const AB = await import('../lib/autobuild.js');
+  return { AB, deps: {
+    load: () => loadTable('idearium_loops'), save: (l) => appendRow('idearium_loops', l), now: () => Date.now(),
+    queue: (r) => _queueFor(getRepoLayer().get(r.uuid)),
+    build: async (r, e) => { const repo = getRepoLayer().get(r.uuid); const st = AB.status(r.uuid, { deps: { load: () => loadTable('idearium_loops') } });
+      const b = await _phaseBuild(repo, _repoDiskDir(repo.uuid), { map: e.map, phase: e.id, startedBy: { who: `loop:${st ? st.loopId : '?'}`, whence: 'system' } });
+      return b.ok ? { ok: true, runId: b.data && b.data.runId } : { ok: false, error: b.error || `refused (${b.status || '?'})` }; },
+    runState: _loopRunState, land: _landByRule, close: (runId) => _closeRun(runId, { trigger: 'loop' }),
+    emit: (type, payload) => { getIdeaOS().emit(`idearium.${type}`, payload); _emitLedger(`idearium.${type}`, payload); },
+  } };
+}
+let _loopTicking = false;
+async function _loopTick() {
+  if (_loopTicking) return []; _loopTicking = true;
+  try {
+    const { AB, deps } = await _loopDeps();
+    const last = new Map(); for (const l of loadTable('idearium_loops')) if (l && (!last.has(l.repoUuid) || (l.at || 0) >= (last.get(l.repoUuid).at || 0))) last.set(l.repoUuid, l);
+    const out = [];
+    for (const l of last.values()) if (l.state === 'running') {
+      try { const r = await AB.step(l, deps); out.push(r); if (r.outcome !== 'waiting' && r.outcome !== 'stopped') _closeLog(l.repoUuid, `loop.${r.outcome}`, `loop ${l.loopId}: ${r.outcome}${r.key ? ` ${r.key.split('::').pop()}` : ''}`, r.why); if (r.outcome === 'stopped') _closeLog(l.repoUuid, 'loop.stopped', `loop ${l.loopId} stopped`, r.why); }
+      catch (e) { _closeLog(l.repoUuid, 'loop.step-failed', `loop ${l.loopId}: a step failed`, e.message); }
+    }
+    return out;
+  } finally { _loopTicking = false; }
+}
+
 // 0.60.223 SL1 — James, 2026-10-23: "contiue getting idearium building phases". Nothing marked a phase done, so a proven run left its
 // phase open and DG1 refused everything after it. _closeRun is called when a run's proof row says proven and whenever one of its changes
 // is applied; it closes the phase only when the run is proven AND every change of it is applied (lib/phase-close.js landed). The close
@@ -786,7 +873,8 @@ function _runOf(runId) {
   const first = rows.find(r => r.map && r.phase) || rows[0];
   const proof = [...rows].reverse().find(r => r.state === 'proven');
   const last = rows.reduce((x, y) => ((y.ts || 0) >= (x.ts || 0) ? y : x), rows[0]);
-  return { runId: b, repoUuid: first.repoUuid, map: first.map, phase: first.phase, proven: !!proof, state: last.state, snapshot: (proof || first).snapshot || null };
+  return { runId: b, repoUuid: first.repoUuid, map: first.map, phase: first.phase, proven: !!proof, state: last.state, snapshot: (proof || first).snapshot || null,
+    strength: proof && proof.proof && proof.proof.strength || null };   // 0.60.226 what the proof ran (idearium/repo/proof-run.js proofStrength)
 }
 function _closeLog(repoUuid, kind, title, detail) {
   try { _require('../../lib/activity-log/compartment.js').record({ compartment: repoUuid, kind, status: kind.split('.').pop(), actor: 'idearium', ts: Date.now(), title, detail: detail || null }); } catch (_) {}
@@ -1954,7 +2042,7 @@ async function _autoRetry(info, kind, note) {
   catch (e) { return { ok: false, error: e.message }; }
 }
 async function _watchRuns() {
-  const mins = Number(_cfg('repos.stall_minutes', 10));
+  const mins = Number(_cfg('repos.stall_minutes', 20));   // §SL4 0.60.225 was 10: a claude-code attempt may run 15 min (lib/repo-agent.js), so a working one was called stalled
   if (!(mins > 0)) return [];
   const RW = _require('../../lib/run-watch.js');
   const st = RW.stalled(loadTable('idearium_phase_runs'), { stallMs: mins * 60 * 1000 });
@@ -2132,10 +2220,10 @@ ${fb}`, ...dispatch, layer: getRepoLayer(), session: `${base.runId}-a${attempt}`
     }
     run = { ...r.run, against: { ...against, ...(size ? { leverage: CH.leverage({ ...size, met: r.run.met }) } : {}) } };
     if (run.verdict === 'ready') {
-      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...run.against, proof: { met: run.met, total: run.total, report: run.files && run.files.report }, ts: Date.now() });
+      appendRow('idearium_phase_runs', { uuid: `${pbase.runId}-proven`, ...pbase, state: 'proven', attempt, snapshot: commitId, ...run.against, proof: { met: run.met, total: run.total, report: run.files && run.files.report, strength: run.strength || null }, ts: Date.now() });
       getIdeaOS().emit('idearium.phase.proven', { ...pbase, attempt, met: run.met, total: run.total, report: run.files && run.files.report });
       getIdeaOS().emit('idearium.repo.phase.run', { ...pbase, state: 'proven' });
-      _closeRun(base.runId, { trigger: 'proven' }).catch((e) => _closeLog(base.repoUuid, 'phase.close-failed', `${phase}: the close check failed`, e.message));   // §SL1 0.60.223 — closes now if its changes are already on disk (auto mode)
+      _landByRule(base.runId).then(() => _closeRun(base.runId, { trigger: 'proven' })).catch((e) => _closeLog(base.repoUuid, 'phase.close-failed', `${phase}: the land/close check failed`, e.message));   // §SL5 0.60.225 his rule first, then the close   // §SL1 0.60.223 — closes now if its changes are already on disk (auto mode)
       // §0.39.362 CH5 — a proven phase moves the compartment: its end state is checked again (with what is proposed)
       if (charter.endState.length) _charterCheck(target.uuid, { cause: base.runId }).catch(e => console.warn(`[idearium] end-state check after ${base.runId}: ${e.message}`));
       return { state: 'proven', attempt, run };
@@ -3278,6 +3366,7 @@ const ROUTE_CAP = {
   'projects.overview': CAPS.READ_IDEAS,   // §0.60.74 COSA10
   'phases.next': CAPS.READ_IDEAS, 'repo.phases.next': CAPS.READ_IDEAS,   // §SL0 — reads only
   'repo.phases.closes': CAPS.READ_IDEAS,   // §SL1 — reads only
+  'repo.loop': CAPS.READ_IDEAS, 'trust.get': CAPS.READ_IDEAS,   // §SL4/SL5 — reads only
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
   'repo.changes': CAPS.READ_IDEAS, 'repo.change.get': CAPS.READ_IDEAS,   // §FR1 0.60.114 — reads only: one record per change
   'repo.flight': CAPS.READ_IDEAS, 'repo.flight.get': CAPS.READ_IDEAS, 'repo.failures': CAPS.READ_IDEAS, 'repo.failure.get': CAPS.READ_IDEAS,   // §FMR3 0.60.146 reads only
@@ -3303,6 +3392,7 @@ const ROUTE_CAP = {
   'context.find': CAPS.READ_IDEAS, 'repo.context.find': CAPS.READ_IDEAS, 'context.sources': CAPS.READ_IDEAS,   // 0.60.156 GM5 — reads only
   'lattice.neighbours': CAPS.READ_IDEAS,   // 0.60.157 GM4 — reads only
   'system.tunnel': CAPS.READ_IDEAS, 'system.tunnel.one': CAPS.READ_IDEAS, 'system.heartbeat': CAPS.READ_IDEAS,   // 0.60.128 DB13/DB14
+  'system.registry.drafts': CAPS.READ_IDEAS, 'system.registry.draft': CAPS.READ_IDEAS,   // 0.60.229 DB16 — reads only
   'system.registry': CAPS.READ_IDEAS, 'system.registry.one': CAPS.READ_IDEAS, 'system.registry.settle': CAPS.WRITE_IDEAS,   // 0.60.127 DB9/DB10
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
@@ -3614,6 +3704,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','heartbeat'], 'system.heartbeat'],   // 0.60.128 DB14 — every system asked over its health route: up, degraded, down
     ['GET',    ['api','system','registry'], 'system.registry'],   // 0.60.127 DB9 — every system and the crossings between them: the dependency graph
     ['GET',    ['api','system','registry',':system'], 'system.registry.one'],   // 0.60.127 DB9/DB10 — one system's generated registry: declared, observed, negative space
+    ['GET',    ['api','system','registry-drafts'], 'system.registry.drafts'],   // 0.60.229 DB16 — every system with no registry: its draft from the tree, and how far from sovereign
+    ['GET',    ['api','system','registry',':system','draft'], 'system.registry.draft'],   // 0.60.229 DB16 — one system's draft (lib/registry-draft.js), not in force
     ['POST',   ['api','system','registry',':system','settle'], 'system.registry.settle'],   // 0.60.127 DB10 — the shadow settled: each absence a gap
     ['POST',   ['api','system','lean'],   'system.lean.set'],    // 0.60.20 — { on } stops/starts the held services now and saves it
     ['POST',   ['api','repos',    ':uuid','system',':op'],  'repo.system.control'],      // §0.39.372 NC2 — restart | stop | start, through the supervisor
@@ -3701,6 +3793,12 @@ function matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','phases','evidence'],     'repo.phases.evidence'], // §SL2 0.60.224 done by evidence: its own tests run; dry run unless apply
     ['POST',   ['api','repos',    ':uuid','phases','groom'],        'repo.phases.groom'],    // §SL3 0.60.227 the DAG groomed: proposals from MP1 + DG3; dry run unless apply
     ['GET',    ['api','repos',    ':uuid','phases','nodes'],        'repo.phases.nodes'],    // §SL9 0.60.229 every phase's .phase node, per owner system: written, missing, stale
+    ['GET',    ['api','repos',    ':uuid','loop'],                  'repo.loop'],            // §SL4 0.60.225 the loop's state
+    ['POST',   ['api','repos',    ':uuid','loop','start'],          'repo.loop.start'],      // §SL4 0.60.225 { budget: { phases, minutes } }
+    ['POST',   ['api','repos',    ':uuid','loop','stop'],           'repo.loop.stop'],
+    ['POST',   ['api','repos',    ':uuid','loop','step'],           'repo.loop.step'],       // §SL4 one step now (the minute tick does the same)
+    ['GET',    ['api','trust-rule'],                                'trust.get'],            // §SL5 0.60.225 his rule: what lands without him
+    ['POST',   ['api','trust-rule'],                                'trust.set'],            // §SL5 0.60.225 set it: his words required
     ['POST',   ['api','repos',    ':uuid','phases','add'],          'repo.phases.add'],
     ['GET',    ['api','repos',    ':uuid','roadmaps'],              'repo.roadmaps'],          // 0.60.199 SD17 — the project's own roadmaps, and whether each is imported
     ['POST',   ['api','repos',    ':uuid','roadmaps','import'],     'repo.roadmaps.import'],   // 0.60.199 SD17 — one imported as a Nexus phasemap beside it
@@ -5876,31 +5974,12 @@ async function handle(req, res, route, query, body) {
     // why every other open phase cannot (lib/build-queue.js over the DAG, the census and the flights). Nexus's own maps, or a repo's.
     case 'phases.next':
     case 'repo.phases.next': {
-      const BQ = _require('../../lib/build-queue.js'), C = _require('../../lib/phase-census.js'), FD = _require('../../lib/flight-data.js');
-      let maps, root, repos;
-      if (action === 'phases.next') {
-        root = _require('../../lib/nexus-self/systems.js').ROOT;
-        maps = fs.readdirSync(path.join(root, 'docs')).filter(f => f.endsWith('-phasemap.spec')).map(f => ({ path: `docs/${f}`, text: fs.readFileSync(path.join(root, 'docs', f), 'utf8') }));
-        repos = getRepoLayer().list({}).filter(r => r.nexusSelf);
-      } else {
-        const repo = getRepoLayer().get(params.uuid);
-        if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
-        const PH = await import('../repo/phases.js');
-        const m = PH.mapsFor({ repo, repoDir: _repoDiskDir(params.uuid) });
-        root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);   // a Nexus system's phases are judged in Nexus's tree
-        maps = (m.maps || []).map(x => ({ path: x.path, text: x.text || '' }));
-        repos = [repo];
-      }
-      let census = null, censusWhy = null;
-      try { census = C.census({ root, system: null, maps }); } catch (e) { censusWhy = e.message; }
-      const flights = [];
-      for (const r of repos) { try { for (const f of FD.summary(_phaseRows(r.uuid)).flights || []) if (f.map && f.phase) flights.push({ key: `${f.map}::${f.phase}`, verdict: f.verdict, landed: !!f.landed, ended: f.ended || 0 }); } catch (_) {} }
-      flights.sort((a, b) => (a.ended || 0) - (b.ended || 0));
-      const r = BQ.queue({ maps, census, flights });
-      if (censusWhy) (r.said = r.said || []).push(`census failed: ${censusWhy}`);
+      let repo = null;
+      if (action === 'repo.phases.next') { repo = getRepoLayer().get(params.uuid); if (!repo) return err(res, 404, `repo not found: ${params.uuid}`); }
+      const r = await _queueFor(repo);
       const limit = Math.max(1, Math.min(2000, parseInt(query.limit, 10) || 50));
       const group = query.group ? String(query.group) : null;
-      return ok(res, { ...r, queue: r.queue.slice(0, limit), blocked: (group ? r.blocked.filter(b => b.group === group) : r.blocked).slice(0, group ? 2000 : limit), lines: BQ.lines(r) });
+      return ok(res, { ...r, queue: r.queue.slice(0, limit), blocked: (group ? r.blocked.filter(b => b.group === group) : r.blocked).slice(0, group ? 2000 : limit), lines: _require('../../lib/build-queue.js').lines(r) });
     }
     case 'phases.census': {
       // 0.60.188 CNS1 — every phase of Nexus's maps judged against commits, releases, files and proof (lib/phase-census.js); the
@@ -6035,6 +6114,17 @@ async function handle(req, res, route, query, body) {
       const t = SYS.tunnel(String(params.name || ''), { commands: SPEC });
       if (!t.ok) return err(res, 404, t.error);
       return ok(res, { ...t, heartbeat: await SYS.heartbeat(t.name) });
+    }
+    case 'system.registry.drafts': case 'system.registry.draft': {
+      // 0.60.229 DB16 — a draft is built fresh from the tree each time; whether it is written (<system>/registry-components.draft.json) and
+      // accepted (renamed to registry-components.js) is said, so the answer is never a stale copy
+      const RD = _require('../../lib/registry-draft.js');
+      const root = path.dirname(_require.resolve('../../package.json'));
+      const one = (sys) => { const d = RD.draft(sys, { root }); return { ...d, written: fs.existsSync(path.join(root, sys, 'registry-components.draft.json')), accepted: fs.existsSync(path.join(root, sys, 'registry-components.js')) }; };
+      if (action === 'system.registry.draft') { try { return ok(res, one(String(params.system || ''))); } catch (e) { return err(res, 404, e.message); } }
+      const list = RD.missing({ root }).map(one).map(d => ({ system: d.systemId, routes: d.components.length, taxonomy: d.events.taxonomy || null, declaredEvents: d.events.declared || 0, emits: d.events.emits.length, handles: d.events.handles.length, reachedInto: d.reached_into.length, sovereign: d.sovereignty && d.sovereignty.sovereign, out: d.sovereignty && d.sovereignty.out, blockers: d.sovereignty && d.sovereignty.blockers, written: d.written, said: d.said }));
+      list.sort((a, b) => (a.out - b.out) || (a.reachedInto - b.reachedInto) || a.system.localeCompare(b.system));
+      return ok(res, { systems: list, order: 'lowest friction first: fewest ways out, then fewest files others reach into (CS_D7)' });
     }
     case 'system.registry':
     case 'system.registry.one':
@@ -9248,6 +9338,23 @@ async function handle(req, res, route, query, body) {
       return ok(res, { dryRun: !written, stats: r.stats, lines: G.lines(r), proposals: r.proposals.slice(0, parseInt(b.limit, 10) || 200),
         forAPerson: r.forAPerson.filter(x => b.all || x.kind !== 'unplaced').slice(0, 300), pending: { maps: a.changes.length }, refused: a.refused, written });
     }
+    case 'repo.loop': case 'repo.loop.start': case 'repo.loop.stop': case 'repo.loop.step': {
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const { AB, deps } = await _loopDeps();
+      if (action === 'repo.loop.start') {
+        try { const l = AB.start({ repo, budget: (body && body.budget) || {}, by: _starter(req, body).who, deps }); _closeLog(repo.uuid, 'loop.started', `loop ${l.loopId} started`, `budget: ${l.budget.phases} phase(s), ${l.budget.minutes} min`); const r = await AB.step(l, deps); return ok(res, { loop: r.loop, first: { outcome: r.outcome, key: r.key || null, why: r.why }, trust: _trust().get(repo.uuid) }); }
+        catch (e) { return e.code === 'LOOP_RUNNING' ? err(res, 409, e.message, { code: e.code, loop: e.loop }) : err(res, 500, e.message); }
+      }
+      if (action === 'repo.loop.stop') { const l = AB.stop(repo, { why: (body && body.why) || `stopped by ${_starter(req, body).who}`, deps }); if (l) _closeLog(repo.uuid, 'loop.stopped', `loop ${l.loopId} stopped`, l.stopWhy); return ok(res, { loop: l }); }
+      if (action === 'repo.loop.step') { const cur = AB.status(repo.uuid, { deps }); const r = await AB.step(cur, deps); return ok(res, { loop: r.loop, outcome: r.outcome, key: r.key || null, why: r.why }); }
+      return ok(res, { loop: AB.status(repo.uuid, { deps }), trust: _trust().get(repo.uuid) });
+    }
+    case 'trust.get': return ok(res, { rule: _trust().get(query.repo || null), rules: _require('../../lib/trust-rule.js').RULES });
+    case 'trust.set': {
+      try { const T = _trust(); const r = T.set({ repo: (body && body.repo) || '*', rule: body && body.rule, kept: (body && body.kept) || [], words: body && body.words, context: (body && body.context) || null, by: _starter(req, body).who }); return ok(res, { rule: r }); }
+      catch (e) { return err(res, 400, e.message); }
+    }
     case 'repo.phases.close': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -10720,7 +10827,7 @@ function _startBuildQueuePoller(port) {
   tick(); // real, immediate first pass — don't wait a full interval before resuming work that was already pending when this boot started
   console.log(`[idearium/build-queue] real, periodic queue drain started — every ${BUILD_QUEUE_POLL_MS}ms`);
   // 0.60.21 — the run watchdog: every minute, a run with no new step for repos.stall_minutes is closed and retried once
-  setInterval(() => { _watchRuns().catch(e => console.warn(`[idearium/run-watch] ${e.message}`)); }, 60000).unref?.();
+  setInterval(() => { _watchRuns().catch(e => console.warn(`[idearium/run-watch] ${e.message}`)).then(() => _loopTick()).catch(e => console.warn(`[idearium/loop] ${e.message}`)); }, 60000).unref?.();   // §SL4 0.60.225 every running loop steps on the same minute
   return timer; // real handle — lets a caller (or a test) stop this poller; startAPI() itself never needs to
 }
 

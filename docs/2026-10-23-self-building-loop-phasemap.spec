@@ -96,10 +96,10 @@ phases:
     proof: "proposals for the map edits, each with its evidence; applied, SL0's queue grows by that many and DG2 accepts them"
 
   SL4_the_loop:
-    status: OPEN
+    status: DONE 0.60.225 — test-self-building-loop 5/5 (LP-02 three chained phases in order; LP-05 in Clear Glass)
     layer: integration
-    depends_on: [SL1_a_proven_phase_closes_itself, SL0_what_can_be_built_now, AB1_autobuild_loop_and_resume, FR10_stop_the_ladder]
-    files: [idearium/lib/autobuild.js, idearium/api/index.js, idearium/cli/route-commands.js]
+    depends_on: [SL1_a_proven_phase_closes_itself, SL0_what_can_be_built_now, AB1_autobuild_loop_and_resume, FR10_stop_the_ladder, SL5_when_a_proven_change_lands_alone]
+    files: [idearium/lib/autobuild.js, idearium/api/index.js, idearium/cli/route-commands.js, idearium/ui/js/phases.js, tests/modules/test-self-building-loop.test.js]
     spec: docs/self-building-loop.spec
     blocks: [MOD-SL-LOOP]
     does: >-
@@ -111,7 +111,7 @@ phases:
     proof: "a fixture repo with three chained phases: started once, all three build, prove, land and close in order; a fourth that needs a decision is skipped and listed; a stuck one stops at the rule"
 
   SL5_when_a_proven_change_lands_alone:
-    status: OPEN-DECISION
+    status: DONE 0.60.225 — DECIDED B (James, 2026-10-24, "yes do it."; read as B, to confirm); lib/trust-rule.js
     depends_on: [SL1_a_proven_phase_closes_itself]
     files: [lib/repo-inject.js, lib/trust-rule.js]
     spec: docs/self-building-loop.spec
@@ -370,3 +370,50 @@ James, 2026-10-23: "run deep and recursive simulations, of every possible failur
   not burn retries; every failing run ends (no hang) within its attempts.
 - Said, not hidden: one traced run before the last fix showed a single failure whose name was not captured; it did not reproduce in the
   eight runs after.
+
+# ── From brave-cori, merged 2026-10-26 (0.60.255): the addenda below were written there, at its numbering, unchanged (§0.3).
+
+## ADDENDUM 2026-10-24 (0.60.225) — his decision on SL5, and SL4 built
+James, 2026-10-24: "yes do it."
+- **Context.** The coder's last message ended: "Say 'B' and 'the 2' (or your own picks) and I'll start SL4." The options on the table were
+  SL5 A (every change asks), B (a proven change whose gates all passed lands by itself in his project repos; Nexus's own repos stay
+  review), C (B and Nexus too, except files he keeps), with the coder's recommendation B; and, from the SL2 dry run, closing the 2 phases
+  whose own test passed, all 107, or his picks, with the coder's recommendation the 2.
+- **The coder's reading (to confirm):** his "yes do it." accepts the recommendations: SL5 = B, close the 2, start SL4. Another reading
+  ("do SL4", rule unchanged) exists; if he meant that, his rule is set back to A with `trust --set A --words "…"` and nothing else changes.
+- **What it changed.**
+  - SL5: lib/trust-rule.js. B is the recorded default with his words and this context (DECIDED; a rule he sets later through
+    POST /api/trust-rule supersedes it, never rewriting it). A proven run's proposals in a project repo are applied when the rule allows
+    each one (_landByRule, before SL1's close); a Nexus repo stays review; a change whose evidence shows a regressed test is not landed.
+  - The 2: G0 (2026-09-28-graph-build-context-settings-memory) and PS1_phase_specs (2026-10-20-substrate-graph-traversal-chunking-gating)
+    closed through setPhaseStatus, "DONE 2026-10-24. by evidence — <its own test> (dry run 2026-10-23; James 2026-10-24: yes do it. )".
+  - SL4: idearium/lib/autobuild.js — start / stop / status / step over the queue (SL0), the phase build, his rule (SL5) and the close
+    (SL1), stepped by the watchdog's minute tick. Budget (default 5 phases, 240 minutes), three phases in a row that did not close stop
+    it, a phase that did not close is skipped for the rest of the loop and listed, decisions are never built and are named when it
+    stops, one loop per repo. GET/POST /api/repos/:uuid/loop(/start|/stop|/step), `repo loop`, `trust`, the Phases rail's loop section.
+  - The watchdog's stall default is 20 minutes (was 10): a claude-code attempt may run 15 (found 2026-10-23).
+- **Drift from the spec, decided by the axioms:** the stop rule is "three phases in a row did not close" rather than FR10's "the same
+  failure from different agents" (FR10 is mapped, not wired; the loop's rule is the part it can see, §1.2); the loop lives in Idearium's
+  tables (idearium_loops, append-only), the rule's default in code because the store is data (§0.3, his decision must not be lost).
+- **Not run yet on Nexus:** a Nexus repo stays review under B, so on Nexus the loop builds and proves, and each phase waits for his apply.
+  No loop was started from this session: starting one spends agent calls, and that is his to start (the rail's ⟳ start, or `repo loop
+  <repo> start`).
+
+## ADDENDUM 2026-10-24 (0.60.226) — his looking-glass run, read against the loop
+James, 2026-10-24, uploading looking-glass-bundle-v0_4.zip and its error report (docs/2026-10-22-looking-glass-v0_4-error-report.md): "This is a
+few days old. But does this help. A project that had auto built 5 phases"
+- **Checked against the zip (§0.1), not taken from the report:** seven proof runs in .nexus/proof-runs, all READY. SP0–SP4's included a
+  `tests` condition that ran; SP5's (09:30 and latest.json) had one condition, "A test that proves title as the spec states it, against the
+  real code (no mock)", with check kind `file` (lib/title.js exists). SP1's own test asserts only a non-empty array of strings, and
+  lib/core_ideas.js returns twelve generic words, none of the spec's.
+- **What it changed (0.60.226):** idearium/repo/proof-run.js proofStrength — what a proof ran; "READY ON FILES ONLY" and an honest footer
+  when nothing ran; "Promised a test, checked only a file" names the conditions like SP5's. lib/phase-close.js landed and lib/trust-rule.js
+  allows refuse a files-only proof. Replayed on his seven runs: SP0–SP4 close, SP5 does not.
+- **Already fixed before his upload was read:** the "Gemini said …" files and the names cut short at a dot (E5) — lib/path-guard.js (RC4,
+  0.60.170) strips the label and refuses a cut name; checked on his four file names.
+- **Not fixed, proposed to him (not added as phases: his 2026-10-21 "stop adding more phases"):**
+  - a test that cannot fail proves nothing (E1): run the phase's own test once against its module with every export gutted (returning
+    nothing); a test that still passes is reported as unable to fail, and its pass is not a proof. Deterministic, no model.
+  - a phase spec copied from another (E3: SP5's text is SP1's with the name swapped): the map check flags two phases whose `does:` match
+    after the name is removed.
+  - a scene that fails its own schema (E6) and the README link (E5) are that project's to fix, not Nexus's.

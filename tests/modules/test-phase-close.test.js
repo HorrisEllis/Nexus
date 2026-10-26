@@ -13,6 +13,8 @@
  *   PC-04  the real path: a repo, a proven run row, its change proposed (nothing closes: proven against a proposal), then applied
  *          (the hook closes the map's phase: DONE … proven by run), the closes route lists it, the change reverted (reopened)
  *   PC-05  every door: the two routes, the two command rows, the phase panel's row
+ *   PC-07  0.60.226 his looking-glass SP5: proven on one file check that promised a test → not closed, not landed, the report says
+ *          READY ON FILES ONLY and names the promise (James, 2026-10-24: "does this help. A project that had auto built 5 phases")
  *   PC-06  in Clear Glass: the phase panel's "closed by" (run, version, date) and "reopened" (which change was undone)
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -137,6 +139,23 @@ const inj = (status, p = 'lib/x.js', runId = 'phrun-a') => ({ uuid: `i-${status}
     assert.deepStrictEqual(rows.find(r => r.key === 'repo.closes').req(a), { method: 'GET', path: '/api/repos/u1/phases/closes' });
     const ui = fs.readFileSync(path.join(ROOT, 'idearium/ui/js/phases.js'), 'utf8');
     assert.ok(/\/phases\/closes`/.test(ui) && /function _phCloseRow/.test(ui) && /closed by/.test(ui));
+  });
+
+  await test('PC-07', "his looking-glass SP5 (2026-10-19): READY on one file check that promised a test — not closed, said; the report says files only", async () => {
+    const PR = await import(pathToFileURL(path.join(ROOT, 'idearium/repo/proof-run.js')).href);
+    // the condition exactly as his bundle's .nexus/proof-runs/latest.json kept it
+    const results = [{ id: 'a-test', says: 'A test that proves title as the spec states it, against the real code (no mock): §1.1, §12.1.', check: { kind: 'file', path: 'lib/title.js' }, met: true, evidence: 'lib/title.js is there' }];
+    const st = PR.proofStrength(results);
+    assert.deepStrictEqual([st.ran, st.files, st.filesOnly, st.untested.length], [0, 1, true, 1]);
+    const l = PC.landed({ ...run, strength: st }, { injects: [] });
+    assert.ok(!l.landed && l.filesOnly); assert.match(l.why, /proven on file checks only: nothing ran/);
+    const T = require(path.join(ROOT, 'lib/trust-rule.js'));
+    assert.match(T.allows({ repo: { uuid: 'p' }, change: { path: 'lib/title.js', status: 'proposed' }, run: { proven: true, strength: st } }).why, /file checks only/);
+    const text = PR.reportText({ subject: 'looking-glass', startedAt: Date.now(), finishedAt: Date.now(), verdict: 'ready', met: 1, total: 1, results, strength: st });
+    assert.match(text, /\*\*READY ON FILES ONLY\.\*\*/); assert.match(text, /## Promised a test, checked only a file/);
+    assert.match(text, /nothing was run, so this does not show that the code works/); assert.doesNotMatch(text, /checked by running it/);
+    const strong = PR.proofStrength([{ says: 'tests/sp1.test.js passes', check: { kind: 'tests' }, met: true }, ...results]);
+    assert.ok(!strong.filesOnly && strong.ran === 1, 'a proof where its test ran is not files-only');
   });
 
   await test('PC-06', 'in Clear Glass: the phase panel says which run closed it, and a reopened one which change was undone', async () => {

@@ -104,7 +104,7 @@ phases:
     proof: "the three phasemaps on main; the consolidation map's CN_D1 addendum; next the EW/LM/GD phases build against them"
 
   BCR4_close_or_archive_161:
-    status: OPEN
+    status: "DONE 0.60.255 — merged (his 2026-10-26 \"merge that repo please\", the addendum at the end); the branch kept as the archive of its line (§0.3)"
     layer: integration
     depends_on: [BCR1_cos_services, BCR2_kernel_ports, BCR3_emerge_and_loom_decisions]
     files: []
@@ -115,3 +115,40 @@ order: >-
   BCR0 first (his three decisions). Then BCR1 (cos/services), BCR2 (kernel ports), BCR3 (the emerge/loom/guardian decisions) —
   each independent, each ported and renumbered above main's latest, each proven. BCR4 last (close/archive #161). Nothing is merged
   or closed until he answers BC_D1–BC_D3; #161 is left exactly as it is until then.
+
+# ── ADDENDUM 2026-10-26 (0.60.255) — merged, not ported: his new call supersedes BC_D3 (both kept, §0.3) ──
+# Context: by 0.60.254 BCR1–BCR3 had ported cos/services, the kernel ports (RAID, pulse, Ollama, Loom's store, the wall) and the maps.
+# Still on brave-cori only: SL4/SL5 (the loop and his trust rule), the proof-strength fix, the DB16 registry drafts, the spec-compiler
+# port, PS3/PS4, and its records. Asked nothing; he wrote:
+# James, 2026-10-26: "Claude/brave cori eczug1. merge that repo please. make sure we dont regenerate the files we moved, and archived."
+# BC_D3 was "Port it phase-by-phase" (2026-10-24). The coder's reading: "merge" = a real git merge, so the branch's history is in main's
+# line and #161 has nothing left unmerged; "dont regenerate the files we moved, and archived" = main's tree wins for every path main moved
+# (emerge → lib/emerge, erosmancer → clear-glass/erosmancer, emergence → lib/emergence, remote-desktop and security → cos/, sentinel →
+# lib/sentinel, cli → lib/cli, nexus → lib/nexus) and every archive, and no generated node (.phase, .graph, atlases, README) is rewritten.
+merge_2026_10_26:
+  how: >-
+    git merge of origin/claude/brave-cori-eczug1 (24 commits, base d7ef2d0b) into claude/keen-davinci-rqxxpb at 0.60.254. 2,946 paths
+    under moved, archived or generated folders resolved to main's side (or left out where main has no such path). Every other conflict
+    resolved by hand, file by file.
+  brought_in:
+    - "SL4 the self-building loop: idearium/lib/autobuild.js; GET/POST /api/repos/:uuid/loop(/start|/stop|/step); the minute tick; `repo loop`; the Phases rail's loop (start asks, stop)"
+    - "SL5 his trust rule B: lib/trust-rule.js; GET/POST /api/trust-rule (his words required); `trust`; a proven run's proposals land by his rule before the close check"
+    - "0.60.226 proof strength: idearium/repo/proof-run.js says what a proof ran; lib/phase-close.js refuses to close a files-only proof; the stall default 10 → 20 min"
+    - "DB16 registry drafts: lib/registry-draft.js, `system drafts`, GET /api/system/registry-drafts and /:system/draft; the three drafts regenerated from main's tree (orchestrator, components, cos)"
+    - "cortex/boot.js provides RAID to lib/raid-port.js in-process (main's port documented it, Cortex never called provide())"
+    - "guardian /forge/health: cockpit/forge is not in the tree; said instead of throwing (GD0)"
+    - "records: the graph-build G0 status; contract-queue's CB3 addendum (his job-ledger words); self-building-loop.spec's SL addendum; cos-spine and self-building-loop map addenda; PROOF-OF-COMPETENCY entries 0.60.237–0.60.239 under a from-brave-cori note; docs/2026-10-22-looking-glass-v0_4-error-report.md (his upload)"
+    - "its 18 CHANGELOGs and version lines (numbers 0.60.225–0.60.242 collide with main's own) in _archive/2026-10-26-brave-cori-records/"
+  not_ported_said:
+    - "the spec-compiler port (EW2/EW3) and its /api/compiler routes: on main the compiler is the kernel's (lib/emerge/compiler), so its callers' require is no crossing. Kept in _archive/2026-10-26-brave-cori-records/not-ported/."
+    - "PS3/PS4 (a uuid per bundle; one file per phase): would rewrite every .phase and drop every .graph — the regeneration he said not to do. Open as his call."
+    - "EW1 emerge as a 16th system, the 'language' crossing kind, FOLDED/realSystems in lib/system-boundary.js: main's RF2 put the language in lib/; main's census stands."
+    - "sentinel's archive (his 2026-10-24 \"Yeah archive it.\"): main keeps lib/sentinel; open as BCR5."
+    - "readme-generate's phase-node folding: it changes the generated README; left for the next README generation, said."
+  tests: "test-registry-draft 6/6 (RD-05/RD-06 rewritten for main's tree; brave-cori's kept in not-ported/), test-self-building-loop 5/5, test-phase-close 7/7, test-proof-run 7/7, test-phase-proof 7/7, test-raid-port 4/4, test-loom-into-cos 8/8, test-sovereign-systems 10/10, test-cos-compartment-template 8/8"
+phases_added_2026_10_26:
+  BCR5_sentinel_archive:
+    status: OPEN
+    depends_on: [BCR4_close_or_archive_161]
+    files: [lib/sentinel/interaction-contract.json, lib/cli/sentinel.js, tests/modules/test-sentinel-cli.js, docs/nexus-sentinel.spec]
+    does: "his 2026-10-24 \"Yeah archive it.\" applied on main: lib/sentinel and lib/cli/sentinel.js to _archive (git mv), test-sentinel-cli out of run-all, the spec addended. Not done in the merge: it is a move, and the merge kept main's moves."

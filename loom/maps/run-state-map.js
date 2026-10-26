@@ -120,6 +120,10 @@ const FILES = [
   ['lib/build-queue.js', I('lib/build-queue.js'), [I('lib/phase-dag.js')]],
   ['lib/phase-groom.js', I('lib/phase-groom.js'), [I('lib/phase-dag.js'), I('lib/phase-files.js'), I('lib/phase-map-auto.js')]],   // 0.60.227 SL3 the DAG groomed: proposals from MP1 + DG3, for a person what needs a choice
   ['lib/phase-close.js', I('lib/phase-close.js'), [I('lib/test-map.js')]],   // 0.60.223 SL1 closes a proven, landed phase; 0.60.224 SL2 byEvidence (its own tests, through lib/test-map.js)   // 0.60.223 SL1 a proven, landed phase closes itself; a revert reopens it (the writer is passed in)   // 0.60.222 SL0 what can be built now, and why every other open phase cannot
+  ['lib/trust-rule.js', I('lib/trust-rule.js'), []],   // 0.60.225 SL5 (from brave-cori) his rule for what lands without him
+  ['lib/registry-draft.js', I('lib/registry-draft.js'), [I('lib/system-boundary.js')]],   // 0.60.229 DB16 (from brave-cori) a registry drafted for every system with none
+  ['cos/services/anonymous/nexus.js', I('cos/services/anonymous/nexus.js'), []],   // 0.60.235 SV0 his engines' kernel in COS (spawns engines/<name>.js by name, newline-JSON IPC)
+  ['idearium/lib/autobuild.js', I('idearium/lib/autobuild.js'), []],   // 0.60.225 SL4 (from brave-cori) the loop: a state machine, every effect a dep
   ['lib/change-entry.js', I('lib/change-entry.js'), [I('lib/nexus-self/inject-gate.js')]],
   ['lib/chat-ledger-client.js', I('lib/chat-ledger-client.js'), []],   // 0.60.192 Clear Glass's live chat ledgers read through its routes (:7702), never its code   // 0.60.190 APV1 an approved change's change-log entry (it rides on its Versionium commit)   // 0.60.188 CNS1 every phase judged against its evidence (commits, releases, files, proof)
   ['lib/path-guard.js', I('lib/path-guard.js'), []],   // §0.60.170 RC4: a file name from an agent's reply is checked (chat label, cut short, prose) before it is written
@@ -149,6 +153,7 @@ const CONSUMERS = [
   [I('loom/lib/changelog.js'), I('loom/lib/store.js'), '0.60.241 LM2 loom_changelog'],
   [I('loom/scanners/phasemap-map.js'), I('loom/lib/store.js'), '0.60.241 LM2 phasemap_history'],
   [I('loom/server.js'), I('lib/pulse.js'), '0.60.241 LM0 the heartbeat (was nexus-connect startHeartbeat)'],
+  [I('architect/service.js'), I('loom/server.js'), '0.60.241 LM3 the hook read view over HTTP: GET /api/hooks, /:id, /validate, /graph (not a require)'],
   [I('lib/agent-build-loop.js'), I('loom/server.js'), '0.60.241 LM3 introspect(): GET /api/phasemap/history (not a require)'],
   [I('cos/compartment/process-runner.js'), I('cos/compartment/boundary.js'), '0.60.242 LM4 preloaded (node --require) when the env carries COS_BOUNDARY (not a require)'],
   [I('loom/templates/cos-compartment.js'), I('lib/cos-bridge.js'), '0.60.242 LM4 moveIn: getCompartment, createCompartment, setRuntime, start, processOf'],
@@ -173,6 +178,14 @@ const CONSUMERS = [
   [I('idearium/api/index.js'), I('idearium/repo/roadmap.js'), '0.60.223 SL1 setPhaseStatus note: "DONE <date>. <version> — proven by run <id>, on snapshot <s>"'],
   [I('idearium/api/index.js'), I('lib/phase-dag.js'), '0.60.224 SL2 repo.phases.evidence: the open phases of the repo\'s maps'],
   [I('idearium/ui/js/phases.js'), I('idearium/api/index.js'), '0.60.224 SL2 the rail\'s "done by evidence?" → POST …/phases/evidence (dry run; close asks first)'],
+  [I('idearium/api/index.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 _loopDeps (queue, _phaseBuild, _loopRunState, _landByRule, _closeRun), _loopTick on the watchdog minute, repo.loop routes'],
+  [I('idearium/api/index.js'), I('lib/trust-rule.js'), '0.60.225 SL5 _landByRule: a proven run\'s proposals applied when his rule allows; trust.get / trust.set'],
+  [I('idearium/api/index.js'), I('lib/build-queue.js'), '0.60.225 _queueFor: shared by …/phases/next and the loop'],
+  [I('idearium/cli/route-commands.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 `repo loop <repo> [start|stop|step]`'],
+  [I('idearium/cli/route-commands.js'), I('lib/trust-rule.js'), '0.60.225 SL5 `trust`'],
+  [I('idearium/ui/js/phases.js'), I('idearium/lib/autobuild.js'), '0.60.225 SL4 the rail\'s loop: start (asks) / stop, built, closed, skipped; his rule in his words'],
+  [I('idearium/api/index.js'), I('lib/registry-draft.js'), '0.60.229 DB16 GET /api/system/registry-drafts and /api/system/registry/:system/draft'],
+  [I('idearium/cli/route-commands.js'), I('lib/registry-draft.js'), '0.60.229 DB16 `system drafts [<system>]`'],
   [I('idearium/cli/route-commands.js'), I('lib/phase-close.js'), '0.60.223 SL1 `repo close <repo> <runId>` and `repo closes <repo>` through the route'],
   [I('idearium/ui/js/phases.js'), I('lib/phase-close.js'), '0.60.223 SL1 the phase panel\'s "closed by" / "reopened" through GET …/phases/closes'],
   [I('idearium/ui/js/phases.js'), I('lib/build-queue.js'), '0.60.222 SL0 the rail\'s "can be built now" through GET …/phases/next'],

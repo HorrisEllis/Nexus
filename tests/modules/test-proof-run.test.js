@@ -115,7 +115,7 @@ function fixture(port) {
     assert.match(text, /\| ❌ \| There is a licence \| The file the condition names is not in the project\. \|/);
     assert.match(text, /## What is missing, and why/);
     assert.match(text, /### ❌ The build script works[\s\S]*Likely cause:\*\* The command ran and reported an error/);
-    assert.match(text, /Every line above was checked by running it, not by reading it/);
+    assert.match(text, /Every line above was checked: \d+ by running a test, a command or a page/);   // 0.60.226: what ran is said
     const last = await P.readLastProof(dir);
     assert.ok(last && last.met === 4 && last.results.length === 8);
     assert.ok(run.files && run.files.report === 'proof/PROOF-REPORT.md' && /\.nexus\/proof-runs\//.test(run.files.run));

@@ -34,3 +34,7 @@ data/ledger-store/bl7-*/
 # 0.60.252 UP2 — the update tool's history and the data files an update set aside: his state, never committed
 data/update/
 _archive/update/
+# 0.60.235 SV0 — a stack's state is never code: the kernel run without SERVICES_ROOT would write these beside itself
+cos/services/anonymous/state/
+cos/services/anonymous/conf/
+cos/services/anonymous/logs/
