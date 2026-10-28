@@ -160,3 +160,9 @@ James, 2026-10-28: "no patch file. unless idearium can run it. like i can drag i
 a change pack he can drop on his Nexus), main already had its own 0.60.221–0.60.224 and went up to 0.60.260. The releases named above as
 0.60.221, 0.60.222, 0.60.223 and 0.60.224 are 0.60.261, 0.60.262, 0.60.263 and 0.60.264; their changelogs say so. The text above is kept as
 written (§0.3).
+
+## ADDENDUM 2026-10-28 (0.60.269) — the Fiverr automation is node files he edits
+James, 2026-10-28: "can you move the fiverr automation and macros to actual node files imported in the settings. like .node files. I want to be able to edit what you added." · "those are supposed to be what you added but in node files. also need a about page in the settings, where it says the version, can check for updates to electron and clearglass."
+The four node files he handed over ship in clear-glass/automation/nodes, are seeded once into the Settings › Automation library (lib/automation-
+nodes.js seedBundled; his edit and delete stand), and the gig fill's delivery pick runs his "Fiverr gig - choose delivery" macro (imported
+from its file the first time). The built-in pick stays as the fallback, said. Proof: test-about-and-nodes AN-02, AN-03.

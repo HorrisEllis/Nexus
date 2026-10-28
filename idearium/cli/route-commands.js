@@ -1154,6 +1154,12 @@ export const SPEC = [
   { key: 'macro.stop', repo: false, usage: 'macro stop [--agent <tab>]', about: 'stop recording a tab: the steps it made (passwords become a {{password}} param) and the .macro file',
     req: (a) => ({ system: 'clear-glass', method: 'POST', path: '/cli/macros/record/stop', body: { agentId: a.flags.agent || 'default' } }),
     print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${(d.steps || []).length} steps → ${d.file}`) + ((d.params || []).length ? h.c.dim(`  params: ${d.params.join(', ')}`) : '') : h.c.amber(`  ${d.error}`)) },
+  { key: 'glass.about', repo: false, usage: 'glass about [--check]', about: 'which Nexus, Clear Glass and Electron are running; --check asks whether a newer Electron, Clear Glass or Nexus exists (read-only, installs nothing)',
+    req: (a) => ({ system: 'clear-glass', method: 'GET', path: a.flags && a.flags.check ? '/cli/about/check' : '/cli/about' }),
+    print: (d, a, h) => {
+      const i = d.info || d; console.log(h.c.bold(`  Nexus ${i.nexus || '?'} · Clear Glass ${i.clearGlass || '?'} · Electron ${i.electron || '?'} (Chrome ${i.chrome || '?'}, Node ${i.node || '?'}) · ${i.platform || ''}`));
+      for (const k of ['electron', 'clearGlass', 'nexus']) { const x = d[k]; if (!x || typeof x !== 'object') continue; console.log(`  ${k.padEnd(11)} ${x.error ? 'could not check: ' + x.error : (x.newer ? h.c.yellow(`newer: ${x.latest} (you have ${x.current})`) : `up to date (${x.latest})`)}`); }
+    } },
   { key: 'glass.processes', repo: false, usage: 'glass processes', about: 'what is running in Clear Glass: each process with its tabs and background tabs, memory and CPU (ending one is his, in the Processes window)',
     req: () => ({ system: 'clear-glass', method: 'GET', path: '/cli/processes' }),
     print: (d, a, h) => {

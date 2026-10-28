@@ -953,6 +953,7 @@ async function _startWire() {
           getMacro: (name) => macroTool.execute({ action: 'get', name }),
           createMacro: (m) => macroTool.execute({ action: 'create', ...m }),
           openPath: (dir) => shell.openPath(dir),
+          bundledDir: path.join(__dirname, '..', '..', 'automation', 'nodes'),   // 0.60.269 — Clear Glass's own node files (the Fiverr gig ones), seeded into Settings
           pages: {
             list: () => listBackgroundTabs().filter(t => /^auto-/.test(t.agentId)),
             act: (page, action) => _automationBrowser({ page, action }),

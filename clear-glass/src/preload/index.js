@@ -351,6 +351,11 @@ contextBridge.exposeInMainWorld('ClearGlass', {
   },
 
   // §BUILT 2026-09-19 — real AutofillProfile CRUD + detect/fill orchestration
+  // 0.60.269 — Settings › About: the versions, and whether a newer Electron / Clear Glass / Nexus exists (read-only)
+  about: {
+    info:  () => ipcRenderer.invoke('about:info'),
+    check: () => ipcRenderer.invoke('about:check'),
+  },
   autofill: {
     listProfiles:  ()             => ipcRenderer.invoke('autofill:profile:list'),
     getProfile:    (id)           => ipcRenderer.invoke('autofill:profile:get', { id }),
