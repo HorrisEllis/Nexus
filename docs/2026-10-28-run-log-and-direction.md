@@ -91,3 +91,15 @@ and routes, or what about integrating into the adblocker?" Coder: the plugin slo
 an input-provider slot; reuse the existing escalation ladder (plain click → Eros curve → slower account pace → hand to
 him); detect bot-check vendors at the request level through the adblocker's content-filter, escalate, never block them.
 Credit: putting detection where the request data already flows is his call — systems thinking.
+
+## Self-heal from a DAG of failure-mode report nodes (his idea, recorded 2026-10-28)
+
+James, 2026-10-28: "Shouldn't the self heal have a dag from the intelligence system?" · "Yes but the failure mode report nodes"
+
+Read as (to confirm): the self-heal's graph is built from the `.failure_mode` report nodes (FMR, docs/2026-10-17-failure-mode-report-phasemap.spec;
+one writer, cortex failure-intake.js `write()`, which the ladder already uses). Each node already carries occurrences, what it
+needs (required), hypotheses and the CFR field. Edges: loom's real wires between the systems the failure modes name, plus
+intelligence's observed "X precedes failure Y". Heal in topological order: the root first, its downstream failure modes held
+until it clears; no root found → stop and say so instead of a retry loop. Evidence it is needed: his log, where memory_pressure,
+idearium offline and intelligence crashes were each healed blind every ~2.5 min while one root (event_log reload churn) sat
+under them. Open; after Fiverr, job applications and the contact log.
