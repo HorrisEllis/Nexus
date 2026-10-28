@@ -66,7 +66,7 @@ t('CW-04', 'the window controls act on the SENDER\'s window: minimize, maximize 
   h({ sender }, 'close'); assert.strictEqual(st.closed, 1);
   assert.deepStrictEqual(h({ sender: {} }, 'close'), { ok: false });
   const main = fs.readFileSync(path.join(ROOT, 'clear-glass/src/main/index.js'), 'utf8');
-  assert.match(main, /CompartmentWindow\.attach\(contents\)/);
+  assert.match(main, /CompartmentWindow\.attach\(contents[,)]/);
   assert.match(main, /CompartmentWindow\.registerIpc\(ipcMain, BrowserWindow\)/);
 });
 

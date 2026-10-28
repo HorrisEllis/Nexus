@@ -142,3 +142,7 @@ page first and does that page's parts, a learned target first; _gigAssign turns 
 Not built yet, said: "correcting or creating macros" — a pick replacing a failed macro step's selector, and a fill saved as a macro. They
 need macro steps that can choose (FG4), so they wait on it. Gig metadata's checkbox tabs and the Service type dropdown need his values
 (the gig does not hold them). Proof: test-fiverr-works 9/9.
+
+## ADDENDUM 2026-10-28 (0.60.223) — choose finds options that are plain divs
+James, 2026-10-28: "continue get it working". When no list item and no option/item-named element appears on opening, the options are what
+became visible then (short, one line), still matched and read back. Proof: test-fiverr-works FW-05 (a plain-div dropdown).

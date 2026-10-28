@@ -5,10 +5,10 @@
  * "it needs to do the drop down menus. one by one" · "the drop down doesn't work" · "stop. just get fiverr working."
  *
  *   FW-01  decideOpen: a target=_blank link → tab; background-tab → tab behind; a sized popup → window; about:blank → window; Idearium → its page
- *   FW-02  the popup handler: a link meant as a tab is denied as a window and sent to the window it is in as cg:open-tab; a sized popup is allowed
+ *   FW-02  the popup handler: a link meant as a tab is denied as a window and sent to the window it is in as cg:open-tab (from a bare window: the main window); a sized popup is allowed
  *   FW-03  the gig autofill takes Fiverr's placeholder-only pricing boxes at medium (was low: under the default floor, never filled)
  *   FW-04  option-match: '3' → '3 Days' not '30 Days'; 'Data' between two Data options is ambiguous; shows() reads back
- *   FW-05  in Clear Glass, on a page laid out like Fiverr's Scope & Pricing: choose opens each tier's custom DELIVERY TIME with the curved
+ *   FW-05  in Clear Glass, on a page laid out like Fiverr's Scope & Pricing (and a dropdown of plain divs): choose opens each tier's custom DELIVERY TIME with the curved
  *          pointer, clicks the option, and the dropdown shows it — one by one; a native SELECT row by column + row label; a missing option
  *          is refused with the options seen
  *   FW-06  (0.60.222) the page is detected from what it shows — Overview, Scope & Pricing, or unknown (said); the suggested category is matched
@@ -35,6 +35,7 @@ body{font:14px sans-serif;margin:20px} table{border-collapse:collapse} td,th{bor
 <tr><td></td><td><div class="dd" data-t="b">Delivery time</div></td><td><div class="dd" data-t="s">Delivery time</div></td><td><div class="dd" data-t="p">Delivery time</div></td></tr>
 <tr><td>Number of APIs integrated</td><td><select><option>Select</option><option>1</option><option>2</option><option>3</option></select></td>
 <td><select><option>Select</option><option>1</option><option>2</option><option>3</option></select></td><td><select><option>Select</option><option>1</option><option>2</option><option>3</option></select></td></tr>
+<tr><td>Revisions</td><td><div class="dv">Select</div></td><td><div class="dv">Select</div></td><td><div class="dv">Select</div></td></tr>
 </table>
 <a id="edit" href="https://www.fiverr.com/edit" target="_blank">Edit Gig</a>
 <script>
@@ -46,6 +47,14 @@ document.querySelectorAll('.dd').forEach(function(dd){ dd.addEventListener('clic
   ['1 Day', '2 Days', '3 Days', '5 Days', '7 Days', '30 Days'].forEach(function(t){ var li = document.createElement('li'); li.textContent = t;
     li.addEventListener('click', function(ev){ ev.stopPropagation(); dd.textContent = t; ul.remove(); }); ul.appendChild(li); });
   document.body.appendChild(ul); }); });
+// a dropdown whose options are plain divs: no li, no option/item class, no role
+document.querySelectorAll('.dv').forEach(function(dv){ dv.addEventListener('click', function(){
+  document.querySelectorAll('.menu').forEach(function(p){ p.remove(); });
+  var r = dv.getBoundingClientRect(), box = document.createElement('div'); box.className = 'menu pop';
+  box.style.left = (r.left + scrollX) + 'px'; box.style.top = (r.bottom + scrollY) + 'px';
+  ['1', '2', '3', 'Unlimited'].forEach(function(t){ var d = document.createElement('div'); d.textContent = t; d.style.padding = '4px 8px';
+    d.addEventListener('click', function(ev){ ev.stopPropagation(); dv.textContent = t; box.remove(); }); box.appendChild(d); });
+  document.body.appendChild(box); }); });
 </script>`;
 
 (async () => {
@@ -61,7 +70,7 @@ document.querySelectorAll('.dd').forEach(function(dd){ dd.addEventListener('clic
     assert.match(decideOpen({ url: 'https://a.b', disposition: 'other' }).why, /as before/);
   });
 
-  await test('FW-02', 'the popup handler sends a link-tab to its window as cg:open-tab and denies the window; a sized popup is allowed', () => {
+  await test('FW-02', 'the popup handler sends a link-tab to its window as cg:open-tab (from a bare window: to the main window) and denies the window; a sized popup is allowed', () => {
     const CW = require(CG('src/main/compartment-window.js'));
     const sent = []; let handler = null;
     const contents = { getType: () => 'webview', setWindowOpenHandler: (h) => { handler = h; }, on: () => {}, hostWebContents: { isDestroyed: () => false, send: (ch, d) => sent.push([ch, d]) } };
@@ -70,6 +79,12 @@ document.querySelectorAll('.dd').forEach(function(dd){ dd.addEventListener('clic
     assert.deepStrictEqual(sent, [['cg:open-tab', { url: 'https://www.fiverr.com/edit', background: false }]]);
     assert.strictEqual(handler({ url: 'https://accounts.google.com/o', features: 'width=500,height=600', disposition: 'new-window' }).action, 'allow');
     assert.strictEqual(sent.length, 1);
+    // a bare window (an earlier pop-out) has no tab strip: its link-tab goes to the main window as a tab
+    const opened = []; let h2 = null;
+    CW.attach({ getType: () => 'window', setWindowOpenHandler: (h) => { h2 = h; }, on: () => {}, hostWebContents: null }, { openTab: (u, o) => { opened.push([u, o.background]); return true; } });
+    assert.deepStrictEqual(h2({ url: 'https://www.fiverr.com/edit2', features: '', disposition: 'foreground-tab' }), { action: 'deny' });
+    assert.deepStrictEqual(opened, [['https://www.fiverr.com/edit2', false]]);
+    assert.strictEqual(h2({ url: 'https://accounts.google.com/o', features: 'width=500', disposition: 'new-window' }).action, 'allow');
     const js = require('fs').readFileSync(CG('renderer/browser.js'), 'utf8');
     assert.match(js, /ClearGlass\.on\('cg:open-tab'[^\n]*_tabs\.newTab\(d\.url\)/, 'the window opens it as a tab');
   });
@@ -160,6 +175,9 @@ document.querySelectorAll('.dd').forEach(function(dd){ dd.addEventListener('clic
       assert.strictEqual(await page.evaluate(() => document.querySelectorAll('select')[1].value), '2');
       await assert.rejects(d.exec({ agentId: 'default', action: 'choose', column: 'PREMIUM', row: 'Number of APIs integrated', option: '9', by: 'person' }), /no option matches "9" — options: Select \| 1 \| 2 \| 3/);
       await assert.rejects(d.exec({ agentId: 'default', action: 'choose', column: 'GOLD', shows: 'DELIVERY TIME', option: '3', by: 'person' }), /no column headed "GOLD"/);
+      const pv = await d.exec({ agentId: 'default', action: 'choose', column: 'PREMIUM', row: 'Revisions', option: 'unlimited', by: 'person' });
+      assert.deepStrictEqual([pv.kind, pv.option], ['widget', 'Unlimited'], 'options that are plain divs are found by what appeared on opening');
+      assert.strictEqual(await page.evaluate(() => document.querySelectorAll('.dv')[2].textContent), 'Unlimited');
       await page.close();
     });
 

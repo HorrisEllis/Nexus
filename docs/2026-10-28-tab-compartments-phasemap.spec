@@ -105,3 +105,8 @@ instances") and are built when he calls for them. The earlier TC3 depends_on is 
 James, 2026-10-28: "stop. just get fiverr working." A link meant as a tab (foreground-tab / background-tab) is denied as a window and sent to the window it is in (cg:open-tab), where
 renderer/browser.js opens it with _tabs.newTab, in the window's session. A sized popup stays a window. Popups are not yet driver-registered
 (pop-<wcId>) or dockable: that part waits on TC4. Proof: test-fiverr-works FW-01, FW-02.
+
+## ADDENDUM 2026-10-28 (0.60.223) — a bare window's link-tab opens in the main window
+James, 2026-10-28: "continue get it working". A page in a bare window (an earlier pop-out, a provider window) has no tab strip, so TC3's
+"a tab of the window it is in" had nowhere to go. attach(contents, { openTab }) sends it to the main window ('default') as a tab. Sized
+popups are unchanged. This is TC4's first part, without the Dock button. Proof: test-fiverr-works FW-02.

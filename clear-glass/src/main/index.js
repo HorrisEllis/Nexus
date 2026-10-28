@@ -2885,7 +2885,8 @@ app.on('web-contents-created', (_e, contents) => {
   });
   try { require('../net/compartment').onContents(contents); } catch (e) { console.warn(`[compartment] WebRTC not restricted: ${e.message}`); }   // SF3 — no UDP around the proxy in a routed window
   try { if (require('../net/compartment').isCompartment(contents.session)) { const q = require('../net/service').service().quarantine; if (q) q.watch(contents, contents.session.__cgPartition); } } catch (e) { console.warn(`[quarantine] magnets not watched: ${e.message}`); }   // CD5 — magnets caught, never opened
-  try { CompartmentWindow.attach(contents); } catch (_) {}   // §0.39.280 — idearium's desktop / settings pop-outs
+  // §0.39.280 — idearium's desktop / settings pop-outs; 0.60.222 — a link-tab from a bare window (no tab strip) opens as a tab of the main window
+  try { CompartmentWindow.attach(contents, { openTab: (url, { background } = {}) => { const w = windows.get('default'); if (!w || w.isDestroyed()) return false; w.webContents.send('cg:open-tab', { url, background }); if (!background) { w.show(); w.focus(); } return true; } }); } catch (_) {}
   // AB3 (0.60.183) — element hiding: the leftover ad boxes are hidden on each page load, unless the Ad Blocker plugin is off or the site allowed
   try {
     if (contents.getType() === 'webview' || contents.getType() === 'window') contents.on('dom-ready', () => {
