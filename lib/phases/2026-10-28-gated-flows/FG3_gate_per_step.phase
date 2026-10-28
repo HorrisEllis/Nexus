@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::FG3_gate_per_step
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::FG3_gate_per_step
+context: pipeline phase FG3_gate_per_step of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: FG3_gate_per_step (backend) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793179560187
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793179560187
+lastSeenAt: 1793179560187
+fingerprint: null
+payload:
+  id: FG3_gate_per_step
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: backend
+  status: MAPPED
+  files:
+    - lib/agent-tools/tools/clear-glass/gates.js
+    - lib/agent-tools/tools/clear-glass/macro.js
+  depends_on:
+    - FG_D1_gate_is_a_step_field
+  blocks:
+    - MOD-FG-GATES
+  spec: clear-glass/spec/gated-flows.spec
+  graph: f27d7a0f3a2314d7

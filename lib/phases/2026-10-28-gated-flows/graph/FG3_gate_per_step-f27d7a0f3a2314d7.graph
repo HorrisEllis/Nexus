@@ -1,0 +1,133 @@
+envelope: 1
+uuid: nexus-export-graph-phase:FG3_gate_per_step:f27d7a0f3a2314d7
+type: graph
+id: phase:FG3_gate_per_step:f27d7a0f3a2314d7
+context: dependency graph of phase FG3_gate_per_step
+intent: null
+summary: 11 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1793179560187
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793179560187
+lastSeenAt: 1793179560187
+fingerprint: null
+payload:
+  for: FG3_gate_per_step
+  kind: phase
+  repo: null
+  hash: f27d7a0f3a2314d7
+  nodes:
+    - path: lib/agent-tools/tools/clear-glass/gates.js
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/agent-tools/tools/clear-glass/macro.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cli/nexus.js
+      role: used-by
+      exists: true
+      system: cli
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/clear-glass/learned.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-macro.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/automation/nodes.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/browser/browser-action.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/sandbox/rewind-replay.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: clear-glass/src/automation/nodes.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: lib/agent-tools/tools/browser/browser-action.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: lib/agent-tools/tools/sandbox/rewind-replay.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/agent-tools/tools/clear-glass/macro.js
+      kind: requires
+    - from: cli/nexus.js
+      to: lib/agent-tools/tools/clear-glass/macro.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/agent-tools/tools/clear-glass/macro.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/learned.js
+      to: lib/agent-tools/tools/clear-glass/macro.js
+      kind: requires
+    - from: tests/modules/test-macro.js
+      to: lib/agent-tools/tools/clear-glass/macro.js
+      kind: requires
+  crossings:
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: clear-glass/src/automation/nodes.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    dagHash: 41f076ccce672924
+    layer: 1
+    deps:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+    dependents:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG6_blocks_ui
+    upstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+    downstream:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG5_fiverr_gig_flow
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG6_blocks_ui
+    blockedBy:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+    unlocks:
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG6_blocks_ui
+    conflicts: []
+    dangling: []
+    lines:
+      - DAG 41f076ccce672924 · layer 1 · blocked by FG_D1_gate_is_a_step_field
+      - 'depends on (1): FG_D1_gate_is_a_step_field'
+      - >-
+        needed by (2): FG4_pointer_and_choose_steps, FG6_blocks_ui · all downstream 3 · finishing it
+        unlocks FG6_blocks_ui

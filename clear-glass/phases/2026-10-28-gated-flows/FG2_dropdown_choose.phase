@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+context: pipeline phase FG2_dropdown_choose of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: FG2_dropdown_choose (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1793179560185
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793179560185
+lastSeenAt: 1793179560185
+fingerprint: null
+payload:
+  id: FG2_dropdown_choose
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: foundation
+  status: MAPPED
+  files:
+    - clear-glass/src/page/dropdown.js
+    - clear-glass/src/driver/index.js
+  depends_on:
+    - FG_D2_choice_is_read_back
+  blocks:
+    - MOD-FG-CHOOSE
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 08c4739a2ba8d8b7

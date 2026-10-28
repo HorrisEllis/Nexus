@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+type: phase
+id: docs_2026-10-28-gated-flows-phasemap.spec::FG4_pointer_and_choose_steps
+context: pipeline phase FG4_pointer_and_choose_steps of docs/2026-10-28-gated-flows-phasemap.spec
+intent: null
+summary: FG4_pointer_and_choose_steps (integration) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1793179560189
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1793179560189
+lastSeenAt: 1793179560189
+fingerprint: null
+payload:
+  id: FG4_pointer_and_choose_steps
+  map: docs/2026-10-28-gated-flows-phasemap.spec
+  repo: null
+  layer: integration
+  status: MAPPED
+  files:
+    - lib/agent-tools/tools/browser/browser-action.js
+    - lib/agent-tools/tools/clear-glass/macro.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - FG2_dropdown_choose
+    - FG3_gate_per_step
+  blocks:
+    - MOD-FG-POINTER-STEPS
+  spec: clear-glass/spec/gated-flows.spec
+  graph: 60773f0036bb8229
